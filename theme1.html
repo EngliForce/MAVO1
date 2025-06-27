@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +12,7 @@
       padding: 0;
     }
     header {
-      background-color: #ffa07a;
+      background-color: #ff7043;
       color: white;
       padding: 2rem;
       text-align: center;
@@ -32,16 +31,22 @@
     h2 {
       color: #ff7043;
     }
-    a.button {
-      display: inline-block;
-      margin: 1rem;
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .links a {
       padding: 0.5rem 1rem;
       background-color: #ff7043;
       color: white;
       border-radius: 6px;
       text-decoration: none;
+      font-size: 0.9rem;
     }
-    a.button:hover {
+    .links a:hover {
       background-color: #e65c30;
     }
     footer {
@@ -55,33 +60,49 @@
 <body>
   <header>
     <h1>Theme 1: All About Me</h1>
-    <p>Let’s learn to talk about ourselves!</p>
+    <p>Welcome to First Class English – Make English your superpower!</p>
   </header>
 
   <main>
     <section>
-      <h2>🎯 What You Will Learn</h2>
-      <p>How to say your name, age, where you're from, and what you like.</p>
+      <h2>🎯 Learning Goals</h2>
+      <p>You will learn to introduce yourself, talk about your family, describe your hobbies, and use basic grammar.</p>
     </section>
 
     <section>
-      <h2>📚 Vocabulary Practice</h2>
-      <a href="https://www.quizlet.com" class="button">Go to Quizlet</a>
+      <h2>📚 Vocabulary</h2>
+      <div class="links">
+        <a href="https://www.quizlet.com" target="_blank">Vocab 1.1</a>
+        <a href="https://www.quizlet.com" target="_blank">Vocab 1.2</a>
+        <a href="https://www.quizlet.com" target="_blank">Vocab 1.3</a>
+        <a href="https://www.quizlet.com" target="_blank">Vocab 1.4</a>
+      </div>
     </section>
 
     <section>
-      <h2>🔤 Grammar Practice</h2>
-      <a href="https://www.learningapps.org" class="button">Practice "To be"</a>
+      <h2>🔤 Grammar</h2>
+      <div class="links">
+        <a href="https://www.learningapps.org" target="_blank">The Alphabet</a>
+        <a href="https://www.learningapps.org" target="_blank">Counting</a>
+        <a href="https://www.learningapps.org" target="_blank">Personal Pronouns</a>
+        <a href="https://www.learningapps.org" target="_blank">To be – present</a>
+        <a href="https://www.learningapps.org" target="_blank">Have/has got</a>
+        <a href="https://www.learningapps.org" target="_blank">Simple Present</a>
+        <a href="https://www.learningapps.org" target="_blank">Question Words</a>
+        <a href="https://www.learningapps.org" target="_blank">Adjectives</a>
+        <a href="https://www.learningapps.org" target="_blank">Possessive Adj.</a>
+        <a href="https://www.learningapps.org" target="_blank">Adverbs</a>
+      </div>
     </section>
 
     <section>
       <h2>📝 Task</h2>
-      <p>Create your own English Passport! Show us who you are using English.</p>
+      <p>Create your English Passport! Include your name, age, where you're from, your family, and what you like. Use full sentences and decorate it!</p>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 My English Passport – You're doing great!</p>
+    <p>&copy; 2025 First Class English – Make English your superpower!</p>
   </footer>
 </body>
 </html>
