@@ -1,56 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Theme 1: All About Me</title>
+  <title>My English Passport</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
+      background-color: #f0f8ff;
       margin: 0;
       padding: 0;
+      color: #000;
     }
     header {
-      background-color: #ff7043;
+      background-color: #4682b4;
       color: white;
       padding: 2rem;
       text-align: center;
     }
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      max-width: 100px;
+      height: auto;
+    }
     main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
       padding: 2rem;
-      text-align: center;
     }
     section {
+      color: black;
+      grid-column: 1 / -1;
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .links a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #4682b4;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+    .links a:hover {
+      background-color: #315f86;
+    }
+    .theme-card {
       background-color: white;
       border-radius: 12px;
       padding: 1.5rem;
-      margin-bottom: 2rem;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+      color: black;
     }
-    h2 {
-      color: #ff7043;
-    }
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .links a {
-      padding: 0.5rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .links a:hover {
-      background-color: #e65c30;
+    .theme-card h2 {
+      color: #4682b4;
     }
     footer {
-      background-color: #ffe6dc;
+      background-color: #dbeeff;
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
@@ -58,47 +90,75 @@
   </style>
 </head>
 <body>
- <header>
-  <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto; max-width: 250px; height: auto;">
-</header>
+  <header>
+    <img src="Logo.png" alt="Englix Logo">
+    <h1>My English Passport</h1>
+    <p>Welcome to your English learning journey!</p>
+  </header>
 
   <main>
+    <div class="theme-card">
+      <h2>Theme 1</h2>
+      <p>All About Me</p>
+      <a href="theme1.html">Go to Theme</a>
+    </div>
+    <div class="theme-card">
+      <h2>Theme 2</h2>
+      <p>Coming soon...</p>
+    </div>
+    <div class="theme-card">
+      <h2>Theme 3</h2>
+      <p>Coming soon...</p>
+    </div>
+    <div class="theme-card">
+      <h2>Theme 4</h2>
+      <p>Coming soon...</p>
+    </div>
+    <div class="theme-card">
+      <h2>Theme 5</h2>
+      <p>Coming soon...</p>
+    </div>
+    <div class="theme-card">
+      <h2>Theme 6</h2>
+      <p>Coming soon...</p>
+    </div>
+
     <section>
-      <h2>🎯 Learning Goals</h2>
-      <p>You will learn to introduce yourself, talk about your family, describe your hobbies, and use basic grammar.</p>
+      <h2>🧠 Uitleg</h2>
+      <p>Het Engelse werkwoord <strong>to be</strong> betekent <em>zijn</em>.</p>
+      <p>In de tegenwoordige tijd ziet het er zo uit:</p>
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>I am</td><td>ik ben</td></tr>
+        <tr><td>You are</td><td>jij bent</td></tr>
+        <tr><td>He / She / It is</td><td>hij / zij / het is</td></tr>
+        <tr><td>We are</td><td>wij zijn</td></tr>
+        <tr><td>You are</td><td>jullie zijn</td></tr>
+        <tr><td>They are</td><td>zij zijn</td></tr>
+      </table>
+      <p>Je gebruikt dit werkwoord om te praten over wie je bent, hoe je je voelt, waar je bent, of hoe oud je bent.</p>
+      <p>Dit werkwoord is super belangrijk en je zult het heel vaak nodig hebben. Zorg ervoor dat je dit werkwoord echt goed leert.</p>
     </section>
 
     <section>
-      <h2>📚 Vocabulary</h2>
-      <div class="links">
-        <a href="https://quizlet.com/nl/1057282550/vocabulary-11-family-friends-flash-cards/?i=23xqd&x=1jqt" target="_blank">Vocab 1.1</a>
-        <a href="https://www.quizlet.com" target="_blank">Vocab 1.2</a>
-        <a href="https://www.quizlet.com" target="_blank">Vocab 1.3</a>
-        <a href="https://www.quizlet.com" target="_blank">Vocab 1.4</a>
+      <h2>🎮 Video-uitleg</h2>
+      <p>Bekijk de video hieronder voor extra uitleg over het werkwoord “to be”.</p>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/Ly-Rrpm2CN8" allowfullscreen></iframe>
       </div>
     </section>
 
     <section>
-  <h2>🔤 Grammar</h2>
-  <div class="links">
-    <a href="https://www.learningapps.org" target="_blank">the Alphabet</a>
-    <a href="https://www.learningapps.org" target="_blank">counting</a>
-    <a href="https://www.learningapps.org" target="_blank">personal Pronouns</a>
-    <a href="tobe_present.html">to be – present simple</a>
-    <a href="https://www.learningapps.org" target="_blank">have/has got - present simple</a>
-    <a href="https://www.learningapps.org" target="_blank">present simple</a>
-    <a href="https://www.learningapps.org" target="_blank">wh- words</a>
-    <a href="https://www.learningapps.org" target="_blank">adjectives</a>
-    <a href="https://www.learningapps.org" target="_blank">possessive adjjectives</a>
-    <a href="https://www.learningapps.org" target="_blank">adverbs</a>
-  </div>
-</section>
-
-  
+      <h2>💡 Oefenen</h2>
+      <p>Klik op de knop hieronder om te oefenen met het werkwoord “to be”.</p>
+      <div class="links">
+        <a href="https://learningapps.org/view14827001" target="_blank">Oefening starten</a>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Englix - Make English Your Superpower!</p>
+    <p>&copy; 2025 Englix – Make English your superpower!</p>
   </footer>
 </body>
 </html>
