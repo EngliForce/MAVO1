@@ -1,111 +1,93 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>To Be - Oefeningen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oefeningen: To Be (Tegenwoordige Tijd)</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f8ff;
+      background-color: #fff8f0;
       margin: 0;
-      padding: 2rem;
-      color: #000;
+      padding: 0;
     }
-    h1 {
-      text-align: center;
-      color: #4682b4;
-    }
-    form {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .question {
-      margin-bottom: 1.5rem;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      background-color: #4682b4;
+    header {
+      background-color: #ff7043;
       color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
+      padding: 2rem;
+      text-align: center;
     }
-    .result {
-      margin-top: 1rem;
-      font-weight: bold;
+    header img.logo {
+      max-height: 60px;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 {
+      color: #ff7043;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 1rem 0;
+    }
+    a.oefen-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #ff7043;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    a.oefen-link:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <h1>To Be – Vul de juiste vorm in</h1>
-  <form id="toBeQuiz">
-    <div class="question">
-      <label>1. I ___ happy.</label>
-      <input type="text" name="q1" />
-    </div>
-    <div class="question">
-      <label>2. She ___ a student.</label>
-      <input type="text" name="q2" />
-    </div>
-    <div class="question">
-      <label>3. We ___ friends.</label>
-      <input type="text" name="q3" />
-    </div>
-    <div class="question">
-      <label>4. You ___ funny.</label>
-      <input type="text" name="q4" />
-    </div>
-    <div class="question">
-      <label>5. They ___ in the garden.</label>
-      <input type="text" name="q5" />
-    </div>
-    <button type="button" onclick="checkAnswers()">Controleer antwoorden</button>
-    <div class="result" id="result"></div>
-  </form>
+  <header>
+    <img class="logo" src="logo.png" alt="Logo">
+    <h1>Oefeningen: To Be (Tegenwoordige Tijd)</h1>
+    <p>Kies een oefening om te starten</p>
+  </header>
 
-  <script>
-    function checkAnswers() {
-      const answers = {
-        q1: 'am',
-        q2: 'is',
-        q3: 'are',
-        q4: 'are',
-        q5: 'are'
-      };
-      const form = document.getElementById('toBeQuiz');
-      let correct = 0;
-      let total = Object.keys(answers).length;
+  <main>
+    <section>
+      <h2>📝 Oefeningen</h2>
+      <ul>
+        <li><a class="oefen-link" href="oefening-bevestigend.html">Oefening 1: Bevestigende zinnen</a></li>
+        <li><a class="oefen-link" href="oefening-ontkennend.html">Oefening 2: Ontkennende zinnen</a></li>
+        <li><a class="oefen-link" href="oefening-vragend.html">Oefening 3: Vragende zinnen</a></li>
+        <li><a class="oefen-link" href="oefening-afkortingen.html">Oefening 4: Afkortingen</a></li>
+        <li><a class="oefen-link" href="oefening-gemengd.html">Oefening 5: Alles door elkaar</a></li>
+      </ul>
+    </section>
+  </main>
 
-      for (let key in answers) {
-        const input = form.elements[key];
-        if (input.value.trim().toLowerCase() === answers[key]) {
-          correct++;
-          input.style.borderColor = 'green';
-        } else {
-          input.style.borderColor = 'red';
-        }
-      }
-
-      const result = document.getElementById('result');
-      result.textContent = `Je hebt ${correct} van de ${total} goed.`;
-    }
-  </script>
+  <footer>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+  </footer>
 </body>
 </html>
