@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -10,7 +10,6 @@
       background-color: #f0f8ff;
       margin: 0;
       padding: 0;
-      color: #000;
     }
     header {
       background-color: #4682b4;
@@ -18,47 +17,23 @@
       padding: 2rem;
       text-align: center;
     }
-    header img {
-      display: block;
-      margin: 0 auto 1rem auto;
-      max-width: 150px;
-      height: auto;
-    }
     main {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
       padding: 2rem;
     }
-    section {
-      color: black;
-      grid-column: 1 / -1;
-      margin-bottom: 2rem;
+    .theme-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+    .theme-card h2 {
+      color: #4682b4;
     }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 0.5rem;
-      text-align: left;
-    }
-    .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-    }
-    .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .links a {
+    .theme-card a {
       display: inline-block;
       margin-top: 1rem;
       padding: 0.5rem 1rem;
@@ -67,19 +42,8 @@
       text-decoration: none;
       border-radius: 6px;
     }
-    .links a:hover {
+    .theme-card a:hover {
       background-color: #315f86;
-    }
-    .theme-card {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      text-align: center;
-      color: black;
-    }
-    .theme-card h2 {
-      color: #4682b4;
     }
     footer {
       background-color: #dbeeff;
@@ -91,15 +55,14 @@
 </head>
 <body>
   <header>
-    <img src="Logo.png" alt="Englix Logo">
-    <h1>Index</h1>
+    <h1>Englix</h1>
   </header>
 
   <main>
     <div class="theme-card">
       <h2>Theme 1</h2>
       <p>All About Me</p>
-      <a href="theme1.html" style="display:inline-block; background-color:#4682b4; color:white; padding:0.5rem 1rem; border-radius:6px; text-decoration:none;">Go to Theme</a>
+      <a href="theme1.html">Go to Theme</a>
     </div>
     <div class="theme-card">
       <h2>Theme 2</h2>
@@ -121,10 +84,21 @@
       <h2>Theme 6</h2>
       <p>Coming soon...</p>
     </div>
+  
+  
   </main>
+  
+  
+  <section style="text-align: center; margin: 2rem auto;">
+    <iframe width="480" height="270" src="https://www.youtube.com/embed/aX_SStTRKqc" allowfullscreen style="border: none;"></iframe>
+    <p><strong>Hoe leer je Engels?</strong></p>
+  </section>
+
+
+
 
   <footer>
-    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+    <p>&copy; 2025 Englix - Make English Your Superpower.</p>
   </footer>
 </body>
 </html>
