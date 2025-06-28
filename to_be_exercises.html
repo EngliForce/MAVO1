@@ -11,22 +11,26 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       background-color: #ff7043;
       color: white;
       padding: 2rem;
       text-align: center;
     }
+
     header img.logo {
       max-height: 80px;
       display: block;
       margin: 0 auto 1rem auto;
     }
+
     main {
       padding: 2rem;
       max-width: 800px;
       margin: 0 auto;
     }
+
     section {
       background-color: white;
       border-radius: 12px;
@@ -35,19 +39,32 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       text-align: center;
     }
+
     h2 {
       color: #ff7043;
     }
+
+    .exercise-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
     ul {
       list-style-type: none;
       padding: 0;
+      margin: 0;
     }
+
     li {
-      margin: 1rem 0;
+      margin: 0.5rem 0;
     }
+
     a.oefen-link {
       display: inline-block;
-      padding: 0.75rem 1.5rem;
+      padding: 0.5rem 1rem;
       background-color: #ff7043;
       color: white;
       text-decoration: none;
@@ -55,9 +72,16 @@
       font-size: 1rem;
       transition: background-color 0.3s;
     }
+
     a.oefen-link:hover {
       background-color: #e65c30;
     }
+
+    .pickle-image {
+      max-width: 180px;
+      height: auto;
+    }
+
     footer {
       background-color: #ffe6dc;
       text-align: center;
@@ -76,13 +100,16 @@
   <main>
     <section>
       <h2>📝 Exercises</h2>
-      <ul>
-        <li><a class="oefen-link" href="oefening-bevestigend.html">Oefening 1: Bevestigende zinnen</a></li>
-        <li><a class="oefen-link" href="oefening-ontkennend.html">Oefening 2: Ontkennende zinnen</a></li>
-        <li><a class="oefen-link" href="oefening-vragend.html">Oefening 3: Vragende zinnen</a></li>
-        <li><a class="oefen-link" href="oefening-afkortingen.html">Oefening 4: Afkortingen</a></li>
-        <li><a class="oefen-link" href="oefening-gemengd.html">Oefening 5: Alles door elkaar</a></li>
-      </ul>
+      <div class="exercise-content">
+        <ul>
+          <li><a class="oefen-link" href="oefening-bevestigend.html">Oefening 1: Bevestigende zinnen</a></li>
+          <li><a class="oefen-link" href="oefening-ontkennend.html">Oefening 2: Ontkennende zinnen</a></li>
+          <li><a class="oefen-link" href="oefening-vragend.html">Oefening 3: Vragende zinnen</a></li>
+          <li><a class="oefen-link" href="oefening-afkortingen.html">Oefening 4: Afkortingen</a></li>
+          <li><a class="oefen-link" href="oefening-gemengd.html">Oefening 5: Alles door elkaar</a></li>
+        </ul>
+        <img class="pickle-image" src="Pickles.png" alt="Pickles with graduation caps">
+      </div>
     </section>
   </main>
 
@@ -91,3 +118,4 @@
   </footer>
 </body>
 </html>
+
