@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To Be - Oefeningen</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 2rem;
+      color: #000;
+    }
+    h1 {
+      text-align: center;
+      color: #4682b4;
+    }
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background-color: #4682b4;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>To Be – Vul de juiste vorm in</h1>
+  <form id="toBeQuiz">
+    <div class="question">
+      <label>1. I ___ happy.</label>
+      <input type="text" name="q1" />
+    </div>
+    <div class="question">
+      <label>2. She ___ a student.</label>
+      <input type="text" name="q2" />
+    </div>
+    <div class="question">
+      <label>3. We ___ friends.</label>
+      <input type="text" name="q3" />
+    </div>
+    <div class="question">
+      <label>4. You ___ funny.</label>
+      <input type="text" name="q4" />
+    </div>
+    <div class="question">
+      <label>5. They ___ in the garden.</label>
+      <input type="text" name="q5" />
+    </div>
+    <button type="button" onclick="checkAnswers()">Controleer antwoorden</button>
+    <div class="result" id="result"></div>
+  </form>
+
+  <script>
+    function checkAnswers() {
+      const answers = {
+        q1: 'am',
+        q2: 'is',
+        q3: 'are',
+        q4: 'are',
+        q5: 'are'
+      };
+      const form = document.getElementById('toBeQuiz');
+      let correct = 0;
+      let total = Object.keys(answers).length;
+
+      for (let key in answers) {
+        const input = form.elements[key];
+        if (input.value.trim().toLowerCase() === answers[key]) {
+          correct++;
+          input.style.borderColor = 'green';
+        } else {
+          input.style.borderColor = 'red';
+        }
+      }
+
+      const result = document.getElementById('result');
+      result.textContent = `Je hebt ${correct} van de ${total} goed.`;
+    }
+  </script>
+</body>
+</html>
