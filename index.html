@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Englix - Make English Your Superpower!</title>
+  <title>Englix</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -18,11 +17,57 @@
       padding: 2rem;
       text-align: center;
     }
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      max-width: 250px;
+      height: auto;
+    }
     main {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
       padding: 2rem;
+    }
+    section {
+      color: black;
+      grid-column: 1 / -1;
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .links a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #4682b4;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+    .links a:hover {
+      background-color: #315f86;
     }
     .theme-card {
       background-color: white;
@@ -34,18 +79,6 @@
     .theme-card h2 {
       color: #4682b4;
     }
-    .theme-card a {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      background-color: #4682b4;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-    }
-    .theme-card a:hover {
-      background-color: #315f86;
-    }
     footer {
       background-color: #dbeeff;
       text-align: center;
@@ -55,16 +88,16 @@
   </style>
 </head>
 <body>
-<header>
-  <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto; max-width: 250px; height: auto;">
-  <p><strong>Welcome</strong></p>
-</header>
+  <header>
+    <img src="Logo.png" alt="Englix Logo">
+    <h1>Welcome</h1>
+  </header>
 
   <main>
     <div class="theme-card">
       <h2>Theme 1</h2>
       <p>All About Me</p>
-      <a href="theme1.html">Go to Theme 1</a>
+      <a href="theme1.html">Go to Theme</a>
     </div>
     <div class="theme-card">
       <h2>Theme 2</h2>
@@ -86,10 +119,43 @@
       <h2>Theme 6</h2>
       <p>Coming soon...</p>
     </div>
+
+    <section>
+      <h2>🧠 Uitleg</h2>
+      <p>Het Engelse werkwoord <strong>to be</strong> betekent <em>zijn</em>.</p>
+      <p>In de tegenwoordige tijd ziet het er zo uit:</p>
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>I am</td><td>ik ben</td></tr>
+        <tr><td>You are</td><td>jij bent</td></tr>
+        <tr><td>He / She / It is</td><td>hij / zij / het is</td></tr>
+        <tr><td>We are</td><td>wij zijn</td></tr>
+        <tr><td>You are</td><td>jullie zijn</td></tr>
+        <tr><td>They are</td><td>zij zijn</td></tr>
+      </table>
+      <p>Je gebruikt dit werkwoord om te praten over wie je bent, hoe je je voelt, waar je bent, of hoe oud je bent.</p>
+      <p>Dit werkwoord is super belangrijk en je zult het heel vaak nodig hebben. Zorg ervoor dat je dit werkwoord echt goed leert.</p>
+    </section>
+
+    <section>
+      <h2>🎮 Video-uitleg</h2>
+      <p>Bekijk de video hieronder voor extra uitleg over het werkwoord “to be”.</p>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/Ly-Rrpm2CN8" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <section>
+      <h2>💡 Oefenen</h2>
+      <p>Klik op de knop hieronder om te oefenen met het werkwoord “to be”.</p>
+      <div class="links">
+        <a href="https://learningapps.org/view14827001" target="_blank">Oefening starten</a>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Englix - Make English your superpower!</p>
+    <p>&copy; 2025 Englix – Make English your superpower!</p>
   </footer>
 </body>
 </html>
