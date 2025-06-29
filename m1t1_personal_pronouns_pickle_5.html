@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flitsquiz – Personal Pronouns (Alt 1)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #ff7043;
+    }
+    .context {
+      font-size: 1.1rem;
+      margin: 1rem 0;
+      color: #333;
+    }
+    .question {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+    .options {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    .feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .score {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <img src="Logo.png" alt="Englix Logo" style="width: 120px; margin-bottom: 1rem;">
+  <h1>⚡ Flitsquiz – Personal Pronouns</h1>
+  <p>Select the correct personal pronoun to complete the sentence. The name(s) the pronoun replaces are shown below the sentence.</p>
+
+  <div class="question" id="question">Loading...</div>
+  <div class="context" id="context"></div>
+  <div class="options" id="options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="score" id="score">Score: 0 / 0</div>
+
+  <button onclick="nextQuestion()">🔁 Next</button>
+  <button onclick="restartQuiz()">🔄 Restart Quiz</button>
+
+  <footer>
+    <p>&copy; 2025 First Class English – Make English your superpower!</p>
+  </footer>
+
+  <script>
+    const allQuestions = [
+      { sentence: "___ go to school.", name: "Jamal and I", correct: "We" },
+      { sentence: "___ is my best friend.", name: "Emily", correct: "She" },
+      { sentence: "___ is sleeping.", name: "The cat", correct: "It" },
+      { sentence: "___ are funny.", name: "You and your sister", correct: "You" },
+      { sentence: "___ am Sarah.", name: "My name is Sarah", correct: "I" },
+      { sentence: "___ play football.", name: "David and Jamal", correct: "They" },
+      { sentence: "___ is our teacher.", name: "Mr. Brown", correct: "He" },
+      { sentence: "___ are happy.", name: "Lisa and I", correct: "We" },
+      { sentence: "___ is in class.", name: "Peter", correct: "He" },
+      { sentence: "___ is reading a book.", name: "Anna", correct: "She" },
+      { sentence: "___ love this dog.", name: "I", correct: "I" },
+      { sentence: "___ are very kind.", name: "You", correct: "You" },
+      { sentence: "___ are playing.", name: "Emma and Liam", correct: "They" },
+      { sentence: "___ is a good singer.", name: "Liam", correct: "He" },
+      { sentence: "___ like to paint.", name: "Sophie and I", correct: "We" },
+      { sentence: "___ is working.", name: "The robot", correct: "It" },
+      { sentence: "___ are in my team.", name: "You and Max", correct: "You" },
+      { sentence: "___ is dancing.", name: "Carla", correct: "She" },
+      { sentence: "___ are characters.", name: "Tom and Jerry", correct: "They" },
+      { sentence: "___ am Paul.", name: "I", correct: "I" }
+    ];
+
+    let questions = [];
+    let current = {};
+    let score = 0;
+    let total = 0;
+    let maxRounds = 10;
+    let roundsPlayed = 0;
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function restartQuiz() {
+      score = 0;
+      total = 0;
+      roundsPlayed = 0;
+      questions = [...allQuestions];
+      shuffle(questions);
+      questions = questions.slice(0, maxRounds);
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("score").textContent = "Score: 0 / 0";
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (roundsPlayed >= maxRounds) return;
+      document.getElementById("feedback").textContent = "";
+      current = questions[roundsPlayed];
+      document.getElementById("question").textContent = current.sentence;
+      document.getElementById("context").textContent = `(${current.name})`;
+
+      const options = ["I", "You", "He", "She", "It", "We", "They"];
+      shuffle(options);
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      options.forEach(p => {
+        const btn = document.createElement("button");
+        btn.textContent = p;
+        btn.onclick = () => checkAnswer(p);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(answer) {
+      total++;
+      roundsPlayed++;
+      if (answer === current.correct) {
+        score++;
+        document.getElementById("feedback").textContent = "✅ Correct!";
+      } else {
+        document.getElementById("feedback").textContent = `❌ Wrong! The correct answer was "${current.correct}".`;
+      }
+      document.getElementById("score").textContent = `Score: ${score} / ${total}`;
+      if (roundsPlayed >= maxRounds) showStars();
+    }
+
+    function showStars() {
+      const stars = "⭐".repeat(Math.floor(score / 2)) || "😢";
+      document.getElementById("feedback").innerHTML += `<br><br>Your stars: <span style="font-size:2rem;">${stars}</span>`;
+    }
+
+    window.onload = () => restartQuiz();
+  </script>
+</body>
+</html>
