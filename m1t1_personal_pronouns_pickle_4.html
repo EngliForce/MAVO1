@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>I Spy – Personal Pronouns</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>I Spy – Personal Pronouns</title>
+<style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
@@ -64,21 +65,18 @@
   </style>
 </head>
 <body>
-  <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px;">
-  <h1>🔍 I Spy – Personal Pronouns</h1>
-  <p id="prompt">Click on the emoji that matches: <strong id="target"></strong></p>
-
-  <div class="image-area" id="game-area"></div>
-  <div class="scoreboard">
+<img alt="Englix Logo" src="Logo.png" style="display: block; margin: 0 auto 1rem auto; width: 120px;"/>
+<h1>🔍 I Spy – Personal Pronouns</h1>
+<p id="prompt">Click on the emoji that matches: <strong id="target"></strong></p>
+<div class="image-area" id="game-area"></div>
+<div class="scoreboard">
     ✅ Correct: <span id="correct-score">0</span> | ❌ Incorrect: <span id="incorrect-score">0</span>
-  </div>
-  <button onclick="restartGame()">🔄 Restart</button>
-
-  <footer>
-    <p>&copy; 2025 Englix – Make English your superpower!</p>
-  </footer>
-
-  <script>
+</div>
+<button onclick="restartGame()">🔄 Restart</button>
+<footer>
+<p>© 2025 Englix – Make English your superpower!</p>
+</footer>
+<script>
     const pronouns = [
       { pronoun: "he", emojis: ["👦🏾", "👦🏻", "👨🏽"] },
       { pronoun: "she", emojis: ["👧🏽", "👧🏼", "👩🏾"] },
@@ -178,3 +176,4 @@
   </script>
 </body>
 </html>
+
