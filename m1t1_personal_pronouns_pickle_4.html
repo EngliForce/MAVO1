@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,103 +80,14 @@
 
   <script>
     const pronouns = [
-      { pronoun: "he", emojis: ["👉🏽👦🏾", "👉🏽👦🏻", "👉🏽👨🏽"] },
-      { pronoun: "she", emojis: ["👉🏽👧🏽", "👉🏽👧🏼", "👉🏽👩🏾"] },
+      { pronoun: "he", emojis: ["👦🏾", "👦🏻", "👨🏽"] },
+      { pronoun: "she", emojis: ["👧🏽", "👧🏼", "👩🏾"] },
       { pronoun: "it", emojis: ["🐶", "🐱", "🤖"] },
       { pronoun: "you", emojis: ["🫵🏽", "🫵🏻"] },
       { pronoun: "we", emojis: ["🙋🏾‍♂️🙋🏼‍♀️", "🙋🏽‍♀️🙋🏻‍♂️", "🙋🏿‍♀️🙋🏽‍♂️"] },
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>I Spy – Personal Pronouns</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      padding: 2rem;
-      text-align: center;
-    }
-    h1 {
-      color: #ff7043;
-    }
-    .image-area {
-      margin: 2rem auto;
-      max-width: 600px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-    }
-    .person {
-      border: 3px solid #ff7043;
-      border-radius: 10px;
-      padding: 1rem;
-      background-color: white;
-      cursor: pointer;
-      font-size: 3rem;
-    }
-    .correct {
-      border-color: #28a745 !important;
-    }
-    .wrong {
-      border-color: #dc3545 !important;
-    }
-    #prompt {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-    }
-    .scoreboard {
-      margin-top: 1rem;
-      font-size: 1rem;
-    }
-    button {
-      background-color: #ff7043;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-size: 1rem;
-      margin-top: 1rem;
-      cursor: pointer;
-    }
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      margin-top: 3rem;
-    }
-  </style>
-</head>
-<body>
-  <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px;">
-  <h1>🔍 I Spy – Personal Pronouns</h1>
-  <p id="prompt">Click on the emoji that matches: <strong id="target"></strong></p>
-
-  <div class="image-area" id="game-area"></div>
-  <div class="scoreboard">
-    ✅ Correct: <span id="correct-score">0</span> | ❌ Incorrect: <span id="incorrect-score">0</span>
-  </div>
-  <button onclick="restartGame()">🔄 Restart</button>
-
-  <footer>
-    <p>&copy; 2025 Englix – Make English your superpower!</p>
-  </footer>
-
-  <script>
-    
-    const pronouns = [
-      { pronoun: "he", emojis: ["👦🏻", "👦🏽", "👦🏿", "👦🏼", "👦"] },
-      { pronoun: "she", emojis: ["👧🏻", "👧🏽", "👧🏿", "👧🏼", "👧"] },
-      { pronoun: "it", emojis: ["🐶", "🐱", "🐭", "🐰", "🐢", "🐠", "🦊", "🐥", "🤖", "🧸"] },
-      { pronoun: "you", emojis: ["🫵🏽", "🫵🏻", "🫵🏿", "🫵🏼", "🫵"] },
-      { pronoun: "we", emojis: ["🙋‍♂️🙋‍♀️", "🙋🏽‍♀️🙋🏼‍♂️", "🙋🏾‍♂️🙋🏻‍♀️", "🙋🏿‍♀️🙋🏽‍♂️", "🙋‍♀️🙋‍♂️"] },
-      { pronoun: "they", emojis: ["👨‍👩‍👧", "👩‍👩‍👧", "👨‍👨‍👦", "👪", "👬", "👭", "🧑‍🤝‍🧑", "👨‍👩‍👧‍👦"] },
-      { pronoun: "I", emojis: ["🙋🏻", "🙋🏽", "🙋🏿", "🙋🏼", "🙋"] }
+      { pronoun: "they", emojis: ["👉🏽👨🏽‍👩🏽‍👧🏾", "👉🏽👩🏿‍👩🏾‍👦🏼", "👉🏽👨🏻‍👨🏿‍👧🏻", "👉🏽👨‍👩‍👧"] },
+      { pronoun: "I", emojis: ["🙋🏾", "🙋🏻", "🙋🏽"] }
     ];
-
 
     let gamePeople = [];
     let currentTarget = null;
@@ -262,7 +172,9 @@
       setupGame();
     }
 
-    setupGame();
+    window.onload = function () {
+      setupGame();
+    };
   </script>
 </body>
 </html>
