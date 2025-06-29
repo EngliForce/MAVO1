@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Memory Game – Personal Pronouns</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #ff7043;
+    }
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 120px);
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .card {
+      background-color: #ff7043;
+      color: white;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .flipped {
+      background-color: #ffe6dc;
+      color: #333;
+    }
+    .matched {
+      background-color: #d4edda;
+      color: #333;
+      cursor: default;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+<h1>🧠 Memory Game – Personal Pronouns</h1>
+  <p>Match the English personal pronouns with their Dutch translations.</p>
+  <div>
+    <button onclick="restartGame()" style="margin-top: 1rem; padding: 0.5rem 1rem; font-size: 1rem; background-color: #ff7043; color: white; border: none; border-radius: 6px;">🔄 Shuffle & Restart</button>
+    <p style="margin-top: 1rem;">⏱️ Time: <span id="timer">0</span> seconds</p>
+    <p>🏆 Best Time: <span id="best-time">-</span> seconds</p>
+  </div>
+  <div id="game-board"></div>
+
+  <footer>
+    <p>&copy; 2025 First Class English – Make English your superpower!</p>
+  </footer>
+
+  <script>
+    const originalPairs = [
+      { en: "I", nl: "ik" },
+      { en: "You", nl: "jij" },
+      { en: "He", nl: "hij" },
+      { en: "She", nl: "zij" },
+      { en: "It", nl: "het" },
+      { en: "We", nl: "wij" },
+      { en: "You (pl)", nl: "jullie" },
+      { en: "They", nl: "zij (meervoud)" }
+    ];
+
+    let cards = [];
+    let firstCard = null;
+    let lock = false;
+    let timerInterval;
+    let seconds = 0;
+
+    const board = document.getElementById("game-board");
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function createCards() {
+      cards = [];
+      originalPairs.forEach(pair => {
+        cards.push({ text: pair.en, match: pair.nl });
+        cards.push({ text: pair.nl, match: pair.en });
+      });
+      shuffle(cards);
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      seconds = 0;
+      document.getElementById("timer").textContent = seconds;
+      timerInterval = setInterval(() => {
+        seconds++;
+        document.getElementById("timer").textContent = seconds;
+      }, 1000);
+    }
+
+    function updateBestTime() {
+      const bestTime = localStorage.getItem("memory_best_time");
+      if (!bestTime || seconds < bestTime) {
+        localStorage.setItem("memory_best_time", seconds);
+        document.getElementById("best-time").textContent = seconds;
+      }
+    }
+
+    function loadBestTime() {
+      const best = localStorage.getItem("memory_best_time");
+      if (best) {
+        document.getElementById("best-time").textContent = best;
+      }
+    }
+
+    function restartGame() {
+      board.innerHTML = "";
+      createCards();
+      firstCard = null;
+      lock = false;
+      cards.forEach(cardData => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.text = cardData.text;
+        card.dataset.match = cardData.match;
+        card.textContent = "";
+        card.addEventListener("click", () => {
+          if (lock || card.classList.contains("flipped") || card.classList.contains("matched")) return;
+          card.textContent = card.dataset.text;
+          card.classList.add("flipped");
+          if (!firstCard) {
+            firstCard = card;
+          } else {
+            lock = true;
+            setTimeout(() => {
+              if (firstCard.dataset.text === card.dataset.match && card.dataset.text === firstCard.dataset.match) {
+                firstCard.classList.add("matched");
+                card.classList.add("matched");
+                if (document.querySelectorAll(".matched").length === cards.length) {
+                  clearInterval(timerInterval);
+                  updateBestTime();
+                }
+              } else {
+                firstCard.textContent = "";
+                card.textContent = "";
+                firstCard.classList.remove("flipped");
+                card.classList.remove("flipped");
+              }
+              firstCard = null;
+              lock = false;
+            }, 1000);
+          }
+        });
+        board.appendChild(card);
+      });
+      startTimer();
+    }
+
+    loadBestTime();
+    restartGame();
+  </script>
+</body>
+</html>
