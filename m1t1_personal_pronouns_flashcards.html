@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -16,6 +17,26 @@
     }
     h1 {
       color: #ff7043;
+    }
+    .buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .shuffle-button, .reverse-button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .shuffle-button:hover, .reverse-button:hover {
+      background-color: #e55b2f;
     }
     .flashcards-container {
       display: flex;
@@ -75,20 +96,6 @@
       color: white;
       transform: rotateY(180deg);
     }
-    .shuffle-button {
-      background-color: #ff7043;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background-color 0.3s;
-    }
-    .shuffle-button:hover {
-      background-color: #e55b2f;
-    }
     footer {
       background-color: #ffe6dc;
       text-align: center;
@@ -101,8 +108,13 @@
 </head>
 <body>
   <h1>🔤 Flashcards – Persoonlijke Voornaamwoorden</h1>
-  <p>Klik op een kaart om de Nederlandse vertaling te zien.</p>
-  <button class="shuffle-button" onclick="createFlashcards()">🔀 Shuffle kaarten</button>
+  <p>Klik op een kaart om de vertaling te zien.</p>
+
+  <div class="buttons">
+    <button class="shuffle-button" onclick="createFlashcards()">🔀 Shuffle kaarten</button>
+    <button class="reverse-button" onclick="toggleDirection()">🔁 Wissel richting</button>
+  </div>
+
   <div class="flashcards-container" id="flashcards-container"></div>
 
   <footer>
@@ -112,14 +124,16 @@
   <script>
     const flashcards = [
       { front: 'I', back: 'ik' },
-      { front: 'you', back: 'jij' },
-      { front: 'he', back: 'hij' },
-      { front: 'she', back: 'zij' },
-      { front: 'it', back: 'het' },
-      { front: 'we', back: 'wij' },
-      { front: 'you (meervoud)', back: 'jullie' },
-      { front: 'they', back: 'zij' }
+      { front: 'You', back: 'jij' },
+      { front: 'He', back: 'hij' },
+      { front: 'She', back: 'zij' },
+      { front: 'It', back: 'het' },
+      { front: 'We', back: 'wij' },
+      { front: 'You', back: 'jullie' },
+      { front: 'They', back: 'zij' }
     ];
+
+    let isReversed = false;
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -130,7 +144,7 @@
 
     function createFlashcards() {
       const container = document.getElementById('flashcards-container');
-      container.innerHTML = ''; // Wis bestaande kaarten
+      container.innerHTML = '';
       shuffle(flashcards);
 
       flashcards.forEach(card => {
@@ -138,10 +152,13 @@
         cardElement.className = 'card';
         cardElement.onclick = () => cardElement.classList.toggle('flipped');
 
+        const frontText = isReversed ? card.back : card.front;
+        const backText = isReversed ? card.front : card.back;
+
         cardElement.innerHTML = `
           <div class="card-inner">
-            <div class="card-front">${card.front}</div>
-            <div class="card-back">${card.back}</div>
+            <div class="card-front">${frontText}</div>
+            <div class="card-back">${backText}</div>
           </div>
         `;
 
@@ -149,7 +166,11 @@
       });
     }
 
-    // Eerste keer aanroepen
+    function toggleDirection() {
+      isReversed = !isReversed;
+      createFlashcards();
+    }
+
     createFlashcards();
   </script>
 </body>
