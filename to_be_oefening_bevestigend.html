@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Oefening 1 - To be (Present Simple)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #ff7043;
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    input {
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100px;
+      text-align: center;
+    }
+    .correct {
+      background-color: #c8e6c9;
+      border: 1px solid #2e7d32;
+    }
+    .incorrect {
+      background-color: #ffcdd2;
+      border: 1px solid #c62828;
+    }
+    .stars {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: #ff7043;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+  
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+</style>
+</head>
+<body>
+  
+  <header>
+    <img src="Logo.png" alt="Logo" style="max-height: 80px; display: block; margin: 0 auto 1rem;">
+    <h1>To Be - present simple</h1>
+    <p>Vul de juiste vorm van het werkwoord 'to be' in: am, is of are.</p>
+    <p>Gebruik de complete vorm, dus geen afkortingen.</p>
+  </header>
+
+  <main>
+    <section>
+      <form id="exerciseForm">
+        <div class="question">1. I <input type="text" name="q1"> a student.</div>
+        <div class="question">2. Laura <input type="text" name="q2"> happy.</div>
+        <div class="question">3. Ahmed and Isac <input type="text" name="q3"> at home.</div>
+        <div class="question">4. Moira and I <input type="text" name="q4"> ready.</div>
+        <div class="question">5. Jeremiah <input type="text" name="q5"> tall.</div>
+        <div class="question">6. You <input type="text" name="q6"> funny.</div>
+        <div class="question">7. Wilbur <input type="text" name="q7"> a dog.</div>
+        <div class="question">8. I <input type="text" name="q8"> tired.</div>
+        <div class="question">9. You <input type="text" name="q9"> welcome.</div>
+        <div class="question">10. She <input type="text" name="q10"> my friend.</div>
+        <button type="button" onclick="checkAnswers()">Controleer</button>
+      </form>
+      <div class="stars" id="score"></div>
+    </section>
+  </main>
+
+  <script>
+    const correctAnswers = ['am', 'is', 'are', 'are', 'is', 'are', 'is', 'am', 'are', 'is'];
+
+    function checkAnswers() {
+      const form = document.forms['exerciseForm'];
+      let correctCount = 0;
+      for (let i = 0; i < correctAnswers.length; i++) {
+        const input = form['q' + (i + 1)];
+        const userAnswer = input.value.trim().toLowerCase();
+        if (userAnswer === correctAnswers[i]) {
+          input.className = 'correct';
+          correctCount++;
+        } else {
+          input.className = 'incorrect';
+        }
+      }
+      const stars = '⭐'.repeat(Math.floor(correctCount / 2));
+      document.getElementById('score').innerText = `Je score: ${stars} (${correctCount}/10 goed)`;
+    }
+  </script>
+
+
+  <footer>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+  </footer>
+
+</body>
+</html>
