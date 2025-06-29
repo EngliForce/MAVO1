@@ -75,73 +75,82 @@
       color: white;
       transform: rotateY(180deg);
     }
-  
+    .shuffle-button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background-color 0.3s;
+    }
+    .shuffle-button:hover {
+      background-color: #e55b2f;
+    }
     footer {
       background-color: #ffe6dc;
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
       width: 100%;
+      margin-top: 3rem;
     }
-
   </style>
 </head>
 <body>
   <h1>🔤 Flashcards – Persoonlijke Voornaamwoorden</h1>
   <p>Klik op een kaart om de Nederlandse vertaling te zien.</p>
-  <div class="flashcards-container">
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">I</div>
-        <div class="card-back">ik</div>
-      </div>
-    </div>
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">You</div>
-        <div class="card-back">jij</div>
-      </div>
-    </div>
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">He</div>
-        <div class="card-back">hij</div>
-      </div>
-    </div>
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">She</div>
-        <div class="card-back">zij</div>
-      </div>
-    </div>
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">It</div>
-        <div class="card-back">het</div>
-      </div>
-    </div>
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">We</div>
-        <div class="card-back">wij</div>
-      </div>
-    </div>
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">You</div>
-        <div class="card-back">jullie</div>
-      </div>
-    </div>
-    <div class="card" onclick="this.classList.toggle('flipped')">
-      <div class="card-inner">
-        <div class="card-front">They</div>
-        <div class="card-back">zij</div>
-      </div>
-    </div>
-  </div>
+  <button class="shuffle-button" onclick="createFlashcards()">🔀 Shuffle kaarten</button>
+  <div class="flashcards-container" id="flashcards-container"></div>
 
   <footer>
-    <p>&copy; 2025 First Class English – Make English your superpower!</p>
+    <p>&copy; 2025 First Class English – Make English Your Superpower!</p>
   </footer>
+
+  <script>
+    const flashcards = [
+      { front: 'I', back: 'ik' },
+      { front: 'you', back: 'jij' },
+      { front: 'he', back: 'hij' },
+      { front: 'she', back: 'zij' },
+      { front: 'it', back: 'het' },
+      { front: 'we', back: 'wij' },
+      { front: 'you (meervoud)', back: 'jullie' },
+      { front: 'they', back: 'zij' }
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function createFlashcards() {
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = ''; // Wis bestaande kaarten
+      shuffle(flashcards);
+
+      flashcards.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'card';
+        cardElement.onclick = () => cardElement.classList.toggle('flipped');
+
+        cardElement.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">${card.front}</div>
+            <div class="card-back">${card.back}</div>
+          </div>
+        `;
+
+        container.appendChild(cardElement);
+      });
+    }
+
+    // Eerste keer aanroepen
+    createFlashcards();
+  </script>
 </body>
 </html>
