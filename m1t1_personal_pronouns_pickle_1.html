@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Sleepoefening – Engelse naar Nederlandse Voornaamwoorden</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #ff7043;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .dropzone, .draggable {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 1rem;
+      width: 160px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .draggable {
+      border-style: solid;
+      background-color: #ff7043;
+      color: white;
+    }
+    .dropzone.filled {
+      background-color: #dff0d8;
+      border-color: #5cb85c;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧲 Sleep het juiste Nederlandse voornaamwoord</h1>
+  <p>Sleep de juiste Nederlandse betekenis naar het Engelse voornaamwoord.</p>
+
+  <div class="container" id="dropzones-container"></div>
+  
+  <div id="feedback-container" style="margin-top: 2rem;">
+    <p id="feedback" style="font-size: 1.1rem; margin-top: 1rem;"></p>
+  </div>
+
+<div class="container" id="draggables-container"></div>
+
+  <script>
+    const dropData = [
+      { label: "ik", match: "I" },
+      { label: "jij", match: "you" },
+      { label: "hij", match: "he" },
+      { label: "zij", match: "she" },
+      { label: "het", match: "it" },
+      { label: "wij", match: "we" },
+      { label: "jullie", match: "you (meervoud)" },
+      { label: "zij (meervoud)", match: "they" }
+    ];
+
+    const dragData = [
+      { value: "I" }, { value: "you" }, { value: "he" }, { value: "she" },
+      { value: "it" }, { value: "we" }, { value: "you (meervoud)" }, { value: "they" }
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function createElements() {
+      const dropContainer = document.getElementById('dropzones-container');
+      const dragContainer = document.getElementById('draggables-container');
+      dropContainer.innerHTML = "";
+      dragContainer.innerHTML = "";
+
+      shuffle(dropData);
+      shuffle(dragData);
+
+      dropData.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'dropzone';
+        div.dataset.match = item.match;
+        div.textContent = item.label;
+        dropContainer.appendChild(div);
+      });
+
+      dragData.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'draggable';
+        div.draggable = true;
+        div.dataset.value = item.value;
+        div.textContent = item.value;
+        div.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/plain', item.value);
+        });
+        dragContainer.appendChild(div);
+      });
+
+      document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.addEventListener('dragover', e => {
+          e.preventDefault();
+          zone.style.borderColor = '#ffa07a';
+        });
+        zone.addEventListener('dragleave', () => {
+          zone.style.borderColor = '#ccc';
+        });
+        zone.addEventListener('drop', e => {
+          e.preventDefault();
+          const value = e.dataTransfer.getData('text/plain');
+          const match = zone.dataset.match;
+          
+let totalMatches = dropData.length;
+let correctCount = 0;
+
+function updateScore() {
+  const feedback = document.getElementById('feedback');
+  if (correctCount === totalMatches) {
+    feedback.textContent = "✅ Well done! You matched all the pronouns correctly.";
+  } else {
+    feedback.textContent = "👍 Keep going! Match all the English pronouns to their Dutch meanings.";
+  }
+  
+}
+
+if (value === match) {
+            zone.textContent = value;
+            zone.classList.add('filled');
+            correctCount++;
+            if (correctCount === totalMatches) updateScore();
+            zone.style.borderColor = '#5cb85c';
+            const dragged = [...document.querySelectorAll('.draggable')].find(d => d.dataset.value === value);
+            if (dragged) dragged.remove();
+          } else {
+            alert("Oops, try again.");
+          }
+        });
+      });
+    }
+
+    createElements();
+  </script>
+
+  <footer>
+    <p>&copy; 2025 First Class English – Make English Your Superpower!</p>
+  </footer>
+</body>
+</html>
