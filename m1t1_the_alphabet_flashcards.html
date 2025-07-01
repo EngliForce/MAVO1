@@ -17,13 +17,41 @@
     h1 {
       color: #ff7043;
     }
-    .flashcards-container {
-      display: grid;
-      grid-template-columns: repeat(5, 140px);
+    .buttons {
+      margin-top: 1rem;
+      display: flex;
       gap: 1rem;
-      margin-top: 2rem;
+      flex-wrap: wrap;
       justify-content: center;
     }
+    .shuffle-button, .reset-button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .shuffle-button:hover, .reset-button:hover {
+      background-color: #e55b2f;
+    }
+
+    .flashcards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+      align-items: center;
+    }
+
+    .flashcard-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
     .card {
       background-color: white;
       border: 2px solid #ff7043;
@@ -95,14 +123,19 @@
   <h1>🔠 Flashcards – Alphabet</h1>
   <p>Klik op een kaart om de uitspraak te zien.</p>
 
+  <div class="buttons">
+    <button class="shuffle-button" onclick="shuffleFlashcards()">🔀 Shuffle</button>
+    <button class="reset-button" onclick="resetFlashcards()">🔁 Reset</button>
+  </div>
+
   <div class="flashcards-container" id="flashcards-container"></div>
 
   <footer>
-    <p>&copy; 2025 First Class English – Make English Your Superpower!</p>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
   </footer>
 
   <script>
-    const alphabet = [
+    const originalAlphabet = [
       { letter: 'A a', pronunciation: 'ee' },
       { letter: 'B b', pronunciation: 'bie' },
       { letter: 'C c', pronunciation: 'sie' },
@@ -111,7 +144,7 @@
       { letter: 'F f', pronunciation: 'ef' },
       { letter: 'G g', pronunciation: 'djie' },
       { letter: 'H h', pronunciation: 'eetsj' },
-      { letter: 'I i', pronunciation: 'aj' },
+      { letter: 'I i', pronunciation: 'aaj' },
       { letter: 'J j', pronunciation: 'djee' },
       { letter: 'K k', pronunciation: 'kee' },
       { letter: 'L l', pronunciation: 'el' },
@@ -131,29 +164,47 @@
       { letter: 'Z z', pronunciation: 'zed' }
     ];
 
+    let currentFlashcards = [...originalAlphabet];
+
     function createFlashcards() {
       const container = document.getElementById('flashcards-container');
       container.innerHTML = '';
 
-      alphabet.forEach((card, index) => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card';
-        cardElement.onclick = () => cardElement.classList.toggle('flipped');
+      for (let i = 0; i < currentFlashcards.length; i += 5) {
+        const row = document.createElement('div');
+        row.className = 'flashcard-row';
 
-        // Center Z on the last row
-        if (index === 25) {
-          cardElement.style.gridColumn = '3 / span 1';
-        }
+        const rowCards = currentFlashcards.slice(i, i + 5);
 
-        cardElement.innerHTML = `
-          <div class="card-inner">
-            <div class="card-front">${card.letter}</div>
-            <div class="card-back">${card.pronunciation}</div>
-          </div>
-        `;
+        rowCards.forEach(card => {
+          const cardElement = document.createElement('div');
+          cardElement.className = 'card';
+          cardElement.onclick = () => cardElement.classList.toggle('flipped');
 
-        container.appendChild(cardElement);
-      });
+          cardElement.innerHTML = `
+            <div class="card-inner">
+              <div class="card-front">${card.letter}</div>
+              <div class="card-back">${card.pronunciation}</div>
+            </div>
+          `;
+          row.appendChild(cardElement);
+        });
+
+        container.appendChild(row);
+      }
+    }
+
+    function shuffleFlashcards() {
+      for (let i = currentFlashcards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [currentFlashcards[i], currentFlashcards[j]] = [currentFlashcards[j], currentFlashcards[i]];
+      }
+      createFlashcards();
+    }
+
+    function resetFlashcards() {
+      currentFlashcards = [...originalAlphabet];
+      createFlashcards();
     }
 
     createFlashcards();
