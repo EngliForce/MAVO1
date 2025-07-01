@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <title>Sleepoefening – Engelse naar Nederlandse Voornaamwoorden</title>
+  <title>Match – Personal Pronouns English > Dutch</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -49,23 +48,33 @@
       padding: 1rem;
       font-size: 0.9rem;
     }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
-  <h1>🧲 Sleep het juiste Nederlandse voornaamwoord</h1>
-  <p>Sleep de juiste Nederlandse betekenis naar het Engelse voornaamwoord.
-  <div style="margin: 1rem 0; text-align:center;">
+
+  <!-- Top logo -->
+  <div>
+    <img src="Logo.png" alt="Logo" class="logo">
+  </div>
+
+  <h1>🧲 Sleep het juiste Nederlandse persoonlijke voornaamwoord</h1>
+  <p>Sleep de juiste Nederlandse betekenis naar het Engelse persoonlijke voornaamwoord.</p>
+
+  <div style="margin: 1rem 0;">
     <button onclick="createElements()" style="background-color:#ff7043;color:white;border:none;padding:0.5rem 1rem;border-radius:6px;font-size:1rem;">🔄 Shuffle</button>
   </div>
-</p>
 
   <div class="container" id="dropzones-container"></div>
-  
+
   <div id="feedback-container" style="margin-top: 2rem;">
     <p id="feedback" style="font-size: 1.1rem; margin-top: 1rem;"></p>
   </div>
 
-<div class="container" id="draggables-container"></div>
+  <div class="container" id="draggables-container"></div>
 
   <script>
     const dropData = [
@@ -120,6 +129,9 @@
         dragContainer.appendChild(div);
       });
 
+      let correctCount = 0;
+      const totalMatches = dropData.length;
+
       document.querySelectorAll('.dropzone').forEach(zone => {
         zone.addEventListener('dragover', e => {
           e.preventDefault();
@@ -132,39 +144,36 @@
           e.preventDefault();
           const value = e.dataTransfer.getData('text/plain');
           const match = zone.dataset.match;
-          
-let totalMatches = dropData.length;
-let correctCount = 0;
 
-function updateScore() {
-  const feedback = document.getElementById('feedback');
-  if (correctCount === totalMatches) {
-    feedback.textContent = "✅ Well done! You matched all the pronouns correctly.";
-  } else {
-    feedback.textContent = "👍 Keep going! Match all the English pronouns to their Dutch meanings.";
-  }
-  
-}
-
-if (value === match) {
+          if (value === match) {
             zone.textContent = value;
             zone.classList.add('filled');
             correctCount++;
-            if (correctCount === totalMatches) updateScore();
             zone.style.borderColor = '#5cb85c';
             const dragged = [...document.querySelectorAll('.draggable')].find(d => d.dataset.value === value);
             if (dragged) dragged.remove();
+            updateScore();
           } else {
             alert("Oops, try again.");
           }
         });
       });
+
+      function updateScore() {
+        const feedback = document.getElementById('feedback');
+        if (correctCount === totalMatches) {
+          feedback.textContent = "✅ Well done! You matched all the personal pronouns correctly.";
+        } else {
+          feedback.textContent = "👍 Keep going! Match all the English personal pronouns to their Dutch meanings.";
+        }
+      }
     }
 
     createElements();
   </script>
 
   <footer>
+    <img src="Logo.png" alt="Logo" class="logo">
     <p>&copy; 2025 Englix – Make English Your Superpower!</p>
   </footer>
 </body>
