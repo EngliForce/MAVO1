@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – Alphabet</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #ff7043;
+    }
+    .flashcards-container {
+      display: grid;
+      grid-template-columns: repeat(5, 140px);
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+    .card {
+      background-color: white;
+      border: 2px solid #ff7043;
+      border-radius: 12px;
+      width: 140px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      perspective: 1000px;
+      position: relative;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+    .card-front {
+      background-color: white;
+      color: #ff7043;
+      font-weight: bold;
+      font-size: 1.4rem;
+    }
+    .card-back {
+      background-color: #ff7043;
+      color: white;
+      transform: rotateY(180deg);
+      font-size: 1.2rem;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <img src="Logo.png" alt="Logo" style="max-width: 150px;">
+  </div>
+
+  <h1>🔠 Flashcards – Alphabet</h1>
+  <p>Klik op een kaart om de uitspraak te zien.</p>
+
+  <div class="flashcards-container" id="flashcards-container"></div>
+
+  <footer>
+    <p>&copy; 2025 First Class English – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const alphabet = [
+      { letter: 'A a', pronunciation: 'ee' },
+      { letter: 'B b', pronunciation: 'bie' },
+      { letter: 'C c', pronunciation: 'sie' },
+      { letter: 'D d', pronunciation: 'die' },
+      { letter: 'E e', pronunciation: 'ie' },
+      { letter: 'F f', pronunciation: 'ef' },
+      { letter: 'G g', pronunciation: 'djie' },
+      { letter: 'H h', pronunciation: 'eetsj' },
+      { letter: 'I i', pronunciation: 'aj' },
+      { letter: 'J j', pronunciation: 'djee' },
+      { letter: 'K k', pronunciation: 'kee' },
+      { letter: 'L l', pronunciation: 'el' },
+      { letter: 'M m', pronunciation: 'em' },
+      { letter: 'N n', pronunciation: 'en' },
+      { letter: 'O o', pronunciation: 'oh' },
+      { letter: 'P p', pronunciation: 'pie' },
+      { letter: 'Q q', pronunciation: 'kjoe' },
+      { letter: 'R r', pronunciation: 'ah' },
+      { letter: 'S s', pronunciation: 'es' },
+      { letter: 'T t', pronunciation: 'tie' },
+      { letter: 'U u', pronunciation: 'joe' },
+      { letter: 'V v', pronunciation: 'vie' },
+      { letter: 'W w', pronunciation: 'dobbeljoe' },
+      { letter: 'X x', pronunciation: 'eks' },
+      { letter: 'Y y', pronunciation: 'waj' },
+      { letter: 'Z z', pronunciation: 'zed' }
+    ];
+
+    function createFlashcards() {
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      alphabet.forEach((card, index) => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'card';
+        cardElement.onclick = () => cardElement.classList.toggle('flipped');
+
+        // Center Z on the last row
+        if (index === 25) {
+          cardElement.style.gridColumn = '3 / span 1';
+        }
+
+        cardElement.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">${card.letter}</div>
+            <div class="card-back">${card.pronunciation}</div>
+          </div>
+        `;
+
+        container.appendChild(cardElement);
+      });
+    }
+
+    createFlashcards();
+  </script>
+</body>
+</html>
