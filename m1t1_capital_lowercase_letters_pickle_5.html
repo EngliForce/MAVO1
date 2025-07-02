@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF">
+  <title>Capitalization Race</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h2 {
+      color: #ff7043;
+    }
+
+    .logo {
+      max-width: 120px;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"], select {
+      padding: 10px;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+
+    .btn {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      margin: 1rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .track {
+      position: relative;
+      height: 60px;
+      margin: 1rem 0;
+      background-color: #ffe6dc;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+    }
+
+    .car {
+      position: absolute;
+      top: 10px;
+      font-size: 2rem;
+      transition: left 0.3s ease-in-out;
+      transform: scaleX(-1);
+    }
+
+    .question {
+      font-size: 1.1rem;
+      margin-top: 2rem;
+    }
+
+    #status {
+      margin-top: 1.5rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #feedback {
+      font-weight: bold;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+
+    footer {
+      width: 100vw;
+      background-color: #ffe6dc;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #leaderboard {
+      margin-top: 2rem;
+    }
+
+    #leaderboard ul {
+      list-style: none;
+      padding: 0;
+      font-size: 1.1rem;
+    }
+
+    #playOnBtn, #rematchBtn {
+      display: none;
+    }
+
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="Logo.png" alt="Logo" class="logo">
+  <h2>🏁 Capitalization Race (1–4 Players)</h2>
+  <p>Fix sentences and race to the finish line!</p>
+
+  <div id="setupArea">
+    <label for="playerCount">Number of players:</label>
+    <select id="playerCount" onchange="generateNameInputs()">
+      <option value="1">1</option>
+      <option value="2" selected>2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+    <div id="nameInputs"></div>
+    <button class="btn" onclick="startGame()">Start Game</button>
+  </div>
+
+  <div id="gameArea" style="display: none;">
+    <div id="tracks"></div>
+
+    <div class="question" id="questionText"></div>
+    <div id="status">Loading...</div>
+
+    <input type="text" id="userInput" placeholder="Type the corrected sentence" disabled>
+    <br>
+    <button class="btn" onclick="submitAnswer()" id="submitBtn" disabled>✔️ Submit</button>
+    <button class="btn" onclick="continueAfterFeedback()" id="playOnBtn">➡️ Play On</button>
+
+    <div id="feedback"></div>
+  </div>
+
+  <div id="leaderboard" style="display:none;">
+    <h3>🏆 Leaderboard</h3>
+    <ul id="leaderboardList"></ul>
+  </div>
+
+  <button class="btn" onclick="startRematch()" id="rematchBtn">🔁 Rematch</button>
+  <canvas id="confettiCanvas"></canvas>
+
+  <footer>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const carEmojis = ['🚗', '🚙', '🏎️', '🚕'];
+    const maxSteps = 5;
+    let playerCount = 2;
+    let playerNames = [];
+    let scores = [];
+    let positions = [];
+    let currentPlayer = 0;
+    let currentQuestion = 0;
+    let waitingToContinue = false;
+    let gameOver = false;
+
+    const questions = [
+      { text: "we went to wales in october.", correct: "We went to Wales in October." },
+      { text: "my brother met king charles.", correct: "My brother met King Charles." },
+      { text: "every friday, we eat pizza at domino’s.", correct: "Every Friday, we eat pizza at Domino’s." },
+      { text: "she watched avengers: endgame last night.", correct: "She watched Avengers: Endgame last night." },
+      { text: "they visited the great wall of china.", correct: "They visited the Great Wall of China." },
+      { text: "he works for microsoft in london.", correct: "He works for Microsoft in London." },
+      { text: "my favourite teacher is Mr. Sebel.", correct: "My favourite teacher is Mr. Sebel." },
+      { text: "on monday, we learned about the titanic.", correct: "On Monday, we learned about the Titanic." },
+      { text: "have you been to the smithsonian museum?", correct: "Have you been to the Smithsonian Museum?" },
+      { text: "i saw the mona lisa in paris.", correct: "I saw the Mona Lisa in Paris." },
+      { text: "she read an article from the new york times.", correct: "She read an article from The New York Times." },
+      { text: "uncle jack lives in bath.", correct: "Uncle Jack lives in Bath." },
+      { text: "we flew with british airways.", correct: "We flew with British Airways." },
+      { text: "he visited mount everest base camp.", correct: "He visited Mount Everest Base Camp." },
+      { text: "they love watching disney movies.", correct: "They love watching Disney movies." },
+      { text: "my mom grew up in south africa.", correct: "My mom grew up in South Africa." },
+      { text: "in february, we celebrate valentine’s day.", correct: "In February, we celebrate Valentine’s Day." },
+      { text: "mrs. thompson teaches history.", correct: "Mrs. Thompson teaches History." },
+      { text: "we watched newsround in class.", correct: "We watched Newsround in class." },
+      { text: "she listens to taylor swift.", correct: "She listens to Taylor Swift." },
+      { text: "i played minecraft with my cousin.", correct: "I played Minecraft with my cousin." },
+      { text: "we visited big ben and buckingham palace.", correct: "We visited Big Ben and Buckingham Palace." },
+      { text: "my dog is named charlie.", correct: "My dog is named Charlie." },
+      { text: "he visited st. paul’s cathedral.", correct: "He visited St. Paul’s Cathedral." },
+      { text: "they traveled through the sahara desert.", correct: "They traveled through the Sahara Desert." },
+      { text: "january is the coldest month in canada.", correct: "January is the coldest month in Canada." },
+      { text: "mr. lee showed us a map of england.", correct: "Mr. Lee showed us a map of England." },
+      { text: "my aunt speaks spanish and german.", correct: "My aunt speaks Spanish and German." },
+      { text: "we studied world war ii in history.", correct: "We studied World War II in History." },
+      { text: "she plays for manchester united.", correct: "She plays for Manchester United." },
+      { text: "our school uses google classroom.", correct: "Our school uses Google Classroom." },
+      { text: "on sunday, we went to church.", correct: "On Sunday, we went to church." },
+      { text: "my cousin moved to melbourne, australia.", correct: "My cousin moved to Melbourne, Australia." },
+      { text: "he read charlotte’s web by e.b. white.", correct: "He read Charlotte’s Web by E.B. White." },
+      { text: "we bought shoes from nike.", correct: "We bought shoes from Nike." },
+      { text: "her favorite movie is the lion king.", correct: "Her favorite movie is The Lion King." },
+      { text: "the olympic games will be held in paris.", correct: "The Olympic Games will be held in Paris." },
+      { text: "he watched spider-man: no way home.", correct: "He watched Spider-Man: No Way Home." },
+      { text: "they stayed at the ritz hotel in london.", correct: "They stayed at The Ritz Hotel in London." },
+      { text: "dr. williams teaches biology.", correct: "Dr. Williams teaches Biology." },
+      { text: "our principal is mr. douglas.", correct: "Our principal is Mr. Douglas." },
+      { text: "we saw fireworks on independence day.", correct: "We saw fireworks on Independence Day." },
+      { text: "she wrote a letter to the queen.", correct: "She wrote a letter to the Queen." },
+      { text: "they danced at the spring festival.", correct: "They danced at the Spring Festival." },
+      { text: "my best friend joe went to le couderc this summer.", correct: "My best friend Joe went to Le Couderc this summer." },
+      { text: "i saw a documentary on bbc one.", correct: "I saw a documentary on BBC One." },
+      { text: "they traveled across europe by train.", correct: "They traveled across Europe by train." },
+      { text: "he lives near niagara falls.", correct: "He lives near Niagara Falls." },
+      { text: "she bought coffee from costa coffee.", correct: "She bought coffee from Costa Coffee." },
+      { text: "we watched frozen on disney+.", correct: "We watched Frozen on Disney+." }
+    ];
+
+    const tracksDiv = document.getElementById('tracks');
+    const questionText = document.getElementById('questionText');
+    const status = document.getElementById('status');
+    const userInput = document.getElementById('userInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const playOnBtn = document.getElementById('playOnBtn');
+    const feedback = document.getElementById('feedback');
+
+    function normalize(str) {
+      return str.replace(/\s+/g, ' ').trim();
+    }
+
+    function generateNameInputs() {
+      const count = parseInt(document.getElementById('playerCount').value);
+      const container = document.getElementById('nameInputs');
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = `Player ${i + 1} name`;
+        input.id = `playerName${i}`;
+        container.appendChild(input);
+      }
+    }
+
+    function createTracks() {
+      tracksDiv.innerHTML = '';
+      for (let i = 0; i < playerCount; i++) {
+        const track = document.createElement('div');
+        track.className = 'track';
+        track.id = `track${i}`;
+        const car = document.createElement('div');
+        car.className = 'car';
+        car.id = `car${i}`;
+        car.textContent = carEmojis[i % carEmojis.length];
+        track.appendChild(car);
+        tracksDiv.appendChild(track);
+      }
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      questionText.textContent = `Fix this sentence: "${q.text}"`;
+      feedback.textContent = '';
+      userInput.value = '';
+      userInput.disabled = false;
+      submitBtn.disabled = false;
+      playOnBtn.style.display = 'none';
+      waitingToContinue = false;
+      status.textContent = `🔁 ${playerNames[currentPlayer]}'s turn (${carEmojis[currentPlayer % carEmojis.length]})`;
+      userInput.focus();
+    }
+
+    function getMistakes(user, correct) {
+      const u = user.trim().split(/\s+/);
+      const c = correct.trim().split(/\s+/);
+      const mistakes = [];
+      const len = Math.max(u.length, c.length);
+      for (let i = 0; i < len; i++) {
+        const a = u[i] || "(missing)";
+        const b = c[i] || "(extra word)";
+        if (a !== b) mistakes.push(`"${a}" should be "${b}"`);
+      }
+      return mistakes;
+    }
+
+    function moveCar(index) {
+      positions[index]++;
+      const trackWidth = document.getElementById(`track${index}`).offsetWidth;
+      const step = (trackWidth - 40) / maxSteps;
+      document.getElementById(`car${index}`).style.left = `${positions[index] * step}px`;
+    }
+
+    function checkWin(index) {
+      if (positions[index] >= maxSteps) {
+        feedback.innerHTML = `🎉 ${playerNames[index]} wins the race!`;
+        userInput.disabled = true;
+        submitBtn.disabled = true;
+        playOnBtn.style.display = 'none';
+        status.textContent = "";
+        gameOver = true;
+        scores[index]++;
+        showLeaderboard();
+        document.getElementById('rematchBtn').style.display = 'inline-block';
+        triggerConfetti();
+        return true;
+      }
+      return false;
+    }
+
+    function submitAnswer() {
+      if (waitingToContinue || gameOver) return;
+      userInput.disabled = true;
+      submitBtn.disabled = true;
+      waitingToContinue = true;
+
+      const playerAnswer = normalize(userInput.value);
+      const correctAnswer = normalize(questions[currentQuestion].correct);
+
+      if (playerAnswer === correctAnswer) {
+        feedback.innerHTML = `✅ Correct! ${playerNames[currentPlayer]} moves forward.`;
+        moveCar(currentPlayer);
+        if (!checkWin(currentPlayer)) playOnBtn.style.display = 'inline-block';
+      } else {
+        feedback.innerHTML = `❌ Incorrect. Turn passes to the next player.<br><br>`;
+        feedback.innerHTML += `<strong>You wrote:</strong> "${userInput.value}"<br>`;
+        feedback.innerHTML += `<strong>Correct sentence:</strong> "${questions[currentQuestion].correct}"<br>`;
+        const mistakes = getMistakes(userInput.value, questions[currentQuestion].correct);
+        if (mistakes.length > 0) {
+          feedback.innerHTML += `<br><strong>🧾 Mistakes:</strong><ul>${mistakes.map(m => `<li>${m}</li>`).join('')}</ul>`;
+        }
+        playOnBtn.style.display = 'inline-block';
+      }
+    }
+
+   function continueAfterFeedback() {
+  playOnBtn.style.display = 'none';
+
+  // Always move to the next question
+  currentQuestion = (currentQuestion + 1) % questions.length;
+  currentPlayer = (currentPlayer + 1) % playerCount;
+
+  showQuestion();
+}
+
+    function startGame() {
+      playerCount = parseInt(document.getElementById('playerCount').value);
+      playerNames = [];
+      scores = Array(playerCount).fill(0);
+      positions = Array(playerCount).fill(0);
+      for (let i = 0; i < playerCount; i++) {
+        const name = document.getElementById(`playerName${i}`).value.trim() || `Player ${i + 1}`;
+        playerNames.push(name);
+      }
+      document.getElementById('setupArea').style.display = 'none';
+      document.getElementById('gameArea').style.display = 'block';
+      createTracks();
+      currentPlayer = Math.floor(Math.random() * playerCount);
+      showQuestion();
+    }
+
+    function showLeaderboard() {
+      const board = document.getElementById('leaderboard');
+      const list = document.getElementById('leaderboardList');
+      list.innerHTML = '';
+      for (let i = 0; i < playerCount; i++) {
+        const li = document.createElement('li');
+        li.textContent = `${playerNames[i]}: ${scores[i]} win${scores[i] !== 1 ? 's' : ''}`;
+        list.appendChild(li);
+      }
+      board.style.display = 'block';
+    }
+
+    function startRematch() {
+      gameOver = false;
+      currentQuestion = 0;
+      positions = Array(playerCount).fill(0);
+      for (let i = 0; i < playerCount; i++) {
+        const car = document.getElementById(`car${i}`);
+        if (car) car.style.left = '0px';
+      }
+      document.getElementById('rematchBtn').style.display = 'none';
+      playOnBtn.style.display = 'none';
+      userInput.disabled = false;
+      submitBtn.disabled = false;
+      currentPlayer = Math.floor(Math.random() * playerCount);
+      showQuestion();
+    }
+
+    function triggerConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let confetti = [];
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 50 + 50,
+          color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+          tilt: Math.random() * 20 - 10
+        });
+      }
+      let angle = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        angle += 0.01;
+        for (let i = 0; i < confetti.length; i++) {
+          const c = confetti[i];
+          c.y += Math.cos(angle + c.d) + 1 + c.r / 2;
+          c.x += Math.sin(angle) * 2;
+          ctx.beginPath();
+          ctx.fillStyle = c.color;
+          ctx.fillRect(c.x + c.tilt, c.y, c.r, c.r);
+        }
+      }
+      function update() {
+        draw();
+        requestAnimationFrame(update);
+      }
+      update();
+      setTimeout(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }, 5000);
+    }
+
+    window.onload = generateNameInputs;
+  </script>
+</body>
+</html>
