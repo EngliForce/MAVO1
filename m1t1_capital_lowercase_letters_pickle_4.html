@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cap It or Leave It?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      color: #ff7043;
+    }
+
+    .sentence-display {
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      padding: 10px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      background-color: #ff7043;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0.5rem;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #ffe6dc;
+      height: 20px;
+      border-radius: 10px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #ff7043;
+      transition: width 0.3s ease-in-out;
+    }
+
+    #feedback {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #d84315;
+    }
+
+    .score {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+    }
+
+    footer {
+      width: 100vw;
+      background-color: #ffe6dc;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .logo {
+      max-width: 120px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="Logo.png" alt="Logo" class="logo">
+
+  <h2>🔤 Correct the mistakes.</h2>
+  <p>Fix the capitalization in each sentence. Type the correct version below.</p>
+
+  <div class="progress-container">
+    <div id="progressBar" class="progress-bar"></div>
+  </div>
+
+  <div id="progressText"></div>
+
+  <div id="quizArea">
+    <div class="sentence-display" id="sentenceDisplay"></div>
+    <input type="text" id="userInput" placeholder="Type the corrected sentence here" autocomplete="off">
+    <div>
+      <button class="btn" id="checkBtn" onclick="checkAnswer()">✔️ Check</button>
+      <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none;">➡️ Next</button>
+    </div>
+    <div id="feedback"></div>
+  </div>
+
+  <div id="finalScore" class="score" style="display:none;"></div>
+  <button class="btn" onclick="startQuiz()" id="restartBtn" style="display:none;">🔄 Try Again</button>
+
+  <footer>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const sentenceBank = [
+      { text: "i went to london last summer.", correct: "I went to London last summer." },
+      { text: "my birthday is in october.", correct: "My birthday is in October." },
+      { text: "we celebrate christmas day together.", correct: "We celebrate Christmas Day together." },
+      { text: "he moved to france in april.", correct: "He moved to France in April." },
+      { text: "they visited the eiffel tower.", correct: "They visited the Eiffel Tower." },
+      { text: "we went skiing in the alps.", correct: "We went skiing in the Alps." },
+      { text: "my sister works in oxford.", correct: "My sister works in Oxford." },
+      { text: "i love watching movies on netflix.", correct: "I love watching movies on Netflix." },
+      { text: "we read harry potter in class.", correct: "We read Harry Potter in class." },
+      { text: "our teacher is mr. sebel.", correct: "Our teacher is Mr. Sebel." },
+      { text: "july is often the hottest month.", correct: "July is often the hottest month." },
+      { text: "she is from spain.", correct: "She is from Spain." },
+      { text: "we had fun on easter monday.", correct: "We had fun on Easter Monday." },
+      { text: "they saw the queen at buckingham palace.", correct: "They saw the Queen at Buckingham Palace." },
+      { text: "i enjoy reading books by roald dahl.", correct: "I enjoy reading books by Roald Dahl." },
+      { text: "he lives on baker street.", correct: "He lives on Baker Street." },
+      { text: "they traveled through africa.", correct: "They traveled through Africa." },
+      { text: "we had pancakes on shrove tuesday.", correct: "We had pancakes on Shrove Tuesday." },
+      { text: "our class visited the british museum.", correct: "Our class visited the British Museum." },
+      { text: "she danced in the chinese new year parade.", correct: "She danced in the Chinese New Year parade." },
+      { text: "i wrote a letter to santa claus.", correct: "I wrote a letter to Santa Claus." },
+      { text: "they drove to scotland in september.", correct: "They drove to Scotland in September." },
+      { text: "i saw the loch ness monster!", correct: "I saw the Loch Ness Monster!" },
+      { text: "we saw fireworks on bonfire night.", correct: "We saw fireworks on Bonfire Night." },
+      { text: "my cousin lives in belfast.", correct: "My cousin lives in Belfast." },
+      { text: "we celebrate st george's day in april.", correct: "We celebrate St George's Day in April." },
+      { text: "i bought a ticket to see shakespeare’s play.", correct: "I bought a ticket to see Shakespeare’s play." },
+      { text: "we ate turkey on thanksgiving day.", correct: "We ate turkey on Thanksgiving Day." },
+      { text: "my dad was born on new year's day.", correct: "My dad was born on New Year's Day." },
+      { text: "they study english every friday.", correct: "They study English every Friday." },
+      { text: "yesterday i went shopping.", correct: "Yesterday I went shopping." },
+      { text: "she gave it to michael.", correct: "She gave it to Michael." },
+      { text: "next year we go to france.", correct: "Next year we go to France." },
+      { text: "he said that i was right.", correct: "He said that I was right." },
+      { text: "emma and i are friends.", correct: "Emma and I are friends." },
+      { text: "i always eat cereal for breakfast.", correct: "I always eat cereal for breakfast." },
+      { text: "after dinner i watched tv.", correct: "After dinner I watched TV." },
+      { text: "can i come with you?", correct: "Can I come with you?" },
+      { text: "do you know if i can help?", correct: "Do you know if I can help?" },
+      { text: "we travelled to rome.", correct: "We travelled to Rome." },
+      { text: "marco and i play chess.", correct: "Marco and I play chess." },
+      { text: "i have a friend from canada.", correct: "I have a friend from Canada." },
+      { text: "at night i read a book.", correct: "At night I read a book." },
+      { text: "do you like english?", correct: "Do you like English?" },
+      { text: "this is my friend tom.", correct: "This is my friend Tom." },
+      { text: "i saw santa claus.", correct: "I saw Santa Claus." },
+      { text: "we play football on monday.", correct: "We play football on Monday." },
+      { text: "my cousin lives in dublin.", correct: "My cousin lives in Dublin." },
+      { text: "on christmas day we eat turkey.", correct: "On Christmas Day we eat turkey." },
+      { text: "i go to onc parkdreef.", correct: "I go to ONC Parkdreef." }
+    ];
+
+    let quizData = [];
+    let currentIndex = 0;
+    let score = 0;
+
+    function normalize(str) {
+      return str.replace(/\s+/g, ' ').trim();
+    }
+
+    function startQuiz() {
+      quizData = sentenceBank.sort(() => 0.5 - Math.random()).slice(0, 10);
+      currentIndex = 0;
+      score = 0;
+      document.getElementById('finalScore').style.display = 'none';
+      document.getElementById('restartBtn').style.display = 'none';
+      document.getElementById('quizArea').style.display = 'block';
+      document.getElementById('userInput').disabled = false;
+      document.getElementById('checkBtn').disabled = false;
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('userInput').value = '';
+      document.getElementById('feedback').textContent = '';
+      updateProgressBar();
+      showSentence();
+    }
+
+    function updateProgressBar() {
+      const percent = (currentIndex / quizData.length) * 100;
+      document.getElementById('progressBar').style.width = percent + "%";
+      document.getElementById('progressText').textContent = `Sentence ${currentIndex + 1} of ${quizData.length}`;
+    }
+
+    function showSentence() {
+      const item = quizData[currentIndex];
+      document.getElementById('sentenceDisplay').textContent = `Fix this sentence: "${item.text}"`;
+      document.getElementById('userInput').value = '';
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('userInput').disabled = false;
+      document.getElementById('checkBtn').disabled = false;
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+
+    function checkAnswer() {
+      const userInput = normalize(document.getElementById('userInput').value);
+      const correctAnswer = normalize(quizData[currentIndex].correct);
+
+      if (userInput === correctAnswer) {
+        document.getElementById('feedback').textContent = "✅ Great job! That’s correct.";
+        document.getElementById('feedback').style.color = "green";
+        score++;
+      } else {
+        document.getElementById('feedback').textContent = `❌ Not quite. The correct sentence is: "${quizData[currentIndex].correct}"`;
+        document.getElementById('feedback').style.color = "red";
+      }
+
+      document.getElementById('userInput').disabled = true;
+      document.getElementById('checkBtn').disabled = true;
+      document.getElementById('nextBtn').style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < quizData.length) {
+        updateProgressBar();
+        showSentence();
+      } else {
+        endQuiz();
+      }
+    }
+
+    function endQuiz() {
+      document.getElementById('quizArea').style.display = 'none';
+      document.getElementById('finalScore').style.display = 'block';
+      document.getElementById('restartBtn').style.display = 'inline-block';
+      document.getElementById('finalScore').innerHTML = `🎉 You scored ${score} out of ${quizData.length}!`;
+      updateProgressBar();
+    }
+
+    document.addEventListener("DOMContentLoaded", startQuiz);
+  </script>
+
+</body>
+</html>
