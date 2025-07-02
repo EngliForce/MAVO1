@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Hoofdletter Quiz – Engels</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #ff7043;
+    }
+    .quiz-container {
+      margin-top: 2rem;
+    }
+    .question {
+      font-size: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .button-group button {
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .capital {
+      background-color: #4caf50;
+      color: white;
+    }
+    .nocapital {
+      background-color: #f44336;
+      color: white;
+    }
+    .score {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+    }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 1rem;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+    .new-quiz-btn {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-top: 2rem;
+    }
+    .wrong-list {
+      text-align: left;
+      max-width: 500px;
+      margin: 2rem auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .wrong-list h3 {
+      color: #ff7043;
+    }
+    .wrong-list ul {
+      padding-left: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- GELUIDEN -->
+  <audio id="correctSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_49e361cf6c.mp3" preload="auto"></audio>
+  <audio id="wrongSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_40598c74f6.mp3" preload="auto"></audio>
+
+  <div>
+    <img src="Logo.png" alt="Logo" class="logo">
+  </div>
+
+  <h1>🔤 Hoofdletter of niet?</h1>
+  <p>Kies of het Engelse woord/de zin met een hoofdletter geschreven wordt.</p>
+
+  <div class="quiz-container">
+    <div class="question" id="questionText"></div>
+    <div class="button-group">
+      <button class="capital" onclick="answer(true)">Hoofdletter</button>
+      <button class="nocapital" onclick="answer(false)">Geen hoofdletter</button>
+    </div>
+    <div class="score" id="scoreDisplay"></div>
+    <div class="wrong-list" id="wrongAnswersContainer" style="display: none;">
+      <h3>Foutenlijst 📋</h3>
+      <ul id="wrongList"></ul>
+    </div>
+    <button class="new-quiz-btn" onclick="startQuiz()">🔄 Nieuwe Quiz</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+   const allQuestions = [
+      { text: "aeroplane", answer: false },
+      { text: "amsterdam", answer: true },
+      { text: "apple computers", answer: true },
+      { text: "april", answer: true },
+      { text: "august", answer: true },
+      { text: "banana", answer: false },
+      { text: "book", answer: false },
+      { text: "bicycle", answer: false },
+      { text: "canada", answer: true },
+      { text: "car", answer: false },
+      { text: "cat", answer: false },
+      { text: "christmas", answer: true },
+      { text: "coffee", answer: false },
+      { text: "december", answer: true },
+      { text: "dracula", answer: true },
+      { text: "dutch", answer: true },
+      { text: "easter", answer: true },
+      { text: "emma", answer: true },
+      { text: "england", answer: true },
+      { text: "english", answer: true },
+      { text: "february", answer: true },
+      { text: "friday", answer: true },
+      { text: "good friday", answer: true },
+      { text: "great britain", answer: true },
+      { text: "happy", answer: false },
+      { text: "harry potter", answer: true },
+      { text: "he", answer: false },
+      { text: "begin van de zin", answer: true },
+      { text: "I (ik)", answer: true },
+      { text: "imagine (song)", answer: true },
+      { text: "instagram", answer: true },
+      { text: "internet", answer: false },
+      { text: "it", answer: false },
+      { text: "james", answer: true },
+      { text: "january", answer: true },
+      { text: "july", answer: true },
+      { text: "june", answer: true },
+      { text: "london", answer: true },
+      { text: "manchester united", answer: true },
+      { text: "march", answer: true },
+      { text: "marco", answer: true },
+      { text: "may", answer: true },
+      { text: "me", answer: false },
+      { text: "monday", answer: true },
+      { text: "mr. sebel", answer: true },
+      { text: "music", answer: false },
+      { text: "new year’s day", answer: true },
+      { text: "nike", answer: true },
+      { text: "northern ireland", answer: true },
+      { text: "november", answer: true },
+      { text: "october", answer: true },
+      { text: "onc parkdreef", answer: true },
+      { text: "paris", answer: true },
+      { text: "president", answer: false },
+      { text: "saint patrick’s day", answer: true },
+      { text: "samsung", answer: true },
+      { text: "scotland", answer: true },
+      { text: "snapchat", answer: true },
+      { text: "saturday", answer: true },
+      { text: "school", answer: false },
+      { text: "september", answer: true },
+      { text: "spain", answer: true },
+      { text: "star wars", answer: true },
+      { text: "sunday", answer: true },
+      { text: "table", answer: false },
+      { text: "teacher", answer: false },
+      { text: "the netherlands", answer: true },
+      { text: "the sun", answer: false },
+      { text: "they", answer: false },
+      { text: "thursday", answer: true },
+      { text: "tiktok", answer: true },
+      { text: "tuesday", answer: true },
+      { text: "usa", answer: true },
+      { text: "valentine's day", answer: true },
+      { text: "wales", answer: true },
+      { text: "wednesday", answer: true },
+      { text: "whatsapp", answer: true },
+      { text: "wwf", answer: true },
+      { text: "you", answer: false },
+      { text: "zoetermeer", answer: true },
+    ];
+
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let wrongAnswers = [];
+
+    function startQuiz() {
+      currentQuestions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 10);
+      currentIndex = 0;
+      score = 0;
+      wrongAnswers = [];
+
+      document.getElementById('scoreDisplay').textContent = "";
+      document.getElementById('wrongAnswersContainer').style.display = "none";
+      document.getElementById('wrongList').innerHTML = "";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (currentIndex < currentQuestions.length) {
+        document.getElementById('questionText').textContent = `📌 ${currentQuestions[currentIndex].text}`;
+      } else {
+        document.getElementById('questionText').textContent = "✅ You are done!";
+        document.getElementById('scoreDisplay').textContent = `Your score: ${score} out of 10.`;
+        showWrongAnswers();
+      }
+    }
+
+    function showWrongAnswers() {
+      if (wrongAnswers.length > 0) {
+        const list = document.getElementById('wrongList');
+        wrongAnswers.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = `${item.text} ➜ ${item.answer ? "Hoofdletter" : "Geen hoofdletter"}`;
+          list.appendChild(li);
+        });
+        document.getElementById('wrongAnswersContainer').style.display = "block";
+      }
+    }
+
+    function answer(choice) {
+      const correctSound = document.getElementById("correctSound");
+      const wrongSound = document.getElementById("wrongSound");
+
+      if (currentIndex < currentQuestions.length) {
+        const current = currentQuestions[currentIndex];
+        if (choice === current.answer) {
+          score++;
+          correctSound.play();
+        } else {
+          wrongAnswers.push(current);
+          wrongSound.play();
+        }
+        currentIndex++;
+        setTimeout(showQuestion, 300);
+      }
+    }
+
+    window.onload = startQuiz;
+  </script>
+
+</body>
+</html>
