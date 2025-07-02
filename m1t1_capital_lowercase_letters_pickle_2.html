@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,12 +10,15 @@
       padding: 2rem;
       text-align: center;
     }
+
     h2 {
       color: #ff7043;
     }
+
     .sentence {
       margin: 1.5rem 0;
     }
+
     .word {
       cursor: pointer;
       padding: 5px;
@@ -25,19 +27,24 @@
       border-bottom: 1px dashed #ccc;
       transition: background 0.3s;
     }
+
     .selected {
       background-color: lightblue;
     }
+
     .correct {
       background-color: lightgreen;
     }
+
     .incorrect {
       background-color: #f08080;
     }
+
     .score {
       font-size: 1.2rem;
       margin-top: 2rem;
     }
+
     .btn {
       background-color: #ff7043;
       color: white;
@@ -48,12 +55,30 @@
       cursor: pointer;
       margin: 1rem;
     }
+
+    .progress-container {
+      width: 100%;
+      background-color: #ffe6dc;
+      height: 20px;
+      border-radius: 10px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #ff7043;
+      transition: width 0.3s ease-in-out;
+    }
+
     footer {
       margin-top: 3rem;
       font-size: 0.9rem;
       background-color: #ffe6dc;
       padding: 1rem;
     }
+
     .logo {
       max-width: 120px;
       margin-bottom: 1rem;
@@ -67,6 +92,11 @@
   <h2>🔤 Cap It or Leave It?</h2>
   <p>Click on the words that should be capitalized in each sentence.</p>
 
+  <div class="progress-container">
+    <div id="progressBar" class="progress-bar"></div>
+  </div>
+
+  <div id="progress"></div>
   <div id="quiz"></div>
   <div class="score" id="scoreDisplay"></div>
   <button class="btn" id="checkBtn" onclick="checkAnswers()">✔️ Check</button>
@@ -79,57 +109,57 @@
 
   <script>
     const sentenceBank = [
-      { text: "i love spending time with my family on christmas day.", capitalize: ["i", "christmas", "day"] },
-      { text: "emma and i play chess every monday.", capitalize: ["emma", "i", "monday"] },
-      { text: "we visited the eiffel tower during our trip.", capitalize: ["eiffel", "tower"] },
-      { text: "my friend lives in new york.", capitalize: ["new", "york"] },
-      { text: "is halloween your favorite holiday?", capitalize: ["halloween"] },
-      { text: "he studies english every friday.", capitalize: ["english", "friday"] },
-      { text: "i can't believe it's already december.", capitalize: ["i", "december"] },
-      { text: "she doesn't enjoy reading harry potter.", capitalize: ["harry", "potter"] },
+      { text: "i went to london last summer.", capitalize: ["i", "london"] },
       { text: "my birthday is in october.", capitalize: ["october"] },
-      { text: "does she live in london?", capitalize: ["london"] },
-      { text: "after dinner i watched tv.", capitalize: ["i"] },
-      { text: "next year we go to france.", capitalize: ["france"] },
-      { text: "can i come with you?", capitalize: ["i"] },
-      { text: "i saw santa claus.", capitalize: ["i", "santa", "claus"] },
-      { text: "on christmas day we eat turkey.", capitalize: ["christmas", "day"] },
-      { text: "marco and i play chess.", capitalize: ["marco", "i"] },
-      { text: "we play football on monday.", capitalize: ["monday"] },
-      { text: "the queen lives in buckingham palace.", capitalize: ["queen", "buckingham", "palace"] },
-      { text: "why is english difficult for some students?", capitalize: ["english"] },
-      { text: "is paris the capital of france?", capitalize: ["paris", "france"] },
-      { text: "he doesn't celebrate halloween.", capitalize: ["halloween"] },
-      { text: "my cousin lives in dublin.", capitalize: ["dublin"] },
-      { text: "do you like english?", capitalize: ["english"] },
-      { text: "why do we study math on monday?", capitalize: ["monday"] },
-      { text: "she doesn't like watching harry potter movies.", capitalize: ["harry", "potter"] },
+      { text: "we celebrate christmas day together.", capitalize: ["christmas", "day"] },
+      { text: "he moved to france in april.", capitalize: ["france", "april"] },
+      { text: "they visited the eiffel tower.", capitalize: ["eiffel", "tower"] },
       { text: "we went skiing in the alps.", capitalize: ["alps"] },
-      { text: "i wrote a letter to santa claus.", capitalize: ["i", "santa", "claus"] },
-      { text: "we celebrate new year's day together.", capitalize: ["new", "year's", "day"] },
-      { text: "they saw the queen at buckingham palace.", capitalize: ["queen", "buckingham", "palace"] },
-      { text: "was your last holiday in spain?", capitalize: ["spain"] },
-      { text: "emma and jack play video games.", capitalize: ["emma", "jack"] },
-      { text: "we watched star wars together.", capitalize: ["star", "wars"] },
-      { text: "mr. smith is our teacher.", capitalize: ["mr.", "smith"] },
-      { text: "she danced in the chinese new year parade.", capitalize: ["chinese", "new", "year"] },
-      { text: "they studied history on monday.", capitalize: ["monday"] },
-      { text: "he visited the national gallery.", capitalize: ["national", "gallery"] },
-      { text: "is st george's day a holiday in england?", capitalize: ["st", "george's", "day", "england"] },
-      { text: "don't forget your homework for mr. brown.", capitalize: ["mr.", "brown"] },
-      { text: "didn't you see i was busy?", capitalize: ["i"] },
-      { text: "do you celebrate valentine's day?", capitalize: ["valentine's", "day"] },
-      { text: "they study english every friday.", capitalize: ["english", "friday"] },
-      { text: "what did emma and jack bring to school?", capitalize: ["emma", "jack"] },
-      { text: "they met santa claus last year.", capitalize: ["santa", "claus"] },
-      { text: "i have a friend from canada.", capitalize: ["i", "canada"] },
-      { text: "we went on a trip to scotland.", capitalize: ["scotland"] },
-      { text: "is halloween your favorite holiday?", capitalize: ["halloween"] },
-      { text: "at night i read a book.", capitalize: ["i"] },
+      { text: "my sister works in oxford.", capitalize: ["oxford"] },
+      { text: "i love watching movies on netflix.", capitalize: ["i", "netflix"] },
+      { text: "we read harry potter in class.", capitalize: ["harry", "potter"] },
+      { text: "our teacher is mr. sebel.", capitalize: ["mr.", "sebel"] },
+      { text: "july is often the hottest month.", capitalize: ["july"] },
       { text: "she is from spain.", capitalize: ["spain"] },
-      { text: "is saturday a good day for a picnic?", capitalize: ["saturday"] },
-      { text: "wasn't she born in april?", capitalize: ["april"] },
-      { text: "are we going to manchester this weekend?", capitalize: ["manchester"] }
+      { text: "we had fun on easter monday.", capitalize: ["easter", "monday"] },
+      { text: "they saw the queen at buckingham palace.", capitalize: ["queen", "buckingham", "palace"] },
+      { text: "i enjoy reading books by roald dahl.", capitalize: ["i", "roald", "dahl"] },
+      { text: "he lives on baker street.", capitalize: ["baker", "street"] },
+      { text: "they traveled through africa.", capitalize: ["africa"] },
+      { text: "we had pancakes on shrove tuesday.", capitalize: ["shrove", "tuesday"] },
+      { text: "our class visited the british museum.", capitalize: ["british", "museum"] },
+      { text: "she danced in the chinese new year parade.", capitalize: ["chinese", "new", "year"] },
+      { text: "i wrote a letter to santa claus.", capitalize: ["i", "santa", "claus"] },
+      { text: "they drove to scotland in september.", capitalize: ["scotland", "september"] },
+      { text: "i saw the loch ness monster!", capitalize: ["i", "loch", "ness", "monster"] },
+      { text: "we saw fireworks on bonfire night.", capitalize: ["bonfire", "night"] },
+      { text: "my cousin lives in belfast.", capitalize: ["belfast"] },
+      { text: "we celebrate st george's day in april.", capitalize: ["st", "george's", "day", "april"] },
+      { text: "i bought a ticket to see shakespeare’s play.", capitalize: ["i", "shakespeare’s"] },
+      { text: "we ate turkey on thanksgiving day.", capitalize: ["thanksgiving", "day"] },
+      { text: "my dad was born on new year's day.", capitalize: ["new", "year's", "day"] },
+      { text: "they study english every friday.", capitalize: ["english", "friday"] },
+      { text: "yesterday i went shopping.", capitalize: ["i"] },
+      { text: "she gave it to michael.", capitalize: ["michael"] },
+      { text: "next year we go to france.", capitalize: ["france"] },
+      { text: "he said that i was right.", capitalize: ["i"] },
+      { text: "emma and i are friends.", capitalize: ["emma", "i"] },
+      { text: "i always eat cereal for breakfast.", capitalize: ["i"] },
+      { text: "after dinner i watched tv.", capitalize: ["i"] },
+      { text: "can i come with you?", capitalize: ["i"] },
+      { text: "do you know if i can help?", capitalize: ["i"] },
+      { text: "we travelled to rome.", capitalize: ["rome"] },
+      { text: "marco and i play chess.", capitalize: ["marco", "i"] },
+      { text: "i have a friend from canada.", capitalize: ["i", "canada"] },
+      { text: "at night i read a book.", capitalize: ["i"] },
+      { text: "do you like english?", capitalize: ["english"] },
+      { text: "this is my friend tom.", capitalize: ["tom"] },
+      { text: "i saw santa claus.", capitalize: ["i", "santa", "claus"] },
+      { text: "we play football on monday.", capitalize: ["monday"] },
+      { text: "my cousin lives in dublin.", capitalize: ["dublin"] },
+      { text: "on christmas day we eat turkey.", capitalize: ["christmas", "day"] },
+      { text: "i go to onc parkdreef.", capitalize: ["i", "onc", "parkdreef"] },
+      { text: "they visited the eiffel tower.", capitalize: ["eiffel", "tower"] }
     ];
 
     let currentRound = [];
@@ -138,17 +168,25 @@
     let clickedWords = new Set();
     let totalCorrectOverall = 0;
     let totalExpectedOverall = 0;
+    let finalMistakes = [];
+
+    function updateProgressBar() {
+      const progress = ((currentIndex) / currentRound.length) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+    }
 
     function startQuiz() {
       currentRound = sentenceBank.sort(() => 0.5 - Math.random()).slice(0, 10);
       currentIndex = 0;
       totalCorrectOverall = 0;
       totalExpectedOverall = 0;
+      finalMistakes = [];
       document.getElementById('scoreDisplay').textContent = '';
       showSentence();
     }
 
     function showSentence() {
+      document.getElementById('progress').textContent = `Sentence ${currentIndex + 1} of ${currentRound.length}`;
       const quiz = document.getElementById('quiz');
       quiz.innerHTML = '';
       wordSpans = [];
@@ -160,12 +198,10 @@
       const sentenceDiv = document.createElement("div");
       sentenceDiv.classList.add("sentence");
 
-      item.text.split(" ").forEach((word, idx) => {
-        const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
-        if (idx === 0 && !item.capitalize.includes(cleanWord)) {
-          item.capitalize.push(cleanWord);
-        }
+      const words = item.text.split(" ");
 
+      words.forEach((word, idx) => {
+        const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
         const span = document.createElement("span");
         span.textContent = word;
         span.classList.add("word");
@@ -180,55 +216,62 @@
           }
         });
 
-        wordSpans.push({ span, word: cleanWord });
+        wordSpans.push({ span, word: cleanWord, index: idx });
         sentenceDiv.appendChild(span);
         sentenceDiv.append(" ");
       });
 
       quiz.appendChild(sentenceDiv);
+      updateProgressBar();
     }
 
     function checkAnswers() {
-  let totalCorrect = 0;
-  let totalExpected = 0;
-  const item = currentRound[currentIndex];
-  let mistakes = [];
+      let totalCorrect = 0;
+      let totalExpected = 0;
+      const item = currentRound[currentIndex];
+      let mistakes = [];
 
-  wordSpans.forEach(({ span, word }, idx) => {
-    const isCorrect = item.capitalize.includes(word);
-    const isSelected = span.classList.contains("selected");
+      const capitalizedSet = new Set(item.capitalize.map(w => w.toLowerCase()));
+      const firstWord = wordSpans[0]?.word;
+      capitalizedSet.add(firstWord); // Eerste woord altijd
 
-    if (isCorrect) totalExpected++;
-    if (isCorrect && isSelected) {
-      span.classList.add("correct");
-      totalCorrect++;
-    } else if (!isCorrect && isSelected) {
-      span.classList.add("incorrect");
-      mistakes.push(`'${span.textContent}' should not be capitalized.`);
-    } else if (isCorrect && !isSelected) {
-      span.classList.add("incorrect");
-      mistakes.push(`You missed '${span.textContent}', which should be capitalized.`);
+      wordSpans.forEach(({ span, word }) => {
+        const isCorrect = capitalizedSet.has(word);
+        const isSelected = span.classList.contains("selected");
+
+        if (isCorrect) totalExpected++;
+        if (isCorrect && isSelected) {
+          span.classList.add("correct");
+          totalCorrect++;
+        } else if (!isCorrect && isSelected) {
+          span.classList.add("incorrect");
+          mistakes.push(`'${span.textContent}' should not be capitalized.`);
+        } else if (isCorrect && !isSelected) {
+          span.classList.add("incorrect");
+          mistakes.push(`You missed '${span.textContent}', which should be capitalized (ik, begin van de zin, namen, merken, landen, nationaliteiten, steden, bedrijven, etc.`);
+        }
+
+        span.classList.remove("selected");
+      });
+
+      totalCorrectOverall += totalCorrect;
+      totalExpectedOverall += totalExpected;
+      finalMistakes.push(...mistakes);
+
+      const feedback = document.createElement("div");
+      feedback.style.marginTop = "1rem";
+      feedback.style.fontSize = "1rem";
+      feedback.style.color = "#d84315";
+      if (mistakes.length === 0) {
+        feedback.textContent = "✅ Perfect! All correct.";
+      } else {
+        feedback.innerHTML = "❌ Mistakes:<br><ul>" + mistakes.map(m => `<li>${m}</li>`).join('') + "</ul>";
+      }
+
+      document.getElementById("quiz").appendChild(feedback);
+      document.getElementById('checkBtn').style.display = 'none';
+      document.getElementById('nextBtn').style.display = 'inline-block';
     }
-    span.classList.remove("selected");
-  });
-
-  totalCorrectOverall += totalCorrect;
-  totalExpectedOverall += totalExpected;
-
-  const feedback = document.createElement("div");
-  feedback.style.marginTop = "1rem";
-  feedback.style.fontSize = "1rem";
-  feedback.style.color = "#d84315";
-  if (mistakes.length === 0) {
-    feedback.textContent = "✅ Perfect! All correct.";
-  } else {
-    feedback.innerHTML = "❌ Mistakes:<br><ul>" + mistakes.map(m => `<li>${m}</li>`).join('') + "</ul>";
-  }
-  document.getElementById("quiz").appendChild(feedback);
-
-  document.getElementById('checkBtn').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'inline-block';
-}
 
     function nextSentence() {
       currentIndex++;
@@ -238,12 +281,34 @@
         document.getElementById('quiz').innerHTML = '';
         document.getElementById('checkBtn').style.display = 'none';
         document.getElementById('nextBtn').style.display = 'none';
-        document.getElementById('scoreDisplay').textContent =
-          `You correctly identified ${totalCorrectOverall} out of ${totalExpectedOverall} capitalized words!`;
+
+        const result = document.createElement('div');
+        result.className = 'score';
+        result.innerHTML = `<p>You correctly identified ${totalCorrectOverall} out of ${totalExpectedOverall} capitalized words!</p>`;
+
+        if (finalMistakes.length > 0) {
+          const mistakeList = document.createElement('ul');
+          finalMistakes.forEach(m => {
+            const li = document.createElement('li');
+            li.textContent = m;
+            mistakeList.appendChild(li);
+          });
+          const mistakeSection = document.createElement('div');
+          mistakeSection.innerHTML = '<strong>Summary of Mistakes:</strong>';
+          mistakeSection.appendChild(mistakeList);
+          result.appendChild(mistakeSection);
+        } else {
+          result.innerHTML += '<p>🎉 Well done! No mistakes!</p>';
+        }
+
+        document.getElementById('quiz').appendChild(result);
+        updateProgressBar();
       }
     }
 
-    window.onload = startQuiz;
+    document.addEventListener("DOMContentLoaded", () => {
+      startQuiz();
+    });
   </script>
 </body>
 </html>
