@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>DRag and drop – Capital or not?</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      color: #ff7043;
+    }
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .box {
+      width: 40%;
+      min-height: 200px;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 1rem;
+      background-color: #fff;
+    }
+    .box h3 {
+      color: #ff7043;
+    }
+    .word {
+      display: inline-block;
+      background-color: #ffe6dc;
+      color: #333;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      cursor: grab;
+    }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      margin: 1rem;
+      cursor: pointer;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+    #result {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+    }
+    #mistakes {
+      color: #d84315;
+      font-size: 1rem;
+      margin-top: 1rem;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+  <img src="Logo.png" alt="Logo" class="logo">
+  <h1>🔠 Sleep de Woorden</h1>
+  <p>Sleep de woorden naar de juiste categorie: Hoofdletter of geen hoofdletter.</p>
+
+  <div id="wordBank"></div>
+
+  <div class="container">
+    <div class="box" id="capitalBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>Hoofdletter</h3>
+    </div>
+    <div class="box" id="lowercaseBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>Geen hoofdletter</h3>
+    </div>
+  </div>
+
+  <button class="btn" onclick="checkAnswers()">✔️ Controleer Antwoorden</button>
+  <button class="btn" onclick="resetGame()">🔁 Probeer Opnieuw</button>
+  <div id="result"></div>
+  <div id="mistakes"></div>
+
+  <footer>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const allWords = [
+      { text: "banana", capital: false },
+      { text: "table", capital: false },
+      { text: "london", capital: true },
+      { text: "apple (fruit)", capital: true },
+      { text: "apple (company)", capital: true },
+      { text: "monday", capital: true },
+      { text: "chair", capital: false },
+      { text: "chocolate", capital: false },
+      { text: "christmas", capital: true },
+      { text: "netflix", capital: true },
+      { text: "january", capital: true },
+      { text: "dog", capital: false },
+      { text: "eiffel tower", capital: true },
+      { text: "doctor", capital: false },
+      { text: "tuesday", capital: true },
+      { text: "football", capital: false },
+      { text: "samsung", capital: true },
+      { text: "canada", capital: true },
+      { text: "camera", capital: false },
+      { text: "internet", capital: false },
+      { text: "roald dahl", capital: true },
+      { text: "window", capital: false },
+      { text: "emma", capital: true },
+      { text: "school", capital: false },
+      { text: "facebook", capital: true },
+      { text: "giraffe", capital: false },
+      { text: "easter", capital: true },
+      { text: "pizza", capital: false },
+      { text: "youtube", capital: true },
+      { text: "microsoft", capital: true },
+      { text: "beach", capital: false },
+      { text: "tokyo", capital: true },
+      { text: "teacher", capital: false },
+      { text: "new year’s day", capital: true },
+      { text: "car", capital: false },
+      { text: "wednesday", capital: true },
+      { text: "pen", capital: false },
+      { text: "amazon", capital: true },
+      { text: "river", capital: false },
+      { text: "halloween", capital: true },
+      { text: "madrid", capital: true },
+      { text: "footballer", capital: false },
+      { text: "nike", capital: true },
+      { text: "phone", capital: false },
+      { text: "france", capital: true },
+      { text: "cloud", capital: false },
+      { text: "snapchat", capital: true },
+      { text: "bottle", capital: false },
+      { text: "google", capital: true },
+      { text: "lamp", capital: false },
+      { text: "england", capital: true },
+      { text: "book", capital: false }
+    ];
+
+    let selectedWords = [];
+
+    function loadWords() {
+      const bank = document.getElementById("wordBank");
+      bank.innerHTML = "";
+      selectedWords = allWords.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+      selectedWords.forEach((word, index) => {
+        const span = document.createElement("span");
+        span.textContent = word.text;
+        span.className = "word";
+        span.draggable = true;
+        span.id = "word-" + index;
+        span.dataset.capital = word.capital;
+        span.ondragstart = drag;
+        bank.appendChild(span);
+      });
+
+      document.getElementById("result").textContent = "";
+      document.getElementById("mistakes").innerHTML = "";
+      document.getElementById("capitalBox").innerHTML = "<h3>Hoofdletter</h3>";
+      document.getElementById("lowercaseBox").innerHTML = "<h3>Geen hoofdletter</h3>";
+    }
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      const word = document.getElementById(data);
+      ev.target.appendChild(word);
+    }
+
+    function checkAnswers() {
+      let correct = 0;
+      let total = selectedWords.length;
+      let mistakes = [];
+
+      selectedWords.forEach((word, index) => {
+        const wordElem = document.getElementById("word-" + index);
+        const parent = wordElem.parentElement.id;
+        const isCapital = word.capital;
+
+        if ((isCapital && parent === "capitalBox") || (!isCapital && parent === "lowercaseBox")) {
+          correct++;
+        } else {
+          mistakes.push(`\u274C '${word.text}' hoort bij "${isCapital ? 'Hoofdletter' : 'Geen hoofdletter'}".`);
+        }
+      });
+
+      document.getElementById("result").textContent = `Je score: ${correct} van de ${total}`;
+
+      if (mistakes.length > 0) {
+        const mistakeList = document.createElement("ul");
+        mistakes.forEach(msg => {
+          const li = document.createElement("li");
+          li.textContent = msg;
+          mistakeList.appendChild(li);
+        });
+        document.getElementById("mistakes").innerHTML = "<strong>Fouten:</strong>";
+        document.getElementById("mistakes").appendChild(mistakeList);
+      }
+    }
+
+    function resetGame() {
+      loadWords();
+    }
+
+    window.onload = loadWords;
+  </script>
+</body>
+</html>
