@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cap It or Leave It?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      text-align: center;
+    }
+    h2 {
+      color: #ff7043;
+    }
+    .sentence {
+      margin: 1.5rem 0;
+    }
+    .word {
+      cursor: pointer;
+      padding: 5px;
+      margin: 2px;
+      display: inline-block;
+      border-bottom: 1px dashed #ccc;
+      transition: background 0.3s;
+    }
+    .selected {
+      background-color: lightblue;
+    }
+    .correct {
+      background-color: lightgreen;
+    }
+    .incorrect {
+      background-color: #f08080;
+    }
+    .score {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+    }
+    .btn {
+      background-color: #ff7043;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 1rem;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      background-color: #ffe6dc;
+      padding: 1rem;
+    }
+    .logo {
+      max-width: 120px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="Logo.png" alt="Logo" class="logo">
+
+  <h2>🔤 Cap It or Leave It?</h2>
+  <p>Click on the words that should be capitalized in each sentence.</p>
+
+  <div id="quiz"></div>
+  <div class="score" id="scoreDisplay"></div>
+  <button class="btn" id="checkBtn" onclick="checkAnswers()">✔️ Check</button>
+  <button class="btn" id="nextBtn" onclick="nextSentence()" style="display: none;">➡️ Next</button>
+  <button class="btn" onclick="startQuiz()">🔄 Play Again</button>
+
+  <footer>
+    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const sentenceBank = [
+      { text: "i love spending time with my family on christmas day.", capitalize: ["i", "christmas", "day"] },
+      { text: "emma and i play chess every monday.", capitalize: ["emma", "i", "monday"] },
+      { text: "we visited the eiffel tower during our trip.", capitalize: ["eiffel", "tower"] },
+      { text: "my friend lives in new york.", capitalize: ["new", "york"] },
+      { text: "is halloween your favorite holiday?", capitalize: ["halloween"] },
+      { text: "he studies english every friday.", capitalize: ["english", "friday"] },
+      { text: "i can't believe it's already december.", capitalize: ["i", "december"] },
+      { text: "she doesn't enjoy reading harry potter.", capitalize: ["harry", "potter"] },
+      { text: "my birthday is in october.", capitalize: ["october"] },
+      { text: "does she live in london?", capitalize: ["london"] },
+      { text: "after dinner i watched tv.", capitalize: ["i"] },
+      { text: "next year we go to france.", capitalize: ["france"] },
+      { text: "can i come with you?", capitalize: ["i"] },
+      { text: "i saw santa claus.", capitalize: ["i", "santa", "claus"] },
+      { text: "on christmas day we eat turkey.", capitalize: ["christmas", "day"] },
+      { text: "marco and i play chess.", capitalize: ["marco", "i"] },
+      { text: "we play football on monday.", capitalize: ["monday"] },
+      { text: "the queen lives in buckingham palace.", capitalize: ["queen", "buckingham", "palace"] },
+      { text: "why is english difficult for some students?", capitalize: ["english"] },
+      { text: "is paris the capital of france?", capitalize: ["paris", "france"] },
+      { text: "he doesn't celebrate halloween.", capitalize: ["halloween"] },
+      { text: "my cousin lives in dublin.", capitalize: ["dublin"] },
+      { text: "do you like english?", capitalize: ["english"] },
+      { text: "why do we study math on monday?", capitalize: ["monday"] },
+      { text: "she doesn't like watching harry potter movies.", capitalize: ["harry", "potter"] },
+      { text: "we went skiing in the alps.", capitalize: ["alps"] },
+      { text: "i wrote a letter to santa claus.", capitalize: ["i", "santa", "claus"] },
+      { text: "we celebrate new year's day together.", capitalize: ["new", "year's", "day"] },
+      { text: "they saw the queen at buckingham palace.", capitalize: ["queen", "buckingham", "palace"] },
+      { text: "was your last holiday in spain?", capitalize: ["spain"] },
+      { text: "emma and jack play video games.", capitalize: ["emma", "jack"] },
+      { text: "we watched star wars together.", capitalize: ["star", "wars"] },
+      { text: "mr. smith is our teacher.", capitalize: ["mr.", "smith"] },
+      { text: "she danced in the chinese new year parade.", capitalize: ["chinese", "new", "year"] },
+      { text: "they studied history on monday.", capitalize: ["monday"] },
+      { text: "he visited the national gallery.", capitalize: ["national", "gallery"] },
+      { text: "is st george's day a holiday in england?", capitalize: ["st", "george's", "day", "england"] },
+      { text: "don't forget your homework for mr. brown.", capitalize: ["mr.", "brown"] },
+      { text: "didn't you see i was busy?", capitalize: ["i"] },
+      { text: "do you celebrate valentine's day?", capitalize: ["valentine's", "day"] },
+      { text: "they study english every friday.", capitalize: ["english", "friday"] },
+      { text: "what did emma and jack bring to school?", capitalize: ["emma", "jack"] },
+      { text: "they met santa claus last year.", capitalize: ["santa", "claus"] },
+      { text: "i have a friend from canada.", capitalize: ["i", "canada"] },
+      { text: "we went on a trip to scotland.", capitalize: ["scotland"] },
+      { text: "is halloween your favorite holiday?", capitalize: ["halloween"] },
+      { text: "at night i read a book.", capitalize: ["i"] },
+      { text: "she is from spain.", capitalize: ["spain"] },
+      { text: "is saturday a good day for a picnic?", capitalize: ["saturday"] },
+      { text: "wasn't she born in april?", capitalize: ["april"] },
+      { text: "are we going to manchester this weekend?", capitalize: ["manchester"] }
+    ];
+
+    let currentRound = [];
+    let currentIndex = 0;
+    let wordSpans = [];
+    let clickedWords = new Set();
+    let totalCorrectOverall = 0;
+    let totalExpectedOverall = 0;
+
+    function startQuiz() {
+      currentRound = sentenceBank.sort(() => 0.5 - Math.random()).slice(0, 10);
+      currentIndex = 0;
+      totalCorrectOverall = 0;
+      totalExpectedOverall = 0;
+      document.getElementById('scoreDisplay').textContent = '';
+      showSentence();
+    }
+
+    function showSentence() {
+      const quiz = document.getElementById('quiz');
+      quiz.innerHTML = '';
+      wordSpans = [];
+      clickedWords.clear();
+      document.getElementById('checkBtn').style.display = 'inline-block';
+      document.getElementById('nextBtn').style.display = 'none';
+
+      const item = currentRound[currentIndex];
+      const sentenceDiv = document.createElement("div");
+      sentenceDiv.classList.add("sentence");
+
+      item.text.split(" ").forEach((word, idx) => {
+        const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
+        if (idx === 0 && !item.capitalize.includes(cleanWord)) {
+          item.capitalize.push(cleanWord);
+        }
+
+        const span = document.createElement("span");
+        span.textContent = word;
+        span.classList.add("word");
+
+        span.addEventListener("click", () => {
+          span.classList.toggle("selected");
+          const key = `${currentIndex}-${idx}`;
+          if (clickedWords.has(key)) {
+            clickedWords.delete(key);
+          } else {
+            clickedWords.add(key);
+          }
+        });
+
+        wordSpans.push({ span, word: cleanWord });
+        sentenceDiv.appendChild(span);
+        sentenceDiv.append(" ");
+      });
+
+      quiz.appendChild(sentenceDiv);
+    }
+
+    function checkAnswers() {
+  let totalCorrect = 0;
+  let totalExpected = 0;
+  const item = currentRound[currentIndex];
+  let mistakes = [];
+
+  wordSpans.forEach(({ span, word }, idx) => {
+    const isCorrect = item.capitalize.includes(word);
+    const isSelected = span.classList.contains("selected");
+
+    if (isCorrect) totalExpected++;
+    if (isCorrect && isSelected) {
+      span.classList.add("correct");
+      totalCorrect++;
+    } else if (!isCorrect && isSelected) {
+      span.classList.add("incorrect");
+      mistakes.push(`'${span.textContent}' should not be capitalized.`);
+    } else if (isCorrect && !isSelected) {
+      span.classList.add("incorrect");
+      mistakes.push(`You missed '${span.textContent}', which should be capitalized.`);
+    }
+    span.classList.remove("selected");
+  });
+
+  totalCorrectOverall += totalCorrect;
+  totalExpectedOverall += totalExpected;
+
+  const feedback = document.createElement("div");
+  feedback.style.marginTop = "1rem";
+  feedback.style.fontSize = "1rem";
+  feedback.style.color = "#d84315";
+  if (mistakes.length === 0) {
+    feedback.textContent = "✅ Perfect! All correct.";
+  } else {
+    feedback.innerHTML = "❌ Mistakes:<br><ul>" + mistakes.map(m => `<li>${m}</li>`).join('') + "</ul>";
+  }
+  document.getElementById("quiz").appendChild(feedback);
+
+  document.getElementById('checkBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+    function nextSentence() {
+      currentIndex++;
+      if (currentIndex < currentRound.length) {
+        showSentence();
+      } else {
+        document.getElementById('quiz').innerHTML = '';
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('scoreDisplay').textContent =
+          `You correctly identified ${totalCorrectOverall} out of ${totalExpectedOverall} capitalized words!`;
+      }
+    }
+
+    window.onload = startQuiz;
+  </script>
+</body>
+</html>
