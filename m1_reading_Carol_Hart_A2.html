@@ -170,12 +170,12 @@
     &copy; Englix - Make English Your Superpower! (A2 Version)
   </footer>
 
-  <script>
+ <script>
   document.getElementById('quizForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const form = e.target;
     let score = 0;
-    let feedback = '';
+    let answerFeedback = '';
 
     const correctAnswers = {
       q1: 'c',
@@ -195,14 +195,26 @@
       const answer = form[q].value;
       if (answer === correctAnswers[q]) {
         score++;
-        feedback += `<p>✅ Vraag ${i} is correct!</p>`;
+        answerFeedback += `<p>✅ Vraag ${i} is correct!</p>`;
       } else {
-        feedback += `<p>❌ Vraag ${i} is onjuist.</p>`;
+        answerFeedback += `<p>❌ Vraag ${i} is onjuist.</p>`;
       }
     }
 
-    feedback += `<p><strong>Je score: ${score}/10</strong></p>`;
-    document.getElementById('feedback').innerHTML = feedback;
+    let overallFeedback = '';
+    if (score < 10) {
+      overallFeedback = `<p>📚 Niet alle antwoorden zijn correct. Lees de tekst nog eens goed en probeer het opnieuw!</p>`;
+    } else {
+      overallFeedback = `<p>🎉 Goed gedaan! Je hebt alle vragen correct beantwoord!</p>`;
+    }
+
+    const finalFeedback = `
+      ${overallFeedback}
+      <p><strong>Je score: ${score}/10</strong></p>
+      ${answerFeedback}
+    `;
+
+    document.getElementById('feedback').innerHTML = finalFeedback;
   });
 </script>
 </body>
