@@ -171,39 +171,39 @@
   </footer>
 
   <script>
-    document.getElementById('quizForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const form = e.target;
-      let score = 0;
-      let feedback = '';
+  document.getElementById('quizForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    let score = 0;
+    let feedback = '';
 
-      const correctAnswers = {
-        q1: 'c',
-        q2: 'b',
-        q3: 'a',
-        q4: 'b',
-        q5: 'a',
-        q6: 'b',
-        q7: 'c',
-        q8: 'a',
-        q9: 'c',
-        q10: 'b'
-      };
+    const correctAnswers = {
+      q1: 'c',
+      q2: 'b',
+      q3: 'a',
+      q4: 'b',
+      q5: 'a',
+      q6: 'b',
+      q7: 'c',
+      q8: 'a',
+      q9: 'c',
+      q10: 'b'
+    };
 
-      for (let i = 1; i <= 10; i++) {
-        const q = `q${i}`;
-        const answer = form[q].value;
-        if (answer === correctAnswers[q]) {
-          score++;
-          feedback += `<p>✅ Question ${i} is correct!</p>`;
-        } else {
-          feedback += `<p>❌ Question ${i} is incorrect.</p>`;
-        }
+    for (let i = 1; i <= 10; i++) {
+      const q = `q${i}`;
+      const answer = form[q].value;
+      if (answer === correctAnswers[q]) {
+        score++;
+        feedback += `<p>✅ Vraag ${i} is correct!</p>`;
+      } else {
+        feedback += `<p>❌ Vraag ${i} is onjuist.</p>`;
       }
+    }
 
-      feedback += `<p><strong>Your score: ${score}/10</strong></p>`;
-      document.getElementById('feedback').innerHTML = feedback;
-    });
-  </script>
+    feedback += `<p><strong>Je score: ${score}/10</strong></p>`;
+    document.getElementById('feedback').innerHTML = feedback;
+  });
+</script>
 </body>
 </html>
