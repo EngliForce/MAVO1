@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Siobhan - B2 Story & Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .story, .quiz {
+      flex: 1;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    h2 {
+      color: #ff7043;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .feedback {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #ffe6dc;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .tooltip {
+      font-weight: bold;
+      position: relative;
+      cursor: pointer;
+      color: #333;
+    }
+    .tooltip::after {
+      content: attr(data-translation);
+      position: absolute;
+      background-color: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      top: -1.8em;
+      left: 0;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Siobhan (B2)</h1>
+    <p>Read the detailed story and answer the interpretive questions.</p>
+  </header>
+
+  <main>
+  <div class="story">
+    <h2>📖 Story</h2>
+    <p>My name is Siobhan (pronounced <span class="tooltip" data-translation="Sjuh-vawn">Shuh-vawn</span>). I'm twelve years old and I’ve lived in a small Irish town near the <span class="tooltip" data-translation="kust">coast</span> for as long as I can remember.</p>
+
+    <p>My family <span class="tooltip" data-translation="bestaat uit">consists of</span> my mum, my dad, and my younger brother Dylan. He’s ten and <span class="tooltip" data-translation="onuitputtelijk">endlessly</span> <span class="tooltip" data-translation="energiek">energetic</span>, which makes the house feel <span class="tooltip" data-translation="levendig">lively</span>, if sometimes a bit <span class="tooltip" data-translation="chaotisch">chaotic</span>. Despite his <span class="tooltip" data-translation="vervelende">annoying</span> habits, he's someone I genuinely enjoy spending time with.</p>
+
+    <p>We also have a cat named Socks, who has black <span class="tooltip" data-translation="vacht">fur</span> with white <span class="tooltip" data-translation="pootjes">paws</span> — hence the name. She’s more <span class="tooltip" data-translation="zelfstandig">independent</span> than <span class="tooltip" data-translation="aanhankelijk">affectionate</span>, but we’ve grown to <span class="tooltip" data-translation="begrijpen">understand</span> each other.</p>
+
+    <p>I <span class="tooltip" data-translation="ga naar">attend</span> a school called <span class="tooltip" data-translation="De Eikenschool">Scoil an Dair</span>, which <span class="tooltip" data-translation="betekent/vertaalt naar">translates to</span> “The Oak School.” It’s modern, <span class="tooltip" data-translation="goed uitgerust">well-equipped</span>, and the teachers are generally <span class="tooltip" data-translation="ondersteunend">supportive</span>. I’ve built strong <span class="tooltip" data-translation="vriendschappen">friendships</span> there, which makes school not just a place to learn, but a place where I feel I <span class="tooltip" data-translation="thuishoor">belong</span>.</p>
+
+    <p>English and art are the subjects I’m most <span class="tooltip" data-translation="gepassioneerd over">passionate about</span>. I’ve always had an eye for <span class="tooltip" data-translation="detail">detail</span> and a love for <span class="tooltip" data-translation="verhalen vertellen">storytelling</span>, whether through writing or <span class="tooltip" data-translation="illustratie">illustration</span>. Mathematics, on the other hand, has never come easily to me — but I’ve learned that <span class="tooltip" data-translation="inspanning">effort</span> often matters more than <span class="tooltip" data-translation="talent">talent</span>.</p>
+
+    <p>What I <span class="tooltip" data-translation="waardeer">value</span> most about school is the <span class="tooltip" data-translation="ruimte">space</span> it gives me to <span class="tooltip" data-translation="mezelf uiten">express myself</span>. Whether I'm reading a <span class="tooltip" data-translation="roman">novel</span>, <span class="tooltip" data-translation="discussiëren">debating</span> a topic in class, or painting a scene from my <span class="tooltip" data-translation="verbeelding">imagination</span>, I feel like I’m <span class="tooltip" data-translation="groeien">growing</span> — not just as a student, but as a person.</p>
+
+    <p>Outside of school, I spend time walking in the hills, playing my guitar, or reading in <span class="tooltip" data-translation="stille hoekjes">quiet corners</span> of the house. These simple activities have become important to me, especially during moments when I feel <span class="tooltip" data-translation="overweldigd">overwhelmed</span> or <span class="tooltip" data-translation="onzeker">uncertain</span>.</p>
+
+    <p>Living in Ireland has taught me to <span class="tooltip" data-translation="waarderen">appreciate</span> both nature and tradition. From its <span class="tooltip" data-translation="glooiende">rolling</span> green hills to its ancient <span class="tooltip" data-translation="kastelen">castles</span>, this country has a quiet <span class="tooltip" data-translation="magie">magic</span> that <span class="tooltip" data-translation="inspireert">inspires</span> me every day. Though English is the language I speak most often, I’m also learning Irish. It’s <span class="tooltip" data-translation="ingewikkeld">complex</span>, but learning it helps me connect more deeply with my <span class="tooltip" data-translation="roots/oorsprong">roots</span>.</p>
+
+    <p>Writing this has helped me <span class="tooltip" data-translation="nadenken over">reflect on</span> the things that matter: family, <span class="tooltip" data-translation="creativiteit">creativity</span>, and a sense of <span class="tooltip" data-translation="plek/thuis">place</span>. These things <span class="tooltip" data-translation="vormen">shape</span> who I am — and who I hope to become.</p>
+  </div>
+
+    <div class="quiz">
+      <h2>📝 Quiz</h2>
+      <form id="quizForm">
+        <div class="question">
+          <p>1. What does the name “Socks” reveal about the cat?</p>
+          <label><input type="radio" name="q1" value="a"> She wears socks</label><br>
+          <label><input type="radio" name="q1" value="b"> Her feet are white like socks</label><br>
+          <label><input type="radio" name="q1" value="c"> She likes warm clothes</label>
+        </div>
+        <div class="question">
+          <p>2. What is Siobhan’s attitude toward learning Irish?</p>
+          <label><input type="radio" name="q2" value="a"> She finds it boring</label><br>
+          <label><input type="radio" name="q2" value="b"> She finds it difficult but meaningful</label><br>
+          <label><input type="radio" name="q2" value="c"> She already speaks it fluently</label>
+        </div>
+        <div class="question">
+          <p>3. Which activity helps Siobhan manage her emotions?</p>
+          <label><input type="radio" name="q3" value="b"> Walking, reading, and playing guitar</label><br>
+          <label><input type="radio" name="q3" value="a"> Running marathons</label><br>
+          <label><input type="radio" name="q3" value="c"> Watching action films</label>
+        </div>
+        <div class="question">
+          <p>4. What does Siobhan value most about school?</p>
+          <label><input type="radio" name="q4" value="c"> Having a space to express herself</label><br>
+          <label><input type="radio" name="q4" value="a"> Winning competitions</label><br>
+          <label><input type="radio" name="q4" value="b"> Getting perfect grades</label>
+        </div>
+        <div class="question">
+          <p>5. Why is effort important to her, especially in maths?</p>
+          <label><input type="radio" name="q5" value="b"> Because it helps her improve despite challenges</label><br>
+          <label><input type="radio" name="q5" value="a"> Because it guarantees perfect results</label><br>
+          <label><input type="radio" name="q5" value="c"> Because she wants to be the best in class</label>
+        </div>
+        <div class="question">
+          <p>6. What tone does Siobhan use when talking about her life?</p>
+          <label><input type="radio" name="q6" value="a"> Critical and negative</label><br>
+          <label><input type="radio" name="q6" value="b"> Grateful and thoughtful</label><br>
+          <label><input type="radio" name="q6" value="c"> Silly and playful</label>
+        </div>
+        <div class="question">
+          <p>7. What has Ireland taught Siobhan?</p>
+          <label><input type="radio" name="q7" value="c"> To value nature and heritage</label><br>
+          <label><input type="radio" name="q7" value="a"> To move abroad</label><br>
+          <label><input type="radio" name="q7" value="b"> That cities are better</label>
+        </div>
+        <div class="question">
+          <p>8. What is the overall purpose of Siobhan’s reflection?</p>
+          <label><input type="radio" name="q8" value="b"> To explore how her surroundings shape her identity</label><br>
+          <label><input type="radio" name="q8" value="a"> To criticize school rules</label><br>
+          <label><input type="radio" name="q8" value="c"> To compare Ireland with other countries</label>
+        </div>
+        <button type="submit">Check answers</button>
+      </form>
+      <div id="feedback" class="feedback"></div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Englix - Make English Your Superpower!
+  </footer>
+
+  <script>
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      let score = 0;
+      let answerFeedback = '';
+
+      const correctAnswers = {
+        q1: 'b',
+        q2: 'b',
+        q3: 'b',
+        q4: 'c',
+        q5: 'b',
+        q6: 'b',
+        q7: 'c',
+        q8: 'b'
+      };
+
+      for (let i = 1; i <= 8; i++) {
+        const q = `q${i}`;
+        const answer = form[q]?.value;
+        if (answer === correctAnswers[q]) {
+          score++;
+          answerFeedback += `<p>✅ Question ${i} is correct!</p>`;
+        } else {
+          answerFeedback += `<p>❌ Question ${i} is incorrect.</p>`;
+        }
+      }
+
+      let overallFeedback = '';
+      if (score < 8) {
+        overallFeedback = `<p>📘 You got ${score}/8. Review the story and try again.</p>`;
+      } else {
+        overallFeedback = `<p>🌟 Excellent! You scored 8/8!</p>`;
+      }
+
+      document.getElementById('feedback').innerHTML = overallFeedback + answerFeedback;
+    });
+  </script>
+</body>
+</html>
+

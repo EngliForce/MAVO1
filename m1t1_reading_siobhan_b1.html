@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Siobhan - B1 Story & Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .story, .quiz {
+      flex: 1;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    h2 {
+      color: #ff7043;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .feedback {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #ffe6dc;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      font-weight: bold;
+      position: relative;
+      cursor: pointer;
+      color: #333;
+    }
+    .tooltip::after {
+      content: attr(data-translation);
+      position: absolute;
+      background-color: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      top: -1.8em;
+      left: 0;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Siobhan (B1)</h1>
+    <p>Read the story and answer the questions. Hover over words for translations.</p>
+  </header>
+  <main>
+    <div class="story">
+      <h2>📖 Story</h2>
+      <p>Hello! My name is Siobhan — you say it like <span class="tooltip" data-translation="Sjuh-vawn">Shuh-vawn</span>. I'm twelve years old, and I live in a <span class="tooltip" data-translation="klein stadje">small town</span> on the coast of <span class="tooltip" data-translation="Ierland">Ireland</span>.</p>
+
+      <p>I live with my mum, dad, and younger brother Dylan. Dylan is ten, and he’s full of energy. He can be a bit <span class="tooltip" data-translation="vervelend">annoying</span>, but he often makes me laugh.</p>
+
+      <p>We have a cat called Socks. She has black <span class="tooltip" data-translation="vacht">fur</span> and white feet, like little socks — that’s how she got her name!</p>
+
+      <p>My school is called <span class="tooltip" data-translation="De Eikenschool (in het Iers)">Scoil an Dair</span>, which means “The Oak School” in Irish. It's a modern building with big classrooms and helpful teachers. I enjoy going there because I learn interesting things and I have great friends.</p>
+
+      <p>My favourite subjects are English and art. I love reading stories and drawing pictures. I’m not very good at maths, but I try my best. Learning new things can be <span class="tooltip" data-translation="lastig">challenging</span>, but it also makes me feel proud when I understand something new.</p>
+
+      <p>In English class, we practise <span class="tooltip" data-translation="spreken en schrijven">speaking and writing</span>. We also learn about <span class="tooltip" data-translation="grammatica">grammar</span>, <span class="tooltip" data-translation="uitspraak">pronunciation</span>, and new words. Sometimes we work in pairs and ask each other questions like “Where do you live?” or “What are your hobbies?”.</p>
+
+      <p>After school, I often go walking in the hills or play guitar at home. I find music very relaxing. When the weather is good, my family and I go for walks along the <span class="tooltip" data-translation="kust">coast</span> or have a picnic.</p>
+
+      <p>Living in Ireland is wonderful. The people are friendly, the landscapes are <span class="tooltip" data-translation="groen en prachtig">green and beautiful</span>, and there’s a mix of modern life and tradition. We speak English at home, but at school we also learn some Irish — it’s difficult but fun.</p>
+
+      <p>I hope you enjoyed reading about my life. Maybe one day, you can visit Ireland too!</p>
+    </div>
+
+    <div class="quiz">
+      <h2>📝 Quiz</h2>
+      <form id="quizForm">
+        <div class="question">
+          <p>1. Why is the cat called Socks?</p>
+          <label><input type="radio" name="q1" value="b"> Because her feet are white</label><br>
+          <label><input type="radio" name="q1" value="a"> Because she hides in socks</label><br>
+          <label><input type="radio" name="q1" value="c"> Because she has a white tail</label>
+        </div>
+        <div class="question">
+          <p>2. What does “Scoil an Dair” mean?</p>
+          <label><input type="radio" name="q2" value="b"> The Oak School</label><br>
+          <label><input type="radio" name="q2" value="a"> The Irish School</label><br>
+          <label><input type="radio" name="q2" value="c"> The Sea School</label>
+        </div>
+        <div class="question">
+          <p>3. What is Siobhan’s attitude toward learning?</p>
+          <label><input type="radio" name="q3" value="c"> She finds it hard but enjoys it</label><br>
+          <label><input type="radio" name="q3" value="a"> She doesn’t like it</label><br>
+          <label><input type="radio" name="q3" value="b"> She thinks it's boring</label>
+        </div>
+        <div class="question">
+          <p>4. What subjects does she enjoy most?</p>
+          <label><input type="radio" name="q4" value="a"> English and art</label><br>
+          <label><input type="radio" name="q4" value="b"> Science and maths</label><br>
+          <label><input type="radio" name="q4" value="c"> Music and history</label>
+        </div>
+        <div class="question">
+          <p>5. What does she often do after school?</p>
+          <label><input type="radio" name="q5" value="b"> Walk or play guitar</label><br>
+          <label><input type="radio" name="q5" value="a"> Watch TV all day</label><br>
+          <label><input type="radio" name="q5" value="c"> Go to a café</label>
+        </div>
+        <div class="question">
+          <p>6. What does she think about Irish?</p>
+          <label><input type="radio" name="q6" value="c"> It’s difficult but fun</label><br>
+          <label><input type="radio" name="q6" value="a"> It's her first language</label><br>
+          <label><input type="radio" name="q6" value="b"> She doesn't like learning it</label>
+        </div>
+        <div class="question">
+          <p>7. Why does Siobhan enjoy going to school?</p>
+          <label><input type="radio" name="q7" value="a"> She has friends and learns interesting things</label><br>
+          <label><input type="radio" name="q7" value="b"> The food is great</label><br>
+          <label><input type="radio" name="q7" value="c"> She wants to leave home</label>
+        </div>
+        <div class="question">
+          <p>8. How does Siobhan describe Ireland?</p>
+          <label><input type="radio" name="q8" value="b"> Friendly and beautiful</label><br>
+          <label><input type="radio" name="q8" value="a"> Boring and cold</label><br>
+          <label><input type="radio" name="q8" value="c"> Too quiet</label>
+        </div>
+        <button type="submit">Check answers</button>
+      </form>
+      <div id="feedback" class="feedback"></div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Englix - Make English Your Superpower!
+  </footer>
+
+  <script>
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      let score = 0;
+      let answerFeedback = '';
+
+      const correctAnswers = {
+        q1: 'b',
+        q2: 'b',
+        q3: 'c',
+        q4: 'a',
+        q5: 'b',
+        q6: 'c',
+        q7: 'a',
+        q8: 'b'
+      };
+
+      for (let i = 1; i <= 8; i++) {
+        const q = `q${i}`;
+        const answer = form[q]?.value;
+        if (answer === correctAnswers[q]) {
+          score++;
+          answerFeedback += `<p>✅ Question ${i} is correct!</p>`;
+        } else {
+          answerFeedback += `<p>❌ Question ${i} is incorrect.</p>`;
+        }
+      }
+
+      let overallFeedback = '';
+      if (score < 8) {
+        overallFeedback = `<p>📚 Try again. You got ${score}/8.</p>`;
+      } else {
+        overallFeedback = `<p>🎉 Excellent! You got 8/8!</p>`;
+      }
+
+      document.getElementById('feedback').innerHTML = overallFeedback + answerFeedback;
+    });
+  </script>
+</body>
+</html>
+
