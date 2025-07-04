@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Siobhan - Easy Story & Quiz (A1)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .story, .quiz {
+      flex: 1;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    h2 {
+      color: #ff7043;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .feedback {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #ffe6dc;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    /* Tooltip */
+    .tooltip {
+      font-weight: bold;
+      position: relative;
+      cursor: pointer;
+      color: #333;
+    }
+    .tooltip::after {
+      content: attr(data-translation);
+      position: absolute;
+      background-color: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      top: -1.8em;
+      left: 0;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Siobhan (A1)</h1>
+    <p>Lees het verhaal en beantwoord de vragen. Klik op moeilijke woorden voor vertaling.</p>
+  </header>
+
+  <main>
+    <div class="story">
+      <h2>📖 Story</h2>
+      <p>Hello! My name is Siobhan. You say it like <span class="tooltip" data-translation="Sjuh-vawn">Shuh-vawn</span>.</p>
+      <p>I am from <span class="tooltip" data-translation="Ierland">Ireland</span>. It is next to the United Kingdom.</p>
+      <p>I am <span class="tooltip" data-translation="twaalf">twelve</span> years old. I live in a small town. The town is near the <span class="tooltip" data-translation="zee">sea</span>.</p>
+      <p>I have brown hair and green eyes. I am <span class="tooltip" data-translation="niet groot">not tall</span>. I like to run and play.</p>
+      <p>People say I am <span class="tooltip" data-translation="vriendelijk">kind</span> and <span class="tooltip" data-translation="vrolijk">happy</span>. I am a little <span class="tooltip" data-translation="verlegen">shy</span>.</p>
+      <p>My hobby is playing the <span class="tooltip" data-translation="gitaar">guitar</span>. I also like walking in the hills.</p>
+      <p>I live with my <span class="tooltip" data-translation="moeder">mum</span>, <span class="tooltip" data-translation="vader">dad</span>, and my brother Dylan. He is ten years old.</p>
+      <p>We have a cat. The cat’s name is Socks. It has black <span class="tooltip" data-translation="vacht">fur</span> and white feet.</p>
+      <p>I go to a school. It is called <span class="tooltip" data-translation="de eikenschool (Iers)">Scoil an Dair</span>.</p>
+      <p>My favourite subjects are English and <span class="tooltip" data-translation="kunst">art</span>.</p>
+    </div>
+
+    <div class="quiz">
+      <h2>📝 Quiz</h2>
+      <form id="quizForm">
+        <div class="question">
+          <p>1. Wat is de naam van het meisje?</p>
+          <label><input type="radio" name="q1" value="a"> Emily</label><br>
+          <label><input type="radio" name="q1" value="b"> Siobhan</label><br>
+          <label><input type="radio" name="q1" value="c"> Sarah</label>
+        </div>
+        <div class="question">
+          <p>2. Waar woont ze?</p>
+          <label><input type="radio" name="q2" value="a"> In een grote stad</label><br>
+          <label><input type="radio" name="q2" value="b"> In een klein dorp</label><br>
+          <label><input type="radio" name="q2" value="c"> In Londen</label>
+        </div>
+        <div class="question">
+          <p>3. Hoe oud is Siobhan?</p>
+          <label><input type="radio" name="q3" value="a"> Tien jaar</label><br>
+          <label><input type="radio" name="q3" value="b"> Twaalf jaar</label><br>
+          <label><input type="radio" name="q3" value="c"> Dertien jaar</label>
+        </div>
+        <div class="question">
+          <p>4. Wat is haar hobby?</p>
+          <label><input type="radio" name="q4" value="b"> Gitaar spelen</label><br>
+          <label><input type="radio" name="q4" value="a"> Koken</label><br>
+          <label><input type="radio" name="q4" value="c"> Vissen</label>
+        </div>
+        <div class="question">
+          <p>5. Met wie woont ze?</p>
+          <label><input type="radio" name="q5" value="c"> Haar moeder, vader en broer</label><br>
+          <label><input type="radio" name="q5" value="a"> Haar grootouders</label><br>
+          <label><input type="radio" name="q5" value="b"> Alleen</label>
+        </div>
+        <div class="question">
+          <p>6. Hoe heet de kat?</p>
+          <label><input type="radio" name="q6" value="a"> Mittens</label><br>
+          <label><input type="radio" name="q6" value="b"> Tiger</label><br>
+          <label><input type="radio" name="q6" value="c"> Socks</label>
+        </div>
+        <div class="question">
+          <p>7. Welke kleur heeft de vacht van de kat?</p>
+          <label><input type="radio" name="q7" value="c"> Zwart en wit</label><br>
+          <label><input type="radio" name="q7" value="a"> Bruin</label><br>
+          <label><input type="radio" name="q7" value="b"> Oranje</label>
+        </div>
+        <div class="question">
+          <p>8. Wat zijn haar favoriete vakken?</p>
+          <label><input type="radio" name="q8" value="b"> Engels en kunst</label><br>
+          <label><input type="radio" name="q8" value="a"> Wiskunde en sport</label><br>
+          <label><input type="radio" name="q8" value="c"> Frans en geschiedenis</label>
+        </div>
+        <button type="submit">Controleer antwoorden</button>
+      </form>
+      <div id="feedback" class="feedback"></div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Englix - Make English Your Superpower!
+  </footer>
+
+  <script>
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      let score = 0;
+      let answerFeedback = '';
+
+      const correctAnswers = {
+        q1: 'b',
+        q2: 'b',
+        q3: 'b',
+        q4: 'b',
+        q5: 'c',
+        q6: 'c',
+        q7: 'c',
+        q8: 'b'
+      };
+
+      for (let i = 1; i <= 8; i++) {
+        const q = `q${i}`;
+        const answer = form[q]?.value;
+        if (answer === correctAnswers[q]) {
+          score++;
+          answerFeedback += `<p>✅ Vraag ${i} is correct!</p>`;
+        } else {
+          answerFeedback += `<p>❌ Vraag ${i} is onjuist.</p>`;
+        }
+      }
+
+      let overallFeedback = '';
+      if (score < 8) {
+        overallFeedback = `<p>📚 Je hebt niet alles goed. Lees het verhaal nog eens en probeer opnieuw.</p>`;
+      } else {
+        overallFeedback = `<p>🎉 Goed gedaan! Alles is correct!</p>`;
+      }
+
+      const finalFeedback = `
+        ${overallFeedback}
+        <p><strong>Je score: ${score}/8</strong></p>
+        ${answerFeedback}
+      `;
+
+      document.getElementById('feedback').innerHTML = finalFeedback;
+    });
+  </script>
+</body>
+</html>
