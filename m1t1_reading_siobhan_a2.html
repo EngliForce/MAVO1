@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meet Siobhan - Story & Quiz (A2)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .story, .quiz {
+      flex: 1;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    h2 {
+      color: #ff7043;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .feedback {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: #ffe6dc;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Tooltip styling */
+    .tooltip {
+      font-weight: bold;
+      position: relative;
+      cursor: pointer;
+      color: #333;
+    }
+    .tooltip::after {
+      content: attr(data-translation);
+      position: absolute;
+      background-color: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      top: -1.8em;
+      left: 0;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+    <h1>Meet Siobhan - Story & Quiz (A2)</h1>
+    <p>Lees het verhaal over Siobhan (klik op moeilijke woorden voor de vertaling.</p>
+  </header>
+
+  <main>
+    <div class="story">
+      <h2>📖 Story</h2>
+      <p>Hello! My name is Siobhan — you say it like "Shuh-vawn". It’s an <span class="tooltip" data-translation="Iers">Irish</span> name. I’m from <span class="tooltip" data-translation="Ierland">Ireland</span>, a <span class="tooltip" data-translation="mooi">beautiful</span> country next to the United Kingdom.</p>
+
+      <p>I’m twelve years old and I live in a small town near the <span class="tooltip" data-translation="zee">sea</span>. It’s <span class="tooltip" data-translation="rustig">quiet</span>, with <span class="tooltip" data-translation="vriendelijke">friendly</span> people and lovely <span class="tooltip" data-translation="natuur">nature</span>.</p>
+
+      <p>I have long brown hair and green eyes. I’m not very tall, but I’m quite <span class="tooltip" data-translation="sportief">sporty</span>. People say I’m kind and <span class="tooltip" data-translation="vrolijk">cheerful</span>. I’m a little <span class="tooltip" data-translation="verlegen">shy</span> at first, but I like talking when I feel <span class="tooltip" data-translation="op mijn gemak">comfortable</span>.</p>
+
+      <p>My hobbies are playing the guitar and walking in the <span class="tooltip" data-translation="bergen">mountains</span>. Ireland has lots of hills and forests, and I love being <span class="tooltip" data-translation="buiten">outside</span>.</p>
+
+      <p>I live with my mum, my dad, and my <span class="tooltip" data-translation="jongere broer">younger brother</span> Dylan. He is ten years old. Sometimes he is <span class="tooltip" data-translation="vervelend">annoying</span>, but he often makes me laugh. We also have a cat called Socks. It has black fur and white feet.</p>
+
+      <p>I go to a school called Scoil an Dair. That means “The Oak School” in Irish. It’s big and <span class="tooltip" data-translation="modern">modern</span>. The teachers are <span class="tooltip" data-translation="behulpzaam">helpful</span>, and I have good friends there.</p>
+
+      <p>My favourite subjects are English and art. I enjoy <span class="tooltip" data-translation="verhalen lezen">reading stories</span> and drawing. <span class="tooltip" data-translation="wiskunde">Maths</span> is difficult, but I try my best.</p>
+
+      <p>In English class, we practise <span class="tooltip" data-translation="grammatica">grammar</span> and <span class="tooltip" data-translation="uitspraak">pronunciation</span>. We learn about the <span class="tooltip" data-translation="alfabet">alphabet</span>, questions like “What is your name?”, and personal <span class="tooltip" data-translation="voornaamwoorden">pronouns</span> like I, you, and she.</p>
+
+      <p>We also use verbs like “to be” and “have got”, and <span class="tooltip" data-translation="bezittelijke bijvoeglijke naamwoorden">possessive adjectives</span> like “my” and “her”.</p>
+
+      <p>I think Ireland is a great place to live. It has green hills, long beaches, old <span class="tooltip" data-translation="kastelen">castles</span>, and kind people. We speak English and also Irish (<span class="tooltip" data-translation="Iers (taal)">Gaeilge</span>) at school.</p>
+
+      <p>So that’s me! Thanks for reading!</p>
+    </div>
+    <div class="quiz">
+      <h2>📝 Quiz</h2>
+      <form id="quizForm">
+        <div class="question">
+          <p>1. Waar komt Siobhan vandaan?</p>
+          <label><input type="radio" name="q1" value="a"> Uit Schotland</label><br>
+          <label><input type="radio" name="q1" value="b"> Uit Ierland</label><br>
+          <label><input type="radio" name="q1" value="c"> Uit Engeland</label>
+        </div>
+        <div class="question">
+          <p>2. Hoe oud is Siobhan?</p>
+          <label><input type="radio" name="q2" value="a"> 10 jaar</label><br>
+          <label><input type="radio" name="q2" value="b"> 12 jaar</label><br>
+          <label><input type="radio" name="q2" value="c"> 14 jaar</label>
+        </div>
+        <div class="question">
+          <p>3. Wat zijn haar hobby’s?</p>
+          <label><input type="radio" name="q3" value="b"> Gitaar spelen en wandelen</label><br>
+          <label><input type="radio" name="q3" value="a"> Lezen en koken</label><br>
+          <label><input type="radio" name="q3" value="c"> Fietsen en zwemmen</label>
+        </div>
+        <div class="question">
+          <p>4. Hoe heet haar broer?</p>
+          <label><input type="radio" name="q4" value="c"> Dylan</label><br>
+          <label><input type="radio" name="q4" value="a"> Declan</label><br>
+          <label><input type="radio" name="q4" value="b"> Daniel</label>
+        </div>
+        <div class="question">
+          <p>5. Wat voor dier is Socks?</p>
+          <label><input type="radio" name="q5" value="a"> Een hond</label><br>
+          <label><input type="radio" name="q5" value="b"> Een konijn</label><br>
+          <label><input type="radio" name="q5" value="c"> Een kat</label>
+        </div>
+        <div class="question">
+          <p>6. Wat betekent “Scoil an Dair”?</p>
+          <label><input type="radio" name="q6" value="b"> De eikenschool</label><br>
+          <label><input type="radio" name="q6" value="a"> De bergschool</label><br>
+          <label><input type="radio" name="q6" value="c"> De zee-school</label>
+        </div>
+        <div class="question">
+          <p>7. Welke vakken vindt Siobhan leuk?</p>
+          <label><input type="radio" name="q7" value="a"> Engels en kunst</label><br>
+          <label><input type="radio" name="q7" value="b"> Wiskunde en sport</label><br>
+          <label><input type="radio" name="q7" value="c"> Geschiedenis en muziek</label>
+        </div>
+        <div class="question">
+          <p>8. Wat leert Siobhan in haar Engelse les?</p>
+          <label><input type="radio" name="q8" value="b"> Grammatica en uitspraak</label><br>
+          <label><input type="radio" name="q8" value="a"> Alleen liedjes</label><br>
+          <label><input type="radio" name="q8" value="c"> Alleen rekenen</label>
+        </div>
+        <div class="question">
+          <p>9. Wat voor landschap heeft Ierland?</p>
+          <label><input type="radio" name="q9" value="a"> Groene heuvels en kastelen</label><br>
+          <label><input type="radio" name="q9" value="b"> Alleen woestijn</label><br>
+          <label><input type="radio" name="q9" value="c"> Alleen grote steden</label>
+        </div>
+        <div class="question">
+          <p>10. Welke talen spreekt men in Ierland?</p>
+          <label><input type="radio" name="q10" value="b"> Engels en Iers</label><br>
+          <label><input type="radio" name="q10" value="a"> Engels en Frans</label><br>
+          <label><input type="radio" name="q10" value="c"> Alleen Engels</label>
+        </div>
+        <button type="submit">Controleer antwoorden</button>
+      </form>
+      <div id="feedback" class="feedback"></div>
+    </div>
+  </main>
+  <footer>
+    &copy; Englix - Make English Your Superpower! (A2 Version)
+  </footer>
+
+  <script>
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      let score = 0;
+      let answerFeedback = '';
+
+      const correctAnswers = {
+        q1: 'b',
+        q2: 'b',
+        q3: 'b',
+        q4: 'c',
+        q5: 'c',
+        q6: 'b',
+        q7: 'a',
+        q8: 'b',
+        q9: 'a',
+        q10: 'b'
+      };
+
+      for (let i = 1; i <= 10; i++) {
+        const q = `q${i}`;
+        const answer = form[q].value;
+        if (answer === correctAnswers[q]) {
+          score++;
+          answerFeedback += `<p>✅ Vraag ${i} is correct!</p>`;
+        } else {
+          answerFeedback += `<p>❌ Vraag ${i} is onjuist.</p>`;
+        }
+      }
+
+      let overallFeedback = '';
+      if (score < 10) {
+        overallFeedback = `<p>📚 Niet alle antwoorden zijn correct. Lees de tekst nog eens goed en probeer het opnieuw!</p>`;
+      } else {
+        overallFeedback = `<p>🎉 Goed gedaan! Je hebt alle vragen correct beantwoord!</p>`;
+      }
+
+      const finalFeedback = `
+        ${overallFeedback}
+        <p><strong>Je score: ${score}/10</strong></p>
+        ${answerFeedback}
+      `;
+
+      document.getElementById('feedback').innerHTML = finalFeedback;
+    });
+  </script>
+</body>
+</html>
