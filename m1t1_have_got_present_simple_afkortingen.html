@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Have Got – Alleen Afkortingen</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    input {
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 180px;
+      text-align: center;
+    }
+    .correct {
+      background-color: #c8e6c9;
+      border: 1px solid #2e7d32;
+    }
+    .incorrect {
+      background-color: #ffcdd2;
+      border: 1px solid #c62828;
+    }
+    .stars {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: #ff7043;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="Logo" style="max-height: 80px; display: block; margin: 0 auto 1rem;">
+  <h1>Have Got – Afkortingen</h1>
+  <p>Vul de juiste vorm in. Gebruik alleen afkortingen.</p>
+</header>
+
+<main>
+  <section>
+    <form id="exerciseForm">
+      <div class="question">1. I <input type="text" name="q1"> a new pair of shoes. (✅)</div>
+      <div class="question">2. He <input type="text" name="q2"> any time today. (❌)</div>
+      <div class="question">3. They <input type="text" name="q3"> a plan for the trip. (✅)</div>
+      <div class="question">4. My sister <input type="text" name="q4"> a winter coat. (❌)</div>
+      <div class="question">5. We <input type="text" name="q5"> a lot of work to do. (✅)</div>
+      <div class="question">6. Emma <input type="text" name="q6"> her phone with her. (❌)</div>
+      <div class="question">7. I <input type="text" name="q7"> my keys. (❌)</div>
+      <div class="question">8. Tom <input type="text" name="q8"> a new bike. (✅)</div>
+      <div class="question">9. You <input type="text" name="q9"> any milk left. (❌)</div>
+      <div class="question">10. The children <input type="text" name="q10"> a trampoline in the garden. (✅)</div>
+      <button type="button" onclick="checkAnswers()">Controleer</button>
+    </form>
+    <div class="stars" id="score"></div>
+  </section>
+</main>
+
+<script>
+  const correctAnswers = {
+    q1: ["'ve got"],
+    q2: ["hasn’t got", "'s not got"],
+    q3: ["'ve got"],
+    q4: ["hasn’t got", "'s not got"],
+    q5: ["'ve got"],
+    q6: ["hasn’t got", "'s not got"],
+    q7: ["haven’t got", "'ve not got"],
+    q8: ["'s got"],
+    q9: ["haven’t got", "'ve not got"],
+    q10: ["'ve got"]
+  };
+
+  function normalize(input) {
+    return input.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    const form = document.forms['exerciseForm'];
+    let correctCount = 0;
+
+    for (const key in correctAnswers) {
+      const input = form[key];
+      const userAnswer = normalize(input.value);
+      const accepted = correctAnswers[key].map(ans => normalize(ans));
+      if (accepted.includes(userAnswer)) {
+        input.className = 'correct';
+        correctCount++;
+      } else {
+        input.className = 'incorrect';
+      }
+    }
+
+    const stars = '⭐'.repeat(Math.floor(correctCount / 2));
+    document.getElementById('score').innerText = `Je score: ${stars} (${correctCount}/10 goed)`;
+  }
+</script>
+
+<footer>
+  <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+</footer>
+
+</body>
+</html>
