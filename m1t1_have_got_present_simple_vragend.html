@@ -1,0 +1,139 @@
+
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Have Got (Present Simple - Vragend)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    input {
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 80px;
+      text-align: center;
+      margin-right: 6px;
+    }
+    .correct {
+      background-color: #c8e6c9;
+      border: 1px solid #2e7d32;
+    }
+    .incorrect {
+      background-color: #ffcdd2;
+      border: 1px solid #c62828;
+    }
+    .stars {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: #ff7043;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="Logo" style="max-height: 80px; display: block; margin: 0 auto 1rem;">
+  <h1>Have Got - present simple - vragend</h1>
+  <p>Vul in: gebruik de juiste vorm van have got / has got.</p>
+</header>
+
+<main>
+  <section>
+    <form id="exerciseForm">
+      <div class="question">1. <input type="text" name="q1a"> you <input type="text" name="q1b"> any pets?</div>
+      <div class="question">2. <input type="text" name="q2a"> she <input type="text" name="q2b"> a piano?</div>
+      <div class="question">3. <input type="text" name="q3a"> Mike and Shuela <input type="text" name="q3b"> a big garden?</div>
+      <div class="question">4. <input type="text" name="q4a"> he <input type="text" name="q4b"> a computer?</div>
+      <div class="question">5. <input type="text" name="q5a"> you <input type="text" name="q5b"> your homework?</div>
+      <div class="question">6. <input type="text" name="q6a"> Emma <input type="text" name="q6b"> any brothers?</div>
+      <div class="question">7. <input type="text" name="q7a"> you and I <input type="text" name="q7b"> enough money?</div>
+      <div class="question">8. <input type="text" name="q8a"> your sister <input type="text" name="q8b"> a pet rabbit?</div>
+      <div class="question">9. <input type="text" name="q9a"> they <input type="text" name="q9b"> tickets for the show?</div>
+      <div class="question">10. <input type="text" name="q10a"> William <input type="text" name="q10b"> a map?</div>
+
+      <button type="button" onclick="checkAnswers()">Controleer</button>
+    </form>
+    <div class="stars" id="score"></div>
+  </section>
+</main>
+
+<script>
+  const correctAnswers = [
+    ['Have', 'got'], ['Has', 'got'], ['Have', 'got'], ['Has', 'got'], ['Have', 'got'],
+    ['Has', 'got'], ['Have', 'got'], ['Has', 'got'], ['Have', 'got'], ['Has', 'got']
+  ];
+
+  function checkAnswers() {
+    const form = document.forms['exerciseForm'];
+    let correctCount = 0;
+    for (let i = 0; i < correctAnswers.length; i++) {
+      const inputA = form['q' + (i + 1) + 'a'];
+      const inputB = form['q' + (i + 1) + 'b'];
+      const answerA = inputA.value.trim();
+      const answerB = inputB.value.trim();
+      const isCorrectA = answerA === correctAnswers[i][0];
+      const isCorrectB = answerB === correctAnswers[i][1];
+
+      inputA.className = isCorrectA ? 'correct' : 'incorrect';
+      inputB.className = isCorrectB ? 'correct' : 'incorrect';
+
+      if (isCorrectA && isCorrectB) {
+        correctCount++;
+      }
+    }
+    const stars = '⭐'.repeat(Math.floor(correctCount / 2));
+    document.getElementById('score').innerText = `Je score: ${stars} (${correctCount}/10 goed)`;
+  }
+</script>
+
+<footer>
+  <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+</footer>
+
+</body>
+</html>
