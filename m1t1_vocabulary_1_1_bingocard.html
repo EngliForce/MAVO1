@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Englix Mini Bingo - Theme 1</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem 1rem;
+    }
+    header img {
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      margin: 0;
+    }
+    #bingo-card {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .cell {
+      background-color: white;
+      border: 2px solid #ff7043;
+      border-radius: 8px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      user-select: none;
+    }
+    .cell.checked {
+      background-color: #ff7043;
+      color: white;
+      text-decoration: line-through;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Logo.png" alt="Englix logo" />
+    <h1>🧩 Bingo Card</h1>
+    <p>Simply click on a box to check it off as you complete each item.</p> 
+    <p>Try to complete a full row, column, or diagonal to win. Good luck and have fun!</p>
+  </header>
+
+  <div id="bingo-card"></div>
+
+  <footer>
+    &copy; 2025 Englix – Make English Your Superpower!
+  </footer>
+
+  <script>
+    const words = [
+      "…-in-law", "ancestor", "aunt", "baby", "brother", "child", "children",
+      "cousin", "dad", "daughter", "descendant", "extended family", "family",
+      "father", "fiancé", "fiancée", "foster family", "god…", "grand…",
+      "guardian", "half-…", "husband", "mother", "mum", "nephew", "niece",
+      "only child", "parents", "relatives", "siblings", "sister", "son",
+      "step...", "twin", "uncle", "wife"
+    ];
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function generateMiniBingoCard() {
+      const shuffled = shuffle(words);
+      const cardWords = shuffled.slice(0, 9);
+      const container = document.getElementById("bingo-card");
+      container.innerHTML = "";
+
+      cardWords.forEach(word => {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.textContent = word;
+        cell.addEventListener("click", () => {
+          cell.classList.toggle("checked");
+        });
+        container.appendChild(cell);
+      });
+    }
+
+    generateMiniBingoCard();
+  </script>
+
+</body>
+</html>
