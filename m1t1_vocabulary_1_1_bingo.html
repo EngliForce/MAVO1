@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Englix Vocabulary Bingo – Theme 1</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    header img {
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      margin: 0;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    #word-box {
+      background-color: white;
+      color: #ff7043;
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 700px;
+      font-size: 4rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      margin: 1rem 0.5rem;
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #history {
+      display: none;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    #history h2 {
+      color: #ff7043;
+    }
+    #shown-list li {
+      margin-bottom: 0.4rem;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="YOUR_LOGO_URL_HERE" alt="Englix Logo" />
+    <h1>Englix Vocabulary Bingo – Theme 1</h1>
+  </header>
+
+  <main>
+    <div id="word-box">Click "Next" to start</div>
+    <div>
+      <button id="next-btn">Next</button>
+      <button id="check-btn">Check Bingo</button>
+    </div>
+
+    <div id="history">
+      <h2>📝 Getoonde woorden met vertaling</h2>
+      <ul id="shown-list"></ul>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 Englix – Make English Your Superpower!
+  </footer>
+
+  <script>
+    const allWords = [
+      { nl: "schoon…", en: "...-in-law" },
+      { nl: "voorouder", en: "ancestor" },
+      { nl: "tante", en: "aunt" },
+      { nl: "baby", en: "baby" },
+      { nl: "broer", en: "brother" },
+      { nl: "kind", en: "child" },
+      { nl: "kinderen", en: "children" },
+      { nl: "neef / nicht (kind van oom/tante)", en: "cousin" },
+      { nl: "papa", en: "dad" },
+      { nl: "dochter", en: "daughter" },
+      { nl: "afstammeling", en: "descendant" },
+      { nl: "uitgebreide familie", en: "extended family" },
+      { nl: "familie", en: "family" },
+      { nl: "vader", en: "father" },
+      { nl: "verloofde (man)", en: "fiancé" },
+      { nl: "verloofde (vrouw)", en: "fiancée" },
+      { nl: "pleeggezin", en: "foster family" },
+      { nl: "peet…", en: "god…" },
+      { nl: "groot…", en: "grand…" },
+      { nl: "voogd", en: "guardian" },
+      { nl: "half…", en: "half-…" },
+      { nl: "echtgenoot", en: "husband" },
+      { nl: "moeder", en: "mother" },
+      { nl: "mama", en: "mum" },
+      { nl: "neef (zoon van broer/zus)", en: "nephew" },
+      { nl: "nicht (dochter van broer/zus)", en: "niece" },
+      { nl: "enig kind", en: "only child" },
+      { nl: "ouders", en: "parents" },
+      { nl: "familieleden", en: "relatives" },
+      { nl: "broers en zussen", en: "siblings" },
+      { nl: "zus", en: "sister" },
+      { nl: "zoon", en: "son" },
+      { nl: "stief...", en: "step..." },
+      { nl: "tweelingbroer of -zus", en: "twin" },
+      { nl: "oom", en: "uncle" },
+      { nl: "echtgenote", en: "wife" }
+    ];
+
+    let remaining = [...allWords];
+    let shown = [];
+
+    const wordBox = document.getElementById("word-box");
+    const shownList = document.getElementById("shown-list");
+    const nextBtn = document.getElementById("next-btn");
+    const checkBtn = document.getElementById("check-btn");
+    const historySection = document.getElementById("history");
+
+    nextBtn.addEventListener("click", () => {
+      if (remaining.length === 0) {
+        wordBox.textContent = "Alle woorden zijn geweest.";
+        nextBtn.disabled = true;
+        return;
+      }
+      const index = Math.floor(Math.random() * remaining.length);
+      const word = remaining.splice(index, 1)[0];
+      shown.push(word);
+      wordBox.textContent = word.nl;
+    });
+
+    checkBtn.addEventListener("click", () => {
+      shownList.innerHTML = "";
+      shown.forEach(({ nl, en }) => {
+        const li = document.createElement("li");
+        li.textContent = `${nl} – ${en}`;
+        shownList.appendChild(li);
+      });
+      historySection.style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
