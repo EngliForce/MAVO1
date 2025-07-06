@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Have Got – Alleen Afkortingen (Nieuwe Zinnen)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question {
+      margin-bottom: 1rem;
+    }
+    input {
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 180px;
+      text-align: center;
+    }
+    .correct {
+      background-color: #c8e6c9;
+      border: 1px solid #2e7d32;
+    }
+    .incorrect {
+      background-color: #ffcdd2;
+      border: 1px solid #c62828;
+    }
+    .stars {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: #ff7043;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Have Got – Afkortingen</h1>
+  <p>Vul in: gebruik alleen afkortingen.</p>
+</header>
+
+<main>
+  <section>
+    <form id="exerciseForm">
+      <div class="question">1. I <input type="text" name="q1"> a new skateboard. (✅ hij is nieuw!)</div>
+      <div class="question">2. She <input type="text" name="q2"> any clean socks. (❌ alles is in de was)</div>
+      <div class="question">3. We <input type="text" name="q3"> a great idea for the project. (✅)</div>
+      <div class="question">4. He <input type="text" name="q4"> his homework with him. (❌ vergeten)</div>
+      <div class="question">5. They <input type="text" name="q5"> a new puppy. (✅)</div>
+      <div class="question">6. Emma <input type="text" name="q6"> any money. (❌ blut)</div>
+      <div class="question">7. I <input type="text" name="q7"> three cousins. (✅ familie!)</div>
+      <div class="question">8. My brother <input type="text" name="q8"> a driving license. (❌ nog geen examen gedaan)</div>
+      <div class="question">9. You <input type="text" name="q9"> a great sense of humor. (✅ dat blijkt!)</div>
+      <div class="question">10. The cat <input type="text" name="q10"> a bell on its collar. (❌ stilletjes)</div>
+      <button type="button" onclick="checkAnswers()">Controleer</button>
+    </form>
+    <div class="stars" id="score"></div>
+  </section>
+</main>
+
+<script>
+  const correctAnswers = {
+    q1: ["'ve got"],
+    q2: ["hasn’t got", "'s not got"],
+    q3: ["'ve got"],
+    q4: ["hasn’t got", "'s not got"],
+    q5: ["'ve got"],
+    q6: ["hasn’t got", "'s not got"],
+    q7: ["'ve got"],
+    q8: ["hasn’t got", "'s not got"],
+    q9: ["'ve got"],
+    q10: ["hasn’t got", "'s not got"]
+  };
+
+  function normalize(str) {
+    return str.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function checkAnswers() {
+    let correctCount = 0;
+    for (const key in correctAnswers) {
+      const input = document.forms['exerciseForm'][key];
+      const userAnswer = normalize(input.value);
+      const validOptions = correctAnswers[key].map(opt => normalize(opt));
+
+      if (validOptions.includes(userAnswer)) {
+        input.className = 'correct';
+        correctCount++;
+      } else {
+        input.className = 'incorrect';
+      }
+    }
+    const stars = '⭐'.repeat(Math.floor(correctCount / 2));
+    document.getElementById('score').innerText = `Je score: ${stars} (${correctCount}/10 goed)`;
+  }
+</script>
+
+<footer>
+  <p>&copy; 2025 Englix – Make English Your Superpower!</p>
+</footer>
+
+</body>
+</html>
