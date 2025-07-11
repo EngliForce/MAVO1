@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Englix – Family Vocabulary</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      padding: 2rem;
+      margin: 0;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    header img {
+      max-width: 120px;
+    }
+
+    header h1 {
+      color: #ff7043;
+      font-size: 2rem;
+      margin-bottom: 0.2em;
+    }
+
+    .language-select {
+      text-align: center;
+      margin: 1rem 0 2rem 0;
+    }
+
+    .language-select label {
+      margin: 0 1em;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .draggable-word {
+      background-color: white;
+      padding: 0.6em 1.2em;
+      border: 2px solid #ff7043;
+      border-radius: 6px;
+      cursor: grab;
+      user-select: none;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .draggable-word:hover {
+      background-color: #ffe6dc;
+    }
+
+    .exercise-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 1.5rem;
+}
+
+.sentence-box {
+  flex: 1 1 calc(50% - 10px); /* 2 per rij, met ruimte */
+  box-sizing: border-box;
+}
+
+    .sentence-box {
+      flex: 0 0 48%;
+      background-color: white;
+      border: 2px solid #ff7043;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .sentence-box p {
+      margin: 0 0 0.3em 0;
+      font-weight: 500;
+      color: #444;
+    }
+
+   .drop-zone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px; /* <-- Dit maakt het breder */
+  min-height: 1em;
+  padding: 0.6em;
+  background: #e0e0e0;
+  margin-top: 0em;
+  border-radius: 3px;
+  border: 2px dashed #999;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+    .correct {
+      background-color: #c8f7c5 !important;
+      border-color: #28a745 !important;
+    }
+
+    .wrong {
+      background-color: #f7c5c5 !important;
+      border-color: #dc3545 !important;
+    }
+
+    .button-row {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin: 0 0.5rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e85d2c;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="Logo.png" alt="Englix Logo" />
+    <h1>🔠 Englix – Family Vocabulary</h1>
+    <p style="color: #555;">Drag the correct word to the matching description</p>
+  </header>
+
+  <div class="language-select">
+    <label><input type="radio" name="language" value="nl" checked> Dutch</label>
+    <label><input type="radio" name="language" value="en"> English</label>
+    <label><input type="radio" name="language" value="mixed"> Mixed</label>
+  </div>
+
+  <div class="word-bank" id="wordBank"></div>
+  <div id="sentenceGrid"></div>
+
+  <div class="button-row">
+    <button onclick="checkAnswers()">✅ Check Answers</button>
+    <button onclick="setupGame()">🔁 Try Again</button>
+  </div>
+
+  <footer>
+    &copy; 2025 Englix – Make English your superpower!
+  </footer>
+
+  <script>
+    const vocabData = {
+      "ancestor": { nl: "Iemand die lang geleden in je familie leefde.", en: "A person from your family who lived long ago." },
+      "aunt": { nl: "De zus van je vader of moeder, of de vrouw van je oom.", en: "Your parent's sister or your uncle’s wife." },
+      "baby": { nl: "Een pasgeboren kind.", en: "A very young child or newborn." },
+      "brother": { nl: "Je jonge mannelijke gezinslid.", en: "A male sibling." },
+      "child": { nl: "Een jong persoon, geen volwassene.", en: "A young person, not an adult." },
+      "children": { nl: "Meervoud van kind.", en: "More than one child." },
+      "cousin": { nl: "Kind van je oom of tante.", en: "The child of your aunt or uncle." },
+      "dad": { nl: "Informele manier om 'vader' te zeggen.", en: "Informal word for father." },
+      "daughter": { nl: "Een meisje dat kind is van haar ouders.", en: "A female child of her parents." },
+      "descendant": { nl: "Iemand die afstamt van een bepaalde persoon.", en: "A person related to someone who lived earlier." },
+      "extended family": { nl: "Ooms, tantes, neven en nichten in je familie.", en: "Relatives outside your immediate family." },
+      "family": { nl: "Alle mensen die met je verwant zijn.", en: "All people related to you." },
+      "father": { nl: "Formele manier om 'vader' te zeggen", en: "Formal word for father." },
+      "fiancé": { nl: "Je verloofde man.", en: "A man who is engaged to be married." },
+      "fiancée": { nl: "Je verloofde vrouw.", en: "A woman who is engaged to be married." },
+      "foster family": { nl: "Een gezin dat tijdelijk voor een kind zorgt.", en: "A family that cares for a child temporarily." },
+      "godparent": { nl: "Een volwassene die je begeleidt bij doop of geloof.", en: "An adult who sponsors a child at baptism." },
+      "grandparent": { nl: "Ouder van je vader of moeder.", en: "A parent of your parent." },
+      "guardian": { nl: "Iemand die wettelijk voor een kind zorgt.", en: "Someone legally responsible for a child." },
+      "half-sibling": { nl: "Broer of zus met één gedeelde ouder.", en: "Sibling with only one shared parent." },
+      "husband": { nl: "De echtgenoot van een vrouw.", en: "A woman's spouse." },
+      "mother": { nl: "Formele manier om 'moeder' te zeggen.", en: "Formal word for mum." },
+      "mum": { nl: "Informele manier om 'moeder' te zeggen.", en: "Informal word for mother." },
+      "nephew": { nl: "Zoon van je broer of zus.", en: "The son of your brother or sister." },
+      "niece": { nl: "Dochter van je broer of zus.", en: "The daughter of your brother or sister." },
+      "only child": { nl: "Kind zonder broers of zussen.", en: "A child with no siblings." },
+      "parents": { nl: "Je vader en moeder.", en: "Your father and mother." },
+      "relatives": { nl: "Andere mensen in je familie.", en: "Other people in your family." },
+      "siblings": { nl: "Je broers en zussen.", en: "Your brothers and sisters." },
+      "sister": { nl: "Je jonge vrouwelijke gezinslid", en: "A female sibling." },
+      "son": { nl: "Een jongen die kind is van zijn ouders.", en: "A male child of his parents." },
+      "step-parent": { nl: "Ouder via een huwelijk, niet biologisch.", en: "A parent through marriage, not by blood." },
+      "twin": { nl: "Eén van twee kinderen geboren op hetzelfde moment.", en: "One of two children born at the same time." },
+      "uncle": { nl: "De broer van je vader of moeder.", en: "Your parent’s brother." },
+      "wife": { nl: "De echtgenote van een man.", en: "A man's spouse." }
+    };
+
+    function getLanguage() {
+      const selected = document.querySelector('input[name="language"]:checked');
+      return selected ? selected.value : 'nl';
+    }
+
+    function setupGame() {
+      const wordBank = document.getElementById('wordBank');
+      const sentenceGrid = document.getElementById('sentenceGrid');
+      wordBank.innerHTML = '';
+      sentenceGrid.innerHTML = '';
+
+      const allWords = Object.keys(vocabData);
+      const selectedWords = shuffleArray(allWords).slice(0, 12);
+      const sentenceWords = shuffleArray([...selectedWords]).slice(0, 10);
+
+      selectedWords.forEach(word => {
+        const el = document.createElement('div');
+        el.className = 'draggable-word';
+        el.textContent = word;
+        el.draggable = true;
+        el.addEventListener('dragstart', drag);
+        wordBank.appendChild(el);
+      });
+
+      const lang = getLanguage();
+      for (let i = 0; i < sentenceWords.length; i += 2) {
+        const row = document.createElement('div');
+        row.className = 'exercise-row';
+
+        for (let j = i; j < i + 2 && j < sentenceWords.length; j++) {
+          const word = sentenceWords[j];
+          let desc = lang === 'en' ? vocabData[word].en
+                     : lang === 'nl' ? vocabData[word].nl
+                     : Math.random() < 0.5 ? vocabData[word].nl : vocabData[word].en;
+
+          const box = document.createElement('div');
+          box.className = 'sentence-box';
+          box.innerHTML = `
+            <p>${j + 1}. ${desc}</p>
+            <div class="drop-zone" data-word="${word}"></div>
+          `;
+
+          const dropZone = box.querySelector('.drop-zone');
+          dropZone.addEventListener('dragover', allowDrop);
+          dropZone.addEventListener('drop', drop);
+
+          row.appendChild(box);
+        }
+
+        sentenceGrid.appendChild(row);
+      }
+    }
+
+    function shuffleArray(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function drag(e) {
+      e.dataTransfer.setData("text/plain", e.target.textContent);
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      const word = e.dataTransfer.getData("text/plain");
+      e.target.innerHTML = '';
+
+      const el = document.createElement('span');
+      el.textContent = word;
+      el.className = 'draggable-word';
+      el.draggable = true;
+      el.addEventListener('dragstart', drag);
+      e.target.appendChild(el);
+    }
+
+    function checkAnswers() {
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        const expected = zone.getAttribute('data-word');
+        const given = zone.textContent.trim();
+        zone.classList.remove('correct', 'wrong');
+        zone.classList.add(given === expected ? 'correct' : 'wrong');
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setupGame();
+      document.querySelectorAll('input[name="language"]').forEach(input =>
+        input.addEventListener('change', setupGame)
+      );
+    });
+  </script>
+</body>
+</html>
+
+
