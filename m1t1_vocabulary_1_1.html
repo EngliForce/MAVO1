@@ -77,16 +77,20 @@ th, td {
   margin-top: 1rem;
 }
 
-.links a {
+.links a,
+.links button {
   padding: 0.5rem 1rem;
   background-color: #ff7043;
   color: white;
   border-radius: 6px;
   text-decoration: none;
   font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
 }
 
-.links a:hover {
+.links a:hover,
+.links button:hover {
   background-color: #e65c30;
 }
 
@@ -119,6 +123,20 @@ footer {
   padding: 1rem;
   font-size: 0.9rem;
 }
+
+#context-sentences {
+  display: none;
+  text-align: center;
+  margin-top: 2rem;
+}
+#context-sentences ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#context-sentences li {
+  margin-bottom: 1rem;
+}
 </style>
 </head>
 <body>
@@ -132,7 +150,7 @@ footer {
 <main>
 
 <section>
-  <h2>🧠 Vocabulary List - family</h2>
+  <h2>🧠 Vocabulary List - Family</h2>
   <p>Leer belangrijke Engelse woorden over familie en relaties.</p>
 
   <div class="table-row">
@@ -145,7 +163,7 @@ footer {
         <tr><td>brother</td><td>broer</td></tr>
         <tr><td>child</td><td>kind</td></tr>
         <tr><td>children</td><td>kinderen</td></tr>
-        <tr><td>cousin</td><td>neef / nicht (kind van oom/tante)</td></tr>
+        <tr><td>cousin</td><td>neef / nicht</td></tr>
         <tr><td>dad</td><td>papa</td></tr>
         <tr><td>daughter</td><td>dochter</td></tr>
         <tr><td>descendant</td><td>afstammeling</td></tr>
@@ -165,7 +183,7 @@ footer {
         <tr><th>Engels</th><th>Nederlands</th></tr>
         <tr><td>guardian</td><td>voogd</td></tr>
         <tr><td>half-…</td><td>half…</td></tr>
-        <tr><td>husband</td><td>echtgenoot / man</td></tr>
+        <tr><td>husband</td><td>echtgenoot</td></tr>
         <tr><td>mother</td><td>moeder</td></tr>
         <tr><td>mum</td><td>mama</td></tr>
         <tr><td>niece</td><td>nicht (dochter van broer/zus)</td></tr>
@@ -177,13 +195,70 @@ footer {
         <tr><td>son</td><td>zoon</td></tr>
         <tr><td>sister</td><td>zus</td></tr>
         <tr><td>step…</td><td>stief…</td></tr>
-        <tr><td>twin</td><td>tweelingbroer of -zus</td></tr>
+        <tr><td>twin</td><td>tweeling</td></tr>
         <tr><td>uncle</td><td>oom</td></tr>
-        <tr><td>wife</td><td>echtgenote / vrouw</td></tr>
+        <tr><td>wife</td><td>vrouw</td></tr>
         <tr><td>…-in-law</td><td>schoon…</td></tr>
       </table>
     </div>
   </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences" style="display: none; margin-top: 2rem;">
+  <h3>📘 Woorden in context</h3>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Woord</th>
+          <th>Engelse zin</th>
+          <th>Nederlandse vertaling</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ancestor</td><td>My ancestors lived in Italy.</td><td>Mijn voorouders woonden in Italië.</td></tr>
+        <tr><td>aunt</td><td>My aunt gave me a birthday card.</td><td>Mijn tante gaf me een verjaardagskaart.</td></tr>
+        <tr><td>baby</td><td>The baby is crying.</td><td>De baby huilt.</td></tr>
+        <tr><td>brother</td><td>I play football with my brother.</td><td>Ik speel voetbal met mijn broer.</td></tr>
+        <tr><td>child</td><td>The child is learning to read.</td><td>Het kind leert lezen.</td></tr>
+        <tr><td>children</td><td>The children are playing outside.</td><td>De kinderen spelen buiten.</td></tr>
+        <tr><td>cousin</td><td>My cousin lives in Amsterdam.</td><td>Mijn neef/nicht woont in Amsterdam.</td></tr>
+        <tr><td>dad</td><td>My dad makes the best pancakes.</td><td>Mijn papa maakt de beste pannenkoeken.</td></tr>
+        <tr><td>daughter</td><td>Their daughter loves music.</td><td>Hun dochter houdt van muziek.</td></tr>
+        <tr><td>descendant</td><td>He is a descendant of royalty.</td><td>Hij is een afstammeling van koninklijke afkomst.</td></tr>
+        <tr><td>extended family</td><td>We had a party with the extended family.</td><td>We hadden een feest met de uitgebreide familie.</td></tr>
+        <tr><td>family</td><td>I love spending time with my family.</td><td>Ik breng graag tijd door met mijn familie.</td></tr>
+        <tr><td>father</td><td>My father is a doctor.</td><td>Mijn vader is arts.</td></tr>
+        <tr><td>fiancé</td><td>Her fiancé is very kind.</td><td>Haar verloofde (man) is erg aardig.</td></tr>
+        <tr><td>fiancée</td><td>His fiancée is a teacher.</td><td>Zijn verloofde (vrouw) is lerares.</td></tr>
+        <tr><td>foster family</td><td>He grew up in a foster family.</td><td>Hij groeide op in een pleeggezin.</td></tr>
+        <tr><td>godmother</td><td>My godmother gave me a necklace.</td><td>Mijn peettante gaf me een ketting.</td></tr>
+        <tr><td>grandmother</td><td>My grandmother makes cookies.</td><td>Mijn grootmoeder bakt koekjes.</td></tr>
+        <tr><td>guardian</td><td>She is his legal guardian.</td><td>Zij is zijn wettelijke voogd.</td></tr>
+        <tr><td>half-sister</td><td>My half-sister lives abroad.</td><td>Mijn halfzus woont in het buitenland.</td></tr>
+        <tr><td>husband</td><td>Her husband travels a lot.</td><td>Haar man reist veel.</td></tr>
+        <tr><td>mother</td><td>My mother helps me with homework.</td><td>Mijn moeder helpt me met huiswerk.</td></tr>
+        <tr><td>mum</td><td>I call my mum every day.</td><td>Ik bel mijn mama elke dag.</td></tr>
+        <tr><td>niece</td><td>My niece is very smart.</td><td>Mijn nichtje is erg slim.</td></tr>
+        <tr><td>nephew</td><td>My nephew loves dinosaurs.</td><td>Mijn neefje houdt van dinosaurussen.</td></tr>
+        <tr><td>only child</td><td>I am an only child.</td><td>Ik ben enig kind.</td></tr>
+        <tr><td>parents</td><td>My parents work hard.</td><td>Mijn ouders werken hard.</td></tr>
+        <tr><td>relatives</td><td>We invited all our relatives.</td><td>We nodigden al onze familieleden uit.</td></tr>
+        <tr><td>siblings</td><td>I have three siblings.</td><td>Ik heb drie broers en zussen.</td></tr>
+        <tr><td>son</td><td>Their son plays guitar.</td><td>Hun zoon speelt gitaar.</td></tr>
+        <tr><td>sister</td><td>My sister is older than me.</td><td>Mijn zus is ouder dan ik.</td></tr>
+        <tr><td>stepfather</td><td>I have a stepfather.</td><td>Ik heb een stiefvader.</td></tr>
+        <tr><td>twin</td><td>They are twins.</td><td>Zij zijn een tweeling.</td></tr>
+        <tr><td>uncle</td><td>My uncle tells funny stories.</td><td>Mijn oom vertelt grappige verhalen.</td></tr>
+        <tr><td>wife</td><td>His wife is an artist.</td><td>Zijn vrouw is kunstenares.</td></tr>
+        <tr><td>mother-in-law</td><td>My mother-in-law is nice.</td><td>Mijn schoonmoeder is aardig.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 </section>
 
 <section>
@@ -196,11 +271,11 @@ footer {
 
 <section>
   <h2>🎬 Video</h2>
-  <p>Bekijk de video hieronder om te oefenen met de uistpraak va de woorden.</p>
+  <p>Bekijk de video hieronder voor uitleg en voorbeelden met familie-woorden.</p>
   <div class="video-row">
     <div class="video-column">
       <iframe src="https://www.youtube.com/embed/uZnGdQQqAKA" allowfullscreen></iframe>
-      <p>Listen & repeat</p>
+      <p>Family Vocabulary Explained</p>
     </div>
   </div>
 </section>
@@ -219,6 +294,13 @@ footer {
 <footer>
 <p>&copy; 2025 Englix – Make English Your Superpower!</p>
 </footer>
+
+<script>
+function toggleContextSentences() {
+  const div = document.getElementById("context-sentences");
+  div.style.display = (div.style.display === "block") ? "none" : "block";
+}
+</script>
 
 </body>
 </html>
