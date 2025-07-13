@@ -22,9 +22,10 @@
       flex-direction: row;
       gap: 2rem;
       padding: 2rem;
+      flex-wrap: wrap;
     }
     .story, .quiz {
-      flex: 1;
+      flex: 1 1 400px;
       background-color: white;
       border-radius: 12px;
       padding: 1.5rem;
@@ -63,6 +64,7 @@
       padding: 1rem;
       font-size: 0.9rem;
     }
+
     /* Tooltip */
     .tooltip {
       font-weight: bold;
@@ -86,7 +88,8 @@
       transition: opacity 0.3s ease;
       z-index: 100;
     }
-    .tooltip:hover::after {
+    .tooltip:hover::after,
+    .tooltip.active::after {
       opacity: 1;
     }
   </style>
@@ -174,6 +177,7 @@
   </footer>
 
   <script>
+    // Quiz functionaliteit
     document.getElementById('quizForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const form = e.target;
@@ -216,6 +220,28 @@
       `;
 
       document.getElementById('feedback').innerHTML = finalFeedback;
+    });
+
+    // Tooltip werkt op klik (voor touch devices)
+    document.querySelectorAll('.tooltip').forEach((el) => {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+
+        // Verwijder actieve tooltip van andere woorden
+        document.querySelectorAll('.tooltip.active').forEach((t) => {
+          if (t !== el) t.classList.remove('active');
+        });
+
+        // Toggle deze tooltip
+        el.classList.toggle('active');
+      });
+    });
+
+    // Sluit tooltip bij klik ergens anders
+    document.addEventListener('click', function () {
+      document.querySelectorAll('.tooltip.active').forEach((el) => {
+        el.classList.remove('active');
+      });
     });
   </script>
 </body>
