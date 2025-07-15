@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulaire</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #ff7043;
+      margin-bottom: 1rem;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .stat-box {
+      background-color: #ffe6dc;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      min-width: 120px;
+    }
+    #flashcard {
+      font-size: 2rem;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff8f0;
+      width: 280px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    input {
+      font-size: 1.1rem;
+      padding: 8px;
+      width: 220px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      margin-top: 10px;
+    }
+    button, select {
+      padding: 10px 15px;
+      font-size: 1rem;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 6px;
+      background: #ff7043;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover, select:hover {
+      background: #e65c30;
+    }
+    select {
+      background: #ff7043;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      min-height: 30px;
+    }
+    .correct {
+      color: green;
+    }
+    .wrong {
+      color: red;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 2rem;
+    }
+    .player-turn {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="Logo.png" alt="EngliForce Logo">
+    <h1>📝 Vocabulaire</h1>
+    <p>Speel alleen of met 2 spelers en oefen je Engelse woorden!</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Familie Flashcards</h2>
+
+      <!-- Modus kiezen -->
+      <div>
+        <label for="modeSelect"><b>Oefenrichting:</b></label>
+        <select id="modeSelect">
+          <option value="en-nl">Engels → Nederlands</option>
+          <option value="nl-en">Nederlands → Engels</option>
+          <option value="mixed">Gemengd</option>
+        </select>
+      </div>
+
+      <!-- Namen invoeren -->
+      <div>
+        <input type="text" id="player1Name" placeholder="Naam speler 1">
+        <input type="text" id="player2Name" placeholder="Naam speler 2 (optioneel)">
+      </div>
+
+      <!-- Beurt info -->
+      <div class="player-turn" id="turnInfo">Voer namen in en klik Start</div>
+
+      <!-- Tellers -->
+      <div class="stats">
+        <div class="stat-box">
+          <span id="p1NameLabel">Speler 1</span><br>
+          ✅ <span id="p1Know">0</span> | ❌ <span id="p1DontKnow">0</span>
+        </div>
+        <div class="stat-box" id="p2Box" style="display:none;">
+          <span id="p2NameLabel">Speler 2</span><br>
+          ✅ <span id="p2Know">0</span> | ❌ <span id="p2DontKnow">0</span>
+        </div>
+        <div class="stat-box">
+          📌 Nog te gaan: <span id="remainingCount">0</span>
+        </div>
+      </div>
+
+      <!-- Flashcard -->
+      <div id="flashcard">Kies een richting en klik Start</div>
+
+      <!-- Antwoordveld -->
+      <br>
+      <input type="text" id="answer" placeholder="Typ de vertaling">
+      <br>
+      <button onclick="checkAnswer()">Controleer</button>
+      <button onclick="startGame()">Start</button>
+
+      <div id="result"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const woordenlijst = [
+      { vraag: "ancestor", antwoord: "voorouder" },
+      { vraag: "aunt", antwoord: "tante" },
+      { vraag: "baby", antwoord: "baby" },
+      { vraag: "brother", antwoord: "broer" },
+      { vraag: "child", antwoord: "kind" },
+      { vraag: "children", antwoord: "kinderen" },
+      { vraag: "cousin", antwoord: "neef / nicht" },
+      { vraag: "dad", antwoord: "papa" },
+      { vraag: "daughter", antwoord: "dochter" },
+      { vraag: "descendant", antwoord: "afstammeling" },
+      { vraag: "extended family", antwoord: "uitgebreide familie" },
+      { vraag: "family", antwoord: "familie" },
+      { vraag: "father", antwoord: "vader" },
+      { vraag: "fiancé", antwoord: "verloofde (man)" },
+      { vraag: "fiancée", antwoord: "verloofde (vrouw)" },
+      { vraag: "foster family", antwoord: "pleeggezin" },
+      { vraag: "god…", antwoord: "peet…" },
+      { vraag: "grand…", antwoord: "groot…" },
+      { vraag: "guardian", antwoord: "voogd" },
+      { vraag: "half-…", antwoord: "half…" },
+      { vraag: "husband", antwoord: "echtgenoot" },
+      { vraag: "mother", antwoord: "moeder" },
+      { vraag: "mum", antwoord: "mama" },
+      { vraag: "niece", antwoord: "nicht (dochter van broer/zus)" },
+      { vraag: "nephew", antwoord: "neef (zoon van broer/zus)" },
+      { vraag: "only child", antwoord: "enig kind" },
+      { vraag: "parents", antwoord: "ouders" },
+      { vraag: "relatives", antwoord: "familieleden" },
+      { vraag: "siblings", antwoord: "broers en zussen" },
+      { vraag: "son", antwoord: "zoon" },
+      { vraag: "sister", antwoord: "zus" },
+      { vraag: "step…", antwoord: "stief…" },
+      { vraag: "twin", antwoord: "tweeling" },
+      { vraag: "uncle", antwoord: "oom" },
+      { vraag: "wife", antwoord: "vrouw" },
+      { vraag: "…-in-law", antwoord: "schoon…" }
+    ];
+
+    let currentDeck = [];
+    let currentIndex = 0;
+    let currentMode = "en-nl";
+
+    // Spelers
+    let player1 = { name: "Speler 1", know: 0, dontKnow: 0 };
+    let player2 = { name: "", know: 0, dontKnow: 0 };
+    let twoPlayers = false;
+    let currentPlayer = 1; // 1 of 2
+
+    document.getElementById("modeSelect").addEventListener("change", (e) => {
+      currentMode = e.target.value;
+    });
+
+    function startGame() {
+      // Zet namen
+      let p1Name = document.getElementById("player1Name").value.trim() || "Speler 1";
+      let p2Name = document.getElementById("player2Name").value.trim(); // kan leeg zijn
+
+      player1.name = p1Name;
+      player1.know = 0;
+      player1.dontKnow = 0;
+      document.getElementById("p1NameLabel").innerText = p1Name;
+
+      if (p2Name) {
+        // 2 spelers modus
+        twoPlayers = true;
+        player2.name = p2Name;
+        player2.know = 0;
+        player2.dontKnow = 0;
+        document.getElementById("p2NameLabel").innerText = p2Name;
+        document.getElementById("p2Box").style.display = "block";
+      } else {
+        // single player
+        twoPlayers = false;
+        player2.name = "";
+        document.getElementById("p2Box").style.display = "none";
+      }
+
+      // Deck maken
+      let preparedList;
+      if (currentMode === "nl-en") {
+        preparedList = woordenlijst.map(w => ({ vraag: w.antwoord, antwoord: w.vraag }));
+      } else if (currentMode === "en-nl") {
+        preparedList = woordenlijst.map(w => ({ vraag: w.vraag, antwoord: w.antwoord }));
+      } else {
+        preparedList = woordenlijst.map(w => {
+          let flip = Math.random() < 0.5;
+          return flip ? { vraag: w.vraag, antwoord: w.antwoord } : { vraag: w.antwoord, antwoord: w.vraag };
+        });
+      }
+
+      currentDeck = shuffleArray(preparedList);
+      currentIndex = 0;
+      currentPlayer = 1; // altijd speler 1 begint
+
+      document.getElementById("result").innerText = "";
+      updateStats();
+      showCard();
+    }
+
+    function showCard() {
+      let remaining = currentDeck.length - currentIndex;
+      document.getElementById("remainingCount").innerText = remaining >= 0 ? remaining : 0;
+
+      if (currentIndex < currentDeck.length) {
+        document.getElementById("flashcard").innerText = currentDeck[currentIndex].vraag;
+        document.getElementById("answer").value = "";
+        document.getElementById("answer").focus();
+        updateTurnInfo();
+      } else {
+        endGame();
+      }
+    }
+
+    function checkAnswer() {
+      if (currentIndex >= currentDeck.length) return;
+
+      let userInput = document.getElementById("answer").value.trim().toLowerCase();
+      let correct = currentDeck[currentIndex].antwoord.toLowerCase();
+
+      let player = (currentPlayer === 1) ? player1 : player2;
+
+      if (userInput === correct) {
+        document.getElementById("result").innerHTML = `<span class="correct">✅ Goed!</span>`;
+        player.know++;
+      } else {
+        document.getElementById("result").innerHTML =
+          `<span class="wrong">❌ Fout!</span> Juiste antwoord: <b>${currentDeck[currentIndex].antwoord}</b>`;
+        player.dontKnow++;
+      }
+
+      currentIndex++;
+
+      // Alleen beurt wisselen als er 2 spelers zijn
+      if (twoPlayers) {
+        currentPlayer = (currentPlayer === 1) ? 2 : 1;
+      }
+
+      updateStats();
+      setTimeout(showCard, 1000);
+    }
+
+    function updateTurnInfo() {
+      if (twoPlayers) {
+        let player = (currentPlayer === 1) ? player1.name : player2.name;
+        document.getElementById("turnInfo").innerText = `Beurt van: ${player}`;
+      } else {
+        document.getElementById("turnInfo").innerText = `Jouw beurt, ${player1.name}`;
+      }
+    }
+
+    function updateStats() {
+      document.getElementById("p1Know").innerText = player1.know;
+      document.getElementById("p1DontKnow").innerText = player1.dontKnow;
+
+      if (twoPlayers) {
+        document.getElementById("p2Know").innerText = player2.know;
+        document.getElementById("p2DontKnow").innerText = player2.dontKnow;
+      }
+
+      let remaining = currentDeck.length - currentIndex;
+      document.getElementById("remainingCount").innerText = remaining >= 0 ? remaining : 0;
+    }
+
+    function endGame() {
+      document.getElementById("flashcard").innerText = "🎉 Klaar!";
+      document.getElementById("remainingCount").innerText = "0";
+
+      if (twoPlayers) {
+        let winner;
+        if (player1.know > player2.know) {
+          winner = `${player1.name} wint! 🎉`;
+        } else if (player2.know > player1.know) {
+          winner = `${player2.name} wint! 🎉`;
+        } else {
+          winner = "Gelijkspel! 🤝";
+        }
+        document.getElementById("result").innerHTML = `
+          ${player1.name}: ✅${player1.know} ❌${player1.dontKnow}<br>
+          ${player2.name}: ✅${player2.know} ❌${player2.dontKnow}<br><br>
+          <b>${winner}</b>
+        `;
+        document.getElementById("turnInfo").innerText = "Spel afgelopen";
+      } else {
+        document.getElementById("result").innerHTML = `
+          ✅ ${player1.know} goed, ❌ ${player1.dontKnow} fout.<br>
+          Goed gedaan, ${player1.name}!
+        `;
+        document.getElementById("turnInfo").innerText = "Spel afgelopen";
+      }
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+  </script>
+</body>
+</html>
