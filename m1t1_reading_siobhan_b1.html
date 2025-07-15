@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -14,8 +15,14 @@
     header {
       background-color: #ff7043;
       color: white;
-      padding: 2rem;
+      padding: 2rem 1rem;
       text-align: center;
+    }
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
     }
     main {
       display: flex;
@@ -64,12 +71,15 @@
       font-size: 0.9rem;
     }
 
-    /* Tooltip */
+    /* Tooltip styling */
     .tooltip {
       font-weight: bold;
       position: relative;
       cursor: pointer;
       color: #333;
+    }
+    .tooltip.active::after {
+      opacity: 1;
     }
     .tooltip::after {
       content: attr(data-translation);
@@ -90,13 +100,26 @@
     .tooltip:hover::after {
       opacity: 1;
     }
+
+    /* Responsive fix for iPad & small screens */
+    @media (max-width: 900px) {
+      main {
+        flex-direction: column;
+      }
+      .story, .quiz {
+        max-height: none;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
+    <!-- ✅ Added Logo -->
+    <img src="Logo.png" alt="EngliForce Logo">
     <h1>Siobhan (B1)</h1>
-    <p>Read the story and answer the questions. Hover over words for translations.</p>
+    <p>Read the story and answer the questions. Tap or hover on words for translations.</p>
   </header>
+
   <main>
     <div class="story">
       <h2>📖 Story</h2>
@@ -177,10 +200,18 @@
   </main>
 
   <footer>
-    &copy; Englix - Make English Your Superpower!
+    &copy; EngliForce - Make English Your Superpower!
   </footer>
 
   <script>
+    // ✅ Touch-friendly tooltips for iPad
+    document.querySelectorAll('.tooltip').forEach(el => {
+      el.addEventListener('click', () => {
+        el.classList.add('active');
+        setTimeout(() => el.classList.remove('active'), 2000);
+      });
+    });
+
     document.getElementById('quizForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const form = e.target;
@@ -200,7 +231,8 @@
 
       for (let i = 1; i <= 8; i++) {
         const q = `q${i}`;
-        const answer = form[q]?.value;
+        const selected = form.querySelector(`input[name="${q}"]:checked`);
+        const answer = selected ? selected.value : null;
         if (answer === correctAnswers[q]) {
           score++;
           answerFeedback += `<p>✅ Question ${i} is correct!</p>`;
@@ -211,14 +243,17 @@
 
       let overallFeedback = '';
       if (score < 8) {
-        overallFeedback = `<p>📚 Try again. You got ${score}/8.</p>`;
+        overallFeedback = `<p>📚 You got ${score}/8. Try again!</p>`;
       } else {
         overallFeedback = `<p>🎉 Excellent! You got 8/8!</p>`;
       }
 
       document.getElementById('feedback').innerHTML = overallFeedback + answerFeedback;
+      // Scroll feedback into view so it’s visible on iPad
+      document.getElementById('feedback').scrollIntoView({behavior: 'smooth'});
     });
   </script>
 </body>
 </html>
+
 
