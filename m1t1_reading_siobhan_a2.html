@@ -71,6 +71,9 @@
       cursor: pointer;
       color: #333;
     }
+    .tooltip.active::after {
+      opacity: 1;
+    }
     .tooltip::after {
       content: attr(data-translation);
       position: absolute;
@@ -90,13 +93,23 @@
     .tooltip:hover::after {
       opacity: 1;
     }
+
+    /* Responsive fix for iPad & small screens */
+    @media (max-width: 900px) {
+      main {
+        flex-direction: column;
+      }
+      .story, .quiz {
+        max-height: none;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
     <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
     <h1>Siobhan (A2)</h1>
-    <p>Lees het verhaal over Siobhan (klik op moeilijke woorden voor de vertaling.</p>
+    <p>Lees het verhaal over Siobhan (tik op moeilijke woorden voor de vertaling).</p>
   </header>
 
   <main>
@@ -127,6 +140,7 @@
     <div class="quiz">
       <h2>📝 Quiz</h2>
       <form id="quizForm">
+        <!-- (vragen blijven hetzelfde) -->
         <div class="question">
           <p>1. Waar komt Siobhan vandaan?</p>
           <label><input type="radio" name="q1" value="a"> Uit Schotland</label><br>
@@ -197,6 +211,16 @@
   </footer>
 
   <script>
+    // ✅ TOUCH-vriendelijke tooltips
+    document.querySelectorAll('.tooltip').forEach(el => {
+      el.addEventListener('click', () => {
+        // toggle tooltip visibility
+        el.classList.toggle('active');
+        // hide again after 2 sec
+        setTimeout(() => el.classList.remove('active'), 2000);
+      });
+    });
+
     document.getElementById('quizForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const form = e.target;
@@ -218,7 +242,8 @@
 
       for (let i = 1; i <= 10; i++) {
         const q = `q${i}`;
-        const answer = form[q].value;
+        const selected = form.querySelector(`input[name="${q}"]:checked`);
+        const answer = selected ? selected.value : null;
         if (answer === correctAnswers[q]) {
           score++;
           answerFeedback += `<p>✅ Vraag ${i} is correct!</p>`;
@@ -241,7 +266,10 @@
       `;
 
       document.getElementById('feedback').innerHTML = finalFeedback;
+      // Scroll feedback into view on iPad
+      document.getElementById('feedback').scrollIntoView({behavior: 'smooth'});
     });
   </script>
 </body>
 </html>
+
