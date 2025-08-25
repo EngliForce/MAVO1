@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Time Challenge</title>
+  <title>Quiz - Vocabulary 1.1</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -14,14 +14,17 @@
     header {
       background-color: #ff7043;
       color: white;
-      padding: 2rem;
+      padding: 2rem 1rem 1rem;
       text-align: center;
     }
     header img {
       display: block;
-      margin: 0 auto 1rem auto;
-      width: 120px;
-      height: auto;
+      margin: 0 auto 1rem;
+      width: 100px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
     }
     main {
       padding: 2rem;
@@ -99,15 +102,13 @@
 <body>
   <header>
     <img src="Logo.png" alt="EngliForce Logo">
-    <h1>🏆 Time Challenge</h1>
+    <h1>🏆 Quiz - Vocabulary 1.1</h1>
     <p>Speel alleen of met z’n tweeën en kies je spelmodus!</p>
   </header>
 
   <main>
-    <!-- Startscherm -->
     <section id="start-screen">
       <h2>🎮 Instellingen</h2>
-      <p>Vul namen in (optioneel):</p>
       <input type="text" id="player1" placeholder="Speler 1 naam (optioneel)">
       <input type="text" id="player2" placeholder="Speler 2 naam (optioneel)">
       <p>
@@ -128,7 +129,6 @@
       <button class="start-btn" onclick="startGame()">🚀 Start Quiz</button>
     </section>
 
-    <!-- Quizsectie -->
     <section id="quiz-section" class="hidden">
       <h2 id="current-players"></h2>
       <div class="quiz-info">
@@ -142,7 +142,6 @@
       </div>
     </section>
 
-    <!-- Einde -->
     <section id="game-over" class="hidden">
       <h2>⏰ Tijd is op!</h2>
       <p><span id="winner-text"></span></p>
@@ -159,42 +158,29 @@
 
 <script>
   const words = [
-    {en: "ancestor", nl: "voorouder"},
-    {en: "aunt", nl: "tante"},
-    {en: "baby", nl: "baby"},
-    {en: "brother", nl: "broer"},
-    {en: "child", nl: "kind"},
-    {en: "children", nl: "kinderen"},
-    {en: "cousin", nl: "neef / nicht (kind van oom/tante)"},
-    {en: "dad", nl: "papa"},
-    {en: "daughter", nl: "dochter"},
-    {en: "descendant", nl: "afstammeling"},
-    {en: "extended family", nl: "uitgebreide familie"},
-    {en: "family", nl: "familie"},
-    {en: "father", nl: "vader"},
-    {en: "fiancé", nl: "verloofde (man)"},
-    {en: "fiancée", nl: "verloofde (vrouw)"},
-    {en: "foster family", nl: "pleeggezin"},
-    {en: "god…", nl: "peet…"},
-    {en: "grand…", nl: "groot…"},
-    {en: "guardian", nl: "voogd"},
-    {en: "half-…", nl: "half…"},
-    {en: "husband", nl: "echtgenoot / man"},
-    {en: "mother", nl: "moeder"},
-    {en: "mum", nl: "mama"},
-    {en: "niece", nl: "nicht (dochter van broer/zus)"},
-    {en: "nephew", nl: "neef (zoon van broer/zus)"},
-    {en: "only child", nl: "enig kind"},
-    {en: "parents", nl: "ouders"},
-    {en: "relatives", nl: "familieleden"},
-    {en: "siblings", nl: "broers en zussen"},
-    {en: "son", nl: "zoon"},
-    {en: "sister", nl: "zus"},
-    {en: "step…", nl: "stief…"},
-    {en: "twin", nl: "tweelingbroer of -zus"},
-    {en: "uncle", nl: "oom"},
-    {en: "wife", nl: "echtgenote / vrouw"},
-    {en: "…-in-law", nl: "schoon…"}
+    { en: ["address"], nl: ["adres"] },
+    { en: ["age"], nl: ["leeftijd"] },
+    { en: ["birthday"], nl: ["verjaardag"] },
+    { en: ["city"], nl: ["stad"] },
+    { en: ["country"], nl: ["land"] },
+    { en: ["email address"], nl: ["e‑mailadres"] },
+    { en: ["first name"], nl: ["voornaam"] },
+    { en: ["nationality"], nl: ["nationaliteit"] },
+    { en: ["phone number"], nl: ["telefoonnummer"] },
+    { en: ["postcode"], nl: ["postcode"] },
+    { en: ["surname", "family name"], nl: ["achternaam"] },
+    { en: ["athletic"], nl: ["sportief gebouwd"] },
+    { en: ["braces"], nl: ["beugel", "beugel (voor tanden)"] },
+    { en: ["build"], nl: ["postuur", "lichaamsbouw", "postuur / lichaamsbouw"] },
+    { en: ["contact lenses"], nl: ["contactlenzen"] },
+    { en: ["freckles"], nl: ["sproeten"] },
+    { en: ["glasses"], nl: ["bril"] },
+    { en: ["height"], nl: ["lengte"] },
+    { en: ["slim"], nl: ["slank"] },
+    { en: ["looks"], nl: ["uiterlijk"] },
+    { en: ["handsome"], nl: ["knap (man/jongen)", "knap"] },
+    { en: ["ordinary"], nl: ["gewoon", "niet bijzonder", "gewoon, niet bijzonder"] },
+    { en: ["pretty"], nl: ["mooi", "mooi (meisje/vrouw)"] }
   ];
 
   let settings = {
@@ -211,9 +197,9 @@
   let timer;
 
   function startGame() {
-    // Haal instellingen op
     const p1 = document.getElementById("player1").value.trim();
     const p2 = document.getElementById("player2").value.trim();
+    settings.players = [];
     if (p1) settings.players.push(p1);
     if (p2) settings.players.push(p2);
 
@@ -223,18 +209,14 @@
     document.getElementById("start-screen").classList.add("hidden");
     document.getElementById("quiz-section").classList.remove("hidden");
 
-    // Toon spelers
-    document.getElementById("current-players").textContent = settings.players.length > 0 ? 
-      "Spelers: " + settings.players.join(" & ") : "Solo modus";
+    document.getElementById("current-players").textContent = settings.players.length > 0
+      ? "Spelers: " + settings.players.join(" & ")
+      : "Solo modus";
 
-    // Reset score
     correctCount = 0;
     wrongAnswers = [];
 
-    // Genereer vragen
     generateQuestions();
-
-    // Start
     showQuestion();
     startTimer();
   }
@@ -243,36 +225,42 @@
     questions = words.map(w => {
       let q, correct;
       if (settings.mode === "en-nl") {
-        q = `Wat betekent "${w.en}"?`;
+        q = `Wat betekent "${w.en[0]}"?`;
         correct = w.nl;
       } else if (settings.mode === "nl-en") {
-        q = `Wat is "${w.nl}" in het Engels?`;
+        q = `Wat is "${w.nl[0]}" in het Engels?`;
         correct = w.en;
       } else {
         if (Math.random() > 0.5) {
-          q = `Wat betekent "${w.en}"?`;
+          q = `Wat betekent "${w.en[0]}"?`;
           correct = w.nl;
         } else {
-          q = `Wat is "${w.nl}" in het Engels?`;
+          q = `Wat is "${w.nl[0]}" in het Engels?`;
           correct = w.en;
         }
       }
 
-      let wrong1, wrong2;
-      if (settings.mode === "nl-en") {
-        do { wrong1 = words[Math.floor(Math.random()*words.length)].en; } while (wrong1 === correct);
-        do { wrong2 = words[Math.floor(Math.random()*words.length)].en; } while (wrong2 === correct || wrong2 === wrong1);
-      } else {
-        do { wrong1 = words[Math.floor(Math.random()*words.length)].nl; } while (wrong1 === correct);
-        do { wrong2 = words[Math.floor(Math.random()*words.length)].nl; } while (wrong2 === correct || wrong2 === wrong1);
-      }
-      let options = [correct, wrong1, wrong2].sort(() => Math.random() - 0.5);
+      const getWrongAnswers = (list, correctArray) => {
+        let options = [];
+        while (options.length < 2) {
+          const candidate = list[Math.floor(Math.random() * list.length)];
+          if (!correctArray.includes(candidate[0]) && !options.includes(candidate[0])) {
+            options.push(candidate[0]);
+          }
+        }
+        return options;
+      };
 
-      return {q, correct, options};
+      const wrong = settings.mode === "nl-en" ? getWrongAnswers(words.map(w => w.en), correct) : getWrongAnswers(words.map(w => w.nl), correct);
+      let allOptions = [...correct.map(c => c), ...wrong].sort(() => Math.random() - 0.5);
+
+      return { q, correct, options: allOptions };
     }).sort(() => Math.random() - 0.5);
   }
 
   function startTimer() {
+    timeLeft = 60;
+    document.getElementById("timer").textContent = timeLeft;
     timer = setInterval(() => {
       timeLeft--;
       document.getElementById("timer").textContent = timeLeft;
@@ -291,7 +279,7 @@
     if (settings.questionType === "mc") {
       document.getElementById("open-answer-section").classList.add("hidden");
       q.options.forEach(opt => {
-        let btn = document.createElement("button");
+        const btn = document.createElement("button");
         btn.textContent = opt;
         btn.onclick = () => checkAnswer(opt);
         answersDiv.appendChild(btn);
@@ -310,15 +298,18 @@
 
   function checkAnswer(choice) {
     const qObj = questions[current];
-    if (choice.toLowerCase() === qObj.correct.toLowerCase()) {
+    const isCorrect = qObj.correct.some(ans => ans.toLowerCase() === choice.toLowerCase());
+
+    if (isCorrect) {
       correctCount++;
     } else {
       wrongAnswers.push({
         question: qObj.q,
         given: choice || "(geen antwoord)",
-        correct: qObj.correct
+        correct: qObj.correct.join(" / ")
       });
     }
+
     current++;
     showQuestion();
   }
@@ -328,41 +319,35 @@
     document.getElementById("quiz-section").classList.add("hidden");
     document.getElementById("game-over").classList.remove("hidden");
 
-    const total = questions.length;
-    const score = Math.round((correctCount / total) * 100);
-
+    const score = Math.round((correctCount / questions.length) * 100);
     document.getElementById("final-score").textContent = `${correctCount} goed (${score}%)`;
 
-    // Speler tekst
-    if (settings.players.length === 2) {
-      document.getElementById("winner-text").textContent = `${settings.players.join(" & ")}, jullie resultaat:`;
-    } else if (settings.players.length === 1) {
-      document.getElementById("winner-text").textContent = `${settings.players[0]}, jouw resultaat:`;
-    } else {
-      document.getElementById("winner-text").textContent = "Solo modus afgerond!";
-    }
+    document.getElementById("winner-text").textContent =
+      settings.players.length === 2
+        ? `${settings.players.join(" & ")}, jullie resultaat:`
+        : settings.players.length === 1
+        ? `${settings.players[0]}, jouw resultaat:`
+        : "Solo modus afgerond!";
 
-    // Foute antwoorden tonen
-    const wrongList = document.getElementById("wrong-answers-list");
-    wrongList.innerHTML = "";
+    const list = document.getElementById("wrong-answers-list");
+    list.innerHTML = "";
     if (wrongAnswers.length === 0) {
-      wrongList.innerHTML = "<li>Geen fouten, goed gedaan! 🎉</li>";
+      list.innerHTML = "<li>Geen fouten, goed gedaan! 🎉</li>";
     } else {
       wrongAnswers.forEach(item => {
         const li = document.createElement("li");
         li.innerHTML = `<strong>${item.question}</strong><br>Jouw antwoord: <em>${item.given}</em><br>Goed antwoord: ✅ ${item.correct}`;
-        wrongList.appendChild(li);
+        list.appendChild(li);
       });
     }
   }
 
   function restartGame() {
     settings.players = [];
+    current = 0;
     correctCount = 0;
     wrongAnswers = [];
     timeLeft = 60;
-    current = 0;
-    document.getElementById("timer").textContent = 60;
     document.getElementById("quiz-section").classList.add("hidden");
     document.getElementById("game-over").classList.add("hidden");
     document.getElementById("start-screen").classList.remove("hidden");
@@ -370,4 +355,3 @@
 </script>
 </body>
 </html>
-
