@@ -3,377 +3,463 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flashcard Challenge</title>
+  <title>Vocabulary Detective – Vocabulary 1.1</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    header {
-      background-color: #ff7043;
-      color: white;
-      padding: 2rem;
-      text-align: center;
+
+   .topbar {
+  width: 100%;
+  background-color: #ff7043;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.topbar-title {
+  color: white;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+    img.logo {
+      max-height: 80px;
     }
-    header img {
-      display: block;
-      margin: 0 auto 1rem auto;
-      width: 120px;
-      height: auto;
-    }
+
     main {
       padding: 2rem;
+      width: 100%;
+      max-width: 800px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #ff7043;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
       text-align: center;
     }
-    section {
+
+    .description {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #ff7043;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .word-card {
+      border: 2px solid #ff7043;
       background-color: white;
       border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 1rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    h2 {
+
+    .word-to-guess {
+      font-size: 1.4rem;
       color: #ff7043;
-      margin-bottom: 1rem;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      margin-top: 1rem;
     }
-    .stats {
+
+    .hint {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #444;
+      text-align: center;
+    }
+
+    .scoreboard {
       display: flex;
       justify-content: space-around;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .stat-box {
-      background-color: #ffe6dc;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      min-width: 120px;
-    }
-    #flashcard {
-      font-size: 2rem;
-      margin: 20px auto;
-      padding: 20px;
-      border-radius: 10px;
-      background: #fff8f0;
-      width: 280px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
-    input {
-      font-size: 1.1rem;
-      padding: 8px;
-      width: 220px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      margin-top: 10px;
-    }
-    button, select {
-      padding: 10px 15px;
-      font-size: 1rem;
-      margin: 10px 5px;
-      border: none;
-      border-radius: 6px;
-      background: #ff7043;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover, select:hover {
-      background: #e65c30;
-    }
-    select {
-      background: #ff7043;
-    }
-    #result {
-      margin-top: 15px;
-      font-weight: bold;
+      margin-top: 1rem;
       font-size: 1.2rem;
-      min-height: 30px;
     }
-    .correct {
-      color: green;
+
+    .score {
+      font-weight: bold;
+      color: #333;
     }
-    .wrong {
-      color: red;
+
+    .turn {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      text-align: center;
     }
+
     footer {
       background-color: #ffe6dc;
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
-      margin-top: 2rem;
+      width: 100%;
+      margin-top: 3rem;
     }
-    .player-turn {
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin: 15px 0;
+
+    #winnerMessage {
+      display: none;
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff8f0;
+      padding: 2rem;
+      border: 3px solid #ff7043;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 2rem;
+      color: #2e7d32;
+      z-index: 10;
+    }
+
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: none;
+      z-index: 5;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="Logo.png" alt="EngliForce Logo">
-    <h1>📝 Flashcard Challenge</h1>
-    <p>Speel alleen of met 2 spelers en oefen je Engelse woorden!</p>
-  </header>
+
+ <div class="topbar">
+  <img src="Logo.png" alt="Logo" class="logo" />
+  <h1 class="topbar-title">Vocabulary Detective – Vocabulary 1.1</h1>
+</div>
 
   <main>
-    <section>
-      <h2>Familie Flashcards</h2>
+    <h1>Vocabulary Detective - Vocabulary 1.1</h1>
 
-      <!-- Modus kiezen -->
-      <div>
-        <label for="modeSelect"><b>Oefenrichting:</b></label>
-        <select id="modeSelect">
-          <option value="en-nl">Engels → Nederlands</option>
-          <option value="nl-en">Nederlands → Engels</option>
-          <option value="mixed">Gemengd</option>
-        </select>
+    <div style="margin-bottom: 1rem;">
+      <label for="languageSwitch">Taal / Language:</label>
+      <select id="languageSwitch" onchange="switchLanguage()">
+        <option value="nl">Nederlands</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <p class="description" id="instructions">
+      🎯 <strong>Doel:</strong> Raad het Engelse woord over persoonlijke informatie of uiterlijk aan de hand van hints.<br><br>
+      Hoe minder hints je nodig hebt, hoe meer punten je krijgt.<br>
+      Engelse hints leveren een bonuspunt op!
+    </p>
+
+    <div class="section" id="setup">
+      <label for="playerCount">Aantal spelers:</label>
+      <select id="playerCount">
+        <option value="2">2 spelers</option>
+        <option value="1">1 speler</option>
+      </select>
+
+      <label for="player1">Speler 1:</label>
+      <input type="text" id="player1" placeholder="bijv. Sam" />
+
+      <div id="player2Section">
+        <label for="player2">Speler 2:</label>
+        <input type="text" id="player2" placeholder="bijv. Alex" />
       </div>
 
-      <!-- Namen invoeren -->
-      <div>
-        <input type="text" id="player1Name" placeholder="Naam speler 1">
-        <input type="text" id="player2Name" placeholder="Naam speler 2 (optioneel)">
-      </div>
-
-      <!-- Beurt info -->
-      <div class="player-turn" id="turnInfo">Voer namen in en klik Start</div>
-
-      <!-- Tellers -->
-      <div class="stats">
-        <div class="stat-box">
-          <span id="p1NameLabel">Speler 1</span><br>
-          ✅ <span id="p1Know">0</span> | ❌ <span id="p1DontKnow">0</span>
-        </div>
-        <div class="stat-box" id="p2Box" style="display:none;">
-          <span id="p2NameLabel">Speler 2</span><br>
-          ✅ <span id="p2Know">0</span> | ❌ <span id="p2DontKnow">0</span>
-        </div>
-        <div class="stat-box">
-          📌 Nog te gaan: <span id="remainingCount">0</span>
-        </div>
-      </div>
-
-      <!-- Flashcard -->
-      <div id="flashcard">Kies een richting en klik Start</div>
-
-      <!-- Antwoordveld -->
-      <br>
-      <input type="text" id="answer" placeholder="Typ de vertaling">
-      <br>
-      <button onclick="checkAnswer()">Controleer</button>
       <button onclick="startGame()">Start</button>
+    </div>
 
-      <div id="result"></div>
-    </section>
+    <div class="section" id="game" style="display: none;">
+      <div class="turn" id="turnIndicator">Speler: ...</div>
+
+      <div class="scoreboard">
+        <div><span id="name1"></span>: <span id="score1" class="score">0</span></div>
+        <div id="player2Score"><span id="name2"></span>: <span id="score2" class="score">0</span></div>
+      </div>
+
+      <div class="word-card" id="word-card">
+        <div class="word-to-guess" id="word-to-guess">Antwoord: —</div>
+
+        <label for="hintLanguage">Hinttaal:</label>
+        <select id="hintLanguage" onchange="resetClue()">
+          <option value="nl">Nederlands</option>
+          <option value="en">English</option>
+        </select>
+
+        <p class="hint" id="hint">Klik op ‘Volgende hint’ om te beginnen.</p>
+        <button onclick="nextHint()">Volgende hint</button>
+        <button onclick="showWord()">Antwoord</button>
+        <button onclick="correctGuess()">Correct</button>
+        <button onclick="wrongGuess()">Fout</button>
+      </div>
+    </div>
   </main>
+
+  <canvas id="confettiCanvas"></canvas>
+  <div id="winnerMessage">🎉 <span id="winnerName">...</span> 🎉</div>
 
   <footer>
     <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
   </footer>
 
   <script>
-    const woordenlijst = [
-      { vraag: "ancestor", antwoord: "voorouder" },
-      { vraag: "aunt", antwoord: "tante" },
-      { vraag: "baby", antwoord: "baby" },
-      { vraag: "brother", antwoord: "broer" },
-      { vraag: "child", antwoord: "kind" },
-      { vraag: "children", antwoord: "kinderen" },
-      { vraag: "cousin", antwoord: "neef / nicht" },
-      { vraag: "dad", antwoord: "papa" },
-      { vraag: "daughter", antwoord: "dochter" },
-      { vraag: "descendant", antwoord: "afstammeling" },
-      { vraag: "extended family", antwoord: "uitgebreide familie" },
-      { vraag: "family", antwoord: "familie" },
-      { vraag: "father", antwoord: "vader" },
-      { vraag: "fiancé", antwoord: "verloofde (man)" },
-      { vraag: "fiancée", antwoord: "verloofde (vrouw)" },
-      { vraag: "foster family", antwoord: "pleeggezin" },
-      { vraag: "god…", antwoord: "peet…" },
-      { vraag: "grand…", antwoord: "groot…" },
-      { vraag: "guardian", antwoord: "voogd" },
-      { vraag: "half-…", antwoord: "half…" },
-      { vraag: "husband", antwoord: "echtgenoot" },
-      { vraag: "mother", antwoord: "moeder" },
-      { vraag: "mum", antwoord: "mama" },
-      { vraag: "niece", antwoord: "nicht (dochter van broer/zus)" },
-      { vraag: "nephew", antwoord: "neef (zoon van broer/zus)" },
-      { vraag: "only child", antwoord: "enig kind" },
-      { vraag: "parents", antwoord: "ouders" },
-      { vraag: "relatives", antwoord: "familieleden" },
-      { vraag: "siblings", antwoord: "broers en zussen" },
-      { vraag: "son", antwoord: "zoon" },
-      { vraag: "sister", antwoord: "zus" },
-      { vraag: "step…", antwoord: "stief…" },
-      { vraag: "twin", antwoord: "tweeling" },
-      { vraag: "uncle", antwoord: "oom" },
-      { vraag: "wife", antwoord: "vrouw" },
-      { vraag: "…-in-law", antwoord: "schoon…" }
+    const words = [
+      { word: "address", hints: { nl: ["Waar je woont.", "Straat en huisnummer.", "Adres."], en: ["Where you live.", "Street and number.", "Address."] }},
+      { word: "age", hints: { nl: ["Hoe oud je bent.", "Aantal jaren.", "Leeftijd."], en: ["How old you are.", "Number of years.", "Age."] }},
+      { word: "birthday", hints: { nl: ["Je geboortedag.", "Wordt elk jaar gevierd.", "Verjaardag."], en: ["The day you were born.", "You celebrate it yearly.", "Birthday."] }},
+      { word: "city", hints: { nl: ["Plaats waar je woont.", "Grotere plaats dan dorp.", "Stad."], en: ["Place you live in.", "Bigger than a village.", "City."] }},
+      { word: "country", hints: { nl: ["Nederland is er één.", "Een natie.", "Land."], en: ["Netherlands is one.", "A nation.", "Country."] }},
+      { word: "email address", hints: { nl: ["Digitaal contactgegeven.", "Met @ erin.", "E‑mailadres."], en: ["Digital contact detail.", "Includes @.", "Email address."] }},
+      { word: "first name", hints: { nl: ["Voor je achternaam.", "Bijvoorbeeld: Emma.", "Voornaam."], en: ["Comes before your last name.", "For example: Emma.", "First name."] }},
+      { word: "nationality", hints: { nl: ["Nederlander, Belg, Duitser...", "Je land van herkomst.", "Nationaliteit."], en: ["Dutch, Belgian, German...", "Country you’re from.", "Nationality."] }},
+      { word: "phone number", hints: { nl: ["Om iemand te bellen.", "Bestaat uit cijfers.", "Telefoonnummer."], en: ["Used to call someone.", "Made of numbers.", "Phone number."] }},
+      { word: "postcode", hints: { nl: ["Cijfer en letter voor je adres.", "Komt na je straatnaam.", "Postcode."], en: ["Code for your address.", "Follows street name.", "Postcode."] }},
+      { word: "surname / family name", hints: { nl: ["De achternaam.", "Deel van je naam.", "Achternaam."], en: ["Your last name.", "Part of your full name.", "Surname / family name."] }},
+      { word: "athletic", hints: { nl: ["Sportieve bouw.", "Sterk en gespierd.", "Sportief gebouwd."], en: ["Sporty body.", "Strong and fit.", "Athletic."] }},
+      { word: "braces", hints: { nl: ["Op je tanden.", "Helpt ze recht te zetten.", "Beugel."], en: ["On your teeth.", "Makes them straight.", "Braces."] }},
+      { word: "build", hints: { nl: ["Lichaamsvorm.", "Postuur.", "Postuur / lichaamsbouw."], en: ["Body shape.", "Figure.", "Build."] }},
+      { word: "contact lenses", hints: { nl: ["Kleine lenzen in je oog.", "In plaats van een bril.", "Contactlenzen."], en: ["Tiny lenses in your eyes.", "Instead of glasses.", "Contact lenses."] }},
+      { word: "freckles", hints: { nl: ["Kleine bruine vlekjes.", "Op je gezicht.", "Sproeten."], en: ["Small brown spots.", "On your face.", "Freckles."] }},
+      { word: "glasses", hints: { nl: ["Op je neus.", "Helpt je beter zien.", "Bril."], en: ["On your nose.", "Helps you see.", "Glasses."] }},
+      { word: "height", hints: { nl: ["Hoe lang je bent.", "In meters of centimeters.", "Lengte."], en: ["How tall you are.", "In meters or feet.", "Height."] }},
+      { word: "slim", hints: { nl: ["Niet dik, niet gespierd.", "Dun en fit.", "Slank."], en: ["Not fat, not muscular.", "Thin and fit.", "Slim."] }},
+      { word: "looks", hints: { nl: ["Hoe je eruitziet.", "Uiterlijk.", "Uiterlijk."], en: ["How you look.", "Appearance.", "Looks."] }},
+      { word: "handsome", hints: { nl: ["Knap voor een jongen.", "Goed uiterlijk.", "Knap (man/jongen)."], en: ["Good-looking man.", "Attractive male.", "Handsome."] }},
+      { word: "ordinary", hints: { nl: ["Niet bijzonder.", "Gewoon.", "Gewoon, niet bijzonder."], en: ["Not special.", "Plain looking.", "Ordinary."] }},
+      { word: "pretty", hints: { nl: ["Mooi voor een meisje.", "Aantrekkelijk uiterlijk.", "Mooi (meisje/vrouw)."], en: ["Attractive girl.", "Nice face.", "Pretty."] }}
     ];
 
-    let currentDeck = [];
+    const translations = {
+      nl: {
+        turn: "Speler: ",
+        wordLabel: "Antwoord:",
+        nextClue: "Volgende hint",
+        correct: "Correct",
+        wrong: "Fout",
+        clueStart: "Klik op ‘Volgende hint’ om te beginnen.",
+        done: "🎉 Klaar!",
+        win: "wint!",
+        tie: "Gelijkspel!"
+      },
+      en: {
+        turn: "Player: ",
+        wordLabel: "Answer:",
+        nextClue: "Next clue",
+        correct: "Correct",
+        wrong: "Incorrect",
+        clueStart: "Click ‘Next clue’ to start.",
+        done: "🎉 Done!",
+        win: "wins!",
+        tie: "It's a tie!"
+      }
+    };
+
+    let currentLang = 'nl';
+    let p1 = '', p2 = '', playerCount = 2;
+    let score = [0, 0];
     let currentIndex = 0;
-    let currentMode = "en-nl";
+    let currentHint = 0;
+    let currentPlayer = 0;
 
-    // Spelers
-    let player1 = { name: "Speler 1", know: 0, dontKnow: 0 };
-    let player2 = { name: "", know: 0, dontKnow: 0 };
-    let twoPlayers = false;
-    let currentPlayer = 1; // 1 of 2
-
-    document.getElementById("modeSelect").addEventListener("change", (e) => {
-      currentMode = e.target.value;
+    document.getElementById("playerCount").addEventListener("change", function () {
+      const show = this.value === "2";
+      document.getElementById("player2Section").style.display = show ? "block" : "none";
+      document.getElementById("player2Score").style.display = show ? "block" : "none";
     });
 
+    function switchLanguage() {
+      currentLang = document.getElementById('languageSwitch').value;
+      document.getElementById("hintLanguage").value = currentLang;
+      resetWordCard();
+      showTurn();
+    }
+
     function startGame() {
-      // Zet namen
-      let p1Name = document.getElementById("player1Name").value.trim() || "Speler 1";
-      let p2Name = document.getElementById("player2Name").value.trim(); // kan leeg zijn
+      playerCount = parseInt(document.getElementById("playerCount").value);
+      p1 = document.getElementById("player1").value || "Player 1";
+      p2 = playerCount === 2 ? (document.getElementById("player2").value || "Player 2") : "—";
 
-      player1.name = p1Name;
-      player1.know = 0;
-      player1.dontKnow = 0;
-      document.getElementById("p1NameLabel").innerText = p1Name;
-
-      if (p2Name) {
-        // 2 spelers modus
-        twoPlayers = true;
-        player2.name = p2Name;
-        player2.know = 0;
-        player2.dontKnow = 0;
-        document.getElementById("p2NameLabel").innerText = p2Name;
-        document.getElementById("p2Box").style.display = "block";
-      } else {
-        // single player
-        twoPlayers = false;
-        player2.name = "";
-        document.getElementById("p2Box").style.display = "none";
-      }
-
-      // Deck maken
-      let preparedList;
-      if (currentMode === "nl-en") {
-        preparedList = woordenlijst.map(w => ({ vraag: w.antwoord, antwoord: w.vraag }));
-      } else if (currentMode === "en-nl") {
-        preparedList = woordenlijst.map(w => ({ vraag: w.vraag, antwoord: w.antwoord }));
-      } else {
-        preparedList = woordenlijst.map(w => {
-          let flip = Math.random() < 0.5;
-          return flip ? { vraag: w.vraag, antwoord: w.antwoord } : { vraag: w.antwoord, antwoord: w.vraag };
-        });
-      }
-
-      currentDeck = shuffleArray(preparedList);
+      shuffle(words);
+      score = [0, 0];
       currentIndex = 0;
-      currentPlayer = 1; // altijd speler 1 begint
+      currentHint = 0;
+      currentPlayer = 0;
 
-      document.getElementById("result").innerText = "";
-      updateStats();
-      showCard();
+      document.getElementById("name1").textContent = p1;
+      document.getElementById("name2").textContent = p2;
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
+
+      updateScore();
+      showTurn();
+      resetWordCard();
     }
 
-    function showCard() {
-      let remaining = currentDeck.length - currentIndex;
-      document.getElementById("remainingCount").innerText = remaining >= 0 ? remaining : 0;
-
-      if (currentIndex < currentDeck.length) {
-        document.getElementById("flashcard").innerText = currentDeck[currentIndex].vraag;
-        document.getElementById("answer").value = "";
-        document.getElementById("answer").focus();
-        updateTurnInfo();
-      } else {
-        endGame();
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
     }
 
-    function checkAnswer() {
-      if (currentIndex >= currentDeck.length) return;
+    function showTurn() {
+      const name = currentPlayer === 0 ? p1 : p2;
+      const text = playerCount === 1 ? `${translations[currentLang].turn}${p1}` : `${translations[currentLang].turn}${name}`;
+      document.getElementById("turnIndicator").textContent = text;
+    }
 
-      let userInput = document.getElementById("answer").value.trim().toLowerCase();
-      let correct = currentDeck[currentIndex].antwoord.toLowerCase();
+    function updateScore() {
+      document.getElementById("score1").textContent = score[0];
+      document.getElementById("score2").textContent = score[1];
+    }
 
-      let player = (currentPlayer === 1) ? player1 : player2;
+    function showWord() {
+      const word = words[currentIndex].word;
+      document.getElementById("word-to-guess").textContent = `${translations[currentLang].wordLabel} ${word}`;
+      document.getElementById("word-to-guess").style.display = "block";
+    }
 
-      if (userInput === correct) {
-        document.getElementById("result").innerHTML = `<span class="correct">✅ Goed!</span>`;
-        player.know++;
-      } else {
-        document.getElementById("result").innerHTML =
-          `<span class="wrong">❌ Fout!</span> Juiste antwoord: <b>${currentDeck[currentIndex].antwoord}</b>`;
-        player.dontKnow++;
-      }
+    function nextHint() {
+      if (currentHint >= 3) return;
+      const lang = document.getElementById("hintLanguage").value;
+      const hint = words[currentIndex].hints[lang][currentHint];
+      document.getElementById("hint").textContent = `Clue ${currentHint + 1}: ${hint}`;
+      currentHint++;
+    }
 
+    function correctGuess() {
+      const lang = document.getElementById("hintLanguage").value;
+      let points = 3 - (currentHint - 1);
+      if (lang === "en") points += 1;
+      score[currentPlayer] += points;
+      nextWord();
+    }
+
+    function wrongGuess() {
+      nextWord();
+    }
+
+    function nextWord() {
       currentIndex++;
-
-      // Alleen beurt wisselen als er 2 spelers zijn
-      if (twoPlayers) {
-        currentPlayer = (currentPlayer === 1) ? 2 : 1;
-      }
-
-      updateStats();
-      setTimeout(showCard, 1000);
-    }
-
-    function updateTurnInfo() {
-      if (twoPlayers) {
-        let player = (currentPlayer === 1) ? player1.name : player2.name;
-        document.getElementById("turnInfo").innerText = `Beurt van: ${player}`;
+      currentHint = 0;
+      if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+      updateScore();
+      if (currentIndex >= words.length) {
+        document.getElementById("hint").textContent = translations[currentLang].done;
+        document.getElementById("word-to-guess").style.display = "none";
+        showWinnerAndCelebrate();
       } else {
-        document.getElementById("turnInfo").innerText = `Jouw beurt, ${player1.name}`;
+        showTurn();
+        resetWordCard();
       }
     }
 
-    function updateStats() {
-      document.getElementById("p1Know").innerText = player1.know;
-      document.getElementById("p1DontKnow").innerText = player1.dontKnow;
-
-      if (twoPlayers) {
-        document.getElementById("p2Know").innerText = player2.know;
-        document.getElementById("p2DontKnow").innerText = player2.dontKnow;
-      }
-
-      let remaining = currentDeck.length - currentIndex;
-      document.getElementById("remainingCount").innerText = remaining >= 0 ? remaining : 0;
+    function resetWordCard() {
+      document.getElementById("hint").textContent = translations[currentLang].clueStart;
+      document.getElementById("word-to-guess").style.display = "none";
     }
 
-    function endGame() {
-      document.getElementById("flashcard").innerText = "🎉 Klaar!";
-      document.getElementById("remainingCount").innerText = "0";
+    function resetClue() {
+      currentHint = 0;
+      resetWordCard();
+    }
 
-      if (twoPlayers) {
-        let winner;
-        if (player1.know > player2.know) {
-          winner = `${player1.name} wint! 🎉`;
-        } else if (player2.know > player1.know) {
-          winner = `${player2.name} wint! 🎉`;
-        } else {
-          winner = "Gelijkspel! 🤝";
+    function showWinnerAndCelebrate() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      const winnerBox = document.getElementById('winnerMessage');
+      const winnerName = document.getElementById('winnerName');
+
+      let winnerText;
+      if (score[0] > score[1]) winnerText = `${p1} ${translations[currentLang].win}`;
+      else if (score[1] > score[0]) winnerText = `${p2} ${translations[currentLang].win}`;
+      else winnerText = translations[currentLang].tie;
+
+      winnerName.textContent = winnerText;
+      winnerBox.style.display = 'block';
+      canvas.style.display = 'block';
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const pieces = Array.from({ length: 150 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 30 + 10,
+        color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+        tilt: Math.random() * 10 - 10
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const p of pieces) {
+          ctx.beginPath();
+          ctx.arc(p.x + p.tilt, p.y, p.r, 0, Math.PI * 2, false);
+          ctx.fillStyle = p.color;
+          ctx.fill();
         }
-        document.getElementById("result").innerHTML = `
-          ${player1.name}: ✅${player1.know} ❌${player1.dontKnow}<br>
-          ${player2.name}: ✅${player2.know} ❌${player2.dontKnow}<br><br>
-          <b>${winner}</b>
-        `;
-        document.getElementById("turnInfo").innerText = "Spel afgelopen";
-      } else {
-        document.getElementById("result").innerHTML = `
-          ✅ ${player1.know} goed, ❌ ${player1.dontKnow} fout.<br>
-          Goed gedaan, ${player1.name}!
-        `;
-        document.getElementById("turnInfo").innerText = "Spel afgelopen";
+        update();
+        requestAnimationFrame(draw);
       }
-    }
 
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+      function update() {
+        for (const p of pieces) {
+          p.y += Math.cos(p.d) + 2;
+          p.x += Math.sin(p.d);
+          if (p.y > canvas.height) {
+            p.y = -10;
+            p.x = Math.random() * canvas.width;
+          }
+        }
       }
-      return arr;
+
+      draw();
+
+      setTimeout(() => {
+        canvas.style.display = 'none';
+        winnerBox.style.display = 'none';
+      }, 7000);
     }
   </script>
 </body>
