@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – Family</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .controls {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    select, label, button {
+      font-size: 1rem;
+    }
+
+    .flashcards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    .card {
+      width: 220px;
+      height: 180px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #ffffff, #ffe6dc);
+      color: #ff7043;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .card-back {
+      background: #ff7043;
+      color: white;
+      transform: rotateY(180deg);
+      font-size: 1.2rem;
+    }
+
+    .example {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    .checkbox-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo.png" alt="EngliForce logo" />
+    <h1>Flashcards – Vocabulary 1.2. Family</h1>
+    <p>Klik op een kaart om de vertaling te zien. Je kunt ook instellen hoe je wilt oefenen!</p>
+  </header>
+
+  <div class="controls">
+    <label>
+      Aantal kaarten:
+      <select id="card-count">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="show-examples" />
+      Toon voorbeeldzinnen
+    </label>
+    <label>
+      <input type="checkbox" id="reverse-cards" />
+      Nederlands → Engels
+    </label>
+
+    <button onclick="generateCards()">Next 🔁</button>
+    <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+  </div>
+
+  <div class="flashcards-container" id="flashcards-container"></div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English your superpower!</p>
+  </footer>
+
+  <script>
+   const flashcards = [
+  { en: 'aunt', nl: 'tante', exEN: 'My aunt lives in London.', exNL: 'Mijn tante woont in Londen.' },
+  { en: 'baby', nl: 'baby', exEN: 'The baby is sleeping.', exNL: 'De baby slaapt.' },
+  { en: 'brother', nl: 'broer', exEN: 'I have a younger brother.', exNL: 'Ik heb een jongere broer.' },
+  { en: 'child', nl: 'kind', exEN: 'The child is playing outside.', exNL: 'Het kind speelt buiten.' },
+  { en: 'cousin', nl: 'neef / nicht', exEN: 'My cousin is visiting us.', exNL: 'Mijn neef/nicht komt op bezoek.' },
+  { en: 'dad', nl: 'papa', exEN: 'My dad makes pancakes.', exNL: 'Mijn papa maakt pannenkoeken.' },
+  { en: 'daughter', nl: 'dochter', exEN: 'She has a daughter named Mia.', exNL: 'Ze heeft een dochter genaamd Mia.' },
+  { en: 'family', nl: 'familie', exEN: 'We love family dinners.', exNL: 'We houden van familiediners.' },
+  { en: 'father', nl: 'vader', exEN: 'His father works in a bank.', exNL: 'Zijn vader werkt bij een bank.' },
+  { en: 'mother', nl: 'moeder', exEN: 'Her mother is kind.', exNL: 'Haar moeder is vriendelijk.' },
+  { en: 'parents', nl: 'ouders', exEN: 'My parents are teachers.', exNL: 'Mijn ouders zijn leraren.' },
+  { en: 'sister', nl: 'zus', exEN: 'My sister loves to sing.', exNL: 'Mijn zus houdt van zingen.' },
+  { en: 'son', nl: 'zoon', exEN: 'They have a son and a daughter.', exNL: 'Ze hebben een zoon en een dochter.' },
+  { en: 'uncle', nl: 'oom', exEN: 'My uncle lives in Belgium.', exNL: 'Mijn oom woont in België.' },
+  { en: 'wife', nl: 'vrouw', exEN: 'His wife is very nice.', exNL: 'Zijn vrouw is erg aardig.' },
+  { en: 'foster family', nl: 'pleeggezin', exEN: 'He grew up in a foster family.', exNL: 'Hij groeide op in een pleeggezin.' },
+  { en: 'godmother', nl: 'peettante', exEN: 'My godmother gave me a gift.', exNL: 'Mijn peettante gaf me een cadeau.' },
+  { en: 'grandfather', nl: 'grootvader', exEN: 'My grandfather is 80 years old.', exNL: 'Mijn grootvader is 80 jaar oud.' },
+  { en: 'guardian', nl: 'voogd', exEN: 'The guardian signed the form.', exNL: 'De voogd ondertekende het formulier.' },
+  { en: 'half-brother', nl: 'halfbroer', exEN: 'I have a half-brother in Spain.', exNL: 'Ik heb een halfbroer in Spanje.' },
+  { en: 'mum', nl: 'mama', exEN: 'My mum is a doctor.', exNL: 'Mijn mama is arts.' },
+  { en: 'nephew', nl: 'neef (zoon van broer/zus)', exEN: 'My nephew is three years old.', exNL: 'Mijn neef is drie jaar oud.' },
+  { en: 'niece', nl: 'nicht (dochter van broer/zus)', exEN: 'My niece loves drawing.', exNL: 'Mijn nicht houdt van tekenen.' },
+  { en: 'only child', nl: 'enig kind', exEN: 'I am an only child.', exNL: 'Ik ben enig kind.' },
+  { en: 'relatives', nl: 'familieleden', exEN: 'All my relatives live nearby.', exNL: 'Al mijn familieleden wonen dichtbij.' },
+  { en: 'siblings', nl: 'broers en zussen', exEN: 'Do you have siblings?', exNL: 'Heb jij broers of zussen?' },
+  { en: 'stepfather', nl: 'stiefvader', exEN: 'My stepfather is kind.', exNL: 'Mijn stiefvader is vriendelijk.' },
+  { en: 'twins', nl: 'tweeling', exEN: 'They are twins.', exNL: 'Zij zijn een tweeling.' }
+];
+
+    const knownWords = new Set();
+    let lastUsed = [];
+
+    function generateCards() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceUnknown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const unknown = flashcards.filter(word => !knownWords.has(word.en));
+      if (unknown.length === 0) {
+        container.innerHTML = "<p>🎉 Je kent alle woorden al!</p>";
+        return;
+      }
+
+      unknown.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function createCard(word, showExamples, reversed, container) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => card.classList.toggle('flipped');
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'card-inner';
+
+      const front = document.createElement('div');
+      front.className = 'card-front';
+      front.innerHTML = reversed ? word.nl : word.en;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exNL : word.exEN;
+        front.appendChild(ex);
+      }
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.innerHTML = reversed ? word.en : word.nl;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exEN : word.exNL;
+        back.appendChild(ex);
+      }
+
+      const checkboxContainer = document.createElement('label');
+      checkboxContainer.className = 'checkbox-container';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = knownWords.has(word.en);
+      checkbox.onchange = (e) => {
+        e.stopPropagation();
+        if (checkbox.checked) {
+          knownWords.add(word.en);
+        } else {
+          knownWords.delete(word.en);
+        }
+      };
+      const labelText = document.createTextNode('Ken ik');
+      checkboxContainer.appendChild(checkbox);
+      checkboxContainer.appendChild(labelText);
+
+      cardInner.appendChild(front);
+      cardInner.appendChild(back);
+      card.appendChild(cardInner);
+      card.appendChild(checkboxContainer);
+      container.appendChild(card);
+    }
+
+    window.onload = generateCards;
+  </script>
+</body>
+</html>
