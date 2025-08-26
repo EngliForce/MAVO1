@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WordFlip Challenge</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header img {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    .container {
+      display: flex;
+      max-width: 90%;
+      margin:  2rem auto;
+      gap: 2rem;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .left {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+      min-width: 320px;
+    }
+    .right {
+      width: 280px;
+    }
+    .setup {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .setup input, .setup select, .setup button {
+      font-size: 1rem;
+      padding: 0.5rem;
+      width: 100%;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 100px);
+      grid-template-rows: repeat(5, 100px);
+      gap: 10px;
+    }
+    .tile {
+      background-color: #ffe6dc;
+      color: #ff7043;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .tile.revealed {
+      background-color: #ff7043;
+      color: white;
+    }
+    .tile.correct {
+      background-color: #4CAF50 !important;
+      color: white;
+    }
+    .tile.incorrect {
+      background-color: #f44336 !important;
+      color: white;
+    }
+    .scoreboard {
+      background-color: #fff0e6;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .scoreboard h3 {
+      margin-top: 0;
+      color: #ff7043;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .scoreboard ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .scoreboard li {
+      margin: 8px 0;
+      font-size: 1.05rem;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #ffdbc7;
+      padding-bottom: 4px;
+    }
+    .turn {
+      font-weight: bold;
+      color: #ff7043;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    #typedAnswerSection, #speakingAnswerButtons {
+      display: none;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    #typedAnswerSection input {
+      font-size: 1rem;
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 300px;
+    }
+    #speakingAnswerButtons button {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #speakingAnswerButtons button.correct-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #speakingAnswerButtons button.incorrect-btn {
+      background-color: #f44336;
+      color: white;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+    }
+    @media (max-width: 768px) {
+      .container { flex-direction: column; align-items: center; }
+      .right { width: 100%; max-width: 320px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="WordFlip logo">
+    <h1>WordFlip Challenge</h1>
+    <p>Play solo or challenge your friends!</p>
+  </header>
+
+  <div class="container">
+    <div class="left">
+      <div id="gameBoard" class="board"></div>
+    </div>
+
+    <div class="right">
+      <div class="setup">
+        <label>Players (1 - 4, use commas):<br>
+          <input type="text" id="playerInput" placeholder="Example: Marco, Kate, Isolde" />
+        </label>
+
+        <label>Woordmodus:
+          <select id="mode">
+            <option value="nl">Dutch → English</option>
+            <option value="en">English → Dutch</option>
+            <option value="mix">Mixed</option>
+          </select>
+        </label>
+
+        <label>Antwoordmodus:
+          <select id="answerMode">
+            <option value="buttons">Speaking</option>
+            <option value="typed">Writing</option>
+          </select>
+        </label>
+
+        <button onclick="startGame()">Start</button>
+      </div>
+
+      <div class="turn" id="turnIndicator"></div>
+      <div class="scoreboard" id="scoreboard"></div>
+
+      <div id="typedAnswerSection">
+        <p><span id="typedPlayerName"></span>, type the translation:</p>
+        <input type="text" id="typedAnswer" onkeydown="if(event.key==='Enter') checkTypedAnswer()" autocomplete="off" />
+      </div>
+
+      <div id="speakingAnswerButtons">
+        <p><span id="speakingPlayerName"></span>, was het antwoord correct?</p>
+        <button class="correct-btn" onclick="markSpeakingAnswer(true)">✔️ Correct</button>
+        <button class="incorrect-btn" onclick="markSpeakingAnswer(false)">❌ Incorrect</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const wordList = [
+  { en: 'aunt', nl: 'tante' },
+  { en: 'baby', nl: 'baby' },
+  { en: 'brother', nl: 'broer' },
+  { en: 'child', nl: 'kind' },
+  { en: 'cousin', nl: 'neef / nicht' },
+  { en: 'dad', nl: 'papa' },
+  { en: 'daughter', nl: 'dochter' },
+  { en: 'family', nl: 'familie' },
+  { en: 'father', nl: 'vader' },
+  { en: 'mother', nl: 'moeder' },
+  { en: 'parents', nl: 'ouders' },
+  { en: 'sister', nl: 'zus' },
+  { en: 'son', nl: 'zoon' },
+  { en: 'uncle', nl: 'oom' },
+  { en: 'wife', nl: 'vrouw' },
+  { en: 'foster family', nl: 'pleeggezin' },
+  { en: 'god…', nl: 'peet…' },
+  { en: 'grand…', nl: 'groot…' },
+  { en: 'guardian', nl: 'voogd' },
+  { en: 'half-…', nl: 'half…' },
+  { en: 'mum', nl: 'mama' },
+  { en: 'nephew', nl: 'neef (zoon van broer/zus)' },
+  { en: 'niece', nl: 'nicht (dochter van broer/zus)' },
+  { en: 'only child', nl: 'enig kind' },
+  { en: 'relatives', nl: 'familieleden' },
+  { en: 'siblings', nl: 'broers en zussen' },
+  { en: 'step…', nl: 'stief…' },
+  { en: 'twins', nl: 'tweeling' }
+];
+
+    let players = [];
+    let scores = {};
+    let currentPlayerIndex = 0;
+    let board = [];
+    let currentTileIndex = null;
+    let clickedOnce = false;
+
+    function startGame() {
+      const input = document.getElementById('playerInput').value.trim();
+      if (!input) return alert('Voer minimaal 1 speler in.');
+      players = input.split(',').map(p => p.trim()).filter(Boolean);
+      if (players.length < 1 || players.length > 4) return alert('1 t/m 4 spelers toegestaan.');
+
+      scores = {};
+      players.forEach(p => scores[p] = 0);
+      currentPlayerIndex = 0;
+      board = shuffle([...wordList]).slice(0, 25);
+
+      document.getElementById('gameBoard').innerHTML = '';
+      document.getElementById('scoreboard').innerHTML = '';
+      document.getElementById('typedAnswerSection').style.display = 'none';
+      document.getElementById('speakingAnswerButtons').style.display = 'none';
+
+      updateScoreboard();
+      document.getElementById('turnIndicator').innerText = `${players[currentPlayerIndex]} is aan de beurt`;
+
+      for (let i = 0; i < 25; i++) {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.dataset.state = 'hidden';
+        tile.dataset.index = i;
+        tile.innerText = '?';
+        tile.onclick = () => handleClick(tile);
+        document.getElementById('gameBoard').appendChild(tile);
+      }
+    }
+
+    function handleClick(tile) {
+      const index = tile.dataset.index;
+      const word = board[index];
+      const state = tile.dataset.state;
+      const mode = document.getElementById('mode').value;
+      const answerMode = document.getElementById('answerMode').value;
+
+      if (state === 'hidden') {
+        tile.innerText = getWord(word, mode, true);
+        tile.classList.add('revealed');
+        tile.dataset.state = 'word';
+        currentTileIndex = index;
+
+        if (answerMode === 'typed') {
+          document.getElementById('typedPlayerName').innerText = players[currentPlayerIndex];
+          document.getElementById('typedAnswer').value = '';
+          document.getElementById('typedAnswerSection').style.display = 'block';
+          document.getElementById('typedAnswer').focus();
+        }
+      } else if (state === 'word' && answerMode === 'buttons') {
+        tile.innerText = getWord(word, mode, false);
+        tile.dataset.state = 'translated';
+        currentTileIndex = index;
+
+        document.getElementById('speakingPlayerName').innerText = players[currentPlayerIndex];
+        document.getElementById('speakingAnswerButtons').style.display = 'block';
+      }
+    }
+
+    function getWord(word, mode, first) {
+      if (mode === 'nl') return first ? word.nl : word.en;
+      if (mode === 'en') return first ? word.en : word.nl;
+      return first ? (Math.random() < 0.5 ? word.nl : word.en) : (word.nl === word.en ? word.nl : (word.nl === first ? word.en : word.nl));
+    }
+
+    function checkTypedAnswer() {
+      const input = document.getElementById('typedAnswer').value.trim().toLowerCase();
+      const mode = document.getElementById('mode').value;
+      const word = board[currentTileIndex];
+      const tile = document.getElementsByClassName('tile')[currentTileIndex];
+      let correctAnswer = (mode === 'nl') ? word.en : (mode === 'en') ? word.nl : (word.nl === tile.innerText ? word.en : word.nl);
+
+      tile.innerText = correctAnswer;
+
+      if (input === correctAnswer.toLowerCase()) {
+        tile.classList.add('correct');
+        scores[players[currentPlayerIndex]] += 1;
+      } else {
+        tile.classList.add('incorrect');
+      }
+
+      document.getElementById('typedAnswerSection').style.display = 'none';
+      nextTurn();
+    }
+
+    function markSpeakingAnswer(isCorrect) {
+      const tile = document.getElementsByClassName('tile')[currentTileIndex];
+      const word = board[currentTileIndex];
+      const mode = document.getElementById('mode').value;
+      const correctAnswer = (mode === 'nl') ? word.en : (mode === 'en') ? word.nl : (word.nl === tile.innerText ? word.en : word.nl);
+
+      tile.innerText = correctAnswer;
+      if (isCorrect) {
+        tile.classList.add('correct');
+        scores[players[currentPlayerIndex]] += 1;
+      } else {
+        tile.classList.add('incorrect');
+      }
+
+      document.getElementById('speakingAnswerButtons').style.display = 'none';
+      nextTurn();
+    }
+
+    function nextTurn() {
+      currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+      document.getElementById('turnIndicator').innerText = `${players[currentPlayerIndex]} is aan de beurt`;
+      updateScoreboard();
+    }
+
+    function updateScoreboard() {
+      const board = document.getElementById('scoreboard');
+      board.innerHTML = '<h3>Scorebord</h3><ul>' +
+        players.map(p => `<li><span>${p}</span><span>${scores[p]} pt</span></li>`).join('') +
+        '</ul>';
+    }
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+  </script>
+</body>
+</html>
