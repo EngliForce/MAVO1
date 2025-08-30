@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – Vocabulary 1.3: Me and My friends</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    .controls {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    select, label, button {
+      font-size: 1rem;
+    }
+
+    .flashcards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    .card {
+      width: 220px;
+      height: 180px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #ffffff, #ffe6dc);
+      color: #ff7043;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .card-back {
+      background: #ff7043;
+      color: white;
+      transform: rotateY(180deg);
+      font-size: 1.2rem;
+    }
+
+    .example {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    .checkbox-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo.png" alt="EngliForce logo" />
+    <h1>Flashcards – Vocabulary 1.3: Clothes & Appearance</h1>
+    <p>Klik op een kaart om de vertaling te zien. Je kunt ook instellen hoe je wilt oefenen!</p>
+  </header>
+
+  <div class="controls">
+    <label>
+      Aantal kaarten:
+      <select id="card-count">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="show-examples" />
+      Toon voorbeeldzinnen
+    </label>
+    <label>
+      <input type="checkbox" id="reverse-cards" />
+      Nederlands → Engels
+    </label>
+
+    <button onclick="generateCards()">Next 🔁</button>
+    <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+    <button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+    <button onclick="practiceAll()">Oefen alles 🔄</button>
+  </div>
+
+  <div class="flashcards-container" id="flashcards-container"></div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English your superpower!</p>
+  </footer>
+
+  <script>
+    const flashcards = [
+      { en: "blouse", nl: "bloes", exEN: "A blouse is a light shirt.", exNL: "Een bloes is een lichte blouse." },
+      { en: "coat", nl: "jas", exEN: "A coat is worn over clothes.", exNL: "Een jas draag je over je kleding." },
+      { en: "dress", nl: "jurk", exEN: "A dress is one-piece clothing.", exNL: "Een jurk is kleding uit één stuk." },
+      { en: "eyes", nl: "ogen", exEN: "Your eyes help you see.", exNL: "Met je ogen kun je zien." },
+      { en: "face", nl: "gezicht", exEN: "Your face has eyes, nose, and mouth.", exNL: "Je gezicht heeft ogen, neus en mond." },
+      { en: "friend", nl: "vriend / vriendin", exEN: "A friend is someone you like.", exNL: "Een vriend is iemand die je aardig vindt." },
+      { en: "hair", nl: "haar", exEN: "Hair grows on your head.", exNL: "Haar groeit op je hoofd." },
+      { en: "hat", nl: "hoed / pet", exEN: "A hat covers your head.", exNL: "Een hoed bedekt je hoofd." },
+      { en: "jeans", nl: "spijkerbroek", exEN: "Jeans are made of denim.", exNL: "Spijkerbroeken zijn van spijkerstof." },
+      { en: "jumper", nl: "trui", exEN: "A jumper keeps you warm.", exNL: "Een trui houdt je warm." },
+      { en: "rucksack", nl: "rugtas", exEN: "A rucksack is worn on your back.", exNL: "Een rugtas draag je op je rug." },
+      { en: "shirt", nl: "overhemd / shirt", exEN: "A shirt has buttons.", exNL: "Een overhemd heeft knopen." },
+      { en: "shoes", nl: "schoenen", exEN: "Shoes protect your feet.", exNL: "Schoenen beschermen je voeten." },
+      { en: "socks", nl: "sokken", exEN: "Socks go in your shoes.", exNL: "Sokken draag je in je schoenen." },
+      { en: "clothing", nl: "kleding", exEN: "Clothing covers your body.", exNL: "Kleding bedekt je lichaam." },
+      { en: "boots", nl: "laarzen", exEN: "Boots are high shoes.", exNL: "Laarzen zijn hoge schoenen." },
+      { en: "cap", nl: "petje", exEN: "A cap is a small hat.", exNL: "Een petje is een kleine hoed." },
+      { en: "clothes", nl: "kleding", exEN: "Clothes are what you wear.", exNL: "Kleding is wat je draagt." },
+      { en: "gloves", nl: "handschoenen", exEN: "Gloves keep your hands warm.", exNL: "Handschoenen houden je handen warm." },
+      { en: "hoodie", nl: "capuchontrui", exEN: "A hoodie has a hood.", exNL: "Een hoodie heeft een capuchon." },
+      { en: "jacket", nl: "jasje", exEN: "A jacket is a short coat.", exNL: "Een jasje is een korte jas." },
+      { en: "scarf", nl: "sjaal", exEN: "A scarf goes around your neck.", exNL: "Een sjaal draag je om je nek." },
+      { en: "skirt", nl: "rok", exEN: "A skirt is worn around the waist.", exNL: "Een rok draag je rond je middel." },
+      { en: "trainers", nl: "sportschoenen", exEN: "Trainers are for sports.", exNL: "Sportschoenen zijn voor sporten." },
+      { en: "trousers", nl: "broek", exEN: "Trousers cover your legs.", exNL: "Een broek bedekt je benen." },
+      { en: "jewellery", nl: "sieraden", exEN: "Jewellery includes rings and necklaces.", exNL: "Sieraden zijn bijvoorbeeld ringen en kettingen." },
+      { en: "belt", nl: "riem", exEN: "A belt goes around your waist.", exNL: "Een riem draag je rond je middel." },
+      { en: "bracelet", nl: "armband", exEN: "A bracelet is worn on the wrist.", exNL: "Een armband draag je om je pols." },
+      { en: "earrings", nl: "oorbellen", exEN: "Earrings are worn on ears.", exNL: "Oorbellen draag je aan je oren." },
+      { en: "necklace", nl: "ketting", exEN: "A necklace goes around the neck.", exNL: "Een ketting draag je om je nek." },
+      { en: "watch", nl: "horloge", exEN: "A watch shows time.", exNL: "Een horloge laat de tijd zien." }
+    ];
+
+    const knownWords = new Set();
+
+    function generateCards() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceUnknown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const unknown = flashcards.filter(word => !knownWords.has(word.en));
+      if (unknown.length === 0) {
+        container.innerHTML = "<p>🎉 Je kent alle woorden al!</p>";
+        return;
+      }
+      unknown.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceKnown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const known = flashcards.filter(word => knownWords.has(word.en));
+      if (known.length === 0) {
+        container.innerHTML = "<p>📋 Je hebt nog geen bekende woorden aangevinkt.</p>";
+        return;
+      }
+      known.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceAll() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      flashcards.forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function createCard(word, showExamples, reversed, container) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => card.classList.toggle('flipped');
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'card-inner';
+
+      const front = document.createElement('div');
+      front.className = 'card-front';
+      front.innerHTML = reversed ? word.nl : word.en;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exNL : word.exEN;
+        front.appendChild(ex);
+      }
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.innerHTML = reversed ? word.en : word.nl;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exEN : word.exNL;
+        back.appendChild(ex);
+      }
+
+      const checkboxContainer = document.createElement('label');
+      checkboxContainer.className = 'checkbox-container';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = knownWords.has(word.en);
+      checkbox.onchange = (e) => {
+        e.stopPropagation();
+        if (checkbox.checked) {
+          knownWords.add(word.en);
+        } else {
+          knownWords.delete(word.en);
+        }
+      };
+      const labelText = document.createTextNode('Ken ik');
+      checkboxContainer.appendChild(checkbox);
+      checkboxContainer.appendChild(labelText);
+
+      cardInner.appendChild(front);
+      cardInner.appendChild(back);
+      card.appendChild(cardInner);
+      card.appendChild(checkboxContainer);
+      container.appendChild(card);
+    }
+
+    window.onload = generateCards;
+  </script>
+
+</body>
+</html>
