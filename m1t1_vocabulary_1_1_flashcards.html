@@ -3,20 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flashcards – Familie</title>
+  <title>Flashcards – Personal Info & Appearance</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
       margin: 0;
-      padding: 2rem;
+      padding: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    h1 {
-      color: #ff7043;
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
     }
 
     .controls {
@@ -41,26 +62,9 @@
     }
 
     .card {
-      background-color: white;
-      border: 2px solid #ff7043;
-      border-radius: 12px;
-      width: 180px;
-      height: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      color: #333;
-      cursor: pointer;
-      transition: transform 0.3s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 220px;
+      height: 180px;
       perspective: 1000px;
-      position: relative;
-      flex-direction: column;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
     }
 
     .card-inner {
@@ -68,8 +72,10 @@
       width: 100%;
       height: 100%;
       text-align: center;
-      transition: transform 0.6s;
+      transition: transform 0.7s ease;
       transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
     .card.flipped .card-inner {
@@ -80,41 +86,48 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      padding: 0.5rem;
       backface-visibility: hidden;
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      border-radius: 12px;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
     }
 
     .card-front {
-      background-color: white;
+      background: linear-gradient(145deg, #ffffff, #ffe6dc);
       color: #ff7043;
+      font-size: 1.3rem;
       font-weight: bold;
     }
 
     .card-back {
-      background-color: #ff7043;
+      background: #ff7043;
       color: white;
       transform: rotateY(180deg);
+      font-size: 1.2rem;
     }
 
     .example {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       margin-top: 0.5rem;
       font-style: italic;
+      opacity: 0.8;
     }
 
     .checkbox-container {
       position: absolute;
-      bottom: 8px;
-      left: 8px;
+      bottom: 10px;
+      left: 10px;
       font-size: 0.85rem;
       display: flex;
       align-items: center;
       gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px;
+      border-radius: 6px;
     }
 
     footer {
@@ -128,11 +141,12 @@
   </style>
 </head>
 <body>
-  <div style="display: flex; flex-direction: column; align-items: center;">
-    <img src="logo.png" alt="EngliForce logo" style="max-height: 100px; margin-bottom: 1rem;" />
-  </div>  
-<h1>👨‍👩‍👧‍👦 Flashcards – Family</h1>
-  <p>Klik op een kaart om de vertaling te zien. Je kunt ook instellen hoe je ze wil oefenen!</p>
+
+  <header>
+    <img src="logo.png" alt="EngliForce logo" />
+    <h1>Flashcards – Vocabulary 1.1: Me, myself and I</h1>
+    <p>Klik op een kaart om de vertaling te zien. Je kunt ook instellen hoe je wilt oefenen!</p>
+  </header>
 
   <div class="controls">
     <label>
@@ -154,8 +168,10 @@
       Nederlands → Engels
     </label>
 
-    <button onclick="generateCards()">Next 🔁</button>
-    <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+ <button onclick="generateCards()">Next 🔁</button>
+<button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+<button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+<button onclick="practiceAll()">Oefen alles 🔄</button>
   </div>
 
   <div class="flashcards-container" id="flashcards-container"></div>
@@ -166,42 +182,29 @@
 
   <script>
     const flashcards = [
-      { en: 'ancestor', nl: 'voorouder', exEN: 'My <b>ancestor</b> came from Ireland.', exNL: 'Mijn <b>voorouder</b> kwam uit Ierland.' },
-      { en: 'aunt', nl: 'tante', exEN: 'My <b>aunt</b> is visiting us.', exNL: 'Mijn <b>tante</b> komt op bezoek.' },
-      { en: 'baby', nl: 'baby', exEN: 'The <b>baby</b> is sleeping.', exNL: 'De <b>baby</b> slaapt.' },
-      { en: 'brother', nl: 'broer', exEN: 'I have one <b>brother</b>.', exNL: 'Ik heb één <b>broer</b>.' },
-      { en: 'child', nl: 'kind', exEN: 'Every <b>child</b> needs love.', exNL: 'Elk <b>kind</b> heeft liefde nodig.' },
-      { en: 'children', nl: 'kinderen', exEN: 'The <b>children</b> are playing.', exNL: 'De <b>kinderen</b> spelen.' },
-      { en: 'cousin', nl: 'neef / nicht (kind van oom/tante)', exEN: 'My <b>cousin</b> lives in Paris.', exNL: 'Mijn <b>nicht</b> woont in Parijs.' },
-      { en: 'dad', nl: 'papa', exEN: 'My <b>dad</b> makes pancakes.', exNL: 'Mijn <b>papa</b> maakt pannenkoeken.' },
-      { en: 'daughter', nl: 'dochter', exEN: 'Her <b>daughter</b> is kind.', exNL: 'Haar <b>dochter</b> is aardig.' },
-      { en: 'descendant', nl: 'afstammeling', exEN: 'He is a <b>descendant</b> of royalty.', exNL: 'Hij is een <b>afstammeling</b> van koninklijke afkomst.' },
-      { en: 'extended family', nl: 'uitgebreide familie', exEN: 'We met the <b>extended family</b>.', exNL: 'We ontmoetten de <b>uitgebreide familie</b>.' },
-      { en: 'family', nl: 'familie', exEN: 'I love my <b>family</b>.', exNL: 'Ik hou van mijn <b>familie</b>.' },
-      { en: 'father', nl: 'vader', exEN: 'His <b>father</b> is a doctor.', exNL: 'Zijn <b>vader</b> is arts.' },
-      { en: 'fiancé', nl: 'verloofde (man)', exEN: 'Her <b>fiancé</b> is German.', exNL: 'Haar <b>verloofde</b> is Duits.' },
-      { en: 'fiancée', nl: 'verloofde (vrouw)', exEN: 'His <b>fiancée</b> is French.', exNL: 'Zijn <b>verloofde</b> is Frans.' },
-      { en: 'foster family', nl: 'pleeggezin', exEN: 'He grew up in a <b>foster family</b>.', exNL: 'Hij groeide op in een <b>pleeggezin</b>.' },
-      { en: 'god...', nl: 'peet…', exEN: 'His <b>godfather</b> is wise.', exNL: 'Zijn <b>peetvader</b> is wijs.' },
-      { en: 'grand...', nl: 'groot…', exEN: 'My <b>grandmother</b> loves gardening.', exNL: 'Mijn <b>grootmoeder</b> houdt van tuinieren.' },
-      { en: 'guardian', nl: 'voogd', exEN: 'She is his <b>guardian</b>.', exNL: 'Zij is zijn <b>voogd</b>.' },
-      { en: 'half-...', nl: 'half…', exEN: 'He is my <b>half-brother</b>.', exNL: 'Hij is mijn <b>halfbroer</b>.' },
-      { en: 'husband', nl: 'echtgenoot / man', exEN: 'Her <b>husband</b> is supportive.', exNL: 'Haar <b>echtgenoot</b> is ondersteunend.' },
-      { en: 'mother', nl: 'moeder', exEN: 'My <b>mother</b> is kind.', exNL: 'Mijn <b>moeder</b> is aardig.' },
-      { en: 'mum', nl: 'mama', exEN: '<b>Mum</b> is cooking dinner.', exNL: '<b>Mama</b> kookt het avondeten.' },
-      { en: 'nephew', nl: 'neef (zoon van broer/zus)', exEN: 'My <b>nephew</b> is funny.', exNL: 'Mijn <b>neef</b> is grappig.' },
-      { en: 'niece', nl: 'nicht (dochter van broer/zus)', exEN: 'His <b>niece</b> is smart.', exNL: 'Zijn <b>nicht</b> is slim.' },
-      { en: 'only child', nl: 'enig kind', exEN: 'She is an <b>only child</b>.', exNL: 'Zij is een <b>enig kind</b>.' },
-      { en: 'parents', nl: 'ouders', exEN: 'Our <b>parents</b> are home.', exNL: 'Onze <b>ouders</b> zijn thuis.' },
-      { en: 'relatives', nl: 'familieleden', exEN: 'All our <b>relatives</b> are invited.', exNL: 'Al onze <b>familieleden</b> zijn uitgenodigd.' },
-      { en: 'siblings', nl: 'broers en zussen', exEN: 'I have two <b>siblings</b>.', exNL: 'Ik heb twee <b>broers en zussen</b>.' },
-      { en: 'sister', nl: 'zus', exEN: 'My <b>sister</b> sings well.', exNL: 'Mijn <b>zus</b> zingt goed.' },
-      { en: 'son', nl: 'zoon', exEN: 'Their <b>son</b> is 10.', exNL: 'Hun <b>zoon</b> is 10.' },
-      { en: 'step...', nl: 'stief...', exEN: 'My <b>stepfather</b> is kind.', exNL: 'Mijn <b>stiefvader</b> is aardig.' },
-      { en: 'twin', nl: 'tweelingbroer of -zus', exEN: 'He has a <b>twin</b>.', exNL: 'Hij heeft een <b>tweelingbroer</b>.' },
-      { en: 'uncle', nl: 'oom', exEN: 'My <b>uncle</b> tells jokes.', exNL: 'Mijn <b>oom</b> vertelt moppen.' },
-      { en: 'wife', nl: 'echtgenote / vrouw', exEN: 'His <b>wife</b> is very good at playing football.', exNL: 'Zijn <b>echtgenote / vrouw</b> is heel goed in voetbal.' },
-      { en: '...-in-law', nl: 'schoon', exEN: 'My mother<b>-in-law</b> is a great cook.', exNL: 'Mijn <b>schoon</b>moeder is een geweldige kok.' }
+      { en: 'address', nl: 'adres', exEN: 'What is your address?', exNL: 'Wat is jouw adres?' },
+      { en: 'age', nl: 'leeftijd', exEN: 'She is 14 years old.', exNL: 'Ze is 14 jaar oud.' },
+      { en: 'birthday', nl: 'verjaardag', exEN: 'My birthday is in July.', exNL: 'Mijn verjaardag is in juli.' },
+      { en: 'city', nl: 'stad', exEN: 'I live in a big city.', exNL: 'Ik woon in een grote stad.' },
+      { en: 'country', nl: 'land', exEN: 'He comes from another country.', exNL: 'Hij komt uit een ander land.' },
+      { en: 'email address', nl: 'e‑mailadres', exEN: 'Can I have your email address?', exNL: 'Mag ik jouw e‑mailadres?' },
+      { en: 'first name', nl: 'voornaam', exEN: 'Her first name is Anna.', exNL: 'Haar voornaam is Anna.' },
+      { en: 'nationality', nl: 'nationaliteit', exEN: 'What is your nationality?', exNL: 'Wat is jouw nationaliteit?' },
+      { en: 'phone number', nl: 'telefoonnummer', exEN: 'This is my phone number.', exNL: 'Dit is mijn telefoonnummer.' },
+      { en: 'postcode', nl: 'postcode', exEN: 'The postcode is 1234 AB.', exNL: 'De postcode is 1234 AB.' },
+      { en: 'surname / family name', nl: 'achternaam', exEN: 'His surname is Jansen.', exNL: 'Zijn achternaam is Jansen.' },
+      { en: 'athletic', nl: 'sportief gebouwd', exEN: 'He has an athletic build.', exNL: 'Hij is sportief gebouwd.' },
+      { en: 'braces', nl: 'beugel (voor tanden)', exEN: 'I wear braces.', exNL: 'Ik draag een beugel.' },
+      { en: 'build', nl: 'postuur / lichaamsbouw', exEN: 'She has a slim build.', exNL: 'Ze heeft een slank postuur.' },
+      { en: 'contact lenses', nl: 'contactlenzen', exEN: 'I wear contact lenses.', exNL: 'Ik draag contactlenzen.' },
+      { en: 'freckles', nl: 'sproeten', exEN: 'He has freckles on his face.', exNL: 'Hij heeft sproeten op zijn gezicht.' },
+      { en: 'glasses', nl: 'bril', exEN: 'I need glasses to read.', exNL: 'Ik heb een bril nodig om te lezen.' },
+      { en: 'height', nl: 'lengte', exEN: 'What is your height?', exNL: 'Wat is jouw lengte?' },
+      { en: 'slim', nl: 'slank', exEN: 'She is very slim.', exNL: 'Ze is erg slank.' },
+      { en: 'looks', nl: 'uiterlijk', exEN: 'He cares about his looks.', exNL: 'Hij geeft om zijn uiterlijk.' },
+      { en: 'handsome', nl: 'knap (voor jongens / mannen)', exEN: 'He is a handsome actor.', exNL: 'Hij is een knappe acteur.' },
+      { en: 'ordinary', nl: 'gewoon, niet bijzonder', exEN: 'She looks very ordinary.', exNL: 'Ze ziet er heel gewoon uit.' },
+      { en: 'pretty', nl: 'mooi (voor meisjes / vrouwen)', exEN: 'She is pretty and smart.', exNL: 'Ze is mooi en slim.' }
     ];
 
     const knownWords = new Set();
@@ -215,25 +218,6 @@
       container.innerHTML = '';
 
       const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
-      selected.forEach(word => createCard(word, showExamples, reversed, container));
-    }
-
-    function nextFive() {
-      const count = 5;
-      const showExamples = document.getElementById('show-examples').checked;
-      const reversed = document.getElementById('reverse-cards').checked;
-      const container = document.getElementById('flashcards-container');
-      container.innerHTML = '';
-
-      let remaining = flashcards.filter(w => !lastUsed.includes(w.en));
-      if (remaining.length < count) {
-        lastUsed = [];
-        remaining = flashcards;
-      }
-
-      const selected = remaining.sort(() => 0.5 - Math.random()).slice(0, count);
-      lastUsed.push(...selected.map(w => w.en));
-
       selected.forEach(word => createCard(word, showExamples, reversed, container));
     }
 
@@ -251,6 +235,31 @@
 
       unknown.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
     }
+function practiceKnown() {
+  const showExamples = document.getElementById('show-examples').checked;
+  const reversed = document.getElementById('reverse-cards').checked;
+  const container = document.getElementById('flashcards-container');
+  container.innerHTML = '';
+
+  const known = flashcards.filter(word => knownWords.has(word.en));
+  if (known.length === 0) {
+    container.innerHTML = "<p>📋 Je hebt nog geen woorden gemarkeerd als ‘Ken ik’.</p>";
+    return;
+  }
+
+  known.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+}
+
+function practiceAll() {
+  const count = parseInt(document.getElementById('card-count').value);
+  const showExamples = document.getElementById('show-examples').checked;
+  const reversed = document.getElementById('reverse-cards').checked;
+  const container = document.getElementById('flashcards-container');
+  container.innerHTML = '';
+
+  const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+  selected.forEach(word => createCard(word, showExamples, reversed, container));
+}
 
     function createCard(word, showExamples, reversed, container) {
       const card = document.createElement('div');
