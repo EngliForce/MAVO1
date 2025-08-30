@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flashcards – Family</title>
+  <title>Flashcards – Vocabulary 1.2: Family</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -144,7 +144,7 @@
 
   <header>
     <img src="logo.png" alt="EngliForce logo" />
-    <h1>Flashcards – Vocabulary 1.2. Family</h1>
+    <h1>Flashcards – Vocabulary 1.2: Family</h1>
     <p>Klik op een kaart om de vertaling te zien. Je kunt ook instellen hoe je wilt oefenen!</p>
   </header>
 
@@ -170,6 +170,8 @@
 
     <button onclick="generateCards()">Next 🔁</button>
     <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+    <button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+    <button onclick="practiceAll()">Oefen alles 🔄</button>
   </div>
 
   <div class="flashcards-container" id="flashcards-container"></div>
@@ -179,36 +181,36 @@
   </footer>
 
   <script>
-   const flashcards = [
-  { en: 'aunt', nl: 'tante', exEN: 'My aunt lives in London.', exNL: 'Mijn tante woont in Londen.' },
-  { en: 'baby', nl: 'baby', exEN: 'The baby is sleeping.', exNL: 'De baby slaapt.' },
-  { en: 'brother', nl: 'broer', exEN: 'I have a younger brother.', exNL: 'Ik heb een jongere broer.' },
-  { en: 'child', nl: 'kind', exEN: 'The child is playing outside.', exNL: 'Het kind speelt buiten.' },
-  { en: 'cousin', nl: 'neef / nicht', exEN: 'My cousin is visiting us.', exNL: 'Mijn neef/nicht komt op bezoek.' },
-  { en: 'dad', nl: 'papa', exEN: 'My dad makes pancakes.', exNL: 'Mijn papa maakt pannenkoeken.' },
-  { en: 'daughter', nl: 'dochter', exEN: 'She has a daughter named Mia.', exNL: 'Ze heeft een dochter genaamd Mia.' },
-  { en: 'family', nl: 'familie', exEN: 'We love family dinners.', exNL: 'We houden van familiediners.' },
-  { en: 'father', nl: 'vader', exEN: 'His father works in a bank.', exNL: 'Zijn vader werkt bij een bank.' },
-  { en: 'mother', nl: 'moeder', exEN: 'Her mother is kind.', exNL: 'Haar moeder is vriendelijk.' },
-  { en: 'parents', nl: 'ouders', exEN: 'My parents are teachers.', exNL: 'Mijn ouders zijn leraren.' },
-  { en: 'sister', nl: 'zus', exEN: 'My sister loves to sing.', exNL: 'Mijn zus houdt van zingen.' },
-  { en: 'son', nl: 'zoon', exEN: 'They have a son and a daughter.', exNL: 'Ze hebben een zoon en een dochter.' },
-  { en: 'uncle', nl: 'oom', exEN: 'My uncle lives in Belgium.', exNL: 'Mijn oom woont in België.' },
-  { en: 'wife', nl: 'vrouw', exEN: 'His wife is very nice.', exNL: 'Zijn vrouw is erg aardig.' },
-  { en: 'foster family', nl: 'pleeggezin', exEN: 'He grew up in a foster family.', exNL: 'Hij groeide op in een pleeggezin.' },
-  { en: 'godmother', nl: 'peettante', exEN: 'My godmother gave me a gift.', exNL: 'Mijn peettante gaf me een cadeau.' },
-  { en: 'grandfather', nl: 'grootvader', exEN: 'My grandfather is 80 years old.', exNL: 'Mijn grootvader is 80 jaar oud.' },
-  { en: 'guardian', nl: 'voogd', exEN: 'The guardian signed the form.', exNL: 'De voogd ondertekende het formulier.' },
-  { en: 'half-brother', nl: 'halfbroer', exEN: 'I have a half-brother in Spain.', exNL: 'Ik heb een halfbroer in Spanje.' },
-  { en: 'mum', nl: 'mama', exEN: 'My mum is a doctor.', exNL: 'Mijn mama is arts.' },
-  { en: 'nephew', nl: 'neef (zoon van broer/zus)', exEN: 'My nephew is three years old.', exNL: 'Mijn neef is drie jaar oud.' },
-  { en: 'niece', nl: 'nicht (dochter van broer/zus)', exEN: 'My niece loves drawing.', exNL: 'Mijn nicht houdt van tekenen.' },
-  { en: 'only child', nl: 'enig kind', exEN: 'I am an only child.', exNL: 'Ik ben enig kind.' },
-  { en: 'relatives', nl: 'familieleden', exEN: 'All my relatives live nearby.', exNL: 'Al mijn familieleden wonen dichtbij.' },
-  { en: 'siblings', nl: 'broers en zussen', exEN: 'Do you have siblings?', exNL: 'Heb jij broers of zussen?' },
-  { en: 'stepfather', nl: 'stiefvader', exEN: 'My stepfather is kind.', exNL: 'Mijn stiefvader is vriendelijk.' },
-  { en: 'twins', nl: 'tweeling', exEN: 'They are twins.', exNL: 'Zij zijn een tweeling.' }
-];
+    const flashcards = [
+      { en: 'aunt', nl: 'tante', exEN: 'My aunt is my father’s sister.', exNL: 'Mijn tante is de zus van mijn vader.' },
+      { en: 'baby', nl: 'baby', exEN: 'A baby is a very young child.', exNL: 'Een baby is een heel jong kind.' },
+      { en: 'brother', nl: 'broer', exEN: 'A brother is a boy with the same parents as you.', exNL: 'Een broer is een jongen met dezelfde ouders als jij.' },
+      { en: 'child', nl: 'kind', exEN: 'A child is a young person.', exNL: 'Een kind is een jong persoon.' },
+      { en: 'cousin', nl: 'neef / nicht', exEN: 'A cousin is the child of your uncle or aunt.', exNL: 'Een neef of nicht is het kind van je oom of tante.' },
+      { en: 'dad', nl: 'papa', exEN: 'Dad is another word for father.', exNL: 'Papa is een ander woord voor vader.' },
+      { en: 'daughter', nl: 'dochter', exEN: 'A daughter is a female child.', exNL: 'Een dochter is een vrouwelijk kind.' },
+      { en: 'family', nl: 'familie', exEN: 'A family is your parents, brothers, sisters and more.', exNL: 'Je familie is je ouders, broers, zussen en anderen.' },
+      { en: 'father', nl: 'vader', exEN: 'A father is your male parent.', exNL: 'Een vader is je mannelijke ouder.' },
+      { en: 'mother', nl: 'moeder', exEN: 'A mother is your female parent.', exNL: 'Een moeder is je vrouwelijke ouder.' },
+      { en: 'parents', nl: 'ouders', exEN: 'Parents are your mother and father.', exNL: 'Ouders zijn je moeder en vader.' },
+      { en: 'sister', nl: 'zus', exEN: 'A sister is a girl with the same parents as you.', exNL: 'Een zus is een meisje met dezelfde ouders als jij.' },
+      { en: 'son', nl: 'zoon', exEN: 'A son is a male child.', exNL: 'Een zoon is een mannelijk kind.' },
+      { en: 'uncle', nl: 'oom', exEN: 'An uncle is your mother’s or father’s brother.', exNL: 'Een oom is de broer van je moeder of vader.' },
+      { en: 'wife', nl: 'vrouw', exEN: 'A wife is the woman someone is married to.', exNL: 'Een vrouw is de echtgenote van iemand.' },
+      { en: 'foster family', nl: 'pleeggezin', exEN: 'A foster family cares for a child not their own.', exNL: 'Een pleeggezin zorgt voor een kind dat niet hun eigen kind is.' },
+      { en: 'god…', nl: 'peet…', exEN: 'A godparent helps guide a child in life.', exNL: 'Een peetouder helpt een kind in het leven.' },
+      { en: 'grand…', nl: 'groot…', exEN: 'A grandparent is your parent’s parent.', exNL: 'Een grootouder is de ouder van je ouder.' },
+      { en: 'guardian', nl: 'voogd', exEN: 'A guardian is a person who takes care of a child.', exNL: 'Een voogd is iemand die voor een kind zorgt.' },
+      { en: 'half-…', nl: 'half…', exEN: 'A half-brother shares one parent with you.', exNL: 'Een halfbroer deelt één ouder met jou.' },
+      { en: 'mum', nl: 'mama', exEN: 'Mum is another word for mother.', exNL: 'Mama is een ander woord voor moeder.' },
+      { en: 'nephew', nl: 'neef (zoon van broer/zus)', exEN: 'A nephew is your brother’s or sister’s son.', exNL: 'Een neef is de zoon van je broer of zus.' },
+      { en: 'niece', nl: 'nicht (dochter van broer/zus)', exEN: 'A niece is your brother’s or sister’s daughter.', exNL: 'Een nicht is de dochter van je broer of zus.' },
+      { en: 'only child', nl: 'enig kind', exEN: 'An only child has no brothers or sisters.', exNL: 'Een enig kind heeft geen broers of zussen.' },
+      { en: 'relatives', nl: 'familieleden', exEN: 'Relatives are people in your family.', exNL: 'Familieleden zijn mensen in je familie.' },
+      { en: 'siblings', nl: 'broers en zussen', exEN: 'Siblings are your brothers and sisters.', exNL: 'Broers en zussen zijn je siblings.' },
+      { en: 'step…', nl: 'stief…', exEN: 'A stepmother is your father’s new wife.', exNL: 'Een stiefmoeder is de nieuwe vrouw van je vader.' },
+      { en: 'twins', nl: 'tweeling', exEN: 'Twins are two children born at the same time.', exNL: 'Een tweeling zijn twee kinderen die tegelijk geboren zijn.' }
+    ];
 
     const knownWords = new Set();
     let lastUsed = [];
@@ -237,6 +239,32 @@
       }
 
       unknown.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceKnown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const known = flashcards.filter(word => knownWords.has(word.en));
+      if (known.length === 0) {
+        container.innerHTML = "<p>📋 Je hebt nog geen woorden gemarkeerd als ‘Ken ik’.</p>";
+        return;
+      }
+
+      known.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceAll() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, showExamples, reversed, container));
     }
 
     function createCard(word, showExamples, reversed, container) {
