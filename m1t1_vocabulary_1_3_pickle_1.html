@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulary 1.2: Me and my family</title>
+  <title>Vocabulary 1.3: Me and my friends</title>
   <style>
-    /* (Dezelfde stijl als jouw originele versie) */
+    /* Stijl hetzelfde als eerder */
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
@@ -131,7 +131,7 @@
 
   <header>
     <img src="Logo.png" alt="EngliForce Logo" />
-    <h1>🔠 Vocabulary 1.2: Me and my family</h1>
+    <h1>🧥 Vocabulary 1.3: Me and my friends</h1>
     <p>Sleep het juiste woord naar de bijpassende omschrijving</p>
   </header>
 
@@ -154,36 +154,125 @@
   </footer>
 
   <script>
-    const vocabData = {
-      "aunt": { nl: "De zus van je vader of moeder.", en: "The sister of your father or mother." },
-      "baby": { nl: "Een heel jong kind.", en: "A very young child." },
-      "brother": { nl: "Een mannelijke broer.", en: "A male sibling." },
-      "child": { nl: "Een jong persoon, geen volwassene.", en: "A young person, not an adult." },
-      "cousin": { nl: "Kind van je oom of tante.", en: "The child of your uncle or aunt." },
-      "dad": { nl: "Informeel voor 'vader'.", en: "Informal for 'father'." },
-      "daughter": { nl: "Vrouwelijk kind van ouders.", en: "A female child of parents." },
-      "family": { nl: "Groep mensen die bij elkaar horen door geboorte of huwelijk.", en: "People related by blood or marriage." },
-      "father": { nl: "Mannelijke ouder.", en: "Male parent." },
-      "mother": { nl: "Vrouwelijke ouder.", en: "Female parent." },
-      "parents": { nl: "Vader en moeder samen.", en: "Father and mother together." },
-      "sister": { nl: "Een vrouwelijke broer of zus.", en: "A female sibling." },
-      "son": { nl: "Mannelijk kind van ouders.", en: "A male child of parents." },
-      "uncle": { nl: "De broer van je vader of moeder.", en: "The brother of your father or mother." },
-      "wife": { nl: "Getrouwde vrouw.", en: "Married woman." },
-      "foster family": { nl: "Gezin dat tijdelijk voor een kind zorgt.", en: "A family that temporarily cares for a child." },
-      "god...": { nl: "Peetvader of peetmoeder, gekozen bij doop.", en: "Chosen parent figure at baptism." },
-      "grand...": { nl: "Opa of oma.", en: "Grandfather or grandmother." },
-      "guardian": { nl: "Iemand die wettelijk voor een kind zorgt.", en: "Someone who legally takes care of a child." },
-      "half...": { nl: "Broer of zus met één gedeelde ouder.", en: "Sibling with one shared parent." },
-      "mum": { nl: "Informeel voor 'moeder'.", en: "Informal for 'mother'." },
-      "nephew": { nl: "Zoon van je broer of zus.", en: "Son of your brother or sister." },
-      "niece": { nl: "Dochter van je broer of zus.", en: "Daughter of your brother or sister." },
-      "only child": { nl: "Enig kind zonder broers of zussen.", en: "Child without siblings." },
-      "relatives": { nl: "Mensen die familie van je zijn.", en: "People who are related to you." },
-      "siblings": { nl: "Broers en zussen samen.", en: "Brothers and sisters." },
-      "step...": { nl: "Stiefouder, getrouwd met je ouder.", en: "Married to your parent but not biological." },
-      "twins": { nl: "Twee kinderen geboren op dezelfde dag.", en: "Two children born on the same day." }
-    };
+  const vocabData = {
+  "blouse": {
+    nl: "Een kledingstuk voor het bovenlichaam, meestal gedragen door vrouwen.",
+    en: "A garment worn on the upper body, usually by women."
+  },
+  "coat": {
+    nl: "Een dikke jas die je draagt om je warm te houden in de winter.",
+    en: "A thick outer garment worn to keep warm in winter."
+  },
+  "dress": {
+    nl: "Een kledingstuk dat uit één stuk bestaat, gedragen door vrouwen.",
+    en: "A one-piece garment typically worn by women."
+  },
+  "eyes": {
+    nl: "De lichaamsdelen waarmee je kunt zien.",
+    en: "The body parts you use to see."
+  },
+  "face": {
+    nl: "Het voorste deel van je hoofd met je ogen, neus en mond.",
+    en: "The front part of your head with eyes, nose, and mouth."
+  },
+  "friend": {
+    nl: "Iemand met wie je een hechte band hebt.",
+    en: "Someone you have a close relationship with."
+  },
+  "hair": {
+    nl: "De haren op je hoofd.",
+    en: "The strands growing on your head."
+  },
+  "hat": {
+    nl: "Wat je op je hoofd draagt tegen de zon of kou.",
+    en: "Something you wear on your head to protect from sun or cold."
+  },
+  "jeans": {
+    nl: "Een stevige spijkerbroek gemaakt van denim.",
+    en: "Strong trousers made of denim."
+  },
+  "jumper": {
+    nl: "Een warme trui die je over je hoofd aantrekt.",
+    en: "A warm sweater you pull over your head."
+  },
+  "rucksack": {
+    nl: "Een tas die je op je rug draagt.",
+    en: "A bag you carry on your back."
+  },
+  "shirt": {
+    nl: "Een kledingstuk met knopen, gedragen op het bovenlichaam.",
+    en: "A buttoned piece of clothing worn on the upper body."
+  },
+  "shoes": {
+    nl: "Wat je draagt aan je voeten om te lopen.",
+    en: "What you wear on your feet to walk."
+  },
+  "socks": {
+    nl: "Stoffen die je voeten bedekken in je schoenen.",
+    en: "Fabric worn on your feet inside shoes."
+  },
+  "boots": {
+    nl: "Schoenen die ook je enkels of benen bedekken.",
+    en: "Shoes that cover your ankles or legs."
+  },
+  "cap": {
+    nl: "Een pet met een klep om je ogen tegen de zon te beschermen.",
+    en: "A soft hat with a visor to shield your eyes from the sun."
+  },
+  "clothes": {
+    nl: "Alle dingen die mensen dragen, zoals shirts, broeken en jassen.",
+    en: "All the things people wear, like shirts, trousers, and jackets."
+  },
+  "gloves": {
+    nl: "Wat je handen warm houdt in de winter.",
+    en: "What keeps your hands warm in winter."
+  },
+  "hoodie": {
+    nl: "Een trui met een capuchon eraan vast.",
+    en: "A sweatshirt with an attached hood."
+  },
+  "jacket": {
+    nl: "Een kortere jas die je warm houdt.",
+    en: "A short coat to keep you warm."
+  },
+  "scarf": {
+    nl: "Een stuk stof dat je om je nek draagt tegen de kou.",
+    en: "A piece of fabric worn around the neck for warmth."
+  },
+  "skirt": {
+    nl: "Een kledingstuk dat het onderlichaam bedekt, zonder pijpen.",
+    en: "A garment that covers the lower body without legs."
+  },
+  "trainers": {
+    nl: "Sportschoenen die je vaak draagt tijdens het bewegen.",
+    en: "Shoes you wear for sports or physical activity."
+  },
+  "trousers": {
+    nl: "Een kledingstuk voor je benen, met twee pijpen.",
+    en: "A piece of clothing for your legs, with two separate parts."
+  },
+  "belt": {
+    nl: "Een band die je om je middel draagt om je broek op te houden.",
+    en: "A strap worn around the waist to hold up trousers."
+  },
+  "bracelet": {
+    nl: "Een sieraad dat je om je pols draagt.",
+    en: "A piece of jewelry worn around the wrist."
+  },
+  "earrings": {
+    nl: "Sieraden die je in je oren draagt.",
+    en: "Jewelry worn in your ears."
+  },
+  "necklace": {
+    nl: "Een sieraad dat je om je hals draagt.",
+    en: "A piece of jewelry worn around the neck."
+  },
+  "watch": {
+    nl: "Een apparaat dat je om je pols draagt om de tijd te zien.",
+    en: "A device worn on the wrist to tell the time."
+  }
+};
+
 
     function getLanguage() {
       const selected = document.querySelector('input[name="language"]:checked');

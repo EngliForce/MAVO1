@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulary 1.2: Me and my family</title>
+  <title>Vocabulary 1.4: Me and my hobbies/school</title>
   <style>
-    /* (Dezelfde stijl als jouw originele versie) */
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
@@ -131,7 +130,7 @@
 
   <header>
     <img src="Logo.png" alt="EngliForce Logo" />
-    <h1>🔠 Vocabulary 1.2: Me and my family</h1>
+    <h1>📚 Vocabulary 1.4: Me and my hobbies/school</h1>
     <p>Sleep het juiste woord naar de bijpassende omschrijving</p>
   </header>
 
@@ -155,34 +154,154 @@
 
   <script>
     const vocabData = {
-      "aunt": { nl: "De zus van je vader of moeder.", en: "The sister of your father or mother." },
-      "baby": { nl: "Een heel jong kind.", en: "A very young child." },
-      "brother": { nl: "Een mannelijke broer.", en: "A male sibling." },
-      "child": { nl: "Een jong persoon, geen volwassene.", en: "A young person, not an adult." },
-      "cousin": { nl: "Kind van je oom of tante.", en: "The child of your uncle or aunt." },
-      "dad": { nl: "Informeel voor 'vader'.", en: "Informal for 'father'." },
-      "daughter": { nl: "Vrouwelijk kind van ouders.", en: "A female child of parents." },
-      "family": { nl: "Groep mensen die bij elkaar horen door geboorte of huwelijk.", en: "People related by blood or marriage." },
-      "father": { nl: "Mannelijke ouder.", en: "Male parent." },
-      "mother": { nl: "Vrouwelijke ouder.", en: "Female parent." },
-      "parents": { nl: "Vader en moeder samen.", en: "Father and mother together." },
-      "sister": { nl: "Een vrouwelijke broer of zus.", en: "A female sibling." },
-      "son": { nl: "Mannelijk kind van ouders.", en: "A male child of parents." },
-      "uncle": { nl: "De broer van je vader of moeder.", en: "The brother of your father or mother." },
-      "wife": { nl: "Getrouwde vrouw.", en: "Married woman." },
-      "foster family": { nl: "Gezin dat tijdelijk voor een kind zorgt.", en: "A family that temporarily cares for a child." },
-      "god...": { nl: "Peetvader of peetmoeder, gekozen bij doop.", en: "Chosen parent figure at baptism." },
-      "grand...": { nl: "Opa of oma.", en: "Grandfather or grandmother." },
-      "guardian": { nl: "Iemand die wettelijk voor een kind zorgt.", en: "Someone who legally takes care of a child." },
-      "half...": { nl: "Broer of zus met één gedeelde ouder.", en: "Sibling with one shared parent." },
-      "mum": { nl: "Informeel voor 'moeder'.", en: "Informal for 'mother'." },
-      "nephew": { nl: "Zoon van je broer of zus.", en: "Son of your brother or sister." },
-      "niece": { nl: "Dochter van je broer of zus.", en: "Daughter of your brother or sister." },
-      "only child": { nl: "Enig kind zonder broers of zussen.", en: "Child without siblings." },
-      "relatives": { nl: "Mensen die familie van je zijn.", en: "People who are related to you." },
-      "siblings": { nl: "Broers en zussen samen.", en: "Brothers and sisters." },
-      "step...": { nl: "Stiefouder, getrouwd met je ouder.", en: "Married to your parent but not biological." },
-      "twins": { nl: "Twee kinderen geboren op dezelfde dag.", en: "Two children born on the same day." }
+      "book": {
+        nl: "Iets dat je leest en waarin informatie staat.",
+        en: "Something you read that contains information."
+      },
+      "English": {
+        nl: "Een taal die wereldwijd gesproken wordt.",
+        en: "A language spoken around the world."
+      },
+      "maths": {
+        nl: "Vakken over cijfers, sommen en berekeningen.",
+        en: "Subject about numbers, sums, and calculations."
+      },
+      "pen": {
+        nl: "Schrijfmiddel met inkt.",
+        en: "A writing tool with ink."
+      },
+      "pencil": {
+        nl: "Schrijfmiddel dat je kunt uitgummen.",
+        en: "A writing tool you can erase."
+      },
+      "PE": {
+        nl: "Lichamelijke opvoeding op school.",
+        en: "Physical Education at school."
+      },
+      "reading": {
+        nl: "Het begrijpen van geschreven tekst.",
+        en: "Understanding written text."
+      },
+      "rubber": {
+        nl: "Een gum die potlood uitwist.",
+        en: "An eraser that removes pencil."
+      },
+      "ruler": {
+        nl: "Hulpmiddel om rechte lijnen te tekenen.",
+        en: "A tool for drawing straight lines."
+      },
+      "scissors": {
+        nl: "Gereedschap om papier te knippen.",
+        en: "A tool to cut paper."
+      },
+      "swimming": {
+        nl: "Bewegen in water.",
+        en: "Moving through water."
+      },
+      "tennis": {
+        nl: "Sport waarbij je een bal slaat met een racket.",
+        en: "A sport where you hit a ball with a racket."
+      },
+      "textbook": {
+        nl: "Boek dat je gebruikt bij een vak op school.",
+        en: "A book used for learning a school subject."
+      },
+      "art": {
+        nl: "Schoolvak waar je tekent, schildert en knutselt.",
+        en: "Subject where you draw, paint, and create."
+      },
+      "biology": {
+        nl: "Vak over planten, dieren en het menselijk lichaam.",
+        en: "Subject about plants, animals, and the human body."
+      },
+      "Dutch": {
+        nl: "De taal die in Nederland gesproken wordt.",
+        en: "The language spoken in the Netherlands."
+      },
+      "French": {
+        nl: "Taal die in Frankrijk gesproken wordt.",
+        en: "The language spoken in France."
+      },
+      "geography": {
+        nl: "Vak over landen, natuur en de wereld.",
+        en: "Subject about countries, nature, and the world."
+      },
+      "history": {
+        nl: "Vak over het verleden en oude tijden.",
+        en: "Subject about the past and ancient times."
+      },
+      "music": {
+        nl: "Schoolvak waarbij je zingt of een instrument speelt.",
+        en: "Subject where you sing or play an instrument."
+      },
+      "technology": {
+        nl: "Vak over techniek en hoe dingen werken.",
+        en: "Subject about technology and how things work."
+      },
+      "calculator": {
+        nl: "Apparaat om mee te rekenen.",
+        en: "A device used to do calculations."
+      },
+      "copybook": {
+        nl: "Schrift waarin je schrijft tijdens de les.",
+        en: "Notebook used to write during class."
+      },
+      "glue stick": {
+        nl: "Lijm in de vorm van een stick.",
+        en: "Glue in stick form."
+      },
+      "headphones": {
+        nl: "Apparaat dat je op je hoofd draagt om te luisteren.",
+        en: "Device worn on your head to listen to sound."
+      },
+      "highlighter": {
+        nl: "Pen waarmee je tekst markeert.",
+        en: "A pen used to mark important text."
+      },
+      "pair of compasses": {
+        nl: "Hulpmiddel om cirkels te tekenen.",
+        en: "Tool used to draw circles."
+      },
+      "pencil case": {
+        nl: "Tas of etui om pennen en potloden in te bewaren.",
+        en: "A case to keep pens and pencils in."
+      },
+      "protractor": {
+        nl: "Meetinstrument om hoeken te meten.",
+        en: "A tool to measure angles."
+      },
+      "sharpener": {
+        nl: "Voorwerp waarmee je potloden scherp maakt.",
+        en: "A tool to sharpen pencils."
+      },
+      "sports kit": {
+        nl: "Kleding en spullen voor sportlessen.",
+        en: "Clothes and gear for sports class."
+      },
+      "workbook": {
+        nl: "Boek waarin je opdrachten maakt.",
+        en: "Book where you complete exercises."
+      },
+      "ball": {
+        nl: "Rond object dat je gebruikt bij sporten en spel.",
+        en: "A round object used in games and sports."
+      },
+      "dancing": {
+        nl: "Bewegen op muziek.",
+        en: "Moving your body to music."
+      },
+      "painting": {
+        nl: "Het maken van kunst met verf.",
+        en: "Making art with paint."
+      },
+      "playing …": {
+        nl: "Het spelen van een sport of muziekinstrument.",
+        en: "Doing a sport or playing an instrument."
+      },
+      "skateboarding": {
+        nl: "Bewegen op een plank met wieltjes.",
+        en: "Riding on a board with wheels."
+      }
     };
 
     function getLanguage() {
