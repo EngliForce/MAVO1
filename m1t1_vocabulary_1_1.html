@@ -1,177 +1,136 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Vocabulary 1.1: Me, myself and I</title>
-<style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #fff8f0;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  background-color: #ff7043;
-  color: white;
-  padding: 2rem;
-  text-align: center;
-}
-
-main {
-  padding: 2rem;
-  text-align: center;
-}
-
-section {
-  background-color: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-h2 {
-  color: #ff7043;
-}
-
-.table-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 1rem;
-}
-
-.table-column {
-  flex: 1 1 300px;
-  max-width: 400px;
-}
-
-table {
-  border-collapse: collapse;
-  font-size: 1rem;
-  width: 100%;
-}
-
-th {
-  font-weight: bold;
-  background-color: #fff1e6;
-}
-
-td {
-  font-weight: normal;
-}
-
-table, th, td {
-  border: 1px solid #ddd;
-}
-
-th, td {
-  padding: 0.5rem 1rem;
-  text-align: left;
-}
-
-.links {
-  margin-top: 1rem;
-}
-
-.links a,
-.links button {
-  padding: 0.5rem 1rem;
-  background-color: #ff7043;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  border: none;
-  cursor: pointer;
-}
-
-.links a:hover,
-.links button:hover {
-  background-color: #e65c30;
-}
-
-.pickle-image {
-  max-width: 100px;
-  height: auto;
-  margin-top: 0.5rem;
-}
-
-.video-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-.video-column {
-  flex: 1 1 400px;
-  max-width: 600px;
-}
-
-.video-column iframe {
-  width: 100%;
-  height: 315px;
-  border: none;
-}
-
-footer {
-  background-color: #ffe6dc;
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-}
-
-#context-sentences {
-  display: none;
-  text-align: center;
-  margin-top: 2rem;
-}
-#context-sentences ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-#context-sentences li {
-  margin-bottom: 1rem;
-}
-
-.oefen-link {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: #ff7043;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-}
-.oefen-link:hover {
-  background-color: #e65c30;
-}
-.exercise-content ul li {
-  margin-bottom: 1rem;
-}
-
-.pickle-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.pickle-list li {
-  margin-bottom: 1rem;
-}
-
-.pickle-image-tall {
-  height: 260px;
-  width: auto;
-  margin-top: 0.25rem;
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 1.1: Me, myself and I</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #ff7043;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #fff1e6;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a,
+    .links button {
+      padding: 0.5rem 1rem;
+      background-color: #ff7043;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover,
+    .links button:hover {
+      background-color: #e65c30;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #ff7043;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #e65c30;
+    }
+    .pickle-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pickle-list li {
+      margin-bottom: 1rem;
+    }
+    .pickle-image-tall {
+      height: 260px;
+      width: auto;
+      margin-top: 0.25rem;
+    }
+  </style>
 </head>
 <body>
 
@@ -219,27 +178,52 @@ footer {
       </table>
     </div>
   </div>
-
   <div class="links">
     <button onclick="toggleContextSentences()">Toon woorden in context</button>
   </div>
 
-  <div id="context-sentences" style="display: none; margin-top: 2rem;">
-    <h3>📘 Woorden in context</h3>
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
     <div style="overflow-x:auto;">
       <table>
         <thead>
-          <tr>
-            <th>Woord</th>
-            <th>Engelse zin</th>
-            <th>Nederlandse vertaling</th>
-          </tr>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
         </thead>
         <tbody>
-          <!-- Context zinnen -->
-          <!-- ... (rest van de woordenlijst blijft ongewijzigd) ... -->
+          <tr><td>address</td><td>My address is 10 Apple Street.</td><td>Mijn adres is Apple Street 10.</td></tr>
+          <tr><td>age</td><td>I am 12 years old.</td><td>Ik ben 12 jaar oud.</td></tr>
+          <tr><td>birthday</td><td>Her birthday is in July.</td><td>Haar verjaardag is in juli.</td></tr>
+          <tr><td>city</td><td>I live in a big city.</td><td>Ik woon in een grote stad.</td></tr>
+          <tr><td>country</td><td>We love our country.</td><td>We houden van ons land.</td></tr>
+          <tr><td>email address</td><td>What is your email address?</td><td>Wat is jouw e-mailadres?</td></tr>
+          <tr><td>first name</td><td>My first name is Emma.</td><td>Mijn voornaam is Emma.</td></tr>
+          <tr><td>nationality</td><td>His nationality is Dutch.</td><td>Zijn nationaliteit is Nederlands.</td></tr>
+          <tr><td>phone number</td><td>Please write your phone number.</td><td>Schrijf alsjeblieft je telefoonnummer op.</td></tr>
+          <tr><td>postcode</td><td>The postcode is 1234 AB.</td><td>De postcode is 1234 AB.</td></tr>
+          <tr><td>surname / family name</td><td>My family name is Jansen.</td><td>Mijn achternaam is Jansen.</td></tr>
+          <tr><td>athletic</td><td>He has an athletic build.</td><td>Hij is sportief gebouwd.</td></tr>
+          <tr><td>braces</td><td>She wears braces on her teeth.</td><td>Ze draagt een beugel voor haar tanden.</td></tr>
+          <tr><td>build</td><td>He has a slim build.</td><td>Hij heeft een slank postuur.</td></tr>
+          <tr><td>contact lenses</td><td>I wear contact lenses every day.</td><td>Ik draag elke dag contactlenzen.</td></tr>
+          <tr><td>freckles</td><td>She has freckles on her nose.</td><td>Ze heeft sproeten op haar neus.</td></tr>
+          <tr><td>glasses</td><td>I need glasses to see clearly.</td><td>Ik heb een bril nodig om goed te zien.</td></tr>
+          <tr><td>height</td><td>What is your height?</td><td>Wat is jouw lengte?</td></tr>
+          <tr><td>slim</td><td>My brother is very slim.</td><td>Mijn broer is erg slank.</td></tr>
+          <tr><td>looks</td><td>She cares about her looks.</td><td>Ze geeft om haar uiterlijk.</td></tr>
+          <tr><td>handsome</td><td>He is a handsome boy.</td><td>Hij is een knappe jongen.</td></tr>
+          <tr><td>ordinary</td><td>He is just an ordinary kid.</td><td>Hij is gewoon een normale jongen.</td></tr>
+          <tr><td>pretty</td><td>She is a pretty girl.</td><td>Ze is een mooi meisje.</td></tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <div class="video-row">
+    <div class="video-column">
+      <iframe width="530" height="315" src="https://www.youtube.com/embed/Smf5DcuVHcE" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 </section>
@@ -248,43 +232,36 @@ footer {
   <h2>🃏 Flashcards</h2>
   <p>Oefen deze woorden met interactieve flashcards.</p>
   <div class="links">
-    <a href="m1t2_vocabulary_1_1_flashcards" target="_blank">Open Flashcards</a>
-  </div>
-</section>
-
-<section>
-  <h2>🎬 Video</h2>
-  <div class="video-row">
-    <div class="video-column">
-      <iframe width="530" height="315" src="https://www.youtube.com/embed/Smf5DcuVHcE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
+    <a href="m1t2_vocabulary_1_1_flashcards.html" target="_blank">Open Flashcards</a>
   </div>
 </section>
 
 <section>
   <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
   <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
     <ul class="pickle-list">
       <li><a class='oefen-link' href='/m1t1_vocabulary_1_1_pickle_1'>Pickle 1: Drag & Drop</a></li>
-      <li><a class="oefen-link" href="m1t1_vocabulary_1_1_pickle_2.html.html">Pickle 2: Vocabulary Grid</a></li>
-      <li><a class="oefen-link" href="m1t1_vocabulary_1_1_pickle_3.html.html">Pickle 3: Vocabulary Detective</a></li>
+      <li><a class="oefen-link" href="/m1t1_vocabulary_1_1_pickle_2.html">Pickle 2: Vocabulary Grid</a></li>
+      <li><a class="oefen-link" href="/m1t1_vocabulary_1_1_pickle_3.html">Pickle 3: Vocabulary Detective</a></li>
       <li><a class='oefen-link' href='/m1t1_vocabulary_1_1_pickle_4'>Pickle 4: Flashcard Challenge</a></li>
       <li><a class='oefen-link' href='/m1t1_vocabulary_1_1_pickle_5'>Pickle 5: Time Challenge</a></li>
     </ul>
     <img class="pickle-image-tall" src="Pickle.png" alt="Super Pickle">
   </div>
 </section>
+
 </main>
 
 <footer>
-<p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
 </footer>
 
 <script>
-function toggleContextSentences() {
-  const div = document.getElementById("context-sentences");
-  div.style.display = (div.style.display === "block") ? "none" : "block";
-}
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
 </script>
 
 </body>
