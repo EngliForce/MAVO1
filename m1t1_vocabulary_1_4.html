@@ -97,6 +97,37 @@
       padding: 1rem;
       font-size: 0.9rem;
     }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #ff7043;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #e65c30;
+    }
+    .pickle-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pickle-list li {
+      margin-bottom: 1rem;
+    }
+    .pickle-image-tall {
+      height: 260px;
+      width: auto;
+      margin-top: 0.25rem;
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
   </style>
 </head>
 <body>
@@ -104,13 +135,11 @@
 <header>
   <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
   <h1>Vocabulary 1.4: Me and my hobbies/school</h1>
-  <p>Leer Engelse woorden over schoolvakken en hobby’s.</p>
 </header>
 
 <main>
 
 <section>
-  <h2>📚 Vocabulary List - School & Hobbies</h2>
   <div class="table-row">
     <div class="table-column">
       <table>
@@ -120,7 +149,7 @@
         <tr><td>maths</td><td>wiskunde</td></tr>
         <tr><td>pen</td><td>pen</td></tr>
         <tr><td>pencil</td><td>potlood</td></tr>
-        <tr><td>physical education / PE</td><td>gymnastiek / LO</td></tr>
+        <tr><td>PE</td><td>gymnastiek / LO</td></tr>
         <tr><td>reading</td><td>lezen</td></tr>
         <tr><td>rubber</td><td>gum</td></tr>
         <tr><td>ruler</td><td>liniaal</td></tr>
@@ -160,6 +189,62 @@
       </table>
     </div>
   </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>book</td><td>I read a book every night.</td><td>Ik lees elke avond een boek.</td></tr>
+          <tr><td>English</td><td>We have English on Monday.</td><td>We hebben Engels op maandag.</td></tr>
+          <tr><td>maths</td><td>I like solving maths problems.</td><td>Ik vind het leuk om wiskundesommen op te lossen.</td></tr>
+          <tr><td>pen</td><td>Use a pen to write your name.</td><td>Gebruik een pen om je naam te schrijven.</td></tr>
+          <tr><td>pencil</td><td>This pencil is sharp.</td><td>Dit potlood is scherp.</td></tr>
+          <tr><td>PE</td><td>We play football during PE.</td><td>We spelen voetbal tijdens gym.</td></tr>
+          <tr><td>reading</td><td>Reading is my hobby.</td><td>Lezen is mijn hobby.</td></tr>
+          <tr><td>rubber</td><td>I need a rubber to fix my mistake.</td><td>Ik heb een gum nodig om mijn fout te verbeteren.</td></tr>
+          <tr><td>ruler</td><td>Use the ruler to draw a line.</td><td>Gebruik de liniaal om een lijn te trekken.</td></tr>
+          <tr><td>scissors</td><td>Cut the paper with scissors.</td><td>Knip het papier met een schaar.</td></tr>
+          <tr><td>swimming</td><td>I go swimming every weekend.</td><td>Ik ga elk weekend zwemmen.</td></tr>
+          <tr><td>tennis</td><td>He plays tennis after school.</td><td>Hij speelt tennis na school.</td></tr>
+          <tr><td>textbook</td><td>Open your textbook to page 10.</td><td>Open je leerboek op pagina 10.</td></tr>
+          <tr><td>art</td><td>We painted in art class.</td><td>We hebben geschilderd in de les beeldende vorming.</td></tr>
+          <tr><td>biology</td><td>Biology is about animals and plants.</td><td>Biologie gaat over dieren en planten.</td></tr>
+          <tr><td>Dutch</td><td>We write stories in Dutch.</td><td>We schrijven verhalen in het Nederlands.</td></tr>
+          <tr><td>French</td><td>He learns French at school.</td><td>Hij leert Frans op school.</td></tr>
+          <tr><td>geography</td><td>Geography teaches us about the world.</td><td>Aardrijkskunde leert ons over de wereld.</td></tr>
+          <tr><td>history</td><td>We study history to learn about the past.</td><td>We leren geschiedenis om over het verleden te leren.</td></tr>
+          <tr><td>music</td><td>We sang songs in music class.</td><td>We zongen liedjes in de muziekles.</td></tr>
+          <tr><td>technology</td><td>Technology class is about machines and coding.</td><td>Techniekles gaat over machines en programmeren.</td></tr>
+          <tr><td>calculator</td><td>I used my calculator to do the sum.</td><td>Ik gebruikte mijn rekenmachine voor de som.</td></tr>
+          <tr><td>copybook</td><td>Write it in your copybook.</td><td>Schrijf het in je schrift.</td></tr>
+          <tr><td>glue stick</td><td>Stick the picture with a glue stick.</td><td>Plak het plaatje met een lijmstift.</td></tr>
+          <tr><td>headphones</td><td>Put on your headphones to listen.</td><td>Zet je koptelefoon op om te luisteren.</td></tr>
+          <tr><td>highlighter</td><td>Use a highlighter to mark keywords.</td><td>Gebruik een markeerstift om kernwoorden te markeren.</td></tr>
+          <tr><td>pair of compasses</td><td>Draw a circle with a pair of compasses.</td><td>Teken een cirkel met een passer.</td></tr>
+          <tr><td>pencil case</td><td>My pencil case is full of pens.</td><td>Mijn etui zit vol pennen.</td></tr>
+          <tr><td>protractor</td><td>Use the protractor to measure the angle.</td><td>Gebruik de geodriehoek om de hoek te meten.</td></tr>
+          <tr><td>sharpener</td><td>I need a sharpener for my pencil.</td><td>Ik heb een puntenslijper nodig voor mijn potlood.</td></tr>
+          <tr><td>sports kit</td><td>Bring your sports kit to school.</td><td>Neem je gymspullen mee naar school.</td></tr>
+          <tr><td>workbook</td><td>Do the exercises in your workbook.</td><td>Maak de oefeningen in je werkboek.</td></tr>
+          <tr><td>ball</td><td>We kicked the ball around the field.</td><td>We trapten de bal over het veld.</td></tr>
+          <tr><td>dancing</td><td>She loves dancing to music.</td><td>Ze houdt van dansen op muziek.</td></tr>
+          <tr><td>painting</td><td>Painting helps me relax.</td><td>Schilderen helpt me ontspannen.</td></tr>
+          <tr><td>playing …</td><td>He is playing the piano.</td><td>Hij speelt piano.</td></tr>
+          <tr><td>skateboarding</td><td>Skateboarding is fun in the park.</td><td>Skateboarden is leuk in het park.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</div>
 </section>
 
 <section>
@@ -177,18 +262,22 @@
   <h2>🃏 Flashcards</h2>
   <p>Oefen deze woorden met interactieve flashcards.</p>
   <div class="links">
-    <a href="m1t1_vocab_1_4_flashcards.html" target="_blank">Open Flashcards</a>
+    <a href="vocab_1_4_flashcards.html" target="_blank">Open Flashcards</a>
   </div>
 </section>
 
 <section>
-  <h2>💡 Pickle Jar</h2>
-  <p>Klaar om je kennis te testen? Kies een pickle over deze woorden!</p>
-  <div class="pickle-jar-container">
-    <div class="links">
-      <a href="vocab_1_4_pickles.html" target="_blank">Pickles</a>
-    </div>
-    <img src="Pickles.png" alt="Pickle character" class="pickle-jar-img">
+  <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
+  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+    <ul class="pickle-list">
+      <li><a class='oefen-link' href='/vocab_1_4_pickle_1'>Pickle 1: Drag & Drop</a></li>
+      <li><a class="oefen-link" href="/vocab_1_4_pickle_2">Pickle 2: Vocabulary Grid</a></li>
+      <li><a class="oefen-link" href="/vocab_1_4_pickle_3">Pickle 3: Vocabulary Detective</a></li>
+      <li><a class='oefen-link' href='/vocab_1_4_pickle_4'>Pickle 4: Flashcard Challenge</a></li>
+      <li><a class='oefen-link' href='/vocab_1_4_pickle_5'>Pickle 5: Time Challenge</a></li>
+    </ul>
+    <img class="pickle-image-tall" src="Pickle.png" alt="Super Pickle">
   </div>
 </section>
 
@@ -198,7 +287,12 @@
   <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
 </footer>
 
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
 </body>
 </html>
-
-
