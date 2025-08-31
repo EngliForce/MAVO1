@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – Vocabulary 1.4: Me and my hobbies/school</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    .controls {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    select, label, button {
+      font-size: 1rem;
+    }
+
+    .flashcards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    .card {
+      width: 220px;
+      height: 180px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #ffffff, #ffe6dc);
+      color: #ff7043;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .card-back {
+      background: #ff7043;
+      color: white;
+      transform: rotateY(180deg);
+      font-size: 1.2rem;
+    }
+
+    .example {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    .checkbox-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Flashcards – Vocabulary 1.4: Me and my hobbies/school</h1>
+  <p>Klik op een kaart om de vertaling en voorbeeldzin te zien.</p>
+</header>
+
+<div class="controls">
+  <label>
+    Aantal kaarten:
+    <select id="card-count">
+      <option value="1">1</option>
+      <option value="2" selected>2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+  </label>
+  <label>
+    <input type="checkbox" id="show-examples" checked />
+    Toon voorbeeldzinnen
+  </label>
+  <label>
+    <input type="checkbox" id="reverse-cards" />
+    Nederlands → Engels
+  </label>
+
+  <button onclick="generateCards()">Volgende 🔁</button>
+  <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+  <button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+  <button onclick="practiceAll()">Oefen alles 🔄</button>
+</div>
+
+<div class="flashcards-container" id="flashcards-container"></div>
+
+<footer>
+  <p>&copy; 2025 EngliForce – Schoolwoorden oefenen met plezier!</p>
+</footer>
+
+<script>
+  const flashcards = [
+    { en: "book", nl: "boek", exEN: "I read a book.", exNL: "Ik lees een boek." },
+    { en: "English", nl: "Engels", exEN: "We speak English.", exNL: "Wij spreken Engels." },
+    { en: "maths", nl: "wiskunde", exEN: "Maths is my favourite subject.", exNL: "Wiskunde is mijn favoriete vak." },
+    { en: "pen", nl: "pen", exEN: "Write with a pen.", exNL: "Schrijf met een pen." },
+    { en: "pencil", nl: "potlood", exEN: "Use a pencil to draw.", exNL: "Gebruik een potlood om te tekenen." },
+    { en: "PE", nl: "gymnastiek / LO", exEN: "We have PE on Friday.", exNL: "We hebben gym op vrijdag." },
+    { en: "reading", nl: "lezen", exEN: "I enjoy reading books.", exNL: "Ik lees graag boeken." },
+    { en: "rubber", nl: "gum", exEN: "Use a rubber to erase.", exNL: "Gebruik een gum om te gummen." },
+    { en: "ruler", nl: "liniaal", exEN: "Draw a line with a ruler.", exNL: "Trek een lijn met een liniaal." },
+    { en: "scissors", nl: "schaar", exEN: "Cut paper with scissors.", exNL: "Knip papier met een schaar." },
+    { en: "swimming", nl: "zwemmen", exEN: "I go swimming every week.", exNL: "Ik ga elke week zwemmen." },
+    { en: "tennis", nl: "tennis", exEN: "She plays tennis.", exNL: "Zij speelt tennis." },
+    { en: "textbook", nl: "leerboek", exEN: "The textbook is new.", exNL: "Het leerboek is nieuw." },
+    { en: "art", nl: "beeldende vorming", exEN: "I like art lessons.", exNL: "Ik vind beeldende vorming leuk." },
+    { en: "biology", nl: "biologie", exEN: "Biology is about animals and plants.", exNL: "Biologie gaat over dieren en planten." },
+    { en: "Dutch", nl: "Nederlands", exEN: "Dutch is a language.", exNL: "Nederlands is een taal." },
+    { en: "French", nl: "Frans", exEN: "They speak French in France.", exNL: "In Frankrijk spreken ze Frans." },
+    { en: "geography", nl: "aardrijkskunde", exEN: "Geography is about the world.", exNL: "Aardrijkskunde gaat over de wereld." },
+    { en: "history", nl: "geschiedenis", exEN: "History teaches us about the past.", exNL: "Geschiedenis leert ons over het verleden." },
+    { en: "music", nl: "muziek", exEN: "We sing in music class.", exNL: "We zingen in de muziekles." },
+    { en: "technology", nl: "techniek", exEN: "Technology is fun.", exNL: "Techniek is leuk." },
+    { en: "calculator", nl: "rekenmachine", exEN: "Use a calculator for this.", exNL: "Gebruik hiervoor een rekenmachine." },
+    { en: "copybook", nl: "schrift", exEN: "Write in your copybook.", exNL: "Schrijf in je schrift." },
+    { en: "glue stick", nl: "lijmstift", exEN: "Stick it with a glue stick.", exNL: "Plak het met een lijmstift." },
+    { en: "headphones", nl: "koptelefoon", exEN: "Wear your headphones.", exNL: "Draag je koptelefoon." },
+    { en: "highlighter", nl: "markeerstift", exEN: "Use a highlighter to mark.", exNL: "Gebruik een markeerstift om te markeren." },
+    { en: "pair of compasses", nl: "passer", exEN: "Use a compass to draw circles.", exNL: "Gebruik een passer om cirkels te tekenen." },
+    { en: "pencil case", nl: "etui", exEN: "My pencil case is full.", exNL: "Mijn etui zit vol." },
+    { en: "protractor", nl: "geodriehoek", exEN: "Use the protractor to measure angles.", exNL: "Gebruik de geodriehoek om hoeken te meten." },
+    { en: "sharpener", nl: "puntenslijper", exEN: "Sharpen your pencil with a sharpener.", exNL: "Slijp je potlood met een puntenslijper." },
+    { en: "sports kit", nl: "gymspullen", exEN: "Bring your sports kit.", exNL: "Neem je gymspullen mee." },
+    { en: "workbook", nl: "werkboek", exEN: "Complete the workbook.", exNL: "Maak het werkboek af." },
+    { en: "ball", nl: "bal", exEN: "Kick the ball.", exNL: "Schop de bal." },
+    { en: "dancing", nl: "dansen", exEN: "I love dancing.", exNL: "Ik hou van dansen." },
+    { en: "painting", nl: "schilderen", exEN: "Painting is relaxing.", exNL: "Schilderen is ontspannend." },
+    { en: "playing", nl: "sport / instrument spelen", exEN: "She is playing the piano.", exNL: "Zij speelt piano." },
+    { en: "skateboarding", nl: "skateboarden", exEN: "He likes skateboarding.", exNL: "Hij houdt van skateboarden." }
+  ];
+
+  const knownWords = new Set();
+
+  function generateCards() {
+    const count = parseInt(document.getElementById('card-count').value);
+    const showExamples = document.getElementById('show-examples').checked;
+    const reversed = document.getElementById('reverse-cards').checked;
+    const container = document.getElementById('flashcards-container');
+    container.innerHTML = '';
+    const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+    selected.forEach(word => createCard(word, showExamples, reversed, container));
+  }
+
+  function practiceUnknown() {
+    const showExamples = document.getElementById('show-examples').checked;
+    const reversed = document.getElementById('reverse-cards').checked;
+    const container = document.getElementById('flashcards-container');
+    container.innerHTML = '';
+    const unknown = flashcards.filter(word => !knownWords.has(word.en));
+    if (unknown.length === 0) {
+      container.innerHTML = "<p>🎉 Je kent alle woorden al!</p>";
+      return;
+    }
+    unknown.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+  }
+
+  function practiceKnown() {
+    const showExamples = document.getElementById('show-examples').checked;
+    const reversed = document.getElementById('reverse-cards').checked;
+    const container = document.getElementById('flashcards-container');
+    container.innerHTML = '';
+    const known = flashcards.filter(word => knownWords.has(word.en));
+    if (known.length === 0) {
+      container.innerHTML = "<p>📋 Je hebt nog geen bekende woorden aangevinkt.</p>";
+      return;
+    }
+    known.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+  }
+
+  function practiceAll() {
+    const showExamples = document.getElementById('show-examples').checked;
+    const reversed = document.getElementById('reverse-cards').checked;
+    const container = document.getElementById('flashcards-container');
+    container.innerHTML = '';
+    flashcards.forEach(word => createCard(word, showExamples, reversed, container));
+  }
+
+  function createCard(word, showExamples, reversed, container) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => card.classList.toggle('flipped');
+
+    const cardInner = document.createElement('div');
+    cardInner.className = 'card-inner';
+
+    const front = document.createElement('div');
+    front.className = 'card-front';
+    front.innerHTML = reversed ? word.nl : word.en;
+    if (showExamples) {
+      const ex = document.createElement('div');
+      ex.className = 'example';
+      ex.innerHTML = reversed ? word.exNL : word.exEN;
+      front.appendChild(ex);
+    }
+
+    const back = document.createElement('div');
+    back.className = 'card-back';
+    back.innerHTML = reversed ? word.en : word.nl;
+    if (showExamples) {
+      const ex = document.createElement('div');
+      ex.className = 'example';
+      ex.innerHTML = reversed ? word.exEN : word.exNL;
+      back.appendChild(ex);
+    }
+
+    const checkboxContainer = document.createElement('label');
+    checkboxContainer.className = 'checkbox-container';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = knownWords.has(word.en);
+    checkbox.onchange = (e) => {
+      e.stopPropagation();
+      if (checkbox.checked) {
+        knownWords.add(word.en);
+      } else {
+        knownWords.delete(word.en);
+      }
+    };
+    const labelText = document.createTextNode('Ken ik');
+    checkboxContainer.appendChild(checkbox);
+    checkboxContainer.appendChild(labelText);
+
+    cardInner.appendChild(front);
+    cardInner.appendChild(back);
+    card.appendChild(cardInner);
+    card.appendChild(checkboxContainer);
+    container.appendChild(card);
+  }
+
+  window.onload = generateCards;
+</script>
+
+</body>
+</html>
+
+
