@@ -11,6 +11,12 @@
       margin: 0;
       padding: 0;
     }
+  footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
 
     header {
       background-color: #ff7043;
@@ -92,30 +98,6 @@
       background-color: #e65c30;
     }
 
-    .video-row {
-      display: flex;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
-    .video-column {
-      flex: 1 1 400px;
-      max-width: 600px;
-    }
-
-    .video-column iframe {
-      width: 100%;
-      height: 315px;
-      border: none;
-    }
-
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-
     #context-sentences {
       display: none;
       text-align: center;
@@ -184,6 +166,7 @@
         <tr><td>uncle</td><td>oom</td></tr>
       </table>
     </div>
+
     <div class="table-column">
       <table>
         <tr><th>Engels</th><th>Nederlands</th></tr>
@@ -204,29 +187,50 @@
       </table>
     </div>
   </div>
+
   <div class="links">
     <button onclick="toggleContextSentences()">Toon woorden in context</button>
   </div>
- <div id="context-sentences">
-  <h3>📘 Woorden in context</h3>
-  <div style="overflow-x:auto;">
-    <table>
-      <thead>
-        <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
-      </thead>
-      <tbody>
-        <!-- bestaande contextzinnen -->
-      </tbody>
-    </table>
-  </div>
-</div>
-</section>
 
-<section>
-  <h2>🃏 Flashcards</h2>
-  <p>Oefen deze woorden met interactieve flashcards.</p>
-  <div class="links">
-    <a href="m1t2_vocabulary_1_2_flashcards" target="_blank">Open Flashcards</a>
+  <div id="context-sentences">
+    <h3>📘 Woorden in context</h3>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>aunt</td><td>My aunt is visiting us today.</td><td>Mijn tante komt vandaag op bezoek.</td></tr>
+          <tr><td>baby</td><td>The baby is sleeping in the crib.</td><td>De baby slaapt in het wiegje.</td></tr>
+          <tr><td>brother</td><td>My brother plays football.</td><td>Mijn broer speelt voetbal.</td></tr>
+          <tr><td>child</td><td>The child is five years old.</td><td>Het kind is vijf jaar oud.</td></tr>
+          <tr><td>cousin</td><td>My cousin lives in Belgium.</td><td>Mijn neef/nicht woont in België.</td></tr>
+          <tr><td>dad</td><td>Dad is cooking dinner.</td><td>Papa kookt het avondeten.</td></tr>
+          <tr><td>daughter</td><td>He has one daughter and two sons.</td><td>Hij heeft één dochter en twee zonen.</td></tr>
+          <tr><td>family</td><td>My family is very big.</td><td>Mijn familie is heel groot.</td></tr>
+          <tr><td>father</td><td>My father is a doctor.</td><td>Mijn vader is arts.</td></tr>
+          <tr><td>mother</td><td>My mother loves gardening.</td><td>Mijn moeder houdt van tuinieren.</td></tr>
+          <tr><td>parents</td><td>My parents are kind.</td><td>Mijn ouders zijn vriendelijk.</td></tr>
+          <tr><td>sister</td><td>My sister is older than me.</td><td>Mijn zus is ouder dan ik.</td></tr>
+          <tr><td>son</td><td>They have a teenage son.</td><td>Ze hebben een tienerzoon.</td></tr>
+          <tr><td>uncle</td><td>My uncle tells funny stories.</td><td>Mijn oom vertelt grappige verhalen.</td></tr>
+          <tr><td>wife</td><td>His wife is very friendly.</td><td>Zijn vrouw is erg vriendelijk.</td></tr>
+          <tr><td>foster family</td><td>He lives with a foster family.</td><td>Hij woont bij een pleeggezin.</td></tr>
+          <tr><td>god…</td><td>My godmother gave me a present.</td><td>Mijn peettante gaf me een cadeau.</td></tr>
+          <tr><td>grand…</td><td>My grandfather is 80 years old.</td><td>Mijn opa is 80 jaar oud.</td></tr>
+          <tr><td>guardian</td><td>She is his legal guardian.</td><td>Zij is zijn wettelijke voogd.</td></tr>
+          <tr><td>half-…</td><td>He is my half-brother.</td><td>Hij is mijn halfbroer.</td></tr>
+          <tr><td>mum</td><td>Mum is reading a book.</td><td>Mama leest een boek.</td></tr>
+          <tr><td>nephew</td><td>My nephew is very playful.</td><td>Mijn neefje is erg speels.</td></tr>
+          <tr><td>niece</td><td>My niece is coming over today.</td><td>Mijn nichtje komt vandaag langs.</td></tr>
+          <tr><td>only child</td><td>I’m an only child.</td><td>Ik ben enig kind.</td></tr>
+          <tr><td>relatives</td><td>All our relatives came to the party.</td><td>Al onze familieleden kwamen naar het feest.</td></tr>
+          <tr><td>siblings</td><td>She has two siblings.</td><td>Ze heeft twee broers of zussen.</td></tr>
+          <tr><td>step…</td><td>My stepfather is very nice.</td><td>Mijn stiefvader is erg aardig.</td></tr>
+          <tr><td>twins</td><td>The twins are five years old.</td><td>De tweeling is vijf jaar oud.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -240,7 +244,16 @@
 </section>
 
 <section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href="m1t2_vocabulary_1_2_flashcards" target="_blank">Open Flashcards</a>
+  </div>
+</section>
+
+<section>
   <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
   <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
     <ul class="pickle-list">
       <li><a class='oefen-link' href='/m1t1_vocabulary_1_2_pickle_1'>Pickle 1: Drag & Drop</a></li>
@@ -265,6 +278,14 @@
     div.style.display = (div.style.display === "block") ? "none" : "block";
   }
 </script>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
 
 </body>
 </html>
