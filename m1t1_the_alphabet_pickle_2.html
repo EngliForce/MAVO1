@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spelling Challenge – 1 of 2 spelers</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header img {
+      max-width: 120px;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin: 0.5rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e85d2c;
+    }
+
+    input[type="text"] {
+      font-size: 1rem;
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 300px;
+      margin: 0.5rem auto;
+      display: block;
+      text-align: center;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .feedback {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .correct {
+      color: green;
+    }
+
+    .wrong {
+      color: red;
+    }
+
+    .score-board {
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #444;
+    }
+
+    .player-turn {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" />
+  <h1>🔡 Spelling Challenge</h1>
+  <p>Luister naar de reeks en typ wat je hoort</p>
+</header>
+
+<main>
+  <!-- Spelmodus & namen -->
+  <div id="modeSelect">
+    <p><strong>Kies de spelmodus:</strong></p>
+    <input type="text" id="player1NameInput" placeholder="Naam speler 1" />
+    <input type="text" id="player2NameInput" placeholder="Naam speler 2" class="hidden" disabled />
+
+    <div>
+      <button onclick="selectMode(1)">🎮 1 speler</button>
+      <button onclick="selectMode(2)">🎮 2 spelers</button>
+    </div>
+
+    <button onclick="startGame()">▶️ Start spel</button>
+  </div>
+
+  <!-- Spel zelf -->
+  <div id="gameArea" class="hidden">
+    <div class="player-turn" id="playerTurn">Beurt: Speler 1</div>
+
+    <p><strong>Klik om een reeks letters te horen:</strong></p>
+    <button onclick="playSequence()">🔊 Speel reeks af</button>
+
+    <div>
+      <input type="text" id="userInput" placeholder="Typ hier de letters" />
+      <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+        Typ alle letters achter elkaar, zonder spaties of komma's.<br>
+        Voorbeeld: <code>jqmb</code>
+      </p>
+    </div>
+
+    <div>
+      <button onclick="checkAnswer()">✅ Controleer</button>
+      <button onclick="skipQuestion()">🤷 Ik weet het niet</button>
+    </div>
+
+    <div class="feedback" id="feedbackMsg"></div>
+
+    <div class="score-board" id="scoreBoard">
+      <p>🎮 <span id="name1Display">Speler 1</span>: <span id="score1">0</span> punten</p>
+      <p>🎮 <span id="name2Display">Speler 2</span>: <span id="score2">0</span> punten</p>
+      <p>Beurten: <span id="turns">0</span></p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 EngliForce – Make English your superpower!
+</footer>
+
+<script>
+  const letters = "abcdefghijklmnopqrstuvwxyz".split('');
+  let currentSequence = [];
+  let currentPlayer = 1;
+  let mode = 1;
+  let score1 = 0;
+  let score2 = 0;
+  let turns = 0;
+
+  let player1Name = "Speler 1";
+  let player2Name = "Speler 2";
+
+  function selectMode(selectedMode) {
+    mode = selectedMode;
+    const player2Input = document.getElementById('player2NameInput');
+
+    if (mode === 2) {
+      player2Input.classList.remove('hidden');
+      player2Input.disabled = false;
+    } else {
+      player2Input.classList.add('hidden');
+      player2Input.disabled = true;
+    }
+  }
+
+  function startGame() {
+    const name1 = document.getElementById('player1NameInput').value.trim();
+    const name2 = document.getElementById('player2NameInput').value.trim();
+
+    player1Name = name1 || "Speler 1";
+    player2Name = (mode === 2 && name2) ? name2 : "Speler 2";
+
+    document.getElementById('name1Display').textContent = player1Name;
+    document.getElementById('name2Display').textContent = player2Name;
+
+    document.getElementById('modeSelect').classList.add('hidden');
+    document.getElementById('gameArea').classList.remove('hidden');
+    updateUI();
+  }
+
+  function playSequence() {
+    const length = Math.floor(Math.random() * 3) + 3; // 3–5 letters
+    currentSequence = [];
+    for (let i = 0; i < length; i++) {
+      const letter = letters[Math.floor(Math.random() * letters.length)];
+      currentSequence.push(letter);
+    }
+    playNext(0);
+    document.getElementById('feedbackMsg').textContent = '';
+    document.getElementById('userInput').value = '';
+    document.getElementById('userInput').focus();
+  }
+
+  function playNext(index) {
+    if (index >= currentSequence.length) return;
+    const audio = new Audio(currentSequence[index] + '.mp3');
+    audio.play();
+    audio.onended = () => {
+      setTimeout(() => playNext(index + 1), 400);
+    };
+  }
+
+  function checkAnswer() {
+    const input = document.getElementById('userInput').value.trim().toLowerCase();
+    const feedback = document.getElementById('feedbackMsg');
+    const expected = currentSequence.join('');
+
+    if (!expected) {
+      feedback.textContent = '🔊 Speel eerst een reeks af!';
+      feedback.className = 'feedback wrong';
+      return;
+    }
+
+    if (input === expected) {
+      const currentName = currentPlayer === 1 ? player1Name : player2Name;
+      feedback.textContent = `✅ Goed gedaan, ${currentName}!`;
+      feedback.className = 'feedback correct';
+
+      if (currentPlayer === 1) score1++;
+      else score2++;
+
+      turns++;
+      currentSequence = [];
+
+      if (mode === 2) switchPlayer();
+    } else {
+      const currentName = currentPlayer === 1 ? player1Name : player2Name;
+      feedback.textContent = `❌ Fout, ${currentName}. Probeer het opnieuw of geef op.`;
+      feedback.className = 'feedback wrong';
+    }
+
+    updateUI();
+  }
+
+  function skipQuestion() {
+    if (!currentSequence.length) {
+      document.getElementById('feedbackMsg').textContent = '🔊 Speel eerst een reeks af!';
+      document.getElementById('feedbackMsg').className = 'feedback wrong';
+      return;
+    }
+
+    const correctAnswer = currentSequence.join('');
+    const currentName = currentPlayer === 1 ? player1Name : player2Name;
+
+    document.getElementById('feedbackMsg').textContent =
+      `❌ Jammer, ${currentName}. De juiste reeks was: ${correctAnswer}`;
+    document.getElementById('feedbackMsg').className = 'feedback wrong';
+
+    currentSequence = [];
+    turns++;
+
+    if (mode === 2) switchPlayer();
+    updateUI();
+  }
+
+  function switchPlayer() {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+  }
+
+  function updateUI() {
+    const turnText = currentPlayer === 1 ? player1Name : player2Name;
+    document.getElementById('playerTurn').textContent =
+      mode === 1 ? `Beurt: ${player1Name}` : `Beurt: ${turnText}`;
+
+    document.getElementById('score1').textContent = score1;
+    document.getElementById('score2').textContent = score2;
+    document.getElementById('turns').textContent = turns;
+
+    // Verberg speler 2 score in 1-speler modus
+    document.getElementById('scoreBoard').children[1].style.display =
+      mode === 2 ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>
