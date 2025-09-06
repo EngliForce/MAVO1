@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Alfabet luisterspel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #fff8f0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #ff7043;
+      padding: 1rem;
+      text-align: center;
+    }
+    header img {
+      max-height: 80px;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      text-align: center;
+    }
+    footer {
+      background-color: #ff7043;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+    button {
+      font-size: 1.2rem;
+      margin: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      cursor: pointer;
+      background-color: #ff8000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #e66f00;
+    }
+    .letter-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 60px);
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    .letter {
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      background-color: white;
+    }
+    .correct { background-color: #c8e6c9; }
+    .wrong { background-color: #ffcdd2; }
+    #feedback, #turnInfo, #scores {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+    #repeatButton {
+      display: none;
+      margin-top: 1rem;
+    }
+    #gameArea { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Logo.png" alt="Logo">
+  </header>
+
+  <main>
+    <h1>🎧 Alfabet luisterspel</h1>
+
+    <div id="setupArea">
+      <p>Voer namen in om te beginnen:</p>
+      <input type="text" id="player1Name" placeholder="Speler 1 naam" />
+      <br>
+      <input type="text" id="player2Name" placeholder="Speler 2 naam (optioneel)" />
+      <br>
+      <button onclick="startGame()">Start spel</button>
+    </div>
+
+    <div id="gameArea">
+      <div id="turnInfo"></div>
+      <button onclick="playLetter()">▶️ Speel letter</button>
+      <button id="repeatButton" onclick="repeatLetter()">🔁 Luister opnieuw</button>
+
+      <div class="letter-grid" id="letterGrid"></div>
+
+      <div id="feedback"></div>
+      <div id="scores"></div>
+      <button id="tryAgainBtn" onclick="resetGame()" style="display: none;">🔁 Probeer opnieuw</button>
+      <audio id="audioPlayer" preload="auto"></audio>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Englix – Make English Your Superpower!
+  </footer>
+
+  <script>
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const letterGrid = document.getElementById("letterGrid");
+    const audio = document.getElementById("audioPlayer");
+
+    let players = [];
+    let currentPlayer = 0;
+    let currentLetter = "";
+    let turnCount = 0;
+    let maxTurns = 10;
+    let totalRounds = 10;
+
+    function startGame() {
+      const p1 = document.getElementById("player1Name").value.trim() || "Speler 1";
+      const p2Input = document.getElementById("player2Name").value.trim();
+      const p2 = p2Input.length > 0 ? p2Input : null;
+
+      players = [{ name: p1, score: 0 }];
+      if (p2) {
+        players.push({ name: p2, score: 0 });
+        maxTurns = totalRounds * 2;
+      } else {
+        maxTurns = totalRounds;
+      }
+
+      document.getElementById("setupArea").style.display = "none";
+      document.getElementById("gameArea").style.display = "block";
+      updateUI();
+    }
+
+    function playLetter() {
+      if (turnCount >= maxTurns) return;
+      currentLetter = letters[Math.floor(Math.random() * letters.length)];
+      audio.src = `https://englix.github.io/MAVO1/${currentLetter}.mp3`;
+      audio.play();
+
+      clearGridColors();
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("repeatButton").style.display = "inline-block";
+    }
+
+    function repeatLetter() {
+      if (currentLetter) {
+        audio.src = `https://englix.github.io/MAVO1/${currentLetter}.mp3`;
+        audio.play();
+      }
+    }
+
+    function clearGridColors() {
+      document.querySelectorAll(".letter").forEach(el => {
+        el.classList.remove("correct", "wrong");
+      });
+    }
+
+    function handleLetterClick(clickedLetter, el) {
+      if (!currentLetter) return;
+
+      if (clickedLetter === currentLetter) {
+        el.classList.add("correct");
+        players[currentPlayer].score++;
+        document.getElementById("feedback").textContent = "✅ Goed!";
+      } else {
+        el.classList.add("wrong");
+        document.getElementById("feedback").innerHTML = `❌ Fout. Het juiste antwoord was: <strong>${currentLetter}</strong>`;
+      }
+
+      document.getElementById("repeatButton").style.display = "inline-block";
+
+      turnCount++;
+      if (turnCount >= maxTurns) {
+        showResults();
+      } else {
+        if (players.length === 2) {
+          currentPlayer = 1 - currentPlayer;
+        }
+        updateUI();
+      }
+
+      currentLetter = "";
+    }
+
+    function updateUI() {
+      const turnInfo = document.getElementById("turnInfo");
+      const scores = document.getElementById("scores");
+
+      turnInfo.innerHTML = `Beurt van: <strong>${players[currentPlayer].name}</strong>`;
+      scores.innerHTML = players.map(p => `${p.name}: ${p.score} punten`).join(" | ");
+    }
+
+    function showResults() {
+      document.getElementById("feedback").innerHTML = "<strong>🎉 Ronde voorbij!</strong>";
+      document.getElementById("tryAgainBtn").style.display = "inline-block";
+      document.getElementById("turnInfo").textContent = "";
+    }
+
+    function resetGame() {
+      players.forEach(p => p.score = 0);
+      currentPlayer = 0;
+      turnCount = 0;
+      currentLetter = "";
+      document.getElementById("tryAgainBtn").style.display = "none";
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("repeatButton").style.display = "none";
+      updateUI();
+    }
+
+    letters.forEach(letter => {
+      const div = document.createElement("div");
+      div.textContent = letter;
+      div.classList.add("letter");
+      div.onclick = () => handleLetterClick(letter, div);
+      letterGrid.appendChild(div);
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
