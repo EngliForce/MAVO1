@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simon Says - Alphabet Edition</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #fff8f0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #ff7043;
+      padding: 1rem;
+      text-align: center;
+    }
+    header img {
+      max-height: 80px;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      text-align: center;
+    }
+    footer {
+      background-color: #ff7043;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    button {
+      font-size: 1.2rem;
+      margin: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      cursor: pointer;
+      background-color: #ff8000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #e66f00;
+    }
+    select {
+      font-size: 1rem;
+      padding: 0.4rem;
+      margin: 0.5rem;
+    }
+    .letter-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 60px);
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    .letter {
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      border: 2px solid #bbb;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      background-color: #f5f5f5;
+      color: #222;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+    }
+    .letter:hover {
+      background-color: #eee;
+    }
+    .clicked {
+      background-color: #ffd54f !important;
+      color: #000 !important;
+      box-shadow: 0 0 12px 4px rgba(255, 213, 79, 0.6);
+      transform: scale(1.1);
+      z-index: 1;
+    }
+    #status, #levelInfo, #instructions {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Logo.png" alt="Logo">
+  </header>
+
+  <main>
+    <h1>🧠 Simon Says: Alphabet Edition</h1>
+
+    <div id="instructions">
+      <ul style="text-align: left; display: inline-block;">
+        <li>1️⃣ Choose how many letters you want to remember.</li>
+        <li>▶️ Click "Start game" to begin.</li>
+        <li>🔊 Listen carefully to the letters.</li>
+        <li>🧠 Click the letters in the same order you heard them.</li>
+        <li>✅ If correct, the sequence gets longer.</li>
+        <li>❌ If wrong, the game ends. Try again!</li>
+      </ul>
+    </div>
+
+    <label for="maxLevel">📈 Choose your goal:</label>
+    <select id="maxLevel">
+      <option value="10">10</option>
+      <option value="20" selected>20</option>
+      <option value="30">30</option>
+      <option value="40">40</option>
+      <option value="50">50</option>
+    </select>
+
+    <br>
+    <button onclick="startGame()">Start game</button>
+
+    <div id="levelInfo"></div>
+    <div class="letter-grid" id="letterGrid"></div>
+    <div id="status"></div>
+    <button onclick="resetGame()" style="display: none;" id="resetBtn">🔁 Play again</button>
+
+    <audio id="audioPlayer" preload="auto"></audio>
+  </main>
+
+  <footer>
+    © 2025 Englix – Make English Your Superpower!
+  </footer>
+
+  <script>
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const audio = document.getElementById("audioPlayer");
+    const grid = document.getElementById("letterGrid");
+    const status = document.getElementById("status");
+    const levelInfo = document.getElementById("levelInfo");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let sequence = [];
+    let userInput = [];
+    let level = 0;
+    let maxLevel = 20;
+    let gameActive = false;
+
+    function startGame() {
+      const selected = document.getElementById("maxLevel").value;
+      maxLevel = parseInt(selected, 10);
+
+      sequence = [];
+      userInput = [];
+      level = 0;
+      gameActive = true;
+      status.textContent = "";
+      resetBtn.style.display = "none";
+      nextRound();
+    }
+
+    function nextRound() {
+      userInput = [];
+      const nextLetter = letters[Math.floor(Math.random() * letters.length)];
+      sequence.push(nextLetter);
+      level++;
+      levelInfo.textContent = `🔢 Level: ${level} of ${maxLevel}`;
+      playSequence();
+    }
+
+    function playSequence() {
+      let index = 0;
+
+      const interval = setInterval(() => {
+        if (index >= sequence.length) {
+          clearInterval(interval);
+          return;
+        }
+
+        const letter = sequence[index];
+        audio.src = `https://englix.github.io/MAVO1/${letter.toLowerCase()}.mp3`;
+        audio.play();
+        index++;
+      }, 1000);
+    }
+
+    function handleClick(letter, el) {
+      if (!gameActive) return;
+
+      // Visual feedback on click only
+      el.classList.add("clicked");
+      setTimeout(() => el.classList.remove("clicked"), 300);
+
+      userInput.push(letter);
+
+      const correct = sequence[userInput.length - 1] === letter;
+      if (!correct) {
+        gameOver();
+        return;
+      }
+
+      if (userInput.length === sequence.length) {
+        if (level >= maxLevel) {
+          status.innerHTML = "<strong>🎉 Well done! You finished the game!</strong>";
+          gameActive = false;
+          resetBtn.style.display = "inline-block";
+        } else {
+          setTimeout(nextRound, 800);
+        }
+      }
+    }
+
+    function gameOver() {
+      status.innerHTML = `<strong>❌ Wrong letter! You reached level ${level}. Try again.</strong>`;
+      gameActive = false;
+      resetBtn.style.display = "inline-block";
+    }
+
+    function resetGame() {
+      startGame();
+    }
+
+    // Create letter grid
+    letters.forEach(letter => {
+      const div = document.createElement("div");
+      div.textContent = letter;
+      div.classList.add("letter");
+      div.setAttribute("data-letter", letter);
+      div.onclick = () => handleClick(letter, div);
+      grid.appendChild(div);
+    });
+  </script>
+</body>
+</html>
