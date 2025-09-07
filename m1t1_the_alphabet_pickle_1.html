@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Alfabet luisterspel</title>
+  <title>Alphabet Listening Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -87,27 +87,27 @@
   </header>
 
   <main>
-    <h1>🎧 Alfabet luisterspel</h1>
+    <h1>🎧 Alphabet Listening Game</h1>
 
     <div id="setupArea">
-      <p>Voer namen in om te beginnen:</p>
-      <input type="text" id="player1Name" placeholder="Speler 1 naam" />
+      <p>Type your name to start:</p>
+      <input type="text" id="player1Name" placeholder="Player 1 name" />
       <br>
-      <input type="text" id="player2Name" placeholder="Speler 2 naam (optioneel)" />
+      <input type="text" id="player2Name" placeholder="Player 2 name (optional)" />
       <br>
-      <button onclick="startGame()">Start spel</button>
+      <button onclick="startGame()">Start game</button>
     </div>
 
     <div id="gameArea">
       <div id="turnInfo"></div>
-      <button onclick="playLetter()">▶️ Speel letter</button>
-      <button id="repeatButton" onclick="repeatLetter()">🔁 Luister opnieuw</button>
+      <button onclick="playLetter()">▶️ Play letter</button>
+      <button id="repeatButton" onclick="repeatLetter()">🔁 Listen again</button>
 
       <div class="letter-grid" id="letterGrid"></div>
 
       <div id="feedback"></div>
       <div id="scores"></div>
-      <button id="tryAgainBtn" onclick="resetGame()" style="display: none;">🔁 Probeer opnieuw</button>
+      <button id="tryAgainBtn" onclick="resetGame()" style="display: none;">🔁 Play again</button>
       <audio id="audioPlayer" preload="auto"></audio>
     </div>
   </main>
@@ -129,7 +129,7 @@
     let totalRounds = 10;
 
     function startGame() {
-      const p1 = document.getElementById("player1Name").value.trim() || "Speler 1";
+      const p1 = document.getElementById("player1Name").value.trim() || "Player 1";
       const p2Input = document.getElementById("player2Name").value.trim();
       const p2 = p2Input.length > 0 ? p2Input : null;
 
@@ -159,7 +159,7 @@
 
     function repeatLetter() {
       if (currentLetter) {
-        audio.src = `https://englix.github.io/MAVO1/${currentLetter}.mp3`;
+        audio.src = `https://engliforce.github.io/MAVO1/${currentLetter.toLowerCase()}.mp3`;
         audio.play();
       }
     }
@@ -176,10 +176,10 @@
       if (clickedLetter === currentLetter) {
         el.classList.add("correct");
         players[currentPlayer].score++;
-        document.getElementById("feedback").textContent = "✅ Goed!";
+        document.getElementById("feedback").textContent = "✅ Correct!";
       } else {
         el.classList.add("wrong");
-        document.getElementById("feedback").innerHTML = `❌ Fout. Het juiste antwoord was: <strong>${currentLetter}</strong>`;
+        document.getElementById("feedback").innerHTML = `❌ Wrong. The correct answer was: <strong>${currentLetter}</strong>`;
       }
 
       document.getElementById("repeatButton").style.display = "inline-block";
@@ -201,12 +201,12 @@
       const turnInfo = document.getElementById("turnInfo");
       const scores = document.getElementById("scores");
 
-      turnInfo.innerHTML = `Beurt van: <strong>${players[currentPlayer].name}</strong>`;
-      scores.innerHTML = players.map(p => `${p.name}: ${p.score} punten`).join(" | ");
+      turnInfo.innerHTML = `Now playing: <strong>${players[currentPlayer].name}</strong>`;
+      scores.innerHTML = players.map(p => `${p.name}: ${p.score} points`).join(" | ");
     }
 
     function showResults() {
-      document.getElementById("feedback").innerHTML = "<strong>🎉 Ronde voorbij!</strong>";
+      document.getElementById("feedback").innerHTML = "<strong>🎉 Game over!</strong>";
       document.getElementById("tryAgainBtn").style.display = "inline-block";
       document.getElementById("turnInfo").textContent = "";
     }
@@ -233,8 +233,3 @@
 
 </body>
 </html>
-
-
-
-
-
