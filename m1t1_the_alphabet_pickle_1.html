@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <title>Alphabet Spelling Game</title>
+  <title>Alfabet luisterspel</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -87,7 +87,7 @@
   </header>
 
   <main>
-    <h1>🎧 Alphabet Listening Game</h1>
+    <h1>🎧 Alfabet luisterspel</h1>
 
     <div id="setupArea">
       <p>Voer namen in om te beginnen:</p>
@@ -149,7 +149,7 @@
     function playLetter() {
       if (turnCount >= maxTurns) return;
       currentLetter = letters[Math.floor(Math.random() * letters.length)];
-      audio.src = `https://englix.github.io/MAVO1/${currentLetter}.mp3`;
+      audio.src = `https://englix.github.io/MAVO1/${currentLetter.toLowerCase()}.mp3`;
       audio.play();
 
       clearGridColors();
@@ -159,7 +159,7 @@
 
     function repeatLetter() {
       if (currentLetter) {
-        audio.src = `https://englix.github.io/MAVO1/${currentLetter.toLowerCase()}.mp3`;
+        audio.src = `https://englix.github.io/MAVO1/${currentLetter}.mp3`;
         audio.play();
       }
     }
@@ -233,8 +233,6 @@
 
 </body>
 </html>
-
-
 
 
 
