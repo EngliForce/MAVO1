@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaartjesspel – Me, myself and I</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .controls, .game-section {
+      margin: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    label, select, input, button {
+      font-size: 1rem;
+    }
+
+    .card-display {
+      margin: 2rem 0;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff7043;
+      text-align: center;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: #333;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 0.7rem;
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ff5722;
+    }
+
+    #override-button {
+      margin-top: 0.5rem;
+      background-color: #4caf50;
+    }
+
+    #override-button:hover {
+      background-color: #388e3c;
+    }
+
+    .result {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎯 Kaartjesspel: Me, myself and I</h1>
+    <p>Speel samen en leer woordjes!</p>
+  </header>
+
+  <div class="controls">
+    <label>Naam Speler 1: <input type="text" id="player1" /></label>
+    <label>Naam Speler 2: <input type="text" id="player2" /></label>
+    <label>
+      Kies oefenrichting:
+      <select id="language-mode">
+        <option value="en-nl">Engels → Nederlands</option>
+        <option value="nl-en">Nederlands → Engels</option>
+        <option value="mixed">Gemixed</option>
+      </select>
+    </label>
+    <button onclick="startGame()">Start spel ▶️</button>
+  </div>
+
+  <div class="game-section hidden" id="game-section">
+    <div class="scoreboard" id="scoreboard"></div>
+    <div class="card-display" id="card-display">Kaart komt hier...</div>
+    <label>
+      <span id="player-turn-label"></span> geef je antwoord:
+      <input type="text" id="answer-input" />
+    </label>
+    <button onclick="submitAnswer()">Bevestig antwoord ✅</button>
+    <button id="override-button" class="hidden" onclick="overrideCorrect()">Toch goedkeuren ✅</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English your superpower!</p>
+  </footer>
+
+  <script>
+    const flashcards = [
+      { en: 'address', nl: 'adres' },
+      { en: 'age', nl: 'leeftijd' },
+      { en: 'birthday', nl: 'verjaardag' },
+      { en: 'city', nl: 'stad' },
+      { en: 'country', nl: 'land' },
+      { en: 'email address', nl: 'e‑mailadres' },
+      { en: 'first name', nl: 'voornaam' },
+      { en: 'nationality', nl: 'nationaliteit' },
+      { en: 'phone number', nl: 'telefoonnummer' },
+      { en: 'postcode', nl: 'postcode' },
+      { en: 'surname / family name', nl: 'achternaam' },
+      { en: 'athletic', nl: 'sportief gebouwd' },
+      { en: 'braces', nl: 'beugel (voor tanden)' },
+      { en: 'build', nl: 'postuur / lichaamsbouw' },
+      { en: 'contact lenses', nl: 'contactlenzen' },
+      { en: 'freckles', nl: 'sproeten' },
+      { en: 'glasses', nl: 'bril' },
+      { en: 'height', nl: 'lengte' },
+      { en: 'slim', nl: 'slank' },
+      { en: 'looks', nl: 'uiterlijk' },
+      { en: 'handsome', nl: 'knap (voor jongens / mannen)' },
+      { en: 'ordinary', nl: 'gewoon, niet bijzonder' },
+      { en: 'pretty', nl: 'mooi (voor meisjes / vrouwen)' }
+    ];
+
+    let playerNames = [];
+    let scores = [0, 0];
+    let currentPlayer = 0;
+    let mode = 'en-nl';
+    let deck = [];
+    let currentCard = null;
+
+    function startGame() {
+      const p1 = document.getElementById('player1').value.trim();
+      const p2 = document.getElementById('player2').value.trim();
+      mode = document.getElementById('language-mode').value;
+
+      if (!p1 || !p2) {
+        alert("Vul beide namen in.");
+        return;
+      }
+
+      playerNames = [p1, p2];
+      scores = [0, 0];
+      currentPlayer = 0;
+      deck = [...flashcards].sort(() => Math.random() - 0.5);
+
+      document.querySelector('.controls').classList.add('hidden');
+      document.getElementById('game-section').classList.remove('hidden');
+
+      nextTurn();
+    }
+
+    function nextTurn() {
+      if (deck.length === 0) {
+        endGame();
+        return;
+      }
+
+      currentCard = deck.shift();
+      let direction = mode;
+      if (mode === 'mixed') {
+        direction = Math.random() < 0.5 ? 'en-nl' : 'nl-en';
+      }
+
+      const display = direction === 'en-nl' ? currentCard.en : currentCard.nl;
+      currentCard.expectedAnswer = direction === 'en-nl' ? currentCard.nl : currentCard.en;
+
+      document.getElementById('card-display').textContent = display;
+      document.getElementById('player-turn-label').textContent = `${playerNames[currentPlayer]}, `;
+      document.getElementById('answer-input').value = '';
+      document.getElementById('result').textContent = '';
+      document.getElementById('override-button').classList.add('hidden');
+      updateScoreboard();
+    }
+
+    function submitAnswer() {
+      const userAnswer = document.getElementById('answer-input').value.trim().toLowerCase();
+      const correctAnswer = currentCard.expectedAnswer.toLowerCase();
+      const resultEl = document.getElementById('result');
+      const overrideBtn = document.getElementById('override-button');
+
+      if (userAnswer === correctAnswer) {
+        scores[currentPlayer]++;
+        resultEl.textContent = '✅ Goed!';
+        overrideBtn.classList.add('hidden');
+        setTimeout(() => {
+          currentPlayer = (currentPlayer + 1) % 2;
+          nextTurn();
+        }, 1000);
+      } else {
+        deck.push(currentCard); // Kaart terug in stapel
+        resultEl.textContent = `❌ Fout. Het juiste antwoord was: ${currentCard.expectedAnswer}`;
+        overrideBtn.classList.remove('hidden');
+      }
+
+      updateScoreboard();
+    }
+
+    function overrideCorrect() {
+      scores[currentPlayer]++;
+      document.getElementById('override-button').classList.add('hidden');
+      document.getElementById('result').textContent = '✅ Toch goedgekeurd!';
+      updateScoreboard();
+      setTimeout(() => {
+        currentPlayer = (currentPlayer + 1) % 2;
+        nextTurn();
+      }, 1000);
+    }
+
+    function updateScoreboard() {
+      const sb = document.getElementById('scoreboard');
+      sb.textContent = `${playerNames[0]}: ${scores[0]} kaartjes | ${playerNames[1]}: ${scores[1]} kaartjes`;
+    }
+
+    function endGame() {
+      const winner =
+        scores[0] === scores[1]
+          ? "🎉 Gelijkspel!"
+          : `🏆 ${scores[0] > scores[1] ? playerNames[0] : playerNames[1]} wint!`;
+      document.getElementById('card-display').textContent = "Spel afgelopen!";
+      document.getElementById('player-turn-label').textContent = '';
+      document.getElementById('result').textContent = winner;
+      document.getElementById('override-button').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
