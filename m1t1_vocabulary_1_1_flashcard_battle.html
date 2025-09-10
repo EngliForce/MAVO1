@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kaartjesspel – Me, myself and I</title>
+  <title>Flashcard Battle – Me, myself and I</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -103,33 +103,33 @@
 </head>
 <body>
   <header>
-    <h1>🎯 Kaartjesspel: Me, myself and I</h1>
-    <p>Speel samen en leer woordjes!</p>
+    <h1>🎯 Flashcard Battle: Me, myself and I</h1>
+    <p>Who's the vocab boss!</p>
   </header>
 
   <div class="controls">
-    <label>Naam Speler 1: <input type="text" id="player1" /></label>
-    <label>Naam Speler 2: <input type="text" id="player2" /></label>
+    <label>Player 1: <input type="text" id="player1" /></label>
+    <label>Player 2: <input type="text" id="player2" /></label>
     <label>
-      Kies oefenrichting:
+      Choose Level:
       <select id="language-mode">
-        <option value="en-nl">Engels → Nederlands</option>
-        <option value="nl-en">Nederlands → Engels</option>
-        <option value="mixed">Gemixed</option>
+        <option value="en-nl">Level 1: English - Dutch</option>
+        <option value="nl-en">Level 2: Dutch - English</option>
+        <option value="mixed">Level 3: Mixed</option>
       </select>
     </label>
-    <button onclick="startGame()">Start spel ▶️</button>
+    <button onclick="startGame()">Start Battle ▶️</button>
   </div>
 
   <div class="game-section hidden" id="game-section">
     <div class="scoreboard" id="scoreboard"></div>
-    <div class="card-display" id="card-display">Kaart komt hier...</div>
+    <div class="card-display" id="card-display">Flashcard...</div>
     <label>
-      <span id="player-turn-label"></span> geef je antwoord:
+      <span id="player-turn-label"></span> type your answer:
       <input type="text" id="answer-input" />
     </label>
-    <button onclick="submitAnswer()">Bevestig antwoord ✅</button>
-    <button id="override-button" class="hidden" onclick="overrideCorrect()">Toch goedkeuren ✅</button>
+    <button onclick="submitAnswer()">Confirm answer ✅</button>
+    <button id="override-button" class="hidden" onclick="overrideCorrect()">Approve anyway ✅</button>
     <div class="result" id="result"></div>
   </div>
 
@@ -267,3 +267,4 @@
   </script>
 </body>
 </html>
+
