@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Persoonlijke Voornaamwoorden</title>
+  <title>Persoonlijke Voornaamwoorden (Engels)</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -52,46 +51,87 @@
       text-align: center;
     }
 
-    .links {
-      margin-top: 1rem;
+    .highlight {
+      color: #e53935;
+      font-weight: bold;
     }
 
-    .links a {
-      padding: 0.5rem 1rem;
+    .flag {
+      height: 20px;
+      vertical-align: middle;
+    }
+
+    .orange-box {
+      background-color: #ffab40;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .side-by-side {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    .side-box {
+      flex: 1 1 280px;
+      max-width: 350px;
+      padding: 0.8rem;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .left-box {
+      background-color: #fff176;
+    }
+
+    .right-box {
+      background-color: #4dd0e1;
+      color: black;
+    }
+
+    .right-box strong {
+      color: red;
+    }
+
+    .oefen-link {
+      display: inline-block;
+      margin: 0.4rem 0;
+      padding: 0.4rem 0.8rem;
       background-color: #ff7043;
       color: white;
       border-radius: 6px;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
-    .links a:hover {
+    .oefen-link:hover {
       background-color: #e65c30;
-    }
-
-    .pickle-jar-img {
-      margin-top: 1rem;
-      max-width: 180px;
-      height: auto;
     }
 
     .video-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
       justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
       margin-top: 1rem;
     }
 
     .video-column {
-      flex: 1 1 300px;
-      max-width: 400px;
+      flex: 1 1 400px;
+      max-width: 560px;
+      text-align: center;
     }
 
     .video-column iframe {
       width: 100%;
-      height: 225px;
+      height: 315px;
       border: none;
+      border-radius: 8px;
     }
 
     footer {
@@ -100,40 +140,77 @@
       padding: 1rem;
       font-size: 0.9rem;
     }
+
+    .links a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      background-color: #ff7043;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+
+    .links a:hover {
+      background-color: #e65c30;
+    }
   </style>
 </head>
+
 <body>
   <header>
     <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
     <h1>Persoonlijke Voornaamwoorden</h1>
-    <p>Leer de Engelse persoonlijke voornaamwoorden!</p>
+    <p>Leer hoe je I, you, he, she, we en they gebruikt in het Engels!</p>
   </header>
 
   <main>
     <section>
-      <h2>🧠 Uitleg</h2>
-      <p>Persoonlijke voornaamwoorden gebruik je om mensen of dingen aan te duiden. In het Engels zijn dat:</p>
-      <table>
-        <tr><th>Engels</th><th>Nederlands</th></tr>
-        <tr><td>I (altijd hoofdletter!)</td><td>ik</td></tr>
-        <tr><td>you (enkelvoud)</td><td>jij</td></tr>
-        <tr><td>he</td><td>hij</td></tr>
-        <tr><td>she</td><td>zij (enkelvoud)</td></tr>
-        <tr><td>it</td><td>het</td></tr>
-        <tr><td>we</td><td>wij</td></tr>
-        <tr><td>you (meervoud)</td><td>jullie</td></tr>
-        <tr><td>they</td><td>zij (meervoud)</td></tr>
-      </table>
-      <p>Deze voornaamwoorden gebruik je vóór het werkwoord in een Engelse zin. Ze helpen je om duidelijk te maken over wie je iets zegt.</p>
-      <p>Leer deze persoonlijke voornaamwoorden zo snel mogelijk, op volgorde, uit je hoofd. Je zult ze heel vaak nodig hebben.</p>
+      <div class="orange-box">
+        Gebruik: Om te verwijzen naar mensen, dieren of dingen zonder die verder bij naam te noemen.
+      </div>
+
+      <div class="side-by-side">
+        <div class="side-box left-box">
+          <h3>🔤 Vorm</h3>
+          <ul style="list-style: none; padding-left: 0;">
+            <li>ik = <span class="highlight">I</span></li>
+            <li>jij = <span class="highlight">you</span> (enkelvoud)</li>
+            <li>hij = <span class="highlight">he</span></li>
+            <li>zij = <span class="highlight">she</span></li>
+            <li>het = <span class="highlight">it</span></li>
+            <li>wij = <span class="highlight">we</span></li>
+            <li>jullie = <span class="highlight">you</span> (meervoud)</li>
+            <li>zij = <span class="highlight">they</span></li>
+          </ul>
+          <p style="color: red; margin-top: 1rem;">I schrijf je altijd met een hoofdletter!</p>
+        </div>
+
+        <div class="side-box right-box">
+          <h3>📌 Voorbeelden</h3>
+          <p><strong>Laura</strong> walks to school.<br>→ <strong>She</strong> walks to school.</p>
+          <p><strong>Jim and I</strong> love English.<br>→ <strong>We</strong> love English.</p>
+          <p><strong>Mike and Ahmed</strong> are friends.<br>→ <strong>They</strong> are friends.</p>
+        </div>
+      </div>
     </section>
 
     <section>
-      <h2>🃏 Flashcards</h2>
-      <p>Oefen de persoonlijke voornaamwoorden met interactieve flashcards.</p>
-      <div class="links">
-        <a href="m1t1_personal_pronouns_flashcards.html" target="_blank">Open Flashcards</a>
-      </div>
+      <h2>🇳🇱 ➡️ 🇬🇧 Overzicht in Tabelvorm</h2>
+      <table>
+        <tr>
+          <th><img src="dutch-flag.png" alt="NL" class="flag"> Nederlands</th>
+          <th><img src="uk-flag.png" alt="UK" class="flag"> Engels</th>
+        </tr>
+        <tr><td>ik</td><td><span class="highlight">I</span> (altijd hoofdletter)</td></tr>
+        <tr><td>jij</td><td>you (enkelvoud)</td></tr>
+        <tr><td>hij</td><td>he</td></tr>
+        <tr><td>zij (enkelvoud)</td><td>she</td></tr>
+        <tr><td>het</td><td>it</td></tr>
+        <tr><td>wij</td><td>we</td></tr>
+        <tr><td>jullie</td><td>you (meervoud)</td></tr>
+        <tr><td>zij (meervoud)</td><td>they</td></tr>
+      </table>
     </section>
 
     <section>
@@ -152,12 +229,30 @@
     </section>
 
     <section>
-      <h2>💡 Pickle Jar</h2>
-      <p>Ready to test your knowledge? Pick a pickle (exercise) and see how well you know your pronouns!</p>
+      <h2>🃏 Flashcards</h2>
+      <p>Oefen met de persoonlijke voornaamwoorden.</p>
+      <a class="oefen-link" href="m1t2_pronouns_flashcards.html" target="_blank">Open Flashcards</a>
+    </section>
+
+    <section>
+      <h2>📝 Super Pickles</h2>
+      <p>Test je kennis met leuke oefeningen!</p>
+      <ul style="list-style: none; padding: 0;">
+        <li><a class='oefen-link' href="m1t1__personal_pronouns_pickle_1.html" target="_blank">Pickle 1: Vul in: he, she, it...</a></li>
+        <li><a class='oefen-link' href="m1t1_personal_pronouns_pickle_2.html" target="_blank">Pickle 2: Wie hoort waar?</a></li>
+        <li><a class='oefen-link' href="m1t1_personal_pronouns_pickle_3.html" target="_blank">Pickle 3: Memory</a></li>
+        <li><a class='oefen-link' href="m1t1_personal_pronouns_pickle_4.html" target="_blank">Pickle 4: I Spy</a></li>
+        <li><a class='oefen-link' href="m1t1_personal_pronouns_pickle_5.html" target="_blank">Pickle 5: Flah Quiz</a></li>
+
+
+      </ul>
+      <img src="Pickles.png" alt="Super Pickle" style="max-height: 200px; margin-top: 1rem;">
+    </section>
+
+    <section>
       <div class="links">
-        <a href="m1t1_personal_pronouns_pickles.html" target="_blank">Pickles</a>
+        <a href="https://engliforce.github.io/MAVO1/theme1.html">⬅️ Terug naar Thema-overzicht</a>
       </div>
-      <img src="Pickles.png" alt="Pickle character" class="pickle-jar-img">
     </section>
   </main>
 
