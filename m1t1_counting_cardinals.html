@@ -69,6 +69,28 @@
       padding: 1rem;
       font-size: 0.9rem;
     }
+.oefen-link {
+  display: inline-block;
+  margin: 0.4rem 0;
+  padding: 0.4rem 0.8rem;
+  background-color: #ff7043;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.video-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.video-container iframe {
+  width: 100%;
+  max-width: 560px;
+  height: 315px;
+  border: none;
+}
   </style>
 </head>
 <body>
@@ -80,11 +102,8 @@
 
   <main>
     <section>
-      <h2>🔢 Getallen 0 t/m 25</h2>
+      <h2>🔢 Getallen 1 t/m 25</h2>
       <table>
-        <tr>
-       <td colspan="5">0<br><small>zero</small></td>
-        </tr>
         <tr>
           <td>1<br><small>one</small></td>
           <td>2<br><small>two</small></td>
@@ -102,7 +121,7 @@
         <tr>
           <td>11<br><small>eleven</small></td>
           <td>12<br><small>twelve</small></td>
-          <td>13<br><small>thirteen</small></td>
+          <td>13<br><small class="highlight">thirteen (let op: geen ‘threeteen’!)</small></td>
           <td>14<br><small>fourteen</small></td>
           <td>15<br><small class="highlight">fifteen (let op: geen ‘fiveteen’!)</small></td>
         </tr>
@@ -125,7 +144,7 @@
     </section>
 
     <section>
-      <h2>🔟 Tientallen 30 t/m 101</h2>
+      <h2>🔟 Tientallen t/m 101</h2>
       <table>
         <tr>
           <td>30<br><small>thirty</small></td>
@@ -145,40 +164,51 @@
       </table>
 
        </section>
-    
- <section>
+
+   <section>
+  <h2>🎬 Video</h2>
+  <p>Bekijk de video over Engelse getallen direct hieronder:</p>
+  <div class="video-container">
+    <iframe width="560" height="315" 
+      src="https://www.youtube.com/embed/TnadM_mwczI" 
+      title="Video: Tellen in het Engels" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
+
+    <section>
       <h2>🃏 Flashcards</h2>
       <p>Oefen de getallen met interactieve flashcards.</p>
       <div class="links">
         <a href="m1t2_numbers_flashcards.html" target="_blank">Open Flashcards</a>
       </div>
     </section>
-    
-    <section>
-      <h2>🎬 Video</h2>
-      <p>Bekijk de video om het alfabet te oefenen:</p>
-<iframe width="560" height="315" 
-  src="https://www.youtube.com/embed/TnadM_mwczI" 
-  title="YouTube video player" frameborder="0" 
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-  allowfullscreen>
-</iframe>
-    </section>
 
-    <section>
-      <h2>💡 Pickle Jar</h2>
-      <p>Klaar voor een quiz? Test je kennis over Engelse getallen!</p>
-      <div class="links">
-        <a href="m1t2_numbers_pickles.html" target="_blank">Pickles</a>
-      </div>
-      <img src="Pickles.png" alt="Pickle character" style="margin-top: 1rem; max-width: 180px; height: auto;">
-    </section>
+   <section>
+  <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
+  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+    <ul class="pickle-list" style="list-style-type: none; padding: 0; margin: 0;">
+      <li><a class='oefen-link' href=m1t1_numbers_pickle_1.html target="_blank">Pickle 1: Number Quiz</a></li>
+      <li><a class="oefen-link" href=m1t1_numbers_pickle_2.html target="_blank">Pickle 2: Listening Challenge</a></li>
+      <li><a class="oefen-link" href=m1t1_numbers_pickle_3.html target="_blank">Pickle 3: Match the Number</a></li>
+      <li><a class='oefen-link' href=m1t1_numbers_pickle_4.html target="_blank">Pickle 4: Fill in the Number</a></li>
+    </ul>
+    <img class="pickle-image-tall" src="Pickles.png" alt="Super Pickle" style="max-height: 200px; height: auto;">
+  </div>
+</section>
   </main>
+
+<section>
+  <div class="links">
+    <a href="https://engliforce.github.io/MAVO1/theme1.html">⬅️ Terug naar Thema-overzicht</a>
+  </div>
+</section>
 
   <footer>
     <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
   </footer>
 </body>
 </html>
-
-
