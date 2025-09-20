@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – To Be Vormen</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      padding: 1rem 0;
+      text-align: center;
+    }
+    header img {
+      width: 120px;
+      height: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #ff7043;
+      margin-top: 1rem;
+    }
+    header h1 {
+      color: white;
+      margin: 0.5rem 0 0;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .tab-button {
+      padding: 0.5rem 1rem;
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .tab-button.active {
+      background-color: #e65c30;
+    }
+    .flashcards-container {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 0 2rem 2rem;
+    }
+    .flashcards-container.active {
+      display: flex;
+    }
+    .card {
+      background-color: white;
+      border: 2px solid #ff7043;
+      border-radius: 12px;
+      width: 180px;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      perspective: 1000px;
+      position: relative;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+    .card-front {
+      background-color: white;
+      color: #ff7043;
+      font-weight: bold;
+    }
+    .card-back {
+      background-color: #ff7043;
+      color: white;
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header met oranje achtergrond en logo -->
+  <header>
+    <img src="Logo.png" alt="Engliforce Logo">
+    <h1>🔤 Flashcards – To Be Vormen</h1>
+  </header>
+
+  <!-- Tabs en flashcards -->
+  <div class="tabs">
+    <button class="tab-button active" onclick="showTab(0)">Bevestigend – Volledig</button>
+    <button class="tab-button" onclick="showTab(1)">Bevestigend – Afgekort</button>
+  </div>
+
+  <div id="tab-0" class="flashcards-container active"></div>
+  <div id="tab-1" class="flashcards-container"></div>
+
+  <!-- Volgende kaart-modus -->
+  <hr style="margin: 3rem 0; border: none; border-top: 2px solid #ff7043;">
+  <h2>📇 Volgende Kaart-modus</h2>
+  <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+    <button class="tab-button" onclick="switchSet(0)">Bevestigend – Volledig</button>
+    <button class="tab-button" onclick="switchSet(1)">Bevestigend – Afgekort</button>
+  </div>
+
+  <div id="single-card-container" style="display: flex; justify-content: center; margin-bottom: 1rem;">
+    <div class="card" id="single-card" onclick="flipSingleCard()">
+      <div class="card-inner" id="single-card-inner">
+        <div class="card-front" id="single-card-front"></div>
+        <div class="card-back" id="single-card-back"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 1rem;">
+    <button class="tab-button" onclick="prevCard()">← Vorige</button>
+    <button class="tab-button" onclick="flipSingleCard()">↻ Flip</button>
+    <button class="tab-button" onclick="nextCard()">Volgende →</button>
+  </div>
+
+  <!-- Footer -->
+  <footer style="background-color: #ffe6dc; text-align: center; padding: 1rem; font-size: 0.9rem; margin-top: 3rem;">
+    <p>&copy; 2025 Engliforce – Make English Your Superpower!</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const sets = [
+      [ // Bevestigend – Volledig
+        ["I", "am"], ["You", "are"], ["He", "is"], ["She", "is"], ["It", "is"],
+        ["We", "are"], ["You", "are"], ["They", "are"]
+      ],
+      [ // Bevestigend – Afgekort
+        ["I", "I'm"], ["You", "You're"], ["He", "He's"], ["She", "She's"], ["It", "It's"],
+        ["We", "We're"], ["You", "You're"], ["They", "They're"]
+      ]
+    ];
+
+    // Shuffle
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // Toon alle flashcards in tab
+    function createFlashcards(containerId, cardData) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      shuffle(cardData);
+      cardData.forEach(([front, back]) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.onclick = () => card.classList.toggle("flipped");
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">${front}</div>
+            <div class="card-back">${back}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function showTab(index) {
+      document.querySelectorAll(".flashcards-container").forEach((el, i) => {
+        el.classList.toggle("active", i === index);
+      });
+      document.querySelectorAll(".tab-button").forEach((btn, i) => {
+        if (i < 2) btn.classList.toggle("active", i === index); // Alleen voor tab-knoppen
+      });
+    }
+
+    // Volgende kaart-modus
+    let currentSetIndex = 0;
+    let currentCardIndex = 0;
+    let flipped = false;
+
+    function switchSet(setIndex) {
+      currentSetIndex = setIndex;
+      currentCardIndex = 0;
+      flipped = false;
+      updateSingleCard();
+    }
+
+    function updateSingleCard() {
+      const [front, back] = sets[currentSetIndex][currentCardIndex];
+      document.getElementById("single-card-front").textContent = front;
+      document.getElementById("single-card-back").textContent = back;
+      document.getElementById("single-card").classList.remove("flipped");
+      flipped = false;
+    }
+
+    function flipSingleCard() {
+      const card = document.getElementById("single-card");
+      flipped = !flipped;
+      card.classList.toggle("flipped", flipped);
+    }
+
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % sets[currentSetIndex].length;
+      flipped = false;
+      updateSingleCard();
+    }
+
+    function prevCard() {
+      currentCardIndex = (currentCardIndex - 1 + sets[currentSetIndex].length) % sets[currentSetIndex].length;
+      flipped = false;
+      updateSingleCard();
+    }
+
+    // Init
+    sets.forEach((set, i) => createFlashcards(`tab-${i}`, set));
+    updateSingleCard();
+  </script>
+</body>
+</html>
