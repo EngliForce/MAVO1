@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To Be Reflex Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #ff7043;
+      padding: 1rem 0;
+    }
+
+    header img {
+      width: 120px;
+    }
+
+    header h1 {
+      color: white;
+      margin: 0.5rem 0 0;
+    }
+
+    .game-container {
+      padding: 2rem;
+    }
+
+    .btn {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #e65c30;
+    }
+
+    .btn.active {
+      background-color: #e65c30;
+    }
+
+    .stars {
+      font-size: 2rem;
+      color: gold;
+    }
+
+    .score {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .sentence-wrapper {
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sentence {
+      font-size: 1.5rem;
+    }
+
+    .answer-buttons {
+      margin: 2rem 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #level-up-message {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #ff7043;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="Engliforce Logo">
+  <h1>💥 To Be Reflex Game</h1>
+</header>
+
+<div class="game-container">
+  <!-- Setup scherm -->
+  <div id="setup-screen">
+    <h2>Kies modus:</h2>
+    <button class="btn" id="btn-full" onclick="selectMode('full')">Volledige vormen</button>
+    <button class="btn" id="btn-short" onclick="selectMode('short')">Afkortingen</button>
+
+    <h2>Kies snelheid (level):</h2>
+    <div>
+      <button class="btn" onclick="selectLevel(1)">1 (langzaam)</button>
+      <button class="btn" onclick="selectLevel(2)">2</button>
+      <button class="btn" onclick="selectLevel(3)">3</button>
+      <button class="btn" onclick="selectLevel(4)">4</button>
+      <button class="btn" onclick="selectLevel(5)">5 (snel)</button>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button class="btn" id="startBtn" onclick="startGame()" disabled>▶ Start</button>
+    </div>
+  </div>
+
+  <!-- Spel -->
+  <div id="game" class="hidden">
+    <div class="stars" id="stars">⭐ ⭐ ⭐</div>
+    <div class="score" id="score">Score: 0</div>
+
+    <div id="level-up-message">Level up!</div>
+
+    <div class="sentence-wrapper">
+      <div class="sentence" id="sentence">...</div>
+    </div>
+
+    <div class="answer-buttons">
+      <button class="btn" id="btn-am"></button>
+      <button class="btn" id="btn-are"></button>
+      <button class="btn" id="btn-is"></button>
+    </div>
+  </div>
+
+  <!-- Game Over -->
+  <div id="game-over" class="hidden">
+    <h2>😢 Game Over!</h2>
+    <p id="final-score"></p>
+    <button class="btn" onclick="window.location.reload()">🔄 Opnieuw spelen</button>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Engliforce – Make English Your Superpower!</p>
+</footer>
+<script>
+  const sentenceEl = document.getElementById('sentence');
+  const levelUpMessage = document.getElementById('level-up-message');
+
+  let mode = '';
+  let levelSpeed = 0;
+  let selectedLevel = 0;
+  let sentences = [];
+  let currentIndex = 0;
+  let score = 0;
+  let lives = 3;
+  let modeSelected = false;
+  let levelSelected = false;
+
+  const levelSpeeds = {
+    1: 10000,
+    2: 8000,
+    3: 6000,
+    4: 4000,
+    5: 2500
+  };
+
+  const allSentences = [
+    { sentence: "I ___ ready.", correctFull: "am", correctShort: "'m" },
+    { sentence: "You ___ on time.", correctFull: "are", correctShort: "'re" },
+    { sentence: "He ___ smart.", correctFull: "is", correctShort: "'s" },
+    { sentence: "She ___ in the kitchen.", correctFull: "is", correctShort: "'s" },
+    { sentence: "It ___ cold today.", correctFull: "is", correctShort: "'s" },
+    { sentence: "We ___ happy.", correctFull: "are", correctShort: "'re" },
+    { sentence: "You (plural) ___ from Belgium.", correctFull: "are", correctShort: "'re" },
+    { sentence: "They ___ best friends.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Mike ___ at school.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Sara ___ a student.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Tom ___ very kind.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Lina ___ on holiday.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Omar ___ a good friend.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Jade ___ outside.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Ravi ___ late.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Yuki ___ very smart.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Anwar ___ tired.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Fatima ___ my neighbor.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Emma ___ here today.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Noah ___ a great singer.", correctFull: "is", correctShort: "'s" },
+    { sentence: "Mike and Sara ___ in the garden.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Tom and Lina ___ very nice.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Omar and Jade ___ good friends.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Ravi and Yuki ___ tired.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Anwar and Fatima ___ late.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Emma and Noah ___ happy.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Mike and Tom ___ ready.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Sara and Lina ___ here now.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Yuki and Anwar ___ students.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Fatima and Jade ___ smart.", correctFull: "are", correctShort: "'re" },
+    { sentence: "Noah and Emma ___ kind.", correctFull: "are", correctShort: "'re" }
+    // Voeg hier meer zinnen toe tot 200 indien gewenst
+  ];
+
+  function selectMode(selected) {
+    mode = selected;
+    modeSelected = true;
+    document.getElementById('btn-full').classList.remove('active');
+    document.getElementById('btn-short').classList.remove('active');
+    document.getElementById(`btn-${selected}`).classList.add('active');
+    updateAnswerButtons();
+    checkStartReady();
+  }
+
+  function updateAnswerButtons() {
+    document.getElementById('btn-am').textContent = mode === 'short' ? "'m" : "am";
+    document.getElementById('btn-are').textContent = mode === 'short' ? "'re" : "are";
+    document.getElementById('btn-is').textContent = mode === 'short' ? "'s" : "is";
+  }
+
+  function selectLevel(level) {
+    selectedLevel = level;
+    levelSelected = true;
+    levelSpeed = levelSpeeds[level];
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(btn => {
+      if (btn.textContent.includes('(')) btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    checkStartReady();
+  }
+
+  function checkStartReady() {
+    if (modeSelected && levelSelected) {
+      document.getElementById('startBtn').disabled = false;
+    }
+  }
+
+  function startGame() {
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('game').classList.remove('hidden');
+
+    // Gebruik volledige lijst
+    sentences = [...allSentences];
+
+    score = 0;
+    lives = 3;
+    currentIndex = 0;
+    updateUI();
+    showSentence();
+
+    document.getElementById('btn-am').addEventListener('click', () => {
+      submitAnswer(document.getElementById('btn-am').textContent);
+    });
+    document.getElementById('btn-are').addEventListener('click', () => {
+      submitAnswer(document.getElementById('btn-are').textContent);
+    });
+    document.getElementById('btn-is').addEventListener('click', () => {
+      submitAnswer(document.getElementById('btn-is').textContent);
+    });
+  }
+
+  function showSentence() {
+    if (currentIndex >= sentences.length) return gameOver();
+    sentenceEl.textContent = sentences[currentIndex].sentence.replace('___', '____');
+
+    clearTimeout(sentenceEl.timeoutId);
+    sentenceEl.timeoutId = setTimeout(() => {
+      loseLife();
+    }, levelSpeed);
+  }
+
+  function submitAnswer(choice) {
+    clearTimeout(sentenceEl.timeoutId);
+    const current = sentences[currentIndex];
+    const correct = mode === 'short' ? current.correctShort : current.correctFull;
+
+    if (choice === correct) {
+      score++;
+      checkLevelUp();
+    } else {
+      lives--;
+    }
+
+    updateUI();
+
+    if (lives <= 0) {
+      gameOver();
+    } else {
+      currentIndex++;
+      showSentence();
+    }
+  }
+
+  function loseLife() {
+    clearTimeout(sentenceEl.timeoutId);
+    lives--;
+    updateUI();
+
+    if (lives <= 0) {
+      gameOver();
+    } else {
+      currentIndex++;
+      showSentence();
+    }
+  }
+
+  function checkLevelUp() {
+    if (score % 10 === 0 && selectedLevel < 5) {
+      selectedLevel++;
+      levelSpeed = levelSpeeds[selectedLevel];
+      showLevelUpMessage(selectedLevel);
+    }
+  }
+
+  function showLevelUpMessage(level) {
+    levelUpMessage.textContent = `Level up! You're now on Level ${level}!`;
+    levelUpMessage.style.display = 'block';
+    setTimeout(() => {
+      levelUpMessage.style.display = 'none';
+    }, 2000);
+  }
+
+  function updateUI() {
+    document.getElementById('score').textContent = `Score: ${score}`;
+    document.getElementById('stars').textContent = '⭐ '.repeat(lives).trim();
+  }
+
+  function gameOver() {
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('game-over').classList.remove('hidden');
+    document.getElementById('final-score').textContent = `Je eindscore: ${score}`;
+  }
+</script>
+
+</body>
+</html>
