@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary Detective – Vocab 1.4: Me and my hobbies/school</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 220px;
+      background-color: #ff7043;
+      z-index: -1;
+    }
+
+    .logo-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #ff7043;
+      padding: 2rem 0;
+    }
+
+    img.logo {
+      max-width: 120px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      color: white;
+      margin: 0;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 2rem 0;
+    }
+
+    .section {
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .word-card {
+      border: 2px solid #ff7043;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .word-to-guess {
+      font-size: 1.4rem;
+      color: #ff7043;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .hint {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #444;
+      text-align: center;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      width: 100%;
+    }
+
+    .score {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .turn {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar"></div>
+  <div class="logo-container">
+    <img src="Logo.png" alt="Logo" class="logo" />
+    <h1>Vocabulary Detective – Vocab 1.4: Me and my hobbies/school</h1>
+  </div>
+
+  <div style="margin-bottom: 1rem;">
+    <label for="languageSwitch">Taal / Language:</label>
+    <select id="languageSwitch" onchange="switchLanguage()">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <p class="description" id="instructions">
+    📋 <strong>Doel:</strong> Raad het <strong>Engelse woord</strong> met behulp van hints. <br /><br />
+    <strong>Start:</strong> – Begin het spel.<br />
+    <strong>Volgende hint:</strong> – Nieuwe hint (max. 3)<br />
+    <strong>Antwoord:</strong> – Laat het Engelse woord zien.<br />
+    <strong>Correct:</strong> – Speler krijgt punten.<br />
+    <strong>Fout:</strong> – Geen punten, volgende woord.<br /><br />
+    Minder hints = meer punten.<br />
+    Engelse hints = bonuspunt!
+  </p>
+
+  <div class="section" id="setup">
+    <label for="playerCount">Aantal spelers:</label>
+    <select id="playerCount">
+      <option value="2">2 spelers</option>
+      <option value="1">1 speler</option>
+    </select>
+
+    <label for="player1">Speler 1:</label>
+    <input type="text" id="player1" placeholder="bijv. Sam" />
+
+    <div id="player2Section">
+      <label for="player2">Speler 2:</label>
+      <input type="text" id="player2" placeholder="bijv. Alex" />
+    </div>
+
+    <button onclick="startGame()">Start</button>
+  </div>
+
+  <div class="section" id="game" style="display: none;">
+    <div class="turn" id="turnIndicator">Speler: ...</div>
+
+    <div class="scoreboard">
+      <div><span id="name1"></span>: <span id="score1" class="score">0</span> punten</div>
+      <div id="player2Score"><span id="name2"></span>: <span id="score2" class="score">0</span> punten</div>
+    </div>
+
+    <div class="word-card" id="word-card">
+      <div class="word-to-guess" id="word-to-guess">Antwoord: —</div>
+
+      <label for="hintLanguage">Hinttaal:</label>
+      <select id="hintLanguage" onchange="resetClue()">
+        <option value="nl">Nederlands</option>
+        <option value="en">English</option>
+      </select>
+
+      <p class="hint" id="hint">Klik op ‘Volgende hint’ om te beginnen.</p>
+      <button onclick="nextHint()">Volgende hint</button>
+      <button onclick="showWord()">Antwoord</button>
+      <button onclick="correctGuess()">Correct</button>
+      <button onclick="wrongGuess()">Fout</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const words = [
+      { en: "book", nl: "boek", hints: { nl: ["Je leest het.", "Te vinden in de bibliotheek.", "Boek."], en: ["You read it.", "Found in the library.", "Book."] }},
+      { en: "maths", nl: "wiskunde", hints: { nl: ["Vakken met cijfers.", "Rekenen.", "Wiskunde."], en: ["Subject with numbers.", "Maths." , "Calculations."] }},
+      { en: "pen", nl: "pen", hints: { nl: ["Je schrijft ermee.", "Blauwe of zwarte inkt.", "Pen."], en: ["Used to write.", "Blue or black ink.", "Pen."] }},
+      { en: "PE", nl: "gymnastiek", hints: { nl: ["Sport op school.", "Je beweegt veel.", "Gym."], en: ["Sports at school.", "You move a lot.", "PE."] }},
+      { en: "glue stick", nl: "lijmstift", hints: { nl: ["Om dingen vast te plakken.", "Geen vloeistof.", "Lijmstift."], en: ["Used to stick things.", "Solid glue.", "Glue stick."] }},
+      { en: "calculator", nl: "rekenmachine", hints: { nl: ["Voor sommen.", "Elektronisch hulpmiddel.", "Rekenmachine."], en: ["Used for math.", "Electronic tool.", "Calculator."] }},
+      { en: "ruler", nl: "liniaal", hints: { nl: ["Om mee te meten.", "Strakke lijnen trekken.", "Liniaal."], en: ["Used to measure.", "Draw straight lines.", "Ruler."] }},
+      { en: "headphones", nl: "koptelefoon", hints: { nl: ["Voor je oren.", "Om naar muziek te luisteren.", "Koptelefoon."], en: ["For your ears.", "Used for music.", "Headphones."] }},
+      { en: "painting", nl: "schilderen", hints: { nl: ["Met kwast en verf.", "Je maakt een kunstwerk.", "Schilderen."], en: ["With brush and paint.", "You make art.", "Painting."] }},
+      { en: "pencil case", nl: "etui", hints: { nl: ["Waar je pennen in doet.", "Op je bureau.", "Etui."], en: ["Holds your pens.", "On your desk.", "Pencil case."] }},
+      { en: "scissors", nl: "schaar", hints: { nl: ["Om te knippen.", "Heeft scherpe bladen.", "Schaar."], en: ["Used to cut.", "Has sharp blades.", "Scissors."] }},
+      { en: "textbook", nl: "leerboek", hints: { nl: ["Boek voor school.", "Bevat uitleg en opdrachten.", "Leerboek."], en: ["Schoolbook.", "Has theory and exercises.", "Textbook."] }},
+      { en: "history", nl: "geschiedenis", hints: { nl: ["Over het verleden.", "Vroegere tijden.", "Geschiedenis."], en: ["About the past.", "Ancient times.", "History."] }},
+      { en: "ball", nl: "bal", hints: { nl: ["Om mee te gooien of trappen.", "Rond.", "Bal."], en: ["Used to throw or kick.", "Round.", "Ball."] }},
+      { en: "skateboarding", nl: "skateboarden", hints: { nl: ["Op een plank met wielen.", "Buitenactiviteit.", "Skateboarden."], en: ["On a board with wheels.", "Outdoor sport.", "Skateboarding."] }}
+    ];
+
+    let currentLang = 'nl';
+    let p1 = '', p2 = '', playerCount = 2;
+    let score = [0, 0];
+    let currentIndex = 0;
+    let currentHint = 0;
+    let currentPlayer = 0;
+
+    function startGame() {
+      playerCount = parseInt(document.getElementById("playerCount").value);
+      p1 = document.getElementById("player1").value || "Speler 1";
+      p2 = playerCount === 2 ? (document.getElementById("player2").value || "Speler 2") : "—";
+
+      shuffle(words);
+      score = [0, 0];
+      currentIndex = 0;
+      currentHint = 0;
+      currentPlayer = 0;
+
+      document.getElementById("name1").textContent = p1;
+      document.getElementById("name2").textContent = p2;
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
+
+      showTurn();
+      resetWordCard();
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function showTurn() {
+      const name = currentPlayer === 0 ? p1 : p2;
+      const text = playerCount === 1 ? `Speler: ${p1}` : `Beurt: ${name}`;
+      document.getElementById("turnIndicator").textContent = text;
+    }
+
+    function nextHint() {
+      if (currentHint >= 3) return;
+      const lang = document.getElementById("hintLanguage").value;
+      const hint = words[currentIndex].hints[lang][currentHint];
+      document.getElementById("hint").textContent = `Hint ${currentHint + 1}: ${hint}`;
+      currentHint++;
+    }
+
+    function showWord() {
+      const answer = words[currentIndex].en;
+      document.getElementById("word-to-guess").textContent = `Antwoord: ${answer}`;
+      document.getElementById("word-to-guess").style.display = "block";
+    }
+
+    function correctGuess() {
+      const lang = document.getElementById("hintLanguage").value;
+      let points = 3 - (currentHint - 1);
+      if (lang === "en") points += 1;
+      score[currentPlayer] += points;
+      nextWord();
+    }
+
+    function wrongGuess() {
+      nextWord();
+    }
+
+    function nextWord() {
+      currentIndex++;
+      currentHint = 0;
+      if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+      updateScore();
+      if (currentIndex >= words.length) {
+        document.getElementById("hint").textContent = "🎉 Einde van het spel!";
+        document.getElementById("word-to-guess").style.display = "none";
+      } else {
+        showTurn();
+        resetWordCard();
+      }
+    }
+
+    function updateScore() {
+      document.getElementById("score1").textContent = score[0];
+      document.getElementById("score2").textContent = score[1];
+    }
+
+    function resetWordCard() {
+      document.getElementById("hint").textContent = "Klik op ‘Volgende hint’ om te beginnen.";
+      document.getElementById("word-to-guess").style.display = "none";
+    }
+
+    function resetClue() {
+      currentHint = 0;
+      resetWordCard();
+    }
+
+    function switchLanguage() {
+      currentLang = document.getElementById('languageSwitch').value;
+      document.getElementById("hintLanguage").value = currentLang;
+    }
+  </script>
+</body>
+</html>
