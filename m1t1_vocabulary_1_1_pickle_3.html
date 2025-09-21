@@ -3,103 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulary Detective</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    img.logo {
-      max-width: 120px;
-      margin-bottom: 1rem;
-    }
-
-    h1 {
-      color: #ff7043;
-      margin-bottom: 0.5rem;
-    }
-
-    .description {
-      text-align: center;
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin-bottom: 2rem;
-    }
-
-    .section {
-      max-width: 600px;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-
-    input, select, button {
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 100%;
-      font-size: 1rem;
-    }
-
-    .word-card {
-      border: 2px solid #ff7043;
-      background-color: white;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-top: 1.5rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .word-to-guess {
-      font-size: 1.4rem;
-      color: #ff7043;
-      font-weight: bold;
-      text-align: center;
-      display: none;
-      margin-top: 1rem;
-    }
-
-    .hint {
-      margin-top: 1rem;
-      font-style: italic;
-      color: #444;
-      text-align: center;
-    }
-
-    .scoreboard {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 1rem;
-      font-size: 1.2rem;
-      width: 100%;
-    }
-
-    .score {
-      font-weight: bold;
-      color: #333;
-    }
-
-    .turn {
-      font-weight: bold;
-      color: #2e7d32;
-      margin-bottom: 1rem;<!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulary Detective – Vocabulary 1.1</title>
+  <title>Vocabulary Detective – Persoonlijke Informatie & Uiterlijk</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -116,28 +20,35 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 230px;
+      height: 220px;
       background-color: #ff7043;
       z-index: -1;
     }
 
+    .logo-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #ff7043;
+      padding: 2rem 0 2rem 0;
+    }
+
     img.logo {
       max-width: 120px;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
 
     h1 {
       color: white;
-      margin-bottom: 0.5rem;
-      z-index: 1;
+      margin: 0;
     }
 
     .description {
       text-align: center;
       font-size: 1.1rem;
       max-width: 600px;
-      margin-bottom: 2rem;
+      margin: 2rem 0;
     }
 
     .section {
@@ -159,6 +70,13 @@
       border: 1px solid #ccc;
       width: 100%;
       font-size: 1rem;
+    }
+
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
 
     .word-card {
@@ -215,364 +133,212 @@
       width: 100%;
       margin-top: 3rem;
     }
-
-    #winnerMessage {
-      display: none;
-      position: fixed;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff8f0;
-      padding: 2rem;
-      border: 3px solid #ff7043;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 2rem;
-      color: #2e7d32;
-      z-index: 10;
-    }
-
-    #confettiCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      display: none;
-      z-index: 5;
-    }
   </style>
 </head>
 <body>
-<div id="topbar"></div>
-<img src="Logo.png" alt="Logo" class="logo" />
-<h1>Vocabulary Detective - Vocabulary 1.1</h1>
-<!-- Taalkeuze -->
-<div style="margin-bottom: 1rem;">
-  <label for="languageSwitch">Taal / Language:</label>
-  <select id="languageSwitch" onchange="switchLanguage()">
-    <option value="nl">Nederlands</option>
-    <option value="en">English</option>
-  </select>
-</div>
-
-<!-- Uitleg / description -->
-<p class="description" id="instructions">
-  📋 <strong>Doel:</strong> Raad het Engelse woord met behulp van hints. <br /><br />
-  <strong>Start:</strong> – Begin het spel.<br />
-  <strong>Next Clue:</strong> – Volgende hint (max. 3)<br />
-  <strong>Correct:</strong> – Speler krijgt punten.<br />
-  <strong>Incorrect:</strong> – Geen punten, volgende woord.<br /><br />
-  Minder hints = meer punten.<br />
-  Engelse hints = bonuspunt!
-</p>
-
-<!-- Spel instellen -->
-<div class="section" id="setup">
-  <label for="playerCount">Aantal spelers:</label>
-  <select id="playerCount">
-    <option value="2">2 spelers</option>
-    <option value="1">1 speler</option>
-  </select>
-
-  <label for="player1">Player 1:</label>
-  <input type="text" id="player1" placeholder="bijv. Sam" />
-
-  <div id="player2Section">
-    <label for="player2">Player 2:</label>
-    <input type="text" id="player2" placeholder="bijv. Alex" />
+  <div id="topbar"></div>
+  <div class="logo-container">
+    <img src="Logo.png" alt="Logo" class="logo" />
+    <h1>Vocabulary Detective – Persoonlijke Info & Uiterlijk</h1>
   </div>
 
-  <button onclick="startGame()">Start</button>
-</div>
-
-<!-- Spel actief -->
-<div class="section" id="game" style="display: none;">
-  <div class="turn" id="turnIndicator">Player: ...</div>
-
-  <div class="scoreboard">
-    <div><span id="name1"></span>: <span id="score1" class="score">0</span> points</div>
-    <div id="player2Score"><span id="name2"></span>: <span id="score2" class="score">0</span> points</div>
-  </div>
-
-  <div class="word-card" id="word-card">
-    <div class="word-to-guess" id="word-to-guess">Answer: —</div>
-
-    <label for="hintLanguage">Hint Language:</label>
-    <select id="hintLanguage" onchange="resetClue()">
-      <option value="nl">Dutch</option>
+  <!-- Taalkeuze -->
+  <div style="margin-bottom: 1rem;">
+    <label for="languageSwitch">Taal / Language:</label>
+    <select id="languageSwitch" onchange="switchLanguage()">
+      <option value="nl">Nederlands</option>
       <option value="en">English</option>
     </select>
-
-    <p class="hint" id="hint">Click ‘Next Clue’ to start.</p>
-    <button onclick="nextHint()">Next Clue</button>
-    <button onclick="showWord()">Answer</button>
-    <button onclick="correctGuess()">Correct</button>
-    <button onclick="wrongGuess()">Incorrect</button>
   </div>
-</div>
 
-<canvas id="confettiCanvas"></canvas>
-<div id="winnerMessage">🎉 <span id="winnerName">...</span> 🎉</div>
+  <!-- Uitleg -->
+  <p class="description" id="instructions">
+    📋 <strong>Doel:</strong> Raad het <strong>Engelse woord</strong> met behulp van hints. <br /><br />
+    <strong>Start:</strong> – Begin het spel.<br />
+    <strong>Volgende hint:</strong> – Nieuwe hint (max. 3)<br />
+    <strong>Antwoord:</strong> – Laat het Engelse woord zien.<br />
+    <strong>Correct:</strong> – Speler krijgt punten.<br />
+    <strong>Fout:</strong> – Geen punten, volgende woord.<br /><br />
+    Minder hints = meer punten.<br />
+    Engelse hints = bonuspunt!
+  </p>
 
-<footer>
-  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-</footer>
-<script>
-const translations = {
-  nl: {
-    title: "Vocabulary Detective",
-    description: "Raad Engelse woorden over persoonlijke informatie en uiterlijk met hints in het Nederlands of Engels.",
-    numberOfPlayers: "Aantal spelers:",
-    namePlayer1: "Speler 1:",
-    namePlayer2: "Speler 2:",
-    startButton: "Start",
-    wordLabel: "Antwoord:",
-    languageLabel: "Hinttaal:",
-    nextClue: "Volgende hint",
-    correct: "Correct",
-    wrong: "Fout",
-    clueStart: "Klik op ‘Volgende hint’ om te beginnen.",
-    done: "🎉 Klaar!",
-    turn: "Beurt: ",
-    player: "Speler: ",
-    points: "punten",
-    win: "wint!",
-    tie: "Gelijkspel!"
-  },
-  en: {
-    title: "Vocabulary Detective",
-    description: "Guess English words about personal info and appearance using Dutch or English hints.",
-    numberOfPlayers: "Number of players:",
-    namePlayer1: "Player 1:",
-    namePlayer2: "Player 2:",
-    startButton: "Start",
-    wordLabel: "Answer:",
-    languageLabel: "Hint language:",
-    nextClue: "Next clue",
-    correct: "Correct",
-    wrong: "Incorrect",
-    clueStart: "Click ‘Next clue’ to start.",
-    done: "🎉 Done!",
-    turn: "Turn: ",
-    player: "Player: ",
-    points: "points",
-    win: "wins!",
-    tie: "It's a tie!"
-  }
-};
+  <!-- Spelinstellingen -->
+  <div class="section" id="setup">
+    <label for="playerCount">Aantal spelers:</label>
+    <select id="playerCount">
+      <option value="2">2 spelers</option>
+      <option value="1">1 speler</option>
+    </select>
 
-const words = [
-  { word: "address", hints: { nl: ["Waar je woont.", "Straatnaam en huisnummer.", "Adres."], en: ["Where you live.", "Street name and number.", "Address."] }},
-  { word: "age", hints: { nl: ["Hoe oud je bent.", "Aantal jaren sinds je geboorte.", "Leeftijd."], en: ["How old you are.", "Years since birth.", "Age."] }},
-  { word: "birthday", hints: { nl: ["De dag waarop je geboren bent.", "Je verjaardagsfeest is dan.", "Verjaardag."], en: ["The day you were born.", "You celebrate it yearly.", "Birthday."] }},
-  { word: "city", hints: { nl: ["Grote plaats waar mensen wonen.", "Bijv. Amsterdam of Rotterdam.", "Stad."], en: ["Large place with people.", "Like Amsterdam or London.", "City."] }},
-  { word: "country", hints: { nl: ["Nederland is er een.", "Ligt op een kaart.", "Land."], en: ["Netherlands is one.", "Found on a map.", "Country."] }},
-  { word: "email address", hints: { nl: ["Voor online berichten.", "Bevat meestal een @.", "E-mailadres."], en: ["Used for online messages.", "Usually has @ in it.", "Email address."] }},
-  { word: "first name", hints: { nl: ["Bijv. Emma of Daan.", "Niet je achternaam.", "Voornaam."], en: ["Like Emma or John.", "Not your last name.", "First name."] }},
-  { word: "nationality", hints: { nl: ["Zegt uit welk land je komt.", "Bijv. Nederlands.", "Nationaliteit."], en: ["Tells what country you're from.", "Dutch, Spanish, etc.", "Nationality."] }},
-  { word: "phone number", hints: { nl: ["Om te bellen.", "Start met +31 in Nederland.", "Telefoonnummer."], en: ["Used to call.", "Starts with country code.", "Phone number."] }},
-  { word: "postcode", hints: { nl: ["Letters en cijfers voor adres.", "Wordt gebruikt door de post.", "Postcode."], en: ["Letters and numbers for address.", "Used by the post.", "Postcode."] }},
-  { word: "surname / family name", hints: { nl: ["Bijv. Jansen of De Vries.", "Niet je voornaam.", "Achternaam."], en: ["Like Smith or Garcia.", "Not your first name.", "Surname."] }},
-  { word: "athletic", hints: { nl: ["Sterk en sportief gebouwd.", "Lijkt op een sporter.", "Sportief gebouwd."], en: ["Looks fit and strong.", "Like an athlete.", "Athletic."] }},
-  { word: "braces", hints: { nl: ["Draag je voor rechte tanden.", "Zit op je gebit.", "Beugel."], en: ["Helps straighten teeth.", "On your teeth.", "Braces."] }},
-  { word: "build", hints: { nl: ["Je lichaamsvorm.", "Bijv. slank of breed.", "Lichaamsbouw."], en: ["Your body shape.", "Slim or broad.", "Build."] }},
-  { word: "contact lenses", hints: { nl: ["Geen bril, maar...?", "Draag je in je ogen.", "Contactlenzen."], en: ["Not glasses but...?", "In your eyes.", "Contact lenses."] }},
-  { word: "freckles", hints: { nl: ["Kleine bruine stipjes op je huid.", "Vaak op neus en wangen.", "Sproeten."], en: ["Small brown dots on skin.", "Often on face.", "Freckles."] }},
-  { word: "glasses", hints: { nl: ["Voor beter zicht.", "Draag je op je neus.", "Bril."], en: ["Helps you see better.", "Worn on your nose.", "Glasses."] }},
-  { word: "height", hints: { nl: ["Hoe lang je bent.", "Wordt gemeten in cm.", "Lengte."], en: ["How tall you are.", "Measured in cm.", "Height."] }},
-  { word: "slim", hints: { nl: ["Niet dik.", "Slank postuur.", "Slank."], en: ["Not fat.", "Thin build.", "Slim."] }},
-  { word: "looks", hints: { nl: ["Hoe je eruitziet.", "Uiterlijk.", "Uiterlijk."], en: ["Your appearance.", "How you look.", "Looks."] }},
-  { word: "handsome", hints: { nl: ["Knap (voor jongens/mannen).", "Aantrekkelijk gezicht.", "Knap."], en: ["Attractive (for men).", "Nice face.", "Handsome."] }},
-  { word: "ordinary", hints: { nl: ["Niet bijzonder.", "Normaal uitziend.", "Gewoon."], en: ["Not special.", "Normal looking.", "Ordinary."] }},
-  { word: "pretty", hints: { nl: ["Mooi (voor meisjes/vrouwen).", "Aantrekkelijk.", "Mooi."], en: ["Nice-looking (for women).", "Attractive.", "Pretty."] }}
-];
+    <label for="player1">Speler 1:</label>
+    <input type="text" id="player1" placeholder="bijv. Sam" />
 
-let currentLang = 'nl';
-let p1 = '', p2 = '', playerCount = 2;
-let score = [0, 0];
-let currentIndex = 0;
-let currentHint = 0;
-let currentPlayer = 0;
+    <div id="player2Section">
+      <label for="player2">Speler 2:</label>
+      <input type="text" id="player2" placeholder="bijv. Alex" />
+    </div>
 
-document.getElementById("playerCount").addEventListener("change", function () {
-  const showPlayer2 = this.value === "2";
-  document.getElementById("player2Section").style.display = showPlayer2 ? "block" : "none";
-  document.getElementById("player2Score").style.display = showPlayer2 ? "block" : "none";
-});
+    <button onclick="startGame()">Start</button>
+  </div>
 
-function switchLanguage() {
-  currentLang = document.getElementById('languageSwitch').value;
-  document.getElementById("hintLanguage").value = currentLang;
-  applyTranslations();
-  resetWordCard();
-  showTurn();
-}
+  <!-- Spel -->
+  <div class="section" id="game" style="display: none;">
+    <div class="turn" id="turnIndicator">Speler: ...</div>
 
-function applyTranslations() {
-  const t = translations[currentLang];
-  document.querySelector("h1").textContent = t.title;
-  document.getElementById("instructions").textContent = t.description;
-  document.querySelector("label[for='playerCount']").textContent = t.numberOfPlayers;
-  document.querySelector("label[for='player1']").textContent = t.namePlayer1;
-  document.querySelector("label[for='player2']").textContent = t.namePlayer2;
-  document.querySelector("button[onclick='startGame()']").textContent = t.startButton;
-  document.querySelector("label[for='hintLanguage']").textContent = t.languageLabel;
-  document.querySelector("button[onclick='nextHint()']").textContent = t.nextClue;
-  document.querySelector("button[onclick='correctGuess()']").textContent = t.correct;
-  document.querySelector("button[onclick='wrongGuess()']").textContent = t.wrong;
-  updateScore();
-}
+    <div class="scoreboard">
+      <div><span id="name1"></span>: <span id="score1" class="score">0</span> punten</div>
+      <div id="player2Score"><span id="name2"></span>: <span id="score2" class="score">0</span> punten</div>
+    </div>
 
-function startGame() {
-  playerCount = parseInt(document.getElementById("playerCount").value);
-  p1 = document.getElementById("player1").value || "Player 1";
-  p2 = playerCount === 2 ? (document.getElementById("player2").value || "Player 2") : "—";
+    <div class="word-card" id="word-card">
+      <div class="word-to-guess" id="word-to-guess">Antwoord: —</div>
 
-  shuffle(words);
-  score = [0, 0];
-  currentIndex = 0;
-  currentHint = 0;
-  currentPlayer = 0;
+      <label for="hintLanguage">Hinttaal:</label>
+      <select id="hintLanguage" onchange="resetClue()">
+        <option value="nl">Nederlands</option>
+        <option value="en">English</option>
+      </select>
 
-  document.getElementById("name1").textContent = p1;
-  document.getElementById("name2").textContent = p2;
-  document.getElementById("setup").style.display = "none";
-  document.getElementById("game").style.display = "block";
+      <p class="hint" id="hint">Klik op ‘Volgende hint’ om te beginnen.</p>
+      <button onclick="nextHint()">Volgende hint</button>
+      <button onclick="showWord()">Antwoord</button>
+      <button onclick="correctGuess()">Correct</button>
+      <button onclick="wrongGuess()">Fout</button>
+    </div>
+  </div>
 
-  applyTranslations();
-  updateScore();
-  showTurn();
-  resetWordCard();
-}
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
+  <script>
+    const words = [
+      { en: "address", nl: "adres", hints: { nl: ["Waar je woont.", "Straat + huisnummer.", "Adres."], en: ["Where you live.", "Street + number.", "Address."] }},
+      { en: "age", nl: "leeftijd", hints: { nl: ["Hoe oud je bent.", "Aantal jaren.", "Leeftijd."], en: ["How old you are.", "Number of years.", "Age."] }},
+      { en: "birthday", nl: "verjaardag", hints: { nl: ["Feestdag van je geboorte.", "Taart en cadeaus.", "Verjaardag."], en: ["Your birth celebration.", "Cake and gifts.", "Birthday."] }},
+      { en: "city", nl: "stad", hints: { nl: ["Grote plaats.", "Amsterdam of Rotterdam.", "Stad."], en: ["Big place.", "Amsterdam or London.", "City."] }},
+      { en: "country", nl: "land", hints: { nl: ["Bijv. Nederland.", "Op de kaart.", "Land."], en: ["Like the Netherlands.", "On the map.", "Country."] }},
+      { en: "email address", nl: "e-mailadres", hints: { nl: ["Voor e-mail.", "Bevat een @.", "E-mailadres."], en: ["Used for email.", "Has an @ sign.", "Email address."] }},
+      { en: "first name", nl: "voornaam", hints: { nl: ["Bijv. Emma of Daan.", "Niet je achternaam.", "Voornaam."], en: ["Like Emma or John.", "Not your last name.", "First name."] }},
+      { en: "nationality", nl: "nationaliteit", hints: { nl: ["Bijv. Nederlands.", "Welk land je komt.", "Nationaliteit."], en: ["Dutch, French, etc.", "Where you're from.", "Nationality."] }},
+      { en: "phone number", nl: "telefoonnummer", hints: { nl: ["Gebruik je om te bellen.", "Begint met +31.", "Telefoonnummer."], en: ["Used to call.", "Starts with a code.", "Phone number."] }},
+      { en: "postcode", nl: "postcode", hints: { nl: ["Voor post.", "Cijfers en letters.", "Postcode."], en: ["Used for mail.", "Numbers and letters.", "Postcode."] }},
+      { en: "surname / family name", nl: "achternaam", hints: { nl: ["Bijv. Jansen of De Vries.", "Niet je voornaam.", "Achternaam."], en: ["Like Smith or Garcia.", "Not your first name.", "Surname."] }},
+      { en: "athletic", nl: "sportief gebouwd", hints: { nl: ["Lijkt op een sporter.", "Sterk lichaam.", "Sportief gebouwd."], en: ["Like an athlete.", "Strong body.", "Athletic."] }},
+      { en: "braces", nl: "beugel", hints: { nl: ["Voor rechte tanden.", "Zit in je mond.", "Beugel."], en: ["Straightens teeth.", "In your mouth.", "Braces."] }},
+      { en: "build", nl: "postuur", hints: { nl: ["Je lichaamsvorm.", "Slank of stevig.", "Postuur."], en: ["Body shape.", "Slim or broad.", "Build."] }},
+      { en: "contact lenses", nl: "contactlenzen", hints: { nl: ["In plaats van bril.", "In je ogen.", "Contactlenzen."], en: ["Instead of glasses.", "In your eyes.", "Contact lenses."] }},
+      { en: "freckles", nl: "sproeten", hints: { nl: ["Kleine bruine stipjes.", "Op je gezicht.", "Sproeten."], en: ["Small brown dots.", "On your face.", "Freckles."] }},
+      { en: "glasses", nl: "bril", hints: { nl: ["Voor je ogen.", "Helpt met kijken.", "Bril."], en: ["Helps you see.", "Worn on your nose.", "Glasses."] }},
+      { en: "height", nl: "lengte", hints: { nl: ["Hoe lang je bent.", "In centimeters.", "Lengte."], en: ["How tall you are.", "In centimeters.", "Height."] }},
+      { en: "slim", nl: "slank", hints: { nl: ["Niet dik.", "Dun postuur.", "Slank."], en: ["Not fat.", "Thin build.", "Slim."] }},
+      { en: "looks", nl: "uiterlijk", hints: { nl: ["Hoe je eruitziet.", "Je gezicht.", "Uiterlijk."], en: ["How you look.", "Your appearance.", "Looks."] }},
+      { en: "handsome", nl: "knap", hints: { nl: ["Mooi voor jongens.", "Aantrekkelijk gezicht.", "Knap."], en: ["Nice looking (for boys).", "Attractive face.", "Handsome."] }},
+      { en: "ordinary", nl: "gewoon", hints: { nl: ["Niet bijzonder.", "Normaal.", "Gewoon."], en: ["Not special.", "Normal looking.", "Ordinary."] }},
+      { en: "pretty", nl: "mooi", hints: { nl: ["Mooi voor meisjes.", "Aantrekkelijk uiterlijk.", "Mooi."], en: ["Nice looking (for girls).", "Attractive.", "Pretty."] }}
+    ];
 
-function showTurn() {
-  const name = currentPlayer === 0 ? p1 : p2;
-  const text = playerCount === 1 ? `${translations[currentLang].player}${p1}` : `${translations[currentLang].turn}${name}`;
-  document.getElementById("turnIndicator").textContent = text;
-}
+    let currentLang = 'nl';
+    let p1 = '', p2 = '', playerCount = 2;
+    let score = [0, 0];
+    let currentIndex = 0;
+    let currentHint = 0;
+    let currentPlayer = 0;
 
-function updateScore() {
-  document.getElementById("score1").textContent = score[0];
-  document.getElementById("score2").textContent = score[1];
-}
+    function startGame() {
+      playerCount = parseInt(document.getElementById("playerCount").value);
+      p1 = document.getElementById("player1").value || "Speler 1";
+      p2 = playerCount === 2 ? (document.getElementById("player2").value || "Speler 2") : "—";
 
-function showWord() {
-  const word = words[currentIndex].word;
-  document.getElementById("word-to-guess").textContent = `${translations[currentLang].wordLabel} ${word}`;
-  document.getElementById("word-to-guess").style.display = "block";
-}
+      shuffle(words);
+      score = [0, 0];
+      currentIndex = 0;
+      currentHint = 0;
+      currentPlayer = 0;
 
-function nextHint() {
-  if (currentHint >= 3) return;
-  const lang = document.getElementById("hintLanguage").value;
-  const hint = words[currentIndex].hints[lang][currentHint];
-  document.getElementById("hint").textContent = `Clue ${currentHint + 1}: ${hint}`;
-  currentHint++;
-}
+      document.getElementById("name1").textContent = p1;
+      document.getElementById("name2").textContent = p2;
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
 
-function correctGuess() {
-  const lang = document.getElementById("hintLanguage").value;
-  let points = 3 - (currentHint - 1);
-  if (lang === "en") points += 1;
-  score[currentPlayer] += points;
-  nextWord();
-}
-
-function wrongGuess() {
-  nextWord();
-}
-
-function nextWord() {
-  currentIndex++;
-  currentHint = 0;
-  if (playerCount === 2) currentPlayer = 1 - currentPlayer;
-  updateScore();
-  if (currentIndex >= words.length) {
-    document.getElementById("hint").textContent = translations[currentLang].done;
-    document.getElementById("word-to-guess").style.display = "none";
-    showWinnerAndCelebrate();
-  } else {
-    showTurn();
-    resetWordCard();
-  }
-}
-
-function resetWordCard() {
-  document.getElementById("hint").textContent = translations[currentLang].clueStart;
-  document.getElementById("word-to-guess").style.display = "none";
-}
-
-function resetClue() {
-  currentHint = 0;
-  resetWordCard();
-}
-
-function showWinnerAndCelebrate() {
-  const canvas = document.getElementById('confettiCanvas');
-  const ctx = canvas.getContext('2d');
-  const winnerBox = document.getElementById('winnerMessage');
-  const winnerName = document.getElementById('winnerName');
-
-  let winnerText;
-  if (score[0] > score[1]) winnerText = `${p1} ${translations[currentLang].win}`;
-  else if (score[1] > score[0]) winnerText = `${p2} ${translations[currentLang].win}`;
-  else winnerText = translations[currentLang].tie;
-
-  winnerName.textContent = winnerText;
-  winnerBox.style.display = 'block';
-  canvas.style.display = 'block';
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const pieces = Array.from({ length: 150 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height - canvas.height,
-    r: Math.random() * 6 + 4,
-    d: Math.random() * 30 + 10,
-    color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-    tilt: Math.random() * 10 - 10
-  }));
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const p of pieces) {
-      ctx.beginPath();
-      ctx.arc(p.x + p.tilt, p.y, p.r, 0, Math.PI * 2, false);
-      ctx.fillStyle = p.color;
-      ctx.fill();
+      updateScore();
+      showTurn();
+      resetWordCard();
     }
-    update();
-    requestAnimationFrame(draw);
-  }
 
-  function update() {
-    for (const p of pieces) {
-      p.y += Math.cos(p.d) + 2;
-      p.x += Math.sin(p.d);
-      if (p.y > canvas.height) {
-        p.y = -10;
-        p.x = Math.random() * canvas.width;
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
     }
-  }
 
-  draw();
+    function showTurn() {
+      const name = currentPlayer === 0 ? p1 : p2;
+      const text = playerCount === 1 ? `Speler: ${p1}` : `Beurt: ${name}`;
+      document.getElementById("turnIndicator").textContent = text;
+    }
 
-  setTimeout(() => {
-    canvas.style.display = 'none';
-    winnerBox.style.display = 'none';
-  }, 7000);
-}
-</script>
+    function resetWordCard() {
+      document.getElementById("hint").textContent = "Klik op ‘Volgende hint’ om te beginnen.";
+      document.getElementById("word-to-guess").style.display = "none";
+    }
+
+    function nextHint() {
+      if (currentHint >= 3) return;
+      const lang = document.getElementById("hintLanguage").value;
+      const hint = words[currentIndex].hints[lang][currentHint];
+      document.getElementById("hint").textContent = `Hint ${currentHint + 1}: ${hint}`;
+      currentHint++;
+    }
+
+    function showWord() {
+      const answer = words[currentIndex].en;
+      document.getElementById("word-to-guess").textContent = `Antwoord (Engels): ${answer}`;
+      document.getElementById("word-to-guess").style.display = "block";
+    }
+
+    function correctGuess() {
+      const lang = document.getElementById("hintLanguage").value;
+      let points = 3 - (currentHint - 1);
+      if (lang === "en") points += 1;
+      score[currentPlayer] += points;
+      nextWord();
+    }
+
+    function wrongGuess() {
+      nextWord();
+    }
+
+    function nextWord() {
+      currentIndex++;
+      currentHint = 0;
+      if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+      updateScore();
+      if (currentIndex >= words.length) {
+        document.getElementById("hint").textContent = "🎉 Einde van het spel!";
+        document.getElementById("word-to-guess").style.display = "none";
+      } else {
+        showTurn();
+        resetWordCard();
+      }
+    }
+
+    function updateScore() {
+      document.getElementById("score1").textContent = score[0];
+      document.getElementById("score2").textContent = score[1];
+    }
+
+    function resetClue() {
+      currentHint = 0;
+      resetWordCard();
+    }
+
+    function switchLanguage() {
+      currentLang = document.getElementById('languageSwitch').value;
+      document.getElementById("hintLanguage").value = currentLang;
+    }
+  </script>
 </body>
 </html>
