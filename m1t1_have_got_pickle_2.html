@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Have Got Reflex Game (100 zinnen)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #ff7043;
+      padding: 1rem 0;
+    }
+    header img {
+      width: 120px;
+    }
+    header h1 {
+      color: white;
+      margin: 0.5rem 0 0;
+    }
+    .game-container {
+      padding: 2rem;
+    }
+    .btn {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #e65c30;
+    }
+    .btn.active {
+      background-color: #e65c30;
+    }
+    .stars {
+      font-size: 2rem;
+      color: gold;
+    }
+    .score {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .sentence-wrapper {
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .sentence {
+      font-size: 1.5rem;
+    }
+    .answer-buttons {
+      margin: 2rem 0;
+    }
+    .hidden {
+      display: none;
+    }
+    #level-up-message {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #ff7043;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    footer {
+      background-color: #ffe6dc;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="Engliforce Logo">
+  <h1>💥 Have Got Reflex Game</h1>
+</header>
+
+<div class="game-container">
+  <!-- Setup scherm -->
+  <div id="setup-screen">
+    <h2>Kies modus:</h2>
+    <button class="btn" id="btn-full" onclick="selectMode('full')">Volledige vormen</button>
+    <button class="btn" id="btn-short" onclick="selectMode('short')">Afkortingen</button>
+
+    <h2>Kies snelheid (level):</h2>
+    <div>
+      <button class="btn" onclick="selectLevel(1)">1 (langzaam)</button>
+      <button class="btn" onclick="selectLevel(2)">2</button>
+      <button class="btn" onclick="selectLevel(3)">3</button>
+      <button class="btn" onclick="selectLevel(4)">4</button>
+      <button class="btn" onclick="selectLevel(5)">5 (snel)</button>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button class="btn" id="startBtn" onclick="startGame()" disabled>▶ Start</button>
+    </div>
+  </div>
+
+  <!-- Game -->
+  <div id="game" class="hidden">
+    <div class="stars" id="stars">⭐ ⭐ ⭐</div>
+    <div class="score" id="score">Score: 0</div>
+    <div id="level-up-message">Level up!</div>
+    <div class="sentence-wrapper">
+      <div class="sentence" id="sentence">...</div>
+    </div>
+    <div class="answer-buttons">
+      <button class="btn" id="btn-have-got"></button>
+      <button class="btn" id="btn-has-got"></button>
+    </div>
+  </div>
+
+  <!-- Game Over -->
+  <div id="game-over" class="hidden">
+    <h2>😢 Game Over!</h2>
+    <p id="final-score"></p>
+    <button class="btn" onclick="window.location.reload()">🔄 Opnieuw spelen</button>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Engliforce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  const sentenceEl = document.getElementById('sentence');
+  const levelUpMessage = document.getElementById('level-up-message');
+
+  let mode = '';
+  let levelSpeed = 0;
+  let score = 0;
+  let lives = 3;
+  let modeSelected = false;
+  let levelSelected = false;
+
+  const levelSpeeds = {
+    1: 10000,
+    2: 8000,
+    3: 6000,
+    4: 4000,
+    5: 2500
+  };
+
+  const allSubjectsHave = ["I", "You", "We", "They", "My friends", "You all", "The kids", "We all"];
+  const allSubjectsHas = ["He", "She", "It", "Tom", "Sara", "The dog", "My brother", "Emma"];
+
+  const objects = [
+    "a book", "a pen", "a red car", "a dog", "a cold", "two sisters", "a problem",
+    "an idea", "a bike", "a jacket", "a secret", "a gift", "a cat", "homework",
+    "a soccer ball", "a phone", "a question", "a new bag", "a pencil case", "some money",
+    "a new phone", "a house", "an old camera", "a chair", "a funny story"
+  ];
+
+  const allSentences = [];
+
+  // Genereer 100 zinnen
+  for (let i = 0; i < 100; i++) {
+    const isHave = Math.random() < 0.5;
+    const subject = isHave
+      ? allSubjectsHave[Math.floor(Math.random() * allSubjectsHave.length)]
+      : allSubjectsHas[Math.floor(Math.random() * allSubjectsHas.length)];
+    const object = objects[Math.floor(Math.random() * objects.length)];
+    const correctFull = isHave ? "have got" : "has got";
+    const correctShort = isHave ? "’ve got" : "’s got";
+    allSentences.push({
+      sentence: `${subject} ___ ${object}.`,
+      correctFull,
+      correctShort
+    });
+  }
+
+  function selectMode(selected) {
+    mode = selected;
+    modeSelected = true;
+    document.getElementById('btn-full').classList.remove('active');
+    document.getElementById('btn-short').classList.remove('active');
+    document.getElementById(`btn-${selected}`).classList.add('active');
+    updateAnswerButtons();
+    checkStartReady();
+  }
+
+  function updateAnswerButtons() {
+    document.getElementById('btn-have-got').textContent = mode === 'short' ? "’ve got" : "have got";
+    document.getElementById('btn-has-got').textContent = mode === 'short' ? "’s got" : "has got";
+  }
+
+  function selectLevel(level) {
+    levelSelected = true;
+    levelSpeed = levelSpeeds[level];
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(btn => {
+      if (btn.textContent.includes('(')) btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    checkStartReady();
+  }
+
+  function checkStartReady() {
+    if (modeSelected && levelSelected) {
+      document.getElementById('startBtn').disabled = false;
+    }
+  }
+
+  function startGame() {
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('game').classList.remove('hidden');
+
+    score = 0;
+    lives = 3;
+    updateUI();
+    showSentence();
+
+    document.getElementById('btn-have-got').addEventListener('click', () => {
+      submitAnswer(document.getElementById('btn-have-got').textContent);
+    });
+    document.getElementById('btn-has-got').addEventListener('click', () => {
+      submitAnswer(document.getElementById('btn-has-got').textContent);
+    });
+  }
+
+  function showSentence() {
+    const random = allSentences[Math.floor(Math.random() * allSentences.length)];
+    sentenceEl.textContent = random.sentence.replace('___', '____');
+    sentenceEl.dataset.correctFull = random.correctFull;
+    sentenceEl.dataset.correctShort = random.correctShort;
+
+    clearTimeout(sentenceEl.timeoutId);
+    sentenceEl.timeoutId = setTimeout(() => {
+      loseLife();
+    }, levelSpeed);
+  }
+
+  function submitAnswer(choice) {
+    clearTimeout(sentenceEl.timeoutId);
+    const correct = mode === 'short'
+      ? sentenceEl.dataset.correctShort
+      : sentenceEl.dataset.correctFull;
+
+    if (choice === correct) {
+      score++;
+      checkLevelUp();
+    } else {
+      lives--;
+    }
+
+    updateUI();
+
+    if (lives <= 0) {
+      gameOver();
+    } else {
+      showSentence();
+    }
+  }
+
+  function loseLife() {
+    clearTimeout(sentenceEl.timeoutId);
+    lives--;
+    updateUI();
+
+    if (lives <= 0) {
+      gameOver();
+    } else {
+      showSentence();
+    }
+  }
+
+  function checkLevelUp() {
+    if (score % 10 === 0 && levelSpeed > levelSpeeds[5]) {
+      levelSpeed = levelSpeed * 0.9;
+      showLevelUpMessage();
+    }
+  }
+
+  function showLevelUpMessage() {
+    levelUpMessage.style.display = 'block';
+    setTimeout(() => {
+      levelUpMessage.style.display = 'none';
+    }, 2000);
+  }
+
+  function updateUI() {
+    document.getElementById('score').textContent = `Score: ${score}`;
+    document.getElementById('stars').textContent = '⭐ '.repeat(lives).trim();
+  }
+
+  function gameOver() {
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('game-over').classList.remove('hidden');
+    document.getElementById('final-score').textContent = `Je eindscore: ${score}`;
+  }
+</script>
+
+</body>
+</html>
