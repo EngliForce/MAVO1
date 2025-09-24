@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Treasure Hunt</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header-bar {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem 1rem;
+    }
+
+    .header-bar img {
+      width: 120px;
+      margin-bottom: 1rem;
+    }
+
+    .header-bar h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .header-bar p {
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+    }
+
+    .game-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding: 2rem;
+      gap: 2rem;
+    }
+
+    .left-panel, .right-panel {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+
+    .question-box {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .question {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .option-btn {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .option-btn:hover {
+      background-color: #e65c30;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-color: #d4edda;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .cell.clicked {
+      background-color: #f44336;
+      color: white;
+      pointer-events: none;
+    }
+
+    .player-turn {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #ff7043;
+      font-weight: bold;
+    }
+
+    #start-screen {
+      padding: 2rem;
+    }
+
+    input {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    #winner {
+      font-size: 1.8rem;
+      color: #28a745;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header-bar">
+    <img src="Logo.png" alt="EngliForce Logo">
+    <h1>🏆 Treasure Hunt</h1>
+    <p>Find the teasure!</p>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="start-screen">
+    <h2>Select number of players</h2>
+    <button onclick="setupPlayers(1)">1 Player</button>
+    <button onclick="setupPlayers(2)">2 Players</button>
+    <div id="name-inputs" style="margin-top: 1rem;"></div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game" style="display: none;">
+    <div class="player-turn" id="player-turn"></div>
+    <div class="game-container">
+      <!-- Left Panel -->
+      <div class="left-panel">
+        <div class="question-box">
+          <div class="question" id="question">Loading...</div>
+          <div class="options" id="options"></div>
+        </div>
+        <div id="winner"></div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="right-panel">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English your superpower!</p>
+  </footer>
+
+<script>
+  const questions = [
+  { text: "My brother ___ come home yet. We’re still waiting.", answer: "hasn't" },
+  { text: "They ___ finished the puzzle. Half the pieces are on the table.", answer: "haven't" },
+  { text: "We ___ cleaned the kitchen. The plates are still dirty.", answer: "haven't" },
+  { text: "She ___ done her homework. It’s still on the desk.", answer: "hasn't" },
+  { text: "I ___ eaten lunch. My stomach is growling.", answer: "haven't" },
+  { text: "He ___ packed his bag. His books are on the floor.", answer: "hasn't" },
+  { text: "You ___ fed the dog. The bowl is empty.", answer: "haven't" },
+  { text: "Emma ___ arrived. Her chair is still empty.", answer: "hasn't" },
+  { text: "They ___ called us. The phone hasn’t rung.", answer: "haven't" },
+  { text: "We ___ started the game. Everyone is still waiting.", answer: "haven't" },
+  { text: "Tom ___ brushed his teeth. His toothbrush is dry.", answer: "hasn't" },
+  { text: "My friends ___ opened their books. They're just talking.", answer: "haven't" },
+  { text: "He ___ taken a shower. His towel is still dry.", answer: "hasn't" },
+  { text: "You ___ opened your gift. It's still wrapped.", answer: "haven't" },
+  { text: "Lucy ___ joined the class. Her name isn't on the list.", answer: "hasn't" },
+  { text: "I ___ finished the drawing. It has no colors yet.", answer: "haven't" },
+  { text: "She ___ cleaned her room. Clothes are everywhere.", answer: "hasn't" },
+  { text: "We ___ watched the movie. The TV is off.", answer: "haven't" },
+  { text: "They ___ put on their shoes. They're barefoot.", answer: "haven't" },
+  { text: "He ___ gone outside. He's still on the couch.", answer: "hasn't" },
+  { text: "My teacher ___ a loud voice. We can hear him from very far away.", answer: "has" },
+  { text: "They ___ three rabbits at home. One is black, two are white.", answer: "have" },
+  { text: "We ___ a new football. It’s red and shiny.", answer: "have" },
+  { text: "She ___ a green backpack. It’s next to her desk.", answer: "has" },
+  { text: "I ___ a big collection of stickers. I keep them in a box.", answer: "have" },
+  { text: "He ___ a blue bike. It's parked outside.", answer: "has" },
+  { text: "You ___ a lot of pencils. I saw them in your case.", answer: "have" },
+  { text: "Emma ___ long hair. It goes past her shoulders.", answer: "has" },
+  { text: "They ___ two dogs. One is big and one is small.", answer: "have" },
+  { text: "We ___ science class on Mondays. It’s right after math.", answer: "have" },
+  { text: "The bird ___ bright feathers. They're red and yellow.", answer: "has" },
+  { text: "I ___ a twin brother. We look the same.", answer: "have" },
+  { text: "He ___ a football match today. It's at 4 PM.", answer: "has" },
+  { text: "You ___ a nice singing voice. I heard you in music class.", answer: "have" },
+  { text: "Tom and Jerry ___ funny stories. They always make me laugh.", answer: "have" },
+  { text: "She ___ a pet turtle. It lives in a small tank.", answer: "has" },
+  { text: "We ___ art class after lunch. I packed my crayons.", answer: "have" },
+  { text: "They ___ a treehouse in the garden. It’s really cool!", answer: "have" },
+  { text: "My dad ___ a red car. He drives it to work.", answer: "has" },
+  { text: "I ___ a question. Can I ask you?", answer: "have" },
+  { text: "He ___ brought his book. His bag is empty.", answer: "hasn't" },
+  { text: "They ___ started eating. Their plates are full.", answer: "haven't" },
+  { text: "We ___ turned on the lights. It's still dark inside.", answer: "haven't" },
+  { text: "She ___ taken her medicine. It’s still on the table.", answer: "hasn't" },
+  { text: "You ___ washed your hands. They’re still dirty.", answer: "haven't" },
+  { text: "I ___ opened my notebook. It’s still in my bag.", answer: "haven't" },
+  { text: "Tom ___ finished the test. He’s still writing.", answer: "hasn't" },
+  { text: "They ___ hung up their coats. They’re on the floor.", answer: "haven't" },
+  { text: "Emma ___ tied her shoes. Her laces are loose.", answer: "hasn't" },
+  { text: "We ___ eaten the cake. It’s still in the box.", answer: "haven't" },
+  { text: "My grandma ___ a rocking chair. She sits in it every evening.", answer: "has" },
+  { text: "They ___ a swimming pool in their backyard.", answer: "have" },
+  { text: "He ___ a new phone. He showed it to me yesterday.", answer: "has" },
+  { text: "You ___ a cool backpack. Where did you get it?", answer: "have" },
+  { text: "I ___ two goldfish. Their names are Bubbles and Splash.", answer: "have" },
+  { text: "She ___ a map on her wall. It shows all the countries.", answer: "has" },
+  { text: "We ___ a picnic planned. It's going to be fun!", answer: "have" },
+  { text: "They ___ a sandcastle at the beach. It was huge!", answer: "have" },
+  { text: "The baby ___ tiny socks. They're so cute!", answer: "has" },
+  { text: "He ___ a pencil case full of colored pens.", answer: "has" },
+  { text: "Emma ___ eaten her sandwich. It’s still on the plate.", answer: "hasn't" },
+  { text: "They ___ left the house. The lights are still on.", answer: "haven't" },
+  { text: "We ___ started the project. The paper is still blank.", answer: "haven't" },
+  { text: "You ___ taken out the trash. The bin is full.", answer: "haven't" },
+  { text: "I ___ called my friend. I’ll do it later.", answer: "haven't" },
+  { text: "Tom ___ opened his gift. It's still wrapped.", answer: "hasn't" },
+  { text: "He ___ fed the cat. The bowl is empty.", answer: "hasn't" },
+  { text: "We ___ seen that film. Let’s watch it together.", answer: "haven't" },
+  { text: "They ___ found the missing sock. It's still lost.", answer: "haven't" },
+  { text: "She ___ watered the flowers. They're very dry.", answer: "hasn't" }
+];
+
+    let currentQuestionIndex = 0;
+    let currentPlayer = 0;
+    let players = [];
+    let correctAnswer = "";
+    let grid = [];
+    let treasureCell = -1;
+    let gameStarted = false;
+
+    function setupPlayers(count) {
+      const container = document.getElementById('name-inputs');
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        container.innerHTML += `<input type="text" placeholder="Enter name for Player ${i + 1}" id="player${i}">`;
+      }
+      container.innerHTML += `<br><button onclick="startGame(${count})">Start Game</button>`;
+    }
+
+    function startGame(count) {
+      players = [];
+      for (let i = 0; i < count; i++) {
+        const name = document.getElementById(`player${i}`).value || `Player ${i + 1}`;
+        players.push(name);
+      }
+
+      // Pick a random starting player
+      currentPlayer = Math.floor(Math.random() * players.length);
+
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('game').style.display = 'block';
+      setupGrid();
+      nextTurn();
+    }
+
+    function setupGrid() {
+      const gridContainer = document.getElementById('grid');
+      gridContainer.innerHTML = '';
+      grid = [];
+      treasureCell = Math.floor(Math.random() * 25);
+      for (let i = 0; i < 25; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.addEventListener('click', () => {
+          if (!cell.classList.contains('clicked') && gameStarted) {
+            if (i === treasureCell) {
+              cell.innerHTML = "💰";
+              cell.style.backgroundColor = "#2e7d32";
+              cell.style.color = "white";
+              cell.classList.add('clicked');
+              document.getElementById('winner').textContent = `${players[currentPlayer]} found the treasure! 🎉`;
+              gameStarted = false;
+            } else {
+              cell.classList.add('clicked');
+              nextPlayer();
+              nextTurn();
+            }
+          }
+        });
+        gridContainer.appendChild(cell);
+        grid.push(cell);
+      }
+    }
+
+    function nextTurn() {
+      gameStarted = false;
+      shuffle(questions);
+      const q = questions[currentQuestionIndex % questions.length];
+      currentQuestionIndex++;
+      correctAnswer = q.answer;
+
+      document.getElementById('question').textContent = q.text;
+      document.getElementById('player-turn').textContent = `👉 ${players[currentPlayer]}'s turn`;
+
+      const options = ["have", "has", "haven't", "hasn't"];
+      shuffle(options);
+      const optionsContainer = document.getElementById('options');
+      optionsContainer.innerHTML = '';
+      options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = option;
+        btn.onclick = () => {
+          if (option === correctAnswer) {
+            gameStarted = true;
+            document.getElementById('player-turn').textContent = `${players[currentPlayer]}, choose a square!`;
+          } else {
+            nextPlayer();
+            nextTurn();
+          }
+        };
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function nextPlayer() {
+      currentPlayer = (currentPlayer + 1) % players.length;
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+  </script>
+
+</body>
+</html>
