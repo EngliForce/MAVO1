@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -9,12 +8,33 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
-      padding: 2rem;
+      margin: 0;
+      padding: 0;
       text-align: center;
     }
-    h1 {
-      color: #ff7043;
+
+    .header-bar {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem 1rem;
     }
+
+    .header-bar img {
+      width: 120px;
+      height: auto;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+
+    .header-bar h1 {
+      margin-bottom: 1rem;
+    }
+
+    .header-bar p {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
     .image-area {
       margin: 2rem auto;
       max-width: 600px;
@@ -23,6 +43,7 @@
       justify-content: center;
       gap: 1rem;
     }
+
     .person {
       border: 3px solid #ff7043;
       border-radius: 10px;
@@ -30,21 +51,27 @@
       background-color: white;
       cursor: pointer;
       font-size: 3rem;
+      transition: border-color 0.3s;
     }
+
     .correct {
       border-color: #28a745 !important;
     }
+
     .wrong {
       border-color: #dc3545 !important;
     }
+
     #prompt {
       font-size: 1.2rem;
       margin-bottom: 1rem;
     }
+
     .scoreboard {
       margin-top: 1rem;
       font-size: 1rem;
     }
+
     button {
       background-color: #ff7043;
       color: white;
@@ -55,6 +82,11 @@
       margin-top: 1rem;
       cursor: pointer;
     }
+
+    button:hover {
+      background-color: #e65c30;
+    }
+
     footer {
       background-color: #ffe6dc;
       text-align: center;
@@ -62,118 +94,131 @@
       font-size: 0.9rem;
       margin-top: 3rem;
     }
-  </style>
+</style>
 </head>
 <body>
-<img alt="Englix Logo" src="Logo.png" style="display: block; margin: 0 auto 1rem auto; width: 120px;"/>
-<h1>🔍 I Spy – Personal Pronouns</h1>
-<p id="prompt">Click on the emoji that matches: <strong id="target"></strong></p>
-<div class="image-area" id="game-area"></div>
-<div class="scoreboard">
-    ✅ Correct: <span id="correct-score">0</span> | ❌ Incorrect: <span id="incorrect-score">0</span>
+
+<!-- Oranje header -->
+<div class="header-bar">
+  <img alt="Englix Logo" src="Logo.png">
+  <h1>🔍 I Spy – Personal Pronouns</h1>
+  <p id="prompt">Click on the emoji that matches: <strong id="target"></strong></p>
 </div>
+
+<!-- Spelgebied -->
+<div class="image-area" id="game-area"></div>
+
+<!-- Score -->
+<div class="scoreboard">
+  ✅ Correct: <span id="correct-score">0</span> | ❌ Incorrect: <span id="incorrect-score">0</span>
+</div>
+
+<!-- Restart knop -->
 <button onclick="restartGame()">🔄 Restart</button>
+
+<!-- Footer -->
 <footer>
-<p>© 2025 EngliForce – Make English your superpower!</p>
+  <p>© 2025 EngliForce – Make English your superpower!</p>
 </footer>
+
+<!-- Script -->
 <script>
-    const pronouns = [
-      { pronoun: "he", emojis: ["👉🏽👦🏾", "👉🏽👦🏻", "👉🏽👨🏽"] },
-      { pronoun: "she", emojis: ["👉🏽👧🏽", "👉🏽👧🏼", "👉🏽👩🏾"] },
-      { pronoun: "it", emojis: ["👉🏽🐶", "👉🏽🐱", "👉🏽🤖"] },
-      { pronoun: "you", emojis: ["🫵🏽", "🫵🏻"] },
-      { pronoun: "we", emojis: ["🙋🏾‍♂️🙋🏼‍♀️", "🙋🏽‍♀️🙋🏻‍♂️", "🙋🏿‍♀️🙋🏽‍♂️"] },
-      { pronoun: "they", emojis: ["👉🏽👨🏽‍👩🏽‍👧🏾", "👉🏽👩🏿‍👩🏾‍👦🏼", "👉🏽👨🏻‍👨🏿‍👧🏻", "👉🏽👨‍👩‍👧"] },
-      { pronoun: "I", emojis: ["🙋🏾", "🙋🏻", "🙋🏽"] }
-    ];
+  const pronouns = [
+    { pronoun: "he", emojis: ["👉🏽👦🏾", "👉🏽👦🏻", "👉🏽👨🏽"] },
+    { pronoun: "she", emojis: ["👉🏽👧🏽", "👉🏽👧🏼", "👉🏽👩🏾"] },
+    { pronoun: "it", emojis: ["👉🏽🐶", "👉🏽🐱", "👉🏽🤖"] },
+    { pronoun: "you", emojis: ["🫵🏽", "🫵🏻"] },
+    { pronoun: "we", emojis: ["🙋🏾‍♂️🙋🏼‍♀️", "🙋🏽‍♀️🙋🏻‍♂️", "🙋🏿‍♀️🙋🏽‍♂️"] },
+    { pronoun: "they", emojis: ["👉🏽👨🏽‍👩🏽‍👧🏾", "👉🏽👩🏿‍👩🏾‍👦🏼", "👉🏽👨🏻‍👨🏿‍👧🏻", "👉🏽👨‍👩‍👧"] },
+    { pronoun: "I", emojis: ["🙋🏾", "🙋🏻", "🙋🏽"] }
+  ];
 
-    let gamePeople = [];
-    let currentTarget = null;
-    let correctScore = 0;
-    let incorrectScore = 0;
-    let round = 0;
-    const maxRounds = 10;
+  let gamePeople = [];
+  let currentTarget = null;
+  let correctScore = 0;
+  let incorrectScore = 0;
+  let round = 0;
+  const maxRounds = 10;
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function setupGame() {
+    const area = document.getElementById("game-area");
+    area.innerHTML = "";
+    gamePeople = [];
+
+    pronouns.forEach(p => {
+      const emoji = p.emojis[Math.floor(Math.random() * p.emojis.length)];
+      gamePeople.push({ emoji, pronoun: p.pronoun });
+    });
+
+    shuffle(gamePeople);
+    gamePeople.forEach(p => {
+      const container = document.createElement("div");
+      container.className = "person";
+      container.textContent = p.emoji;
+      container.onclick = () => checkAnswer(container, p.pronoun);
+      area.appendChild(container);
+    });
+
+    const options = gamePeople.map(p => p.pronoun);
+    shuffle(options);
+    currentTarget = options[0];
+    document.getElementById("target").textContent = currentTarget;
+    round++;
+  }
+
+  function checkAnswer(element, pronoun) {
+    const all = document.querySelectorAll(".person");
+    all.forEach(p => p.onclick = null);
+
+    if (pronoun.toLowerCase() === currentTarget.toLowerCase()) {
+      element.classList.add("correct");
+      correctScore++;
+      document.getElementById("correct-score").textContent = correctScore;
+    } else {
+      element.classList.add("wrong");
+      incorrectScore++;
+      document.getElementById("incorrect-score").textContent = incorrectScore;
+      const correct = Array.from(all).find(e => {
+        return gamePeople.find(p => p.emoji === e.textContent).pronoun === currentTarget;
+      });
+      if (correct) correct.classList.add("correct");
     }
 
-    function setupGame() {
-      const area = document.getElementById("game-area");
-      area.innerHTML = "";
-      gamePeople = [];
-
-      pronouns.forEach(p => {
-        const emoji = p.emojis[Math.floor(Math.random() * p.emojis.length)];
-        gamePeople.push({ emoji, pronoun: p.pronoun });
-      });
-
-      shuffle(gamePeople);
-      gamePeople.forEach(p => {
-        const container = document.createElement("div");
-        container.className = "person";
-        container.textContent = p.emoji;
-        container.onclick = () => checkAnswer(container, p.pronoun);
-        area.appendChild(container);
-      });
-
-      const options = gamePeople.map(p => p.pronoun);
-      shuffle(options);
-      currentTarget = options[0];
-      document.getElementById("target").textContent = currentTarget;
-      round++;
-    }
-
-    function checkAnswer(element, pronoun) {
-      const all = document.querySelectorAll(".person");
-      all.forEach(p => p.onclick = null);
-
-      if (pronoun.toLowerCase() === currentTarget.toLowerCase()) {
-        element.classList.add("correct");
-        correctScore++;
-        document.getElementById("correct-score").textContent = correctScore;
+    setTimeout(() => {
+      if (round < maxRounds) {
+        setupGame();
       } else {
-        element.classList.add("wrong");
-        incorrectScore++;
-        document.getElementById("incorrect-score").textContent = incorrectScore;
-        const correct = Array.from(all).find(e => {
-          return gamePeople.find(p => p.emoji === e.textContent).pronoun === currentTarget;
-        });
-        if (correct) correct.classList.add("correct");
+        endGame();
       }
+    }, 1000);
+  }
 
-      setTimeout(() => {
-        if (round < maxRounds) {
-          setupGame();
-        } else {
-          endGame();
-        }
-      }, 1000);
-    }
+  function endGame() {
+    document.getElementById("prompt").innerHTML = `🎉 You finished ${maxRounds} rounds!<br>
+      ✅ Correct: <strong>${correctScore}</strong> | ❌ Incorrect: <strong>${incorrectScore}</strong>`;
+    document.getElementById("game-area").innerHTML = "";
+  }
 
-    function endGame() {
-      document.getElementById("prompt").innerHTML = `🎉 You finished ${maxRounds} rounds!<br>
-        ✅ Correct: <strong>${correctScore}</strong> | ❌ Incorrect: <strong>${incorrectScore}</strong>`;
-      document.getElementById("game-area").innerHTML = "";
-    }
+  function restartGame() {
+    correctScore = 0;
+    incorrectScore = 0;
+    round = 0;
+    document.getElementById("correct-score").textContent = "0";
+    document.getElementById("incorrect-score").textContent = "0";
+    document.getElementById("prompt").innerHTML = 'Click on the emoji that matches: <strong id="target"></strong>';
+    setupGame();
+  }
 
-    function restartGame() {
-      correctScore = 0;
-      incorrectScore = 0;
-      round = 0;
-      document.getElementById("correct-score").textContent = "0";
-      document.getElementById("incorrect-score").textContent = "0";
-      document.getElementById("prompt").innerHTML = 'Click on the emoji that matches: <strong id="target"></strong>';
-      setupGame();
-    }
-
-    window.onload = function () {
-      setupGame();
-    };
-  </script>
+  window.onload = function () {
+    setupGame();
+  };
+</script>
 </body>
 </html>
-
