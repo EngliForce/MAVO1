@@ -2,16 +2,18 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <title>Match – Personal Pronouns English > Dutch</title>
+  <title>Match – Personal Pronouns Dutch > English</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
-      padding: 2rem;
+      padding: 0;
+      margin: 0;
       text-align: center;
     }
     h1 {
-      color: #ff7043;
+      color: white;
+      margin-bottom: 1rem;
     }
     .container {
       display: flex;
@@ -47,50 +49,77 @@
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
+      margin-top: 4rem;
     }
     .logo {
       max-width: 150px;
       margin-bottom: 1rem;
     }
+    .header-bar {
+      background-color: #ff7043;
+      padding: 2rem 1rem;
+      color: white;
+    }
+    .header-bar p {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e65c30;
+    }
   </style>
 </head>
+
 <body>
 
-  <!-- Top logo -->
-  <div>
+  <!-- Oranje balk met logo en titel -->
+  <div class="header-bar">
     <img src="Logo.png" alt="Logo" class="logo">
+    <h1>🧲 Sleep het juiste Nederlandse persoonlijke voornaamwoord</h1>
+    <p>Sleep de juiste Nederlandse betekenis naar het Engelse persoonlijke voornaamwoord.</p>
   </div>
 
-  <h1>🧲 Sleep het juiste Nederlandse persoonlijke voornaamwoord</h1>
-  <p>Sleep de juiste Nederlandse betekenis naar het Engelse persoonlijke voornaamwoord.</p>
-
-  <div style="margin: 1rem 0;">
-    <button onclick="createElements()" style="background-color:#ff7043;color:white;border:none;padding:0.5rem 1rem;border-radius:6px;font-size:1rem;">🔄 Shuffle</button>
+  <!-- Shuffle-knop -->
+  <div style="margin: 2rem 0;">
+    <button onclick="createElements()">🔄 Shuffle</button>
   </div>
 
+  <!-- Dropzones -->
   <div class="container" id="dropzones-container"></div>
 
+  <!-- Feedback -->
   <div id="feedback-container" style="margin-top: 2rem;">
     <p id="feedback" style="font-size: 1.1rem; margin-top: 1rem;"></p>
   </div>
 
+  <!-- Draggables -->
   <div class="container" id="draggables-container"></div>
 
+  <!-- Script -->
   <script>
     const dropData = [
-      { label: "I", match: "ik" },
-      { label: "you", match: "jij" },
-      { label: "he", match: "hij" },
-      { label: "she", match: "zij" },
-      { label: "it", match: "het" },
-      { label: "we", match: "wij" },
-      { label: "you (meervoud)", match: "jullie" },
-      { label: "they", match: "zij (meervoud)" }
+      { label: "ik", match: "I" },
+      { label: "jij", match: "you" },
+      { label: "hij", match: "he" },
+      { label: "zij", match: "she" },
+      { label: "het", match: "it" },
+      { label: "wij", match: "we" },
+      { label: "jullie", match: "you (meervoud)" },
+      { label: "zij (meervoud)", match: "they" }
     ];
 
     const dragData = [
-      { value: "ik" }, { value: "jij" }, { value: "hij" }, { value: "zij" },
-      { value: "het" }, { value: "wij" }, { value: "jullie" }, { value: "zij (meervoud)" }
+      { value: "I" }, { value: "you" }, { value: "he" }, { value: "she" },
+      { value: "it" }, { value: "we" }, { value: "you (meervoud)" }, { value: "they" }
     ];
 
     function shuffle(array) {
@@ -172,8 +201,10 @@
     createElements();
   </script>
 
+  <!-- Footer -->
   <footer>
     <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
   </footer>
+
 </body>
 </html>
