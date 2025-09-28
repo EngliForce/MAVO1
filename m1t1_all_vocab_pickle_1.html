@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Theme 1 - Vocab Drag & Drop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header img {
+      max-width: 120px;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+    .language-select {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+    .language-select label {
+      margin: 0 1em;
+      font-weight: bold;
+      color: #444;
+    }
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .draggable-word {
+      background-color: white;
+      padding: 0.6em 1.2em;
+      border: 2px solid #ff7043;
+      border-radius: 6px;
+      cursor: grab;
+      user-select: none;
+      font-weight: bold;
+      color: #333;
+    }
+    .draggable-word:hover {
+      background-color: #ffe6dc;
+    }
+    .exercise-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .sentence-box {
+      flex: 0 0 45%;
+      background-color: white;
+      border: 2px solid #ff7043;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: left;
+      box-sizing: border-box;
+    }
+    .sentence-box p {
+      margin: 0 0 0.5em 0;
+      font-weight: 500;
+      color: #444;
+    }
+    .drop-zone {
+      min-height: 2em;
+      padding: 0.6em;
+      background: #e0e0e0;
+      border-radius: 4px;
+      border: 2px dashed #999;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    .correct {
+      background-color: #c8f7c5 !important;
+      border-color: #28a745 !important;
+    }
+    .wrong {
+      background-color: #f7c5c5 !important;
+      border-color: #dc3545 !important;
+    }
+    .button-row {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin: 0 0.5rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e85d2c;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" />
+  <h1>🎯 Theme 1 – Vocab Drag & Drop</h1>
+  <p>Sleep het juiste woord naar de juiste omschrijving</p>
+</header>
+
+<div class="language-select">
+  <label><input type="radio" name="language" value="nl" checked> Nederlands</label>
+  <label><input type="radio" name="language" value="en"> Engels</label>
+  <label><input type="radio" name="language" value="mixed"> Gemengd</label>
+</div>
+
+<div class="word-bank" id="wordBank"></div>
+<div id="sentenceGrid"></div>
+
+<div class="button-row">
+  <button onclick="checkAnswers()">✅ Controleer antwoorden</button>
+  <button onclick="setupGame()">🔁 Opnieuw</button>
+</div>
+
+<footer>
+  &copy; 2025 EngliForce – Make English Your Superpower!
+</footer>
+
+<script>
+  const vocab = {
+  "address": {
+    nl: "Een plek waar iemand woont of post ontvangt.",
+    en: "A place where someone lives or gets mail."
+  },
+  "age": {
+    nl: "Hoe oud je bent.",
+    en: "How old you are."
+  },
+  "birthday": {
+    nl: "De dag waarop je geboren bent.",
+    en: "The day you were born."
+  },
+  "city": {
+    nl: "Een grote plaats waar mensen wonen.",
+    en: "A large place where people live."
+  },
+  "country": {
+    nl: "Een land zoals Nederland of België.",
+    en: "A country like the Netherlands or Belgium."
+  },
+  "email address": {
+    nl: "Digitaal adres voor berichten via internet.",
+    en: "Digital address to send and receive messages."
+  },
+  "first name": {
+    nl: "Je voornaam, zoals Emma.",
+    en: "Your first name, like Emma."
+  },
+  "nationality": {
+    nl: "Het land waar je vandaan komt.",
+    en: "The country you come from."
+  },
+  "phone number": {
+    nl: "Een reeks cijfers waarmee je kunt bellen.",
+    en: "A series of numbers used to call someone."
+  },
+  "postcode": {
+    nl: "Code bij een adres, zoals 1234 AB.",
+    en: "Code for an address, like 1234 AB."
+  },
+  "surname / family name": {
+    nl: "Je achternaam, bijvoorbeeld De Vries.",
+    en: "Your last name, like Smith."
+  },
+  "athletic": {
+    nl: "Sterk en sportief gebouwd.",
+    en: "Strong and sporty body."
+  },
+  "braces": {
+    nl: "Beugel die je tanden rechtzet.",
+    en: "A device that straightens your teeth."
+  },
+  "build": {
+    nl: "De vorm van iemands lichaam.",
+    en: "The shape of someone's body."
+  },
+  "contact lenses": {
+    nl: "Doorzichtige lenzen die je in je ogen draagt.",
+    en: "Clear lenses you wear in your eyes."
+  },
+  "freckles": {
+    nl: "Kleine bruine vlekjes op je huid.",
+    en: "Small brown spots on your skin."
+  },
+  "glasses": {
+    nl: "Bril om beter te kunnen zien.",
+    en: "Glasses to help you see better."
+  },
+  "height": {
+    nl: "Hoe lang iemand is.",
+    en: "How tall someone is."
+  },
+  "slim": {
+    nl: "Dun of slank gebouwd.",
+    en: "Thin or slender build."
+  },
+  "looks": {
+    nl: "Hoe iemand eruitziet.",
+    en: "How someone looks."
+  },
+  "handsome": {
+    nl: "Een knappe man of jongen.",
+    en: "A good-looking man or boy."
+  },
+  "ordinary": {
+    nl: "Gewoon, niet bijzonder.",
+    en: "Normal, not special."
+  },
+  "pretty": {
+    nl: "Mooi meisje of vrouw.",
+    en: "Beautiful girl or woman."
+  },
+  "aunt": {
+    nl: "De zus van je vader of moeder.",
+    en: "The sister of your father or mother."
+  },
+  "baby": {
+    nl: "Een pasgeboren kind.",
+    en: "A newborn child."
+  },
+  "brother": {
+    nl: "Een jongen uit je gezin.",
+    en: "A boy in your family."
+  },
+  "child": {
+    nl: "Een jong persoon.",
+    en: "A young person."
+  },
+  "cousin": {
+    nl: "Kind van je oom of tante.",
+    en: "Child of your uncle or aunt."
+  },
+  "dad": {
+    nl: "Informeel woord voor vader.",
+    en: "Informal word for father."
+  },
+  "daughter": {
+    nl: "Dochter van een ouder.",
+    en: "Daughter of a parent."
+  },
+  "family": {
+    nl: "Je ouders, broers en zussen.",
+    en: "Your parents, brothers, and sisters."
+  },
+  "father": {
+    nl: "Mannelijke ouder.",
+    en: "Male parent."
+  },
+  "mother": {
+    nl: "Vrouwelijke ouder.",
+    en: "Female parent."
+  },
+  "parents": {
+    nl: "Je vader en moeder.",
+    en: "Your father and mother."
+  },
+  "sister": {
+    nl: "Een meisje uit je gezin.",
+    en: "A girl in your family."
+  },
+  "son": {
+    nl: "Jongen die kind is van ouders.",
+    en: "Boy who is a child of parents."
+  },
+  "uncle": {
+    nl: "De broer van je vader of moeder.",
+    en: "The brother of your father or mother."
+  },
+  "wife": {
+    nl: "Vrouw die met iemand getrouwd is.",
+    en: "A woman who is married to someone."
+  },
+  "foster family": {
+    nl: "Gezin dat voor andere kinderen zorgt.",
+    en: "Family that cares for other children."
+  },
+  "god…": {
+    nl: "Peetouder bij doop of ceremonie.",
+    en: "Godparent at a baptism or ceremony."
+  },
+  "grand…": {
+    nl: "Voorvoegsel voor grootouder of kleinkind.",
+    en: "Prefix for grandparent or grandchild."
+  },
+  "guardian": {
+    nl: "Iemand die voor een kind zorgt.",
+    en: "Someone who takes care of a child."
+  },
+  "half-…": {
+    nl: "Familielid met één gedeelde ouder.",
+    en: "Family member with one shared parent."
+  },
+  "mum": {
+    nl: "Informeel voor moeder.",
+    en: "Informal word for mother."
+  },
+  "nephew": {
+    nl: "Zoon van je broer of zus.",
+    en: "Son of your brother or sister."
+  },
+  "niece": {
+    nl: "Dochter van je broer of zus.",
+    en: "Daughter of your brother or sister."
+  },
+  "only child": {
+    nl: "Kind zonder broers of zussen.",
+    en: "Child without brothers or sisters."
+  },
+  "relatives": {
+    nl: "Mensen die familie van je zijn.",
+    en: "People who are part of your family."
+  },
+  "siblings": {
+    nl: "Je broers en zussen.",
+    en: "Your brothers and sisters."
+  },
+  "step…": {
+    nl: "Familie door huwelijk, niet geboorte.",
+    en: "Family by marriage, not by birth."
+  },
+  "twins": {
+    nl: "Twee kinderen die tegelijk geboren zijn.",
+    en: "Two children born at the same time."
+  },
+  "blouse": {
+    nl: "Licht shirt voor meisjes of vrouwen.",
+    en: "Light shirt for girls or women."
+  },
+  "coat": {
+    nl: "Jas om je warm te houden buiten.",
+    en: "Jacket to keep you warm outside."
+  },
+  "dress": {
+    nl: "Lang kledingstuk voor meisjes of vrouwen.",
+    en: "Long piece of clothing for girls or women."
+  },
+  "eyes": {
+    nl: "Je gebruikt ze om te zien.",
+    en: "You use them to see."
+  },
+  "face": {
+    nl: "Voorkant van je hoofd.",
+    en: "Front of your head."
+  },
+  "friend": {
+    nl: "Iemand die je aardig vindt.",
+    en: "Someone you like."
+  },
+  "hair": {
+    nl: "Wat op je hoofd groeit.",
+    en: "What grows on your head."
+  },
+  "hat": {
+    nl: "Hoed of pet voor op je hoofd.",
+    en: "Hat or cap for your head."
+  },
+  "jeans": {
+    nl: "Broek van spijkerstof.",
+    en: "Pants made of denim."
+  },
+  "jumper": {
+    nl: "Warme trui zonder knopen.",
+    en: "Warm sweater without buttons."
+  },
+  "rucksack": {
+    nl: "Tas die je op je rug draagt.",
+    en: "Bag you carry on your back."
+  },
+  "shirt": {
+    nl: "Kledingstuk met knopen of kraag.",
+    en: "Clothing with buttons or collar."
+  },
+  "shoes": {
+    nl: "Wat je aan je voeten draagt.",
+    en: "What you wear on your feet."
+  },
+  "socks": {
+    nl: "Dunne stof om je voeten.",
+    en: "Thin fabric around your feet."
+  },
+  "boots": {
+    nl: "Hoge schoenen, vaak voor regen of sneeuw.",
+    en: "High shoes, often for rain or snow."
+  },
+  "cap": {
+    nl: "Pet voor op je hoofd.",
+    en: "Cap for your head."
+  },
+  "clothes": {
+    nl: "Wat je draagt op je lichaam.",
+    en: "What you wear on your body."
+  },
+  "gloves": {
+    nl: "Draag je aan je handen als het koud is.",
+    en: "You wear them on your hands when it’s cold."
+  },
+  "hoodie": {
+    nl: "Trui met capuchon.",
+    en: "Sweatshirt with a hood."
+  },
+  "jacket": {
+    nl: "Kort jasje voor buiten.",
+    en: "Short coat for outdoors."
+  },
+  "scarf": {
+    nl: "Strook stof om je nek.",
+    en: "A piece of fabric for your neck."
+  },
+  "skirt": {
+    nl: "Kledingstuk dat je benen bedekt.",
+    en: "Clothing that covers your legs."
+  },
+  "trainers": {
+    nl: "Sportschoenen om in te rennen.",
+    en: "Sports shoes for running."
+  },
+  "trousers": {
+    nl: "Broek met twee pijpen.",
+    en: "Pants with two legs."
+  },
+  "belt": {
+    nl: "Strook om je middel, houdt broek op zijn plaats.",
+    en: "Band around your waist to hold trousers."
+  },
+  "bracelet": {
+    nl: "Sieraad om je pols.",
+    en: "Jewelry for your wrist."
+  },
+  "earrings": {
+    nl: "Sieraden voor in je oren.",
+    en: "Jewelry for your ears."
+  },
+  "necklace": {
+    nl: "Sieraad om je nek.",
+    en: "Jewelry for your neck."
+  },
+  "watch": {
+    nl: "Draagbaar klokje voor om je pols.",
+    en: "Small clock worn on the wrist."
+  },
+  "book": {
+    nl: "Bundel van bladzijden met tekst of verhalen.",
+    en: "Group of pages with text or stories."
+  },
+  "English": {
+    nl: "Vak over de Engelse taal.",
+    en: "Subject about the English language."
+  },
+  "maths": {
+    nl: "Vak over rekenen en getallen.",
+    en: "Subject about numbers and counting."
+  },
+  "pen": {
+    nl: "Schrijfmiddel met inkt.",
+    en: "Tool to write with ink."
+  },
+  "pencil": {
+    nl: "Schrijfmiddel van hout en grafiet.",
+    en: "Writing tool made of wood and graphite."
+  },
+  "PE": {
+    nl: "Gymnastiekles of bewegingsles op school.",
+    en: "Physical education or gym class at school."
+  },
+  "reading": {
+    nl: "Woorden of verhalen bekijken en begrijpen.",
+    en: "Looking at and understanding words or stories."
+  },
+  "rubber": {
+    nl: "Gum om potloodfouten uit te wissen.",
+    en: "Eraser for removing pencil mistakes."
+  },
+  "ruler": {
+    nl: "Liniaal om te meten of lijnen te trekken.",
+    en: "Tool to measure or draw lines."
+  },
+  "scissors": {
+    nl: "Om dingen mee te knippen.",
+    en: "Tool for cutting things."
+  },
+  "swimming": {
+    nl: "Bewegen in water als sport of hobby.",
+    en: "Moving in water as a sport or hobby."
+  },
+  "tennis": {
+    nl: "Sport met racket en bal op een veld.",
+    en: "Sport with racket and ball on a court."
+  },
+  "textbook": {
+    nl: "Boek dat je gebruikt om te leren.",
+    en: "Book used for learning."
+  },
+  "art": {
+    nl: "Vak waarin je tekent, schildert of knutselt.",
+    en: "Subject where you draw, paint or craft."
+  },
+  "biology": {
+    nl: "Vak over planten, dieren en mensen.",
+    en: "Subject about plants, animals and humans."
+  },
+  "Dutch": {
+    nl: "Vak over de Nederlandse taal.",
+    en: "Subject about the Dutch language."
+  },
+  "French": {
+    nl: "Vak over de Franse taal.",
+    en: "Subject about the French language."
+  },
+  "geography": {
+    nl: "Vak over landen, kaarten en aarde.",
+    en: "Subject about countries, maps and the Earth."
+  },
+  "history": {
+    nl: "Vak over wat er vroeger is gebeurd.",
+    en: "Subject about things that happened in the past."
+  },
+  "music": {
+    nl: "Vak waarin je zingt of muziek maakt.",
+    en: "Subject where you sing or make music."
+  },
+  "technology": {
+    nl: "Vak over hoe dingen werken of gemaakt worden.",
+    en: "Subject about how things work or are made."
+  },
+  "calculator": {
+    nl: "Apparaat om mee te rekenen.",
+    en: "Device used for calculating."
+  },
+  "copybook": {
+    nl: "Schrift waar je in schrijft op school.",
+    en: "Notebook used for writing at school."
+  },
+  "glue stick": {
+    nl: "Lijm in de vorm van een staaf.",
+    en: "Glue in the shape of a stick."
+  },
+  "headphones": {
+    nl: "Apparaat voor op je oren om geluid te horen.",
+    en: "Device you wear on your ears to hear sound."
+  },
+  "highlighter": {
+    nl: "Stift om belangrijke dingen te markeren.",
+    en: "Marker to highlight important things."
+  },
+  "pair of compasses": {
+    nl: "Instrument om cirkels te tekenen.",
+    en: "Tool used to draw circles."
+  },
+  "pencil case": {
+    nl: "Etui om je pennen en potloden in te bewaren.",
+    en: "Case to store pens and pencils."
+  },
+  "protractor": {
+    nl: "Hulpmiddel om hoeken te meten.",
+    en: "Tool to measure angles."
+  },
+  "sharpener": {
+    nl: "Voorwerp om potloden scherp te maken.",
+    en: "Object used to sharpen pencils."
+  },
+  "sports kit": {
+    nl: "Kleding en spullen voor gym of sport.",
+    en: "Clothes and gear for PE or sports."
+  },
+  "workbook": {
+    nl: "Boek waarin je opdrachten maakt.",
+    en: "Book where you do exercises."
+  },
+  "ball": {
+    nl: "Ronde vorm om mee te spelen of sporten.",
+    en: "Round object used in games or sports."
+  },
+  "dancing": {
+    nl: "Bewegen op muziek.",
+    en: "Moving your body to music."
+  },
+  "painting": {
+    nl: "Met verf een afbeelding maken.",
+    en: "Making a picture using paint."
+  },
+  "playing …": {
+    nl: "Muziek maken of een sport doen.",
+    en: "Making music or doing a sport."
+  },
+  "skateboarding": {
+    nl: "Rijden op een plank met wielen.",
+    en: "Riding on a board with wheels."
+  }
+};
+
+
+  function getLanguage() {
+    const selected = document.querySelector('input[name="language"]:checked');
+    return selected ? selected.value : 'nl';
+  }
+
+  function setupGame() {
+    const wordBank = document.getElementById("wordBank");
+    const sentenceGrid = document.getElementById("sentenceGrid");
+    wordBank.innerHTML = '';
+    sentenceGrid.innerHTML = '';
+
+    const allWords = Object.keys(vocab);
+    const selectedWords = shuffleArray(allWords).slice(0, 8); // choose 8 for manageable layout
+
+    const langMode = getLanguage();
+
+    // Word Bank
+    selectedWords.forEach(word => {
+      const el = document.createElement('div');
+      el.className = 'draggable-word';
+      el.textContent = word;
+      el.draggable = true;
+      el.addEventListener('dragstart', drag);
+      wordBank.appendChild(el);
+    });
+
+    // Sentences
+    for (let i = 0; i < selectedWords.length; i += 2) {
+      const row = document.createElement('div');
+      row.className = 'exercise-row';
+
+      for (let j = i; j < i + 2 && j < selectedWords.length; j++) {
+        const word = selectedWords[j];
+        let lang = langMode === 'mixed' ? (Math.random() < 0.5 ? 'nl' : 'en') : langMode;
+        const desc = vocab[word][lang];
+
+        const box = document.createElement('div');
+        box.className = 'sentence-box';
+        box.innerHTML = `
+          <p>${desc}</p>
+          <div class="drop-zone" data-word="${word}"></div>
+        `;
+
+        const dropZone = box.querySelector('.drop-zone');
+        dropZone.addEventListener('dragover', allowDrop);
+        dropZone.addEventListener('drop', drop);
+
+        row.appendChild(box);
+      }
+
+      sentenceGrid.appendChild(row);
+    }
+  }
+
+  function shuffleArray(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function allowDrop(e) {
+    e.preventDefault();
+  }
+
+  function drag(e) {
+    e.dataTransfer.setData("text/plain", e.target.textContent);
+  }
+
+  function drop(e) {
+    e.preventDefault();
+    const word = e.dataTransfer.getData("text/plain");
+    e.target.innerHTML = '';
+
+    const el = document.createElement('span');
+    el.textContent = word;
+    el.className = 'draggable-word';
+    el.draggable = true;
+    el.addEventListener('dragstart', drag);
+    e.target.appendChild(el);
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+      const expected = zone.getAttribute('data-word');
+      const given = zone.textContent.trim();
+      zone.classList.remove('correct', 'wrong');
+      zone.classList.add(given === expected ? 'correct' : 'wrong');
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    setupGame();
+    document.querySelectorAll('input[name="language"]').forEach(input =>
+      input.addEventListener('change', setupGame)
+    );
+  });
+</script>
+
+</body>
+</html>
