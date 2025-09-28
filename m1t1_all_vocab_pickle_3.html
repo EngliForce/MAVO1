@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Theme 1 - All Vocab Detective</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 220px;
+      background-color: #ff7043;
+      z-index: -1;
+    }
+
+    .logo-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #ff7043;
+      padding: 2rem 0 2rem 0;
+    }
+
+    img.logo {
+      max-width: 120px;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      color: white;
+      margin: 0;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 2rem 0;
+    }
+
+    .section {
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .word-card {
+      border: 2px solid #ff7043;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .word-to-guess {
+      font-size: 1.4rem;
+      color: #ff7043;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .hint {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #444;
+      text-align: center;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      width: 100%;
+    }
+
+    .score {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .turn {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar"></div>
+  <div class="logo-container">
+    <img src="Logo.png" alt="Logo" class="logo" />
+    <h1>Theme 1 - All Vocab Detective</h1>
+  </div>
+
+  <!-- Taalkeuze -->
+  <div style="margin-bottom: 1rem;">
+    <label for="languageSwitch">Taal / Language:</label>
+    <select id="languageSwitch" onchange="switchLanguage()">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+
+  <!-- Uitleg -->
+  <p class="description" id="instructions">
+    📋 <strong>Doel:</strong> Raad het <strong>Engelse woord</strong> met behulp van hints. <br /><br />
+    <strong>Start:</strong> – Begin het spel.<br />
+    <strong>Volgende hint:</strong> – Nieuwe hint (max. 3)<br />
+    <strong>Antwoord:</strong> – Laat het Engelse woord zien.<br />
+    <strong>Correct:</strong> – Speler krijgt punten.<br />
+    <strong>Fout:</strong> – Geen punten, volgende woord.<br /><br />
+    Minder hints = meer punten.<br />
+    Engelse hints = bonuspunt!
+  </p>
+
+  <!-- Spelinstellingen -->
+  <div class="section" id="setup">
+    <label for="playerCount">Aantal spelers:</label>
+    <select id="playerCount">
+      <option value="2">2 spelers</option>
+      <option value="1">1 speler</option>
+    </select>
+
+    <label for="player1">Speler 1:</label>
+    <input type="text" id="player1" placeholder="bijv. Sam" />
+
+    <div id="player2Section">
+      <label for="player2">Speler 2:</label>
+      <input type="text" id="player2" placeholder="bijv. Alex" />
+    </div>
+
+    <button onclick="startGame()">Start</button>
+  </div>
+
+  <!-- Spel -->
+  <div class="section" id="game" style="display: none;">
+    <div class="turn" id="turnIndicator">Speler: ...</div>
+
+    <div class="scoreboard">
+      <div><span id="name1"></span>: <span id="score1" class="score">0</span> punten</div>
+      <div id="player2Score"><span id="name2"></span>: <span id="score2" class="score">0</span> punten</div>
+    </div>
+
+    <div class="word-card" id="word-card">
+      <div class="word-to-guess" id="word-to-guess">Antwoord: —</div>
+
+      <label for="hintLanguage">Hinttaal:</label>
+      <select id="hintLanguage" onchange="resetClue()">
+        <option value="nl">Nederlands</option>
+        <option value="en">English</option>
+      </select>
+
+      <p class="hint" id="hint">Klik op ‘Volgende hint’ om te beginnen.</p>
+      <button onclick="nextHint()">Volgende hint</button>
+      <button onclick="showWord()">Antwoord</button>
+      <button onclick="correctGuess()">Correct</button>
+      <button onclick="wrongGuess()">Fout</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const words = [
+  { en: "address", nl: "adres", hints: { nl: ["Waar je woont.", "Straat en huisnummer.", "Adres."], en: ["Where you live.", "Street and number.", "Address."] }},
+  { en: "age", nl: "leeftijd", hints: { nl: ["Hoe oud je bent.", "In jaren.", "Leeftijd."], en: ["How old you are.", "In years.", "Age."] }},
+  { en: "birthday", nl: "verjaardag", hints: { nl: ["De dag waarop je geboren bent.", "Wordt gevierd elk jaar.", "Verjaardag."], en: ["The day you were born.", "Celebrated yearly.", "Birthday."] }},
+  { en: "city", nl: "stad", hints: { nl: ["Grotere plaats.", "Meer inwoners dan een dorp.", "Stad."], en: ["Big town.", "More people than a village.", "City."] }},
+  { en: "country", nl: "land", hints: { nl: ["Nederland is er één.", "Bestaat uit steden en dorpen.", "Land."], en: ["Like the Netherlands.", "Has cities and villages.", "Country."] }},
+  { en: "email address", nl: "e-mailadres", hints: { nl: ["Om e-mails te sturen.", "Bevat een @-teken.", "E-mailadres."], en: ["Used for sending email.", "Has an @ sign.", "Email address."] }},
+  { en: "first name", nl: "voornaam", hints: { nl: ["Je eigen naam.", "Niet je achternaam.", "Voornaam."], en: ["Your given name.", "Not your last name.", "First name."] }},
+  { en: "nationality", nl: "nationaliteit", hints: { nl: ["Bij welk land je hoort.", "Nederlander, Belg, etc.", "Nationaliteit."], en: ["The country you belong to.", "Dutch, Belgian, etc.", "Nationality."] }},
+  { en: "phone number", nl: "telefoonnummer", hints: { nl: ["Om te bellen.", "Bestaat uit cijfers.", "Telefoonnummer."], en: ["Used to call.", "Made of numbers.", "Phone number."] }},
+  { en: "postcode", nl: "postcode", hints: { nl: ["Bij je adres.", "Cijfers en letters.", "Postcode."], en: ["Part of your address.", "Numbers and letters.", "Postcode."] }},
+  { en: "surname / family name", nl: "achternaam", hints: { nl: ["Naam van je familie.", "Komt na je voornaam.", "Achternaam."], en: ["Family name.", "After your first name.", "Surname."] }},
+  { en: "freckles", nl: "sproeten", hints: { nl: ["Op je gezicht.", "Kleine bruine vlekjes.", "Sproeten."], en: ["On your face.", "Small brown spots.", "Freckles."] }},
+  { en: "glasses", nl: "bril", hints: { nl: ["Voor beter zicht.", "Draag je op je neus.", "Bril."], en: ["For better vision.", "Worn on your nose.", "Glasses."] }},
+  { en: "contact lenses", nl: "contactlenzen", hints: { nl: ["In je ogen.", "Als je geen bril wilt dragen.", "Contactlenzen."], en: ["In your eyes.", "Alternative to glasses.", "Contact lenses."] }},
+  { en: "height", nl: "lengte", hints: { nl: ["Hoe lang je bent.", "In centimeters.", "Lengte."], en: ["How tall you are.", "In centimeters.", "Height."] }},
+  { en: "build", nl: "postuur / lichaamsbouw", hints: { nl: ["Hoe je lichaam eruitziet.", "Slank, stevig, sportief.", "Postuur of lichaamsbouw."], en: ["Body shape.", "Slim, strong, athletic.", "Build."] }},
+  { en: "slim", nl: "slank", hints: { nl: ["Niet dik.", "Dun postuur.", "Slank."], en: ["Not fat.", "Thin build.", "Slim."] }},
+  { en: "athletic", nl: "sportief gebouwd", hints: { nl: ["Sterk lichaam.", "Als een sporter.", "Sportief gebouwd."], en: ["Strong body.", "Like an athlete.", "Athletic."] }},
+  { en: "looks", nl: "uiterlijk", hints: { nl: ["Hoe iemand eruitziet.", "Niet innerlijk.", "Uiterlijk."], en: ["How someone looks.", "Not personality.", "Looks."] }},
+  { en: "handsome", nl: "knap (voor jongens / mannen)", hints: { nl: ["Goed uitziende jongen.", "Aantrekkelijk gezicht.", "Knap."], en: ["Good-looking boy.", "Attractive face.", "Handsome."] }},
+  { en: "pretty", nl: "mooi (voor meisjes / vrouwen)", hints: { nl: ["Goed uitziend meisje.", "Aantrekkelijk gezicht.", "Mooi."], en: ["Good-looking girl.", "Attractive face.", "Pretty."] }},
+  { en: "aunt", nl: "tante", hints: { nl: ["Zus van je vader of moeder.", "Familielid.", "Tante."], en: ["Sister of your parent.", "Family member.", "Aunt."] }},
+  { en: "baby", nl: "baby", hints: { nl: ["Pasgeboren kind.", "Heel jong.", "Baby."], en: ["Newborn child.", "Very young.", "Baby."] }},
+  { en: "brother", nl: "broer", hints: { nl: ["Jongen in je gezin.", "Zoon van je ouders.", "Broer."], en: ["Boy in your family.", "Son of your parents.", "Brother."] }},
+  { en: "child", nl: "kind", hints: { nl: ["Nog geen volwassene.", "Jongen of meisje.", "Kind."], en: ["Not an adult.", "Boy or girl.", "Child."] }},
+  { en: "cousin", nl: "neef / nicht", hints: { nl: ["Kind van je oom of tante.", "Familielid.", "Neef of nicht."], en: ["Child of your aunt or uncle.", "Family member.", "Cousin."] }},
+  { en: "dad", nl: "papa", hints: { nl: ["Mannelijke ouder.", "Vader.", "Papa."], en: ["Male parent.", "Father.", "Dad."] }},
+  { en: "daughter", nl: "dochter", hints: { nl: ["Meisje van ouders.", "Tegenovergestelde van zoon.", "Dochter."], en: ["Girl child.", "Opposite of son.", "Daughter."] }},
+  { en: "family", nl: "familie", hints: { nl: ["Ouders, broers, zussen, enz.", "Je naasten.", "Familie."], en: ["Parents, siblings, etc.", "Your close ones.", "Family."] }},
+  { en: "father", nl: "vader", hints: { nl: ["Mannelijke ouder.", "Papa.", "Vader."], en: ["Male parent.", "Dad.", "Father."] }},
+  { en: "mother", nl: "moeder", hints: { nl: ["Vrouwelijke ouder.", "Mama.", "Moeder."], en: ["Female parent.", "Mum.", "Mother."] }},
+  { en: "parents", nl: "ouders", hints: { nl: ["Vader en moeder samen.", "Verzorgen je.", "Ouders."], en: ["Father and mother together.", "They care for you.", "Parents."] }},
+  { en: "sister", nl: "zus", hints: { nl: ["Meisje in je gezin.", "Dochter van je ouders.", "Zus."], en: ["Girl in your family.", "Daughter of your parents.", "Sister."] }},
+  { en: "son", nl: "zoon", hints: { nl: ["Jongen van ouders.", "Tegenovergestelde van dochter.", "Zoon."], en: ["Boy child.", "Opposite of daughter.", "Son."] }},
+  { en: "uncle", nl: "oom", hints: { nl: ["Broer van je vader of moeder.", "Familielid.", "Oom."], en: ["Brother of your parent.", "Family member.", "Uncle."] }},
+  { en: "wife", nl: "vrouw", hints: { nl: ["Gehuwd met een man.", "Vrouwelijke partner.", "Vrouw."], en: ["Married to a man.", "Female partner.", "Wife."] }},
+  { en: "foster family", nl: "pleeggezin", hints: { nl: ["Niet je echte ouders.", "Zorgen tijdelijk voor je.", "Pleeggezin."], en: ["Not your real parents.", "Take care of you.", "Foster family."] }},
+  { en: "godmother", nl: "peetmoeder", hints: { nl: ["Bij doop gekozen vrouw.", "Speciale band.", "Peetmoeder."], en: ["Chosen woman at baptism.", "Special connection.", "Godmother."] }},
+  { en: "godfather", nl: "peetvader", hints: { nl: ["Bij doop gekozen man.", "Speciale band.", "Peetvader."], en: ["Chosen man at baptism.", "Special connection.", "Godfather."] }},
+  { en: "grandmother", nl: "grootmoeder", hints: { nl: ["Moeder van je vader of moeder.", "Oma.", "Grootmoeder."], en: ["Mother of your parent.", "Grandma.", "Grandmother."] }},
+  { en: "grandfather", nl: "grootvader", hints: { nl: ["Vader van je vader of moeder.", "Opa.", "Grootvader."], en: ["Father of your parent.", "Grandpa.", "Grandfather."] }},
+  { en: "guardian", nl: "voogd", hints: { nl: ["Zorgt wettelijk voor je.", "Niet altijd familie.", "Voogd."], en: ["Legal carer.", "Not always family.", "Guardian."] }},
+  { en: "half-brother", nl: "halfbroer", hints: { nl: ["Deel ouders gemeenschappelijk.", "Niet volledig verwant.", "Halfbroer."], en: ["Share one parent.", "Not fully related.", "Half-brother."] }},
+  { en: "half-sister", nl: "halfzus", hints: { nl: ["Deel ouders gemeenschappelijk.", "Niet volledig verwant.", "Halfzus."], en: ["Share one parent.", "Not fully related.", "Half-sister."] }},
+  { en: "mum", nl: "mama", hints: { nl: ["Vrouwelijke ouder.", "Moeder.", "Mama."], en: ["Female parent.", "Mother.", "Mum."] }},
+  { en: "nephew", nl: "neef", hints: { nl: ["Zoon van je broer of zus.", "Familielid.", "Neef."], en: ["Son of your sibling.", "Family member.", "Nephew."] }},
+  { en: "niece", nl: "nicht", hints: { nl: ["Dochter van je broer of zus.", "Familielid.", "Nicht."], en: ["Daughter of your sibling.", "Family member.", "Niece."] }},
+  { en: "only child", nl: "enig kind", hints: { nl: ["Geen broers of zussen.", "Alleen kind in gezin.", "Enig kind."], en: ["No siblings.", "Only child in family.", "Only child."] }},
+  { en: "relatives", nl: "familieleden", hints: { nl: ["Leden van je familie.", "Opa, tante, broer, enz.", "Familieleden."], en: ["Family members.", "Grandpa, aunt, brother, etc.", "Relatives."] }},
+  { en: "siblings", nl: "broers en zussen", hints: { nl: ["Kinderen van dezelfde ouders.", "Broer of zus.", "Broers en zussen."], en: ["Same parents.", "Brother or sister.", "Siblings."] }},
+  { en: "stepfather", nl: "stiefvader", hints: { nl: ["Niet je echte vader.", "Getrouwd met je moeder.", "Stiefvader."], en: ["Not your real dad.", "Married to your mother.", "Stepfather."] }},
+  { en: "stepmother", nl: "stiefmoeder", hints: { nl: ["Niet je echte moeder.", "Getrouwd met je vader.", "Stiefmoeder."], en: ["Not your real mum.", "Married to your father.", "Stepmother."] }},
+  { en: "stepsister", nl: "stiefzus", hints: { nl: ["Niet biologische zus.", "Via huwelijk erbij gekomen.", "Stiefzus."], en: ["Not biological sister.", "Came by marriage.", "Stepsister."] }},
+  { en: "stepbrother", nl: "stiefbroer", hints: { nl: ["Niet biologische broer.", "Via huwelijk erbij gekomen.", "Stiefbroer."], en: ["Not biological brother.", "Came by marriage.", "Stepbrother."] }},
+  { en: "twins", nl: "tweeling", hints: { nl: ["Twee tegelijk geboren kinderen.", "Kunnen identiek zijn.", "Tweeling."], en: ["Two children born at once.", "Can look the same.", "Twins."] }},
+  { en: "art", nl: "beeldende vorming", hints: { nl: ["Creatief vak.", "Je tekent of schildert.", "Beeldende vorming."], en: ["Creative subject.", "You draw or paint.", "Art."] }},
+  { en: "biology", nl: "biologie", hints: { nl: ["Leer je over planten en dieren.", "Natuurwetenschap.", "Biologie."], en: ["Study of plants and animals.", "Science subject.", "Biology."] }},
+  { en: "Dutch", nl: "Nederlands", hints: { nl: ["Taalvak.", "Je leert lezen, schrijven en spreken.", "Nederlands."], en: ["Language subject.", "You learn to read and write.", "Dutch."] }},
+  { en: "English", nl: "Engels", hints: { nl: ["Taalvak.", "Je leert Engelse woorden.", "Engels."], en: ["Language subject.", "You learn English words.", "English."] }},
+  { en: "French", nl: "Frans", hints: { nl: ["Taalvak.", "Gaat over Frankrijk.", "Frans."], en: ["Language subject.", "Related to France.", "French."] }},
+  { en: "geography", nl: "aardrijkskunde", hints: { nl: ["Leer je over landen en natuur.", "Wereld en kaarten.", "Aardrijkskunde."], en: ["Study of the earth.", "Maps and countries.", "Geography."] }},
+  { en: "history", nl: "geschiedenis", hints: { nl: ["Leer je over het verleden.", "Over oude tijden.", "Geschiedenis."], en: ["Study of the past.", "About old times.", "History."] }},
+  { en: "maths", nl: "wiskunde", hints: { nl: ["Rekenen en formules.", "Getallen en sommen.", "Wiskunde."], en: ["Numbers and formulas.", "Calculations.", "Maths."] }},
+  { en: "music", nl: "muziek", hints: { nl: ["Vak met instrumenten en zang.", "Je leert over geluid.", "Muziek."], en: ["Subject with instruments and singing.", "You learn about sound.", "Music."] }},
+  { en: "PE", nl: "gymnastiek / LO", hints: { nl: ["Je beweegt en sport.", "In de gymzaal.", "Gymnastiek of LO."], en: ["You move and play sports.", "In the gym.", "PE."] }},
+  { en: "technology", nl: "techniek", hints: { nl: ["Vak met bouwen en ontwerpen.", "Gereedschap gebruiken.", "Techniek."], en: ["Subject with building and designing.", "Use tools.", "Technology."] }},
+  { en: "pen", nl: "pen", hints: { nl: ["Om mee te schrijven.", "Blauw of zwart.", "Pen."], en: ["Used to write.", "Blue or black.", "Pen."] }},
+  { en: "pencil", nl: "potlood", hints: { nl: ["Om mee te tekenen of schrijven.", "Grijs schrijfmiddel.", "Potlood."], en: ["For writing or drawing.", "Grey writing tool.", "Pencil."] }},
+  { en: "rubber", nl: "gum", hints: { nl: ["Om potlood weg te halen.", "Zacht blokje.", "Gum."], en: ["Erases pencil.", "Soft block.", "Rubber."] }},
+  { en: "ruler", nl: "liniaal", hints: { nl: ["Om rechte lijnen te trekken.", "Meet instrument.", "Liniaal."], en: ["Draw straight lines.", "Measuring tool.", "Ruler."] }},
+  { en: "scissors", nl: "schaar", hints: { nl: ["Om te knippen.", "Twee bladen.", "Schaar."], en: ["Used to cut.", "Two blades.", "Scissors."] }},
+  { en: "calculator", nl: "rekenmachine", hints: { nl: ["Voor sommen.", "Toestel met knoppen.", "Rekenmachine."], en: ["For math.", "Device with buttons.", "Calculator."] }},
+  { en: "textbook", nl: "leerboek", hints: { nl: ["Boek met theorie.", "Bij een vak.", "Leerboek."], en: ["Book with theory.", "Used in class.", "Textbook."] }},
+  { en: "workbook", nl: "werkboek", hints: { nl: ["Boek waar je in schrijft.", "Oefeningen maken.", "Werkboek."], en: ["Write in it.", "Practice exercises.", "Workbook."] }},
+  { en: "copybook", nl: "schrift", hints: { nl: ["Boekje om in te schrijven.", "Voor notities of huiswerk.", "Schrift."], en: ["Notebook.", "Used for notes or homework.", "Copybook."] }},
+  { en: "glue stick", nl: "lijmstift", hints: { nl: ["Om dingen te plakken.", "In stickvorm.", "Lijmstift."], en: ["To glue paper.", "Stick format.", "Glue stick."] }},
+  { en: "highlighter", nl: "markeerstift", hints: { nl: ["Maakt tekst opvallend.", "In felle kleuren.", "Markeerstift."], en: ["Makes text stand out.", "Bright colors.", "Highlighter."] }},
+  { en: "headphones", nl: "koptelefoon", hints: { nl: ["Voor je oren.", "Om geluid te horen.", "Koptelefoon."], en: ["For your ears.", "To hear sound.", "Headphones."] }},
+  { en: "pair of compasses", nl: "passer", hints: { nl: ["Voor cirkels tekenen.", "Heeft een punt en potlood.", "Passer."], en: ["To draw circles.", "Has a point and pencil.", "Pair of compasses."] }},
+  { en: "pencil case", nl: "etui", hints: { nl: ["Berg je pennen in op.", "Meestal van stof of plastic.", "Etui."], en: ["Store pens and pencils.", "Often made of fabric.", "Pencil case."] }},
+  { en: "protractor", nl: "geodriehoek", hints: { nl: ["Meet hoeken.", "Driehoekige vorm.", "Geodriehoek."], en: ["Measures angles.", "Triangle shape.", "Protractor."] }},
+  { en: "sharpener", nl: "puntenslijper", hints: { nl: ["Maakt potloden scherp.", "Klein voorwerp.", "Puntenslijper."], en: ["Sharpens pencils.", "Small object.", "Sharpener."] }},
+  { en: "sports kit", nl: "gymspullen", hints: { nl: ["Voor de gymles.", "Sportkleding en schoenen.", "Gymspullen."], en: ["For PE class.", "Sport clothes and shoes.", "Sports kit."] }},
+  { en: "ball", nl: "bal", hints: { nl: ["Om mee te spelen of sporten.", "Rond voorwerp.", "Bal."], en: ["Used in games or sports.", "Round object.", "Ball."] }},
+  { en: "dancing", nl: "dansen", hints: { nl: ["Bewegen op muziek.", "Leuke activiteit.", "Dansen."], en: ["Move to music.", "Fun activity.", "Dancing."] }},
+  { en: "painting", nl: "schilderen", hints: { nl: ["Je gebruikt verf.", "Maak kunst op papier of doek.", "Schilderen."], en: ["Use paint.", "Create art on canvas.", "Painting."] }},
+  { en: "reading", nl: "lezen", hints: { nl: ["Doe je met boeken.", "Voor verhalen of info.", "Lezen."], en: ["Done with books.", "For stories or info.", "Reading."] }},
+  { en: "playing football", nl: "voetballen", hints: { nl: ["Teamsport met bal.", "Doelpunten maken.", "Voetballen."], en: ["Team sport with a ball.", "Score goals.", "Playing football."] }},
+  { en: "playing the piano", nl: "piano spelen", hints: { nl: ["Muziekinstrument met toetsen.", "Zit vaak thuis of in school.", "Piano spelen."], en: ["Instrument with keys.", "Often at home or school.", "Playing the piano."] }},
+  { en: "playing guitar", nl: "gitaar spelen", hints: { nl: ["Muziekinstrument met snaren.", "Wordt vaak gebruikt in bands.", "Gitaar spelen."], en: ["Instrument with strings.", "Used in bands.", "Playing guitar."] }},
+  { en: "skateboarding", nl: "skateboarden", hints: { nl: ["Op een plank met wielen.", "Doe je op straat of skatepark.", "Skateboarden."], en: ["On a board with wheels.", "In street or skatepark.", "Skateboarding."] }},
+  { en: "swimming", nl: "zwemmen", hints: { nl: ["In water bewegen.", "In een zwembad of zee.", "Zwemmen."], en: ["Move in water.", "In pool or sea.", "Swimming."] }},
+  { en: "tennis", nl: "tennis", hints: { nl: ["Met racket en bal.", "Op een veld met net.", "Tennis."], en: ["With racket and ball.", "On a court with a net.", "Tennis."] }}
+    ];
+
+    let currentLang = 'nl';
+    let p1 = '', p2 = '', playerCount = 2;
+    let score = [0, 0];
+    let currentIndex = 0;
+    let currentHint = 0;
+    let currentPlayer = 0;
+
+    function startGame() {
+      playerCount = parseInt(document.getElementById("playerCount").value);
+      p1 = document.getElementById("player1").value || "Speler 1";
+      p2 = playerCount === 2 ? (document.getElementById("player2").value || "Speler 2") : "—";
+
+      shuffle(words);
+      score = [0, 0];
+      currentIndex = 0;
+      currentHint = 0;
+      currentPlayer = 0;
+
+      document.getElementById("name1").textContent = p1;
+      document.getElementById("name2").textContent = p2;
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
+
+      updateScore();
+      showTurn();
+      resetWordCard();
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function showTurn() {
+      const name = currentPlayer === 0 ? p1 : p2;
+      const text = playerCount === 1 ? `Speler: ${p1}` : `Beurt: ${name}`;
+      document.getElementById("turnIndicator").textContent = text;
+    }
+
+    function resetWordCard() {
+      document.getElementById("hint").textContent = "Klik op ‘Volgende hint’ om te beginnen.";
+      document.getElementById("word-to-guess").style.display = "none";
+    }
+
+    function nextHint() {
+      if (currentHint >= 3) return;
+      const lang = document.getElementById("hintLanguage").value;
+      const hint = words[currentIndex].hints[lang][currentHint];
+      document.getElementById("hint").textContent = `Hint ${currentHint + 1}: ${hint}`;
+      currentHint++;
+    }
+
+    function showWord() {
+      const answer = words[currentIndex].en;
+      document.getElementById("word-to-guess").textContent = `Antwoord (Engels): ${answer}`;
+      document.getElementById("word-to-guess").style.display = "block";
+    }
+
+    function correctGuess() {
+      const lang = document.getElementById("hintLanguage").value;
+      let points = 3 - (currentHint - 1);
+      if (lang === "en") points += 1;
+      score[currentPlayer] += points;
+      nextWord();
+    }
+
+    function wrongGuess() {
+      nextWord();
+    }
+
+    function nextWord() {
+      currentIndex++;
+      currentHint = 0;
+      if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+      updateScore();
+      if (currentIndex >= words.length) {
+        document.getElementById("hint").textContent = "🎉 Einde van het spel!";
+        document.getElementById("word-to-guess").style.display = "none";
+      } else {
+        showTurn();
+        resetWordCard();
+      }
+    }
+
+    function updateScore() {
+      document.getElementById("score1").textContent = score[0];
+      document.getElementById("score2").textContent = score[1];
+    }
+
+    function resetClue() {
+      currentHint = 0;
+      resetWordCard();
+    }
+
+    function switchLanguage() {
+      currentLang = document.getElementById('languageSwitch').value;
+      document.getElementById("hintLanguage").value = currentLang;
+    }
+  </script>
+</body>
+</html>
