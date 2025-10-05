@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adjective Quiz – Emoji Edition</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ff7043;
+      padding: 1rem 0;
+      text-align: center;
+    }
+    header img {
+      width: 120px;
+      height: auto;
+    }
+    header h1 {
+      color: white;
+      margin: 0.5rem 0 0;
+    }
+    h2 {
+      text-align: center;
+      color: #ff7043;
+      margin-top: 2rem;
+    }
+    .quiz-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .option {
+      padding: 0.6rem 1rem;
+      border: 2px solid #ff7043;
+      border-radius: 8px;
+      background-color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-align: left;
+    }
+    .option:hover {
+      background-color: #ffe6dc;
+    }
+    .option.correct {
+      border-color: green;
+      background-color: #e8fce8;
+    }
+    .option.incorrect {
+      border-color: red;
+      background-color: #ffecec;
+    }
+    .button-bar {
+      text-align: center;
+    }
+    .tab-button {
+      padding: 0.5rem 1rem;
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+    .feedback {
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #ff7043;
+      text-align: center;
+    }
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Logo.png" alt="Engliforce Logo">
+    <h1>🎯 Adjectives Quiz – Emoji Edition</h1>
+  </header>
+
+  <h2>Choose the adjective that best matches the emoji.</h2>
+
+  <div class="quiz-container" id="quiz">
+    <div class="question" id="question-text">Loading...</div>
+    <div class="options" id="option-buttons"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="button-bar">
+      <button class="tab-button" id="next-btn" onclick="nextQuestion()" disabled>➡ Next</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Engliforce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const allQuestions = [
+      { noun: "clown 🤡😂", correct: "funny", wrong: "boring" },
+      { noun: "cat 😺❤️", correct: "cute", wrong: "ugly" },
+      { noun: "elephant 🐘📏", correct: "big", wrong: "tiny" },
+      { noun: "turtle 🐢🐾", correct: "slow", wrong: "fast" },
+      { noun: "pizza 🍕🔥", correct: "hot", wrong: "cold" },
+      { noun: "snowman ☃️❄️", correct: "cold", wrong: "warm" },
+      { noun: "person 😈🔥", correct: "mean", wrong: "kind" },
+      { noun: "rabbit 🐇🧸", correct: "soft", wrong: "rough" },
+      { noun: "student 😴💤", correct: "tired", wrong: "energetic" },
+      { noun: "bee 🐝💼", correct: "busy", wrong: "lazy" },
+      { noun: "lion 🦁🛡️", correct: "brave", wrong: "scared" },
+      { noun: "ghost 👻😱", correct: "scary", wrong: "funny" },
+      { noun: "rose 🌹😍", correct: "beautiful", wrong: "ugly" },
+      { noun: "mouse 🐭🔍", correct: "tiny", wrong: "huge" },
+      { noun: "baby 👶🍼", correct: "young", wrong: "old" },
+      { noun: "owl 🦉🎓", correct: "wise", wrong: "silly" },
+      { noun: "sun ☀️😎", correct: "bright", wrong: "dark" },
+      { noun: "sofa 🛋️😌", correct: "comfortable", wrong: "hard" },
+      { noun: "cloud 🌧️💧", correct: "wet", wrong: "dry" },
+      { noun: "pencil ✏️✂️", correct: "sharp", wrong: "dull" },
+      { noun: "rock 🪨👊", correct: "hard", wrong: "soft" },
+      { noun: "feather 🪶🎈", correct: "light", wrong: "heavy" },
+      { noun: "apple 🍎❤️", correct: "red", wrong: "green" },
+      { noun: "banana 🍌☀️", correct: "yellow", wrong: "purple" },
+      { noun: "zebra 🦓🎨", correct: "striped", wrong: "plain" },
+      { noun: "snowball ❄️⚪", correct: "round", wrong: "flat" },
+      { noun: "lollipop 🍭😋", correct: "sweet", wrong: "sour" },
+      { noun: "lemon 🍋😖", correct: "sour", wrong: "sweet" },
+      { noun: "witch 🧙‍♀️👵", correct: "old", wrong: "young" },
+      { noun: "penguin 🐧❄️", correct: "cold", wrong: "hot" },
+      { noun: "car 🏎️💨", correct: "fast", wrong: "slow" },
+      { noun: "book 📚🤔", correct: "interesting", wrong: "boring" },
+      { noun: "snake 🐍📏", correct: "long", wrong: "short" },
+      { noun: "jelly 🪼🔁", correct: "wobbly", wrong: "stiff" },
+      { noun: "bed 🛏️🧸", correct: "soft", wrong: "hard" },
+      { noun: "puzzle 🧩🧠", correct: "difficult", wrong: "easy" },
+      { noun: "basketball 🏀🔁", correct: "bouncy", wrong: "flat" },
+      { noun: "fox 🦊🧠", correct: "clever", wrong: "foolish" },
+      { noun: "tree 🌳📏", correct: "tall", wrong: "short" },
+      { noun: "door 🚪🔓", correct: "open", wrong: "closed" },
+      { noun: "moon 🌕🔇", correct: "quiet", wrong: "loud" },
+      { noun: "alarm clock ⏰🔊", correct: "loud", wrong: "quiet" },
+      { noun: "balloon 🎈💨", correct: "empty", wrong: "full" },
+      { noun: "monster 👹😠", correct: "mean", wrong: "nice" },
+      { noun: "doll 🪆🌸", correct: "pretty", wrong: "ugly" },
+      { noun: "carrot 🥕🧡", correct: "orange", wrong: "purple" },
+      { noun: "koala 🐨💤", correct: "sleepy", wrong: "awake" },
+      { noun: "mirror 🪞✨", correct: "clean", wrong: "dirty" },
+      { noun: "mud puddle 🌧️💩", correct: "dirty", wrong: "clean" },
+      { noun: "fire 🔥🌡️", correct: "hot", wrong: "cold" }
+    ];
+
+    let quizQuestions = [];
+    let currentIndex = 0;
+    let correctAnswers = 0;
+
+    const questionText = document.getElementById('question-text');
+    const optionButtons = document.getElementById('option-buttons');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+
+    function getArticle(word) {
+      return /^[aeiou]/i.test(word) ? "An" : "A";
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function startQuiz() {
+      quizQuestions = [...allQuestions];
+      shuffleArray(quizQuestions);
+      quizQuestions = quizQuestions.slice(0, 20); // Load more in case of mistakes
+      currentIndex = 0;
+      correctAnswers = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizQuestions[currentIndex];
+      questionText.textContent = `A/An ___ ${q.noun}.`;
+      feedback.textContent = "";
+      nextBtn.disabled = true;
+
+      const options = [q.correct, q.wrong];
+      shuffleArray(options);
+
+      optionButtons.innerHTML = '';
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.className = 'option';
+        btn.onclick = () => selectAnswer(btn, opt, q.correct, q.noun);
+        optionButtons.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(button, selected, correct, noun) {
+      const buttons = document.querySelectorAll('.option');
+      buttons.forEach(btn => btn.disabled = true);
+
+      const article = getArticle(correct);
+
+      if (selected === correct) {
+        button.classList.add('correct');
+        feedback.textContent = `✅ Correct! ${article} ${correct} ${noun}.`;
+        correctAnswers++;
+      } else {
+        button.classList.add('incorrect');
+        feedback.textContent = `❌ Wrong. The correct answer is: ${article} ${correct} ${noun}.`;
+      }
+
+      nextBtn.disabled = false;
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (correctAnswers >= 10) {
+        showResult();
+      } else {
+        showQuestion();
+      }
+    }
+
+    function showResult() {
+      questionText.textContent = `🎉 You answered 10 questions correctly!`;
+      optionButtons.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+    }
+
+    // Start the quiz
+    startQuiz();
+  </script>
+
+</body>
+</html>
