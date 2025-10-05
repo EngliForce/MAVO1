@@ -75,22 +75,17 @@
     font-size: 0.9rem;
   }
 
- .video-container {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 verhouding */
-  height: 0;
-  overflow: hidden;
-  max-width: 600px;   /* Niet te groot */
-  margin: 0 auto;     /* Centreert de video */
+.video-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 .video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;     /* Volledige breedte van de container */
-  height: 100%;    /* Verhoudingsgewijs */
-  border: 0;
+  width: 100%;
+  max-width: 560px;   /* Maximaal 560px breed */
+  aspect-ratio: 16 / 9;
+  border: none;
 }
 </style>
 </head>
@@ -186,6 +181,7 @@
 
 </body>
 </html>
+
 
 
 
