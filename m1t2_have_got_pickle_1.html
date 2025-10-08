@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag & Drop – Have Got</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #43a047;
+      padding: 1rem 0;
+      text-align: center;
+    }
+    header img {
+      width: 120px;
+      height: auto;
+    }
+    header h1 {
+      color: white;
+      margin: 0.5rem 0 0;
+    }
+    h2 {
+      text-align: center;
+      color: #43a047;
+      margin-top: 2rem;
+    }
+    .dropzones {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .dropzone {
+      border: 2px dashed #43a047;
+      border-radius: 8px;
+      width: 200px;
+      min-height: 150px;
+      padding: 1rem;
+      text-align: center;
+      background-color: #ffffff;
+      transition: background-color 0.3s;
+    }
+    .dropzone h3 {
+      margin-top: 0;
+      color: #43a047;
+    }
+    .drag-items {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .drag-item {
+      background-color: white;
+      border: 2px solid #43a047;
+      border-radius: 12px;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      color: #333;
+      cursor: grab;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: border-color 0.3s;
+    }
+    .correct {
+      border-color: #2e7d32 !important;
+    }
+    .incorrect {
+      border-color: #c62828 !important;
+    }
+    .button-bar {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .tab-button {
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0 0.5rem;
+    }
+    .tab-button:hover {
+      background-color: #388e3c;
+    }
+    footer {
+      background-color: #e0f2f1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Logo.png" alt="Engliforce Logo">
+    <h1>🔤 Drag & Drop – Have Got</h1>
+  </header>
+
+  <h2>🧲 Sleep het juiste onderwerp naar <em>have</em> of <em>has</em></h2>
+
+  <!-- Dropzones -->
+  <div class="dropzones">
+    <div class="dropzone" data-group="have">
+      <h3>have</h3>
+    </div>
+    <div class="dropzone" data-group="has">
+      <h3>has</h3>
+    </div>
+  </div>
+
+  <!-- Drag items -->
+  <div class="drag-items" id="drag-items">
+    <!-- Items worden dynamisch toegevoegd -->
+  </div>
+
+  <!-- Buttons -->
+  <div class="button-bar">
+    <button class="tab-button" onclick="checkAnswers()">✔ Controleer</button>
+    <button class="tab-button" onclick="reset()">🔄 Opnieuw</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Engliforce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const dragContainer = document.getElementById('drag-items');
+    const dropzones = document.querySelectorAll('.dropzone');
+
+    let draggedItem = null;
+
+    const items = [
+      { text: 'I', correct: 'have' },
+      { text: 'You', correct: 'have' },
+      { text: 'We', correct: 'have' },
+      { text: 'They', correct: 'have' },
+      { text: 'He', correct: 'has' },
+      { text: 'She', correct: 'has' },
+      { text: 'It', correct: 'has' }
+    ];
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function renderItems() {
+      dragContainer.innerHTML = '';
+      const shuffledItems = [...items];
+      shuffleArray(shuffledItems);
+
+      shuffledItems.forEach(({ text, correct }) => {
+        const el = document.createElement('div');
+        el.className = 'drag-item';
+        el.setAttribute('draggable', 'true');
+        el.setAttribute('data-correct', correct);
+        el.textContent = text;
+
+        el.addEventListener('dragstart', () => {
+          draggedItem = el;
+        });
+
+        dragContainer.appendChild(el);
+      });
+    }
+
+    dropzones.forEach(zone => {
+      zone.addEventListener('dragover', e => e.preventDefault());
+
+      zone.addEventListener('drop', () => {
+        if (draggedItem) {
+          zone.appendChild(draggedItem);
+          draggedItem = null;
+        }
+      });
+    });
+
+    function checkAnswers() {
+      document.querySelectorAll('.drag-item').forEach(item => {
+        const expected = item.getAttribute('data-correct');
+        const parent = item.parentElement;
+        const actual = parent.getAttribute('data-group');
+
+        item.classList.remove('correct', 'incorrect');
+
+        if (expected === actual) {
+          item.classList.add('correct');
+        } else {
+          item.classList.add('incorrect');
+        }
+      });
+    }
+
+    function reset() {
+      document.querySelectorAll('.drag-item').forEach(item => {
+        item.classList.remove('correct', 'incorrect');
+      });
+      renderItems();
+    }
+
+    // Init
+    renderItems();
+  </script>
+
+</body>
+</html>
