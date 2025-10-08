@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Have Got Reflex Game (100 zinnen)</title>
+  <title>Have Got Reflex Game</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -87,6 +87,11 @@
       display: none;
     }
 
+    #feedback-text {
+      font-size: 1.2rem;
+      color: #d32f2f;
+    }
+
     footer {
       background-color: #e0f2f1;
       padding: 1rem;
@@ -103,10 +108,6 @@
 <div class="game-container">
   <!-- Setup scherm -->
   <div id="setup-screen">
-    <h2>Kies modus:</h2>
-    <button class="btn" id="btn-full" onclick="selectMode('full')">Volledige vormen</button>
-    <button class="btn" id="btn-short" onclick="selectMode('short')">Afkortingen</button>
-
     <h2>Kies snelheid (level):</h2>
     <div>
       <button class="btn" onclick="selectLevel(1)">1 (langzaam)</button>
@@ -130,9 +131,15 @@
       <div class="sentence" id="sentence">...</div>
     </div>
     <div class="answer-buttons">
-      <button class="btn" id="btn-have-got"></button>
-      <button class="btn" id="btn-has-got"></button>
+      <button class="btn" id="btn-have-got">have got</button>
+      <button class="btn" id="btn-has-got">has got</button>
     </div>
+  </div>
+
+  <!-- Feedback -->
+  <div id="feedback" class="hidden">
+    <p id="feedback-text"></p>
+    <button class="btn" onclick="continueGame()">✅ Try again</button>
   </div>
 
   <!-- Game Over -->
@@ -151,11 +158,9 @@
   const sentenceEl = document.getElementById('sentence');
   const levelUpMessage = document.getElementById('level-up-message');
 
-  let mode = '';
   let levelSpeed = 0;
   let score = 0;
   let lives = 3;
-  let modeSelected = false;
   let levelSelected = false;
 
   const levelSpeeds = {
@@ -166,91 +171,22 @@
     5: 2500
   };
 
- const allSubjectsHave = [
-  "I", "You", "We", "They", "My friends", "Your friends", "Our classmates", "The students",
-  "The children", "Tom and Jerry", "Emma and Olivia", "Liam and Noah", "Max and Sam", "The twins",
-  "Sophie and Lily", "Lucas and Mason", "Jack and Harry", "Ben and Tom", "Ava and Ella", "The boys",
-  "The girls", "Sara and her friends", "The teachers", "The parents", "Some kids", "The team members",
-  "Both teams", "You all", "We all", "The neighbours", "The dogs", "These cats", "Those birds",
-  "All of us", "The players", "The robots", "My cousins", "The brothers", "The sisters", "Your classmates",
-  "The musicians", "The artists", "My grandparents", "The builders", "The hikers", "The campers",
-  "Our neighbours", "Your teammates", "These students", "These people", "The winners", "My uncles",
-  "Your aunts", "Our leaders", "Some girls", "Some boys", "All of them", "The audience", "The judges",
-  "The dancers", "The actors", "The engineers", "The fans", "The readers", "The writers", "My classmates",
-  "Our teammates", "The competitors", "The kids at school", "The footballers", "Those kids", "All my friends",
-  "The gardeners", "Our group", "The chefs", "The bakers", "These workers", "The swimmers", "The runners",
-  "The climbers", "The organizers", "These helpers", "The volunteers", "The members", "The guests",
-  "The customers", "The drivers", "The students in class", "My teammates", "The explorers", "The designers",
-  "The group of kids", "The people outside", "The gamers", "The coders", "The presenters", "Those twins",
-  "The baseball players", "The singers", "The puppets", "The travelers", "The tourists", "Our guests"
-];
-
- const allSubjectsHas = [
-  "He", "She", "It", "Tom", "Sara", "Emma", "Liam", "Olivia", "Mason", "Chloe",
-  "Sophie", "Ella", "Lucas", "Noah", "Ava", "Jack", "Ben", "Harry", "Nora", "Leo",
-  "My dad", "My mom", "My teacher", "My brother", "My sister", "My cousin", "My uncle",
-  "My aunt", "My friend", "Our neighbour", "His dad", "Her mom", "His friend", "Her friend",
-  "The baby", "The boy", "The girl", "The child", "The student", "The cat", "The dog", "The fish",
-  "The bird", "The robot", "The player", "The teacher", "The coach", "The singer", "The actor",
-  "The dancer", "The writer", "The painter", "The chef", "The baker", "The driver", "The visitor",
-  "The guest", "The neighbour", "The doctor", "The nurse", "The farmer", "The swimmer", "The runner",
-  "The gamer", "The climber", "The explorer", "The magician", "The waiter", "The leader", "The artist",
-  "The student in class", "The astronaut", "The presenter", "The superhero", "The policeman",
-  "The fireman", "The princess", "The prince", "The queen", "The king", "The president", "The mayor",
-  "The librarian", "The janitor", "The pilot", "The mechanic", "The janitor", "The animal", "The monster",
-  "The dragon", "The pirate", "The zombie", "The wizard", "The elf", "The alien", "The knight",
-  "The unicorn", "The troll", "The villain", "The superhero dog", "My little sister", "The goldfish"
-];
-
-const objects = [
-  "a red car", "a new phone", "a green pencil", "a cool backpack", "a funny story", "a pen", "a book",
-  "a blue bike", "a water bottle", "a secret", "a gift", "a pencil case", "a soccer ball", "a sandwich",
-  "a question", "some money", "a new bag", "an old camera", "a broken laptop", "a smartphone", "a scarf",
-  "a pair of socks", "a cool T-shirt", "a skateboard", "a violin", "a trumpet", "a coloring book",
-  "a comic", "a smartwatch", "a cap", "a hoodie", "a toy car", "a lunchbox", "a bottle of juice",
-  "a map", "a game console", "a torch", "a photo", "a pair of shoes", "a necklace", "a bracelet",
-  "a box of crayons", "a blue folder", "a math book", "a science kit", "a dictionary", "a calendar",
-  "a globe", "a computer", "a pet dog", "a cat", "a rabbit", "a goldfish", "a hamster", "a cage",
-  "a chair", "a desk", "a sofa", "a plant", "a remote control", "a kite", "a robot", "a dinosaur toy",
-  "a soccer jersey", "a trophy", "a medal", "a backpack", "a charger", "a light", "a snack",
-  "a pair of glasses", "a mirror", "a picture frame", "a sleeping bag", "a tent", "a marshmallow stick",
-  "a flashlight", "a winter coat", "a raincoat", "an umbrella", "a set of keys", "a clock", "a ruler",
-  "a paper plane", "a robot arm", "a camera", "a drone", "a remote-control car", "a trampoline",
-  "a diary", "a poster", "a sticker album", "a pencil sharpener", "a bottle of glue", "a pair of boots",
-  "a hat", "a birthday card", "a puzzle", "a video game", "a USB stick", "a banana", "an apple"
-];
-
+  const allSubjectsHave = ["I", "You", "We", "They", "My friends", "The kids"];
+  const allSubjectsHas = ["He", "She", "It", "Tom", "Sara", "The dog"];
+  const objects = ["a bike", "a pen", "a red car", "a backpack", "a new phone", "a funny story"];
 
   const allSentences = [];
-
   for (let i = 0; i < 100; i++) {
     const isHave = Math.random() < 0.5;
     const subject = isHave
       ? allSubjectsHave[Math.floor(Math.random() * allSubjectsHave.length)]
       : allSubjectsHas[Math.floor(Math.random() * allSubjectsHas.length)];
     const object = objects[Math.floor(Math.random() * objects.length)];
-    const correctFull = isHave ? "have got" : "has got";
-    const correctShort = isHave ? "’ve got" : "’s got";
+    const correct = isHave ? "have got" : "has got";
     allSentences.push({
       sentence: `${subject} ___ ${object}.`,
-      correctFull,
-      correctShort
+      correct
     });
-  }
-
-  function selectMode(selected) {
-    mode = selected;
-    modeSelected = true;
-    document.getElementById('btn-full').classList.remove('active');
-    document.getElementById('btn-short').classList.remove('active');
-    document.getElementById(`btn-${selected}`).classList.add('active');
-    updateAnswerButtons();
-    checkStartReady();
-  }
-
-  function updateAnswerButtons() {
-    document.getElementById('btn-have-got').textContent = mode === 'short' ? "’ve got" : "have got";
-    document.getElementById('btn-has-got').textContent = mode === 'short' ? "’s got" : "has got";
   }
 
   function selectLevel(level) {
@@ -261,13 +197,7 @@ const objects = [
       if (btn.textContent.includes('(')) btn.classList.remove('active');
     });
     event.target.classList.add('active');
-    checkStartReady();
-  }
-
-  function checkStartReady() {
-    if (modeSelected && levelSelected) {
-      document.getElementById('startBtn').disabled = false;
-    }
+    document.getElementById('startBtn').disabled = false;
   }
 
   function startGame() {
@@ -280,18 +210,17 @@ const objects = [
     showSentence();
 
     document.getElementById('btn-have-got').addEventListener('click', () => {
-      submitAnswer(document.getElementById('btn-have-got').textContent);
+      submitAnswer("have got");
     });
     document.getElementById('btn-has-got').addEventListener('click', () => {
-      submitAnswer(document.getElementById('btn-has-got').textContent);
+      submitAnswer("has got");
     });
   }
 
   function showSentence() {
     const random = allSentences[Math.floor(Math.random() * allSentences.length)];
     sentenceEl.textContent = random.sentence.replace('___', '____');
-    sentenceEl.dataset.correctFull = random.correctFull;
-    sentenceEl.dataset.correctShort = random.correctShort;
+    sentenceEl.dataset.correct = random.correct;
 
     clearTimeout(sentenceEl.timeoutId);
     sentenceEl.timeoutId = setTimeout(() => {
@@ -301,23 +230,16 @@ const objects = [
 
   function submitAnswer(choice) {
     clearTimeout(sentenceEl.timeoutId);
-    const correct = mode === 'short'
-      ? sentenceEl.dataset.correctShort
-      : sentenceEl.dataset.correctFull;
+    const correct = sentenceEl.dataset.correct;
 
     if (choice === correct) {
       score++;
       checkLevelUp();
+      showSentence();
     } else {
       lives--;
-    }
-
-    updateUI();
-
-    if (lives <= 0) {
-      gameOver();
-    } else {
-      showSentence();
+      updateUI();
+      showFeedback(correct);
     }
   }
 
@@ -325,12 +247,7 @@ const objects = [
     clearTimeout(sentenceEl.timeoutId);
     lives--;
     updateUI();
-
-    if (lives <= 0) {
-      gameOver();
-    } else {
-      showSentence();
-    }
+    showFeedback(sentenceEl.dataset.correct);
   }
 
   function checkLevelUp() {
@@ -352,8 +269,25 @@ const objects = [
     document.getElementById('stars').textContent = '⭐ '.repeat(lives).trim();
   }
 
+  function showFeedback(correct) {
+    document.getElementById('feedback-text').textContent = `Oops! Het juiste antwoord was: "${correct}"`;
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('feedback').classList.remove('hidden');
+  }
+
+  function continueGame() {
+    document.getElementById('feedback').classList.add('hidden');
+    if (lives <= 0) {
+      gameOver();
+    } else {
+      document.getElementById('game').classList.remove('hidden');
+      showSentence();
+    }
+  }
+
   function gameOver() {
     document.getElementById('game').classList.add('hidden');
+    document.getElementById('feedback').classList.add('hidden');
     document.getElementById('game-over').classList.remove('hidden');
     document.getElementById('final-score').textContent = `Je eindscore: ${score}`;
   }
@@ -361,3 +295,5 @@ const objects = [
 
 </body>
 </html>
+
+
