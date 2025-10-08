@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>4 in a Row – Have Got Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff8;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header-bar {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem 1rem;
+    }
+
+    .header-bar img {
+      width: 120px;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-bar h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    #start-screen {
+      padding: 2rem;
+    }
+
+    input {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .game-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2rem;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .question-box {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+
+    .question {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .option-btn {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .option-btn:hover {
+      background-color: #388e3c;
+    }
+
+    #feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+
+    #play-on,
+    #try-again {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #43a047;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 60px);
+      gap: 5px;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-color: #d4edda;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .red { background-color: #f44336 !important; }
+    .yellow { background-color: #ffee58 !important; }
+
+    .player-turn {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: #43a047;
+      font-weight: bold;
+    }
+
+    #winner {
+      font-size: 1.8rem;
+      color: #2e7d32;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+
+    footer {
+      background-color: #e0f2f1;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <img src="Logo.png" alt="EngliForce Logo">
+    <h1>🎯 4 in a Row – Have Got Challenge</h1>
+  </div>
+
+  <!-- Start screen -->
+  <div id="start-screen">
+    <h2>Choose number of players</h2>
+    <button onclick="choosePlayers(1)">1 Player</button>
+    <button onclick="choosePlayers(2)">2 Players</button>
+    <div id="name-fields"></div>
+  </div>
+
+  <!-- Game -->
+  <div class="player-turn" id="player-turn"></div>
+
+  <div class="game-container" id="game" style="display: none;">
+    <div class="question-box">
+      <div class="question" id="question">Loading...</div>
+      <div class="options" id="options"></div>
+      <div id="feedback"></div>
+      <button id="play-on">Play on</button>
+      <div id="winner"></div>
+      <button id="try-again" onclick="restartGame()">Try Again</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+const questions = [
+  { text: "My brother ___ a new backpack. His is 10 years old.", answer: "hasn't got" },
+  { text: "We ___ a new football. It’s red and shiny.", answer: "have got" },
+  { text: "She ___ a pen in her bag. She never has one.", answer: "hasn't got" },
+  { text: "They ___ any pencils today, only pens.", answer: "haven't got" },
+  { text: "He ___ a blue bike. It's parked outside.", answer: "has got" },
+  { text: "I ___ a big collection of stickers. I love collecting them.", answer: "have got" },
+  { text: "You ___ a map on your wall. It shows all the countries.", answer: "have got" },
+  { text: "Lucy and Ava ___ matching T-shirts! They look like twins.", answer: "have got" },
+  { text: "She ___ a green backpack. It's next to her desk.", answer: "has got" },
+  { text: "Tom and Jerry ___ three pet rabbits. They love animals!", answer: "have got" },
+  { text: "Liam and I ___ our football kits. We forgot them at home.", answer: "haven't got" },
+  { text: "He ___ his lunch today. He left it on the kitchen table.", answer: "hasn't got" },
+  { text: "We ___ science class on Mondays. It's always fun.", answer: "have got" },
+  { text: "My dad ___ a red car. It’s very fast.", answer: "has got" },
+  { text: "The bird ___ bright feathers. They're red and yellow.", answer: "has got" },
+  { text: "They ___ a sandcastle at the beach. It was huge!", answer: "have got" },
+  { text: "I ___ two goldfish. Their names are Bubbles and Splash.", answer: "have got" },
+  { text: "Sophie ___ a pet turtle. It lives in a small tank.", answer: "has got" },
+  { text: "Emma ___ long hair. It goes past her shoulders.", answer: "has got" },
+  { text: "We ___ new crayons for art. They are all sharp and colorful.", answer: "have got" },
+  { text: "The baby ___ tiny socks. They're so cute!", answer: "has got" },
+  { text: "He ___ a younger sister. She’s in Year 3.", answer: "has got" },
+  { text: "You ___ the same shoes as me! That’s so cool.", answer: "have got" },
+  { text: "She ___ stickers on her folder. It’s completely covered.", answer: "has got" },
+  { text: "Olivia ___ a world map on her wall. She loves geography.", answer: "has got" },
+  { text: "They ___ any rulers in their bags. They left them at home.", answer: "haven't got" },
+  { text: "My teacher ___ a loud voice. We always hear her clearly.", answer: "has got" },
+  { text: "I ___ a red pen. Can I use yours?", answer: "haven't got" },
+  { text: "Noah and Liam ___ time to play today. It’s almost home time.", answer: "haven't got" },
+  { text: "She ___ a football match later. She's really excited.", answer: "has got" },
+  { text: "We ___ art class after lunch. I can't wait!", answer: "have got" },
+  { text: "He ___ a pencil case full of coloured pens. He shares them with us.", answer: "has got" },
+  { text: "They ___ any glue sticks. We can’t finish the project.", answer: "haven't got" },
+  { text: "You ___ a lot of pencils in your case. Enough for everyone!", answer: "have got" },
+  { text: "I ___ a twin brother. We look exactly the same.", answer: "have got" },
+  { text: "Luna ___ a banana for lunch. She eats one every day.", answer: "has got" },
+  { text: "She ___ a bracelet from Spain. Her grandma gave it to her.", answer: "has got" },
+  { text: "He ___ freckles on his nose. They’re really cute.", answer: "has got" },
+  { text: "Liam and Mason ___ their homework. They forgot it again.", answer: "haven't got" },
+  { text: "My friends ___ jackets today. They’re cold outside.", answer: "haven't got" },
+  { text: "You ___ a nice singing voice. Everyone claps!", answer: "have got" },
+  { text: "We ___ a picnic planned. It’s going to be fun!", answer: "have got" },
+  { text: "Sophie and I ___ an idea for the project. It's creative!", answer: "have got" },
+  { text: "Emma ___ any apples. She only brought a banana.", answer: "hasn't got" },
+  { text: "I ___ a wobbly tooth. Look at it!", answer: "have got" },
+  { text: "Tom ___ a calculator. He’s borrowing mine.", answer: "hasn't got" },
+  { text: "Jamal and I ___ funny stories. We always make people laugh.", answer: "have got" },
+  { text: "He ___ a phone. He never brings one to school.", answer: "hasn't got" },
+  { text: "Chloe and Mia ___ matching hats. They bought them together.", answer: "have got" },
+  { text: "Sarah ___ a lovely smile. It lights up the room.", answer: "has got" },
+  { text: "They ___ a swimming pool at home. We swim every summer.", answer: "have got" },
+  { text: "The cat ___ green eyes. They glow in the dark.", answer: "has got" },
+  { text: "I ___ a question. Can I ask you?", answer: "have got" },
+  { text: "You ___ a cool backpack. Where did you get it?", answer: "have got" },
+  { text: "He ___ any socks on. He’s wearing sandals!", answer: "hasn't got" },
+  { text: "Liam ___ a new hoodie. It’s super warm.", answer: "has got" },
+  { text: "We ___ any board games at school. Let’s bring some!", answer: "haven't got" },
+  { text: "She ___ a lunchbox but left it at home.", answer: "hasn't got" },
+  { text: "Tom and Jerry ___ matching bikes. They look the same.", answer: "have got" },
+  { text: "Mister Sebel ___ a lightsaber.", answer: "has got" },
+  { text: "My teachers ___ very funny jokes. They always make us laugh.", answer: "have got" },
+  { text: "Lucy ___ a guitar. She plays every evening.", answer: "has got" }
+];
+
+
+
+    let gameMode = 1;
+    let players = ["Player", "Computer"];
+    let currentPlayer = 0;
+    const colors = ['red', 'yellow'];
+    let board = Array(7).fill().map(() => Array(7).fill(''));
+    let gameStarted = false;
+    let currentAnswer = '';
+    let gameOver = false;
+
+    function choosePlayers(mode) {
+      gameMode = mode;
+      const container = document.getElementById("name-fields");
+      container.innerHTML = "";
+      if (mode === 1) {
+        container.innerHTML = `<br><input type="text" id="name1" placeholder="Your name">
+                               <br><button onclick="startGame()">Start Game</button>`;
+      } else {
+        container.innerHTML = `<br><input type="text" id="name1" placeholder="Player 1 name">
+                               <input type="text" id="name2" placeholder="Player 2 name">
+                               <br><button onclick="startGame()">Start Game</button>`;
+      }
+    }
+
+    function startGame() {
+      const name1 = document.getElementById("name1").value || "Player 1";
+      const name2 = gameMode === 2 ? (document.getElementById("name2").value || "Player 2") : "Computer";
+      players = [name1, name2];
+
+      currentPlayer = 0; // Always start with Player 1
+
+      document.getElementById("start-screen").style.display = "none";
+      document.getElementById("game").style.display = "flex";
+      document.getElementById("try-again").style.display = "none";
+      document.getElementById("winner").textContent = '';
+      renderGrid();
+      nextQuestion();
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      board = Array(7).fill().map(() => Array(7).fill(''));
+      for (let row = 0; row < 7; row++) {
+        for (let col = 0; col < 7; col++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = row;
+          cell.dataset.col = col;
+          cell.addEventListener('click', () => handleMove(col));
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    function nextQuestion() {
+      if (gameOver) return;
+      gameStarted = false;
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("play-on").style.display = "none";
+      const q = questions[Math.floor(Math.random() * questions.length)];
+      currentAnswer = q.answer;
+      document.getElementById("question").textContent = q.text;
+      document.getElementById("player-turn").textContent = `👉 ${players[currentPlayer]}'s turn`;
+
+      const opts = ["have got", "has got", "haven't got", "hasn't got"];
+      shuffle(opts);
+      const container = document.getElementById("options");
+      container.innerHTML = '';
+      opts.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(opt);
+        container.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(opt) {
+      const isCorrect = opt === currentAnswer;
+      const feedback = document.getElementById("feedback");
+      const playOnBtn = document.getElementById("play-on");
+
+      if (isCorrect) {
+        gameStarted = true;
+        feedback.textContent = "";
+        playOnBtn.style.display = "none";
+        document.getElementById("player-turn").textContent = `${players[currentPlayer]}, choose a cell!`;
+      } else {
+        feedback.textContent = `❌ Incorrect. Correct answer: "${currentAnswer}"`;
+        playOnBtn.style.display = "inline-block";
+        playOnBtn.onclick = () => {
+          playOnBtn.style.display = "none";
+          feedback.textContent = "";
+          if (gameMode === 1 && currentPlayer === 0) {
+            document.getElementById("player-turn").textContent = `🤖 Computer is thinking...`;
+            setTimeout(() => {
+              computerMove();
+              currentPlayer = 0;
+              nextQuestion();
+            }, 800);
+          } else {
+            currentPlayer = 1 - currentPlayer;
+            nextQuestion();
+          }
+        };
+      }
+    }
+
+    function handleMove(col) {
+      if (!gameStarted || gameOver) return;
+      for (let row = 6; row >= 0; row--) {
+        if (!board[row][col]) {
+          const color = colors[currentPlayer];
+          board[row][col] = color;
+          const index = row * 7 + col;
+          document.getElementsByClassName('cell')[index].classList.add(color);
+          if (checkWin(row, col, color)) {
+            document.getElementById('winner').textContent = `${players[currentPlayer]} wins! 🎉`;
+            document.getElementById('try-again').style.display = 'inline-block';
+            gameOver = true;
+            return;
+          }
+          gameStarted = false;
+          if (gameMode === 1 && currentPlayer === 0) {
+            document.getElementById("player-turn").textContent = `🤖 Computer is thinking...`;
+            setTimeout(() => {
+              computerMove();
+              currentPlayer = 0;
+              nextQuestion();
+            }, 800);
+          } else {
+            currentPlayer = 1 - currentPlayer;
+            nextQuestion();
+          }
+          break;
+        }
+      }
+    }
+
+    function computerMove() {
+      const validCols = [...Array(7).keys()].filter(c => board[0][c] === '');
+      const col = validCols[Math.floor(Math.random() * validCols.length)];
+      for (let row = 6; row >= 0; row--) {
+        if (!board[row][col]) {
+          board[row][col] = 'yellow';
+          const index = row * 7 + col;
+          document.getElementsByClassName('cell')[index].classList.add('yellow');
+          if (checkWin(row, col, 'yellow')) {
+            document.getElementById('winner').textContent = `Computer wins! 🤖`;
+            document.getElementById('try-again').style.display = 'inline-block';
+            gameOver = true;
+          }
+          break;
+        }
+      }
+    }
+
+    function checkWin(row, col, color) {
+      return (
+        checkDirection(row, col, color, 1, 0) ||
+        checkDirection(row, col, color, 0, 1) ||
+        checkDirection(row, col, color, 1, 1) ||
+        checkDirection(row, col, color, 1, -1)
+      );
+    }
+
+    function checkDirection(row, col, color, dr, dc) {
+      let count = 1;
+      for (let d = 1; d < 4; d++) {
+        const r = row + d * dr, c = col + d * dc;
+        if (r < 0 || c < 0 || r >= 7 || c >= 7 || board[r][c] !== color) break;
+        count++;
+      }
+      for (let d = 1; d < 4; d++) {
+        const r = row - d * dr, c = col - d * dc;
+        if (r < 0 || c < 0 || r >= 7 || c >= 7 || board[r][c] !== color) break;
+        count++;
+      }
+      return count >= 4;
+    }
+
+    function restartGame() {
+      location.reload();
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+  </script>
+</body>
+</html>
