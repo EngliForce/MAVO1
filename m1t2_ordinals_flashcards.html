@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – Rangtelwoorden 1–101</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .controls {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    select, label, button {
+      font-size: 1rem;
+    }
+
+    .flashcards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    .card {
+      width: 220px;
+      height: 160px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #ffffff, #e8f5e9);
+      color: #43a047;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .card-back {
+      background: #43a047;
+      color: white;
+      transform: rotateY(180deg);
+      font-size: 1.2rem;
+    }
+
+    .checkbox-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+
+    footer {
+      background-color: #c8e6c9;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="EngliForce logo" />
+    <h1>Rangtelwoorden 1 t/m 101</h1>
+    <p>Klik op een kaart om de vertaling te zien. Oefen slim!</p>
+  </header>
+
+  <div class="controls">
+    <label>
+      Aantal kaarten:
+      <select id="card-count">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="40">40</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="reverse-cards" />
+      Nederlands → Engels
+    </label>
+    <button onclick="generateCards()">Next 🔁</button>
+    <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+    <button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+    <button onclick="practiceAll()">Oefen alles 🔄</button>
+  </div>
+
+  <div class="flashcards-container" id="flashcards-container"></div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English your superpower!</p>
+  </footer>
+
+  <script>
+    const flashcards = [
+      { en: "1st – first", nl: "eerste" },
+      { en: "2nd – second", nl: "tweede" },
+      { en: "3rd – third", nl: "derde" },
+      { en: "4th – fourth", nl: "vierde" },
+      { en: "5th – fifth", nl: "vijfde" },
+      { en: "6th – sixth", nl: "zesde" },
+      { en: "7th – seventh", nl: "zevende" },
+      { en: "8th – eighth", nl: "achtste" },
+      { en: "9th – ninth", nl: "negende" },
+      { en: "10th – tenth", nl: "tiende" },
+      { en: "11th – eleventh", nl: "elfde" },
+      { en: "12th – twelfth", nl: "twaalfde" },
+      { en: "13th – thirteenth", nl: "dertiende" },
+      { en: "14th – fourteenth", nl: "veertiende" },
+      { en: "15th – fifteenth", nl: "vijftiende" },
+      { en: "16th – sixteenth", nl: "zestiende" },
+      { en: "17th – seventeenth", nl: "zeventiende" },
+      { en: "18th – eighteenth", nl: "achttiende" },
+      { en: "19th – nineteenth", nl: "negentiende" },
+      { en: "20th – twentieth", nl: "twintigste" },
+      { en: "21st – twenty-first", nl: "eenentwintigste" },
+      { en: "22nd – twenty-second", nl: "tweeëntwintigste" },
+      { en: "23rd – twenty-third", nl: "drieëntwintigste" },
+      { en: "24th – twenty-fourth", nl: "vierentwintigste" },
+      { en: "25th – twenty-fifth", nl: "vijfentwintigste" },
+      { en: "26th – twenty-sixth", nl: "zesentwintigste" },
+      { en: "27th – twenty-seventh", nl: "zevenentwintigste" },
+      { en: "28th – twenty-eighth", nl: "achtentwintigste" },
+      { en: "29th – twenty-ninth", nl: "negenentwintigste" },
+      { en: "30th – thirtieth", nl: "dertigste" },
+      { en: "31st – thirty-first", nl: "eenendertigste" },
+      { en: "32nd – thirty-second", nl: "tweeëndertigste" },
+      { en: "33rd – thirty-third", nl: "drieëndertigste" },
+      { en: "34th – thirty-fourth", nl: "vierendertigste" },
+      { en: "35th – thirty-fifth", nl: "vijfendertigste" },
+      { en: "36th – thirty-sixth", nl: "zesendertigste" },
+      { en: "37th – thirty-seventh", nl: "zevenendertigste" },
+      { en: "38th – thirty-eighth", nl: "achtendertigste" },
+      { en: "39th – thirty-ninth", nl: "negenendertigste" },
+      { en: "40th – fortieth", nl: "veertigste" },
+      { en: "41st – forty-first", nl: "eenenveertigste" },
+      { en: "42nd – forty-second", nl: "tweeënveertigste" },
+      { en: "43rd – forty-third", nl: "drieënveertigste" },
+      { en: "44th – forty-fourth", nl: "vierenveertigste" },
+      { en: "45th – forty-fifth", nl: "vijfenveertigste" },
+      { en: "46th – forty-sixth", nl: "zesenveertigste" },
+      { en: "47th – forty-seventh", nl: "zevenenveertigste" },
+      { en: "48th – forty-eighth", nl: "achtenveertigste" },
+      { en: "49th – forty-ninth", nl: "negenenveertigste" },
+      { en: "50th – fiftieth", nl: "vijftigste" },
+      { en: "51st – fifty-first", nl: "eenenvijftigste" },
+      { en: "52nd – fifty-second", nl: "tweeënvijftigste" },
+      { en: "53rd – fifty-third", nl: "drieënvijftigste" },
+      { en: "54th – fifty-fourth", nl: "vierenvijftigste" },
+      { en: "55th – fifty-fifth", nl: "vijfenvijftigste" },
+      { en: "56th – fifty-sixth", nl: "zesenvijftigste" },
+      { en: "57th – fifty-seventh", nl: "zevenenvijftigste" },
+      { en: "58th – fifty-eighth", nl: "achtenvijftigste" },
+      { en: "59th – fifty-ninth", nl: "negenenvijftigste" },
+      { en: "60th – sixtieth", nl: "zestigste" },
+      { en: "61st – sixty-first", nl: "eenenzestigste" },
+      { en: "62nd – sixty-second", nl: "tweeënzestigste" },
+      { en: "63rd – sixty-third", nl: "drieënzestigste" },
+      { en: "64th – sixty-fourth", nl: "vierenzestigste" },
+      { en: "65th – sixty-fifth", nl: "vijfenzestigste" },
+      { en: "66th – sixty-sixth", nl: "zesenzestigste" },
+      { en: "67th – sixty-seventh", nl: "zevenenzestigste" },
+      { en: "68th – sixty-eighth", nl: "achtenzestigste" },
+      { en: "69th – sixty-ninth", nl: "negenenzestigste" },
+      { en: "70th – seventieth", nl: "zeventigste" },
+      { en: "71st – seventy-first", nl: "eenenzeventigste" },
+      { en: "72nd – seventy-second", nl: "tweeënzeventigste" },
+      { en: "73rd – seventy-third", nl: "drieënzeventigste" },
+      { en: "74th – seventy-fourth", nl: "vierenzeventigste" },
+      { en: "75th – seventy-fifth", nl: "vijfenzeventigste" },
+      { en: "76th – seventy-sixth", nl: "zesenzeventigste" },
+      { en: "77th – seventy-seventh", nl: "zevenenzeventigste" },
+      { en: "78th – seventy-eighth", nl: "achtenzeventigste" },
+      { en: "79th – seventy-ninth", nl: "negenenzeventigste" },
+      { en: "80th – eightieth", nl: "tachtigste" },
+      { en: "81st – eighty-first", nl: "eenentachtigste" },
+      { en: "82nd – eighty-second", nl: "tweeëntachtigste" },
+      { en: "83rd – eighty-third", nl: "drieëntachtigste" },
+      { en: "84th – eighty-fourth", nl: "vierentachtigste" },
+      { en: "85th – eighty-fifth", nl: "vijfentachtigste" },
+      { en: "86th – eighty-sixth", nl: "zesentachtigste" },
+      { en: "87th – eighty-seventh", nl: "zevenentachtigste" },
+      { en: "88th – eighty-eighth", nl: "achtentachtigste" },
+      { en: "89th – eighty-ninth", nl: "negenentachtigste" },
+      { en: "90th – ninetieth", nl: "negentigste" },
+      { en: "91st – ninety-first", nl: "eenennegentigste" },
+      { en: "92nd – ninety-second", nl: "tweeënnegentigste" },
+      { en: "93rd – ninety-third", nl: "drieënnegentigste" },
+      { en: "94th – ninety-fourth", nl: "vierennegentigste" },
+      { en: "95th – ninety-fifth", nl: "vijfennegentigste" },
+      { en: "96th – ninety-sixth", nl: "zesennegentigste" },
+      { en: "97th – ninety-seventh", nl: "zevenennegentigste" },
+      { en: "98th – ninety-eighth", nl: "achtennegentigste" },
+      { en: "99th – ninety-ninth", nl: "negenennegentigste" },
+      { en: "100th – one hundredth", nl: "honderdste" },
+      { en: "101st – one hundred and first", nl: "honderdeerste" }
+    ];
+
+    const knownWords = new Set();
+
+    function generateCards() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, reversed, container));
+    }
+
+    function practiceUnknown() {
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const unknown = flashcards.filter(word => !knownWords.has(word.en));
+      if (unknown.length === 0) {
+        container.innerHTML = "<p>🎉 Je kent alle woorden al!</p>";
+        return;
+      }
+      unknown.slice(0, 10).forEach(word => createCard(word, reversed, container));
+    }
+
+    function practiceKnown() {
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const known = flashcards.filter(word => knownWords.has(word.en));
+      if (known.length === 0) {
+        container.innerHTML = "<p>📋 Je hebt nog geen woorden gemarkeerd als ‘Ken ik’.</p>";
+        return;
+      }
+      known.slice(0, 10).forEach(word => createCard(word, reversed, container));
+    }
+
+    function practiceAll() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, reversed, container));
+    }
+
+    function createCard(word, reversed, container) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => card.classList.toggle('flipped');
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'card-inner';
+
+      const front = document.createElement('div');
+      front.className = 'card-front';
+      front.innerHTML = reversed ? word.nl : word.en;
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.innerHTML = reversed ? word.en : word.nl;
+
+      const checkboxContainer = document.createElement('label');
+      checkboxContainer.className = 'checkbox-container';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = knownWords.has(word.en);
+      checkbox.onchange = (e) => {
+        e.stopPropagation();
+        if (checkbox.checked) {
+          knownWords.add(word.en);
+        } else {
+          knownWords.delete(word.en);
+        }
+      };
+      const labelText = document.createTextNode('Ken ik');
+      checkboxContainer.appendChild(checkbox);
+      checkboxContainer.appendChild(labelText);
+
+      cardInner.appendChild(front);
+      cardInner.appendChild(back);
+      card.appendChild(cardInner);
+      card.appendChild(checkboxContainer);
+      container.appendChild(card);
+    }
+
+    window.onload = generateCards;
+  </script>
+</body>
+</html>
