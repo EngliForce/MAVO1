@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 1.2: Sport</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1fdf4;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header img {
+      max-width: 120px;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .language-select {
+      text-align: center;
+      margin: 1.5rem 0 2rem 0;
+    }
+
+    .language-select label {
+      margin: 0 1em;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .draggable-word {
+      background-color: white;
+      padding: 0.6em 1.2em;
+      border: 2px solid #43a047;
+      border-radius: 6px;
+      cursor: grab;
+      user-select: none;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .draggable-word:hover {
+      background-color: #d7fadd;
+    }
+
+    .exercise-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+    }
+
+    .sentence-box {
+      flex: 0 0 48%;
+      background-color: white;
+      border: 2px solid #43a047;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .sentence-box p {
+      margin: 0 0 0.3em 0;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .drop-zone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 0.6em;
+      background: #e0e0e0;
+      border-radius: 3px;
+      border: 2px dashed #999;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    .correct {
+      background-color: #c8f7c5 !important;
+      border-color: #28a745 !important;
+    }
+
+    .wrong {
+      background-color: #f7c5c5 !important;
+      border-color: #dc3545 !important;
+    }
+
+    .button-row {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    button {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin: 0 0.5rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    footer {
+      background-color: #d7fadd;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Logo.png" alt="EngliForce Logo" />
+    <h1>🏅 Vocabulary 1.2: Sport</h1>
+    <p>Sleep het juiste woord naar de bijpassende omschrijving</p>
+  </header>
+
+  <div class="language-select">
+    <label><input type="radio" name="language" value="nl" checked> Nederlands</label>
+    <label><input type="radio" name="language" value="en"> Engels</label>
+    <label><input type="radio" name="language" value="mixed"> Gemengd</label>
+  </div>
+
+  <div class="word-bank" id="wordBank"></div>
+  <div id="sentenceGrid"></div>
+
+  <div class="button-row">
+    <button onclick="checkAnswers()">✅ Controleer antwoorden</button>
+    <button onclick="setupGame()">🔁 Opnieuw</button>
+  </div>
+
+  <footer>
+    &copy; 2025 EngliForce – Make English Your Superpower!
+  </footer>
+
+  <script>
+    const vocabData = {
+      "sport": { nl: "Lichamelijke activiteit of spel, vaak competitief.", en: "Physical activity or game, often competitive." },
+      "game": { nl: "Een georganiseerde activiteit met regels en doelen.", en: "An organized activity with rules and goals." },
+      "team": { nl: "Groep mensen die samenwerkt om te winnen.", en: "Group of people working together to win." },
+      "player": { nl: "Iemand die meedoet aan een sport of spel.", en: "Someone who takes part in a sport or game." },
+      "ball": { nl: "Rond voorwerp dat wordt gebruikt in veel sporten.", en: "Round object used in many sports." },
+      "football": { nl: "Spel waarbij je een bal met je voeten speelt.", en: "Game where you play a ball with your feet." },
+      "swimming": { nl: "Voortbewegen in water.", en: "Moving through water." },
+      "running": { nl: "Snel bewegen met je voeten.", en: "Moving fast on your feet." },
+      "basketball": { nl: "Spel waarbij je een bal in een net probeert te gooien.", en: "Game where you try to throw a ball into a hoop." },
+      "tennis": { nl: "Spel met rackets en een bal over een net.", en: "Game with rackets and a ball over a net." },
+      "coach": { nl: "Persoon die een sportteam begeleidt.", en: "Person who guides a sports team." },
+      "referee": { nl: "Persoon die de regels in een wedstrijd handhaaft.", en: "Person who enforces rules in a match." },
+      "match": { nl: "Een sportwedstrijd tussen twee teams of spelers.", en: "A sports contest between two teams or players." },
+      "goal": { nl: "Punt gescoord door de bal in het doel te krijgen.", en: "Point scored by getting the ball into the goal." },
+      "win (to)": { nl: "Beter zijn dan de tegenstander.", en: "To be better than the opponent." },
+      "lose (to)": { nl: "Niet winnen, minder goed zijn dan de ander.", en: "Not win, be worse than the other." },
+      "practice (to)": { nl: "Iets herhalen om beter te worden.", en: "Repeat something to get better." },
+      "practise": { nl: "Oefensessie om vaardigheden te verbeteren.", en: "Training session to improve skills." },
+      "stadium": { nl: "Grote plek waar sportevenementen worden gehouden.", en: "Large place where sports events are held." },
+      "prize": { nl: "Wat je wint na een wedstrijd.", en: "What you win after a contest." },
+      "pitch": { nl: "Veld waarop je sport speelt.", en: "Field where you play a sport." }
+    };
+
+    function getLanguage() {
+      const selected = document.querySelector('input[name="language"]:checked');
+      return selected ? selected.value : 'nl';
+    }
+
+    function setupGame() {
+      const wordBank = document.getElementById('wordBank');
+      const sentenceGrid = document.getElementById('sentenceGrid');
+      wordBank.innerHTML = '';
+      sentenceGrid.innerHTML = '';
+
+      const allWords = Object.keys(vocabData);
+      const selectedWords = shuffleArray(allWords).slice(0, 12);
+      const sentenceWords = shuffleArray([...selectedWords]).slice(0, 10);
+
+      selectedWords.forEach(word => {
+        const el = document.createElement('div');
+        el.className = 'draggable-word';
+        el.textContent = word;
+        el.draggable = true;
+        el.addEventListener('dragstart', drag);
+        wordBank.appendChild(el);
+      });
+
+      const lang = getLanguage();
+      for (let i = 0; i < sentenceWords.length; i += 2) {
+        const row = document.createElement('div');
+        row.className = 'exercise-row';
+
+        for (let j = i; j < i + 2 && j < sentenceWords.length; j++) {
+          const word = sentenceWords[j];
+          let desc = lang === 'en' ? vocabData[word].en
+                     : lang === 'nl' ? vocabData[word].nl
+                     : Math.random() < 0.5 ? vocabData[word].nl : vocabData[word].en;
+
+          const box = document.createElement('div');
+          box.className = 'sentence-box';
+          box.innerHTML = `
+            <p>${j + 1}. ${desc}</p>
+            <div class="drop-zone" data-word="${word}"></div>
+          `;
+
+          const dropZone = box.querySelector('.drop-zone');
+          dropZone.addEventListener('dragover', allowDrop);
+          dropZone.addEventListener('drop', drop);
+
+          row.appendChild(box);
+        }
+
+        sentenceGrid.appendChild(row);
+      }
+    }
+
+    function shuffleArray(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function drag(e) {
+      e.dataTransfer.setData("text/plain", e.target.textContent);
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      const word = e.dataTransfer.getData("text/plain");
+      e.target.innerHTML = '';
+
+      const el = document.createElement('span');
+      el.textContent = word;
+      el.className = 'draggable-word';
+      el.draggable = true;
+      el.addEventListener('dragstart', drag);
+      e.target.appendChild(el);
+    }
+
+    function checkAnswers() {
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        const expected = zone.getAttribute('data-word');
+        const given = zone.textContent.trim();
+        zone.classList.remove('correct', 'wrong');
+        zone.classList.add(given === expected ? 'correct' : 'wrong');
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setupGame();
+      document.querySelectorAll('input[name="language"]').forEach(input =>
+        input.addEventListener('change', setupGame)
+      );
+    });
+  </script>
+</body>
+</html>
