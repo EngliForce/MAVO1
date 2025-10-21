@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 2.1: Sports</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #43a047;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #e6f4ea;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #c8e6c9;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a, .links button {
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover, .links button:hover {
+      background-color: #388e3c;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #e0f2f1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #388e3c;
+    }
+    .pickle-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pickle-list li {
+      margin-bottom: 1rem;
+    }
+    .pickle-image-tall {
+      height: 260px;
+      width: auto;
+      margin-top: 0.25rem;
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+  <h1>Vocabulary 2.1: Sports</h1>
+</header>
+
+<main>
+
+<section>
+  <div class="table-row">
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>sport</td><td>sport</td></tr>
+        <tr><td>game</td><td>spel</td></tr>
+        <tr><td>team</td><td>team</td></tr>
+        <tr><td>player</td><td>speler</td></tr>
+        <tr><td>ball</td><td>bal</td></tr>
+        <tr><td>football</td><td>voetbal</td></tr>
+        <tr><td>swimming</td><td>zwemmen</td></tr>
+        <tr><td>running</td><td>hardlopen</td></tr>
+        <tr><td>basketball</td><td>basketbal</td></tr>
+        <tr><td>tennis</td><td>tennis</td></tr>
+      </table>
+    </div>
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>coach</td><td>trainer</td></tr>
+        <tr><td>referee</td><td>scheidsrechter</td></tr>
+        <tr><td>match</td><td>wedstrijd</td></tr>
+        <tr><td>goal</td><td>doelpunt</td></tr>
+        <tr><td>win (to)</td><td>winnen</td></tr>
+        <tr><td>lose (to)</td><td>verliezen</td></tr>
+        <tr><td>practice (to)</td><td>trainen</td></tr>
+        <tr><td>practise</td><td>training</td></tr>
+        <tr><td>stadium</td><td>stadion</td></tr>
+        <tr><td>prize</td><td>prijs (die je wint)</td></tr>
+        <tr><td>pitch</td><td>veld</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+       <tbody>
+  <tr><td>sport</td><td>Sport is good for your health.</td><td>Sport is goed voor je gezondheid.</td></tr>
+  <tr><td>game</td><td>We played a fun game in PE class.</td><td>We speelden een leuk spel tijdens gym.</td></tr>
+  <tr><td>team</td><td>Our team won the match.</td><td>Ons team won de wedstrijd.</td></tr>
+  <tr><td>player</td><td>She is the best player on the team.</td><td>Zij is de beste speler van het team.</td></tr>
+  <tr><td>ball</td><td>Kick the ball to me!</td><td>Schop de bal naar mij!</td></tr>
+  <tr><td>football</td><td>We play football every Saturday.</td><td>We spelen elke zaterdag voetbal.</td></tr>
+  <tr><td>swimming</td><td>Swimming is my favorite sport.</td><td>Zwemmen is mijn favoriete sport.</td></tr>
+  <tr><td>running</td><td>He is running very fast.</td><td>Hij rent heel snel.</td></tr>
+  <tr><td>basketball</td><td>They play basketball after school.</td><td>Zij spelen na school basketbal.</td></tr>
+  <tr><td>tennis</td><td>I have tennis practice on Friday.</td><td>Ik heb tennisles op vrijdag.</td></tr>
+  <tr><td>coach</td><td>Our coach helps us train.</td><td>Onze trainer helpt ons trainen.</td></tr>
+  <tr><td>referee</td><td>The referee blew the whistle.</td><td>De scheidsrechter floot op zijn fluitje.</td></tr>
+  <tr><td>match</td><td>The football match was exciting.</td><td>De voetbalwedstrijd was spannend.</td></tr>
+  <tr><td>goal</td><td>He scored a goal!</td><td>Hij scoorde een doelpunt!</td></tr>
+  <tr><td>win (to)</td><td>We want to win the game.</td><td>We willen de wedstrijd winnen.</td></tr>
+  <tr><td>lose (to)</td><td>They didn’t want to lose.</td><td>Ze wilden niet verliezen.</td></tr>
+  <tr><td>practice (to)</td><td>We practice football every day.</td><td>We trainen elke dag voetbal.</td></tr>
+  <tr><td>practise</td><td>Practice makes perfect.</td><td>Oefening baart kunst.</td></tr>
+  <tr><td>stadium</td><td>The stadium was full of fans.</td><td>Het stadion zat vol fans.</td></tr>
+  <tr><td>prize</td><td>She won a big prize.</td><td>Ze won een grote prijs.</td></tr>
+  <tr><td>pitch</td><td>We walked onto the pitch.</td><td>We liepen het veld op.</td></tr>
+</tbody>
+
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Bekijk de video hieronder voor uitleg en voorbeelden over sportwoorden.</p>
+  <div class="video-row">
+    <div class="video-column">
+      <iframe src="https://www.youtube.com/embed/1ooZkW2nCrI" allowfullscreen></iframe>
+      <p>Sports Vocabulary</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href="vocab_2_1_flashcards.html" target="_blank">Open Flashcards</a>
+  </div>
+</section>
+
+<section>
+  <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
+  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+    <ul class="pickle-list">
+      <li><a class='oefen-link' href='/vocab_2_1_pickle_1'>Pickle 1: Drag & Drop</a></li>
+      <li><a class="oefen-link" href="/vocab_2_1_pickle_2">Pickle 2: Vocabulary Grid</a></li>
+      <li><a class="oefen-link" href="/vocab_2_1_pickle_3">Pickle 3: Vocabulary Detective</a></li>
+      <li><a class='oefen-link' href='/vocab_2_1_pickle_4'>Pickle 4: Flashcard Challenge</a></li>
+      <li><a class='oefen-link' href='/vocab_2_1_pickle_5'>Pickle 5: Time Challenge</a></li>
+    </ul>
+    <img class="pickle-image-tall" src="Pickle.png" alt="Super Pickle">
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
+</body>
+</html>
