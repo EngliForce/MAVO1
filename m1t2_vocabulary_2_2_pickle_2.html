@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 2.2: Entertainment</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1fdf4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      grid-gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .card {
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 16px;
+      background: #f0f0f0;
+      border: 2px solid #ccc;
+      cursor: pointer;
+      padding: 10px;
+      box-sizing: border-box;
+      transition: background 0.3s, color 0.3s;
+      word-wrap: break-word;
+    }
+    .hiddenText { color: transparent; }
+    .correct { background-color: #c8f7c5 !important; }
+    .incorrect { background-color: #f8c6c6 !important; }
+
+    select, input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    .controls, .setup {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .score, .turn, .result {
+      margin-top: 15px;
+      font-size: 18px;
+    }
+
+    .confetti {
+      font-size: 40px;
+      animation: pop 0.5s ease-in-out;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    footer {
+      background-color: #d7fadd;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" />
+  <h1>🎵 Vocabulary 2.2: Entertainment</h1>
+  <p>Test je Engelse woordenschat en je geheugen</p>
+</header>
+
+<main>
+<section>
+  <div class="setup">
+    <select id="playerMode">
+      <option value="1">1 speler</option>
+      <option value="2">2 spelers</option>
+    </select>
+    <input type="text" id="player1" placeholder="Naam speler 1" />
+    <input type="text" id="player2" placeholder="Naam speler 2 (optioneel)" />
+    <select id="direction">
+      <option value="en-nl">Engels → Nederlands</option>
+      <option value="nl-en">Nederlands → Engels</option>
+    </select>
+    <button onclick="startGame()">Start spel</button>
+  </div>
+
+  <div class="turn" id="turnDisplay"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="controls">
+    <button onclick="showQuestion()" id="readyBtn" disabled>Ready</button>
+    <button onclick="nextRound()" id="nextBtn" style="display: none;">Next</button>
+  </div>
+
+  <div class="score" id="scoreDisplay"></div>
+  <div class="result" id="resultDisplay"></div>
+</section>
+</main>
+
+<footer>
+  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+const wordList = [
+  { en: "music", nl: "muziek" },
+  { en: "song", nl: "lied" },
+  { en: "dance", nl: "dansen" },
+  { en: "film", nl: "film" },
+  { en: "television", nl: "televisie" },
+  { en: "singer", nl: "zanger" },
+  { en: "guitar", nl: "gitaar" },
+  { en: "actor", nl: "acteur" },
+  { en: "actress", nl: "actrice" },
+  { en: "concert", nl: "concert" },
+  { en: "band", nl: "band" },
+  { en: "drums", nl: "drums" },
+  { en: "microphone", nl: "microfoon" },
+  { en: "listen", nl: "luisteren" },
+  { en: "watch", nl: "kijken" },
+  { en: "favourite", nl: "favoriet" },
+  { en: "video game", nl: "videospel" },
+  { en: "cartoon", nl: "tekenfilm" },
+  { en: "programme", nl: "programma" },
+  { en: "fun", nl: "plezier" },
+  { en: "funny", nl: "grappig" },
+  { en: "boring", nl: "saai" },
+  { en: "audience", nl: "publiek" }
+];
+
+let currentGrid = [];
+let correctIndex = -1;
+let currentPlayer = 0;
+let players = [];
+let scores = [];
+let rounds = [];
+let mode = 1;
+let direction = "en-nl";
+const totalRounds = 10;
+
+function getRandomWords(count) {
+  return [...wordList].sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+function startGame() {
+  mode = parseInt(document.getElementById("playerMode").value);
+  direction = document.getElementById("direction").value;
+
+  const p1 = document.getElementById("player1").value.trim() || "Speler 1";
+  const p2 = document.getElementById("player2").value.trim() || "Speler 2";
+
+  players = mode === 2 ? [p1, p2] : [p1];
+  scores = Array(players.length).fill(0);
+  rounds = Array(players.length).fill(0);
+  currentPlayer = 0;
+
+  document.getElementById("resultDisplay").innerHTML = "";
+  document.getElementById("nextBtn").style.display = "none";
+  document.getElementById("readyBtn").disabled = false;
+
+  newGrid();
+}
+
+function newGrid() {
+  if (players.length === 0) return;
+  currentGrid = getRandomWords(9);
+  correctIndex = -1;
+
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  currentGrid.forEach((word, i) => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.textContent = direction === "en-nl" ? word.en : word.nl;
+    div.dataset.index = i;
+    grid.appendChild(div);
+  });
+
+  updateTurn();
+}
+
+function showQuestion() {
+  if (players.length === 0) return;
+  correctIndex = Math.floor(Math.random() * 9);
+  const targetWord = direction === "en-nl"
+    ? currentGrid[correctIndex].nl
+    : currentGrid[correctIndex].en;
+
+  document.getElementById("turnDisplay").innerHTML =
+    `Beurt: ${players[currentPlayer]} – Waar zit: <strong>${targetWord}</strong>?`;
+
+  document.querySelectorAll(".card").forEach(card => {
+    card.classList.remove("correct", "incorrect");
+    card.classList.add("hiddenText");
+    card.onclick = () => checkAnswer(parseInt(card.dataset.index), card);
+  });
+
+  document.getElementById("nextBtn").style.display = "none";
+  document.getElementById("readyBtn").disabled = true;
+}
+
+function checkAnswer(index, card) {
+  const all = document.querySelectorAll(".card");
+  all.forEach(c => {
+    c.classList.remove("hiddenText");
+    c.onclick = null;
+  });
+
+  if (index === correctIndex) {
+    card.classList.add("correct");
+    scores[currentPlayer]++;
+  } else {
+    card.classList.add("incorrect");
+    all[correctIndex].classList.add("correct");
+  }
+
+  rounds[currentPlayer]++;
+  updateScore();
+  document.getElementById("nextBtn").style.display = "inline-block";
+}
+
+function nextRound() {
+  document.getElementById("nextBtn").style.display = "none";
+
+  if ((mode === 2 && rounds[0] >= totalRounds && rounds[1] >= totalRounds) ||
+      (mode === 1 && rounds[0] >= totalRounds)) {
+    showWinner();
+  } else {
+    currentPlayer = (currentPlayer + 1) % players.length;
+    newGrid();
+    document.getElementById("readyBtn").disabled = false;
+  }
+}
+
+function updateTurn() {
+  if (players.length > 0) {
+    document.getElementById("turnDisplay").innerHTML = `Beurt: ${players[currentPlayer]}`;
+  }
+  updateScore();
+}
+
+function updateScore() {
+  if (players.length === 0) return;
+  const html = players.map((name, i) =>
+    `🎯 ${name}: ${scores[i]} punten (${rounds[i]}/${totalRounds})`
+  ).join(" | ");
+  document.getElementById("scoreDisplay").innerHTML = html;
+}
+
+function showWinner() {
+  const res = document.getElementById("resultDisplay");
+  if (mode === 1) {
+    res.innerHTML = `🎉 Score: ${scores[0]} van de ${totalRounds} <span class="confetti">🎊</span>`;
+  } else if (scores[0] > scores[1]) {
+    res.innerHTML = `🏆 ${players[0]} wint! <span class="confetti">🎊🎊🎊</span>`;
+  } else if (scores[1] > scores[0]) {
+    res.innerHTML = `🏆 ${players[1]} wint! <span class="confetti">🎊🎊🎊</span>`;
+  } else {
+    res.innerHTML = `🤝 Gelijkspel! <span class="confetti">🎊</span>`;
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 2.2: Entertainment</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1fdf4;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header img {
+      max-width: 120px;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .language-select {
+      text-align: center;
+      margin: 1.5rem 0 2rem 0;
+    }
+
+    .language-select label {
+      margin: 0 1em;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .draggable-word {
+      background-color: white;
+      padding: 0.6em 1.2em;
+      border: 2px solid #43a047;
+      border-radius: 6px;
+      cursor: grab;
+      user-select: none;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .draggable-word:hover {
+      background-color: #d7fadd;
+    }
+
+    .exercise-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+    }
+
+    .sentence-box {
+      flex: 0 0 48%;
+      background-color: white;
+      border: 2px solid #43a047;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .sentence-box p {
+      margin: 0 0 0.3em 0;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .drop-zone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 0.6em;
+      background: #e0e0e0;
+      border-radius: 3px;
+      border: 2px dashed #999;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    .correct {
+      background-color: #c8f7c5 !important;
+      border-color: #28a745 !important;
+    }
+
+    .wrong {
+      background-color: #f7c5c5 !important;
+      border-color: #dc3545 !important;
+    }
+
+    .button-row {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    button {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin: 0 0.5rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    footer {
+      background-color: #d7fadd;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" />
+  <h1>🎵 Vocabulary 2.2: Entertainment</h1>
+  <p>Sleep het juiste woord naar de bijpassende omschrijving</p>
+</header>
+
+<div class="language-select">
+  <label><input type="radio" name="language" value="nl" checked> Nederlands</label>
+  <label><input type="radio" name="language" value="en"> Engels</label>
+  <label><input type="radio" name="language" value="mixed"> Gemengd</label>
+</div>
+
+<div class="word-bank" id="wordBank"></div>
+<div id="sentenceGrid"></div>
+
+<div class="button-row">
+  <button onclick="checkAnswers()">✅ Controleer antwoorden</button>
+  <button onclick="setupGame()">🔁 Opnieuw</button>
+</div>
+
+<footer>
+  &copy; 2025 EngliForce – Make English Your Superpower!
+</footer>
+
+<script>
+  const vocabData = {
+    "music":       { nl: "Geluid dat wordt gemaakt met instrumenten of zang.", en: "Sound made with instruments or singing." },
+    "song":        { nl: "Een stuk muziek dat gezongen wordt.", en: "A piece of music that is sung." },
+    "dance":       { nl: "Bewegingen op muziek.", en: "Movements to music." },
+    "film":        { nl: "Een verhaal op beeld dat je kunt bekijken.", en: "A story on screen you can watch." },
+    "television":  { nl: "Apparaat waarmee je programma’s kunt bekijken.", en: "Device to watch shows and programs." },
+    "singer":      { nl: "Iemand die zingt.", en: "Someone who sings." },
+    "guitar":      { nl: "Een snaarinstrument dat vaak wordt gebruikt in muziek.", en: "A string instrument often used in music." },
+    "actor":       { nl: "Iemand die in films of toneel speelt.", en: "Someone who acts in movies or plays." },
+    "actress":     { nl: "Vrouwelijke acteur.", en: "Female actor." },
+    "concert":     { nl: "Een live muziekoptreden.", en: "A live music performance." },
+    "band":        { nl: "Groep muzikanten die samen spelen.", en: "Group of musicians playing together." },
+    "drums":       { nl: "Instrument dat geluid maakt door erop te slaan.", en: "Instrument played by hitting it." },
+    "microphone":  { nl: "Apparaat om je stem te versterken.", en: "Device to make your voice louder." },
+    "listen":      { nl: "Met aandacht naar geluid horen.", en: "Hear sound carefully." },
+    "watch":       { nl: "Met aandacht naar iets kijken.", en: "Look at something carefully." },
+    "favourite":   { nl: "Wat je het leukst vindt.", en: "The one you like the most." },
+    "video game":  { nl: "Interactief spel dat je op een scherm speelt.", en: "Interactive game you play on a screen." },
+    "cartoon":     { nl: "Getekende film of tv-show.", en: "Drawn film or TV show." },
+    "programme":   { nl: "Tv-show of radioshow.", en: "TV or radio show." },
+    "fun":         { nl: "Iets wat leuk is om te doen.", en: "Something enjoyable to do." },
+    "funny":       { nl: "Iets dat je aan het lachen maakt.", en: "Something that makes you laugh." },
+    "boring":      { nl: "Niet interessant of saai.", en: "Not interesting or dull." },
+    "audience":    { nl: "Mensen die naar een optreden kijken.", en: "People watching a performance." }
+  };
+
+  function getLanguage() {
+    const selected = document.querySelector('input[name="language"]:checked');
+    return selected ? selected.value : 'nl';
+  }
+
+  function setupGame() {
+    const wordBank = document.getElementById('wordBank');
+    const sentenceGrid = document.getElementById('sentenceGrid');
+    wordBank.innerHTML = '';
+    sentenceGrid.innerHTML = '';
+
+    const allWords = Object.keys(vocabData);
+    const selectedWords = shuffleArray(allWords).slice(0, 12);
+    const sentenceWords = shuffleArray([...selectedWords]).slice(0, 10);
+
+    selectedWords.forEach(word => {
+      const el = document.createElement('div');
+      el.className = 'draggable-word';
+      el.textContent = word;
+      el.draggable = true;
+      el.addEventListener('dragstart', drag);
+      wordBank.appendChild(el);
+    });
+
+    const lang = getLanguage();
+    for (let i = 0; i < sentenceWords.length; i += 2) {
+      const row = document.createElement('div');
+      row.className = 'exercise-row';
+
+      for (let j = i; j < i + 2 && j < sentenceWords.length; j++) {
+        const word = sentenceWords[j];
+        let desc = lang === 'en' ? vocabData[word].en
+                   : lang === 'nl' ? vocabData[word].nl
+                   : Math.random() < 0.5 ? vocabData[word].nl : vocabData[word].en;
+
+        const box = document.createElement('div');
+        box.className = 'sentence-box';
+        box.innerHTML = `
+          <p>${j + 1}. ${desc}</p>
+          <div class="drop-zone" data-word="${word}"></div>
+        `;
+
+        const dropZone = box.querySelector('.drop-zone');
+        dropZone.addEventListener('dragover', allowDrop);
+        dropZone.addEventListener('drop', drop);
+
+        row.appendChild(box);
+      }
+
+      sentenceGrid.appendChild(row);
+    }
+  }
+
+  function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  function allowDrop(e) {
+    e.preventDefault();
+  }
+
+  function drag(e) {
+    e.dataTransfer.setData("text/plain", e.target.textContent);
+  }
+
+  function drop(e) {
+    e.preventDefault();
+    const word = e.dataTransfer.getData("text/plain");
+    e.target.innerHTML = '';
+
+    const el = document.createElement('span');
+    el.textContent = word;
+    el.className = 'draggable-word';
+    el.draggable = true;
+    el.addEventListener('dragstart', drag);
+    e.target.appendChild(el);
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+      const expected = zone.getAttribute('data-word');
+      const given = zone.textContent.trim();
+      zone.classList.remove('correct', 'wrong');
+      zone.classList.add(given === expected ? 'correct' : 'wrong');
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    setupGame();
+    document.querySelectorAll('input[name="language"]').forEach(input =>
+      input.addEventListener('change', setupGame)
+    );
+  });
+</script>
+</body>
+</html>

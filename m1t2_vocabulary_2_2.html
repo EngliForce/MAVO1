@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 2.2: Entertainment</title>
+  <style>
+    /* Dezelfde stijl als voorbeeld */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #43a047;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #e6f4ea;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #c8e6c9;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a, .links button {
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover, .links button:hover {
+      background-color: #388e3c;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #e0f2f1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #388e3c;
+    }
+    .pickle-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pickle-list li {
+      margin-bottom: 1rem;
+    }
+    .pickle-image-tall {
+      height: 260px;
+      width: auto;
+      margin-top: 0.25rem;
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+  <h1>Vocabulary 2.2: Entertainment</h1>
+</header>
+
+<main>
+
+<section>
+  <div class="table-row">
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>music</td><td>muziek</td></tr>
+        <tr><td>song</td><td>lied</td></tr>
+        <tr><td>dance</td><td>dansen</td></tr>
+        <tr><td>film</td><td>film</td></tr>
+        <tr><td>television</td><td>televisie</td></tr>
+        <tr><td>singer</td><td>zanger</td></tr>
+        <tr><td>guitar</td><td>gitaar</td></tr>
+        <tr><td>actor</td><td>acteur</td></tr>
+        <tr><td>actress</td><td>actrice</td></tr>
+        <tr><td>concert</td><td>concert</td></tr>
+        <tr><td>band</td><td>band</td></tr>
+        <tr><td>drums</td><td>drums</td></tr>
+      </table>
+    </div>
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>microphone</td><td>microfoon</td></tr>
+        <tr><td>listen</td><td>luisteren</td></tr>
+        <tr><td>watch</td><td>kijken</td></tr>
+        <tr><td>favourite</td><td>favoriet</td></tr>
+        <tr><td>video game</td><td>videospel</td></tr>
+        <tr><td>cartoon</td><td>tekenfilm</td></tr>
+        <tr><td>programme</td><td>programma</td></tr>
+        <tr><td>fun</td><td>plezier</td></tr>
+        <tr><td>funny</td><td>grappig</td></tr>
+        <tr><td>boring</td><td>saai</td></tr>
+        <tr><td>audience</td><td>publiek</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+<tr><td>music</td><td>I love listening to music.</td><td>Ik hou van naar muziek luisteren.</td></tr>
+<tr><td>song</td><td>This is my favourite song.</td><td>Dit is mijn favoriete lied.</td></tr>
+<tr><td>dance</td><td>Let’s dance to the rhythm!</td><td>Laten we dansen op het ritme!</td></tr>
+<tr><td>film</td><td>We watched a great film last night.</td><td>We hebben gisteravond een geweldige film gekeken.</td></tr>
+<tr><td>television</td><td>There’s nothing on television.</td><td>Er is niets op de televisie.</td></tr>
+<tr><td>singer</td><td>The singer has a beautiful voice.</td><td>De zanger heeft een mooie stem.</td></tr>
+<tr><td>guitar</td><td>He plays the guitar in a band.</td><td>Hij speelt gitaar in een band.</td></tr>
+<tr><td>actor</td><td>The actor was very talented.</td><td>De acteur was erg getalenteerd.</td></tr>
+<tr><td>actress</td><td>She is a famous actress.</td><td>Zij is een beroemde actrice.</td></tr>
+<tr><td>concert</td><td>We went to a live concert.</td><td>We gingen naar een live concert.</td></tr>
+<tr><td>band</td><td>The band played three songs.</td><td>De band speelde drie liedjes.</td></tr>
+<tr><td>drums</td><td>He plays the drums loudly.</td><td>Hij speelt luid op de drums.</td></tr>
+<tr><td>microphone</td><td>Use the microphone to speak.</td><td>Gebruik de microfoon om te spreken.</td></tr>
+<tr><td>listen</td><td>Listen carefully to the lyrics.</td><td>Luister goed naar de songtekst.</td></tr>
+<tr><td>watch</td><td>We watch cartoons every morning.</td><td>We kijken elke ochtend tekenfilms.</td></tr>
+<tr><td>favourite</td><td>That’s my favourite programme.</td><td>Dat is mijn favoriete programma.</td></tr>
+<tr><td>video game</td><td>I play a new video game.</td><td>Ik speel een nieuw videospel.</td></tr>
+<tr><td>cartoon</td><td>This cartoon is really funny.</td><td>Deze tekenfilm is echt grappig.</td></tr>
+<tr><td>programme</td><td>My favourite programme is on tonight.</td><td>Mijn favoriete programma is vanavond op tv.</td></tr>
+<tr><td>fun</td><td>We had so much fun!</td><td>We hadden zoveel plezier!</td></tr>
+<tr><td>funny</td><td>The movie was very funny.</td><td>De film was erg grappig.</td></tr>
+<tr><td>boring</td><td>The show was boring.</td><td>De show was saai.</td></tr>
+<tr><td>audience</td><td>The audience clapped loudly.</td><td>Het publiek klapte luid.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Bekijk de video hieronder voor uitleg en voorbeelden over entertainmentwoorden.</p>
+  <div class="video-row">
+    <div class="video-column">
+      <iframe src="https://www.youtube.com/embed/k4KNrlMwVjI" allowfullscreen></iframe>
+      <p>Entertainment Vocabulary</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href="m1t2_vocabulary_2_2_flashcards.html" target="_blank">Open Flashcards</a>
+  </div>
+</section>
+
+<section>
+  <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
+  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+    <ul class="pickle-list">
+      <li><a class='oefen-link' href='/m1t2_vocabulary_2_2_pickle_1.html'>Pickle 1: Drag & Drop</a></li>
+      <li><a class='oefen-link' href='/m1t2_vocabulary_2_2_pickle_2.html'>Pickle 2: Vocabulary Grid</a></li>
+      <li><a class='oefen-link' href='/m1t2_vocabulary_2_2_pickle_3.html'>Pickle 3: Vocabulary Detective</a></li>
+      <li><a class='oefen-link' href='/m1t2_vocabulary_2_2_pickle_4.html'>Pickle 4: Flashcard Challenge</a></li>
+      <li><a class='oefen-link' href='/m1t2_vocab_2_2_pickle_5.html'>Pickle 5: Time Challenge</a></li>
+    </ul>
+    <img class="pickle-image-tall" src="Pickle.png" alt="Super Pickle">
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
+</body>
+</html>
+
