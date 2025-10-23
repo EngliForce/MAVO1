@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Memory – Rangtelwoorden</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header-bar {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem 1rem;
+    }
+
+    .header-bar h1 {
+      margin: 0.5rem 0;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(6, 150px);
+      grid-template-rows: repeat(6, 120px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background-color: #d4edda;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s, transform 0.3s;
+      padding: 0.5rem;
+      text-align: center;
+      word-wrap: break-word;
+    }
+
+    .card.flipped {
+      background-color: #43a047;
+      color: white;
+      cursor: default;
+    }
+
+    .player0 { background-color: #9c27b0 !important; color: white; }
+    .player1 { background-color: #2196f3 !important; color: white; }
+    .player2 { background-color: #fdd835 !important; color: black; }
+
+    #status, #player-turn {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    #reset-btn {
+      margin-top: 2rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #reset-btn:hover {
+      background-color: #004d40;
+    }
+
+    footer {
+      background-color: #e0f2f1;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+
+    #setup {
+      margin-top: 2rem;
+    }
+
+    #scores {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+
+    input {
+      padding: 0.4rem;
+      margin: 0.4rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1>🧠 Memory – Rangtelwoorden</h1>
+    <p>Vind de juiste match: Nederlands ↔ Engels</p>
+  </div>
+
+  <div class="game-container">
+    <div id="setup">
+      <label for="playerCount">Aantal spelers:</label>
+      <select id="playerCount">
+        <option value="1">1 speler</option>
+        <option value="2" selected>2 spelers</option>
+        <option value="3">3 spelers</option>
+      </select>
+      <div id="nameInputs"></div>
+      <button onclick="startGame()">Start spel</button>
+    </div>
+
+    <div id="player-turn" style="display:none;"></div>
+    <div id="scores"></div>
+    <div id="status"></div>
+    <div class="grid" id="memory-grid"></div>
+    <button id="reset-btn" onclick="location.reload()">🔁 Opnieuw</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const allOrdinals = [
+      { nl: "eerste", en: "first" }, { nl: "tweede", en: "second" }, { nl: "derde", en: "third" },
+      { nl: "vierde", en: "fourth" }, { nl: "vijfde", en: "fifth" }, { nl: "zesde", en: "sixth" },
+      { nl: "zevende", en: "seventh" }, { nl: "achtste", en: "eighth" }, { nl: "negende", en: "ninth" },
+      { nl: "tiende", en: "tenth" }, { nl: "elfde", en: "eleventh" }, { nl: "twaalfde", en: "twelfth" },
+      { nl: "dertiende", en: "thirteenth" }, { nl: "veertiende", en: "fourteenth" },
+      { nl: "vijftiende", en: "fifteenth" }, { nl: "zestiende", en: "sixteenth" },
+      { nl: "zeventiende", en: "seventeenth" }, { nl: "achttiende", en: "eighteenth" },
+      { nl: "negentiende", en: "nineteenth" }, { nl: "twintigste", en: "twentieth" },
+      { nl: "eenentwintigste", en: "twenty-first" }, { nl: "tweeëntwintigste", en: "twenty-second" },
+      { nl: "drieëntwintigste", en: "twenty-third" }, { nl: "vierentwintigste", en: "twenty-fourth" },
+      { nl: "vijfentwintigste", en: "twenty-fifth" }, { nl: "zesentwintigste", en: "twenty-sixth" },
+      { nl: "zevenentwintigste", en: "twenty-seventh" }, { nl: "achtentwintigste", en: "twenty-eighth" },
+      { nl: "negenentwintigste", en: "twenty-ninth" }, { nl: "dertigste", en: "thirtieth" },
+      { nl: "eenendertigste", en: "thirty-first" }, { nl: "veertigste", en: "fortieth" },
+      { nl: "vijftigste", en: "fiftieth" }, { nl: "zestigste", en: "sixtieth" },
+      { nl: "zeventigste", en: "seventieth" }, { nl: "tachtigste", en: "eightieth" },
+      { nl: "negentigste", en: "ninetieth" }, { nl: "honderdste", en: "one hundredth" },
+      { nl: "honderdeerste", en: "one hundred and first" }
+    ];
+
+    let players = [];
+    let currentPlayer = 0;
+    let scores = [];
+    let flippedCards = [];
+    let matchedCount = 0;
+    let cards = [];
+
+    document.getElementById("playerCount").addEventListener("change", function () {
+      const count = parseInt(this.value);
+      const container = document.getElementById("nameInputs");
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        container.innerHTML += `<br><input type="text" placeholder="Naam speler ${i + 1}" id="player${i}">`;
+      }
+    });
+
+    function startGame() {
+      const count = parseInt(document.getElementById("playerCount").value);
+      players = [];
+      for (let i = 0; i < count; i++) {
+        const name = document.getElementById(`player${i}`).value || `Speler ${i + 1}`;
+        players.push(name);
+      }
+
+      scores = new Array(players.length).fill(0);
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("player-turn").style.display = "block";
+      updateTurnDisplay();
+      updateScores();
+
+      const selected = shuffle([...allOrdinals]).slice(0, 18);
+      cards = [];
+      selected.forEach(pair => {
+        cards.push({ text: pair.nl, matchId: pair.nl });
+        cards.push({ text: pair.en, matchId: pair.nl });
+      });
+
+      shuffle(cards);
+      const grid = document.getElementById("memory-grid");
+      grid.innerHTML = '';
+      cards.forEach((card, index) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.dataset.matchId = card.matchId;
+        div.dataset.index = index;
+        div.textContent = '';
+        div.onclick = () => flipCard(div, card);
+        grid.appendChild(div);
+      });
+    }
+
+    function flipCard(div, cardData) {
+      if (div.classList.contains('flipped') || div.classList.contains('matched') || flippedCards.length >= 2) return;
+      div.classList.add('flipped');
+      div.textContent = cardData.text;
+      flippedCards.push({ div, matchId: cardData.matchId });
+
+      if (flippedCards.length === 2) {
+        const [first, second] = flippedCards;
+        if (first.matchId === second.matchId && first.div !== second.div) {
+          const playerClass = `player${currentPlayer}`;
+          first.div.classList.add('matched', playerClass);
+          second.div.classList.add('matched', playerClass);
+          scores[currentPlayer]++;
+          matchedCount++;
+          flippedCards = [];
+          updateScores();
+          if (matchedCount === 18) showWinner();
+        } else {
+          setTimeout(() => {
+            first.div.classList.remove('flipped');
+            second.div.classList.remove('flipped');
+            first.div.textContent = '';
+            second.div.textContent = '';
+            flippedCards = [];
+            currentPlayer = (currentPlayer + 1) % players.length;
+            updateTurnDisplay();
+          }, 1000);
+        }
+      }
+    }
+
+    function updateTurnDisplay() {
+      document.getElementById("player-turn").textContent = `Beurt van: ${players[currentPlayer]}`;
+    }
+
+    function updateScores() {
+      const display = players.map((name, i) => `${name}: ${scores[i]} ${scores[i] === 1 ? 'paar' : 'paren'}`);
+      document.getElementById("scores").textContent = display.join(' | ');
+    }
+
+    function showWinner() {
+      const max = Math.max(...scores);
+      const winners = players.filter((_, i) => scores[i] === max);
+      if (winners.length === 1) {
+        document.getElementById("status").textContent = `🎉 ${winners[0]} heeft gewonnen!`;
+      } else {
+        document.getElementById("status").textContent = `🤝 Gelijkspel tussen: ${winners.join(' en ')}`;
+      }
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Initialiseer namenvelden
+    document.getElementById("playerCount").dispatchEvent(new Event("change"));
+  </script>
+
+</body>
+</html>

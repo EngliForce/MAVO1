@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Four in a Row – Ordinals</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff8;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header-bar {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem 1rem;
+    }
+
+    .header-bar img {
+      width: 120px;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-bar h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    #start-screen {
+      padding: 2rem;
+    }
+
+    input[type="text"] {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .game-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2rem;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .question-box {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+
+    .question {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .option-btn {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .option-btn:hover {
+      background-color: #388e3c;
+    }
+
+    #feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+
+    #play-on,
+    #try-again {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #43a047;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 60px);
+      gap: 5px;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-color: #d4edda;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .red { background-color: #f44336 !important; }
+    .yellow { background-color: #ffee58 !important; }
+
+    .player-turn {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: #43a047;
+      font-weight: bold;
+    }
+
+    #winner {
+      font-size: 1.8rem;
+      color: #2e7d32;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+
+    footer {
+      background-color: #e0f2f1;
+      padding: 1rem;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <img src="Logo.png" alt="EngliForce Logo">
+    <h1>🎯 Four in a Row – Ordinals</h1>
+  </div>
+
+  <!-- Start screen -->
+  <div id="start-screen">
+    <h2>Choose number of players</h2>
+    <button onclick="choosePlayers(1)">1 Player</button>
+    <button onclick="choosePlayers(2)">2 Players</button>
+    <div id="name-fields"></div>
+  </div>
+
+  <!-- Game -->
+  <div class="player-turn" id="player-turn"></div>
+
+  <div class="game-container" id="game" style="display: none;">
+    <div class="question-box">
+      <div class="question" id="question">Loading...</div>
+      <div>
+        <input type="text" id="user-input" placeholder="Typ je antwoord hier">
+        <button class="option-btn" onclick="checkInput()">Check</button>
+      </div>
+      <div id="feedback"></div>
+      <button id="play-on">Play on</button>
+      <div id="winner"></div>
+      <button id="try-again" onclick="restartGame()">Try Again</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const questions = [
+      { text: "eerste", answer: "first" },
+      { text: "tweede", answer: "second" },
+      { text: "derde", answer: "third" },
+      { text: "vierde", answer: "fourth" },
+      { text: "vijfde", answer: "fifth" },
+      { text: "zesde", answer: "sixth" },
+      { text: "zevende", answer: "seventh" },
+      { text: "achtste", answer: "eighth" },
+      { text: "negende", answer: "ninth" },
+      { text: "tiende", answer: "tenth" },
+      { text: "elfde", answer: "eleventh" },
+      { text: "twaalfde", answer: "twelfth" },
+      { text: "dertiende", answer: "thirteenth" },
+      { text: "veertiende", answer: "fourteenth" },
+      { text: "vijftiende", answer: "fifteenth" },
+      { text: "zestiende", answer: "sixteenth" },
+      { text: "zeventiende", answer: "seventeenth" },
+      { text: "achttiende", answer: "eighteenth" },
+      { text: "negentiende", answer: "nineteenth" },
+      { text: "twintigste", answer: "twentieth" },
+      { text: "eenentwintigste", answer: "twenty-first" },
+      { text: "tweeëntwintigste", answer: "twenty-second" },
+      { text: "drieëntwintigste", answer: "twenty-third" },
+      { text: "vierentwintigste", answer: "twenty-fourth" },
+      { text: "vijfentwintigste", answer: "twenty-fifth" },
+      { text: "zesentwintigste", answer: "twenty-sixth" },
+      { text: "zevenentwintigste", answer: "twenty-seventh" },
+      { text: "achtentwintigste", answer: "twenty-eighth" },
+      { text: "negenentwintigste", answer: "twenty-ninth" },
+      { text: "dertigste", answer: "thirtieth" },
+      { text: "eenendertigste", answer: "thirty-first" },
+      { text: "tweeëndertigste", answer: "thirty-second" },
+      { text: "drieëndertigste", answer: "thirty-third" },
+      { text: "vierendertigste", answer: "thirty-fourth" },
+      { text: "vijfendertigste", answer: "thirty-fifth" },
+      { text: "zesendertigste", answer: "thirty-sixth" },
+      { text: "zevenendertigste", answer: "thirty-seventh" },
+      { text: "achtendertigste", answer: "thirty-eighth" },
+      { text: "negenendertigste", answer: "thirty-ninth" },
+      { text: "veertigste", answer: "fortieth" },
+      { text: "eenenveertigste", answer: "forty-first" },
+      { text: "tweeënveertigste", answer: "forty-second" },
+      { text: "drieënveertigste", answer: "forty-third" },
+      { text: "vierenveertigste", answer: "forty-fourth" },
+      { text: "vijfenveertigste", answer: "forty-fifth" },
+      { text: "zesenveertigste", answer: "forty-sixth" },
+      { text: "zevenenveertigste", answer: "forty-seventh" },
+      { text: "achtenveertigste", answer: "forty-eighth" },
+      { text: "negenenveertigste", answer: "forty-ninth" },
+      { text: "vijftigste", answer: "fiftieth" },
+      { text: "eenenvijftigste", answer: "fifty-first" },
+      { text: "tweeënvijftigste", answer: "fifty-second" },
+      { text: "drieënvijftigste", answer: "fifty-third" },
+      { text: "vierenvijftigste", answer: "fifty-fourth" },
+      { text: "vijfenvijftigste", answer: "fifty-fifth" },
+      { text: "zesenvijftigste", answer: "fifty-sixth" },
+      { text: "zevenenvijftigste", answer: "fifty-seventh" },
+      { text: "achtenvijftigste", answer: "fifty-eighth" },
+      { text: "negenenvijftigste", answer: "fifty-ninth" },
+      { text: "zestigste", answer: "sixtieth" },
+      { text: "eenenzestigste", answer: "sixty-first" },
+      { text: "tweeënzestigste", answer: "sixty-second" },
+      { text: "drieënzestigste", answer: "sixty-third" },
+      { text: "vierenzestigste", answer: "sixty-fourth" },
+      { text: "vijfenzestigste", answer: "sixty-fifth" },
+      { text: "zesenzestigste", answer: "sixty-sixth" },
+      { text: "zevenenzestigste", answer: "sixty-seventh" },
+      { text: "achtenzestigste", answer: "sixty-eighth" },
+      { text: "negenenzestigste", answer: "sixty-ninth" },
+      { text: "zeventigste", answer: "seventieth" },
+      { text: "eenenzeventigste", answer: "seventy-first" },
+      { text: "tweeënzeventigste", answer: "seventy-second" },
+      { text: "drieënzeventigste", answer: "seventy-third" },
+      { text: "vierenzeventigste", answer: "seventy-fourth" },
+      { text: "vijfenzeventigste", answer: "seventy-fifth" },
+      { text: "zesenzeventigste", answer: "seventy-sixth" },
+      { text: "zevenenzeventigste", answer: "seventy-seventh" },
+      { text: "achtenzeventigste", answer: "seventy-eighth" },
+      { text: "negenenzeventigste", answer: "seventy-ninth" },
+      { text: "tachtigste", answer: "eightieth" },
+      { text: "eenentachtigste", answer: "eighty-first" },
+      { text: "tweeëntachtigste", answer: "eighty-second" },
+      { text: "drieëntachtigste", answer: "eighty-third" },
+      { text: "vierentachtigste", answer: "eighty-fourth" },
+      { text: "vijfentachtigste", answer: "eighty-fifth" },
+      { text: "zesentachtigste", answer: "eighty-sixth" },
+      { text: "zevenentachtigste", answer: "eighty-seventh" },
+      { text: "achtentachtigste", answer: "eighty-eighth" },
+      { text: "negenentachtigste", answer: "eighty-ninth" },
+      { text: "negentigste", answer: "ninetieth" },
+      { text: "eenennegentigste", answer: "ninety-first" },
+      { text: "tweeënnegentigste", answer: "ninety-second" },
+      { text: "drieënnegentigste", answer: "ninety-third" },
+      { text: "vierennegentigste", answer: "ninety-fourth" },
+      { text: "vijfennegentigste", answer: "ninety-fifth" },
+      { text: "zesennegentigste", answer: "ninety-sixth" },
+      { text: "zevenennegentigste", answer: "ninety-seventh" },
+      { text: "achtennegentigste", answer: "ninety-eighth" },
+      { text: "negenennegentigste", answer: "ninety-ninth" },
+      { text: "honderdste", answer: "one hundredth" },
+      { text: "honderdeerste", answer: "one hundred and first" }
+    ];
+
+    let gameMode = 1;
+    let players = ["Player", "Computer"];
+    let currentPlayer = 0;
+    const colors = ['red', 'yellow'];
+    let board = Array(7).fill().map(() => Array(7).fill(''));
+    let gameStarted = false;
+    let currentAnswer = '';
+    let gameOver = false;
+
+    function choosePlayers(mode) {
+      gameMode = mode;
+      const container = document.getElementById("name-fields");
+      container.innerHTML = "";
+      if (mode === 1) {
+        container.innerHTML = `<br><input type="text" id="name1" placeholder="Your name">
+                               <br><button onclick="startGame()">Start Game</button>`;
+      } else {
+        container.innerHTML = `<br><input type="text" id="name1" placeholder="Player 1 name">
+                               <input type="text" id="name2" placeholder="Player 2 name">
+                               <br><button onclick="startGame()">Start Game</button>`;
+      }
+    }
+
+    function startGame() {
+      const name1 = document.getElementById("name1").value || "Player 1";
+      const name2 = gameMode === 2 ? (document.getElementById("name2").value || "Player 2") : "Computer";
+      players = [name1, name2];
+      currentPlayer = 0;
+      document.getElementById("start-screen").style.display = "none";
+      document.getElementById("game").style.display = "flex";
+      document.getElementById("try-again").style.display = "none";
+      document.getElementById("winner").textContent = '';
+      renderGrid();
+      nextQuestion();
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+      board = Array(7).fill().map(() => Array(7).fill(''));
+      for (let row = 0; row < 7; row++) {
+        for (let col = 0; col < 7; col++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = row;
+          cell.dataset.col = col;
+          cell.addEventListener('click', () => handleMove(col));
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    function nextQuestion() {
+      if (gameOver) return;
+      gameStarted = false;
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("play-on").style.display = "none";
+      const q = questions[Math.floor(Math.random() * questions.length)];
+      currentAnswer = q.answer.toLowerCase();
+      document.getElementById("question").textContent = q.text;
+      document.getElementById("user-input").value = "";
+      document.getElementById("player-turn").textContent = `👉 ${players[currentPlayer]}'s turn`;
+    }
+
+    function checkInput() {
+      const input = document.getElementById("user-input").value.trim().toLowerCase();
+      const feedback = document.getElementById("feedback");
+      const playOnBtn = document.getElementById("play-on");
+
+      if (input === currentAnswer) {
+        gameStarted = true;
+        feedback.textContent = "";
+        playOnBtn.style.display = "none";
+        document.getElementById("player-turn").textContent = `${players[currentPlayer]}, kies een vakje!`;
+      } else {
+        feedback.textContent = `❌ Fout. Juist antwoord: "${currentAnswer}"`;
+        playOnBtn.style.display = "inline-block";
+        playOnBtn.onclick = () => {
+          playOnBtn.style.display = "none";
+          feedback.textContent = "";
+          if (gameMode === 1 && currentPlayer === 0) {
+            document.getElementById("player-turn").textContent = `🤖 De computer denkt na...`;
+            setTimeout(() => {
+              computerMove();
+              currentPlayer = 0;
+              nextQuestion();
+            }, 800);
+          } else {
+            currentPlayer = 1 - currentPlayer;
+            nextQuestion();
+          }
+        };
+      }
+    }
+
+    function handleMove(col) {
+      if (!gameStarted || gameOver) return;
+      for (let row = 6; row >= 0; row--) {
+               if (!board[row][col]) {
+          const color = colors[currentPlayer];
+          board[row][col] = color;
+          const index = row * 7 + col;
+          document.getElementsByClassName('cell')[index].classList.add(color);
+          if (checkWin(row, col, color)) {
+            document.getElementById('winner').textContent = `${players[currentPlayer]} wint! 🎉`;
+            document.getElementById('try-again').style.display = 'inline-block';
+            gameOver = true;
+            return;
+          }
+          gameStarted = false;
+          if (gameMode === 1 && currentPlayer === 0) {
+            document.getElementById("player-turn").textContent = `🤖 De computer denkt na...`;
+            setTimeout(() => {
+              computerMove();
+              currentPlayer = 0;
+              nextQuestion();
+            }, 800);
+          } else {
+            currentPlayer = 1 - currentPlayer;
+            nextQuestion();
+          }
+          break;
+        }
+      }
+    }
+
+    function computerMove() {
+      const validCols = [...Array(7).keys()].filter(c => board[0][c] === '');
+      const col = validCols[Math.floor(Math.random() * validCols.length)];
+      for (let row = 6; row >= 0; row--) {
+        if (!board[row][col]) {
+          board[row][col] = 'yellow';
+          const index = row * 7 + col;
+          document.getElementsByClassName('cell')[index].classList.add('yellow');
+          if (checkWin(row, col, 'yellow')) {
+            document.getElementById('winner').textContent = `Computer wint! 🤖`;
+            document.getElementById('try-again').style.display = 'inline-block';
+            gameOver = true;
+          }
+          break;
+        }
+      }
+    }
+
+    function checkWin(row, col, color) {
+      return (
+        checkDirection(row, col, color, 1, 0) ||
+        checkDirection(row, col, color, 0, 1) ||
+        checkDirection(row, col, color, 1, 1) ||
+        checkDirection(row, col, color, 1, -1)
+      );
+    }
+
+    function checkDirection(row, col, color, dr, dc) {
+      let count = 1;
+      for (let d = 1; d < 4; d++) {
+        const r = row + d * dr, c = col + d * dc;
+        if (r < 0 || c < 0 || r >= 7 || c >= 7 || board[r][c] !== color) break;
+        count++;
+      }
+      for (let d = 1; d < 4; d++) {
+        const r = row - d * dr, c = col - d * dc;
+        if (r < 0 || c < 0 || r >= 7 || c >= 7 || board[r][c] !== color) break;
+        count++;
+      }
+      return count >= 4;
+    }
+
+    function restartGame() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>
+

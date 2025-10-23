@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ordinal Numbers – Typoefening (Reflex)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff4;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #4caf50;
+      padding: 1rem 0;
+    }
+
+    header img {
+      width: 120px;
+    }
+
+    header h1 {
+      color: white;
+      margin: 0.5rem 0 0;
+    }
+
+    .game-container {
+      padding: 2rem;
+    }
+
+    .btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .btn:hover, .btn.active {
+      background-color: #388e3c;
+    }
+
+    input[type="text"] {
+      padding: 0.6rem 1rem;
+      font-size: 1.2rem;
+      border: 2px solid #4caf50;
+      border-radius: 6px;
+      width: 160px;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .sentence-wrapper {
+      margin: 2rem 0 1rem;
+      font-size: 1.5rem;
+    }
+
+    .feedback {
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .correct {
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    .incorrect {
+      color: #c62828;
+      font-weight: bold;
+    }
+
+    .stars {
+      font-size: 2rem;
+      color: gold;
+    }
+
+    .score {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    footer {
+      background-color: #e0f2f1;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="Engliforce Logo">
+  <h1>✍️ Reflex – Typ de juiste rangtelwoorden</h1>
+</header>
+
+<div class="game-container">
+
+  <!-- Setup -->
+  <div id="setup">
+    <h2>Kies snelheid (level):</h2>
+    <div>
+      <button class="btn level-btn" onclick="selectLevel(1)">1 (langzaam)</button>
+      <button class="btn level-btn" onclick="selectLevel(2)">2</button>
+      <button class="btn level-btn" onclick="selectLevel(3)">3</button>
+      <button class="btn level-btn" onclick="selectLevel(4)">4</button>
+      <button class="btn level-btn" onclick="selectLevel(5)">5 (snel)</button>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button class="btn" id="startBtn" onclick="startGame()" disabled>▶ Start</button>
+    </div>
+  </div>
+
+  <!-- Game -->
+  <div id="game" class="hidden">
+    <div class="stars" id="stars">⭐ ⭐ ⭐</div>
+    <div class="score" id="score">Score: 0</div>
+
+    <div class="sentence-wrapper" id="sentence">...</div>
+
+    <input type="text" id="answerInput" placeholder="Typ hier..." autocomplete="off" />
+
+    <div>
+      <button class="btn" onclick="submitAnswer()">Controleer</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+  </div>
+
+  <!-- Game Over -->
+  <div id="game-over" class="hidden">
+    <h2>😢 Game Over!</h2>
+    <p id="final-score"></p>
+    <button class="btn" onclick="window.location.reload()">🔄 Opnieuw</button>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Engliforce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  const ordinalWords = [
+    "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth",
+    "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth",
+    "twenty-first", "twenty-second", "twenty-third", "twenty-fourth", "twenty-fifth", "twenty-sixth", "twenty-seventh", "twenty-eighth", "twenty-ninth", "thirtieth",
+    "thirty-first", "thirty-second", "thirty-third", "thirty-fourth", "thirty-fifth", "thirty-sixth", "thirty-seventh", "thirty-eighth", "thirty-ninth", "fortieth",
+    "forty-first", "forty-second", "forty-third", "forty-fourth", "forty-fifth", "forty-sixth", "forty-seventh", "forty-eighth", "forty-ninth", "fiftieth",
+    "fifty-first", "fifty-second", "fifty-third", "fifty-fourth", "fifty-fifth", "fifty-sixth", "fifty-seventh", "fifty-eighth", "fifty-ninth", "sixtieth",
+    "sixty-first", "sixty-second", "sixty-third", "sixty-fourth", "sixty-fifth", "sixty-sixth", "sixty-seventh", "sixty-eighth", "sixty-ninth", "seventieth",
+    "seventy-first", "seventy-second", "seventy-third", "seventy-fourth", "seventy-fifth", "seventy-sixth", "seventy-seventh", "seventy-eighth", "seventy-ninth", "eightieth",
+    "eighty-first", "eighty-second", "eighty-third", "eighty-fourth", "eighty-fifth", "eighty-sixth", "eighty-seventh", "eighty-eighth", "eighty-ninth", "ninetieth",
+    "ninety-first", "ninety-second", "ninety-third", "ninety-fourth", "ninety-fifth", "ninety-sixth", "ninety-seventh", "ninety-eighth", "ninety-ninth", "hundredth",
+    "hundred-and-first"
+  ];
+
+  const ordinalData = ordinalWords.map((word, index) => ({
+    number: index + 1,
+    correct: word
+  }));
+
+  // Shuffle the order
+  const shuffledData = ordinalData.sort(() => Math.random() - 0.5);
+
+  let levelSpeed = 0;
+  let currentIndex = 0;
+  let score = 0;
+  let lives = 3;
+  let timeoutId = null;
+
+  const sentenceEl = document.getElementById("sentence");
+  const feedbackEl = document.getElementById("feedback");
+  const answerInput = document.getElementById("answerInput");
+  const starsEl = document.getElementById("stars");
+  const scoreEl = document.getElementById("score");
+
+  function selectLevel(level) {
+    const speedMap = { 1: 15000, 2: 10000, 3: 8000, 4: 6000, 5: 4000 };
+    levelSpeed = speedMap[level];
+    document.querySelectorAll(".level-btn").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+    document.getElementById("startBtn").disabled = false;
+  }
+
+  function startGame() {
+    document.getElementById("setup").classList.add("hidden");
+    document.getElementById("game").classList.remove("hidden");
+
+    currentIndex = 0;
+    score = 0;
+    lives = 3;
+    updateUI();
+    nextQuestion();
+  }
+
+  function nextQuestion() {
+    if (currentIndex >= shuffledData.length) return endGame();
+
+    const item = shuffledData[currentIndex];
+    sentenceEl.textContent = `Typ het juiste Engelse rangtelwoord voor: ${item.number}e`;
+    feedbackEl.textContent = "";
+    answerInput.value = "";
+    answerInput.focus();
+
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      loseLife("⏱ Tijd op!");
+    }, levelSpeed);
+  }
+
+  function submitAnswer() {
+    clearTimeout(timeoutId);
+    const input = answerInput.value.trim().toLowerCase();
+    const correct = shuffledData[currentIndex].correct.toLowerCase();
+
+    if (input === correct) {
+      score++;
+      feedbackEl.textContent = "✔ Correct!";
+      feedbackEl.className = "feedback correct";
+    } else {
+      loseLife(`✖ Fout. Antwoord: "${correct}"`);
+      return;
+    }
+
+    updateUI();
+    currentIndex++;
+    setTimeout(nextQuestion, 1500);
+  }
+
+  function loseLife(message) {
+    lives--;
+    feedbackEl.textContent = message;
+    feedbackEl.className = "feedback incorrect";
+    updateUI();
+
+    if (lives <= 0) {
+      endGame();
+    } else {
+      currentIndex++;
+      setTimeout(nextQuestion, 1500);
+    }
+  }
+
+  function updateUI() {
+    scoreEl.textContent = `Score: ${score}`;
+    starsEl.textContent = "⭐ ".repeat(lives);
+  }
+
+  function endGame() {
+    clearTimeout(timeoutId);
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("game-over").classList.remove("hidden");
+    document.getElementById("final-score").textContent = `Je eindscore: ${score} van ${shuffledData.length}`;
+  }
+</script>
+
+</body>
+</html>
