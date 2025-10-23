@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Treasure Hunt</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .header-bar {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem 1rem;
+    }
+
+    .header-bar img {
+      width: 120px;
+      margin-bottom: 1rem;
+    }
+
+    .header-bar h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .header-bar p {
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+    }
+
+    .game-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding: 2rem;
+      gap: 2rem;
+    }
+
+    .left-panel, .right-panel {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+
+    .question-box {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .question {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .option-btn {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .option-btn:hover {
+      background-color: #388e3c;
+    }
+
+    #feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-color: #d4edda;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .cell.clicked {
+      background-color: #f44336;
+      color: white;
+      pointer-events: none;
+    }
+
+    .player-turn {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #388e3c;
+      font-weight: bold;
+    }
+
+    #start-screen {
+      padding: 2rem;
+    }
+
+    input {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    #winner {
+      font-size: 1.8rem;
+      color: #28a745;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+
+    #try-again {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.5rem;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #try-again:hover {
+      background-color: #004d40;
+    }
+
+    footer {
+      background-color: #e0f2f1;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header-bar">
+    <img src="Logo.png" alt="EngliForce Logo">
+    <h1>🏆 Treasure Hunt</h1>
+    <p>Find the treasure!</p>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="start-screen">
+    <h2>Select number of players</h2>
+    <button onclick="setupPlayers(1)">1 Player</button>
+    <button onclick="setupPlayers(2)">2 Players</button>
+    <div id="name-inputs" style="margin-top: 1rem;"></div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game" style="display: none;">
+    <div class="player-turn" id="player-turn"></div>
+    <div class="game-container">
+      <div class="left-panel">
+        <div class="question-box">
+          <div class="question" id="question">Loading...</div>
+          <div class="options" id="options"></div>
+          <div id="feedback"></div>
+        </div>
+        <div id="winner"></div>
+        <button id="try-again" onclick="tryAgain()">Try Again</button>
+      </div>
+      <div class="right-panel">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+<script>
+const questions = [
+  { text: "My brother ___ very happy. He just won a prize.", answer: "is" },
+  { text: "Sarah and I ___ at school. It's Saturday today.", answer: "are not" },
+  { text: "Tom and Jerry ___ in the living room. I can hear them laughing.", answer: "are" },
+  { text: "She ___ tired. She stayed up late last night.", answer: "is" },
+  { text: "I ___ hungry. I haven’t eaten since lunch.", answer: "am" },
+  { text: "Tom and Jerry ___ angry. They’re smiling and joking.", answer: "are not" },
+  { text: "She ___ at home. Her lights are off and no one answers the door.", answer: "is not" },
+  { text: "I ___ a student. I go to EngliForce School.", answer: "am" },
+  { text: "He ___ in class today. His chair is empty.", answer: "is not" },
+  { text: "We ___ excited. The school trip is tomorrow!", answer: "are" },
+  { text: "You ___ ready for the test. You’ve studied hard.", answer: "are" },
+  { text: "Emma ___ in the room. Her bag is on the chair.", answer: "is" },
+  { text: "Sophie and Max ___ in the garden. I can see them through the window.", answer: "are" },
+  { text: "The bird ___ in the cage. The door is open and it flew away.", answer: "is not" },
+  { text: "She ___ at school today. She's on holiday.", answer: "is not" },
+  { text: "Ethan and Lucas ___ in the treehouse. I hear them talking.", answer: "are" },
+  { text: "My dad ___ at home. His car is in the driveway.", answer: "is" },
+  { text: "He ___ ten years old. Today is his birthday!", answer: "is" },
+  { text: "Lucy and Ava ___ best friends. They do everything together.", answer: "are" },
+  { text: "Emma ___ nervous. She has a big presentation today.", answer: "is" },
+  { text: "They ___ in the classroom. All the chairs are empty.", answer: "are not" },
+  { text: "The baby ___ asleep. She’s crying loudly.", answer: "is not" },
+  { text: "He ___ cold. He’s wearing a big coat.", answer: "is" },
+  { text: "Olivia ___ in the library. She’s reading a book.", answer: "is" },
+  { text: "I ___ sad. I just lost my favourite toy.", answer: "am" },
+  { text: "You ___ in this photo. Where were you?", answer: "are not" },
+  { text: "We ___ lucky today. The sun is shining!", answer: "are" },
+  { text: "He ___ a good singer. He won the talent show.", answer: "is" },
+  { text: "The cats ___ in the house. They're hiding under the bed.", answer: "are" },
+  { text: "My parents ___ home right now. They went shopping.", answer: "are not" },
+  { text: "It ___ very hot today. Let's go to the beach.", answer: "is" },
+  { text: "The children ___ in the playground. It’s raining.", answer: "are not" },
+  { text: "This book ___ interesting. I can't stop reading it.", answer: "is" },
+  { text: "We ___ busy right now. We have so much homework!", answer: "are" },
+  { text: "The teacher ___ in the classroom. She’s in a meeting.", answer: "is not" },
+  { text: "Grandma ___ in the kitchen. She’s baking cookies.", answer: "is" },
+  { text: "My shoes ___ dirty. I walked through the mud.", answer: "are" },
+  { text: "The dog ___ in the garden. It's chasing butterflies.", answer: "is" },
+  { text: "I ___ very tired. I stayed up late watching a movie.", answer: "am" },
+  { text: "You ___ my best friend. I trust you.", answer: "are" },
+{ text: "The classroom ___ clean. There’s trash everywhere.", answer: "is not" },
+{ text: "The books ___ on the shelf. Someone must have moved them.", answer: "are not" },
+{ text: "She ___ very kind. She always helps her classmates.", answer: "is" },
+{ text: "We ___ late. The bell hasn’t rung yet.", answer: "are not" },
+{ text: "You ___ the only one here. Look, Sarah is here too!", answer: "are not" },
+{ text: "This ice cream ___ delicious. Try it!", answer: "is" },
+{ text: "His friends ___ here today. They're all on a trip.", answer: "are not" },
+{ text: "My hands ___ cold. I need to wear gloves.", answer: "are" },
+{ text: "The cinema ___ open. There’s a big ‘Closed’ sign.", answer: "is not" },
+{ text: "He ___ in the football team. He plays every weekend.", answer: "is" }
+];
+
+
+  let currentQuestionIndex = 0;
+  let currentPlayer = 0;
+  let players = [];
+  let correctAnswer = "";
+  let grid = [];
+  let treasureCell = -1;
+  let gameStarted = false;
+
+  function setupPlayers(count) {
+    const container = document.getElementById('name-inputs');
+    container.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      container.innerHTML += `<input type="text" placeholder="Enter name for Player ${i + 1}" id="player${i}">`;
+    }
+    container.innerHTML += `<br><button onclick="startGame(${count})">Start Game</button>`;
+  }
+
+  function startGame(playerCount) {
+    players = [];
+    for (let i = 0; i < playerCount; i++) {
+      const nameInput = document.getElementById(`player${i}`);
+      players.push(nameInput.value || `Player ${i + 1}`);
+    }
+
+    shuffle(questions);
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('game').style.display = 'block';
+    currentPlayer = 0;
+    currentQuestionIndex = 0;
+    document.getElementById('winner').textContent = '';
+    document.getElementById('try-again').style.display = 'none';
+    setupGrid();
+    nextTurn();
+  }
+
+  function nextTurn() {
+    gameStarted = false;
+    const q = questions[currentQuestionIndex % questions.length];
+    currentQuestionIndex++;
+    correctAnswer = q.answer.replace(/[’']/g, "'").toLowerCase();
+
+    document.getElementById('question').textContent = q.text;
+    document.getElementById('player-turn').textContent = `👉 ${players[currentPlayer]}'s turn`;
+    document.getElementById('feedback').textContent = '';
+
+   const options = ["am", "is", "are", "am not", "is not", "are not"];
+    shuffle(options);
+    const optionsContainer = document.getElementById('options');
+    optionsContainer.innerHTML = '';
+
+    options.forEach(option => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = option;
+      btn.onclick = () => {
+        const cleanedOption = option.replace(/[’']/g, "'").toLowerCase();
+        if (cleanedOption === correctAnswer) {
+          gameStarted = true;
+          document.getElementById('player-turn').textContent = `${players[currentPlayer]}, choose a square!`;
+        } else {
+          document.getElementById('feedback').textContent = `❌ Incorrect. Correct answer: "${correctAnswer}"`;
+          setTimeout(() => {
+            nextPlayer();
+            nextTurn();
+          }, 2000);
+        }
+      };
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function setupGrid() {
+    const gridContainer = document.getElementById('grid');
+    gridContainer.innerHTML = '';
+    grid = [];
+    treasureCell = Math.floor(Math.random() * 25);
+    for (let i = 0; i < 25; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.addEventListener('click', () => {
+        if (!cell.classList.contains('clicked') && gameStarted) {
+          if (i === treasureCell) {
+            cell.innerHTML = "💰";
+            cell.style.backgroundColor = "#2e7d32";
+            cell.style.color = "white";
+            cell.classList.add('clicked');
+            document.getElementById('winner').textContent = `${players[currentPlayer]} found the treasure! 🎉`;
+            gameStarted = false;
+            document.getElementById('try-again').style.display = 'inline-block';
+          } else {
+            cell.classList.add('clicked');
+            nextPlayer();
+            nextTurn();
+          }
+        }
+      });
+      gridContainer.appendChild(cell);
+      grid.push(cell);
+    }
+  }
+
+  function nextPlayer() {
+    currentPlayer = (currentPlayer + 1) % players.length;
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  function tryAgain() {
+    document.getElementById('winner').textContent = '';
+    document.getElementById('try-again').style.display = 'none';
+    document.getElementById('feedback').textContent = '';
+    shuffle(questions);
+    currentQuestionIndex = 0;
+    currentPlayer = 0;
+    setupGrid();
+    nextTurn();
+  }
+</script>
+
+</body>
+</html>
