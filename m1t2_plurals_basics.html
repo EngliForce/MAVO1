@@ -5,98 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Meervoud in het Engels</title>
   <style>
-   body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f0fff4;
-  margin: 0;
-  padding: 0;
-}
-header {
-  background-color: #4caf50;
-  color: white;
-  padding: 2rem;
-  text-align: center;
-}
-main {
-  padding: 2rem;
-  text-align: center;
-}
-section {
-  background-color: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-h2 {
-  color: #4caf50;
-}
-
-/* 🔥 Verbeterde tabellen */
-table {
-  margin: 1rem auto;
-  border-collapse: collapse;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  min-width: 320px;
-  max-width: 900px; /* <-- aangepast */
-}
-th, td {
-  padding: 0.9rem 1.4rem;
-  text-align: center;
-  border-bottom: 1px solid #e0f2f1;
-}
-th {
-  background-color: #c8e6c9;
-  font-weight: bold;
-}
-tr:nth-child(even) td {
-  background-color: #f1f8e9;
-}
-tr:hover td {
-  background-color: #e8f5e9;
-  transition: background-color 0.2s ease-in-out;
-}
-
-ul {
-  list-style: none;
-  padding-left: 0;
-}
-ul li::before {
-  content: "✅ ";
-  color: #4caf50;
-}
-.video-container {
-  margin-top: 1rem;
-}
-.video-container iframe {
-  width: 360px;
-  height: 203px;
-  border: none;
-}
-.links {
-  margin-top: 1rem;
-}
-.links a {
-  display: inline-block;
-  margin: 0.3rem 0;
-  padding: 0.5rem 1rem;
-  background-color: #4caf50;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-.links a:hover {
-  background-color: #388e3c;
-}
-footer {
-  background-color: #e0f2f1;
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-}
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4caf50;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #4caf50;
+    }
+    table {
+      margin: 1rem auto;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-width: 320px;
+      max-width: 900px;
+    }
+    th, td {
+      padding: 0.9rem 1.4rem;
+      text-align: center;
+      border-bottom: 1px solid #e0f2f1;
+    }
+    th {
+      background-color: #c8e6c9;
+      font-weight: bold;
+    }
+    tr:nth-child(even) td {
+      background-color: #f1f8e9;
+    }
+    tr:hover td {
+      background-color: #e8f5e9;
+      transition: background-color 0.2s ease-in-out;
+    }
+    .toggle-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0 1rem 0;
+      flex-wrap: wrap;
+    }
+    .toggle-button {
+      padding: 0.5rem 1.2rem;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .toggle-button:hover {
+      background-color: #388e3c;
+    }
+    .toggle-content {
+      display: none;
+      margin-top: 1rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    footer {
+      background-color: #e0f2f1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -116,50 +111,51 @@ footer {
         <tr><td>car</td><td>cars</td></tr>
         <tr><td>apple</td><td>apples</td></tr>
       </table>
-    </section>
 
-    <section>
-      <h2>📦 +<em>es</em> bij bepaalde eindklanken</h2>
-      <p>Woorden die eindigen op een <strong>-s-klank</strong> krijgen <strong>–es</strong>:</p>
-      <table>
-  <tr><th>Uitgang</th><th>Enkelvoud</th><th>Meervoud</th><th>Opmerking</th></tr>
-  <tr><td>-ch</td><td>watch</td><td>watches</td><td></td></tr>
-  <tr><td>-sh</td><td>brush</td><td>brushes</td><td></td></tr>
-  <tr><td>-s</td><td>bus</td><td>buses</td><td></td></tr>
-  <tr><td>-x</td><td>box</td><td>boxes</td><td></td></tr>
-  <tr><td>-z</td><td>quiz</td><td>quizzes</td><td>z verdubbelt</td></tr>
-  <tr><td>-o</td><td>tomato</td><td>tomatoes</td><td>soms alleen -s: photo → photos</td></tr>
-</table>
-    </section>
+      <!-- 👇 Knoppen om de extra regels te tonen -->
+      <div class="toggle-buttons">
+        <button class="toggle-button" onclick="toggleContent('es')">+es</button>
+        <button class="toggle-button" onclick="toggleContent('ies')">-ies</button>
+        <button class="toggle-button" onclick="toggleContent('ves')">-ves</button>
+      </div>
 
-    <section>
-      <h2>🔤 Eindigt op een <em>medeklinker + y</em></h2>
-      <p>Verander <strong>-y</strong> in <strong>-ies</strong>:</p>
-      <table>
-        <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
-        <tr><td>city</td><td>cities</td></tr>
-        <tr><td>baby</td><td>babies</td></tr>
-      </table>
-      <p><em>Let op:</em> Als er een klinker voor de <strong>-y</strong> staat, komt er gewoon –s bij:<br> <strong>boy → boys</strong></p>
-    </section>
+      <!-- 👇 Verborgen secties -->
+      <div id="content-es" class="toggle-content">
+        <h3>📦 +<em>es</em> bij bepaalde eindklanken</h3>
+        <p>Woorden die eindigen op een <strong>-s-klank</strong> krijgen <strong>–es</strong>:</p>
+        <table>
+          <tr><th>Uitgang</th><th>Enkelvoud</th><th>Meervoud</th><th>Opmerking</th></tr>
+          <tr><td>-ch</td><td>watch</td><td>watches</td><td></td></tr>
+          <tr><td>-sh</td><td>brush</td><td>brushes</td><td></td></tr>
+          <tr><td>-s</td><td>bus</td><td>buses</td><td></td></tr>
+          <tr><td>-x</td><td>box</td><td>boxes</td><td></td></tr>
+          <tr><td>-z</td><td>quiz</td><td>quizzes</td><td>z verdubbelt</td></tr>
+          <tr><td>-o</td><td>tomato</td><td>tomatoes</td>
+        </table>
+<p><em>Let op:</em> Sommige woorden krijgen gewoon –s:<br><strong>photo → photos</strong></p>
+      </div>
 
-    <section>
-      <h2>🍃 Woorden die eindigen op <em>-f</em> of <em>-fe</em></h2>
-      <p>Verander <strong>-f</strong> of <strong>-fe</strong> in <strong>-ves</strong>:</p>
-      <table>
-        <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
-        <tr><td>leaf</td><td>leaves</td></tr>
-        <tr><td>wife</td><td>wives</td></tr>
-        <tr><td>knife</td><td>knives</td></tr>
-      </table>
-      <p><em>Let op:</em> Sommige woorden krijgen gewoon –s:<br><strong>roof → roofs</strong></p>
-    </section>
+      <div id="content-ies" class="toggle-content">
+        <h3>🔤 Eindigt op een <em>medeklinker + y</em></h3>
+        <p>Verander <strong>-y</strong> in <strong>-ies</strong>:</p>
+        <table>
+          <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
+          <tr><td>city</td><td>cities</td></tr>
+          <tr><td>baby</td><td>babies</td></tr>
+        </table>
+        <p><em>Let op:</em> Als er een klinker voor de <strong>-y</strong> staat, komt er gewoon –s bij:<br> <strong>boy → boys</strong></p>
+      </div>
 
-    <section>
-      <h2>🃏 Flashcards</h2>
-      <p>Oefen de meervoudsvormen met interactieve flashcards.</p>
-      <div class="links">
-        <a href="m1t3_plural_flashcards.html" target="_blank">Open Flashcards</a>
+      <div id="content-ves" class="toggle-content">
+        <h3>🍃 Woorden die eindigen op <em>-f</em> of <em>-fe</em></h3>
+        <p>Verander <strong>-f</strong> of <strong>-fe</strong> in <strong>-ves</strong>:</p>
+        <table>
+          <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
+          <tr><td>leaf</td><td>leaves</td></tr>
+          <tr><td>wife</td><td>wives</td></tr>
+          <tr><td>knife</td><td>knives</td></tr>
+        </table>
+        <p><em>Let op:</em> Sommige woorden krijgen gewoon –s:<br><strong>roof → roofs</strong></p>
       </div>
     </section>
 
@@ -167,28 +163,46 @@ footer {
       <h2>🎬 Video</h2>
       <p>Bekijk deze uitlegvideo over meervouden in het Engels!</p>
       <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/lD1OaD4FBqM" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/lD1OaD4FBqM" allowfullscreen style="width: 360px; height: 203px; border: none;"></iframe>
       </div>
     </section>
 
-    <section>
-      <h2>📝 Super Pickles</h2>
-      <p>Test je kennis met leuke Pickle-oefeningen!</p>
-      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2rem;">
-        <div class="links" style="min-width: 200px;">
-          <a href="m1t3_plural_pickle_1.html" target="_blank">Pickle 1: Drag & Drop</a><br>
-          <a href="m1t3_plural_pickle_2.html" target="_blank">Pickle 2: Reflex Game</a><br>
-          <a href="m1t3_plural_pickle_3.html" target="_blank">Pickle 3: Treasure Hunt</a><br>
-          <a href="m1t3_plural_pickle_4.html" target="_blank">Pickle 4: 4 in a row</a><br>
-          <a href="m1t3_plural_pickle_5.html" target="_blank">Pickle 5: ???</a>
-        </div>
-        <img src="Pickles.png" alt="Super Pickle" style="max-height: 200px; height: auto; width: auto;">
-      </div>
-    </section>
+<section>
+  <h2>📝 Super Pickles</h2>
+  <p>Test je kennis met leuke Pickle-oefeningen!</p>
+
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 2rem;">
+    <!-- Linkerkant: de knoppen -->
+    <div class="links" style="min-width: 200px; display: flex; flex-direction: column; gap: 1rem;">
+      <a href="m1t3_plural_pickle_1.html" target="_blank" class="toggle-button">Pickle 1: Drag & Drop</a>
+      <a href="m1t3_plural_pickle_2.html" target="_blank" class="toggle-button">Pickle 2: Reflex Game</a>
+      <a href="m1t3_plural_pickle_3.html" target="_blank" class="toggle-button">Pickle 3: Treasure Hunt</a>
+      <a href="m1t3_plural_pickle_4.html" target="_blank" class="toggle-button">Pickle 4: 4 in a row</a>
+      <a href="m1t3_plural_pickle_5.html" target="_blank" class="toggle-button">Pickle 5: ???</a>
+    </div>
+
+    <!-- Rechterkant: de afbeelding -->
+    <div>
+      <img src="Pickles.png" alt="Super Pickle" style="max-height: 200px; height: auto; width: auto;">
+    </div>
+  </div>
+</section>
   </main>
 
   <footer>
     <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
   </footer>
+
+  <!-- Script voor toggle-functionaliteit -->
+  <script>
+    function toggleContent(id) {
+      const content = document.getElementById('content-' + id);
+      if (content.style.display === 'block') {
+        content.style.display = 'none';
+      } else {
+        content.style.display = 'block';
+      }
+    }
+  </script>
 </body>
 </html>
