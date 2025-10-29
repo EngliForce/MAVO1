@@ -178,9 +178,9 @@
     <input type="text" id="q3_2">
     <label>3. What is 3 + 4? (spell it)</label>
     <input type="text" id="q3_3">
-    <label>4. Spell the number 8</label>
+    <label>4. Spell the number 21</label>
     <input type="text" id="q3_4">
-    <label>5. Spell the number 10</label>
+    <label>5. Spell the number 64</label>
     <input type="text" id="q3_5">
     <button onclick="checkAnswers(3)">Check Answers ✅</button>
     <div id="hint3" class="hint hidden">
@@ -281,15 +281,15 @@
   <!-- Exercise 8 -->
   <div class="container hidden" id="exercise8">
     <h2>Exercise 8: Present Simple</h2>
-    <label>1. He ___ to school every day.</label>
+    <label>1. He ___ (go) to school every day.</label>
     <input type="text" id="q8_1">
-    <label>2. I ___ football on Saturdays.</label>
+    <label>2. I ___ (play) football on Saturdays.</label>
     <input type="text" id="q8_2">
-    <label>3. They ___ breakfast at 7am.</label>
+    <label>3. They ___ (eat) breakfast at 7am.</label>
     <input type="text" id="q8_3">
-    <label>4. She ___ her homework in the evening.</label>
+    <label>4. She ___ (do) her homework in the evening.</label>
     <input type="text" id="q8_4">
-    <label>5. We ___ English on Monday.</label>
+    <label>5. We ___ (have got) English on Monday.</label>
     <input type="text" id="q8_5">
     <button onclick="checkAnswers(8)">Check Answers ✅</button>
     <div id="hint8" class="hint hidden">
@@ -325,15 +325,15 @@
   <!-- Exercise 10 -->
   <div class="container hidden" id="exercise10">
     <h2>Exercise 10: Adjectives</h2>
-    <label>1. The girl is very ___ (mooi).</label>
+    <label>1. She is a very ___ (mooi) girl.</label>
     <input type="text" id="q10_1">
-    <label>2. He is really ___ (knap).</label>
+    <label>2. He is a really ___ (knap) boy.</label>
     <input type="text" id="q10_2">
-    <label>3. The dog is very ___ (slank).</label>
+    <label>3. That is a very ___ (slank) dog.</label>
     <input type="text" id="q10_3">
-    <label>4. That’s an ___ boy. (gewoon)</label>
+    <label>4. That’s an ___ guy. (gewoon)</label>
     <input type="text" id="q10_4">
-    <label>5. She has ___ (sproeten).</label>
+    <label>5. She has ___  (coole) freckles.</label>
     <input type="text" id="q10_5">
     <button onclick="checkAnswers(10)">Check Answers ✅</button>
     <div id="hint10" class="hint hidden">
@@ -341,29 +341,6 @@
       <input type="text" id="code10" placeholder="Enter code">
       <button onclick="checkCode(10)">Unlock Exercise 11</button>
       <p id="codeResult10"></p>
-    </div>
-  </div>
-
-  <!-- Exercise 11 -->
-  <div class="container hidden" id="exercise11">
-    <h2>Exercise 11: Possessive Adjectives</h2>
-    <label>1. I love ___ dog.</label>
-    <input type="text" id="q11_1">
-    <label>2. She is washing ___ hands.</label>
-    <input type="text" id="q11_2">
-    <label>3. We are in ___ classroom.</label>
-    <input type="text" id="q11_3">
-    <label>4. He forgot ___ phone.</label>
-    <input type="text" id="q11_4">
-    <label>5. They are playing with ___ toys.</label>
-    <input type="text" id="q11_5">
-    <button onclick="checkAnswers(11)">Check Answers ✅</button>
-    <div id="hint11" class="hint hidden">
-      🎉 <strong>Congratulations!</strong> You've completed all exercises!
-      Code hint: English for "achternaam"
-      <input type="text" id="code11" placeholder="Enter code">
-      <button onclick="checkCode(11)">Finish Hunt 🏁</button>
-      <p id="codeResult11"></p>
     </div>
   </div>
 
@@ -432,7 +409,7 @@ else if (ex === 2) {
 }
 
       else if (ex === 3) {
-        const correctAnswers = ["two", "six", "seven", "eight", "ten"];
+        const correctAnswers = ["two", "five", "seven", "twenty-one", "sixty-four"];
         if (answer === correctAnswers[i - 1]) {
           input.className = "correct";
           correct++;
@@ -442,17 +419,7 @@ else if (ex === 2) {
       }
 
       else if (ex === 10) {
-        const correctAnswers = ["pretty", "handsome", "slim", "ordinary", "freckles"];
-        if (answer === correctAnswers[i - 1]) {
-          input.className = "correct";
-          correct++;
-        } else {
-          input.className = "incorrect";
-        }
-      }
-
-      else if (ex === 11) {
-        const correctAnswers = ["my", "her", "our", "his", "their"];
+        const correctAnswers = ["pretty", "handsome", "slim", "ordinary", "cool"];
         if (answer === correctAnswers[i - 1]) {
           input.className = "correct";
           correct++;
@@ -466,8 +433,8 @@ else if (ex === 2) {
           4: ["an", "an", "a", "an", "a"],
           5: ["She", "We", "It", "You", "He"],
           6: ["am", "is", "are", "is", "are"],
-          7: ["have", "has", "have", "has", "have"],
-          8: ["goes", "play", "have", "does", "learn"],
+          7: ["have got", "has got", "have got", "has got", "have got"],
+          8: ["goes", "play", "eat", "does", "have got"],
           9: ["Who", "What", "When", "Who", "Where"]
         };
 
@@ -527,3 +494,4 @@ else if (ex === 2) {
 </footer>
 </body>
 </html>
+
