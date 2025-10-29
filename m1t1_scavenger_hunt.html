@@ -94,37 +94,37 @@
     <p>Listen, learn, and unlock your English grammar adventure!</p>
   </header>
 
-  <!-- Exercise 1: Listening with spelled letters -->
+  <!-- Exercise 1 -->
   <div class="container" id="exercise1">
     <h2>Exercise 1: Listen to the spelled word</h2>
     <p>Click ▶️ to hear the letters. Then type the word you hear. All answers are case-sensitive.</p>
 
     <div>
-      <label>1.</label>
+      <label for="q1_1">1.</label>
       <button onclick="playSpelling(1)">▶️ Play</button>
       <input type="text" id="q1_1">
     </div>
 
     <div>
-      <label>2.</label>
+      <label for="q1_2">2.</label>
       <button onclick="playSpelling(2)">▶️ Play</button>
       <input type="text" id="q1_2">
     </div>
 
     <div>
-      <label>3.</label>
+      <label for="q1_3">3.</label>
       <button onclick="playSpelling(3)">▶️ Play</button>
       <input type="text" id="q1_3">
     </div>
 
     <div>
-      <label>4.</label>
+      <label for="q1_4">4.</label>
       <button onclick="playSpelling(4)">▶️ Play</button>
       <input type="text" id="q1_4">
     </div>
 
     <div>
-      <label>5.</label>
+      <label for="q1_5">5.</label>
       <button onclick="playSpelling(5)">▶️ Play</button>
       <input type="text" id="q1_5">
     </div>
@@ -139,48 +139,47 @@
     </div>
   </div>
 
-  <!-- Exercise 2: Capitalization Rules -->
-<div class="container hidden" id="exercise2">
-  <h2>Exercise 2: Capitalization</h2>
-  <p>Rewrite each sentence using correct capital letters.</p>
-  <label>1. i am from the netherlands.</label>
-  <input type="text" id="q2_1">
+  <!-- Exercise 2 -->
+  <div class="container hidden" id="exercise2">
+    <h2>Exercise 2: Capitalization</h2>
+    <p>Rewrite each sentence using correct capital letters.</p>
 
-  <label>2. we go to school on monday.</label>
-  <input type="text" id="q2_2">
+    <label for="q2_1">1. i am from the netherlands.</label>
+    <input type="text" id="q2_1">
 
-  <label>3. she loves reading harry potter books.</label>
-  <input type="text" id="q2_3">
+    <label for="q2_2">2. we go to school on monday.</label>
+    <input type="text" id="q2_2">
 
-  <label>4. they visited london in august.</label>
-  <input type="text" id="q2_4">
+    <label for="q2_3">3. she loves reading harry potter books.</label>
+    <input type="text" id="q2_3">
 
-  <label>5. my favorite brand is nike.</label>
-  <input type="text" id="q2_5">
+    <label for="q2_4">4. they visited london in august.</label>
+    <input type="text" id="q2_4">
 
-  <button onclick="checkAnswers(2)">Check Answers ✅</button>
+    <label for="q2_5">5. my favorite brand is nike.</label>
+    <input type="text" id="q2_5">
 
-  <div id="hint2" class="hint hidden">
-    ✅ Great! Code hint: English for "leeftijd"
-    <input type="text" id="code2" placeholder="Enter code">
-    <button onclick="checkCode(2)">Unlock Exercise 3</button>
-    <p id="codeResult2"></p>
+    <button onclick="checkAnswers(2)">Check Answers ✅</button>
+
+    <div id="hint2" class="hint hidden">
+      ✅ Great! Code hint: English for "leeftijd"
+      <input type="text" id="code2" placeholder="Enter code">
+      <button onclick="checkCode(2)">Unlock Exercise 3</button>
+      <p id="codeResult2"></p>
+    </div>
   </div>
-</div>
-
-
   <!-- Exercise 3 -->
   <div class="container hidden" id="exercise3">
     <h2>Exercise 3: Counting (spell out numbers)</h2>
-    <label>1. What is 1 + 1? (spell it)</label>
+    <label for="q3_1">1. What is 1 + 1? (spell it)</label>
     <input type="text" id="q3_1">
-    <label>2. What comes after 5? (spell it)</label>
+    <label for="q3_2">2. What comes after 5? (spell it)</label>
     <input type="text" id="q3_2">
-    <label>3. What is 3 + 4? (spell it)</label>
+    <label for="q3_3">3. What is 3 + 4? (spell it)</label>
     <input type="text" id="q3_3">
-    <label>4. Spell the number 21</label>
+    <label for="q3_4">4. Spell the number 21</label>
     <input type="text" id="q3_4">
-    <label>5. Spell the number 64</label>
+    <label for="q3_5">5. Spell the number 64</label>
     <input type="text" id="q3_5">
     <button onclick="checkAnswers(3)">Check Answers ✅</button>
     <div id="hint3" class="hint hidden">
@@ -194,15 +193,15 @@
   <!-- Exercise 4 -->
   <div class="container hidden" id="exercise4">
     <h2>Exercise 4: A / An</h2>
-    <label>1. ___ apple</label>
+    <label for="q4_1">1. ___ apple</label>
     <input type="text" id="q4_1">
-    <label>2. ___ orange</label>
+    <label for="q4_2">2. ___ orange</label>
     <input type="text" id="q4_2">
-    <label>3. ___ banana</label>
+    <label for="q4_3">3. ___ banana</label>
     <input type="text" id="q4_3">
-    <label>4. ___ elephant</label>
+    <label for="q4_4">4. ___ elephant</label>
     <input type="text" id="q4_4">
-    <label>5. ___ house</label>
+    <label for="q4_5">5. ___ house</label>
     <input type="text" id="q4_5">
     <button onclick="checkAnswers(4)">Check Answers ✅</button>
     <div id="hint4" class="hint hidden">
@@ -216,15 +215,15 @@
   <!-- Exercise 5 -->
   <div class="container hidden" id="exercise5">
     <h2>Exercise 5: Personal Pronouns</h2>
-    <label>1. (Anna) → ___ is my friend.</label>
+    <label for="q5_1">1. (Anna) → ___ is my friend.</label>
     <input type="text" id="q5_1">
-    <label>2. (Tom and I) → ___ are tired.</label>
+    <label for="q5_2">2. (Tom and I) → ___ are tired.</label>
     <input type="text" id="q5_2">
-    <label>3. (My cat) → ___ is black.</label>
+    <label for="q5_3">3. (My cat) → ___ is black.</label>
     <input type="text" id="q5_3">
-    <label>4. (You and Sarah) → ___ are nice.</label>
+    <label for="q5_4">4. (You and Sarah) → ___ are nice.</label>
     <input type="text" id="q5_4">
-    <label>5. (Jack) → ___ is tall.</label>
+    <label for="q5_5">5. (Jack) → ___ is tall.</label>
     <input type="text" id="q5_5">
     <button onclick="checkAnswers(5)">Check Answers ✅</button>
     <div id="hint5" class="hint hidden">
@@ -238,15 +237,15 @@
   <!-- Exercise 6 -->
   <div class="container hidden" id="exercise6">
     <h2>Exercise 6: To be – Present Simple (affirmative)</h2>
-    <label>1. I ___ a student.</label>
+    <label for="q6_1">1. I ___ a student.</label>
     <input type="text" id="q6_1">
-    <label>2. She ___ a doctor.</label>
+    <label for="q6_2">2. She ___ a doctor.</label>
     <input type="text" id="q6_2">
-    <label>3. We ___ friends.</label>
+    <label for="q6_3">3. We ___ friends.</label>
     <input type="text" id="q6_3">
-    <label>4. He ___ funny.</label>
+    <label for="q6_4">4. He ___ funny.</label>
     <input type="text" id="q6_4">
-    <label>5. They ___ here.</label>
+    <label for="q6_5">5. They ___ here.</label>
     <input type="text" id="q6_5">
     <button onclick="checkAnswers(6)">Check Answers ✅</button>
     <div id="hint6" class="hint hidden">
@@ -259,15 +258,15 @@
   <!-- Exercise 7 -->
   <div class="container hidden" id="exercise7">
     <h2>Exercise 7: Have / Has got – Present Simple</h2>
-    <label>1. I ___ a cat.</label>
+    <label for="q7_1">1. I ___ a cat.</label>
     <input type="text" id="q7_1">
-    <label>2. She ___ a bike.</label>
+    <label for="q7_2">2. She ___ a bike.</label>
     <input type="text" id="q7_2">
-    <label>3. They ___ two brothers.</label>
+    <label for="q7_3">3. They ___ two brothers.</label>
     <input type="text" id="q7_3">
-    <label>4. He ___ a phone.</label>
+    <label for="q7_4">4. He ___ a phone.</label>
     <input type="text" id="q7_4">
-    <label>5. You ___ a good idea!</label>
+    <label for="q7_5">5. You ___ a good idea!</label>
     <input type="text" id="q7_5">
     <button onclick="checkAnswers(7)">Check Answers ✅</button>
     <div id="hint7" class="hint hidden">
@@ -281,15 +280,15 @@
   <!-- Exercise 8 -->
   <div class="container hidden" id="exercise8">
     <h2>Exercise 8: Present Simple</h2>
-    <label>1. He ___ (go) to school every day.</label>
+    <label for="q8_1">1. He ___ (go) to school every day.</label>
     <input type="text" id="q8_1">
-    <label>2. I ___ (play) football on Saturdays.</label>
+    <label for="q8_2">2. I ___ (play) football on Saturdays.</label>
     <input type="text" id="q8_2">
-    <label>3. They ___ (eat) breakfast at 7am.</label>
+    <label for="q8_3">3. They ___ (eat) breakfast at 7am.</label>
     <input type="text" id="q8_3">
-    <label>4. She ___ (do) her homework in the evening.</label>
+    <label for="q8_4">4. She ___ (do) her homework in the evening.</label>
     <input type="text" id="q8_4">
-    <label>5. We ___ (have got) English on Monday.</label>
+    <label for="q8_5">5. We ___ (have got) English on Monday.</label>
     <input type="text" id="q8_5">
     <button onclick="checkAnswers(8)">Check Answers ✅</button>
     <div id="hint8" class="hint hidden">
@@ -303,15 +302,15 @@
   <!-- Exercise 9 -->
   <div class="container hidden" id="exercise9">
     <h2>Exercise 9: Question Words</h2>
-    <label>1. ___ are you?</label>
+    <label for="q9_1">1. ___ are you?</label>
     <input type="text" id="q9_1">
-    <label>2. ___ is your name?</label>
+    <label for="q9_2">2. ___ is your name?</label>
     <input type="text" id="q9_2">
-    <label>3. ___ is your birthday?</label>
+    <label for="q9_3">3. ___ is your birthday?</label>
     <input type="text" id="q9_3">
-    <label>4. ___ is your best friend?</label>
+    <label for="q9_4">4. ___ is your best friend?</label>
     <input type="text" id="q9_4">
-    <label>5. ___ do you live?</label>
+    <label for="q9_5">5. ___ do you live?</label>
     <input type="text" id="q9_5">
     <button onclick="checkAnswers(9)">Check Answers ✅</button>
     <div id="hint9" class="hint hidden">
@@ -325,21 +324,21 @@
   <!-- Exercise 10 -->
   <div class="container hidden" id="exercise10">
     <h2>Exercise 10: Adjectives</h2>
-    <label>1. She is a very ___ (mooi) girl.</label>
+    <label for="q10_1">1. She is a very ___ (mooi) girl.</label>
     <input type="text" id="q10_1">
-    <label>2. He is a really ___ (knap) boy.</label>
+    <label for="q10_2">2. He is a really ___ (knap) boy.</label>
     <input type="text" id="q10_2">
-    <label>3. That is a very ___ (slank) dog.</label>
+    <label for="q10_3">3. That is a very ___ (slank) dog.</label>
     <input type="text" id="q10_3">
-    <label>4. That’s an ___ guy. (gewoon)</label>
+    <label for="q10_4">4. That’s an ___ guy. (gewoon)</label>
     <input type="text" id="q10_4">
-    <label>5. She has ___  (coole) freckles.</label>
+    <label for="q10_5">5. She has ___ (coole) freckles.</label>
     <input type="text" id="q10_5">
     <button onclick="checkAnswers(10)">Check Answers ✅</button>
     <div id="hint10" class="hint hidden">
       ✅ Nice job! Code hint: English for "postcode"
       <input type="text" id="code10" placeholder="Enter code">
-      <button onclick="checkCode(10)">Unlock Exercise 11</button>
+      <button onclick="checkCode(10)">Finish the Scavenger Hunt</button>
       <p id="codeResult10"></p>
     </div>
   </div>
@@ -349,149 +348,133 @@
     <h2>🎉 Well done!</h2>
     <p>You’ve completed the full scavenger hunt. You’re a grammar champion! 🧠</p>
   </div>
-<script>
-  const spelledWords = {
-    1: ['j', 'u', 'm', 'p'],
-    2: ['z', 'e', 'b', 'r', 'a'],
-    3: ['v', 'o', 't', 'i', 'n', 'g'],
-    4: ['q', 'u', 'i', 'c', 'k'],
-    5: ['h', 'e', 'a', 'd', 'f', 'l', 'y']
-  };
 
-  function playSpelling(wordIndex) {
-    const letters = spelledWords[wordIndex];
-    let i = 0;
-
-    function playNext() {
-      if (i < letters.length) {
-        const audio = new Audio(`${letters[i]}.mp3`);
-        audio.play();
-        i++;
-        audio.onended = () => setTimeout(playNext, 200);
-      }
-    }
-
-    playNext();
-  }
-
-  function checkAnswers(ex) {
-    let correct = 0;
-
-    for (let i = 1; i <= 5; i++) {
-      const input = document.getElementById(`q${ex}_${i}`);
-      const answer = input.value.trim();
-
-      if (ex === 1) {
-        const correctAnswers = ["jump", "zebra", "voting", "quick", "headfly"];
-        if (answer === correctAnswers[i - 1]) {
-          input.className = "correct";
-          correct++;
-        } else {
-          input.className = "incorrect";
-        }
-      }
-
-else if (ex === 2) {
-  const correctAnswers = [
-    "I am from the Netherlands.",
-    "We go to school on Monday.",
-    "She loves reading Harry Potter books.",
-    "They visited London in August.",
-    "My favorite brand is Nike."
-  ];
-
-  if (answer === correctAnswers[i - 1]) {
-    input.className = "correct";
-    correct++;
-  } else {
-    input.className = "incorrect";
-  }
-}
-
-      else if (ex === 3) {
-        const correctAnswers = ["two", "five", "seven", "twenty-one", "sixty-four"];
-        if (answer === correctAnswers[i - 1]) {
-          input.className = "correct";
-          correct++;
-        } else {
-          input.className = "incorrect";
-        }
-      }
-
-      else if (ex === 10) {
-        const correctAnswers = ["pretty", "handsome", "slim", "ordinary", "cool"];
-        if (answer === correctAnswers[i - 1]) {
-          input.className = "correct";
-          correct++;
-        } else {
-          input.className = "incorrect";
-        }
-      }
-
-      else {
-        const expectedAnswers = {
-          4: ["an", "an", "a", "an", "a"],
-          5: ["She", "We", "It", "You", "He"],
-          6: ["am", "is", "are", "is", "are"],
-          7: ["have got", "has got", "have got", "has got", "have got"],
-          8: ["goes", "play", "eat", "does", "have got"],
-          9: ["Who", "What", "When", "Who", "Where"]
-        };
-
-        if (expectedAnswers[ex] && answer === expectedAnswers[ex][i - 1]) {
-          input.className = "correct";
-          correct++;
-        } else {
-          input.className = "incorrect";
-        }
-      }
-    }
-
-    if (correct === 5) {
-      document.getElementById(`hint${ex}`).classList.remove("hidden");
-    }
-  }
-
-  function checkCode(ex) {
-    const input = document.getElementById(`code${ex}`);
-    const value = input.value.trim();
-    const result = document.getElementById(`codeResult${ex}`);
-
-    const correctCodes = {
-      1: "address",
-      2: "age",
-      3: "birthday",
-      4: "city",
-      5: "country",
-      6: "email address",
-      7: "first name",
-      8: "nationality",
-      9: "phone number",
-      10: "postcode",
-      11: "surname"
+  <script>
+    const spelledWords = {
+      1: ['j', 'u', 'm', 'p'],
+      2: ['z', 'e', 'b', 'r', 'a'],
+      3: ['v', 'o', 't', 'i', 'n', 'g'],
+      4: ['q', 'u', 'i', 'c', 'k'],
+      5: ['h', 'e', 'a', 'd', 'f', 'l', 'y']
     };
 
-    if (value === correctCodes[ex]) {
-      result.textContent = "✅ Code correct!";
-      result.className = "success";
+    function playSpelling(wordIndex) {
+      const letters = spelledWords[wordIndex];
+      let i = 0;
 
-      if (ex < 11) {
-        document.getElementById(`exercise${ex + 1}`).classList.remove("hidden");
-        window.scrollTo({ top: document.getElementById(`exercise${ex + 1}`).offsetTop - 20, behavior: "smooth" });
-      } else {
-        document.getElementById("finalMessage").classList.remove("hidden");
-        window.scrollTo({ top: document.getElementById("finalMessage").offsetTop - 20, behavior: "smooth" });
+      function playNext() {
+        if (i < letters.length) {
+          const audio = new Audio(`${letters[i]}.mp3`);
+          audio.onerror = () => console.error(`Missing audio: ${letters[i]}.mp3`);
+          audio.play();
+          i++;
+          audio.onended = () => setTimeout(playNext, 200);
+        }
       }
-    } else {
-      result.textContent = "❌ Incorrect code. Try again.";
-      result.className = "error";
-    }
-  }
-</script>
 
-<footer>
-  <p>&copy; 2025 EngliForce – Make English your superpower!</p>
-</footer>
+      playNext();
+    }
+
+    function checkAnswers(ex) {
+      let correct = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        const input = document.getElementById(`q${ex}_${i}`);
+        const answer = input.value.trim();
+
+        if (ex === 1) {
+          const correctAnswers = ["jump", "zebra", "voting", "quick", "headfly"];
+          input.className = (answer === correctAnswers[i - 1]) ? "correct" : "incorrect";
+          if (answer === correctAnswers[i - 1]) correct++;
+        }
+
+        else if (ex === 2) {
+          const correctAnswers = [
+            "I am from the Netherlands.",
+            "We go to school on Monday.",
+            "She loves reading Harry Potter books.",
+            "They visited London in August.",
+            "My favorite brand is Nike."
+          ];
+          input.className = (answer === correctAnswers[i - 1]) ? "correct" : "incorrect";
+          if (answer === correctAnswers[i - 1]) correct++;
+        }
+
+        else if (ex === 3) {
+          const correctAnswers = ["two", "six", "seven", "twenty-one", "sixty-four"];
+          input.className = (answer === correctAnswers[i - 1]) ? "correct" : "incorrect";
+          if (answer === correctAnswers[i - 1]) correct++;
+        }
+
+        else if (ex === 10) {
+          const correctAnswers = ["pretty", "handsome", "slim", "ordinary", "cool"];
+          input.className = (answer === correctAnswers[i - 1]) ? "correct" : "incorrect";
+          if (answer === correctAnswers[i - 1]) correct++;
+        }
+
+        else {
+          const expectedAnswers = {
+            4: ["an", "an", "a", "an", "a"],
+            5: ["She", "We", "It", "You", "He"],
+            6: ["am", "is", "are", "is", "are"],
+            7: ["have got", "has got", "have got", "has got", "have got"],
+            8: ["goes", "play", "eat", "does", "have got"],
+            9: ["Who", "What", "When", "Who", "Where"]
+          };
+
+          const expected = expectedAnswers[ex]?.[i - 1];
+          input.className = (answer === expected) ? "correct" : "incorrect";
+          if (answer === expected) correct++;
+        }
+      }
+
+      if (correct === 5) {
+        document.getElementById(`hint${ex}`).classList.remove("hidden");
+      }
+    }
+
+    function checkCode(ex) {
+      const input = document.getElementById(`code${ex}`);
+      const value = input.value.trim().toLowerCase();
+      const result = document.getElementById(`codeResult${ex}`);
+
+      const correctCodes = {
+        1: "address",
+        2: "age",
+        3: "birthday",
+        4: "city",
+        5: "country",
+        6: "email address",
+        7: "first name",
+        8: "nationality",
+        9: "phone number",
+        10: "postcode",
+        11: "surname"
+      };
+
+      if (value === correctCodes[ex]) {
+        result.textContent = "✅ Code correct!";
+        result.className = "success";
+
+        const nextExercise = document.getElementById(`exercise${ex + 1}`);
+        if (nextExercise) {
+          nextExercise.classList.remove("hidden");
+          window.scrollTo({ top: nextExercise.offsetTop - 20, behavior: "smooth" });
+        } else {
+          document.getElementById("finalMessage").classList.remove("hidden");
+          window.scrollTo({ top: document.getElementById("finalMessage").offsetTop - 20, behavior: "smooth" });
+        }
+      } else {
+        result.textContent = "❌ Incorrect code. Try again.";
+        result.className = "error";
+      }
+    }
+  </script>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English your superpower!</p>
+  </footer>
 </body>
 </html>
 
+ 
