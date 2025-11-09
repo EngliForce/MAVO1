@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – Vocabulary 2.2: Going Out</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4fff4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #4caf50;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .controls {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    select, label, button {
+      font-size: 1rem;
+    }
+
+    .flashcards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    .card {
+      width: 220px;
+      height: 180px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #ffffff, #ddffe0);
+      color: #4caf50;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .card-back {
+      background: #4caf50;
+      color: white;
+      transform: rotateY(180deg);
+      font-size: 1.2rem;
+    }
+
+    .example {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    .checkbox-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+
+    footer {
+      background-color: #ddffe0;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo.png" alt="EngliForce logo" />
+    <h1>Vocabulary 2.2: Going Out</h1>
+    <p>Klik op een kaart om de vertaling te zien. Je kunt ook instellen hoe je wilt oefenen!</p>
+  </header>
+
+  <div class="controls">
+    <label>
+      Aantal kaarten:
+      <select id="card-count">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="show-examples" />
+      Toon voorbeeldzinnen
+    </label>
+    <label>
+      <input type="checkbox" id="reverse-cards" />
+      Nederlands → Engels
+    </label>
+
+    <button onclick="generateCards()">Next 🔁</button>
+    <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+    <button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+    <button onclick="practiceAll()">Oefen alles 🔄</button>
+  </div>
+
+  <div class="flashcards-container" id="flashcards-container"></div>
+
+  <footer>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const flashcards = [
+      { en: 'restaurant', nl: 'restaurant', exEN: 'We had dinner at a restaurant.', exNL: 'We hebben in een restaurant gegeten.' },
+      { en: 'café', nl: 'café', exEN: 'Let\'s meet at the café.', exNL: 'Laten we afspreken in het café.' },
+      { en: 'park', nl: 'park', exEN: 'They walked in the park.', exNL: 'Ze wandelden in het park.' },
+      { en: 'cinema', nl: 'bioscoop', exEN: 'We are going to the cinema.', exNL: 'We gaan naar de bioscoop.' },
+      { en: 'shop', nl: 'winkel', exEN: 'She works in a shop.', exNL: 'Ze werkt in een winkel.' },
+      { en: 'ticket', nl: 'ticket', exEN: 'He bought a movie ticket.', exNL: 'Hij kocht een bioscoopticket.' },
+      { en: 'weekend', nl: 'weekend', exEN: 'What are your plans this weekend?', exNL: 'Wat zijn jouw plannen dit weekend?' },
+      { en: 'meet friends (to)', nl: 'vrienden ontmoeten', exEN: 'I like to meet friends.', exNL: 'Ik vind het leuk om vrienden te ontmoeten.' },
+      { en: 'meal', nl: 'maaltijd', exEN: 'We had a delicious meal.', exNL: 'We hadden een heerlijke maaltijd.' },
+      { en: 'menu', nl: 'menu', exEN: 'Can I see the menu, please?', exNL: 'Mag ik het menu zien, alstublieft?' },
+      { en: 'order (to)', nl: 'bestellen', exEN: 'I want to order a drink.', exNL: 'Ik wil een drankje bestellen.' },
+      { en: 'waiter / waitress', nl: 'ober / serveerster', exEN: 'The waitress was kind.', exNL: 'De serveerster was vriendelijk.' },
+      { en: 'bill', nl: 'rekening', exEN: 'Can we get the bill?', exNL: 'Kunnen we de rekening krijgen?' },
+      { en: 'snack', nl: 'snack', exEN: 'I had a small snack.', exNL: 'Ik nam een kleine snack.' },
+      { en: 'drink', nl: 'drankje', exEN: 'Would you like a drink?', exNL: 'Wil je een drankje?' },
+      { en: 'dessert', nl: 'dessert', exEN: 'Chocolate cake is my favorite dessert.', exNL: 'Chocoladetaart is mijn favoriete dessert.' },
+      { en: 'invitation', nl: 'uitnodiging', exEN: 'I got an invitation to a party.', exNL: 'Ik kreeg een uitnodiging voor een feest.' },
+      { en: 'party', nl: 'feest', exEN: 'The party was fun.', exNL: 'Het feest was leuk.' },
+      { en: 'music (live)', nl: '(live) muziek', exEN: 'There was live music at the bar.', exNL: 'Er was live muziek in de bar.' },
+      { en: 'table', nl: 'tafel', exEN: 'We reserved a table.', exNL: 'We hebben een tafel gereserveerd.' },
+      { en: 'busy', nl: 'druk', exEN: 'The restaurant is busy tonight.', exNL: 'Het restaurant is druk vanavond.' },
+      { en: 'price', nl: 'prijs (die je moet betalen)', exEN: 'The price is too high.', exNL: 'De prijs is te hoog.' },
+      { en: 'street', nl: 'straat', exEN: 'She lives on this street.', exNL: 'Ze woont in deze straat.' },
+      { en: 'city centre', nl: 'stadscentrum', exEN: 'The shop is in the city centre.', exNL: 'De winkel is in het stadscentrum.' }
+    ];
+
+    const knownWords = new Set();
+
+    function generateCards() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceUnknown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const unknown = flashcards.filter(word => !knownWords.has(word.en));
+      if (unknown.length === 0) {
+        container.innerHTML = "<p>🎉 Je kent alle woorden al!</p>";
+        return;
+      }
+
+      unknown.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceKnown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const known = flashcards.filter(word => knownWords.has(word.en));
+      if (known.length === 0) {
+        container.innerHTML = "<p>📋 Je hebt nog geen woorden gemarkeerd als ‘Ken ik’.</p>";
+        return;
+      }
+
+      known.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceAll() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function createCard(word, showExamples, reversed, container) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => card.classList.toggle('flipped');
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'card-inner';
+
+      const front = document.createElement('div');
+      front.className = 'card-front';
+      front.innerHTML = reversed ? word.nl : word.en;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exNL : word.exEN;
+        front.appendChild(ex);
+      }
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.innerHTML = reversed ? word.en : word.nl;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exEN : word.exNL;
+        back.appendChild(ex);
+      }
+
+      const checkboxContainer = document.createElement('label');
+      checkboxContainer.className = 'checkbox-container';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = knownWords.has(word.en);
+      checkbox.onchange = (e) => {
+        e.stopPropagation();
+        if (checkbox.checked) {
+          knownWords.add(word.en);
+        } else {
+          knownWords.delete(word.en);
+        }
+      };
+      const labelText = document.createTextNode('Ken ik');
+      checkboxContainer.appendChild(checkbox);
+      checkboxContainer.appendChild(labelText);
+
+      cardInner.appendChild(front);
+      cardInner.appendChild(back);
+      card.appendChild(cardInner);
+      card.appendChild(checkboxContainer);
+      container.appendChild(card);
+    }
+
+    window.onload = generateCards;
+  </script>
+
+</body>
+</html>

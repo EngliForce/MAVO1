@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 2.3: Going Out</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #43a047;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #e6f4ea;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #c8e6c9;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a, .links button {
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover, .links button:hover {
+      background-color: #388e3c;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #e0f2f1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #388e3c;
+    }
+    .pickle-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pickle-list li {
+      margin-bottom: 1rem;
+    }
+    .pickle-image-tall {
+      height: 260px;
+      width: auto;
+      margin-top: 0.25rem;
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+  <h1>Vocabulary 2.3: Going Out</h1>
+</header>
+
+<main>
+
+<section>
+  <div class="table-row">
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>restaurant</td><td>restaurant</td></tr>
+        <tr><td>café</td><td>café</td></tr>
+        <tr><td>park</td><td>park</td></tr>
+        <tr><td>cinema</td><td>bioscoop</td></tr>
+        <tr><td>shop</td><td>winkel</td></tr>
+        <tr><td>ticket</td><td>ticket</td></tr>
+        <tr><td>weekend</td><td>weekend</td></tr>
+        <tr><td>meet friends (to)</td><td>vrienden ontmoeten</td></tr>
+        <tr><td>meal</td><td>maaltijd</td></tr>
+        <tr><td>menu</td><td>menu</td></tr>
+      </table>
+    </div>
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>order (to)</td><td>bestellen</td></tr>
+        <tr><td>waiter / waitress</td><td>ober / serveerster</td></tr>
+        <tr><td>bill</td><td>rekening</td></tr>
+        <tr><td>snack</td><td>snack</td></tr>
+        <tr><td>drink</td><td>drankje</td></tr>
+        <tr><td>dessert</td><td>dessert</td></tr>
+        <tr><td>invitation</td><td>uitnodiging</td></tr>
+        <tr><td>party</td><td>feest</td></tr>
+        <tr><td>music (live)</td><td>(live) muziek</td></tr>
+        <tr><td>table</td><td>tafel</td></tr>
+        <tr><td>busy</td><td>druk</td></tr>
+        <tr><td>price</td><td>prijs (die je moet betalen)</td></tr>
+        <tr><td>street</td><td>straat</td></tr>
+        <tr><td>city centre</td><td>stadscentrum</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>restaurant</td><td>We had dinner at a nice restaurant.</td><td>We hebben gegeten in een leuk restaurant.</td></tr>
+          <tr><td>café</td><td>Let’s meet at the café near school.</td><td>Laten we afspreken in het café bij school.</td></tr>
+          <tr><td>park</td><td>They walked through the park.</td><td>Ze liepen door het park.</td></tr>
+          <tr><td>cinema</td><td>We’re going to the cinema tonight.</td><td>We gaan vanavond naar de bioscoop.</td></tr>
+          <tr><td>shop</td><td>I bought a new jacket at the shop.</td><td>Ik kocht een nieuw jasje in de winkel.</td></tr>
+          <tr><td>ticket</td><td>He forgot his movie ticket at home.</td><td>Hij vergat zijn bioscoopticket thuis.</td></tr>
+          <tr><td>weekend</td><td>What are you doing this weekend?</td><td>Wat ga jij dit weekend doen?</td></tr>
+          <tr><td>meet friends (to)</td><td>I love to meet friends after school.</td><td>Ik vind het leuk om na school vrienden te ontmoeten.</td></tr>
+          <tr><td>meal</td><td>We enjoyed a delicious meal together.</td><td>We genoten samen van een heerlijke maaltijd.</td></tr>
+          <tr><td>menu</td><td>The menu has many vegetarian options.</td><td>Het menu heeft veel vegetarische opties.</td></tr>
+          <tr><td>order (to)</td><td>She wants to order a drink.</td><td>Ze wil een drankje bestellen.</td></tr>
+          <tr><td>waiter / waitress</td><td>The waitress was very friendly.</td><td>De serveerster was erg vriendelijk.</td></tr>
+          <tr><td>bill</td><td>Can we have the bill, please?</td><td>Kunnen we de rekening krijgen, alstublieft?</td></tr>
+          <tr><td>snack</td><td>I had a quick snack after school.</td><td>Ik nam een snelle snack na school.</td></tr>
+          <tr><td>drink</td><td>Would you like a cold drink?</td><td>Wil je een koud drankje?</td></tr>
+          <tr><td>dessert</td><td>The chocolate cake is my favorite dessert.</td><td>De chocoladetaart is mijn favoriete dessert.</td></tr>
+          <tr><td>invitation</td><td>I got an invitation to a birthday party.</td><td>Ik kreeg een uitnodiging voor een verjaardagsfeest.</td></tr>
+          <tr><td>party</td><td>There’s a big party on Friday night.</td><td>Er is een groot feest op vrijdagavond.</td></tr>
+          <tr><td>music (live)</td><td>The café had live music last night.</td><td>Het café had gisteravond live muziek.</td></tr>
+          <tr><td>table</td><td>We reserved a table for four people.</td><td>We hebben een tafel voor vier gereserveerd.</td></tr>
+          <tr><td>busy</td><td>The restaurant was really busy.</td><td>Het restaurant was erg druk.</td></tr>
+          <tr><td>price</td><td>The price was too high for me.</td><td>De prijs was te hoog voor mij.</td></tr>
+          <tr><td>street</td><td>They live on a quiet street.</td><td>Ze wonen in een rustige straat.</td></tr>
+          <tr><td>city centre</td><td>The cinema is in the city centre.</td><td>De bioscoop is in het stadscentrum.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Bekijk de video hieronder over uitgaan en vrije tijd.</p>
+  <div class="video-row">
+    <div class="video-column">
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+        <iframe 
+          src="https://www.youtube.com/embed/sJkUJjuwqUw" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen 
+          style="position:absolute;top:0;left:0;width:100%;height:100%;">
+        </iframe>
+      </div>
+      <p>Going Out Vocabulary</p>
+    </div>
+  </div>
+</section>
+<section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href="vocab_2_3_flashcards.html" target="_blank">Open Flashcards</a>
+  </div>
+</section>
+
+<section>
+  <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
+  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+    <ul class="pickle-list">
+      <li><a class='oefen-link' href='/vocab_2_2_pickle_1'>Pickle 1: Drag & Drop</a></li>
+      <li><a class="oefen-link" href="/vocab_2_2_pickle_2">Pickle 2: Vocabulary Grid</a></li>
+      <li><a class="oefen-link" href="/vocab_2_2_pickle_3">Pickle 3: Vocabulary Detective</a></li>
+      <li><a class='oefen-link' href='/vocab_2_2_pickle_4'>Pickle 4: Flashcard Challenge</a></li>
+      <li><a class='oefen-link' href='/vocab_2_2_pickle_5'>Pickle 5: Time Challenge</a></li>
+    </ul>
+    <img class="pickle-image-tall" src="Pickle.png" alt="Super Pickle">
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
+</body>
+</html>
