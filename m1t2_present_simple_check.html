@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>English Grammar Exercises – Present Simple</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    h2 {
+      cursor: pointer;
+      color: #007BFF;
+      margin-top: 30px;
+    }
+    .exercise {
+      display: none;
+      margin-bottom: 30px;
+      border-left: 4px solid #007BFF;
+      padding-left: 15px;
+    }
+    .question {
+      margin-bottom: 12px;
+    }
+    .option {
+      padding: 2px 6px;
+      margin: 0 3px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .option.selected {
+      background-color: #cce5ff;
+      border-color: #339af0;
+      color: #004085;
+    }
+    .option.correct {
+      background-color: #d4edda !important;
+      border-color: #28a745 !important;
+      color: #155724 !important;
+    }
+    .option.incorrect {
+      background-color: #f8d7da !important;
+      border-color: #dc3545 !important;
+      color: #721c24 !important;
+    }
+    input[type="text"] {
+      width: 120px;
+      padding: 5px;
+      margin: 0 4px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+    }
+    input.correct {
+      background-color: #d4edda;
+      border: 2px solid #28a745;
+      color: #155724;
+    }
+    input.incorrect {
+      background-color: #f8d7da;
+      border: 2px solid #dc3545;
+      color: #721c24;
+    }
+    button {
+      margin-top: 15px;
+      padding: 6px 12px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .instruction {
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    .score {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>English Grammar Exercises – Present Simple</h1>
+
+  <h2 onclick="toggleExercise(1)">1️⃣ Multiple Choice – Words in the sentence ⭐</h2>
+  <div id="exercise1" class="exercise"></div>
+
+  <h2 onclick="toggleExercise(2)">2️⃣ Fill in the blanks – English verb given ⭐⭐</h2>
+  <div id="exercise2" class="exercise"></div>
+
+  <h2 onclick="toggleExercise(3)">3️⃣ Fill in the blanks – Use shuffled English words ⭐⭐⭐</h2>
+  <div id="exercise3" class="exercise"></div>
+
+  <h2 onclick="toggleExercise(4)">4️⃣ Fill in the blanks – Dutch verb hint ⭐⭐⭐⭐</h2>
+  <div id="exercise4" class="exercise"></div>
+
+  <h2 onclick="toggleExercise(5)">5️⃣ Fill in the blanks – Use shuffled Dutch words ⭐⭐⭐⭐⭐</h2>
+  <div id="exercise5" class="exercise"></div>
+
+<script>
+function toggleExercise(n) {
+  const div = document.getElementById(`exercise${n}`);
+  div.style.display = div.style.display === "block" ? "none" : "block";
+}
+
+function getStarScore(percent) {
+  if (percent >= 90) return "⭐️⭐️⭐️⭐️⭐️";
+  if (percent >= 70) return "⭐️⭐️⭐️⭐️☆";
+  if (percent >= 50) return "⭐️⭐️⭐️☆☆";
+  if (percent >= 30) return "⭐️⭐️☆☆☆";
+  if (percent >= 1) return "⭐️☆☆☆☆";
+  return "☆☆☆☆☆";
+}
+
+const questions1 = [
+  { text: "(Do/Does) she (leave/leaves) at 9:00?", answers: ["Does", "leave"] },
+  { text: "They (don’t/doesn’t) (work/works) on Saturdays.", answers: ["don’t", "work"] },
+  { text: "He (read/reads) a book every morning.", answers: ["reads"] },
+  { text: "She (don’t/doesn’t) (eat/eats) meat.", answers: ["doesn’t", "eat"] },
+  { text: "(Do/Does) they (know/knows) the answer?", answers: ["Do", "know"] },
+  { text: "He (don’t/doesn’t) (drive/drives) in the evening.", answers: ["doesn’t", "drive"] },
+  { text: "She (play/plays) the piano on Sundays.", answers: ["plays"] },
+  { text: "They (go/goes) to school by bike.", answers: ["go"] },
+  { text: "(Do/Does) he (watch/watches) TV after dinner?", answers: ["Does", "watch"] },
+  { text: "Our teacher (don’t/doesn’t) (like/likes) it if we talk in class.", answers: ["doesn’t", "like"] }
+];
+
+function loadExercise1() {
+  const container = document.getElementById("exercise1");
+  questions1.forEach((q, index) => {
+    const div = document.createElement("div");
+    div.classList.add("question");
+    div.innerHTML = `<strong>${index + 1}.</strong> ` + buildMC(q.text, index);
+    container.appendChild(div);
+  });
+
+  const btn = document.createElement("button");
+  btn.textContent = "Check";
+  btn.onclick = checkAnswers1;
+  container.appendChild(btn);
+
+  const scoreDiv = document.createElement("div");
+  scoreDiv.className = "score";
+  container.appendChild(scoreDiv);
+}
+
+function buildMC(text, index) {
+  const regex = /\(([^)]+)\)/g;
+  let match, result = "", lastIndex = 0, partIndex = 0;
+  while ((match = regex.exec(text)) !== null) {
+    result += text.substring(lastIndex, match.index);
+    const options = match[1].split("/");
+    result += options.map(opt => {
+      const id = `q${index}_p${partIndex}_${opt}`;
+      return `<span class="option" data-question="${index}" data-part="${partIndex}" data-value="${opt}" onclick="selectOption('${id}')" id="${id}">${opt}</span>`;
+    }).join(" / ");
+    lastIndex = regex.lastIndex;
+    partIndex++;
+  }
+  result += text.substring(lastIndex);
+  return result;
+}
+
+function selectOption(id) {
+  const el = document.getElementById(id);
+  const { question, part } = el.dataset;
+  document.querySelectorAll(`.option[data-question="${question}"][data-part="${part}"]`).forEach(opt => {
+    opt.classList.remove("selected", "correct", "incorrect");
+  });
+  el.classList.add("selected");
+}
+
+function checkAnswers1() {
+  let correct = 0;
+  let total = questions1.length;
+
+  questions1.forEach((q, index) => {
+    let isCorrect = true;
+    q.answers.forEach((correctAnswer, partIndex) => {
+      const selected = document.querySelector(`.option.selected[data-question="${index}"][data-part="${partIndex}"]`);
+      if (!selected || selected.dataset.value !== correctAnswer) {
+        isCorrect = false;
+      }
+    });
+    if (isCorrect) correct++;
+  });
+
+  const score = document.querySelector("#exercise1 .score");
+  const percent = (correct / total) * 100;
+  score.textContent = `✅ Correct: ${correct} / ${total} | 🌟 Score: ${getStarScore(percent)}`;
+}
+
+loadExercise1();
+const exercises = {
+  2: {
+    instruction: "",
+    data: [
+      ["___ she ___ (leave) at 9:00?", [["Does"], ["leave"]]],
+      ["They ___ (not work) on Saturdays.", [["do not work", "don't work"]]],
+      ["He ___ (read) a book every morning.", [["reads"]]],
+      ["She ___ (not eat) meat.", [["does not eat", "doesn't eat"]]],
+      ["___ they ___ (know) the answer?", [["Do"], ["know"]]],
+      ["He ___ (not drive) in the evening.", [["does not drive", "doesn't drive"]]],
+      ["She ___ (play) the piano on Sundays.", [["plays"]]],
+      ["They ___ (go) to school by bike.", [["go"]]],
+      ["___ he ___ (watch) TV after dinner?", [["Does"], ["watch"]]],
+      ["Our teacher (not like) it if we talk in class.", [["does not like", "doesn't like"]]]
+    ]
+  },
+  3: {
+    instruction: "Use these words: go – not eat – watch – not work – not drive – leave – play – not like – know – read",
+    data: [
+      ["___ she ___ at 9:00?", [["Does"], ["leave"]]],
+      ["They ___ on Saturdays.", [["do not work", "don't work"]]],
+      ["He ___ a book every morning.", [["reads"]]],
+      ["She ___ meat.", [["does not eat", "doesn't eat"]]],
+      ["___ they ___ the answer?", [["Do"], ["know"]]],
+      ["He ___ in the evening.", [["does not drive", "doesn't drive"]]],
+      ["She ___ the piano on Sundays.", [["plays"]]],
+      ["They ___ to school by bike.", [["go"]]],
+      ["___ he ___ TV after dinner?", [["Does"], ["watch"]]],
+      ["Our teacher ___ it if we talk in class.", [["does not like", "doesn't like"]]]
+    ]
+  },
+  4: {
+    instruction: "",
+    data: [
+      ["___ she ___ (vertrekken) at 9:00?", [["Does"], ["leave"]]],
+      ["They ___ (niet werken) on Saturdays.", [["do not work", "don't work"]]],
+      ["He ___ (lezen) a book every morning.", [["reads"]]],
+      ["She ___ (niet eten) meat.", [["does not eat", "doesn't eat"]]],
+      ["___ they ___ (weten) the answer?", [["Do"], ["know"]]],
+      ["He ___ (niet rijden) in the evening.", [["does not drive", "doesn't drive"]]],
+      ["She ___ (spelen) the piano on Sundays.", [["plays"]]],
+      ["They ___ (gaan) to school by bike.", [["go"]]],
+      ["___ he ___ (kijken) TV after dinner?", [["Does"], ["watch"]]],
+      ["Our teacher ___ (niet leuk vinden) it if we talk in class.", [["does not like", "doesn't like"]]]
+    ]
+  },
+  5: {
+    instruction: "Gebruik deze woorden: kijken – niet werken – vertrekken – niet leuk vinden – spelen – gaan – niet eten – weten – lezen – niet rijden",
+    data: [
+      ["___ she ___ at 9:00?", [["Does"], ["leave"]]],
+      ["They ___ on Saturdays.", [["do not work", "don't work"]]],
+      ["He ___ a book every morning.", [["reads"]]],
+      ["She ___ meat.", [["does not eat", "doesn't eat"]]],
+      ["___ they ___ the answer?", [["Do"], ["know"]]],
+      ["He ___ in the evening.", [["does not drive", "doesn't drive"]]],
+      ["She ___ the piano on Sundays.", [["plays"]]],
+      ["They ___ to school by bike.", [["go"]]],
+      ["___ he ___ TV after dinner?", [["Does"], ["watch"]]],
+      ["Our teacher ___ it if we talk in class.", [["does not like", "doesn't like"]]]
+    ]
+  }
+};
+
+Object.entries(exercises).forEach(([id, ex]) => {
+  const container = document.getElementById(`exercise${id}`);
+  if (ex.instruction) {
+    const p = document.createElement("p");
+    p.className = "instruction";
+    p.innerHTML = `<strong>${ex.instruction}</strong>`;
+    container.appendChild(p);
+  }
+
+  const questionElements = [];
+
+  ex.data.forEach((line, idx) => {
+    const div = document.createElement("div");
+    div.classList.add("question");
+    div.innerHTML = `<strong>${idx + 1}.</strong> `;
+    let inputIndex = 0;
+    const parts = line[0].split(" ");
+    parts.forEach(word => {
+      if (word === "___") {
+        const acceptableAnswers = line[1][inputIndex];
+        const input = document.createElement("input");
+        input.type = "text";
+        input.dataset.answers = JSON.stringify(acceptableAnswers);
+        div.appendChild(input);
+        inputIndex++;
+      } else {
+        div.innerHTML += `${word} `;
+      }
+    });
+    questionElements.push(div);
+    container.appendChild(div);
+  });
+
+  const btn = document.createElement("button");
+  btn.textContent = "Check";
+  btn.onclick = () => {
+    let correct = 0;
+    let total = questionElements.length;
+
+    questionElements.forEach(question => {
+      const inputs = question.querySelectorAll("input");
+      let allCorrect = true;
+
+      inputs.forEach(input => {
+        const answers = JSON.parse(input.dataset.answers);
+        const userInput = input.value.trim().toLowerCase().replace(/\s+/g, " ");
+        const isCorrect = answers.some(ans =>
+          ans.trim().toLowerCase().replace(/\s+/g, " ") === userInput
+        );
+        input.classList.remove("correct", "incorrect");
+        input.classList.add(isCorrect ? "correct" : "incorrect");
+        if (!isCorrect) allCorrect = false;
+      });
+
+      if (allCorrect) correct++;
+    });
+
+    const score = container.querySelector(".score");
+    const percent = (correct / total) * 100;
+    score.textContent = `✅ Correct: ${correct} / ${total} | 🌟 Score: ${getStarScore(percent)}`;
+  };
+  container.appendChild(btn);
+
+  const scoreDiv = document.createElement("div");
+  scoreDiv.className = "score";
+  container.appendChild(scoreDiv);
+});
+</script>
+</body>
+</html>
