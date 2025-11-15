@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 2.3: Vakantie en Reizen</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1fdf4;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header img {
+      max-width: 120px;
+      display: block;
+      margin: 0 auto 1rem auto;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .language-select {
+      text-align: center;
+      margin: 1.5rem 0 2rem 0;
+    }
+
+    .language-select label {
+      margin: 0 1em;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .draggable-word {
+      background-color: white;
+      padding: 0.6em 1.2em;
+      border: 2px solid #43a047;
+      border-radius: 6px;
+      cursor: grab;
+      user-select: none;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .draggable-word:hover {
+      background-color: #d7fadd;
+    }
+
+    .exercise-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+    }
+
+    .sentence-box {
+      flex: 0 0 48%;
+      background-color: white;
+      border: 2px solid #43a047;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .sentence-box p {
+      margin: 0 0 0.3em 0;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .drop-zone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 0.6em;
+      background: #e0e0e0;
+      border-radius: 3px;
+      border: 2px dashed #999;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    .correct {
+      background-color: #c8f7c5 !important;
+      border-color: #28a745 !important;
+    }
+
+    .wrong {
+      background-color: #f7c5c5 !important;
+      border-color: #dc3545 !important;
+    }
+
+    .button-row {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    button {
+      background-color: #43a047;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin: 0 0.5rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    footer {
+      background-color: #d7fadd;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.95rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" />
+  <h1>🎉 Vocabulary 2.3: Vakantie en Reizen</h1>
+  <p>Sleep het juiste woord naar de bijpassende omschrijving</p>
+</header>
+
+<div class="language-select">
+  <label><input type="radio" name="language" value="nl" checked> Nederlands</label>
+  <label><input type="radio" name="language" value="en"> Engels</label>
+  <label><input type="radio" name="language" value="mixed"> Gemengd</label>
+</div>
+
+<div class="word-bank" id="wordBank"></div>
+<div id="sentenceGrid"></div>
+
+<div class="button-row">
+  <button onclick="checkAnswers()">✅ Controleer antwoorden</button>
+  <button onclick="setupGame()">🔁 Opnieuw</button>
+</div>
+
+<footer>
+  &copy; 2025 EngliForce – Make English Your Superpower!
+</footer>
+
+<script>
+  const vocabData = {
+    "holiday":     { nl: "Vrije tijd waarin je niet naar school of werk gaat.", en: "Time off from school or work." },
+    "travel (to)": { nl: "Van de ene plaats naar de andere gaan.", en: "To go from one place to another." },
+    "beach":       { nl: "Zand naast de zee.", en: "Sandy area next to the sea." },
+    "sun":         { nl: "De ster die licht en warmte geeft.", en: "The star that gives light and warmth." },
+    "hotel":       { nl: "Plek waar je kunt slapen als je op reis bent.", en: "Place to sleep when you're travelling." },
+    "ticket":      { nl: "Bewijs dat je ergens toegang toe hebt.", en: "Proof that you can enter something." },
+    "map":         { nl: "Tekening van een gebied of plek.", en: "Drawing of an area or place." },
+    "photo":       { nl: "Beeld gemaakt met een camera.", en: "Picture taken with a camera." },
+    "suitcase":    { nl: "Koffer waarin je spullen meeneemt op reis.", en: "Case where you pack things for a trip." },
+    "baggage":     { nl: "Alle koffers en tassen die je meeneemt.", en: "All the bags you take with you." },
+    "passport":    { nl: "Officieel document om naar het buitenland te reizen.", en: "Official document to travel abroad." },
+    "flight":      { nl: "Reis met een vliegtuig.", en: "Trip by plane." },
+    "aeroplane":   { nl: "Vliegtuig waarmee je door de lucht reist.", en: "Vehicle that flies through the air." },
+    "airport":     { nl: "Plek waar vliegtuigen vertrekken en aankomen.", en: "Place where planes leave and arrive." },
+    "camping":     { nl: "Overnachten in de natuur, vaak in een tent.", en: "Sleeping in nature, often in a tent." },
+    "tent":        { nl: "Stof huisje waarin je kampeert.", en: "Cloth shelter used for camping." },
+    "mountain":    { nl: "Zeer hoge natuurlijke heuvel.", en: "Very tall natural hill." },
+    "sea":         { nl: "Groot zout wateroppervlak.", en: "Large body of salt water." },
+    "swimming pool": { nl: "Bad met water om in te zwemmen.", en: "Water-filled area for swimming." },
+    "tourist":     { nl: "Iemand die een plek bezoekt voor plezier.", en: "Someone visiting a place for fun." },
+    "relax":       { nl: "Niets doen en rusten.", en: "To do nothing and rest." },
+    "journey":     { nl: "Een reis van begin tot eind.", en: "A trip from start to finish." },
+    "adventure":   { nl: "Spannende of nieuwe ervaring.", en: "Exciting or new experience." },
+    "souvenir":    { nl: "Voorwerp dat je meeneemt als herinnering.", en: "Object you take home as a memory." },
+    "arrive (to)": { nl: "Op je bestemming komen.", en: "To get to your destination." },
+    "depart":      { nl: "Vertrekken van een plaats.", en: "To leave a place." }
+  };
+
+  function getLanguage() {
+    const selected = document.querySelector('input[name="language"]:checked');
+    return selected ? selected.value : 'nl';
+  }
+
+  function setupGame() {
+    const wordBank = document.getElementById('wordBank');
+    const sentenceGrid = document.getElementById('sentenceGrid');
+    wordBank.innerHTML = '';
+    sentenceGrid.innerHTML = '';
+
+    const allWords = Object.keys(vocabData);
+    const selectedWords = shuffleArray(allWords).slice(0, 12);
+    const sentenceWords = shuffleArray([...selectedWords]).slice(0, 10);
+
+    selectedWords.forEach(word => {
+      const el = document.createElement('div');
+      el.className = 'draggable-word';
+      el.textContent = word;
+      el.draggable = true;
+      el.addEventListener('dragstart', drag);
+      wordBank.appendChild(el);
+    });
+
+    const lang = getLanguage();
+    for (let i = 0; i < sentenceWords.length; i += 2) {
+      const row = document.createElement('div');
+      row.className = 'exercise-row';
+
+      for (let j = i; j < i + 2 && j < sentenceWords.length; j++) {
+        const word = sentenceWords[j];
+        let desc = lang === 'en' ? vocabData[word].en
+                   : lang === 'nl' ? vocabData[word].nl
+                   : Math.random() < 0.5 ? vocabData[word].nl : vocabData[word].en;
+
+        const box = document.createElement('div');
+        box.className = 'sentence-box';
+        box.innerHTML = `
+          <p>${j + 1}. ${desc}</p>
+          <div class="drop-zone" data-word="${word}"></div>
+        `;
+
+        const dropZone = box.querySelector('.drop-zone');
+        dropZone.addEventListener('dragover', allowDrop);
+        dropZone.addEventListener('drop', drop);
+
+        row.appendChild(box);
+      }
+
+      sentenceGrid.appendChild(row);
+    }
+  }
+
+  function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  function allowDrop(e) {
+    e.preventDefault();
+  }
+
+  function drag(e) {
+    e.dataTransfer.setData("text/plain", e.target.textContent);
+  }
+
+  function drop(e) {
+    e.preventDefault();
+    const word = e.dataTransfer.getData("text/plain");
+    e.target.innerHTML = '';
+
+    const el = document.createElement('span');
+    el.textContent = word;
+    el.className = 'draggable-word';
+    el.draggable = true;
+    el.addEventListener('dragstart', drag);
+    e.target.appendChild(el);
+  }
+
+  function checkAnswers() {
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+      const expected = zone.getAttribute('data-word');
+      const given = zone.textContent.trim();
+      zone.classList.remove('correct', 'wrong');
+      zone.classList.add(given === expected ? 'correct' : 'wrong');
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    setupGame();
+    document.querySelectorAll('input[name="language"]').forEach(input =>
+      input.addEventListener('change', setupGame)
+    );
+  });
+</script>
+</body>
+</html>
