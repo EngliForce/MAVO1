@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 2.4: Holidays</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0fff8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #43a047;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #43a047;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #e6f4ea;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #c8e6c9;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a, .links button {
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover, .links button:hover {
+      background-color: #388e3c;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #e0f2f1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #43a047;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #388e3c;
+    }
+    .pickle-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pickle-list li {
+      margin-bottom: 1rem;
+    }
+    .pickle-image-tall {
+      height: 260px;
+      width: auto;
+      margin-top: 0.25rem;
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+  <h1>Vocabulary 2.4: Holidays</h1>
+</header>
+
+<main>
+
+<section>
+  <div class="table-row">
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>holiday</td><td>vakantie</td></tr>
+        <tr><td>travel (to)</td><td>reizen</td></tr>
+        <tr><td>beach</td><td>strand</td></tr>
+        <tr><td>sun</td><td>zon</td></tr>
+        <tr><td>hotel</td><td>hotel</td></tr>
+        <tr><td>ticket</td><td>ticket</td></tr>
+        <tr><td>map</td><td>kaart</td></tr>
+        <tr><td>photo</td><td>foto</td></tr>
+        <tr><td>suitcase</td><td>koffer</td></tr>
+        <tr><td>baggage</td><td>bagage</td></tr>
+        <tr><td>passport</td><td>paspoort</td></tr>
+        <tr><td>flight</td><td>vlucht</td></tr>
+        <tr><td>aeroplane</td><td>vliegtuig</td></tr>
+        <tr><td>airport</td><td>luchthaven</td></tr>
+      </table>
+    </div>
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>camping</td><td>kamperen</td></tr>
+        <tr><td>tent</td><td>tent</td></tr>
+        <tr><td>mountain</td><td>berg</td></tr>
+        <tr><td>sea</td><td>zee</td></tr>
+        <tr><td>swimming pool</td><td>zwembad</td></tr>
+        <tr><td>tourist</td><td>toerist</td></tr>
+        <tr><td>relax</td><td>ontspannen</td></tr>
+        <tr><td>journey</td><td>reis</td></tr>
+        <tr><td>adventure</td><td>avontuur</td></tr>
+        <tr><td>souvenir</td><td>souvenir</td></tr>
+        <tr><td>arrive (to)</td><td>aankomen</td></tr>
+        <tr><td>depart</td><td>vertrekken</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+<tr><td>holiday</td><td>We are going on holiday next week.</td><td>We gaan volgende week op vakantie.</td></tr>
+<tr><td>travel (to)</td><td>They love to travel around the world.</td><td>Ze reizen graag de wereld rond.</td></tr>
+<tr><td>beach</td><td>The children played on the beach all day.</td><td>De kinderen speelden de hele dag op het strand.</td></tr>
+<tr><td>sun</td><td>The sun is shining brightly today.</td><td>De zon schijnt vandaag fel.</td></tr>
+<tr><td>hotel</td><td>We stayed in a beautiful hotel by the sea.</td><td>We verbleven in een mooi hotel aan zee.</td></tr>
+<tr><td>ticket</td><td>Don’t forget your plane ticket!</td><td>Vergeet je vliegticket niet!</td></tr>
+<tr><td>map</td><td>He checked the map to find the route.</td><td>Hij keek op de kaart om de route te vinden.</td></tr>
+<tr><td>photo</td><td>I took a photo of the sunset.</td><td>Ik maakte een foto van de zonsondergang.</td></tr>
+<tr><td>suitcase</td><td>Her suitcase was too heavy to carry.</td><td>Haar koffer was te zwaar om te dragen.</td></tr>
+<tr><td>baggage</td><td>Please collect your baggage at carousel 3.</td><td>Haal je bagage op bij band 3.</td></tr>
+<tr><td>passport</td><td>He forgot his passport at home.</td><td>Hij vergat zijn paspoort thuis.</td></tr>
+<tr><td>flight</td><td>The flight was delayed by two hours.</td><td>De vlucht had twee uur vertraging.</td></tr>
+<tr><td>aeroplane</td><td>The aeroplane is ready for boarding.</td><td>Het vliegtuig is klaar om te boarden.</td></tr>
+<tr><td>airport</td><td>We arrived early at the airport.</td><td>We kwamen vroeg aan op de luchthaven.</td></tr>
+<tr><td>camping</td><td>They went camping in the forest.</td><td>Ze gingen kamperen in het bos.</td></tr>
+<tr><td>tent</td><td>We slept in a small tent.</td><td>We sliepen in een kleine tent.</td></tr>
+<tr><td>mountain</td><td>They climbed the highest mountain.</td><td>Ze beklommen de hoogste berg.</td></tr>
+<tr><td>sea</td><td>The sea was calm and blue.</td><td>De zee was kalm en blauw.</td></tr>
+<tr><td>swimming pool</td><td>The hotel has a large swimming pool.</td><td>Het hotel heeft een groot zwembad.</td></tr>
+<tr><td>tourist</td><td>Many tourists visit this city every year.</td><td>Veel toeristen bezoeken deze stad elk jaar.</td></tr>
+<tr><td>relax</td><td>She likes to relax on the beach.</td><td>Ze ontspant graag op het strand.</td></tr>
+<tr><td>journey</td><td>The journey took eight hours by bus.</td><td>De reis duurde acht uur met de bus.</td></tr>
+<tr><td>adventure</td><td>They are looking for a new adventure.</td><td>Ze zijn op zoek naar een nieuw avontuur.</td></tr>
+<tr><td>souvenir</td><td>I bought a souvenir from the museum.</td><td>Ik kocht een souvenir uit het museum.</td></tr>
+<tr><td>arrive (to)</td><td>We will arrive at noon.</td><td>We komen rond de middag aan.</td></tr>
+<tr><td>depart</td><td>The train will depart soon.</td><td>De trein vertrekt binnenkort.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Bekijk de video hieronder over vakantie en reizen.</p>
+  <div class="video-row">
+    <div class="video-column">
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+        <iframe 
+          src="https://www.youtube.com/embed/1wI4c0zW8z8" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen 
+          style="position:absolute;top:0;left:0;width:100%;height:100%;">
+        </iframe>
+      </div>
+      <p>Vakantie en Reizen Vocabulary</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href="vocab_2_3_flashcards.html" target="_blank">Open Flashcards</a>
+  </div>
+</section>
+
+<section>
+  <h2>📝 Super Pickles</h2>
+  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
+  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+    <ul class="pickle-list">
+      <li><a class='oefen-link' href='/vocab_2_4_pickle_1'>Pickle 1: Drag & Drop</a></li>
+      <li><a class="oefen-link" href="/vocab_2_4_pickle_2">Pickle 2: Vocabulary Grid</a></li>
+      <li><a class="oefen-link" href="/vocab_2_4_pickle_3">Pickle 3: Vocabulary Detective</a></li>
+      <li><a class='oefen-link' href='/vocab_2_4_pickle_4'>Pickle 4: Flashcard Challenge</a></li>
+      <li><a class='oefen-link' href='/vocab_2_4_pickle_5'>Pickle 5: Time Challenge</a></li>
+    </ul>
+    <img class="pickle-image-tall" src="Pickle.png" alt="Super Pickle">
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
+</body>
+</html>
