@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Present Continuous Boss Battle</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff5f5;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #e53935;
+      color: white;
+      padding: 1.5rem;
+    }
+
+    #start-screen, #game-screen {
+      display: none;
+      padding: 2rem;
+    }
+
+    #start-screen.active, #game-screen.active {
+      display: block;
+    }
+
+    .player-setup {
+      display: inline-block;
+      text-align: left;
+      margin: 1rem;
+    }
+
+    .character-option {
+      font-size: 2.5rem;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      margin: 0.3rem;
+      padding: 0.4rem;
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .character-option:hover {
+      transform: scale(1.2);
+    }
+
+    .character-option.selected {
+      border: 2px solid #e53935;
+      background-color: #ffebee;
+    }
+
+    input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 0.5rem 0;
+      width: 90%;
+    }
+
+    button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #e53935;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    button:hover:enabled {
+      background-color: #c62828;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #game-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 2rem;
+    }
+
+    .player-display {
+      font-size: 5rem;
+      transition: opacity 0.3s ease;
+    }
+
+    .damage-bar {
+      font-weight: bold;
+      margin-top: 0.5rem;
+      color: #c62828;
+    }
+
+    #question-box {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 2rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    footer {
+      background-color: #ffebee;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    #feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      min-height: 2.5rem;
+      white-space: pre-line;
+      transition: all 0.2s ease;
+    }
+
+    #feedback.correct {
+      background-color: #c8e6c9;
+      color: #1b5e20;
+      border: 2px solid #2e7d32;
+    }
+
+    #feedback.incorrect {
+      background-color: #ffcdd2;
+      color: #b71c1c;
+      border: 2px solid #c62828;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎮 Present Continuous Boss Battle</h1>
+  <p>am – is – are + verb-ing: Train your Present Continuous skills!</p>
+</header>
+
+<!-- Start Screen -->
+<section id="start-screen" class="active">
+  <div class="player-setup">
+    <h2>Player 1</h2>
+    <input type="text" id="name1" placeholder="Enter player 1 name">
+    <div id="char1-options">
+      <span class="character-option" onclick="selectCharacter(1, '🧙')">🧙</span>
+      <span class="character-option" onclick="selectCharacter(1, '🧛')">🧛</span>
+      <span class="character-option" onclick="selectCharacter(1, '👸')">👸</span>
+      <span class="character-option" onclick="selectCharacter(1, '🤖')">🤖</span>
+      <span class="character-option" onclick="selectCharacter(1, '🧟')">🧟</span>
+    </div>
+  </div>
+
+  <div class="player-setup">
+    <h2>Player 2</h2>
+    <input type="text" id="name2" placeholder="Enter player 2 name">
+    <div id="char2-options">
+      <span class="character-option" onclick="selectCharacter(2, '🧙')">🧙</span>
+      <span class="character-option" onclick="selectCharacter(2, '🧛')">🧛</span>
+      <span class="character-option" onclick="selectCharacter(2, '👸')">👸</span>
+      <span class="character-option" onclick="selectCharacter(2, '🤖')">🤖</span>
+      <span class="character-option" onclick="selectCharacter(2, '🧟')">🧟</span>
+    </div>
+  </div>
+
+  <button onclick="startGame()">Start Game</button>
+</section>
+
+<!-- Game Screen -->
+<section id="game-screen">
+  <div id="game-container">
+    <div>
+      <h2 id="label1">Player 1</h2>
+      <div id="charDisplay1" class="player-display">❓</div>
+      <div class="damage-bar" id="damage1">Damage: 0/10</div>
+    </div>
+    <div>
+      <h2 id="label2">Player 2</h2>
+      <div id="charDisplay2" class="player-display">❓</div>
+      <div class="damage-bar" id="damage2">Damage: 0/10</div>
+    </div>
+  </div>
+
+  <section id="question-box">
+    <h2 id="turn-indicator">Turn: Player 1</h2>
+    <p id="question">She ___ (read) a book right now.</p>
+    <input type="text" id="answer" placeholder="Type your answer (e.g. 'is reading')">
+    <br>
+    <button id="submit-btn" onclick="submitAnswer()">Submit</button>
+    <p id="feedback"></p>
+  </section>
+</section>
+
+<footer>
+  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  let playerNames = ["Player 1", "Player 2"];
+  let playerChars = ["❓", "❓"];
+  let currentPlayer = 1;
+  let damage = { 1: 0, 2: 0 };
+  let currentQuestion = 0;
+
+  const questions = [
+    // ✅ Affirmative (Present Continuous)
+    { sentence: "She ___ (read) a book right now.", answer: "is reading" },
+    { sentence: "We ___ (watch) a movie at the moment.", answer: "are watching" },
+    { sentence: "He ___ (play) football in the park.", answer: "is playing" },
+    { sentence: "I ___ (do) my homework now.", answer: "am doing" },
+    { sentence: "They ___ (have) lunch together.", answer: "are having" },
+    { sentence: "Emma ___ (study) for her test.", answer: "is studying" },
+    { sentence: "The cat ___ (sleep) on the sofa.", answer: "is sleeping" },
+    { sentence: "James ___ (write) an email.", answer: "is writing" },
+    { sentence: "We ___ (walk) to school today.", answer: "are walking" },
+    { sentence: "You ___ (listen) to music.", answer: "are listening" },
+    { sentence: "My dad ___ (cook) dinner tonight.", answer: "is cooking" },
+    { sentence: "I ___ (talk) to my friend.", answer: "am talking" },
+    { sentence: "They ___ (swim) in the pool now.", answer: "are swimming" },
+    { sentence: "Olivia ___ (draw) a picture.", answer: "is drawing" },
+    { sentence: "The children ___ (play) in the garden.", answer: "are playing" },
+
+    // ❌ Negative (Present Continuous)
+    { sentence: "I ___ (not watch) TV right now.", answer: "am not watching" },
+    { sentence: "She ___ (not do) her homework at the moment.", answer: "is not doing" },
+    { sentence: "They ___ (not play) football now.", answer: "are not playing" },
+    { sentence: "He ___ (not listen) to the teacher.", answer: "is not listening" },
+    { sentence: "We ___ (not eat) breakfast now.", answer: "are not eating" },
+    { sentence: "Emma ___ (not sleep) at the moment.", answer: "is not sleeping" },
+    { sentence: "You ___ (not write) an email.", answer: "are not writing" },
+    { sentence: "Tom ___ (not read) his book now.", answer: "is not reading" },
+    { sentence: "I ___ (not talk) on the phone.", answer: "am not talking" },
+    { sentence: "They ___ (not swim) in the sea now.", answer: "are not swimming" },
+    { sentence: "He ___ (not wear) a jacket today.", answer: "is not wearing" },
+    { sentence: "We ___ (not go) to school today.", answer: "are not going" },
+    { sentence: "She ___ (not cook) dinner tonight.", answer: "is not cooking" },
+    { sentence: "You ___ (not run) in the hall.", answer: "are not running" },
+    { sentence: "The children ___ (not sit) quietly.", answer: "are not sitting" },
+
+    // ❓ Questions (Present Continuous)
+    { sentence: "___ you ___ (do) your homework now?", answer: "Are doing" },
+    { sentence: "___ she ___ (read) a book now?", answer: "Is reading" },
+    { sentence: "___ they ___ (play) in the garden?", answer: "Are playing" },
+    { sentence: "___ he ___ (watch) TV at the moment?", answer: "Is watching" },
+    { sentence: "___ we ___ (have) lunch now?", answer: "Are having" },
+    { sentence: "___ Emma ___ (study) for her exam?", answer: "Is studying" },
+    { sentence: "___ they ___ (swim) in the pool?", answer: "Are swimming" },
+    { sentence: "___ he ___ (write) a message?", answer: "Is writing" },
+    { sentence: "___ you ___ (listen) to me?", answer: "Are listening" },
+    { sentence: "___ we ___ (go) to the park now?", answer: "Are going" },
+    { sentence: "___ she ___ (cook) dinner tonight?", answer: "Is cooking" },
+    { sentence: "___ they ___ (talk) about the game?", answer: "Are talking" },
+    { sentence: "___ he ___ (wear) a hat today?", answer: "Is wearing" },
+    { sentence: "___ you ___ (sit) here?", answer: "Are sitting" },
+    { sentence: "___ we ___ (wait) for the bus?", answer: "Are waiting" }
+  ];
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function selectCharacter(player, emoji) {
+    playerChars[player - 1] = emoji;
+    const container = document.getElementById(`char${player}-options`);
+    Array.from(container.children).forEach(c => c.classList.remove('selected'));
+    Array.from(container.children).forEach(c => {
+      if (c.textContent === emoji) c.classList.add('selected');
+    });
+  }
+
+  function startGame() {
+    shuffle(questions);
+    const name1 = document.getElementById('name1').value || "Player 1";
+    const name2 = document.getElementById('name2').value || "Player 2";
+
+    playerNames = [name1, name2];
+
+    document.getElementById('label1').textContent = name1;
+    document.getElementById('label2').textContent = name2;
+    document.getElementById('charDisplay1').textContent = playerChars[0];
+    document.getElementById('charDisplay2').textContent = playerChars[1];
+
+    document.getElementById('start-screen').classList.remove('active');
+    document.getElementById('game-screen').classList.add('active');
+
+    updateQuestion();
+  }
+
+  function updateQuestion() {
+    document.getElementById('turn-indicator').textContent =
+      `Turn: ${playerNames[currentPlayer - 1]}`;
+    document.getElementById('question').textContent =
+      questions[currentQuestion].sentence;
+    document.getElementById('answer').value = "";
+
+    const feedback = document.getElementById('feedback');
+    feedback.textContent = "";
+    feedback.classList.remove('correct', 'incorrect');
+
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = false;
+  }
+
+  // Spaties normaliseren, case blijft behouden
+  function normalizeSpaces(str) {
+    return str.replace(/\s+/g, ' ').trim();
+  }
+
+  // Afkortingen -> lange vorm, inclusief losse 's / 're / 'm
+  function expandContractions(str) {
+    return str
+      // gewone vormen met pronoun
+      .replace(/\bI'm\b/g, "I am")
+      .replace(/\baren't\b/gi, "are not")
+      .replace(/\bisn't\b/gi, "is not")
+      .replace(/\bwe're\b/gi, "we are")
+      .replace(/\byou're\b/gi, "you are")
+      .replace(/\bthey're\b/gi, "they are")
+      .replace(/\bhe's\b/gi, "he is")
+      .replace(/\bshe's\b/gi, "she is")
+      .replace(/\bit's\b/gi, "it is")
+      // losse 'm / 're / 's aan begin of na spatie
+      .replace(/(^|\s)'m\b/gi, "$1am")
+      .replace(/(^|\s)'re\b/gi, "$1are")
+      .replace(/(^|\s)'s\b/gi, "$1is");
+  }
+
+  // Eventueel een persoonlijk voornaamwoord aan het begin verwijderen
+  function stripPronoun(str) {
+    const pronouns = ["I", "You", "He", "She", "It", "We", "They",
+                      "i", "you", "he", "she", "it", "we", "they"];
+    for (const p of pronouns) {
+      if (str.startsWith(p + " ")) {
+        return str.slice(p.length + 1);
+      }
+    }
+    return str;
+  }
+
+  // Case sensitive check met steun voor afkortingen
+  function isCorrect(userInputRaw, expectedRaw) {
+    const expected = normalizeSpaces(expectedRaw);
+    let user = normalizeSpaces(userInputRaw);
+
+    if (!user) return false;
+
+    // 1. Exact gelijk (case sensitive)
+    if (user === expected) return true;
+
+    // 2. Afkortingen uitbreiden
+    user = expandContractions(user);
+    user = normalizeSpaces(user);
+    if (user === expected) return true;
+
+    // 3. Voornaamwoord aan begin weghalen
+    user = stripPronoun(user);
+    user = normalizeSpaces(user);
+    if (user === expected) return true;
+
+    return false;
+  }
+
+  function submitAnswer() {
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = true;
+
+    const rawInput = document.getElementById("answer").value;
+    const feedback = document.getElementById("feedback");
+    const correctAnswer = questions[currentQuestion].answer;
+
+    feedback.classList.remove('correct', 'incorrect');
+
+    const right = isCorrect(rawInput, correctAnswer);
+
+    if (right) {
+      const target = currentPlayer === 1 ? 2 : 1;
+      damage[target]++;
+      updateDamage(target);
+      feedback.textContent = `✅ Correct! Your answer: "${rawInput.trim()}"`;
+      feedback.classList.add('correct');
+    } else {
+      const shownCorrect = correctAnswer;
+      const shownInput = rawInput.trim() || "—";
+      feedback.textContent =
+        `❌ Incorrect.\nYour answer: "${shownInput}".\nCorrect answer: "${shownCorrect}".`;
+      feedback.classList.add('incorrect');
+    }
+
+    // Win check
+    if (damage[1] >= 10 || damage[2] >= 10) {
+      const winner = damage[1] >= 10 ? playerNames[0] : playerNames[1];
+      setTimeout(() => {
+        alert(`${winner} wins!`);
+        location.reload();
+      }, 1500);
+      return;
+    }
+
+    // 2s pauze voor volgende vraag
+    setTimeout(() => {
+      currentPlayer = currentPlayer === 1 ? 2 : 1;
+      currentQuestion = (currentQuestion + 1) % questions.length;
+      updateQuestion();
+    }, 2000);
+  }
+
+  function updateDamage(player) {
+    document.getElementById(`damage${player}`).textContent =
+      `Damage: ${damage[player]}/10`;
+    const display = document.getElementById(`charDisplay${player}`);
+    display.style.opacity = `${1 - damage[player] * 0.1}`;
+  }
+</script>
+
+</body>
+</html>
