@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 3.2: Wales</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fdf0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #c62828;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #c62828;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #fbe9e7;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #ffcdd2;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a, .links button {
+      padding: 0.5rem 1rem;
+      background-color: #c62828;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover, .links button:hover {
+      background-color: #b71c1c;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #ffebee;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #c62828;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #b71c1c;
+    }
+    .pickle-card {
+      display: block;
+      background-color: #c62828;
+      color: white;
+      text-decoration: none;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      width: 200px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: transform 0.2s, background-color 0.3s;
+      line-height: 1.4;
+    }
+    .pickle-card span {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: normal;
+      margin-top: 0.25rem;
+      color: #ffebee;
+    }
+    .pickle-card:hover {
+      background-color: #b71c1c;
+      transform: translateY(-3px);
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+  <h1>Vocabulary 3.2: Wales</h1>
+</header>
+
+<main>
+
+<section>
+  <div class="table-row">
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>landscape</td><td>landschap</td></tr>
+        <tr><td>valley</td><td>vallei / dal</td></tr>
+        <tr><td>coastline</td><td>kustlijn / kust</td></tr>
+        <tr><td>farmer</td><td>boer</td></tr>
+        <tr><td>Roman</td><td>Romein</td></tr>
+        <tr><td>army</td><td>leger</td></tr>
+        <tr><td>fort</td><td>fort / vesting</td></tr>
+        <tr><td>tradition</td><td>traditie</td></tr>
+      </table>
+    </div>
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>symbol</td><td>symbool</td></tr>
+        <tr><td>dragon</td><td>draak</td></tr>
+        <tr><td>castle</td><td>kasteel</td></tr>
+        <tr><td>king</td><td>koning</td></tr>
+        <tr><td>prince</td><td>prins</td></tr>
+        <tr><td>battle</td><td>slag / gevecht</td></tr>
+        <tr><td>survive</td><td>overleven</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>landscape</td><td>The landscape is beautiful.</td><td>Het landschap is prachtig.</td></tr>
+          <tr><td>valley</td><td>The valley is between two hills.</td><td>De vallei ligt tussen twee heuvels.</td></tr>
+          <tr><td>coastline</td><td>The coastline is long and rocky.</td><td>De kustlijn is lang en rotsachtig.</td></tr>
+          <tr><td>farmer</td><td>The farmer works on the land.</td><td>De boer werkt op het land.</td></tr>
+          <tr><td>Roman</td><td>The Romans built many roads.</td><td>De Romeinen bouwden veel wegen.</td></tr>
+          <tr><td>army</td><td>The army marched into the city.</td><td>Het leger marcheerde de stad binnen.</td></tr>
+          <tr><td>fort</td><td>They defended the fort bravely.</td><td>Ze verdedigden het fort dapper.</td></tr>
+          <tr><td>tradition</td><td>It is a family tradition.</td><td>Het is een familietraditie.</td></tr>
+          <tr><td>symbol</td><td>The dragon is a symbol of Wales.</td><td>De draak is een symbool van Wales.</td></tr>
+          <tr><td>dragon</td><td>The dragon flies over the castle.</td><td>De draak vliegt over het kasteel.</td></tr>
+          <tr><td>castle</td><td>They visited an old castle.</td><td>Ze bezochten een oud kasteel.</td></tr>
+          <tr><td>king</td><td>The king gave a speech.</td><td>De koning hield een toespraak.</td></tr>
+          <tr><td>prince</td><td>The prince rode a white horse.</td><td>De prins reed op een wit paard.</td></tr>
+          <tr><td>battle</td><td>The battle lasted for hours.</td><td>De slag duurde uren.</td></tr>
+          <tr><td>survive</td><td>They survived the storm.</td><td>Ze overleefden de storm.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href='/m1t3_vocab_3_2_wales_flashcards' target='_blank'>Open Flashcards</a>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Bekijk de video hieronder voor uitleg en voorbeelden over deze woorden.</p>
+  <div class="video-row">
+    <div class="video-column">
+      <iframe src="https://www.youtube.com/embed/p0jMah7Sjkc" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🥒 Super Pickles</h2>
+  <p style="max-width: 700px; margin: 0 auto;">Oefen de <strong>vocabulary</strong> met deze leuke, interactieve opdrachten.</p>
+
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
+    <a class='pickle-card' href='/m1t3_vocab_3_2_pickle_1'>🥒 Pickle 1<br><span>Drag & Drop</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_2_pickle_2'>🥒 Pickle 2<br><span>Vocabulary Grid</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_2_pickle_3'>🥒 Pickle 3<br><span>Vocabulary Detective</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_2_pickle_4'>🥒 Pickle 4<br><span>Flashcard Challenge</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_2_pickle_5'>🥒 Pickle 5<br><span>Time Challenge</span></a>
+  </div>
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <img src="Pickles.png" alt="Super Pickle" style="max-height: 200px;">
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcards – Vocab 3.2: Wales</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #c62828;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    header img {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 120px;
+      height: auto;
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .controls {
+      margin: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    select, label, button {
+      font-size: 1rem;
+    }
+
+    .flashcards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+
+    .card {
+      width: 220px;
+      height: 180px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.7s ease;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #ffffff, #ffe6dc);
+      color: #c62828;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .card-back {
+      background: #c62828;
+      color: white;
+      transform: rotateY(180deg);
+      font-size: 1.2rem;
+    }
+
+    .example {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    .checkbox-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+
+    footer {
+      background-color: #ffe6dc;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="logo.png" alt="EngliForce logo" />
+    <h1>Flashcards – Vocab 3.2: Wales</h1>
+    <p>Klik op een kaart om de vertaling te zien. Je kunt ook instellen hoe je wilt oefenen!</p>
+  </header>
+
+  <div class="controls">
+    <label>
+      Aantal kaarten:
+      <select id="card-count">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="show-examples" />
+      Toon voorbeeldzinnen
+    </label>
+    <label>
+      <input type="checkbox" id="reverse-cards" />
+      Nederlands → Engels
+    </label>
+
+    <button onclick="generateCards()">Next 🔁</button>
+    <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+    <button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+    <button onclick="practiceAll()">Oefen alles 🔄</button>
+  </div>
+
+  <div class="flashcards-container" id="flashcards-container"></div>
+
+  <footer>
+    <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    const flashcards = [
+      { en: 'landscape', nl: 'landschap', exEN: 'The landscape is beautiful.', exNL: 'Het landschap is prachtig.' },
+      { en: 'valley', nl: 'vallei / dal', exEN: 'The valley is between two hills.', exNL: 'De vallei ligt tussen twee heuvels.' },
+      { en: 'coastline', nl: 'kustlijn / kust', exEN: 'The coastline is long and rocky.', exNL: 'De kustlijn is lang en rotsachtig.' },
+      { en: 'farmer', nl: 'boer', exEN: 'The farmer works on the land.', exNL: 'De boer werkt op het land.' },
+      { en: 'Roman', nl: 'Romein', exEN: 'The Romans built many roads.', exNL: 'De Romeinen bouwden veel wegen.' },
+      { en: 'army', nl: 'leger', exEN: 'The army marched into the city.', exNL: 'Het leger marcheerde de stad binnen.' },
+      { en: 'fort', nl: 'fort / vesting', exEN: 'They defended the fort bravely.', exNL: 'Ze verdedigden het fort dapper.' },
+      { en: 'tradition', nl: 'traditie', exEN: 'It is a family tradition.', exNL: 'Het is een familietraditie.' },
+      { en: 'symbol', nl: 'symbool', exEN: 'The dragon is a symbol of Wales.', exNL: 'De draak is een symbool van Wales.' },
+      { en: 'dragon', nl: 'draak', exEN: 'The dragon flies over the castle.', exNL: 'De draak vliegt over het kasteel.' },
+      { en: 'castle', nl: 'kasteel', exEN: 'They visited an old castle.', exNL: 'Ze bezochten een oud kasteel.' },
+      { en: 'king', nl: 'koning', exEN: 'The king gave a speech.', exNL: 'De koning hield een toespraak.' },
+      { en: 'prince', nl: 'prins', exEN: 'The prince rode a white horse.', exNL: 'De prins reed op een wit paard.' },
+      { en: 'battle', nl: 'slag / gevecht', exEN: 'The battle lasted for hours.', exNL: 'De slag duurde uren.' },
+      { en: 'survive', nl: 'overleven', exEN: 'They survived the storm.', exNL: 'Ze overleefden de storm.' }
+    ];
+
+    const knownWords = new Set();
+
+    function generateCards() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceUnknown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const unknown = flashcards.filter(word => !knownWords.has(word.en));
+      if (unknown.length === 0) {
+        container.innerHTML = "<p>🎉 Je kent alle woorden al!</p>";
+        return;
+      }
+
+      unknown.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceKnown() {
+      const showExamples = document.getElementById('show-examples').checked;
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+
+      const known = flashcards.filter(word => knownWords.has(word.en));
+      if (known.length === 0) {
+        container.innerHTML = "<p>📋 Je hebt nog geen woorden gemarkeerd als ‘Ken ik’.</p>";
+        return;
+      }
+
+      known.slice(0, 5).forEach(word => createCard(word, showExamples, reversed, container));
+    }
+
+    function practiceAll() {
+      generateCards();
+    }
+
+    function createCard(word, showExamples, reversed, container) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => card.classList.toggle('flipped');
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'card-inner';
+
+      const front = document.createElement('div');
+      front.className = 'card-front';
+      front.innerHTML = reversed ? word.nl : word.en;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exNL : word.exEN;
+        front.appendChild(ex);
+      }
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.innerHTML = reversed ? word.en : word.nl;
+      if (showExamples) {
+        const ex = document.createElement('div');
+        ex.className = 'example';
+        ex.innerHTML = reversed ? word.exEN : word.exNL;
+        back.appendChild(ex);
+      }
+
+      const checkboxContainer = document.createElement('label');
+      checkboxContainer.className = 'checkbox-container';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = knownWords.has(word.en);
+      checkbox.onchange = (e) => {
+        e.stopPropagation();
+        if (checkbox.checked) {
+          knownWords.add(word.en);
+        } else {
+          knownWords.delete(word.en);
+        }
+      };
+      const labelText = document.createTextNode('Ken ik');
+      checkboxContainer.appendChild(checkbox);
+      checkboxContainer.appendChild(labelText);
+
+      cardInner.appendChild(front);
+      cardInner.appendChild(back);
+      card.appendChild(cardInner);
+      card.appendChild(checkboxContainer);
+      container.appendChild(card);
+    }
+
+    window.onload = generateCards;
+  </script>
+</body>
+</html>
