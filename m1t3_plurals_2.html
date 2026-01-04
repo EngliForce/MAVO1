@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meervoud in het Engels</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #ffebee;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #e53935;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #e53935;
+    }
+    table {
+      margin: 1rem auto;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-width: 320px;
+      max-width: 900px;
+    }
+    th, td {
+      padding: 0.9rem 1.4rem;
+      text-align: center;
+      border-bottom: 1px solid #ffcdd2;
+    }
+    th {
+      background-color: #ffcdd2;
+      font-weight: bold;
+    }
+    tr:nth-child(even) td {
+      background-color: #ffebee;
+    }
+    tr:hover td {
+      background-color: #ffdde0;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .toggle-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0 1rem 0;
+      flex-wrap: wrap;
+    }
+    .toggle-button {
+      padding: 0.5rem 1.2rem;
+      background-color: #e53935;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
+    }
+    .toggle-button:hover {
+      background-color: #b71c1c;
+      transform: translateY(-1px);
+    }
+
+    .toggle-content {
+      display: none;
+      margin-top: 1rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    footer {
+      background-color: #ffebee;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .video-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ✅ Mooie Pickle-knoppen (cards) */
+    .pickle-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .pickle-card {
+      background: linear-gradient(135deg, #e53935, #ff7043);
+      color: #fff;
+      padding: 1.2rem 1.6rem;
+      border-radius: 16px;
+      text-decoration: none;
+      min-width: 180px;
+      max-width: 220px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .pickle-card span {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .pickle-card:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      filter: brightness(1.05);
+    }
+
+    .pickle-card:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.16);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+    <h1>Meervoud in het Engels</h1>
+    <p>Leer hoe je van een zelfstandig naamwoord een meervoud maakt!</p>
+  </header>
+
+  <main>
+
+<section>
+  <h2>🧠 Basisregel</h2>
+  <p>In het Engels maak je een woord meestal meervoud door <strong>–s</strong> toe te voegen:</p>
+  <table>
+    <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
+    <tr><td>book</td><td>books</td></tr>
+    <tr><td>car</td><td>cars</td></tr>
+    <tr><td>apple</td><td>apples</td></tr>
+  </table>
+
+  <div class="toggle-buttons">
+    <button class="toggle-button" onclick="toggleContent('es')">+es</button>
+    <button class="toggle-button" onclick="toggleContent('ies')">-ies</button>
+    <button class="toggle-button" onclick="toggleContent('ves')">-ves</button>
+  </div>
+
+  <div id="content-es" class="toggle-content">
+    <h3>📦 +es bij bepaalde eindklanken</h3>
+    <p>Woorden die eindigen op een <strong>-s-klank</strong> krijgen –es:</p>
+    <table>
+      <tr><th>Uitgang</th><th>Enkelvoud</th><th>Meervoud</th><th>Opmerking</th></tr>
+      <tr><td>-ch</td><td>watch</td><td>watches</td><td></td></tr>
+      <tr><td>-sh</td><td>brush</td><td>brushes</td><td></td></tr>
+      <tr><td>-s</td><td>bus</td><td>buses</td><td></td></tr>
+      <tr><td>-x</td><td>box</td><td>boxes</td><td></td></tr>
+      <tr><td>-z</td><td>quiz</td><td>quizzes</td><td>z verdubbelt</td></tr>
+      <tr><td>-o</td><td>tomato</td><td>tomatoes</td><td></td></tr>
+    </table>
+    <p><em>Let op:</em> Soms toch –s: <strong>photo → photos</strong></p>
+  </div>
+
+  <div id="content-ies" class="toggle-content">
+    <h3>🔤 Medeklinker + y</h3>
+    <p>-y wordt -ies</p>
+    <table>
+      <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
+      <tr><td>city</td><td>cities</td></tr>
+      <tr><td>baby</td><td>babies</td></tr>
+    </table>
+    <p><em>Let op:</em> klinker + y → gewoon -s (boy → boys)</p>
+  </div>
+
+  <div id="content-ves" class="toggle-content">
+    <h3>🍃 Woorden met -f of -fe</h3>
+    <p>-f / -fe wordt -ves</p>
+    <table>
+      <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
+      <tr><td>leaf</td><td>leaves</td></tr>
+      <tr><td>wife</td><td>wives</td></tr>
+      <tr><td>knife</td><td>knives</td></tr>
+    </table>
+    <p><em>Let op:</em> roof → roofs</p>
+  </div>
+</section>
+
+<section>
+  <h2>⚠️ Uitzonderingen & Speciale Meervouden</h2>
+  <p>Niet alle Engelse woorden volgen de regels!</p>
+
+  <div class="toggle-buttons">
+    <button class="toggle-button" onclick="toggleContent('singular')">Altijd enkelvoud</button>
+    <button class="toggle-button" onclick="toggleContent('plural')">Altijd meervoud</button>
+    <button class="toggle-button" onclick="toggleContent('irregular')">Onregelmatige meervouden</button>
+    <button class="toggle-button" onclick="toggleContent('same')">Zelfde vorm</button>
+  </div>
+
+  <div id="content-singular" class="toggle-content">
+    <h3>Altijd enkelvoud</h3>
+    <table>
+      <tr><th>Woord</th><th>Voorbeeld</th></tr>
+      <tr><td>news</td><td>The news <strong>is</strong> good.</td></tr>
+      <tr><td>information</td><td>This information <strong>is</strong> useful.</td></tr>
+      <tr><td>homework</td><td>My homework <strong>is</strong> hard.</td></tr>
+      <tr><td>money</td><td>The money <strong>is</strong> gone.</td></tr>
+    </table>
+  </div>
+
+  <div id="content-plural" class="toggle-content">
+    <h3>Altijd meervoud</h3>
+    <table>
+      <tr><th>Woord</th><th>Voorbeeld</th></tr>
+      <tr><td>trousers</td><td>My trousers <strong>are</strong> new.</td></tr>
+      <tr><td>scissors</td><td>The scissors <strong>are</strong> sharp.</td></tr>
+      <tr><td>glasses</td><td>His glasses <strong>are</strong> broken.</td></tr>
+      <tr><td>police</td><td>The police <strong>are</strong> here.</td></tr>
+    </table>
+  </div>
+
+  <div id="content-irregular" class="toggle-content">
+    <h3>Onregelmatige meervouden</h3>
+    <table>
+      <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
+      <tr><td>child</td><td>children</td></tr>
+      <tr><td>man</td><td>men</td></tr>
+      <tr><td>woman</td><td>women</td></tr>
+      <tr><td>tooth</td><td>teeth</td></tr>
+      <tr><td>foot</td><td>feet</td></tr>
+      <tr><td>mouse</td><td>mice</td></tr>
+    </table>
+  </div>
+
+  <div id="content-same" class="toggle-content">
+    <h3>Zelfde vorm</h3>
+    <table>
+      <tr><th>Enkelvoud</th><th>Meervoud</th></tr>
+      <tr><td>sheep</td><td>sheep</td></tr>
+      <tr><td>deer</td><td>deer</td></tr>
+      <tr><td>fish</td><td>fish</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Bekijk deze uitlegvideo over meervouden:</p>
+  <div class="video-container">
+    <iframe src="https://www.youtube.com/embed/SciwuODiHYY" allowfullscreen style="width: 360px; height: 203px; border: none;"></iframe>
+  </div>
+</section>
+
+<section>
+  <h2>🥒 Super Pickles</h2>
+  <p style="max-width: 700px; margin: 0 auto;">
+    Oefen de <strong>present continuous</strong> met deze leuke, interactieve opdrachten.
+  </p>
+
+  <div class="pickle-container">
+    <a href="https://wordwall.net/embed/f66898e493e24ab0a84fa97554295108?themeId=1&templateId=89&fontStackId=0" class="pickle-card">
+      🥒 Pickle 1
+      <span>Fill in the blanks</span>
+    </a>
+
+    <a href="https://wordwall.net/embed/502ea4d7da714bbeb7092c0ecc33304f?themeId=22&templateId=45&fontStackId=0" class="pickle-card">
+      🥒 Pickle 2
+      <span>Whack-a-mole</span>
+    </a>
+
+    <a href="m1t3_present_continuous_pickle_3.html" class="pickle-card">
+      🥒 Pickle 3
+      <span>Boss Battle</span>
+    </a>
+
+    <a href="https://wordwall.net/embed/jkl012" class="pickle-card">
+      🥒 Pickle 4
+      <span>Match the forms</span>
+    </a>
+
+    <a href="https://wordwall.net/embed/mno345" class="pickle-card">
+      🥒 Pickle 5
+      <span>Whack-a-verb</span>
+    </a>
+  </div>
+</section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+  </footer>
+
+  <script>
+    function toggleContent(id) {
+      const content = document.getElementById('content-' + id);
+      if (!content) return;
+      content.style.display = content.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
