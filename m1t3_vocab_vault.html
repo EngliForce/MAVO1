@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Vault: Sequential Decryption</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        body { font-family: 'Share Tech Mono', monospace; background-color: #050505; color: #00d4ff; overflow: hidden; }
+        .crt-overlay {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+            background-size: 100% 2px, 3px 100%; pointer-events: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 50;
+        }
+        .glitch { position: relative; text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75), 0.025em 0.05em 0 rgba(0,0,255,0.75); animation: glitch 500ms infinite; }
+        @keyframes glitch { 0% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75), -0.025em 0.05em 0 rgba(0,0,255,0.75); } 15% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75), -0.05em -0.05em 0 rgba(0,0,255,0.75); } 100% { text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75), -0.025em -0.05em 0 rgba(0,0,255,0.75); } }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const WORD_LIST = [
+            { en: "complicated", nl: "ingewikkeld" }, { en: "country", nl: "land" },
+            { en: "difficult", nl: "moeilijk" }, { en: "exactly", nl: "precies" },
+            { en: "I get it", nl: "ik snap het" }, { en: "government", nl: "regering" },
+            { en: "island", nl: "eiland" }, { en: "local", nl: "lokaal" },
+            { en: "nation", nl: "natie" }, { en: "state", nl: "staat" },
+            { en: "United Kingdom", nl: "Verenigd Koninkrijk" }, { en: "Great Britain", nl: "Groot Brittannië" },
+            { en: "remember", nl: "onthouden" }, { en: "prefer", nl: "liever hebben" },
+            { en: "explain", nl: "uitleggen" }, { en: "arrive", nl: "aankomen" },
+            { en: "improve", nl: "verbeteren" }, { en: "population", nl: "bevolking" },
+            { en: "modern", nl: "modern" }, { en: "celebrate", nl: "vieren" },
+            { en: "travel", nl: "reizen" }, { en: "landscape", nl: "landschap" },
+            { en: "valley", nl: "vallei" }, { en: "coastline", nl: "kustlijn" },
+            { en: "farmer", nl: "boer" }, { en: "Roman", nl: "Romein" },
+            { en: "army", nl: "leger" }, { en: "fort", nl: "fort" },
+            { en: "tradition", nl: "traditie" }, { en: "symbol", nl: "symbool" },
+            { en: "dragon", nl: "draak" }, { en: "castle", nl: "kasteel" },
+            { en: "king", nl: "koning" }, { en: "prince", nl: "prins" },
+            { en: "battle", nl: "slag" }, { en: "survive", nl: "overleven" }
+        ];
+
+        const App = () => {
+            const [phase, setPhase] = useState('INTRO');
+            const [round, setRound] = useState(1);
+            const [correctCount, setCorrectCount] = useState(0);
+            const [currentQ, setCurrentQ] = useState(null);
+            const [input, setInput] = useState("");
+            const [feedback, setFeedback] = useState(null);
+            const [score, setScore] = useState(0);
+
+            const getTarget = () => round === 3 ? 10 : 5;
+
+            const generateQuestion = (forcedRound) => {
+                const r = forcedRound || round;
+                const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+                
+                let toDutch;
+                if (r === 1) toDutch = true;
+                else if (r === 2) toDutch = false;
+                else toDutch = Math.random() > 0.5;
+
+                setCurrentQ({
+                    q: toDutch ? `Vertaal naar NL: ${word.en}` : `Vertaal naar EN: ${word.nl}`,
+                    a: toDutch ? word.nl : word.en
+                });
+            };
+
+            const startMission = () => {
+                setRound(1);
+                setCorrectCount(0);
+                setScore(0);
+                generateQuestion(1);
+                setPhase('GAME');
+            };
+
+            const handleAnswer = () => {
+                const isCorrect = input.toLowerCase().trim() === currentQ.a.toLowerCase().trim();
+                
+                if (isCorrect) {
+                    setFeedback('CORRECT');
+                    setScore(s => s + (round * 50));
+                    const newCorrectCount = correctCount + 1;
+                    
+                    if (newCorrectCount >= getTarget()) {
+                        setTimeout(() => {
+                            setFeedback(null);
+                            setInput("");
+                            if (round < 3) {
+                                setPhase('BREAK');
+                            } else {
+                                setPhase('SCORE');
+                            }
+                        }, 1500);
+                        setCorrectCount(newCorrectCount);
+                    } else {
+                        setCorrectCount(newCorrectCount);
+                        nextQuestion();
+                    }
+                } else {
+                    setFeedback('WRONG');
+                    nextQuestion();
+                }
+            };
+
+            const nextQuestion = () => {
+                setTimeout(() => {
+                    setFeedback(null);
+                    setInput("");
+                    generateQuestion();
+                }, 1500);
+            };
+
+            const proceedToNextRound = () => {
+                const nextR = round + 1;
+                setRound(nextR);
+                setCorrectCount(0);
+                generateQuestion(nextR);
+                setPhase('GAME');
+            };
+
+            if (phase === 'INTRO') return (
+                <div className="h-screen flex flex-col items-center justify-center bg-black">
+                    <h1 className="text-6xl font-bold glitch mb-2 text-cyan-400">VOCAB VAULT</h1>
+                    <p className="text-cyan-800 mb-12 tracking-[0.2em] text-center">R1: EN-NL (5) | R2: NL-EN (5) | R3: MIX (10)</p>
+                    <button onClick={startMission} className="border-2 border-cyan-500 px-10 py-4 text-xl hover:bg-cyan-500 hover:text-black transition-all shadow-[0_0_15px_rgba(0,212,255,0.3)]">
+                        START PROTOCOL
+                    </button>
+                </div>
+            );
+
+            if (phase === 'GAME') return (
+                <div className="h-screen flex flex-col items-center justify-center p-4">
+                    <div className="absolute top-10 w-full max-w-3xl px-6 flex justify-between items-end border-b border-cyan-900 pb-4">
+                        <div>
+                            <div className="text-[10px] text-cyan-700">CURRENT_SECTOR</div>
+                            <div className="text-xl">RONDE 0{round}</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-[10px] text-cyan-700 font-bold">SYSTEEM STABILITEIT</div>
+                            <div className="w-48 h-2 bg-gray-900 mt-2 border border-cyan-900 relative">
+                                <div 
+                                    className="h-full bg-cyan-500 transition-all duration-500 shadow-[0_0_10px_#00d4ff]" 
+                                    style={{ width: `${(correctCount / getTarget()) * 100}%` }}
+                                ></div>
+                            </div>
+                            <div className="text-[10px] mt-1 text-cyan-500">{correctCount} / {getTarget()} VERIFIED</div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-[10px] text-cyan-700">TOTAL_CREDITS</div>
+                            <div className="text-xl text-yellow-500">{score}</div>
+                        </div>
+                    </div>
+
+                    {!feedback ? (
+                        <div className="w-full max-w-2xl p-10 border-l-2 border-cyan-500 bg-cyan-950/5">
+                            <h2 className="text-4xl font-bold mb-12 text-white tracking-tight">
+                                {currentQ?.q}
+                            </h2>
+                            <input 
+                                className="w-full bg-transparent border-b border-cyan-800 p-2 text-3xl text-cyan-400 outline-none focus:border-cyan-400 transition-all"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleAnswer()}
+                                placeholder="_AFWACHTEN OP INPUT..."
+                                autoFocus
+                            />
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <div className={`text-6xl font-bold mb-4 ${feedback === 'CORRECT' ? 'text-green-500' : 'text-red-500'} glitch`}>
+                                {feedback === 'CORRECT' ? '✓ MATCH' : '✗ ERROR'}
+                            </div>
+                            {feedback === 'WRONG' && (
+                                <div className="text-2xl text-white">SYSTEM REQUIREMENT: <span className="underline text-cyan-400">{currentQ.a}</span></div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+
+            if (phase === 'BREAK') return (
+                <div className="h-screen flex flex-col items-center justify-center bg-black text-center">
+                    <div className="text-cyan-800 mb-2">FIREWALL DOORBROKEN</div>
+                    <h2 className="text-5xl font-bold mb-8 text-white">SECTOR 0{round} VOLTOOID</h2>
+                    <button onClick={proceedToNextRound} className="bg-cyan-600 px-12 py-4 text-black font-bold hover:bg-cyan-400 transition-all shadow-lg">
+                        NAAR SECTOR 0{round + 1} &gt;&gt;
+                    </button>
+                </div>
+            );
+
+            if (phase === 'SCORE') return (
+                <div className="h-screen flex flex-col items-center justify-center text-center">
+                    <h1 className="text-3xl text-cyan-900 mb-4 tracking-[0.5em]">SYSTEM BREACH SUCCESSFUL</h1>
+                    <div className="text-sm text-cyan-700 mb-2">EIND SCORE</div>
+                    <div className="text-9xl font-bold text-white mb-12 drop-shadow-[0_0_30px_rgba(0,212,255,0.5)]">{score}</div>
+                    <button onClick={() => setPhase('INTRO')} className="text-cyan-600 hover:text-white underline tracking-widest text-xs">
+                        REBOOT SYSTEM.EXE
+                    </button>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<><div className="crt-overlay"></div><App /></>);
+    </script>
+</body>
+</html>
