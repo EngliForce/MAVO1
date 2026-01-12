@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Grid: Full Grammar Protocol</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+        body { font-family: 'Fira Code', monospace; background-color: #050505; color: #00f2ff; overflow: hidden; height: 100vh; }
+        .grid-bg { background-image: linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px); background-size: 50px 50px; }
+        .power-bar { transition: width 0.4s ease; box-shadow: 0 0 20px #00f2ff; }
+        .glitch-flash { animation: glitch 0.2s ease-out; }
+        @keyframes glitch { 0% { background-color: #ff3333; opacity: 0.5; } 100% { background-color: transparent; opacity: 0; } }
+        .input-glow { border: none; border-bottom: 3px solid #00f2ff; background: rgba(255, 255, 255, 0.05); color: #fff; text-align: center; outline: none; transition: border-color 0.3s; }
+        .input-glow:focus { border-bottom: 3px solid #fff; background: rgba(255, 255, 255, 0.15); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const nouns = [
+            "a bike", "a phone", "money", "homework", "time", "a dog", "a sister", "a problem", "a laptop", "the keys", 
+            "an idea", "a map", "a camera", "a brother", "tickets", "a plan", "a secret", "a garden", "a passport", "a pet",
+            "a guitar", "a blue pen", "a sandwich", "a dictionary", "an umbrella", "a credit card", "a cousin", "a message", 
+            "a uniform", "a hobby", "a snack", "a souvenir", "a toolkit", "a football", "a battery", "a charger", "a towel", 
+            "a bottle", "a mistake", "a goal", "an appointment", "a calculator", "a hat", "a jacket", "a watch", 
+            "a diary", "a mirror", "a lamp", "a brush", "a new car"
+        ];
+
+        const names = [
+            {n: "Anaya", s: true}, {n: "Lars", s: true}, {n: "Fatma", s: true}, {n: "Mateo", s: true}, {n: "Yuki", s: true},
+            {n: "Priya", s: true}, {n: "Chen", s: true}, {n: "Amara", s: true}, {n: "Sven", s: true}, {n: "Zainab", s: true},
+            {n: "Kaito", s: true}, {n: "Elena", s: true}, {n: "Omar", s: true}, {n: "Aisha", s: true}, {n: "Diego", s: true},
+            {n: "Sofia", s: true}, {n: "Kwame", s: true}, {n: "Hana", s: true}, {n: "Ivan", s: true}, {n: "Ji-min", s: true},
+            {n: "Malik", s: true}, {n: "Inaya", s: true}, {n: "Ravi", s: true}, {n: "Noa", s: true}, {n: "Luca", s: true},
+            {n: "Zara", s: true}, {n: "Kenji", s: true}, {n: "Freja", s: true}, {n: "Youssef", s: true}, {n: "Mei", s: true},
+            {n: "Liam", s: true}, {n: "Saanvi", s: true}, {n: "Arjun", s: true}, {n: "Chloe", s: true}, {n: "Tariq", s: true},
+            {n: "Dante", s: true}, {n: "Nala", s: true}, {n: "Oskar", s: true}, {n: "Samira", s: true}, {n: "Finn", s: true},
+            {n: "Lars and Fatma", s: false}, {n: "Mateo and Yuki", s: false}, {n: "Priya and Chen", s: false}, 
+            {n: "The students", s: false}, {n: "My friends", s: false}, {n: "Anaya and Amara", s: false},
+            {n: "The teachers", s: false}, {n: "Zainab and Omar", s: false}, {n: "Elena and Diego", s: false}, {n: "The children", s: false}
+        ];
+
+        const FULL_LIST = [];
+        names.forEach(subject => {
+            const n = nouns[Math.floor(Math.random() * nouns.length)];
+            
+            FULL_LIST.push({
+                task: "NEGATIVE", prompt: `${subject.n} ${subject.s ? 'has' : 'have'} ${n}.`,
+                s: subject.n, m: "", e: n + ".", isDouble: false,
+                ans1: subject.s ? ["doesn't have", "does not have"] : ["don't have", "do not have"]
+            });
+            FULL_LIST.push({
+                task: "QUESTION", prompt: `${subject.n} ${subject.s ? 'has' : 'have'} ${n}.`,
+                s: "", m: subject.n, e: n + "?", isDouble: true,
+                ans1: subject.s ? ["does"] : ["do"], ans2: ["have"]
+            });
+            FULL_LIST.push({
+                task: "NEGATIVE", prompt: `${subject.n} ${subject.s ? 'has got' : 'have got'} ${n}.`,
+                s: subject.n, m: "", e: n + ".", isDouble: false,
+                ans1: subject.s ? ["hasn't got", "has not got"] : ["haven't got", "have not got"]
+            });
+            FULL_LIST.push({
+                task: "QUESTION", prompt: `${subject.n} ${subject.s ? 'has got' : 'have got'} ${n}.`,
+                s: "", m: subject.n, e: n + "?", isDouble: true,
+                ans1: subject.s ? ["has"] : ["have"], ans2: ["got"]
+            });
+        });
+
+        const SHUFFLED_DECK = FULL_LIST.sort(() => Math.random() - 0.5).slice(0, 100);
+
+        const App = () => {
+            const [phase, setPhase] = useState('START');
+            const [energy, setEnergy] = useState(60);
+            const [nodesSynced, setNodesSynced] = useState(0);
+            const [currentIdx, setCurrentIdx] = useState(0);
+            const [in1, setIn1] = useState("");
+            const [in2, setIn2] = useState("");
+            const [flash, setFlash] = useState(false);
+            const inputRef2 = useRef(null);
+
+            useEffect(() => {
+                let timer;
+                if (phase === 'LIVE' && energy > 0) {
+                    timer = setInterval(() => setEnergy(prev => prev <= 1 ? 0 : prev - 1), 1000);
+                }
+                if (energy === 0 && phase === 'LIVE') setPhase('BLACKOUT');
+                return () => clearInterval(timer);
+            }, [phase, energy]);
+
+            const checkAnswer = () => {
+                const q = SHUFFLED_DECK[currentIdx];
+                const v1 = in1.toLowerCase().trim().replace(/’/g, "'");
+                const v2 = in2.toLowerCase().trim().replace(/’/g, "'");
+                const isCorrect = q.isDouble ? q.ans1.includes(v1) && q.ans2.includes(v2) : q.ans1.includes(v1);
+
+                if (isCorrect) {
+                    setEnergy(prev => Math.min(100, prev + 12));
+                    setNodesSynced(prev => {
+                        if (prev + 1 >= 100) setPhase('COMPLETE');
+                        return prev + 1;
+                    });
+                    setCurrentIdx(prev => prev + 1);
+                    setIn1(""); setIn2("");
+                } else {
+                    setEnergy(prev => Math.max(0, prev - 15));
+                    setFlash(true);
+                    setTimeout(() => setFlash(false), 200);
+                    setIn1(""); setIn2("");
+                }
+            };
+
+            return (
+                <div className={`h-screen w-full flex flex-col items-center justify-center grid-bg ${flash ? 'glitch-flash' : ''}`}>
+                    {phase === 'START' && (
+                        <div className="text-center p-12 border-4 border-cyan-500 bg-black shadow-[0_0_60px_rgba(0,242,255,0.2)]">
+                            <h1 className="text-5xl font-bold mb-4 tracking-tighter uppercase">SAVE THE POWERGRID</h1>
+                            <p className="mb-8 text-cyan-400 uppercase tracking-widest text-sm leading-relaxed">
+                                Transform to <strong>NEGATIVE</strong> or <strong>QUESTION</strong>.<br/>
+                               
+                            </p>
+                            <button onClick={() => setPhase('LIVE')} className="px-16 py-5 bg-cyan-500 text-black font-black text-2xl hover:bg-white transition-all">START PROTOCOL</button>
+                        </div>
+                    )}
+
+                    {phase === 'LIVE' && (
+                        <div className="w-full max-w-6xl px-10">
+                            <div className="flex justify-between mb-6 uppercase text-sm font-bold tracking-widest">
+                                <span className={energy < 20 ? 'text-red-500 animate-pulse' : ''}>Stability: {energy}s</span>
+                                <span>Progress: {nodesSynced}/100</span>
+                            </div>
+                            <div className="w-full h-4 bg-zinc-900 mb-20">
+                                <div className="h-full bg-cyan-400 power-bar" style={{width: `${(energy/100)*100}%`}}></div>
+                            </div>
+                            <div className="text-center">
+                                <div className="bg-zinc-900/80 p-6 mb-16 border border-cyan-900/30 rounded">
+                                    <span className="text-yellow-500 font-bold mr-4 text-xl tracking-[0.2em]">{SHUFFLED_DECK[currentIdx].task}</span>
+                                    <div className="text-zinc-300 text-3xl italic mt-2">"{SHUFFLED_DECK[currentIdx].prompt}"</div>
+                                </div>
+                                <div className="text-3xl md:text-5xl text-white font-bold flex flex-wrap justify-center items-center gap-6">
+                                    {!SHUFFLED_DECK[currentIdx].isDouble ? (
+                                        <>
+                                            <span>{SHUFFLED_DECK[currentIdx].s}</span>
+                                            <input className="input-glow w-[550px] py-2" value={in1} onChange={e => setIn1(e.target.value)} onKeyPress={e => e.key==='Enter' && checkAnswer()} autoFocus autoComplete="off" />
+                                            <span>{SHUFFLED_DECK[currentIdx].e}</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <input className="input-glow w-48 py-2" value={in1} onChange={e => setIn1(e.target.value)} onKeyPress={e => e.key==='Enter' && inputRef2.current.focus()} autoFocus autoComplete="off" />
+                                            <span>{SHUFFLED_DECK[currentIdx].m}</span>
+                                            <input ref={inputRef2} className="input-glow w-48 py-2" value={in2} onChange={e => setIn2(e.target.value)} onKeyPress={e => e.key==='Enter' && checkAnswer()} autoComplete="off" />
+                                            <span>{SHUFFLED_DECK[currentIdx].e}</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {phase === 'BLACKOUT' && (
+                        <div className="text-center p-20 border-4 border-red-600 bg-black">
+                            <h1 className="text-9xl font-bold text-red-600 mb-8 tracking-tighter uppercase">Failed</h1>
+                            <button onClick={() => window.location.reload()} className="px-12 py-6 bg-red-600 text-white text-2xl font-bold uppercase transition-all hover:bg-white hover:text-red-600">Retry</button>
+                        </div>
+                    )}
+
+                    {phase === 'COMPLETE' && (
+                        <div className="absolute inset-0 bg-cyan-500 text-black flex flex-col items-center justify-center p-10 z-50 text-center">
+                            <h1 className="text-9xl font-bold mb-4 tracking-tighter italic">POWERGRID SAVED</h1>
+                            <p className="text-3xl font-bold uppercase mb-12 tracking-widest">100/100 Sync complete.</p>
+                            <button onClick={() => window.location.reload()} className="px-16 py-8 bg-black text-cyan-400 text-3xl font-bold rounded-full">New Run</button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
