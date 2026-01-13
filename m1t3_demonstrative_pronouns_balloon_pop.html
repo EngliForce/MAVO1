@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balloon Pop: Demonstrative Pronouns</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+        body { font-family: 'Fredoka One', cursive; background: #f0f9ff; overflow: hidden; height: 100vh; }
+        
+        .balloon {
+            transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            background-color: #ef4444;
+            position: relative;
+        }
+        
+        .deflate { animation: deflate 0.5s ease-out; }
+        @keyframes deflate {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.8) rotate(-5deg); }
+            100% { transform: scale(1); }
+        }
+
+        .bg-sky { background: linear-gradient(to bottom, #87CEEB, #E0F7FA); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useCallback } = React;
+
+       const QUESTIONS = [
+    { q: "Is ___ your book over there?", a: "that" },
+    { q: "___ cookies here are delicious!", a: "these" },
+    { q: "Look at ___ birds high in the sky.", a: "those" },
+    { q: "I love ___ shirt I am wearing.", a: "this" },
+    { q: "Are ___ your shoes under the chair over there?", a: "those" },
+    { q: "___ is my best friend, Sam, standing next to me.", a: "this" },
+    { q: "Can you see ___ mountains in the distance?", a: "those" },
+    { q: "___ pens on my desk are all blue.", a: "these" },
+    { q: "Was ___ your phone that rang just now?", a: "that" },
+    { q: "___ apples in this basket look fresh.", a: "these" },
+    { q: "Who is ___ girl standing by the door?", a: "that" },
+    { q: "___ questions are very easy to answer.", a: "these" },
+    { q: "___ stars are so bright tonight.", a: "those" },
+    { q: "I find ___ ring on the floor here.", a: "this" },
+    { q: "___ trees across the river are very old.", a: "those" },
+    { q: "___ coffee in my cup is getting cold.", a: "this" },
+    { q: "Do you remember ___ summer we spent in Italy?", a: "that" },
+    { q: "___ clouds over the horizon look like rain.", a: "those" },
+    { q: "___ earrings I’m putting on are a gift.", a: "these" },
+    { q: "___ house at the end of the street is haunted.", a: "that" },
+    { q: "Please take ___ keys here and lock the door.", a: "these" },
+    { q: "___ people waiting at the bus stop look cold.", a: "those" },
+    { q: "I don't like ___ movie we are watching.", a: "this" },
+    { q: "___ seats in the back row are still empty.", a: "those" },
+    { q: "___ cake on my plate is very sweet.", a: "this" },
+    { q: "Can you pass me ___ magazine on the table near you?", a: "that" },
+    { q: "___ pictures on this wall are from my vacation.", a: "these" },
+    { q: "___ man walking his dog across the park is my neighbor.", a: "that" },
+    { q: "I’ll never forget ___ day as long as I live.", a: "that" },
+    { q: "___ flowers in my hand smell wonderful.", a: "these" },
+    { q: "___ students in the other classroom are very loud.", a: "those" },
+    { q: "___ is a great idea you just had!", a: "that" },
+    { q: "Look at ___ mess in this room!", a: "this" },
+    { q: "___ shoes I bought yesterday are a bit tight.", a: "these" },
+    { q: "Is ___ lady over there your grandmother?", a: "that" },
+    { q: "___ grapes here are much sweeter than the green ones.", a: "these" },
+    { q: "Who were ___ boys you were talking to earlier?", a: "those" },
+    { q: "___ computer I am using is very fast.", a: "this" },
+    { q: "___ lights in the valley look beautiful at night.", a: "those" },
+    { q: "___ sandwich I am eating is delicious.", a: "this" },
+    { q: "Could you help me move ___ boxes in the hallway?", a: "those" },
+    { q: "___ is the best day of my life!", a: "this" },
+    { q: "Did you see ___ shooting star just now?", a: "that" },
+    { q: "___ socks I have on are mismatched.", a: "these" },
+    { q: "___ building across the street is the library.", a: "that" },
+    { q: "I prefer ___ color here over the one you chose.", a: "this" },
+    { q: "___ children playing in the park look happy.", a: "those" },
+    { q: "How much are ___ oranges in this bag?", a: "these" },
+    { q: "___ was a very difficult exam we had last week.", a: "that" },
+    { q: "I can't wait to finish ___ project I'm working on.", a: "this" }
+].sort(() => Math.random() - 0.5);
+
+        const App = () => {
+            const [score, setScore] = useState(0);
+            const [currentIdx, setCurrentIdx] = useState(0);
+            const [input, setInput] = useState("");
+            const [phase, setPhase] = useState('START'); 
+            const [isDeflating, setIsDeflating] = useState(false);
+
+            const playSound = useCallback((type) => {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                if (type === 'pop') {
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                } else {
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.3);
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                }
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            }, []);
+
+            const checkAnswer = (e) => {
+                e.preventDefault();
+                const correct = QUESTIONS[currentIdx].a.toLowerCase();
+                const user = input.toLowerCase().trim();
+
+                if (user === correct) {
+                    const nextScore = score + 1;
+                    setScore(nextScore);
+                    if (nextScore >= 15) {
+                        playSound('pop');
+                        setPhase('POP');
+                    } else {
+                        setCurrentIdx((prev) => (prev + 1) % QUESTIONS.length);
+                        setInput("");
+                    }
+                } else {
+                    playSound('hiss');
+                    setIsDeflating(true);
+                    setScore(prev => Math.max(0, prev - 1));
+                    setTimeout(() => setIsDeflating(false), 500);
+                    setInput("");
+                }
+            };
+
+            const balloonSize = 100 + (score * 25); 
+
+            return (
+                <div className="h-screen w-full flex flex-col bg-sky overflow-hidden">
+                    
+                    <div className="w-full text-center py-8 h-32">
+                        <h1 className="text-5xl text-blue-800 tracking-wide">Balloon Pop!</h1>
+                        <div className="text-2xl bg-white/60 px-8 py-2 rounded-full inline-block mt-4 shadow-sm border-2 border-white/50">
+                            Score: <span className="text-red-600">{score}</span> / 15
+                        </div>
+                    </div>
+
+                    <div className="flex flex-1 items-center justify-center px-20">
+                        <div className="flex items-center justify-center w-full max-w-7xl gap-20">
+                            
+                            <div className="w-[500px] flex flex-col justify-center shrink-0">
+                                {phase === 'START' && (
+                                    <button 
+                                        onClick={() => setPhase('PLAY')} 
+                                        className="mx-auto px-12 py-6 bg-green-500 text-white text-3xl rounded-2xl shadow-xl hover:bg-green-600 transition-all transform hover:scale-105"
+                                    >
+                                        START
+                                    </button>
+                                )}
+
+                                {phase === 'PLAY' && (
+                                    <div className="bg-white p-10 rounded-[2rem] shadow-2xl border-4 border-blue-100 min-h-[400px] flex flex-col justify-between">
+                                        <div className="flex-1 flex items-center justify-center text-center">
+                                            <p className="text-3xl leading-relaxed text-gray-800">
+                                                {QUESTIONS[currentIdx].q.split('___')[0]}
+                                                <span className="text-red-500 font-bold border-b-4 border-red-200 px-2 mx-1">
+                                                    {input || "___"}
+                                                </span>
+                                                {QUESTIONS[currentIdx].q.split('___')[1]}
+                                            </p>
+                                        </div>
+                                        <form onSubmit={checkAnswer} className="mt-8">
+                                            <input 
+                                                autoFocus
+                                                className="w-full p-5 text-2xl border-2 border-gray-100 rounded-2xl outline-none focus:border-red-400 text-center bg-gray-50 shadow-inner"
+                                                placeholder="Antwoord..."
+                                                value={input}
+                                                onChange={(e) => setInput(e.target.value)}
+                                            />
+                                            <p className="text-center text-gray-400 text-xs mt-4 uppercase tracking-widest italic">Druk op Enter</p>
+                                        </form>
+                                    </div>
+                                )}
+
+                                {phase === 'POP' && (
+                                    <div className="text-center bg-white p-10 rounded-[2rem] shadow-2xl border-4 border-yellow-400 animate-bounce">
+                                        <h2 className="text-6xl text-red-600">POF! 💥</h2>
+                                        <p className="text-2xl text-blue-800 mt-4 italic">Heel goed!</p>
+                                        <button onClick={() => window.location.reload()} className="mt-8 px-10 py-4 bg-blue-600 text-white rounded-full text-2xl hover:bg-blue-700 transition-all shadow-lg">
+                                            Opnieuw
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="w-[500px] flex flex-col items-center justify-center shrink-0">
+                                {phase !== 'POP' ? (
+                                    <div className="relative flex flex-col items-center justify-center h-[500px] w-full">
+                                        <div 
+                                            className={`balloon rounded-full ${isDeflating ? 'deflate' : ''}`}
+                                            style={{ 
+                                                width: `${balloonSize}px`, 
+                                                height: `${balloonSize * 1.25}px`
+                                            }}
+                                        >
+                                            <div className="absolute top-1/4 left-1/4 w-1/4 h-1/6 bg-white/30 rounded-full blur-[2px]"></div>
+                                            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-5 bg-red-700 rounded-sm" style={{clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)'}}></div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-[12rem] animate-ping opacity-50">💥</div>
+                                )}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
