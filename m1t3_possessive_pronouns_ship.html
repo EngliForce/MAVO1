@@ -1,69 +1,80 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Possessive Cargo Ship - 50 Questions</title>
+    <title>Possessive Cargo Ship</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto+Mono:wght@700&display=swap');
-        
-        body, html { 
-            margin: 0; padding: 0;
-            font-family: 'Roboto Mono', monospace; 
-            background: #f0f9ff; 
-            height: 100%;
-            overflow: hidden;
-        }
-        
+        body, html { margin: 0; padding: 0; font-family: 'Roboto Mono', monospace; background: #0284c7; height: 100vh; overflow: hidden; }
         h1, h2, button { font-family: 'Black Ops One', system-ui; }
+        
+        .ocean { height: 100vh; width: 100%; background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%); position: relative; }
 
-        .ship-wrapper {
+        .ui-panel {
             position: absolute;
-            right: 10%; 
-            transition: transform 8s ease-in-out;
-            z-index: 20;
+            bottom: 0; left: 0; right: 0;
+            height: 120px;
+            background: #f1f5f9;
+            border-top: 6px solid #1e3a8a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
         }
 
-        .sailing-away {
-            transform: translateX(-180vw); 
+        .ship-wrapper { position: absolute; right: 10%; bottom: 120px; transition: transform 8s ease-in-out; z-index: 20; }
+        .sailing-away { transform: translateX(-180vw); }
+        
+        .container-box { animation: drop 0.4s ease-out; border: 1px solid rgba(0,0,0,0.1); }
+        @keyframes drop { 0% { transform: translateY(-150px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        
+        .bobbing { animation: bob 4s ease-in-out infinite; }
+        @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* CORRECTED POINTY BOW: Point is at the top, slanted towards the water */
+        .ship-bow {
+            position: absolute;
+            left: -59px;
+            top: 0;
+            width: 60px;
+            height: 48px;
+            background: #1e293b;
+            /* Slants from top-left to bottom-right */
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
         }
 
-        .container-box {
-            animation: drop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 40;
+        .sentence-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            gap: 8px;
         }
 
-        @keyframes drop {
-            0% { transform: translateY(-100px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        .water-bg {
-            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-        }
-
-        .bobbing {
-            animation: bob 4s ease-in-out infinite;
-        }
-
-        @keyframes bob {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .inline-input {
+            border-bottom: 4px solid #2563eb;
+            background: #eff6ff;
+            text-align: center;
+            outline: none;
+            color: #2563eb;
+            width: 110px;
+            padding: 0 5px;
+            border-radius: 4px;
+            font-weight: 800;
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
-
     <script type="text/babel">
-        const { useState, useMemo } = React;
+        const { useState, useMemo, useEffect, useRef } = React;
 
         const ALL_QUESTIONS = [
-            // I / MY / MINE
             { prompt: "I have a pen. It is ___ pen.", a: "my" },
             { prompt: "This laptop belongs to me. It is ___.", a: "mine" },
             { prompt: "I am wearing ___ favorite shirt today.", a: "my" },
@@ -71,7 +82,6 @@
             { prompt: "I love ___ new shoes.", a: "my" },
             { prompt: "I bought this coffee, so it is ___.", a: "mine" },
             { prompt: "I live here with ___ father.", a: "my" },
-            // YOU / YOUR / YOURS
             { prompt: "You have a nice bike. I like ___ bike.", a: "your" },
             { prompt: "You bought this umbrella, so it is ___.", a: "yours" },
             { prompt: "You must do ___ homework now.", a: "your" },
@@ -79,7 +89,6 @@
             { prompt: "Can you tell me ___ phone number?", a: "your" },
             { prompt: "You didn't pay for this, so it isn't ___.", a: "yours" },
             { prompt: "You left ___ jacket in the hall.", a: "your" },
-            // HE / HIS
             { prompt: "He has a brother. ___ brother is very tall.", a: "his" },
             { prompt: "Tom has a cat. That cat is ___.", a: "his" },
             { prompt: "He forgot ___ bag at school.", a: "his" },
@@ -87,7 +96,6 @@
             { prompt: "He told me that ___ name is Peter.", a: "his" },
             { prompt: "He won the prize. That trophy is ___.", a: "his" },
             { prompt: "He lives in London with ___ parents.", a: "his" },
-            // SHE / HER / HERS
             { prompt: "She has a sister. ___ sister is very nice.", a: "her" },
             { prompt: "The pink dress belongs to her. It is ___.", a: "hers" },
             { prompt: "Sarah is happy in ___ new room.", a: "her" },
@@ -95,7 +103,6 @@
             { prompt: "She has beautiful blue eyes. ___ eyes are blue.", a: "her" },
             { prompt: "She bought that house. The house is ___.", a: "hers" },
             { prompt: "She is riding ___ horse in the woods.", a: "her" },
-            // WE / OUR / OURS
             { prompt: "We have a big house. It is ___ house.", a: "our" },
             { prompt: "We won the game! The victory is ___.", a: "ours" },
             { prompt: "We are eating ___ dinner right now.", a: "our" },
@@ -103,7 +110,6 @@
             { prompt: "We love going to ___ school.", a: "our" },
             { prompt: "We made the choice ourselves. The decision was ___.", a: "ours" },
             { prompt: "We bought these tickets. They are ___.", a: "ours" },
-            // THEY / THEIR / THEIRS
             { prompt: "They have a dog. ___ dog barks a lot.", a: "their" },
             { prompt: "The ball belongs to them. It is ___.", a: "theirs" },
             { prompt: "They sold ___ old car last week.", a: "their" },
@@ -111,137 +117,105 @@
             { prompt: "I don't know those people or ___ names.", a: "their" },
             { prompt: "Those bikes belong to them. They are ___.", a: "theirs" },
             { prompt: "They are visiting ___ grandma today.", a: "their" },
-            // IT / ITS
             { prompt: "The bird is in the tree. ___ nest is small.", a: "its" },
             { prompt: "The cat licked ___ own paw.", a: "its" },
             { prompt: "The company changed ___ logo yesterday.", a: "its" },
             { prompt: "The dog wagged ___ tail.", a: "its" },
-            // MIXED
             { prompt: "I have my book, but where is ___ (you)?", a: "yours" },
             { prompt: "We invited all our friends to ___ party.", a: "our" },
             { prompt: "Is this her pen or is it ___ (he)?", a: "his" },
             { prompt: "It is my turn now, and then it is ___ (she).", a: "hers" }
         ];
 
-        const App = () => {
-            const currentQuestions = useMemo(() => {
-                return [...ALL_QUESTIONS].sort(() => 0.5 - Math.random()).slice(0, 10);
-            }, []);
+        const CONTAINER_COLORS = ['#FF5733', '#33FF57', '#3357FF', '#F333FF', '#33FFF3', '#FFB833', '#8D33FF', '#FF3385', '#57FF33', '#FFD433'];
 
+        const App = () => {
+            const currentQuestions = useMemo(() => [...ALL_QUESTIONS].sort(() => 0.5 - Math.random()).slice(0, 10), []);
             const [score, setScore] = useState(0);
             const [currentIdx, setCurrentIdx] = useState(0);
             const [input, setInput] = useState("");
             const [phase, setPhase] = useState('START');
             const [containers, setContainers] = useState([]);
+            const inputRef = useRef(null);
 
-            const playFoghorn = () => {
-                try {
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    const osc1 = audioCtx.createOscillator();
-                    const osc2 = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc1.type = 'sawtooth'; osc1.frequency.setValueAtTime(80, audioCtx.currentTime);
-                    osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(82, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.4, audioCtx.currentTime + 0.5);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 4.5);
-                    osc1.connect(gain); osc2.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc1.start(); osc2.start();
-                    osc1.stop(audioCtx.currentTime + 5);
-                    osc2.stop(audioCtx.currentTime + 5);
-                } catch(e) {}
-            };
+            useEffect(() => {
+                if (phase === 'PLAY' && inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, [phase, currentIdx]);
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                const correct = currentQuestions[currentIdx].a.toLowerCase();
-                const user = input.toLowerCase().trim();
-                
-                if (user === correct) {
-                    setContainers(prev => [...prev, user]);
-                    const newScore = score + 1;
-                    setScore(newScore);
-                    if (newScore >= 10) {
+                if (input.toLowerCase().trim() === currentQuestions[currentIdx].a.toLowerCase()) {
+                    setContainers([...containers, { text: input.toLowerCase().trim(), color: CONTAINER_COLORS[containers.length % 10] }]);
+                    if (containers.length + 1 >= 10) {
                         setPhase('SAILING');
-                        playFoghorn();
                         setTimeout(() => setPhase('WIN'), 8000);
                     } else {
-                        setCurrentIdx(prev => prev + 1);
+                        setCurrentIdx(currentIdx + 1);
                         setInput("");
                     }
-                } else {
-                    setInput("");
-                }
+                } else { setInput(""); }
             };
 
+            const q = currentQuestions[currentIdx];
+            const parts = q.prompt.split("___");
+
             return (
-                <div className="flex flex-col h-screen w-full">
-                    <div className="water-bg flex-[1] relative flex items-end overflow-hidden border-b-8 border-blue-900 pb-12">
+                <div className="relative h-screen w-full overflow-hidden">
+                    <div className="ocean">
                         <div className={`ship-wrapper ${phase === 'SAILING' || phase === 'WIN' ? 'sailing-away' : ''}`}>
-                            <div className="bobbing relative w-[340px] h-[140px] flex flex-col justify-end">
-                                <div className="absolute bottom-[96px] left-4 flex flex-wrap-reverse justify-start items-end w-[180px] min-h-[50px] z-30 pointer-events-none">
+                            <div className="bobbing flex flex-col items-start w-[400px] relative">
+                                
+                                {/* Containers - Stacked behind the bridge */}
+                                <div className="flex flex-wrap-reverse gap-0.5 ml-28 mb-[-2px] w-[220px] z-30">
                                     {containers.map((c, i) => (
-                                        <div key={i} className="container-box w-10 h-8 bg-orange-600 border-2 border-orange-800 m-0.5 flex items-center justify-center text-[8px] text-white font-bold shadow-md rounded-sm">
-                                            {c}
-                                        </div>
+                                        <div key={i} style={{ backgroundColor: c.color }} className="container-box w-12 h-9 flex items-center justify-center text-[10px] text-white font-bold shadow-inner rounded-sm">{c.text}</div>
                                     ))}
                                 </div>
-                                <div className="relative w-[340px] h-24 bg-slate-800 rounded-b-[40px] border-b-8 border-slate-900 shadow-2xl z-20">
-                                    <div className="absolute -top-12 right-6 w-24 h-12 bg-slate-700 rounded-t-lg border-t-4 border-slate-600">
-                                        <div className="flex p-2 space-x-2">
-                                            <div className="w-3 h-3 bg-cyan-400 opacity-60 rounded-sm"></div>
-                                            <div className="w-3 h-3 bg-cyan-400 opacity-60 rounded-sm"></div>
-                                        </div>
+
+                                {/* Ship Hull */}
+                                <div className="w-[400px] h-12 bg-slate-800 rounded-br-[10px] shadow-2xl relative border-t-4 border-slate-700">
+                                    <div className="ship-bow"></div>
+                                    
+                                    {/* Bridge (Stuurhut) - Positioned in the Front area */}
+                                    <div className="absolute -top-10 left-4 w-20 h-10 bg-slate-700 rounded-t-lg border-t-2 border-slate-500 flex p-1.5 gap-2 z-40">
+                                        <div className="w-3 h-2 bg-cyan-200 opacity-50 rounded-sm"></div>
+                                        <div className="w-3 h-2 bg-cyan-200 opacity-50 rounded-sm"></div>
                                     </div>
-                                    <div className="absolute -top-20 right-10 w-6 h-20 bg-slate-800">
-                                        <div className="absolute top-0 w-full h-3 bg-red-600"></div>
+                                    
+                                    {/* Mast / Antenna */}
+                                    <div className="absolute -top-16 left-8 w-1 h-16 bg-slate-800 z-10">
+                                        <div className="h-2 w-4 bg-red-600 -ml-1.5 mt-2"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex-[1] bg-slate-100 flex items-center justify-center p-4">
-                        <div className="w-full max-w-2xl text-center">
-                            {phase === 'START' && (
-                                <div>
-                                    <h1 className="text-3xl md:text-4xl mb-8 text-slate-800 tracking-tight">LOAD THE SHIP</h1>
-                                    <button onClick={() => setPhase('PLAY')} className="bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl text-2xl shadow-xl transition-all">START LOADING</button>
-                                </div>
-                            )}
-
+                    <div className="ui-panel">
+                        <div className="w-full max-w-4xl text-center">
+                            {phase === 'START' && <button onClick={() => setPhase('PLAY')} className="bg-blue-600 text-white px-8 py-3 rounded-xl text-2xl shadow-xl uppercase tracking-wider">Start Loading</button>}
+                            
                             {(phase === 'PLAY' || phase === 'SAILING') && (
-                                <div className={`bg-white p-8 rounded-3xl shadow-xl border-2 border-slate-200 transition-all ${phase === 'SAILING' ? 'scale-95 opacity-50' : ''}`}>
-                                    <div className="flex justify-between items-center mb-6">
-                                        <span className="text-blue-600 font-bold uppercase text-xs">Container {score + 1}/10</span>
-                                        {phase === 'SAILING' && <span className="text-orange-600 font-bold animate-pulse">SAILING AWAY...</span>}
-                                    </div>
-                                    <h2 className="text-lg md:text-2xl mb-8 min-h-[80px] text-slate-800 leading-snug">
-                                        {currentQuestions[currentIdx].prompt.split('___').map((p, i, a) => (
-                                            <span key={i}>{p}{i < a.length - 1 && <span className="mx-2 px-4 border-b-4 border-blue-500 text-blue-600 font-bold">?</span>}</span>
-                                        ))}
-                                    </h2>
-                                    <form onSubmit={handleSubmit}>
+                                <form onSubmit={handleSubmit} className={`px-4 ${phase === 'SAILING' ? 'opacity-0' : ''}`}>
+                                    <div className="sentence-container text-lg md:text-xl lg:text-2xl text-slate-800 font-bold bg-white p-4 rounded-xl shadow-lg border-2 border-slate-200">
+                                        <span>{parts[0]}</span>
                                         <input 
-                                            autoFocus
-                                            disabled={phase === 'SAILING'}
-                                            className="w-full p-4 border-4 border-slate-100 rounded-2xl outline-none focus:border-blue-500 text-center text-3xl bg-slate-50 lowercase"
-                                            placeholder="..."
+                                            ref={inputRef}
+                                            className="inline-input"
                                             value={input}
                                             onChange={(e) => setInput(e.target.value)}
+                                            disabled={phase === 'SAILING'}
+                                            autoComplete="off"
                                         />
-                                    </form>
-                                </div>
+                                        <span>{parts[1]}</span>
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 mt-2 uppercase font-bold tracking-widest">Progress: {containers.length}/10 Containers</div>
+                                </form>
                             )}
 
-                            {phase === 'WIN' && (
-                                <div>
-                                    <h2 className="text-5xl text-blue-600 mb-4 tracking-tighter">MISSION COMPLETE</h2>
-                                    <p className="text-slate-600 text-xl mb-8 font-bold">The cargo has been delivered.</p>
-                                    <button onClick={() => window.location.reload()} className="bg-slate-800 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-700">NEW SHIP</button>
-                                </div>
-                            )}
+                            {phase === 'WIN' && <button onClick={() => window.location.reload()} className="bg-green-600 text-white px-8 py-3 rounded-xl text-2xl animate-bounce uppercase">Well Done! Play Again?</button>}
                         </div>
                     </div>
                 </div>
