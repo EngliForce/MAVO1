@@ -1,403 +1,292 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocab 3.2: Time Challenge</title>
+  <title>Flashcard Battle – Vocabulary: Scotland</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f1fdf4;
+      background-color: #fff3f3;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
     header {
-      background-color: #d32f2f;
+      background-color: #c62828;
       color: white;
       padding: 2rem 1rem 1rem;
       text-align: center;
+      width: 100%;
     }
-    header img {
+
+    header img.logo {
       display: block;
       margin: 0 auto 1rem;
-      width: 100px;
+      height: 80px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
+
+    .controls, .game-section {
+      margin: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 90%;
+      max-width: 500px;
     }
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-    section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #d32f2f;
-    }
-    #current-players {
-      font-size: 1.4rem;
-      color: #d32f2f;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-    .timer {
-      color: red;
-      font-weight: bold;
-    }
-    .question {
-      font-size: 1.3rem;
-      margin: 1rem 0;
-    }
-    .answers button {
-      padding: 0.8rem 1rem;
-      margin: 0.3rem;
-      background-color: #d32f2f;
-      color: white;
-      border: none;
-      border-radius: 8px;
+
+    label, select, input, button {
       font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.3s;
     }
-    .answers button:hover {
-      background-color: #b71c1c;
+
+    .card-display {
+      margin: 2rem 0;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backface-visibility: hidden;
     }
+
+    .flip {
+      animation: flip 0.6s ease-in-out;
+    }
+
+    @keyframes flip {
+      0% { transform: rotateY(0deg); }
+      50% { transform: rotateY(90deg); opacity: 0.5; }
+      100% { transform: rotateY(0deg); opacity: 1; }
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: #333;
+    }
+
     .hidden {
       display: none;
     }
-    input[type=text], select {
-      padding: 0.5rem;
-      margin: 0.5rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .start-btn {
-      background: #d32f2f;
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    .start-btn:hover {
-      background-color: #b71c1c;
-    }
-    .results-list {
-      text-align: left;
-      max-width: 600px;
-      margin: 1rem auto;
-      font-size: 0.95rem;
-    }
-    .results-list li {
-      margin-bottom: 0.5rem;
-    }
+
     footer {
       background-color: #f8d7da;
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
+      width: 100%;
+      margin-top: 3rem;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 0.7rem;
+      background-color: #c62828;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #b71c1c;
+    }
+
+    #override-button {
+      margin-top: 0.5rem;
+      background-color: #e53935;
+    }
+
+    #override-button:hover {
+      background-color: #b71c1c;
+    }
+
+    .result {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="EngliForce Logo">
-    <h1>🏆 Vocab 3.2: Time Challenge</h1>
-    <p>Play solo or with a friend. Choose your mode and get started!</p>
+    <img src="logo.png" alt="Logo" class="logo" />
+    <h1>🎯 Flashcard Battle: Vocabulary Scotland</h1>
+    <p>Who's the vocab champion?</p>
   </header>
 
-  <main>
-    <section id="start-screen">
-      <h2>🎮 Game Settings</h2>
-      <input type="text" id="player1" placeholder="Player 1 name (optional)">
-      <input type="text" id="player2" placeholder="Player 2 name (optional)">
-      <p>
-        <label for="mode">Language Mode:</label>
-        <select id="mode">
-          <option value="en-nl">English → Dutch</option>
-          <option value="nl-en">Dutch → English</option>
-          <option value="mixed">Mixed</option>
-        </select>
-      </p>
-      <p>
-        <label for="questionType">Question Type:</label>
-        <select id="questionType">
-          <option value="mc">Multiple Choice</option>
-          <option value="open">Open Question</option>
-        </select>
-      </p>
-      <button class="start-btn" onclick="startGame()">🚀 Start Quiz</button>
-    </section>
+  <div class="controls">
+    <label>Player 1: <input type="text" id="player1" /></label>
+    <label>Player 2: <input type="text" id="player2" /></label>
+    <label>
+      Choose Level:
+      <select id="language-mode">
+        <option value="en-nl">Level 1: English → Dutch</option>
+        <option value="nl-en">Level 2: Dutch → English</option>
+        <option value="mixed">Level 3: Mixed</option>
+      </select>
+    </label>
+    <button onclick="startGame()">Start Battle ▶️</button>
+  </div>
 
-    <section id="quiz-section" class="hidden">
-      <h2 id="current-players"></h2>
-      <div class="quiz-info">
-        ⏳ Time left: <span class="timer" id="timer">60</span> sec
-      </div>
-      <div class="question" id="question"></div>
-      <div class="answers" id="answers"></div>
-      <div id="open-answer-section" class="hidden">
-        <input type="text" id="openAnswer" placeholder="Type your answer...">
-        <button onclick="submitOpenAnswer()">Submit</button>
-      </div>
-    </section>
-
-    <section id="game-over" class="hidden">
-      <h2>⏰ Time's up!</h2>
-      <p><span id="winner-text"></span></p>
-      <p>Final score: <span class="score" id="final-score"></span></p>
-      <h3>Incorrect Answers:</h3>
-      <ul class="results-list" id="wrong-answers-list"></ul>
-      <button onclick="restartGame()">🔄 Play Again</button>
-    </section>
-  </main>
+  <div class="game-section hidden" id="game-section">
+    <div class="scoreboard" id="scoreboard"></div>
+    <div class="card-display" id="card-display">Flashcard...</div>
+    <label>
+      <span id="player-turn-label"></span> type your answer:
+      <input type="text" id="answer-input" />
+    </label>
+    <button onclick="submitAnswer()">Confirm answer ✅</button>
+    <button id="override-button" class="hidden" onclick="overrideCorrect()">Approve anyway ✅</button>
+    <div class="result" id="result"></div>
+  </div>
 
   <footer>
-    <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
   </footer>
 
   <script>
-    const words = [
-  { en: ["landscape"], nl: ["landschap"] },
-  { en: ["valley"], nl: ["vallei", "dal"] },
-  { en: ["coastline"], nl: ["kustlijn", "kust"] },
-  { en: ["farmer"], nl: ["boer"] },
-  { en: ["Roman"], nl: ["Romein"] },
-  { en: ["army"], nl: ["leger"] },
-  { en: ["fort"], nl: ["fort", "vesting"] },
-  { en: ["tradition"], nl: ["traditie"] },
-  { en: ["symbol"], nl: ["symbool"] },
-  { en: ["dragon"], nl: ["draak"] },
-  { en: ["castle"], nl: ["kasteel"] },
-  { en: ["king"], nl: ["koning"] },
-  { en: ["prince"], nl: ["prins"] },
-  { en: ["battle"], nl: ["slag", "gevecht"] },
-  { en: ["survive"], nl: ["overleven"] }
+    const flashcards = [
+  { en: 'history', nl: 'geschiedenis' },
+  { en: 'country', nl: 'land' },
+  { en: 'brave', nl: 'dapper' },
+  { en: 'tribe', nl: 'stam' },
+  { en: 'castle', nl: 'kasteel' },
+  { en: 'king', nl: 'koning' },
+  { en: 'war', nl: 'oorlog' },
+  { en: 'freedom', nl: 'vrijheid' },
+  { en: 'hero', nl: 'held' },
+  { en: 'culture', nl: 'cultuur' },
+  { en: 'heritage', nl: 'erfgoed' },
+  { en: 'soldier', nl: 'soldaat' },
+  { en: 'village', nl: 'dorp' },
+  { en: 'capital city', nl: 'hoofdstad' },
+  { en: 'future', nl: 'toekomst' }
 ];
 
-    let settings = {
-      mode: "en-nl",
-      questionType: "mc",
-      players: [],
-    };
-
-    let questions = [];
-    let current = 0;
-    let correctCount = 0;
-    let wrongAnswers = [];
-    let timeLeft = 60;
-    let timer;
-
-    let currentPlayerIndex = 0;
-    let playerResults = [];
+    let playerNames = [];
+    let scores = [0, 0];
+    let currentPlayer = 0;
+    let mode = 'en-nl';
+    let deck = [];
+    let currentCard = null;
 
     function startGame() {
-      const p1 = document.getElementById("player1").value.trim();
-      const p2 = document.getElementById("player2").value.trim();
-      settings.players = [];
-      if (p1) settings.players.push(p1);
-      if (p2) settings.players.push(p2);
+      const p1 = document.getElementById('player1').value.trim();
+      const p2 = document.getElementById('player2').value.trim();
+      mode = document.getElementById('language-mode').value;
 
-      settings.mode = document.getElementById("mode").value;
-      settings.questionType = document.getElementById("questionType").value;
+      if (!p1 || !p2) {
+        alert("Vul beide namen in.");
+        return;
+      }
 
-      currentPlayerIndex = 0;
-      playerResults = [];
+      playerNames = [p1, p2];
+      scores = [0, 0];
+      currentPlayer = 0;
+      deck = [...flashcards].sort(() => Math.random() - 0.5);
 
-      startPlayerTurn();
+      document.querySelector('.controls').classList.add('hidden');
+      document.getElementById('game-section').classList.remove('hidden');
+
+      nextTurn();
     }
 
-    function startPlayerTurn() {
-      document.getElementById("start-screen").classList.add("hidden");
-      document.getElementById("quiz-section").classList.remove("hidden");
+    function nextTurn() {
+      if (deck.length === 0) {
+        endGame();
+        return;
+      }
 
-      const currentPlayer = settings.players[currentPlayerIndex] || "Solo Player";
-      document.getElementById("current-players").textContent = currentPlayer;
+      currentCard = deck.shift();
+      let direction = mode;
+      if (mode === 'mixed') {
+        direction = Math.random() < 0.5 ? 'en-nl' : 'nl-en';
+      }
 
-      correctCount = 0;
-      wrongAnswers = [];
-      current = 0;
+      const display = direction === 'en-nl' ? currentCard.en : currentCard.nl;
+      currentCard.expectedAnswer = direction === 'en-nl' ? currentCard.nl : currentCard.en;
 
-      generateQuestions();
-      showQuestion();
-      startTimer();
+      const cardEl = document.getElementById('card-display');
+      cardEl.classList.remove('flip');
+      void cardEl.offsetWidth;
+      cardEl.textContent = display;
+      cardEl.classList.add('flip');
+
+      document.getElementById('player-turn-label').textContent = `${playerNames[currentPlayer]}, `;
+      document.getElementById('answer-input').value = '';
+      document.getElementById('result').textContent = '';
+      document.getElementById('override-button').classList.add('hidden');
+      updateScoreboard();
     }
 
-    function generateQuestions() {
-      questions = words.map(w => {
-        let q, correct;
-        if (settings.mode === "en-nl") {
-          q = `What is the Dutch word for "${w.en[0]}"?`;
-          correct = w.nl;
-        } else if (settings.mode === "nl-en") {
-          q = `What is the English word for "${w.nl[0]}"?`;
-          correct = w.en;
-        } else {
-          if (Math.random() > 0.5) {
-            q = `What is the Dutch word for "${w.en[0]}"?`;
-            correct = w.nl;
-          } else {
-            q = `What is the English word for "${w.nl[0]}"?`;
-            correct = w.en;
-          }
-        }
+    function submitAnswer() {
+      const userAnswer = document.getElementById('answer-input').value.trim().toLowerCase();
+      const correctAnswer = currentCard.expectedAnswer.toLowerCase();
+      const resultEl = document.getElementById('result');
+      const overrideBtn = document.getElementById('override-button');
 
-        const getWrongAnswers = (list, correctArray) => {
-          let options = [];
-          while (options.length < 2) {
-            const candidate = list[Math.floor(Math.random() * list.length)];
-            if (!correctArray.includes(candidate[0]) && !options.includes(candidate[0])) {
-              options.push(candidate[0]);
-            }
-          }
-          return options;
-        };
+      if (userAnswer === correctAnswer) {
+        scores[currentPlayer]++;
+        resultEl.textContent = '✅ Correct!';
+        overrideBtn.classList.add('hidden');
+        setTimeout(() => {
+          currentPlayer = (currentPlayer + 1) % 2;
+          nextTurn();
+        }, 1000);
+      } else {
+        deck.push(currentCard);
+        resultEl.textContent = `❌ Incorrect. The correct answer was: ${currentCard.expectedAnswer}`;
+        overrideBtn.classList.remove('hidden');
+      }
 
-        const wrong = settings.mode === "nl-en"
-          ? getWrongAnswers(words.map(w => w.en), correct)
-          : getWrongAnswers(words.map(w => w.nl), correct);
-
-        let allOptions = [...correct.map(c => c), ...wrong].sort(() => Math.random() - 0.5);
-
-        return { q, correct, options: allOptions };
-      }).sort(() => Math.random() - 0.5);
+      updateScoreboard();
     }
 
-    function startTimer() {
-      timeLeft = 60;
-      document.getElementById("timer").textContent = timeLeft;
-      timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById("timer").textContent = timeLeft;
-        if (timeLeft <= 0) endGame();
+    function overrideCorrect() {
+      scores[currentPlayer]++;
+      document.getElementById('override-button').classList.add('hidden');
+      document.getElementById('result').textContent = '✅ Approved manually!';
+      updateScoreboard();
+      setTimeout(() => {
+        currentPlayer = (currentPlayer + 1) % 2;
+        nextTurn();
       }, 1000);
     }
 
-    function showQuestion() {
-      if (current >= questions.length) current = 0;
-      const q = questions[current];
-      document.getElementById("question").textContent = q.q;
-
-      const answersDiv = document.getElementById("answers");
-      answersDiv.innerHTML = "";
-
-      if (settings.questionType === "mc") {
-        document.getElementById("open-answer-section").classList.add("hidden");
-        q.options.forEach(opt => {
-          const btn = document.createElement("button");
-          btn.textContent = opt;
-          btn.onclick = () => checkAnswer(opt);
-          answersDiv.appendChild(btn);
-        });
-      } else {
-        document.getElementById("open-answer-section").classList.remove("hidden");
-        document.getElementById("openAnswer").value = "";
-      }
-    }
-
-    function submitOpenAnswer() {
-      const answer = document.getElementById("openAnswer").value.trim();
-      checkAnswer(answer);
-    }
-
-    function checkAnswer(choice) {
-      const qObj = questions[current];
-      const isCorrect = qObj.correct.some(ans => ans.toLowerCase() === choice.toLowerCase());
-
-      if (isCorrect) {
-        correctCount++;
-      } else {
-        wrongAnswers.push({
-          question: qObj.q,
-          given: choice || "(no answer)",
-          correct: qObj.correct.join(" / ")
-        });
-      }
-
-      current++;
-      showQuestion();
+    function updateScoreboard() {
+      const sb = document.getElementById('scoreboard');
+      sb.textContent = `${playerNames[0]}: ${scores[0]} Cards | ${playerNames[1]}: ${scores[1]} Cards`;
     }
 
     function endGame() {
-      clearInterval(timer);
-
-      const playerName = settings.players[currentPlayerIndex] || "Solo Player";
-
-      playerResults.push({
-        name: playerName,
-        correct: correctCount,
-        wrong: [...wrongAnswers]
-      });
-
-      if (settings.players.length === 2 && currentPlayerIndex === 0) {
-        currentPlayerIndex = 1;
-        document.getElementById("quiz-section").classList.add("hidden");
-        alert("Next player's turn!");
-        startPlayerTurn();
-      } else {
-        showFinalResults();
-      }
-    }
-
-    function showFinalResults() {
-      document.getElementById("quiz-section").classList.add("hidden");
-      document.getElementById("game-over").classList.remove("hidden");
-
-      const list = document.getElementById("wrong-answers-list");
-      list.innerHTML = "";
-
-      let resultText = "";
-      let scoreText = "";
-
-      if (playerResults.length === 2) {
-        const [p1, p2] = playerResults;
-        if (p1.correct > p2.correct) {
-          resultText = `🏆 ${p1.name} wins with ${p1.correct} correct answers!`;
-        } else if (p2.correct > p1.correct) {
-          resultText = `🏆 ${p2.name} wins with ${p2.correct} correct answers!`;
-        } else {
-          resultText = `🤝 It's a tie! Both scored ${p1.correct} correct answers.`;
-        }
-        scoreText = `${p1.name}: ${p1.correct} | ${p2.name}: ${p2.correct}`;
-        [...p1.wrong, ...p2.wrong].forEach(item => {
-          const li = document.createElement("li");
-          li.innerHTML = `<strong>${item.question}</strong><br>Your answer: <em>${item.given}</em><br>Correct answer: ✅ ${item.correct}`;
-          list.appendChild(li);
-        });
-      } else {
-        const p = playerResults[0];
-        resultText = `${p.name}, here is your result:`;
-        scoreText = `${p.correct} correct`;
-        p.wrong.forEach(item => {
-          const li = document.createElement("li");
-          li.innerHTML = `<strong>${item.question}</strong><br>Your answer: <em>${item.given}</em><br>Correct answer: ✅ ${item.correct}`;
-          list.appendChild(li);
-        });
-      }
-
-      document.getElementById("winner-text").textContent = resultText;
-      document.getElementById("final-score").textContent = scoreText;
-    }
-
-    function restartGame() {
-      currentPlayerIndex = 0;
-      playerResults = [];
-      current = 0;
-      correctCount = 0;
-      wrongAnswers = [];
-      timeLeft = 60;
-      document.getElementById("quiz-section").classList.add("hidden");
-      document.getElementById("game-over").classList.add("hidden");
-      document.getElementById("start-screen").classList.remove("hidden");
+      const winner =
+        scores[0] === scores[1]
+          ? "🎉 It's a tie!"
+          : `🏆 ${scores[0] > scores[1] ? playerNames[0] : playerNames[1]} wins!`;
+      document.getElementById('card-display').textContent = "Game Over!";
+      document.getElementById('player-turn-label').textContent = '';
+      document.getElementById('result').textContent = winner;
+      document.getElementById('override-button').classList.add('hidden');
     }
   </script>
 </body>
