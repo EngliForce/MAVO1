@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 3.2: Scotland</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fdf0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #c62828;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #c62828;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #fbe9e7;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #ffcdd2;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a, .links button {
+      padding: 0.5rem 1rem;
+      background-color: #c62828;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover, .links button:hover {
+      background-color: #b71c1c;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #ffebee;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #c62828;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #b71c1c;
+    }
+    .pickle-card {
+      display: block;
+      background-color: #c62828;
+      color: white;
+      text-decoration: none;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      width: 200px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: transform 0.2s, background-color 0.3s;
+      line-height: 1.4;
+    }
+    .pickle-card span {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: normal;
+      margin-top: 0.25rem;
+      color: #ffebee;
+    }
+    .pickle-card:hover {
+      background-color: #b71c1c;
+      transform: translateY(-3px);
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+  <h1>Vocabulary 3.2: Scotland</h1>
+</header>
+
+<main>
+
+<section>
+  <div class="table-row">
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>history</td><td>geschiedenis</td></tr>
+        <tr><td>country</td><td>land</td></tr>
+        <tr><td>brave</td><td>dapper</td></tr>
+        <tr><td>tribe</td><td>stam</td></tr>
+        <tr><td>castle</td><td>kasteel</td></tr>
+        <tr><td>king</td><td>koning</td></tr>
+        <tr><td>war</td><td>oorlog</td></tr>
+      </table>
+    </div>
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>freedom</td><td>vrijheid</td></tr>
+        <tr><td>hero</td><td>held</td></tr>
+        <tr><td>culture</td><td>cultuur</td></tr>
+        <tr><td>heritage</td><td>erfgoed</td></tr>
+        <tr><td>soldier</td><td>soldaat</td></tr>
+        <tr><td>village</td><td>dorp</td></tr>
+        <tr><td>capital city</td><td>hoofdstad</td></tr>
+        <tr><td>future</td><td>toekomst</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>history</td><td>Scotland has a long and interesting history.</td><td>Schotland heeft een lange en interessante geschiedenis.</td></tr>
+          <tr><td>country</td><td>Scotland is a beautiful country in the UK.</td><td>Schotland is een prachtig land in het VK.</td></tr>
+          <tr><td>brave</td><td>The brave warrior protected his people.</td><td>De dappere krijger beschermde zijn volk.</td></tr>
+          <tr><td>tribe</td><td>Long ago, each tribe had its own leader.</td><td>Lang geleden had elke stam zijn eigen leider.</td></tr>
+          <tr><td>castle</td><td>We visited a famous castle in Scotland.</td><td>We bezochten een beroemd kasteel in Schotland.</td></tr>
+          <tr><td>king</td><td>The king lived in a large castle.</td><td>De koning woonde in een groot kasteel.</td></tr>
+          <tr><td>war</td><td>The war changed the country forever.</td><td>De oorlog veranderde het land voorgoed.</td></tr>
+          <tr><td>freedom</td><td>Many people fought for freedom.</td><td>Veel mensen vochten voor vrijheid.</td></tr>
+          <tr><td>hero</td><td>The hero helped the village in danger.</td><td>De held hielp het dorp in gevaar.</td></tr>
+          <tr><td>culture</td><td>Scottish culture includes music and traditions.</td><td>De Schotse cultuur bevat muziek en tradities.</td></tr>
+          <tr><td>heritage</td><td>They are proud of their heritage.</td><td>Ze zijn trots op hun erfgoed.</td></tr>
+          <tr><td>soldier</td><td>The soldier marched with his team.</td><td>De soldaat marcheerde met zijn team.</td></tr>
+          <tr><td>village</td><td>The village is small but friendly.</td><td>Het dorp is klein maar vriendelijk.</td></tr>
+          <tr><td>capital city</td><td>Edinburgh is Scotland’s capital city.</td><td>Edinburgh is de hoofdstad van Schotland.</td></tr>
+          <tr><td>future</td><td>We hope for a bright future.</td><td>We hopen op een mooie toekomst.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href='m1t3_vocab_3_3_scotland_flashcards.html' target='_blank'>Open Flashcards</a>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Oefen hier met de uitspraak van de woorden</p>
+  <div class="video-row">
+    <div class="video-column">
+      <!-- Vervang de video-link als je een specifieke Scotland-vocab video hebt -->
+      <iframe src="https://www.youtube.com/embed/iudS8PytqfI" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🥒 Super Pickles</h2>
+  <p style="max-width: 700px; margin: 0 auto;">Oefen de <strong>vocabulary</strong> met deze leuke, interactieve opdrachten.</p>
+
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
+    <a class='pickle-card' href='m1t3_vocab_3_3_pickle_1.html'>🥒 Pickle 1<br><span>Drag & Drop</span></a>
+    <a class='pickle-card' href='m1t3_vocab_3_3_pickle_2.html'>🥒 Pickle 2<br><span>Vocabulary Grid</span></a>
+    <a class='pickle-card' href='m1t3_vocab_3_3_pickle_3.html'>🥒 Pickle 3<br><span>Vocabulary Detective</span></a>
+    <a class='pickle-card' href='m1t3_vocab_3_3_pickle_4.html'>🥒 Pickle 4<br><span>Flashcard Challenge</span></a>
+    <a class='pickle-card' href='m1t3_vocab_3_3_pickle_5.html'>🥒 Pickle 5<br><span>Time Challenge</span></a>
+  </div>
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <img src="Pickles.png" alt="Super Pickle" style="max-height: 200px;">
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
+</body>
+</html>
