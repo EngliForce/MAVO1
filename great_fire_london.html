@@ -4,21 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Great Fire of London Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary: #d35400;
-            --secondary: #e67e22;
-            --bg: #fdf2e9;
-            --text: #2c3e50;
-            --correct: #27ae60;
-            --wrong: #e74c3c;
+            --primary: #FF4D00;
+            --primary-gradient: linear-gradient(135deg, #FF8C00 0%, #FF4D00 100%);
+            --bg: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --text: #1C1E21;
+            --correct: #4BB543;
+            --wrong: #FF3333;
+            --shadow: 0 8px 30px rgba(0,0,0,0.08);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
+            background-image: radial-gradient(#FF8C00 0.5px, transparent 0.5px);
+            background-size: 30px 30px; /* Subtiel patroon op achtergrond */
             color: var(--text);
-            line-height: 1.6;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -26,111 +31,157 @@
         }
 
         .container {
-            max-width: 750px;
+            max-width: 700px;
             width: 100%;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         h1 {
-            color: var(--primary);
-            text-align: center;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .question-card {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            background: #fff;
+            background: var(--card-bg);
+            margin-bottom: 25px;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .question-card:hover {
+            transform: translateY(-5px);
         }
 
         .question-text {
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 15px;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option-label {
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
             display: block;
         }
 
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-label {
+            padding: 15px 20px;
+            border: 2px solid #E4E6EB;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+        }
+
         .option-label:hover {
-            background: #fff5eb;
+            background-color: #F8F9FA;
+            border-color: #FF8C00;
+            transform: scale(1.02);
         }
 
         input[type="radio"] {
-            margin-right: 10px;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #CED4DA;
+            border-radius: 50%;
+            margin-right: 15px;
+            position: relative;
         }
 
-        /* Resultaat stijlen */
+        input[type="radio"]:checked {
+            border-color: var(--primary);
+            background: var(--primary);
+            box-shadow: inset 0 0 0 4px white;
+        }
+
         .feedback {
-            display: none; /* Verstop tot check */
-            margin-top: 15px;
+            display: none;
+            margin-top: 20px;
             padding: 15px;
-            border-radius: 6px;
-            font-size: 0.95em;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
-        .correct-answer { border: 2px solid var(--correct); background: #e9f7ef; }
-        .wrong-answer { border: 2px solid var(--wrong); background: #fdedec; }
+        .correct-answer { border-color: var(--correct) !important; background: #EEF9F1 !important; color: #1E4620; }
+        .wrong-answer { border-color: var(--wrong) !important; background: #FFF0F0 !important; color: #A80000; }
 
         #result-area {
             display: none;
             text-align: center;
-            padding: 20px;
-            background: #eee;
-            border-radius: 8px;
-            margin-top: 20px;
+            padding: 40px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+            animation: slideUp 0.5s ease-out;
         }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #animation-container { font-size: 100px; margin-bottom: 10px; }
 
         .btn-check, .btn-reset {
-            display: block;
+            display: inline-block;
             width: 100%;
-            max-width: 300px;
-            margin: 30px auto;
-            padding: 15px;
-            font-size: 1.1em;
-            font-weight: bold;
+            padding: 18px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 15px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 77, 0, 0.3);
         }
 
-        .btn-check { background: var(--primary); }
-        .btn-check:hover { background: var(--secondary); }
-        .btn-reset { background: #7f8c8d; display: none; }
+        .btn-check { background: var(--primary-gradient); }
+        .btn-check:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(255, 77, 0, 0.4); }
+        
+        .btn-reset { background: #65676B; display: none; margin-top: 20px; box-shadow: none; }
+
+        .bounce { animation: bounce 0.6s infinite alternate; display: inline-block; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-20px); } }
+        .shake { animation: shake 0.5s infinite; display: inline-block; }
+        @keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🔥 Great Fire of London Quiz</h1>
+    <header>
+        <h1>🔥 Great Fire Quiz</h1>
+    </header>
+
     <form id="quiz-form">
         <div id="quiz-content"></div>
-        <button type="button" class="btn-check" id="submit-btn" onclick="showResults()">Check mijn antwoorden</button>
+        <button type="button" class="btn-check" id="submit-btn" onclick="showResults()">Check mijn score! 🚀</button>
     </form>
 
     <div id="result-area">
-        <h2 id="final-score"></h2>
-        <p id="score-comment"></p>
-        <button class="btn-reset" id="reset-btn" onclick="location.reload()">Opnieuw proberen</button>
+        <div id="animation-container"></div>
+        <h2 id="final-score" style="font-size: 2rem; margin: 10px 0;"></h2>
+        <p id="score-comment" style="color: #65676B; margin-bottom: 25px;"></p>
+        <button class="btn-reset" id="reset-btn" onclick="window.scrollTo(0,0); location.reload()">Opnieuw proberen 🔄</button>
     </div>
 </div>
 
@@ -138,26 +189,25 @@
     const questions = [
         { q: "In welk jaar vond de Grote Brand van Londen plaats?", a: ["1666", "1766", "1566", "1866"], correct: 0, info: "Het juiste jaar is 1666. De brand begon in de vroege ochtend van 2 september." },
         { q: "Waar begon de brand op 2 september 1666?", a: ["Fleet Street", "Pudding Lane", "Baker Street", "Oxford Street"], correct: 1, info: "De brand begon in de bakkerij van Thomas Farriner op Pudding Lane." },
-        { q: "Wie was de eigenaar van de bakkerij waar de brand begon?", a: ["John Smith", "William Turner", "Thomas Fariner", "Samuel Baker"], correct: 2, info: "Thomas Farer werd genoemd als eigenaar." },
-        { q: "Waarom verspreidde de brand zo snel door de stad?", a: ["Weinig mensen", "Veel regen", "Veel bomen in de straten", "Huizen waren van hout en het was droog en winderig"], correct: 3, info: "Hout, droogte en wind hielpen het vuur te verspreiden." },
-        { q: "Wat gebruikten mensen toen om te koken en warm te blijven?", a: ["Open vuren", "Kaarsen", "Kolen", "Dikke kleding"], correct: 0, info: "Men gebruikte open vuren." },
-        { q: "Welke weersomstandigheid maakte de brand erger in de zomer van 1666?", a: ["Veel sneeuw", "Extreem koud", "Het was droog en er viel weinig regen", "Zware mist"], correct: 2, info: "Droogte maakte het hout extreem brandbaar." },
-        { q: "Wat deden mensen om water naar het vuur te brengen?", a: ["Brandweerkoetsen", "Ze vormden ketens en gaven emmers water door", "De rivier omleiden", "Natte doeken"], correct: 1, info: "Men gaf emmers water door in lange ketens." },
-        { q: "Waarom konden mensen sommige huizen niet snel slopen?", a: ["Huizen van steen", "Strenge wetten", "Niemand wilde helpen", "Gereedschap eenvoudig en hitte te sterk"], correct: 3, info: "Eenvoudig gereedschap en intense hitte maakten slopen moeilijk." },
-        { q: "Hoe lang brandde de Grote Brand van Londen?", a: ["Twee dagen", "Een week", "Vier dagen", "Tien dagen"], correct: 2, info: "De brand duurde vier dagen." },
-        { q: "Welk beroemd gebouw brandde af tijdens de brand?", a: ["St. Paul's Cathedral", "Westminster Abbey", "Tower of London", "Buckingham Palace"], correct: 0, info: "St. Paul's Cathedral werd verwoest." },
-        { q: "Welke verandering werd verplicht bij het bouwen van huizen?", a: ["Hoger", "Kleiner", "Hout", "Van baksteen en steen"], correct: 3, info: "Steen en baksteen werden de nieuwe standaard." },
-        { q: "Welke stadsaanpassing verminderde later het risico?", a: ["Houten bruggen", "Smalle steegjes", "Straatverbreding", "Hogere schoorstenen"], correct: 2, info: "Bredere straten voorkwamen dat vuur oversprong." },
-       ];
+        { q: "Wie was de eigenaar van de bakkerij waar de brand begon?", a: ["John Smith", "William Turner", "Thomas Farriner", "Samuel Baker"], correct: 2, info: "Thomas Farriner was de bakker van de koning." },
+        { q: "Waarom verspreidde de brand zo snel?", a: ["Weinig mensen", "Veel regen", "Veel bomen", "Houten huizen en sterke wind"], correct: 3, info: "Hout, droogte en wind hielpen het vuur te verspreiden." },
+        { q: "Wat gebruikten mensen toen om te koken?", a: ["Open vuren", "Kaarsen", "Kolen", "Dikke kleding"], correct: 0, info: "Men gebruikte open vuren in houten huizen, wat erg gevaarlijk was." },
+        { q: "Wat voor weer was het in de zomer van 1666?", a: ["Windstil", "Watertekort", "Heet en droog", "Zware mist"], correct: 2, info: "Een extreem droge zomer maakte het hout kurkdroog." },
+        { q: "Hoe blusten ze het vuur zonder brandweerauto's?", a: ["Brandweerkoetsen", "Emmers water doorgeven", "De rivier omleiden", "Natte doeken"], correct: 1, info: "Mensen stonden in lange rijen om water uit de Theems door te geven." },
+        { q: "Waarom was huizen slopen zo lastig?", a: ["Huizen van steen", "Strenge wetten", "Niemand wilde helpen", "Te veel hitte en slecht gereedschap"], correct: 3, info: "De hitte was zo intens dat mensen niet dichtbij genoeg konden komen." },
+        { q: "Hoe lang duurde de brand?", a: ["Twee dagen", "Een week", "Vier dagen", "Tien dagen"], correct: 2, info: "Pas na vier dagen was de brand onder controle." },
+        { q: "Welk beroemd gebouw ging verloren?", a: ["St. Paul's Cathedral", "Westminster Abbey", "Tower of London", "Buckingham Palace"], correct: 0, info: "De kathedraal werd later prachtig herbouwd door Christopher Wren." },
+        { q: "Waarvan moesten nieuwe huizen gebouwd worden?", a: ["Hoger", "Kleiner", "Hout", "Baksteen en steen"], correct: 3, info: "Houten huizen werden verboden om een nieuwe ramp te voorkomen." },
+        { q: "Wat werd er aangepast aan de straten?", a: ["Houten bruggen", "Smalle steegjes", "Ze werden breder", "Hogere schoorstenen"], correct: 2, info: "Bredere straten zorgden dat vuur minder makkelijk kon oversteken." },
+    ];
 
     const quizContent = document.getElementById('quiz-content');
 
-    // Genereer vragen
     questions.forEach((item, qIdx) => {
         const div = document.createElement('div');
         div.className = 'question-card';
         div.innerHTML = `
-            <div class="question-text">${qIdx + 1}. ${item.q}</div>
+            <span class="question-text">${qIdx + 1}. ${item.q}</span>
             <div class="options">
                 ${item.a.map((opt, i) => `
                     <label class="option-label" id="label-${qIdx}-${i}">
@@ -166,7 +216,7 @@
                 `).join('')}
             </div>
             <div class="feedback" id="feedback-${qIdx}">
-                <strong>Uitleg:</strong> ${item.info}
+                <strong>Wist je dat?</strong> ${item.info}
             </div>
         `;
         quizContent.appendChild(div);
@@ -174,12 +224,10 @@
 
     function showResults() {
         let score = 0;
-        
         questions.forEach((item, qIdx) => {
             const selected = document.querySelector(`input[name="q${qIdx}"]:checked`);
             const feedback = document.getElementById(`feedback-${qIdx}`);
             const correctLabel = document.getElementById(`label-${qIdx}-${item.correct}`);
-            
             feedback.style.display = 'block';
 
             if (selected) {
@@ -188,23 +236,35 @@
                     score++;
                     correctLabel.classList.add('correct-answer');
                 } else {
-                    const wrongLabel = document.getElementById(`label-${qIdx}-${val}`);
-                    wrongLabel.classList.add('wrong-answer');
+                    document.getElementById(`label-${qIdx}-${val}`).classList.add('wrong-answer');
                     correctLabel.classList.add('correct-answer');
                 }
             } else {
-                // Niet ingevuld
                 correctLabel.classList.add('correct-answer');
             }
         });
 
-        // Toon score
+        const animContainer = document.getElementById('animation-container');
+        const scorePercentage = (score / questions.length) * 100;
+
+        if (scorePercentage >= 80) {
+            animContainer.innerHTML = '<span class="bounce">🏆</span>';
+            document.getElementById('score-comment').innerText = "Legendary! Jij weet echt alles over de brand!";
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        } else if (scorePercentage >= 50) {
+            animContainer.innerHTML = '<span class="bounce">😎</span>';
+            document.getElementById('score-comment').innerText = "Lekker bezig! Een dikke voldoende.";
+        } else {
+            animContainer.innerHTML = '<span class="shake">🔥</span>';
+            document.getElementById('score-comment').innerText = "Ai, dat was lastig. Check de uitleg hierboven!";
+        }
+
         document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('result-area').style.display = 'block';
         document.getElementById('reset-btn').style.display = 'block';
-        document.getElementById('final-score').innerText = `Jouw Score: ${score} / ${questions.length}`;
+        document.getElementById('final-score').innerText = `${score} / ${questions.length} Punten`;
         
-        window.scrollTo(0, document.body.scrollHeight);
+        document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
     }
 </script>
 
