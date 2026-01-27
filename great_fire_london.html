@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Fire of London Quiz</title>
+    <style>
+        :root {
+            --primary: #d35400;
+            --secondary: #e67e22;
+            --bg: #fdf2e9;
+            --text: #2c3e50;
+            --correct: #27ae60;
+            --wrong: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 750px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .question-card {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: block;
+        }
+
+        .option-label:hover {
+            background: #fff5eb;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* Resultaat stijlen */
+        .feedback {
+            display: none; /* Verstop tot check */
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+
+        .correct-answer { border: 2px solid var(--correct); background: #e9f7ef; }
+        .wrong-answer { border: 2px solid var(--wrong); background: #fdedec; }
+
+        #result-area {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #eee;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .btn-check, .btn-reset {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-check { background: var(--primary); }
+        .btn-check:hover { background: var(--secondary); }
+        .btn-reset { background: #7f8c8d; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔥 Great Fire of London Quiz</h1>
+    <form id="quiz-form">
+        <div id="quiz-content"></div>
+        <button type="button" class="btn-check" id="submit-btn" onclick="showResults()">Check mijn antwoorden</button>
+    </form>
+
+    <div id="result-area">
+        <h2 id="final-score"></h2>
+        <p id="score-comment"></p>
+        <button class="btn-reset" id="reset-btn" onclick="location.reload()">Opnieuw proberen</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "In welk jaar vond de Grote Brand van Londen plaats?", a: ["1666", "1766", "1566", "1866"], correct: 0, info: "Het juiste jaar is 1666. De brand begon in de vroege ochtend van 2 september." },
+        { q: "Waar begon de brand op 2 september 1666?", a: ["Fleet Street", "Pudding Lane", "Baker Street", "Oxford Street"], correct: 1, info: "De brand begon in de bakkerij van Thomas Farriner op Pudding Lane." },
+        { q: "Wie was de eigenaar van de bakkerij waar de brand begon?", a: ["John Smith", "William Turner", "Thomas Fariner", "Samuel Baker"], correct: 2, info: "Thomas Farer werd genoemd als eigenaar." },
+        { q: "Waarom verspreidde de brand zo snel door de stad?", a: ["Weinig mensen", "Veel regen", "Veel bomen in de straten", "Huizen waren van hout en het was droog en winderig"], correct: 3, info: "Hout, droogte en wind hielpen het vuur te verspreiden." },
+        { q: "Wat gebruikten mensen toen om te koken en warm te blijven?", a: ["Open vuren", "Kaarsen", "Kolen", "Dikke kleding"], correct: 0, info: "Men gebruikte open vuren." },
+        { q: "Welke weersomstandigheid maakte de brand erger in de zomer van 1666?", a: ["Veel sneeuw", "Extreem koud", "Het was droog en er viel weinig regen", "Zware mist"], correct: 2, info: "Droogte maakte het hout extreem brandbaar." },
+        { q: "Wat deden mensen om water naar het vuur te brengen?", a: ["Brandweerkoetsen", "Ze vormden ketens en gaven emmers water door", "De rivier omleiden", "Natte doeken"], correct: 1, info: "Men gaf emmers water door in lange ketens." },
+        { q: "Waarom konden mensen sommige huizen niet snel slopen?", a: ["Huizen van steen", "Strenge wetten", "Niemand wilde helpen", "Gereedschap eenvoudig en hitte te sterk"], correct: 3, info: "Eenvoudig gereedschap en intense hitte maakten slopen moeilijk." },
+        { q: "Hoe lang brandde de Grote Brand van Londen?", a: ["Twee dagen", "Een week", "Vier dagen", "Tien dagen"], correct: 2, info: "De brand duurde vier dagen." },
+        { q: "Welk beroemd gebouw brandde af tijdens de brand?", a: ["St. Paul's Cathedral", "Westminster Abbey", "Tower of London", "Buckingham Palace"], correct: 0, info: "St. Paul's Cathedral werd verwoest." },
+        { q: "Welke verandering werd verplicht bij het bouwen van huizen?", a: ["Hoger", "Kleiner", "Hout", "Van baksteen en steen"], correct: 3, info: "Steen en baksteen werden de nieuwe standaard." },
+        { q: "Welke stadsaanpassing verminderde later het risico?", a: ["Houten bruggen", "Smalle steegjes", "Straatverbreding", "Hogere schoorstenen"], correct: 2, info: "Bredere straten voorkwamen dat vuur oversprong." },
+       ];
+
+    const quizContent = document.getElementById('quiz-content');
+
+    // Genereer vragen
+    questions.forEach((item, qIdx) => {
+        const div = document.createElement('div');
+        div.className = 'question-card';
+        div.innerHTML = `
+            <div class="question-text">${qIdx + 1}. ${item.q}</div>
+            <div class="options">
+                ${item.a.map((opt, i) => `
+                    <label class="option-label" id="label-${qIdx}-${i}">
+                        <input type="radio" name="q${qIdx}" value="${i}"> ${opt}
+                    </label>
+                `).join('')}
+            </div>
+            <div class="feedback" id="feedback-${qIdx}">
+                <strong>Uitleg:</strong> ${item.info}
+            </div>
+        `;
+        quizContent.appendChild(div);
+    });
+
+    function showResults() {
+        let score = 0;
+        
+        questions.forEach((item, qIdx) => {
+            const selected = document.querySelector(`input[name="q${qIdx}"]:checked`);
+            const feedback = document.getElementById(`feedback-${qIdx}`);
+            const correctLabel = document.getElementById(`label-${qIdx}-${item.correct}`);
+            
+            feedback.style.display = 'block';
+
+            if (selected) {
+                const val = parseInt(selected.value);
+                if (val === item.correct) {
+                    score++;
+                    correctLabel.classList.add('correct-answer');
+                } else {
+                    const wrongLabel = document.getElementById(`label-${qIdx}-${val}`);
+                    wrongLabel.classList.add('wrong-answer');
+                    correctLabel.classList.add('correct-answer');
+                }
+            } else {
+                // Niet ingevuld
+                correctLabel.classList.add('correct-answer');
+            }
+        });
+
+        // Toon score
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('result-area').style.display = 'block';
+        document.getElementById('reset-btn').style.display = 'block';
+        document.getElementById('final-score').innerText = `Jouw Score: ${score} / ${questions.length}`;
+        
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+</script>
+
+</body>
+</html>
