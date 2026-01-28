@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Have vs Have Got</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #e53935;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      color: #e53935;
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      color: #b71c1c;
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .tip {
+      background-color: #ffebee;
+      border-left: 6px solid #ef5350;
+      padding: 1rem;
+      margin: 1rem auto;
+      max-width: 700px;
+      text-align: left;
+      font-size: 1rem;
+    }
+
+    .highlight-have {
+      color: #d32f2f;
+      font-weight: bold;
+    }
+
+    .highlight-got {
+      color: #b71c1c;
+      font-weight: bold;
+    }
+
+    .toggle-button {
+      background-color: #e53935;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0.5rem;
+    }
+
+    .toggle-button:hover {
+      background-color: #b71c1c;
+    }
+
+    .collapsible-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    table {
+      margin: 1.5rem auto;
+      width: auto;
+      min-width: 320px;
+      max-width: 90%;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.7rem 1rem;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ffcdd2;
+      color: #b71c1c;
+    }
+
+    /* Pickles styling */
+    .pickle-card {
+      background-color: #ffebee;
+      border: 2px solid #e53935;
+      color: #b71c1c;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      text-align: center;
+      width: 200px;
+      box-shadow: 0 4px 8px rgba(229, 57, 53, 0.15);
+      transition: all 0.2s ease-in-out;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .pickle-card span {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: normal;
+      color: #d32f2f;
+    }
+
+    .pickle-card:hover {
+      background-color: #ffcdd2;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(229, 57, 53, 0.3);
+    }
+
+    footer {
+      background-color: #ffebee;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+  <script>
+    function toggleSection(id) {
+      const sections = document.querySelectorAll('.collapsible-content');
+      sections.forEach(sec => {
+        sec.style.display = (sec.id === id) ? 'block' : 'none';
+      });
+    }
+  </script>
+</head>
+<body>
+
+<header>
+  <h1>Have vs Have Got</h1>
+  <p>Uitleg, voorbeelden en Pickles</p>
+</header>
+
+<main>
+
+  <!-- Algemene uitleg -->
+  <section>
+    <h2>🧠 Wat is het verschil tussen <em>have</em> en <em>have got</em>?</h2>
+    <div class="tip">
+      <p>Beide vormen betekenen <strong>hebben</strong>. Ze worden vaak door elkaar gebruikt, maar:</p>
+      <ul>
+        <li><span class="highlight-have">Have</span> komt vaker voor in Amerikaans Engels.</li>
+        <li><span class="highlight-got">Have got</span> is typisch Brits Engels.</li>
+      </ul>
+      <p>In betekenis zijn ze gelijk:</p>
+      <ul>
+        <li>I <span class="highlight-have">have</span> a bike = I <span class="highlight-got">have got</span> a bike</li>
+        <li>She <span class="highlight-have">has</span> a dog = She <span class="highlight-got">has got</span> a dog</li>
+      </ul>
+<p>Maar je maakt ze op hun eigen manier ontkennend of vragend.</p>
+    </div>
+  </section>
+
+  <!-- Knoppen -->
+  <section>
+    <h2>📂 Vervoegingen</h2>
+    <button class="toggle-button" onclick="toggleSection('bevestigend')">Bevestigend</button>
+    <button class="toggle-button" onclick="toggleSection('ontkennend')">Ontkennend</button>
+    <button class="toggle-button" onclick="toggleSection('vragend')">Vragend</button>
+  </section>
+
+  <!-- ✅ Bevestigend -->
+  <section id="bevestigend" class="collapsible-content">
+    <h2>✅ Bevestigende zinnen</h2>
+    <table>
+      <tr><th>Persoon</th><th><span class="highlight-have">Have</span></th><th><span class="highlight-got">Have got</span></th></tr>
+      <tr><td>I</td><td>I <strong>have</strong> a bike.</td><td>I <strong>have got</strong> a bike.</td></tr>
+      <tr><td>You (enk)</td><td>You <strong>have</strong> a cat.</td><td>You <strong>have got</strong> a cat.</td></tr>
+      <tr><td>He</td><td>He <strong>has</strong> a phone.</td><td>He <strong>has got</strong> a phone.</td></tr>
+      <tr><td>She</td><td>She <strong>has</strong> a book.</td><td>She <strong>has got</strong> a book.</td></tr>
+      <tr><td>It</td><td>It <strong>has</strong> a tail.</td><td>It <strong>has got</strong> a tail.</td></tr>
+      <tr><td>We</td><td>We <strong>have</strong> time.</td><td>We <strong>have got</strong> time.</td></tr>
+      <tr><td>You (mv)</td><td>You <strong>have</strong> tickets.</td><td>You <strong>have got</strong> tickets.</td></tr>
+      <tr><td>They</td><td>They <strong>have</strong> money.</td><td>They <strong>have got</strong> money.</td></tr>
+    </table>
+  </section>
+
+  <!-- ❌ Ontkennend -->
+  <section id="ontkennend" class="collapsible-content">
+    <h2>❌ Ontkennende zinnen</h2>
+    <div class="tip">
+      <p><span class="highlight-have">Have</span>: <strong>do/does + not + have</strong></p>
+      <p><span class="highlight-got">Have got</span>: <strong>have/has + not + got</strong></p>
+    </div>
+    <table>
+      <tr><th>Persoon</th><th><span class="highlight-have">Have</span></th><th><span class="highlight-got">Have got</span></th></tr>
+      <tr><td>I</td><td>I <strong>do not have</strong> a car.</td><td>I <strong>haven’t got</strong> a car.</td></tr>
+      <tr><td>You (enk)</td><td>You <strong>don’t have</strong> a dog.</td><td>You <strong>haven’t got</strong> a dog.</td></tr>
+      <tr><td>He</td><td>He <strong>doesn’t have</strong> money.</td><td>He <strong>hasn’t got</strong> money.</td></tr>
+      <tr><td>She</td><td>She <strong>doesn’t have</strong> time.</td><td>She <strong>hasn’t got</strong> time.</td></tr>
+      <tr><td>It</td><td>It <strong>doesn’t have</strong> a tail.</td><td>It <strong>hasn’t got</strong> a tail.</td></tr>
+      <tr><td>We</td><td>We <strong>don’t have</strong> homework.</td><td>We <strong>haven’t got</strong> homework.</td></tr>
+      <tr><td>You (mv)</td><td>You <strong>don’t have</strong> pens.</td><td>You <strong>haven’t got</strong> pens.</td></tr>
+      <tr><td>They</td><td>They <strong>don’t have</strong> ideas.</td><td>They <strong>haven’t got</strong> ideas.</td></tr>
+    </table>
+  </section>
+
+  <!-- ❓ Vragend -->
+  <section id="vragend" class="collapsible-content">
+    <h2>❓ Vragende zinnen</h2>
+    <div class="tip">
+      <p><span class="highlight-have">Have</span>: <strong>Do/Does + subject + have?</strong></p>
+      <p><span class="highlight-got">Have got</span>: <strong>Have/Has + subject + got?</strong></p>
+    </div>
+    <table>
+      <tr><th>Persoon</th><th><span class="highlight-have">Have</span></th><th><span class="highlight-got">Have got</span></th></tr>
+      <tr><td>I</td><td><strong>Do</strong> I <strong>have</strong> a phone?</td><td><strong>Have</strong> I <strong>got</strong> a phone?</td></tr>
+      <tr><td>You (enk)</td><td><strong>Do</strong> you <strong>have</strong> a key?</td><td><strong>Have</strong> you <strong>got</strong> a key?</td></tr>
+      <tr><td>He</td><td><strong>Does</strong> he <strong>have</strong> a job?</td><td><strong>Has</strong> he <strong>got</strong> a job?</td></tr>
+      <tr><td>She</td><td><strong>Does</strong> she <strong>have</strong> a phone?</td><td><strong>Has</strong> she <strong>got</strong> a phone?</td></tr>
+      <tr><td>It</td><td><strong>Does</strong> it <strong>have</strong> eyes?</td><td><strong>Has</strong> it <strong>got</strong> eyes?</td></tr>
+      <tr><td>We</td><td><strong>Do</strong> we <strong>have</strong> time?</td><td><strong>Have</strong> we <strong>got</strong> time?</td></tr>
+      <tr><td>You (mv)</td><td><strong>Do</strong> you <strong>have</strong> ideas?</td><td><strong>Have</strong> you <strong>got</strong> ideas?</td></tr>
+      <tr><td>They</td><td><strong>Do</strong> they <strong>have</strong> pets?</td><td><strong>Have</strong> they <strong>got</strong> pets?</td></tr>
+    </table>
+  </section>
+
+  <!-- 🥒 Pickles -->
+  <section>
+    <h2>🥒 Super Pickles</h2>
+    <p style="max-width: 700px; margin: 0 auto;">Oefen <strong>have</strong> en <strong>have got</strong> met deze leuke, interactieve spellen:</p>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
+      <a href="https://msga-1.github.io/msga/have_have_got_power.html" class="pickle-card">🥒 Pickle 1<br><span>Power Grid</span></a>
+      <a href="https://msga-1.github.io/msga/slotmachine.html" class="pickle-card">🥒 Pickle 2<br><span>Have (got) Slots</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+</body>
+</html>
