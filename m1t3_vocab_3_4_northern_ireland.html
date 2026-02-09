@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulary 3.4: Northern Ireland</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fdf0f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #c62828;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #c62828;
+    }
+    .table-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .table-column {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 1rem;
+      width: 100%;
+    }
+    th {
+      font-weight: bold;
+      background-color: #fbe9e7;
+    }
+    td {
+      font-weight: normal;
+    }
+    table, th, td {
+      border: 1px solid #ffcdd2;
+    }
+    th, td {
+      padding: 0.5rem 1rem;
+      text-align: left;
+    }
+    .links {
+      margin-top: 1rem;
+    }
+    .links a, .links button {
+      padding: 0.5rem 1rem;
+      background-color: #c62828;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
+    .links a:hover, .links button:hover {
+      background-color: #b71c1c;
+    }
+    .video-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .video-column {
+      flex: 1 1 400px;
+      max-width: 600px;
+    }
+    .video-column iframe {
+      width: 100%;
+      height: 315px;
+      border: none;
+    }
+    footer {
+      background-color: #ffebee;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .oefen-link {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #c62828;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .oefen-link:hover {
+      background-color: #b71c1c;
+    }
+    .pickle-card {
+      display: block;
+      background-color: #c62828;
+      color: white;
+      text-decoration: none;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      width: 200px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: transform 0.2s, background-color 0.3s;
+      line-height: 1.4;
+    }
+    .pickle-card span {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: normal;
+      margin-top: 0.25rem;
+      color: #ffebee;
+    }
+    .pickle-card:hover {
+      background-color: #b71c1c;
+      transform: translateY(-3px);
+    }
+    #context-sentences {
+      display: none;
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
+  <h1>Vocabulary 3.4: Northern Ireland</h1>
+</header>
+
+<main>
+
+<section>
+  <div class="table-row">
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>leader</td><td>leider</td></tr>
+        <tr><td>race</td><td>wedstrijd</td></tr>
+        <tr><td>shore</td><td>kust / oever</td></tr>
+        <tr><td>sacrifice</td><td>offer</td></tr>
+        <tr><td>pain</td><td>pijn</td></tr>
+        <tr><td>legend</td><td>legende</td></tr>
+        <tr><td>identity</td><td>identiteit</td></tr>
+      </table>
+    </div>
+    <div class="table-column">
+      <table>
+        <tr><th>Engels</th><th>Nederlands</th></tr>
+        <tr><td>flag</td><td>vlag</td></tr>
+        <tr><td>choice</td><td>keuze</td></tr>
+        <tr><td>protect</td><td>beschermen</td></tr>
+        <tr><td>generation</td><td>generatie</td></tr>
+        <tr><td>land</td><td>land</td></tr>
+        <tr><td>sea</td><td>zee</td></tr>
+        <tr><td>winner</td><td>winnaar</td></tr>
+        <tr><td>rule</td><td>regel</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="links">
+    <button onclick="toggleContextSentences()">Toon woorden in context</button>
+  </div>
+
+  <div id="context-sentences">
+    <h2>📘 Woorden in context</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>leader</td><td>A good leader listens to all sides.</td><td>Een goede leider luistert naar alle kanten.</td></tr>
+          <tr><td>race</td><td>The race started near the town and ended by the sea.</td><td>De wedstrijd begon bij het stadje en eindigde bij de zee.</td></tr>
+          <tr><td>shore</td><td>We walked along the shore and watched the waves.</td><td>We liepen langs de kust / oever en keken naar de golven.</td></tr>
+          <tr><td>sacrifice</td><td>Some people made a sacrifice to protect their community.</td><td>Sommige mensen brachten een offer om hun gemeenschap te beschermen.</td></tr>
+          <tr><td>pain</td><td>The conflict caused a lot of pain for many families.</td><td>Het conflict veroorzaakte veel pijn voor veel families.</td></tr>
+          <tr><td>legend</td><td>There is a legend about a ship lost at sea.</td><td>Er is een legende over een schip dat op zee verdween.</td></tr>
+          <tr><td>identity</td><td>For many people, identity is connected to history and culture.</td><td>Voor veel mensen is identiteit verbonden met geschiedenis en cultuur.</td></tr>
+          <tr><td>flag</td><td>The flag can be a powerful symbol.</td><td>De vlag kan een krachtig symbool zijn.</td></tr>
+          <tr><td>choice</td><td>It was a difficult choice, but we decided together.</td><td>Het was een moeilijke keuze, maar we besloten samen.</td></tr>
+          <tr><td>protect</td><td>People want to protect what is important to them.</td><td>Mensen willen beschermen wat belangrijk voor hen is.</td></tr>
+          <tr><td>generation</td><td>Each generation learns the story in a different way.</td><td>Elke generatie leert het verhaal op een andere manier.</td></tr>
+          <tr><td>land</td><td>This land has a long and complicated history.</td><td>Dit land heeft een lange en ingewikkelde geschiedenis.</td></tr>
+          <tr><td>sea</td><td>The sea around Northern Ireland can be rough.</td><td>De zee rond Noord-Ierland kan wild zijn.</td></tr>
+          <tr><td>winner</td><td>The winner held the trophy and smiled.</td><td>De winnaar hield de beker vast en glimlachte.</td></tr>
+          <tr><td>rule</td><td>There is a rule: be respectful when talking about symbols.</td><td>Er is een regel: wees respectvol wanneer je over symbolen praat.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🃏 Flashcards</h2>
+  <p>Oefen deze woorden met interactieve flashcards.</p>
+  <div class="links">
+    <a href='/m1t3_vocab_3_4_northern_ireland_flashcards' target='_blank'>Open Flashcards</a>
+  </div>
+</section>
+
+<section>
+  <h2>🎬 Video</h2>
+  <p>Oefen hier met de uitspraak van de woorden</p>
+  <div class="video-row">
+    <div class="video-column">
+      <iframe src="https://www.youtube.com/embed/E_-SNL1Z8u0" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🥒 Super Pickles</h2>
+  <p style="max-width: 700px; margin: 0 auto;">Oefen de <strong>vocabulary</strong> met deze leuke, interactieve opdrachten.</p>
+
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
+    <a class='pickle-card' href='/m1t3_vocab_3_4_pickle_1'>🥒 Pickle 1<br><span>Drag & Drop</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_4_pickle_2'>🥒 Pickle 2<br><span>Vocabulary Grid</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_4_pickle_3'>🥒 Pickle 3<br><span>Vocabulary Detective</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_4_pickle_4'>🥒 Pickle 4<br><span>Flashcard Challenge</span></a>
+    <a class='pickle-card' href='/m1t3_vocab_3_4_pickle_5'>🥒 Pickle 5<br><span>Time Challenge</span></a>
+  </div>
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <img src="Pickles.png" alt="Super Pickle" style="max-height: 200px;">
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+  function toggleContextSentences() {
+    const div = document.getElementById("context-sentences");
+    div.style.display = (div.style.display === "block") ? "none" : "block";
+  }
+</script>
+
+</body>
+</html>
