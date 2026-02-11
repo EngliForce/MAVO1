@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>English Unit 3 - Mastery Class</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.95); 
+            --text: #1e293b;
+            --accent: #4f46e5;
+            --success: #22c55e;
+            --error: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --button-primary: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: var(--bg-gradient); color: var(--text);
+            overflow: hidden;
+        }
+
+        .container {
+            width: 92%; max-width: 550px; padding: 1rem 1.5rem;
+            background: var(--glass); border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center; position: relative;
+        }
+
+        h1 { font-size: 1.6rem; margin: 0; color: #4338ca; }
+        p.subtitle { color: #64748b; font-size: 0.8rem; margin: 2px 0 10px 0; }
+        
+        h3 { 
+            margin: 12px 0 6px 0; text-transform: uppercase; letter-spacing: 1px; 
+            font-size: 0.7rem; color: #64748b; border-bottom: 1px solid #f1f5f9; 
+            padding-bottom: 2px; text-align: left;
+        }
+
+        .selection-list {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 5px 0;
+        }
+
+        .item-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #f8fafc; padding: 6px 10px;
+            border-radius: 10px; border: 1px solid #e2e8f0;
+        }
+
+        .item-label { font-size: 0.72rem; font-weight: 600; text-align: left; line-height: 1.1; }
+
+        .switch { position: relative; display: inline-block; width: 32px; height: 18px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1; transition: .4s; border-radius: 18px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background: #6366f1; }
+        input:checked + .slider:before { transform: translateX(14px); }
+
+        .mode-selector button {
+            border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 700; transition: 0.2s; font-size: 0.7rem;
+            flex: 1; padding: 6px; cursor: pointer; background: #fff; color: #64748b;
+        }
+
+        .start-btn {
+            width: 100%; padding: 12px; margin-top: 15px;
+            background: var(--button-primary);
+            color: white; border: none; border-radius: 12px;
+            font-size: 1rem; font-weight: 800; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .progress-container {
+            width: 100%; height: 6px; background: #f1f5f9; 
+            border-radius: 10px; margin-bottom: 10px; overflow: hidden; display: none;
+        }
+        #progress-bar { background: var(--button-primary); transition: width 0.3s; }
+
+        input[type="text"] {
+            width: 85%; padding: 10px; margin: 10px 0;
+            background: #f8fafc; border: 2px solid #e2e8f0;
+            border-radius: 12px; color: #1e293b; font-size: 1.2rem; text-align: center;
+        }
+
+        #timeout-badge {
+            display: none; position: absolute; top: -10px; right: -10px;
+            background: #fef08a; color: #854d0e; padding: 6px 12px;
+            border-radius: 50px; font-weight: 900; font-size: 0.7rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stats { margin-top: 8px; font-size: 0.8rem; color: #64748b; }
+        .star { position: absolute; font-size: 30px; pointer-events: none; z-index: 100; }
+        
+        .vocab-section {
+            background: #f1f5f9;
+            padding: 10px;
+            border-radius: 15px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="timeout-badge">⚡ SPEED BONUS!</div>
+    <div class="progress-container" id="progress-container"><div id="progress-bar" style="width: 0%; height: 100%;"></div></div>
+    
+    <div id="main-menu">
+        <h1>Unit 3 Mastery</h1>
+        <p class="subtitle">Oefen je vocabulaire en grammatica</p>
+
+        <div class="vocab-section">
+            <h3 style="border:none; margin-top:0;">1. Woordenlijsten & Modus</h3>
+            <div class="mode-selector" style="display: flex; gap: 5px; margin-bottom: 10px;">
+                <button id="btn-ne-en" onclick="setMode('ne-en')">NL ➔ EN</button>
+                <button id="btn-en-ne" onclick="setMode('en-ne')">EN ➔ NL</button>
+                <button id="btn-mix" onclick="setMode('mix')">MIX</button>
+            </div>
+            
+            <div class="selection-list">
+                <div class="item-row"><span class="item-label">3.1 London</span><label class="switch"><input type="checkbox" class="quiz-cat" value="v31"><span class="slider"></span></label></div>
+                <div class="item-row"><span class="item-label">3.2 Wales</span><label class="switch"><input type="checkbox" class="quiz-cat" value="v32"><span class="slider"></span></label></div>
+                <div class="item-row"><span class="item-label">3.3 Scotland</span><label class="switch"><input type="checkbox" class="quiz-cat" value="v33a"><span class="slider"></span></label></div>
+                <div class="item-row"><span class="item-label">3.4 Northern Ireland</span><label class="switch"><input type="checkbox" class="quiz-cat" value="v33b"><span class="slider"></span></label></div>
+            </div>
+        </div>
+
+        <h3>2. Grammatica (Vaste richting)</h3>
+        <div class="selection-list">
+            <div class="item-row"><span class="item-label">Possessives</span><label class="switch"><input type="checkbox" class="quiz-cat" value="g_pp"><span class="slider"></span></label></div>
+            <div class="item-row"><span class="item-label">Present continuous</span><label class="switch"><input type="checkbox" class="quiz-cat" value="g_pc"><span class="slider"></span></label></div>
+            <div class="item-row"><span class="item-label">Much/Many</span><label class="switch"><input type="checkbox" class="quiz-cat" value="g_mm"><span class="slider"></span></label></div>
+            <div class="item-row"><span class="item-label">Plurals</span><label class="switch"><input type="checkbox" class="quiz-cat" value="g_pl"><span class="slider"></span></label></div>
+            <div class="item-row"><span class="item-label">Have & have (got)</span><label class="switch"><input type="checkbox" class="quiz-cat" value="g_hh"><span class="slider"></span></label></div>
+            <div class="item-row"><span class="item-label">Comparisons</span><label class="switch"><input type="checkbox" class="quiz-cat" value="g_comp"><span class="slider"></span></label></div>
+            <div class="item-row"><span class="item-label">Aanwijzende vnw.</span><label class="switch"><input type="checkbox" class="quiz-cat" value="g_dem"><span class="slider"></span></label></div>
+        </div>
+
+        <button class="start-btn" onclick="collectAndStart()">🚀 START QUIZ (10 VRAGEN)</button>
+    </div>
+
+    <div id="quiz-area" style="display:none;">
+        <h2 id="category-title" style="color: #4f46e5; margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Quiz</h2>
+        <p id="question-text" style="font-size: 1.3rem; font-weight: 700; min-height: 70px; display: flex; align-items: center; justify-content: center; color: #1e293b;"></p>
+        <input type="text" id="answer-input" placeholder="Typ hier..." autocomplete="off">
+        <div id="feedback" style="font-weight: 700; min-height: 20px; font-size: 0.9rem; margin-bottom: 8px;"></div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="checkAnswer()" style="background: #22c55e; color: white; flex: 1; padding: 12px; border-radius: 12px; font-weight: bold; border:none; cursor:pointer;">Check!</button>
+            <button onclick="showMenu()" style="background: #f1f5f9; flex: 1; padding: 12px; border-radius: 12px; color: #64748b; border:none; cursor:pointer;">Stop</button>
+        </div>
+        <div class="stats">
+            Score: <span id="current-score" style="color: #4f46e5; font-weight: bold;">0</span> | 
+            Record: <span id="high-score" style="color: #22c55e; font-weight: bold;">0</span>
+        </div>
+    </div>
+</div>
+
+<script>
+// Namen voor de categorieën
+const categoryNames = {
+    v31: "Vocab: London",
+    v32: "Vocab: Wales",
+    v33a: "Vocab: Scotland",
+    v33b: "Vocab: N. Ireland",
+    g_pp: "Grammar: Possessives",
+    g_pc: "Grammar: Present Continuous",
+    g_mm: "Grammar: Much / Many",
+    g_pl: "Grammar: Plurals",
+    g_hh: "Grammar: Have & Have Got",
+    g_comp: "Grammar: Comparisons",
+    g_dem: "Grammar: Aanwijzende VNW"
+};
+
+const data = {
+    v31: [{q: "complicated", a: "ingewikkeld"}, {q: "country", a: "land"}, {q: "difficult", a: "moeilijk"}, {q: "exactly", a: "precies"}, {q: "I get it", a: "ik snap het"}, {q: "government", a: "regering"}, {q: "island", a: "eiland"}, {q: "local", a: "lokaal"}, {q: "nation", a: "natie"}, {q: "state", a: "staat"}, {q: "United Kingdom", a: "Verenigd Koninkrijk"}, {q: "Great Britain", a: "Great Britain"}, {q: "remember (to)", a: "onthouden"}, {q: "prefer (to)", a: "liever hebben"}, {q: "explain (to)", a: "uitleggen"}, {q: "arrive (to)", a: "aankomen"}, {q: "improve (to)", a: "verbeteren"}, {q: "population", a: "bevolking"}, {q: "modern", a: "modern"}, {q: "celebrate (to)", a: "vieren"}, {q: "travel (to)", a: "reizen"}],
+    v32: [{q: "landscape", a: "landschap"}, {q: "valley", a: "vallei"}, {q: "coastline", a: "kustlijn"}, {q: "farmer", a: "boer"}, {q: "Roman", a: "Roman"}, {q: "army", a: "leger"}, {q: "fort", a: "fort"}, {q: "tradition", a: "traditie"}, {q: "symbol", a: "symbool"}, {q: "dragon", a: "draak"}, {q: "castle", a: "kasteel"}, {q: "king", a: "koning"}, {q: "prince", a: "prins"}, {q: "battle", a: "slag"}, {q: "survive", a: "overleven"}],
+    v33a: [{q: "history", a: "geschiedenis"}, {q: "country", a: "land"}, {q: "brave", a: "dapper"}, {q: "tribe", a: "stam"}, {q: "castle", a: "kasteel"}, {q: "king", a: "koning"}, {q: "war", a: "oorlog"}, {q: "freedom", a: "vrijheid"}, {q: "hero", a: "held"}, {q: "culture", a: "cultuur"}, {q: "heritage", a: "erfgoed"}, {q: "soldier", a: "soldaat"}, {q: "village", a: "dorp"}, {q: "capital city", a: "hoofdstad"}, {q: "future", a: "toekomst"}],
+    v33b: [{q: "leader", a: "leider"}, {q: "race", a: "wedstrijd"}, {q: "shore", a: "kust"}, {q: "sacrifice", a: "offer"}, {q: "pain", a: "pijn"}, {q: "legend", a: "legende"}, {q: "identity", a: "identiteit"}, {q: "flag", a: "vlag"}, {q: "choice", a: "keuze"}, {q: "protect", a: "beschermen"}, {q: "generation", a: "generatie"}, {q: "land", a: "land"}, {q: "sea", a: "zee"}, {q: "winner", a: "winnaar"}, {q: "rule", a: "regel"}],
+    g_pp: [{q: "I have a book. It is ___ book.", a: "my"},{q: "You have a car. It is ___ car.", a: "your"},{q: "He has a dog. It is ___ dog.", a: "his"},{q: "She has a cat. It is ___ cat.", a: "her"},{q: "The tree lost ___ leaves.", a: "its"},{q: "We have a house. It is ___ house.", a: "our"},{q: "They have a boat. It is ___ boat.", a: "their"},{q: "I forgot ___ keys at home.", a: "my"},{q: "Can I borrow ___ pen?", a: "your"},{q: "He washed ___ hands.", a: "his"},{q: "She brushed ___ hair.", a: "her"},{q: "The bird built ___ nest.", a: "its"},{q: "We love ___ school.", a: "our"},{q: "They sold ___ old furniture.", a: "their"},{q: "I need ___ glasses to read.", a: "my"},{q: "Is this ___ jacket?", a: "your"},{q: "He finished ___ homework.", a: "his"},{q: "She lost ___ phone again.", a: "her"},{q: "The cat licked ___ paw.", a: "its"},{q: "We are visiting ___ grandparents.", a: "our"},{q: "They are painting ___ room.", a: "their"},{q: "I like ___ new haircut.", a: "your"},{q: "He is talking to ___ sister.", a: "his"},{q: "She is wearing ___ favorite dress.", a: "her"},{q: "The car has a scratch on ___ door.", a: "its"},{q: "We need to clean ___ garden.", a: "our"},{q: "They forgot ___ umbrellas.", a: "their"},{q: "This is ___ seat, I think.", a: "my"},{q: "What is ___ name?", a: "your"},{q: "He invited ___ friends to the party.", a: "his"},{q: "She opened ___ present.", a: "her"},{q: "The dog wagged ___ tail.", a: "its"},{q: "We enjoy ___ English classes.", a: "our"},{q: "They fixed ___ broken window.", a: "their"},{q: "I am doing ___ best.", a: "my"},{q: "This book belongs to me. It is ___.", a: "mine"},{q: "This car belongs to you. It is ___.", a: "yours"},{q: "This dog belongs to him. It is ___.", a: "his"},{q: "This cat belongs to her. It is ___.", a: "hers"},{q: "This house belongs to us. It is ___.", a: "ours"},{q: "This boat belongs to them. It is ___.", a: "theirs"},{q: "Is this pen yours or ___? (van mij)", a: "mine"},{q: "I found a bag. Is it ___? (van jou)", a: "yours"},{q: "He has a bike. The red one is ___.", a: "his"},{q: "She has a scarf. The blue one is ___.", a: "hers"},{q: "The victory is ___! (van ons)", a: "ours"},{q: "The decision was ___ to make. (van hen)", a: "theirs"},{q: "That laptop isn't mine, it's ___.", a: "his"},{q: "I have my ticket. Do you have ___?", a: "yours"},{q: "Her eyes are blue, but ___ are green. (van mij)", a: "mine"},{q: "Our car is fast, but ___ is faster. (van hen)", a: "theirs"},{q: "This room is mine, and that one is ___.", a: "hers"},{q: "They have their problems, and we have ___.", a: "ours"},{q: "Is that coat ___? (van hem)", a: "his"},{q: "These seats are ___! (van ons)", a: "ours"},{q: "My phone is dead. Can I use ___?", a: "yours"},{q: "The house on the corner is ___. (van hen)", a: "theirs"},{q: "That idea was ___! (van haar)", a: "hers"},{q: "This sandwich is ___. (van mij)", a: "mine"},{q: "Are these keys ___? (van jou)", a: "yours"},{q: "I love ___ parents.", a: "my"},{q: "Did you find ___ lost wallet?", a: "your"},{q: "Tom has ___ own room.", a: "his"},{q: "Lisa is doing ___ chores.", a: "her"},{q: "The computer has ___ own fan.", a: "its"},{q: "We shared ___ snacks.", a: "our"},{q: "The children played with ___ toys.", a: "their"},{q: "Is this apple ___? (van mij)", a: "mine"},{q: "Your shoes are clean, but ___ are dirty.", a: "mine"},{q: "Is this seat ___? (van jou)", a: "yours"},{q: "He lost his watch, so I lent him ___.", a: "mine"},{q: "This isn't my drink. It must be ___.", a: "hers"},{q: "The responsibility is ___ now. (van ons)", a: "ours"},{q: "They won the game. The trophy is ___.", a: "theirs"},{q: "I don't have an eraser. Can I use ___?", a: "yours"},{q: "She has my number. Do I have ___.", a: "hers"},{q: "This is my brother. ___ name is Sam.", a: "his"},{q: "This is my sister. ___ name is Anna.", a: "her"},{q: "The robot moved ___ head.", a: "its"},{q: "We live here. This is ___ neighborhood.", a: "our"},{q: "They are happy with ___ grades.", a: "their"},{q: "Is this umbrella ___? (van hem)", a: "his"},{q: "Our team is better than ___.", a: "theirs"},{q: "My drawing is good, but ___ is amazing!", a: "yours"},{q: "I broke my pencil. Can you give me ___?", a: "yours"},{q: "The bird is in ___ cage.", a: "its"},{q: "That bike is ___! (van mij)", a: "mine"},{q: "Is that house ___? (van hen)", a: "theirs"},{q: "We take ___ dog for a walk every day.", a: "our"},{q: "The baby wants ___ bottle.", a: "its"},{q: "Is this bag ___? (van haar)", a: "hers"},{q: "These cupcakes are ___. (van ons)", a: "ours"},{q: "Where is ___ office? (van jou)", a: "your"},{q: "He forgot ___ lunchbox.", a: "his"},{q: "She loves ___ new shoes.", a: "her"},{q: "Their house is big, but ___ is small. (van ons)", a: "ours"},{q: "I found my pen. Have you found ___?", a: "yours"},{q: "That is my car. ___ is over there. (die van hem)", a: "his"},{q: "This is our cat, and that is ___.", a: "theirs"},{q: "I finished my work. She finished ___.", a: "hers"}],
+    g_pc: [{q: "I (to watch) TV now.", a: "am watching"},{q: "You (to watch) TV now.", a: "are watching"},{q: "He (to watch) TV now.", a: "is watching"},{q: "She (to watch) TV now.", a: "is watching"},{q: "It (to rain) at the moment.", a: "is raining"},{q: "We (to watch) TV now.", a: "are watching"},{q: "They (to watch) TV now.", a: "are watching"},{q: "I (to eat) an apple.", a: "am eating"},{q: "You (to eat) an apple.", a: "are eating"},{q: "He (to eat) an apple.", a: "is eating"},{q: "She (to eat) an apple.", a: "is eating"},{q: "We (to eat) an apple.", a: "are eating"},{q: "They (to eat) an apple.", a: "are eating"},{q: "I (to listen) to music.", a: "am listening"},{q: "He (to listen) to music.", a: "is listening"},{q: "The cat (to sleep) on the sofa.", a: "is sleeping"},{q: "The dogs (to bark) outside.", a: "are barking"},{q: "Look! The sun (to shine).", a: "is shining"},{q: "Listen! Someone (to sing).", a: "is singing"},{q: "My parents (to work) in the garden.", a: "are working"},{q: "The children (to play) football.", a: "are playing"},{q: "I (to write) an email.", a: "am writing"},{q: "You (to write) an email.", a: "are writing"},{q: "He (to write) an email.", a: "is writing"},{q: "She (to write) an email.", a: "is writing"},{q: "We (to write) an email.", a: "are writing"},{q: "They (to write) an email.", a: "are writing"},{q: "The bus (to come) now.", a: "is coming"},{q: "We (to wait) for the train.", a: "are waiting"},{q: "I (to learn) English.", a: "am learning"},{q: "He (to learn) English.", a: "is learning"},{q: "They (to learn) English.", a: "are learning"},{q: "The water (to boil) now.", a: "is boiling"},{q: "The wind (to blow) very hard.", a: "is blowing"},{q: "I (to do) my homework.", a: "am doing"},{q: "She (to do) her homework.", a: "is doing"},{q: "They (to do) their homework.", a: "are doing"},{q: "He (to sit) on the chair.", a: "is sitting"},{q: "We (to sit) on the chair.", a: "are sitting"},{q: "The baby (to cry).", a: "is crying"},{q: "I (to make) a cake.", a: "am making"},{q: "She (to make) a cake.", a: "is making"},{q: "You (to make) a cake.", a: "are making"},{q: "The boys (to swim) in the lake.", a: "are swimming"},{q: "I (to run) to school.", a: "am running"},{q: "They (to run) to school.", a: "are running"},{q: "Look! It (to snow).", a: "is snowing"},{q: "We (to travel) by bus.", a: "are traveling"},{q: "He (to drive) his car.", a: "is driving"},{q: "She (to cook) dinner.", a: "is cooking"},{q: "I (not to watch) TV.", a: "am not watching"},{q: "You (not to watch) TV.", a: "are not watching"},{q: "He (not to watch) TV.", a: "is not watching"},{q: "She (not to watch) TV.", a: "is not watching"},{q: "It (not to rain) today.", a: "is not raining"},{q: "We (not to watch) TV.", a: "are not watching"},{q: "They (not to watch) TV.", a: "are not watching"},{q: "I (not to eat) meat.", a: "am not eating"},{q: "You (not to eat) meat.", a: "are not eating"},{q: "He (not to eat) meat.", a: "is not eating"},{q: "The cat (not to sleep).", a: "is not sleeping"},{q: "The dogs (not to bark).", a: "are not barking"},{q: "I (not to write) a letter.", a: "am not writing"},{q: "We (not to wait) anymore.", a: "are not waiting"},{q: "He (not to work) today.", a: "is not working"},{q: "She (not to listen).", a: "is not listening"},{q: "They (not to come) to the party.", a: "are not coming"},{q: "I (not to feel) well.", a: "am not feeling"},{q: "You (not to try) hard enough.", a: "are not trying"},{q: "It (not to snow).", a: "is not snowing"},{q: "(to be) I (to dream)?", a: "am I dreaming"},{q: "(to be) you (to listen) to me?", a: "are you listening"},{q: "(to be) he (to work) now?", a: "is he working"},{q: "(to be) she (to cook)?", a: "is she cooking"},{q: "(to be) it (to rain)?", a: "is it raining"},{q: "(to be) we (to leave) now?", a: "are we leaving"},{q: "(to be) they (to play) outside?", a: "are they playing"},{q: "What (to be) you (to do)?", a: "are you doing"},{q: "Where (to be) he (to go)?", a: "is he going"},{q: "Why (to be) she (to cry)?", a: "is she crying"},{q: "What (to be) they (to eat)?", a: "are they eating"},{q: "Who (to be) you (to call)?", a: "are you calling"},{q: "Where (to be) we (to stay)?", a: "are we staying"},{q: "What (to be) I (to wear)?", a: "am I wearing"},{q: "(to be) the sun (to shine)?", a: "is the sun shining"},{q: "I (to stop) the car.", a: "am stopping"},{q: "He (to begin) the lesson.", a: "is beginning"},{q: "They (to plan) a trip.", a: "are planning"},{q: "She (to put) on her shoes.", a: "is putting"},{q: "We (to get) ready.", a: "are getting"},{q: "The man (to shop) for food.", a: "is shopping"},{q: "I (to hop) on one leg.", a: "am hopping"},{q: "You (to dig) a hole.", a: "are digging"},{q: "It (to happen) right now.", a: "is happening"},{q: "He (to visit) his friend.", a: "is visiting"},{q: "I (to lie) on the bed.", a: "am lying"},{q: "She (to die) of laughter.", a: "is dying"},{q: "They (to tie) their laces.", a: "are tying"},{q: "I (to bake) a pizza.", a: "am baking"},{q: "He (to smile) at you.", a: "is smiling"}],
+    g_mm: [{q: "How ___ water is in the bottle? (much/many)", a: "much"},{q: "How ___ money do you have? (much/many)", a: "much"},{q: "How ___ time do we have left? (much/many)", a: "much"},{q: "How ___ sugar do you want in your tea? (much/many)", a: "much"},{q: "There isn't ___ milk in the fridge. (much/many)", a: "much"},{q: "How ___ salt did you add? (much/many)", a: "much"},{q: "I don't have ___ information about it. (much/many)", a: "much"},{q: "How ___ homework do you have? (much/many)", a: "much"},{q: "There is too ___ noise in this room. (much/many)", a: "much"},{q: "How ___ juice is left? (much/many)", a: "much"},{q: "I haven't got ___ luck today. (much/many)", a: "much"},{q: "How ___ butter do we need? (much/many)", a: "much"},{q: "There isn't ___ space in the car. (much/many)", a: "much"},{q: "How ___ tea do you drink? (much/many)", a: "much"},{q: "How ___ energy does this use? (much/many)", a: "much"},{q: "He doesn't show ___ interest. (much/many)", a: "much"},{q: "How ___ sand is on the beach? (much/many)", a: "much"},{q: "How ___ snow fell last night? (much/many)", a: "much"},{q: "There is too ___ traffic today. (much/many)", a: "much"},{q: "How ___ fun did you have? (much/many)", a: "much"},{q: "I don't have ___ patience left. (much/many)", a: "much"},{q: "How ___ cheese is on the pizza? (much/many)", a: "much"},{q: "There isn't ___ food in the house. (much/many)", a: "much"},{q: "How ___ coffee do you want? (much/many)", a: "much"},{q: "How ___ rain did you expect? (much/many)", a: "much"},{q: "There is so ___ pollution here. (much/many)", a: "much"},{q: "How ___ soup did you eat? (much/many)", a: "much"},{q: "I don't have ___ experience with kids. (much/many)", a: "much"},{q: "How ___ bread should I buy? (much/many)", a: "much"},{q: "There is too ___ oil in the pan. (much/many)", a: "much"},{q: "How ___ honey do bees make? (much/many)", a: "much"},{q: "I didn't get ___ sleep. (much/many)", a: "much"},{q: "How ___ luggage do you have? (much/many)", a: "much"},{q: "How ___ advice can you give? (much/many)", a: "much"},{q: "There isn't ___ help available. (much/many)", a: "much"},{q: "How ___ meat do you eat? (much/many)", a: "much"},{q: "How ___ gas is in the tank? (much/many)", a: "much"},{q: "How ___ flour do we need? (much/many)", a: "much"},{q: "I don't have ___ respect for him. (much/many)", a: "much"},{q: "How ___ courage does it take? (much/many)", a: "much"},{q: "How ___ friends do you have? (much/many)", a: "many"},{q: "How ___ apples are in the basket? (much/many)", a: "many"},{q: "How ___ people are there? (much/many)", a: "many"},{q: "I don't have ___ books. (much/many)", a: "many"},{q: "How ___ cars are on the street? (much/many)", a: "many"},{q: "How ___ days are in a week? (much/many)", a: "many"},{q: "How ___ sisters do you have? (much/many)", a: "many"},{q: "There aren't ___ eggs left. (much/many)", a: "many"},{q: "How ___ questions do you have? (much/many)", a: "many"},{q: "How ___ students are in the class? (much/many)", a: "many"},{q: "How ___ times have you been there? (much/many)", a: "many"},{q: "How ___ languages can you speak? (much/many)", a: "many"},{q: "There are so ___ stars tonight. (much/many)", a: "many"},{q: "How ___ chairs do we need? (much/many)", a: "many"},{q: "How ___ pictures did you take? (much/many)", a: "many"},{q: "I don't have ___ pens in my bag. (much/many)", a: "many"},{q: "How ___ countries did you visit? (much/many)", a: "many"},{q: "How ___ shoes do you own? (much/many)", a: "many"},{q: "How ___ cats do they have? (much/many)", a: "many"},{q: "How ___ miles did you walk? (much/many)", a: "many"},{q: "There are too ___ problems. (much/many)", a: "many"},{q: "How ___ houses are in this street? (much/many)", a: "many"},{q: "How ___ trees are in the forest? (much/many)", a: "many"},{q: "I don't see ___ birds today. (much/many)", a: "many"},{q: "How ___ children do they have? (much/many)", a: "many"},{q: "How ___ mistakes did I make? (much/many)", a: "many"},{q: "How ___ songs are on your phone? (much/many)", a: "many"},{q: "How ___ minutes until we arrive? (much/many)", a: "many"},{q: "There aren't ___ shops open. (much/many)", a: "many"},{q: "How ___ bottles do we need? (much/many)", a: "many"},{q: "How ___ keys are on your ring? (much/many)", a: "many"},{q: "How ___ computers are there? (much/many)", a: "many"},{q: "I haven't got ___ ideas. (much/many)", a: "many"},{q: "How ___ windows are in the room? (much/many)", a: "many"},{q: "How ___ players are in a team? (much/many)", a: "many"},{q: "How ___ coins are in your pocket? (much/many)", a: "many"},{q: "There are too ___ people here. (much/many)", a: "many"},{q: "How ___ onions do I need? (much/many)", a: "many"},{q: "How ___ months are in a year? (much/many)", a: "many"},{q: "How ___ glasses of water? (much/many)", a: "many"},{q: "How ___ work do you have? (much/many)", a: "much"},{q: "How ___ jobs have you had? (much/many)", a: "many"},{q: "How ___ rice is on your plate? (much/many)", a: "much"},{q: "How ___ bowls of rice? (much/many)", a: "many"},{q: "How ___ paper is left? (much/many)", a: "much"},{q: "How ___ pages did you read? (much/many)", a: "many"},{q: "There isn't ___ furniture here. (much/many)", a: "much"},{q: "How ___ chairs are there? (much/many)", a: "many"},{q: "How ___ luggage did you bring? (much/many)", a: "much"},{q: "How ___ bags did you bring? (much/many)", a: "many"},{q: "How ___ advice did she give? (much/many)", a: "much"},{q: "How ___ tips did she give? (much/many)", a: "many"},{q: "How ___ music do you listen to? (much/many)", a: "much"},{q: "How ___ songs do you like? (much/many)", a: "many"},{q: "How ___ rain fell today? (much/many)", a: "much"},{q: "How ___ raindrops can you see? (much/many)", a: "many"},{q: "How ___ gold is in the vault? (much/many)", a: "much"},{q: "How ___ rings do you wear? (much/many)", a: "many"},{q: "How ___ toothpaste do you use? (much/many)", a: "much"},{q: "How ___ teeth do you have? (much/many)", a: "many"}],
+    g_pl: [{q: "One book -> two ___", a: "books"},{q: "One car -> two ___", a: "cars"},{q: "One dog -> two ___", a: "dogs"},{q: "One apple -> two ___", a: "apples"},{q: "One friend -> two ___", a: "friends"},{q: "One chair -> two ___", a: "chairs"},{q: "One bag -> two ___", a: "bags"},{q: "One school -> two ___", a: "schools"},{q: "One tree -> two ___", a: "trees"},{q: "One key -> two ___", a: "keys"},{q: "One day -> two ___", a: "days"},{q: "One boy -> two ___", a: "boys"},{q: "One bus -> two ___", a: "buses"},{q: "One glass -> two ___", a: "glasses"},{q: "One box -> two ___", a: "boxes"},{q: "One watch -> two ___", a: "watches"},{q: "One dish -> two ___", a: "dishes"},{q: "One brush -> two ___", a: "brushes"},{q: "One church -> two ___", a: "churches"},{q: "One dress -> two ___", a: "dresses"},{q: "One sandwich -> two ___", a: "sandwiches"},{q: "One kiss -> two ___", a: "kisses"},{q: "One wish -> two ___", a: "wishes"},{q: "One fox -> two ___", a: "fixes"},{q: "One class -> two ___", a: "classes"},{q: "One beach -> two ___", a: "beaches"},{q: "One match -> two ___", a: "matches"},{q: "One tomato -> two ___", a: "tomatoes"},{q: "One potato -> two ___", a: "potatoes"},{q: "One hero -> two ___", a: "heroes"},{q: "One volcano -> two ___", a: "volcanoes"},{q: "One cargo -> two ___", a: "cargoes"},{q: "One baby -> two ___", a: "babies"},{q: "One city -> two ___", a: "cities"},{q: "One party -> two ___", a: "parties"},{q: "One country -> two ___", a: "countries"},{q: "One fly -> two ___", a: "flies"},{q: "One lady -> two ___", a: "ladies"},{q: "One story -> two ___", a: "stories"},{q: "One family -> two ___", a: "families"},{q: "One hobby -> two ___", a: "hobbies"},{q: "One cherry -> two ___", a: "cherries"},{q: "One strawberry -> two ___", a: "strawberries"},{q: "One library -> two ___", a: "libraries"},{q: "One leaf -> two ___", a: "leaves"},{q: "One thief -> two ___", a: "thieves"},{q: "One wolf -> two ___", a: "wolves"},{q: "One shelf -> two ___", a: "shelves"},{q: "One wife -> two ___", a: "wives"},{q: "One knife -> two ___", a: "knives"},{q: "One life -> two ___", a: "lives"},{q: "One loaf -> two ___", a: "loaves"},{q: "One scarf -> two ___", a: "scarves"},{q: "One calf -> two ___", a: "calves"},{q: "One man -> two ___", a: "men"},{q: "One woman -> two ___", a: "women"},{q: "One child -> two ___", a: "children"},{q: "One person -> two ___", a: "people"},{q: "One tooth -> two ___", a: "teeth"},{q: "One foot -> two ___", a: "feet"},{q: "One mouse -> two ___", a: "mice"},{q: "I am wearing one pair of ___ (broek).", a: "trousers"},{q: "I can't see! Where are my ___ (bril)?", a: "glasses"},{q: "Use these ___ (schaar) to cut the paper.", a: "scissors"},{q: "These blue ___ (spijkerbroek) are too small.", a: "jeans"},{q: "One sheep -> two ___", a: "sheep"},{q: "One fish -> two ___", a: "fish"},{q: "She has long blonde ___ (haar).", a: "hair"},{q: "A hundred ___ (schaap) are in the field.", a: "sheep"},{q: "There are many ___ (vis) in the sea.", a: "fish"},{q: "One puppy -> two ___", a: "puppies"},{q: "One box -> three ___", a: "boxes"},{q: "One tooth -> all my ___", a: "teeth"},{q: "One bus -> many ___", a: "buses"},{q: "One child -> five ___", a: "children"},{q: "One knife -> four ___", a: "knives"},{q: "One city -> ten ___", a: "cities"},{q: "One man -> three ___", a: "men"},{q: "One potato -> more ___", a: "potatoes"},{q: "One life -> nine ___", a: "lives"},{q: "One person -> a lot of ___", a: "people"},{q: "One foot -> two ___", a: "feet"},{q: "One leaf -> brown ___", a: "leaves"},{q: "One hobby -> multiple ___", a: "hobbies"},{q: "One box -> cardboard ___", a: "boxes"},{q: "One mouse -> small ___", a: "mice"},{q: "One tomato -> red ___", a: "tomatoes"},{q: "One watch -> silver ___", a: "watches"},{q: "One shelf -> book ___", a: "shelves"},{q: "One thief -> two ___", a: "thieves"},{q: "One hero -> local ___", a: "heroes"},{q: "One family -> many ___", a: "families"},{q: "One woman -> group of ___", a: "women"},{q: "One scarf -> winter ___", a: "scarves"},{q: "One baby -> cute ___", a: "babies"}],
+    g_hh: [{q: "Make negative: I have got a sister. -> ...", a: "I haven't got a sister"},{q: "Make negative: She has got a brother. -> ...", a: "She hasn't got a brother"},{q: "Make negative: We have got a new car. -> ...", a: "We haven't got a new car"},{q: "Make negative: He has got a phone. -> ...", a: "He hasn't got a phone"},{q: "Make negative: They have got a dog. -> ...", a: "They haven't got a dog"},{q: "Make negative: You have got a key. -> ...", a: "You haven't got a key"},{q: "Make negative: It has got a tail. -> ...", a: "It hasn't got a tail"},{q: "Make negative: My parents have got a house. -> ...", a: "My parents haven't got a house"},{q: "Make negative: Lisa has got blue eyes. -> ...", a: "Lisa hasn't got blue eyes"},{q: "Make negative: We have got enough time. -> ...", a: "We haven't got enough time"},{q: "Make negative: I have a sister. -> ...", a: "I don't have a sister"},{q: "Make negative: He has a car. -> ...", a: "He doesn't have a car"},{q: "Make negative: They have English today. -> ...", a: "They don't have English today"},{q: "Make negative: She has a job. -> ...", a: "She doesn't have a job"},{q: "Make negative: We have a meeting. -> ...", a: "We don't have a meeting"},{q: "Make negative: You have a map. -> ...", a: "You don't have a map"},{q: "Make negative: It has a battery. -> ...", a: "It doesn't have a battery"},{q: "Make negative: Tom has a bike. -> ...", a: "Tom doesn't have a bike"},{q: "Make negative: My friends have a boat. -> ...", a: "My friends don't have a boat"},{q: "Make negative: I have your number. -> ...", a: "I don't have your number"},{q: "Make a question: You have got a pen. -> ...", a: "Have you got a pen?"},{q: "Make a question: He has got a sister. -> ...", a: "Has he got a sister?"},{q: "Make a question: They have got a house. -> ...", a: "Have they got a house?"},{q: "Make a question: She has got a new phone. -> ...", a: "Has she got a new phone?"},{q: "Make a question: We have got homework. -> ...", a: "Have we got homework?"},{q: "Make a question: It has got a name. -> ...", a: "Has it got a name?"},{q: "Make a question: Your dad has got a car. -> ...", a: "Has your dad got a car?"},{q: "Make a question: I have got a surprise. -> ...", a: "Have I got a surprise?"},{q: "Make a question: You have got time. -> ...", a: "Have you got time?"},{q: "Make a question: The cat has got a collar. -> ...", a: "Has the cat got a collar?"},{q: "Make a question: I have English tomorrow. -> ...", a: "Do I have English tomorrow?"},{q: "Make a question: You have a pen. -> ...", a: "Do you have a pen?"},{q: "Make a question: He has a sister. -> ...", a: "Does he have a sister?"},{q: "Make a question: They have a car. -> ...", a: "Do they have a car?"},{q: "Make a question: She has a dog. -> ...", a: "Does she have a dog?"},{q: "Make a question: We have lunch at one. -> ...", a: "Do we have lunch at one?"},{q: "Make a question: It has a problem. -> ...", a: "Does it have a problem?"},{q: "Make a question: Tom has a lesson. -> ...", a: "Does Tom have a lesson?"},{q: "Make a question: They have your keys. -> ...", a: "Do they have your keys?"},{q: "Make a question: You have a question. -> ...", a: "Do you have a question?"},{q: "Make negative: We have a dog. -> ...", a: "We don't have a dog"},{q: "Make a question: She has got a secret. -> ...", a: "Has she got a secret?"},{q: "Make negative: He has got a bike. -> ...", a: "He hasn't got a bike"},{q: "Make a question: They have a garden. -> ...", a: "Do they have a garden?"},{q: "Make negative: I have got money. -> ...", a: "I haven't got money"},{q: "Make a question: You have got a map. -> ...", a: "Have you got a map?"},{q: "Make negative: It has a window. -> ...", a: "It doesn't have a window"},{q: "Make a question: He has a brother. -> ...", a: "Does he have a brother?"},{q: "Make negative: They have got tickets. -> ...", a: "They haven't got tickets"},{q: "Make a question: We have a test. -> ...", a: "Do we have a test?"},{q: "Make negative: She has a cat. -> ...", a: "She doesn't have a cat"},{q: "Make a question: You have a hobby. -> ...", a: "Do you have a hobby?"},{q: "Make negative: I have a plan. -> ...", a: "I don't have a plan"},{q: "Make a question: He has got a cold. -> ...", a: "Has he got a cold?"},{q: "Make negative: We have got a boat. -> ...", a: "We haven't got a boat"},{q: "Make a question: They have got time. -> ...", a: "Have they got time?"},{q: "Make negative: He has a job. -> ...", a: "He doesn't have a job"},{q: "Make a question: She has a brother. -> ...", a: "Does she have a brother?"},{q: "Make negative: You have got my pen. -> ...", a: "You haven't got my pen"},{q: "Make a question: It has got a tail. -> ...", a: "Has it got a tail?"},{q: "Make negative: They have a house. -> ...", a: "They don't have a house"},{q: "Make a question: You have my book. -> ...", a: "Do you have my book?"},{q: "Make negative: She has got a sister. -> ...", a: "She hasn't got a sister"},{q: "Make a question: He has a bike. -> ...", a: "Does he have a bike?"},{q: "Make negative: We have got enough milk. -> ...", a: "We haven't got enough milk"},{q: "Make a question: They have English. -> ...", a: "Do they have English?"},{q: "Make negative: I have a phone. -> ...", a: "I don't have a phone"},{q: "Make a question: She has got a car. -> ...", a: "Has she got a car?"},{q: "Make negative: He has got a dog. -> ...", a: "He hasn't got a dog"},{q: "Make a question: You have got a key. -> ...", a: "Have you got a key?"},{q: "Make negative: It has a battery. -> ...", a: "It doesn't have a battery"},{q: "Make a question: They have a problem. -> ...", a: "Do they have a problem?"},{q: "Make negative: We have got homework. -> ...", a: "We haven't got homework"},{q: "Make a question: He has a cold. -> ...", a: "Does he have a cold?"},{q: "Make negative: She has a sister. -> ...", a: "She doesn't have a sister"},{q: "Make a question: You have time. -> ...", a: "Do you have time?"},{q: "Make negative: They have got a car. -> ...", a: "They haven't got a car"},{q: "Make a question: We have got a map. -> ...", a: "Have we got a map?"},{q: "Make negative: I have got a brother. -> ...", a: "I haven't got a brother"},{q: "Make a question: She has a job. -> ...", a: "Does she have a job?"},{q: "Make negative: He has a house. -> ...", a: "He doesn't have a house"},{q: "Make a question: They have got a dog. -> ...", a: "Have they got a dog?"},{q: "Make negative: You have a sister. -> ...", a: "You don't have a sister"},{q: "Make a question: He has got a bike. -> ...", a: "Has he got a bike?"},{q: "Make negative: We have got a phone. -> ...", a: "We haven't got a phone"},{q: "Make a question: She has got a pen. -> ...", a: "Has she got a pen?"},{q: "Make negative: They have a car. -> ...", a: "They don't have a car"},{q: "Make a question: You have a dog. -> ...", a: "Do you have a dog?"},{q: "Make negative: He has got a car. -> ...", a: "He hasn't got a car"},{q: "Make a question: She has a sister. -> ...", a: "Does she have a sister?"},{q: "Make negative: We have a house. -> ...", a: "We don't have a house"},{q: "Make a question: They have got a bike. -> ...", a: "Have they got a bike?"},{q: "Make negative: I have got a dog. -> ...", a: "I haven't got a dog"},{q: "Make a question: He has a pen. -> ...", a: "Does he have a pen?"},{q: "Make negative: She has got a house. -> ...", a: "She hasn't got a house"},{q: "Make a question: You have a car. -> ...", a: "Do you have a car?"},{q: "Make negative: They have got a pen. -> ...", a: "They haven't got a pen"},{q: "Make a question: We have got a dog. -> ...", a: "Have we got a dog?"},{q: "Make negative: He has a phone. -> ...", a: "He doesn't have a phone"},{q: "Make a question: She has got a bike. -> ...", a: "Has she got a bike?"}],
+   g_comp: [
+        // BASIC (-er / -est)
+        {q: "Small - smaller - ___", a: "smallest"},
+        {q: "Tall - taller - ___", a: "tallest"},
+        {q: "Short - shorter - ___", a: "shortest"},
+        {q: "Long - longer - ___", a: "longest"},
+        {q: "Fast - faster - ___", a: "fastest"},
+        {q: "Slow - slower - ___", a: "slowest"},
+        {q: "Old - older - ___", a: "oldest"},
+        {q: "Young - younger - ___", a: "youngest"},
+        {q: "Strong - stronger - ___", a: "strongest"},
+        {q: "Weak - weaker - ___", a: "weakest"},
+        {q: "Cheap - cheaper - ___", a: "cheapest"},
+        {q: "Rich - richer - ___", a: "richest"},
+        {q: "Cold - colder - ___", a: "coldest"},
+        {q: "Warm - warmer - ___", a: "warmest"},
+        {q: "Sweet - sweeter - ___", a: "sweetest"},
+        {q: "Clean - cleaner - ___", a: "cleanest"},
+        {q: "Dark - darker - ___", a: "darkest"},
+        {q: "Light - lighter - ___", a: "lightest"},
+        {q: "Deep - deeper - ___", a: "deepest"},
+        {q: "High - higher - ___", a: "highest"},
+        {q: "Low - lower - ___", a: "lowest"},
+        {q: "Hard - harder - ___", a: "hardest"},
+        {q: "Soft - softer - ___", a: "softest"},
+        {q: "Loud - louder - ___", a: "loudest"},
+        {q: "Quick - quicker - ___", a: "quickest"},
+
+        // SPELLING: DOUBLE CONSONANT (Big - bigger)
+        {q: "Big - ___ - biggest", a: "bigger"},
+        {q: "Hot - ___ - hottest", a: "hotter"},
+        {q: "Fat - ___ - fattest", a: "fatter"},
+        {q: "Thin - ___ - thinnest", a: "thinner"},
+        {q: "Sad - ___ - saddest", a: "sadder"},
+        {q: "Wet - ___ - wettest", a: "wetter"},
+        {q: "Big - bigger - ___", a: "biggest"},
+        {q: "Hot - hotter - ___", a: "hottest"},
+        {q: "Fat - fatter - ___", a: "fattest"},
+        {q: "Thin - thinner - ___", a: "thinnest"},
+
+        // SPELLING: -Y becomes -I (Happy - happier)
+        {q: "Happy - happier - ___", a: "happiest"},
+        {q: "Heavy - heavier - ___", a: "heaviest"},
+        {q: "Busy - busier - ___", a: "busiest"},
+        {q: "Easy - easier - ___", a: "easiest"},
+        {q: "Funny - funnier - ___", a: "funniest"},
+        {q: "Pretty - prettier - ___", a: "prettiest"},
+        {q: "Ugly - uglier - ___", a: "ugliest"},
+        {q: "Lucky - luckier - ___", a: "luckiest"},
+        {q: "Dirty - dirtier - ___", a: "dirtiest"},
+        {q: "Angry - angrier - ___", a: "angriest"},
+        {q: "Dry - drier - ___", a: "driest"},
+        {q: "Crazy - crazier - ___", a: "craziest"},
+        {q: "Noisy - noisier - ___", a: "noisiest"},
+        {q: "Early - earlier - ___", a: "earliest"},
+        {q: "Healthy - healthier - ___", a: "healthiest"},
+
+        // IRREGULAR (Good - better / Bad - worse)
+        {q: "Good - better - ___", a: "best"},
+        {q: "Bad - worse - ___", a: "worst"},
+        {q: "Good - ___ - best", a: "better"},
+        {q: "Bad - ___ - worst", a: "worse"},
+        {q: "Much/Many - more - ___", a: "most"},
+        {q: "Little - less - ___", a: "least"},
+        {q: "Far - further - ___", a: "furthest"},
+
+        // SENTENCE COMPLETION (Comparative)
+        {q: "A plane is ___ (fast) than a car.", a: "faster"},
+        {q: "A mouse is ___ (small) than a cat.", a: "smaller"},
+        {q: "I am ___ (tall) than my sister.", a: "taller"},
+        {q: "Ice is ___ (cold) than water.", a: "colder"},
+        {q: "The sun is ___ (bright) than the moon.", a: "brighter"},
+        {q: "An elephant is ___ (heavy) than a dog.", a: "heavier"},
+        {q: "This box is ___ (big) than that one.", a: "bigger"},
+        {q: "English is ___ (easy) than Chinese.", a: "easier"},
+        {q: "Today is ___ (warm) than yesterday.", a: "warmer"},
+        {q: "My dad is ___ (old) than my mom.", a: "older"},
+        {q: "A rock is ___ (hard) than a pillow.", a: "harder"},
+        {q: "The blue car is ___ (cheap) than the red car.", a: "cheaper"},
+        {q: "The city is ___ (noisy) than the village.", a: "noisier"},
+        {q: "I am ___ (happy) today than yesterday.", a: "happier"},
+        {q: "This knife is ___ (sharp) than that one.", a: "sharper"},
+
+        // SENTENCE COMPLETION (Superlative)
+        {q: "He is the ___ (tall) boy in class.", a: "tallest"},
+        {q: "This is the ___ (small) room in the house.", a: "smallest"},
+        {q: "It was the ___ (cold) day of the year.", a: "coldest"},
+        {q: "Who is the ___ (rich) person in the world?", a: "richest"},
+        {q: "Mount Everest is the ___ (high) mountain.", a: "highest"},
+        {q: "That was the ___ (funny) joke ever.", a: "funniest"},
+        {q: "She is the ___ (smart) girl I know.", a: "smartest"},
+        {q: "This is the ___ (old) tree in the park.", a: "oldest"},
+        {q: "January is often the ___ (wet) month.", a: "wettest"},
+        {q: "The cheetah is the ___ (fast) animal.", a: "fastest"},
+        {q: "That is the ___ (bad) movie I have seen.", a: "worst"},
+        {q: "He is my ___ (good) friend.", a: "best"},
+        {q: "This is the ___ (easy) exercise.", a: "easiest"},
+        {q: "Monday is the ___ (busy) day for me.", a: "busiest"},
+        {q: "It is the ___ (deep) lake in the country.", a: "deepest"},
+
+        // MIXED TRANSFORMATIONS
+        {q: "Large -> larger -> ___", a: "largest"},
+        {q: "Late -> later -> ___", a: "latest"},
+        {q: "Nice -> nicer -> ___", a: "nicest"},
+        {q: "Safe -> safer -> ___", a: "safest"},
+        {q: "Wide -> wider -> ___", a: "widest"},
+        {q: "Brave -> braver -> ___", a: "bravest"},
+        {q: "Cute -> cuter -> ___", a: "cutest"},
+        {q: "Fine -> finer -> ___", a: "finest"},
+        {q: "Simple -> simpler -> ___", a: "simplest"},
+        {q: "Wise -> wiser -> ___", a: "wisest"},
+        {q: "Clear - clearer - ___", a: "clearest"},
+        {q: "Kind - kinder - ___", a: "kindest"},
+        {q: "Proud - prouder - ___", a: "proudest"}
+    ],
+   g_dem: [
+        // BASIC: DICHTBIJ (this / these)
+        {q: "Dichtbij (enk.): ___ book", a: "this"},
+        {q: "Dichtbij (mv.): ___ books", a: "these"},
+        {q: "Dichtbij (enk.): ___ pen", a: "this"},
+        {q: "Dichtbij (mv.): ___ pens", a: "these"},
+        {q: "Dichtbij (enk.): ___ apple", a: "this"},
+        {q: "Dichtbij (mv.): ___ apples", a: "these"},
+        {q: "Dichtbij (enk.): ___ chair", a: "this"},
+        {q: "Dichtbij (mv.): ___ chairs", a: "these"},
+        {q: "Dichtbij (enk.): ___ boy", a: "this"},
+        {q: "Dichtbij (mv.): ___ boys", a: "these"},
+        {q: "Dichtbij (enk.): ___ house", a: "this"},
+        {q: "Dichtbij (mv.): ___ houses", a: "these"},
+        {q: "Dichtbij (enk.): ___ computer", a: "this"},
+        {q: "Dichtbij (mv.): ___ computers", a: "these"},
+        {q: "Dichtbij (enk.): ___ cup", a: "this"},
+        {q: "Dichtbij (mv.): ___ cups", a: "these"},
+        {q: "Dichtbij (enk.): ___ bag", a: "this"},
+        {q: "Dichtbij (mv.): ___ bags", a: "these"},
+        {q: "Dichtbij (enk.): ___ dog", a: "this"},
+        {q: "Dichtbij (mv.): ___ dogs", a: "these"},
+
+        // BASIC: VERAF (that / those)
+        {q: "Veraf (enk.): ___ star", a: "that"},
+        {q: "Veraf (mv.): ___ stars", a: "those"},
+        {q: "Veraf (enk.): ___ plane", a: "that"},
+        {q: "Veraf (mv.): ___ planes", a: "those"},
+        {q: "Veraf (enk.): ___ cloud", a: "that"},
+        {q: "Veraf (mv.): ___ clouds", a: "those"},
+        {q: "Veraf (enk.): ___ building", a: "that"},
+        {q: "Veraf (mv.): ___ buildings", a: "those"},
+        {q: "Veraf (enk.): ___ mountain", a: "that"},
+        {q: "Veraf (mv.): ___ mountains", a: "those"},
+        {q: "Veraf (enk.): ___ bird", a: "that"},
+        {q: "Veraf (mv.): ___ birds", a: "those"},
+        {q: "Veraf (enk.): ___ car", a: "that"},
+        {q: "Veraf (mv.): ___ cars", a: "those"},
+        {q: "Veraf (enk.): ___ tree", a: "that"},
+        {q: "Veraf (mv.): ___ trees", a: "those"},
+        {q: "Veraf (enk.): ___ ship", a: "that"},
+        {q: "Veraf (mv.): ___ ships", a: "those"},
+        {q: "Veraf (enk.): ___ light", a: "that"},
+        {q: "Veraf (mv.): ___ lights", a: "those"},
+
+        // CONTEXT: IS / ARE (Here = dichtbij, There = veraf)
+        {q: "Look here! ___ is my new watch.", a: "this"},
+        {q: "Look there! ___ is a huge tower.", a: "that"},
+        {q: "Here are the keys. ___ are the ones I lost.", a: "these"},
+        {q: "Look at the horizon. ___ are mountains.", a: "those"},
+        {q: "___ (dichtbij) is my brother, Sam.", a: "this"},
+        {q: "___ (veraf) are my parents over there.", a: "those"},
+        {q: "I like ___ (veraf) dress in the window.", a: "that"},
+        {q: "I want to buy ___ (dichtbij) shoes I'm wearing.", a: "these"},
+        {q: "___ (dichtbij) sandwich tastes great!", a: "this"},
+        {q: "___ (veraf) sandwiches on that plate look old.", a: "those"},
+
+        // MIXED ENKELVOUD/MEERVOUD
+        {q: "Who is ___ girl over there?", a: "that"},
+        {q: "Who are ___ people in the garden?", a: "those"},
+        {q: "Is ___ your phone in your hand?", a: "this"},
+        {q: "Are ___ your glasses on my desk?", a: "these"},
+        {q: "___ cookies I'm eating are delicious.", a: "these"},
+        {q: "___ cookies on the top shelf are for later.", a: "those"},
+        {q: "___ movie we are watching is boring.", a: "this"},
+        {q: "Do you remember ___ movie we saw last year?", a: "that"},
+        {q: "___ cat on my lap is sleeping.", a: "this"},
+        {q: "___ cat on the roof is meowing.", a: "that"},
+
+        // CHALLENGE: WHAT IS / WHAT ARE
+        {q: "What is ___? (iets in je hand)", a: "this"},
+        {q: "What is ___? (iets ver weg)", a: "that"},
+        {q: "What are ___? (dingen hier)", a: "these"},
+        {q: "What are ___? (dingen daar)", a: "those"},
+        {q: "___ is a present for you! (ik geef het nu)", a: "this"},
+        {q: "___ was a great party last week.", a: "that"},
+        {q: "Are ___ people over there your friends?", a: "those"},
+        {q: "Are ___ students here in your class?", a: "these"},
+        {q: "I don't like ___ weather lately.", a: "this"},
+        {q: "Look at ___ clouds in the sky!", a: "those"},
+
+        // REPETITION FOR MASTERY
+        {q: "___ (veraf) car is very fast.", a: "that"},
+        {q: "___ (dichtbij) car is electric.", a: "this"},
+        {q: "___ (veraf) bikes are expensive.", a: "those"},
+        {q: "___ (dichtbij) bikes are for rent.", a: "these"},
+        {q: "Is ___ (veraf) your house?", a: "that"},
+        {q: "Is ___ (dichtbij) your bag?", a: "this"},
+        {q: "Are ___ (veraf) your keys?", a: "those"},
+        {q: "Are ___ (dichtbij) your pens?", a: "these"},
+        {q: "I want ___ (veraf) blue balloon.", a: "that"},
+        {q: "I want ___ (dichtbij) red balloon.", a: "this"},
+        {q: "Do you see ___ (veraf) birds?", a: "those"},
+        {q: "Do you see ___ (dichtbij) ants?", a: "these"},
+        {q: "___ (dichtbij) lesson is almost over.", a: "this"},
+        {q: "___ (veraf) lesson was very difficult.", a: "that"},
+        {q: "___ (dichtbij) eggs are fresh.", a: "these"},
+        {q: "___ (veraf) eggs were rotten.", a: "those"},
+        {q: "Look at ___ (veraf) painting.", a: "that"},
+        {q: "Look at ___ (dichtbij) photo.", a: "this"},
+        {q: "___ (dichtbij) flowers smell nice.", a: "these"},
+        {q: "___ (veraf) flowers are dying.", a: "those"},
+        {q: "I prefer ___ (dichtbij) chair.", a: "this"},
+        {q: "He prefers ___ (veraf) chair.", a: "that"},
+        {q: "___ (dichtbij) students are loud.", a: "these"},
+        {q: "___ (veraf) students are quiet.", a: "those"},
+        {q: "I love ___ (dichtbij) music.", a: "this"},
+        {q: "I hated ___ (veraf) song.", a: "that"},
+        {q: "Are ___ (dichtbij) your parents?", a: "these"},
+        {q: "Are ___ (veraf) your cousins?", a: "those"},
+        {q: "___ (dichtbij) is my seat.", a: "this"},
+        {q: "___ (veraf) is your seat.", a: "that"}
+    ]
+};
+
+let quizMode = 'ne-en';
+let currentQuestions = [];
+let currentIdx = 0;
+let score = 0;
+let startTime;
+let highScore = localStorage.getItem('unit3_high') || 0;
+let validAnswersMap = {};
+
+document.getElementById('high-score').innerText = highScore;
+setMode('ne-en');
+
+function setMode(mode) {
+    quizMode = mode;
+    ['ne-en', 'en-ne', 'mix'].forEach(m => {
+        const btn = document.getElementById(`btn-${m}`);
+        btn.style.background = (m === mode) ? 'var(--button-primary)' : '#fff';
+        btn.style.color = (m === mode) ? 'white' : '#64748b';
+        btn.style.borderColor = (m === mode) ? 'transparent' : '#e2e8f0';
+    });
+}
+
+function collectAndStart() {
+    const selected = Array.from(document.querySelectorAll('.quiz-cat:checked')).map(cb => cb.value);
+    if (selected.length === 0) { alert("Kies eerst minimaal één onderdeel!"); return; }
+    startQuiz(selected);
+}
+
+function startQuiz(selection) {
+    let rawData = [];
+    selection.forEach(cat => { if (data[cat]) {
+        // Hier voegen we de categorie toe aan elk item
+        const itemsWithCat = data[cat].map(item => ({...item, cat: cat}));
+        rawData.push(...itemsWithCat); 
+    }});
+    
+    const shuffled = rawData.sort(() => Math.random() - 0.5);
+    const limited = shuffled.slice(0, 10);
+
+    currentQuestions = limited.map(item => {
+        if (item.cat.startsWith('g_')) return { q: item.q, a: item.a, cat: item.cat };
+        if (quizMode === 'en-ne') return { q: item.q, a: item.a, cat: item.cat };
+        if (quizMode === 'ne-en') return { q: item.a, a: item.q, cat: item.cat };
+        return Math.random() > 0.5 ? { q: item.q, a: item.a, cat: item.cat } : { q: item.a, a: item.q, cat: item.cat };
+    });
+
+    validAnswersMap = {};
+    currentQuestions.forEach((item, index) => {
+        const key = index + "_" + item.q.toLowerCase();
+        validAnswersMap[key] = item.a;
+    });
+
+    currentIdx = 0; score = 0;
+    document.getElementById('main-menu').style.display = 'none';
+    document.getElementById('quiz-area').style.display = 'block';
+    document.getElementById('progress-container').style.display = 'block';
+    document.getElementById('current-score').innerText = score;
+    nextQuestion();
+}
+
+function nextQuestion() {
+    if (currentIdx >= currentQuestions.length) { finishQuiz(); return; }
+    document.getElementById('progress-bar').style.width = `${(currentIdx / 10) * 100}%`;
+    
+    // Toon de categorie boven de vraag
+    const currentCatKey = currentQuestions[currentIdx].cat;
+    const readableCat = categoryNames[currentCatKey] || "Quiz";
+    document.getElementById('category-title').innerText = readableCat;
+
+    document.getElementById('question-text').innerText = currentQuestions[currentIdx].q;
+    document.getElementById('answer-input').value = '';
+    document.getElementById('feedback').innerText = '';
+    document.getElementById('timeout-badge').style.display = 'none';
+    document.getElementById('answer-input').focus();
+    startTime = Date.now();
+}
+
+function checkAnswer() {
+    let userAnsw = document.getElementById('answer-input').value.trim(); // Geen toLowerCase hier!
+    const currentQ = currentQuestions[currentIdx];
+    const key = currentIdx + "_" + currentQ.q.toLowerCase();
+    let correctAnsw = validAnswersMap[key];
+    const duration = (Date.now() - startTime) / 1000;
+
+    // Helper functie om afkortingen te normaliseren en te controleren
+    const normalize = (str, isCheckingUser) => {
+        // Stap 1: Leestekens weg en trimmen
+        let cleanStr = str.replace(/[.,?!]/g, "").trim();
+
+        // Stap 2: Als we de gebruiker controleren, check op kleine 'i' als los woord
+        // Dit zorgt ervoor dat "i have" fout wordt gerekend als het "I have" moet zijn.
+        if (isCheckingUser && /\bi\b/.test(cleanStr)) {
+            return "INVALID_LOWERCASE_I"; 
+        }
+
+        // Stap 3: Alles naar kleine letters voor de vergelijking
+        cleanStr = cleanStr.toLowerCase();
+
+        // Stap 4: Afkortingen voluit schrijven
+        cleanStr = cleanStr
+            .replace(/'m\b/g, " am")
+            .replace(/'re\b/g, " are")
+            .replace(/'s\b/g, " is")
+            .replace(/'ve\b/g, " have")
+            .replace(/\bisn't\b/g, " is not")
+            .replace(/\baren't\b/g, " are not")
+            .replace(/\bdon't\b/g, " do not")
+            .replace(/\bdoesn't\b/g, " does not")
+            .replace(/\bhaven't\b/g, " have not")
+            .replace(/\bhasn't\b/g, " has not")
+            .replace(/\bcan't\b/g, " cannot")
+            .replace(/\(to\)/g, '')
+            .replace(/\bto\s+/g, '')
+            .replace(/\s+/g, ' ')
+            .trim(); // <--- CRITICAL FIX: Trim as last step to remove potential leading space from replacements
+
+        return cleanStr;
+    };
+
+    const userNormalized = normalize(userAnsw, true);
+    const correctNormalized = normalize(correctAnsw, false);
+
+    if (userNormalized === correctNormalized) {
+        score++;
+        document.getElementById('feedback').innerText = "TOP! 🚀";
+        document.getElementById('feedback').style.color = "#22c55e";
+        if (duration < 3.0) document.getElementById('timeout-badge').style.display = 'block';
+        createStar();
+        setTimeout(() => { 
+            currentIdx++; 
+            document.getElementById('current-score').innerText = score; 
+            nextQuestion(); 
+        }, 800);
+    } else {
+        document.getElementById('feedback').innerText = `Helaas! Het is: ${correctAnsw}`;
+        document.getElementById('feedback').style.color = "#ef4444";
+        setTimeout(() => { 
+            currentIdx++; 
+            nextQuestion(); 
+        }, 3500); 
+    }
+}
+
+function finishQuiz() {
+    if (score > highScore) { 
+        highScore = score; 
+        localStorage.setItem('unit3_high', highScore); 
+        document.getElementById('high-score').innerText = highScore; 
+    }
+    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+    alert(`Klaar! Score: ${score}/10`);
+    showMenu();
+}
+
+function showMenu() {
+    document.getElementById('main-menu').style.display = 'block';
+    document.getElementById('quiz-area').style.display = 'none';
+    document.getElementById('progress-container').style.display = 'none';
+}
+
+function createStar() {
+    const star = document.createElement('div');
+    star.innerHTML = '⭐'; star.className = 'star';
+    star.style.left = Math.random() * 80 + 10 + '%';
+    star.style.bottom = '20%';
+    document.querySelector('.container').appendChild(star);
+    star.animate([{ transform: 'translateY(0) scale(1)', opacity: 1 }, { transform: 'translateY(-150px) scale(2)', opacity: 0 }], { duration: 1000, easing: 'ease-out' });
+    setTimeout(() => star.remove(), 1000);
+}
+
+document.getElementById('answer-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAnswer(); });
+</script>
+</body>
+</html>
