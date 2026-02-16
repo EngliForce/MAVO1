@@ -305,34 +305,75 @@
 
     <div class="section-divider"></div>
 
-    <h2>⚔️ PICKLE MISSIONS</h2>
-   <div class="card" onclick="createExplosion(event, 'CRUNCH!')">
-    <a href="m1t4_word_order_pickle_1.html" style="text-decoration: none; color: inherit;">
-        <span style="font-size: 3rem;">🧩</span>
-        <div class="title">Pickle 1</div>
-        <p>Zet in de juiste volgorde</p>
-    </a>
-</div>
-        <div class="card" onclick="createExplosion(event, 'SQUASH!')">
+   <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t4_word_order_pickle_1.html')">
+            <span style="font-size: 3rem;">🧩</span>
+            <div class="title">Pickle 1</div>
+            <p>Sorteer de zinsdelen</p>
+        </div>
+
+        <div class="card" onclick="openMission(event, 'SQUASH!', 'https://LINK-VOOR-PICKLE-2.nl')">
             <span style="font-size: 3rem;">⚖️</span>
             <div class="title">Pickle 2</div>
             <p>P of T Check</p>
         </div>
-        <div class="card" onclick="createExplosion(event, 'BAM!')">
+
+        <div class="card" onclick="openMission(event, 'BAM!', 'https://LINK-VOOR-PICKLE-3.nl')">
             <span style="font-size: 3rem;">🔍</span>
             <div class="title">Pickle 3</div>
             <p>Foutzoeker</p>
         </div>
-        <div class="card" onclick="createExplosion(event, 'ZAP!')">
+
+        <div class="card" onclick="openMission(event, 'ZAP!', 'https://LINK-VOOR-PICKLE-4.nl')">
             <span style="font-size: 3rem;">⏳</span>
             <div class="title">Pickle 4</div>
             <p>Time Travel</p>
         </div>
-        <div class="card" onclick="createExplosion(event, 'BOOM!')">
+
+        <div class="card" onclick="openMission(event, 'BOOM!', 'https://LINK-VOOR-PICKLE-5.nl')">
             <span style="font-size: 3rem;">👹</span>
             <div class="title">Pickle 5</div>
             <p>Eindbaas Gevecht</p>
         </div>
+    </div>
+</main>
+
+<script>
+    // NIEUWE FUNCTIE: Eerst knallen, dan navigeren
+    function openMission(e, message, url) {
+        createExplosion(e, message);
+        
+        // Wacht 400ms zodat de leerling de 'BOOM' ziet voordat de pagina verspringt
+        setTimeout(() => {
+            window.location.href = url;
+        }, 400);
+    }
+
+    function showSection(e, id, boomMessage) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, boomMessage);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX;
+        const y = e.clientY;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+</script>
     </div>
 </main>
 
@@ -365,5 +406,6 @@
 </body>
 
 </html>
+
 
 
