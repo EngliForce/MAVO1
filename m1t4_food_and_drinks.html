@@ -1,109 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Theme 4: Food & Drinks</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #e3f2fd; /* lichtblauw */
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #0288d1; /* blauw */
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-    header img {
-      display: block;
-      margin: 0 auto 1rem auto;
-      width: 120px;
-      height: auto;
-    }
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-    section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #0288d1; /* blauw */
-    }
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .links a {
-      padding: 0.5rem 1rem;
-      background-color: #0288d1; /* blauw */
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .links a:hover {
-      background-color: #0277bd; /* donkerder blauw */
-    }
-    footer {
-      background-color: #bbdefb; /* lichtblauwe achtergrond */
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Theme 4 - Food & Drinks</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
+
+        main { max-width: 1000px; margin: 20px auto; padding: 20px; }
+        
+        /* De blauwe scheidingslijn tussen secties */
+        .divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-blue-main), transparent);
+            margin: 60px 0 20px 0;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-blue-main);
+        }
+
+        .section-title { 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.8rem; 
+            color: var(--hero-yellow); 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 25px; margin-top: 30px; }
+
+        .card {
+            background: #102a43;
+            border: 3px solid #243b53;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            position: relative;
+        }
+
+        .card:hover { border-color: var(--hero-yellow); transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+
+        .card-header { display: flex; justify-content: center; margin-bottom: 15px; }
+        .power-icon { font-size: 2.5rem; background: rgba(255,255,255,0.05); width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+
+        .name { font-weight: bold; font-size: 1.3rem; margin-bottom: 8px; color: #f8fafc; text-align: center; }
+        .desc { font-size: 0.9rem; color: #94a3b8; flex-grow: 1; text-align: center; margin-bottom: 15px; }
+
+        .btn {
+            background: #243b53;
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .card.done { border-color: var(--hero-yellow); background: #05101a; box-shadow: 0 0 20px rgba(255, 183, 3, 0.2); }
+        .card.done .btn { background: var(--hero-yellow); color: var(--hero-blue-dark); }
+
+        .star { position: fixed; pointer-events: none; font-size: 3rem; z-index: 1000; animation: starFly 0.8s forwards; }
+        @keyframes starFly { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2) translateY(-150px); opacity: 0; } }
+    </style>
 </head>
 <body>
-  <header>
-    <img src="Logo.png" alt="EngliForce Logo">
-    <h1>Theme 4: Food & Drinks</h1>
-  </header>
 
-  <main>
-    <section>
-      <h2>🎯 Learning Goals</h2>
-      <p>You will learn to talk about food and drinks, order in a restaurant, describe taste, and use grammar to talk about quantities and preferences.</p>
-    </section>
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>THEME 4: FOOD & DRINKS</p>
+</header>
 
-    <section>
-      <h2>🔤 Vocabulary</h2>
-      <div class="links">
-        <a href='/m1t4_vocab_4_1_fruit_vegetables' target='_blank'>Vocab 4.1: Food</a>
-        <a href='/m1t4_vocab_4_2_drinks' target='_blank'>Vocab 4.2: Beverages</a>
-        <a href='/m1t4_vocab_4_3_meals' target='_blank'>Vocab 4.3: Cooking</a>
-        <a href='/m1t4_vocab_4_4_restaurant' target='_blank'>Vocab 4.4: Eating out</a>
-      </div>
-    </section>
+<main>
+    <h2 class="section-title">📡 VOCAB TRAINING</h2>
+    <div class="grid" id="vocab-grid"></div>
 
-    <section>
-      <h2>🎓 Grammar</h2>
-      <div class="links">
-        <a href='m1t4_dates.html' target='_blank'>Dates</a>
-        <a href='m1t4_little_few.html' target='_blank'>Little & few</a>
-        <a href='m1t4_prepositions.html' target='_blank'>Prepositions</a>
-        <a href='m1t4_comparisons_more_most.html' target='_blank'>Comparisons more / most</a>
-        <a href='m1t4_imperative.html' target='_blank'>Imperative</a>
-        <a href='m1t4_can_cant.html' target='_blank'>Can / can't</a>
-        <a href='m1t4_word_order.html' target='_blank'>Word order</a>
-        <a href='m1t4_word_order.html' target='_blank'>Possessives ('s / s')</a>
-      </div>
-    </section>
+    <div class="divider"></div> <h2 class="section-title">⚔️ GRAMMAR BRIEFING</h2>
+    <div class="grid" id="grammar-grid"></div>
+</main>
 
-    <footer>
-      <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-    </footer>
-  </main>
+<footer>
+    <p style="text-align: center; opacity: 0.5; padding: 60px 0;">&copy; 2026 EngliForce – Make English Your Superpower!</p>
+</footer>
+
+<script>
+    const vocabData = [
+        { id: 'v1', name: 'Food', desc: 'Food intel.', icon: '🍎', url: 'm1t4_vocab_4_1_fruit_vegetables' },
+        { id: 'v2', name: 'Drinks', desc: 'Drinks data.', icon: '🥤', url: 'm1t4_vocab_4_2_drinks' },
+        { id: 'v3', name: 'Cooking', desc: 'Kitchen skills.', icon: '🍕', url: 'm1t4_vocab_4_3_meals' },
+        { id: 'v4', name: 'Eating Out', desc: 'Restaurant recon.', icon: '🍔', url: 'm1t4_vocab_4_4_restaurant' }
+    ];
+
+    const grammarData = [
+        { id: 'g1', name: 'Dates', desc: 'Master the calendar.', icon: '📅', url: 'm1t4_dates.html' },
+        { id: 'g2', name: 'Little & Few', desc: 'Quantity control.', icon: '⚖️', url: 'm1t4_little_few.html' },
+        { id: 'g3', name: 'Prepositions', desc: 'Location precision.', icon: '📍', url: 'm1t4_prepositions.html' },
+        { id: 'g4', name: 'More / Most', desc: 'Advanced Comparisons.', icon: '🚀', url: 'm1t4_comparisons_more_most.html' },
+        { id: 'g5', name: 'Imperative', desc: 'Giving Orders.', icon: '📣', url: 'm1t4_imperative.html' },
+        { id: 'g6', name: "Can / Can't", desc: 'Abilities unlocked.', icon: '🔋', url: 'm1t4_can_cant.html' },
+        { id: 'g7', name: 'Word Order', desc: 'Sentence structure.', icon: '🧩', url: 'm1t4_word_order.html' },
+        { id: 'g8', name: "Possessives ('s)", desc: 'Ownership mastery.', icon: '🔑', url: 'm1t4_word_order.html' }
+    ];
+
+    function createCard(item, gridId) {
+        const grid = document.getElementById(gridId);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = item.id;
+        card.innerHTML = `
+            <div class="card-header"><div class="power-icon">${item.icon}</div></div>
+            <a href="${item.url}" style="text-decoration:none; color:inherit;">
+                <div class="name">${item.name}</div>
+                <div class="desc">${item.desc}</div>
+            </a>
+            <button class="btn" onclick="completeTask(event, '${item.id}')">COMPLETE MISSION</button>
+        `;
+        grid.appendChild(card);
+    }
+
+    vocabData.forEach(i => createCard(i, 'vocab-grid'));
+    grammarData.forEach(i => createCard(i, 'grammar-grid'));
+
+    function completeTask(event, id) {
+        event.preventDefault(); event.stopPropagation();
+        const card = document.getElementById(id);
+        const isDone = card.classList.toggle('done');
+        const saved = JSON.parse(localStorage.getItem('hero_progress_t4') || '{}');
+        saved[id] = isDone;
+        localStorage.setItem('hero_progress_t4', JSON.stringify(saved));
+        
+        if(isDone) {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#81d4fa', '#ffb703'] });
+            const s = document.createElement('div'); s.className = 'star'; s.innerHTML = '⚡';
+            s.style.left = event.clientX + 'px'; s.style.top = event.clientY + 'px';
+            document.body.appendChild(s); setTimeout(() => s.remove(), 800);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const saved = JSON.parse(localStorage.getItem('hero_progress_t4') || '{}');
+        Object.keys(saved).forEach(id => { 
+            const el = document.getElementById(id);
+            if(el && saved[id]) el.classList.add('done'); 
+        });
+    });
+</script>
 </body>
 </html>
+
 
 
