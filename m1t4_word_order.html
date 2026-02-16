@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Word Order Masterclass</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
+
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; }
+
+        /* DE BLAUWE LIJN TUSSEN SECTIES */
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 50px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .explanation-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--hero-orange);
+            padding-left: 20px;
+            background: rgba(255, 87, 34, 0.05);
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .formula-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .formula-part {
+            background: var(--hero-blue-dark);
+            border: 2px solid var(--hero-cyan);
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: bold;
+            text-align: center;
+            flex: 1;
+            max-width: 160px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .definition-list {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            width: 100%;
+        }
+
+        .definition-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid var(--hero-cyan);
+            flex: 1;
+            min-width: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .tip-box {
+            background: rgba(255, 183, 3, 0.1);
+            border-left: 5px solid var(--hero-yellow);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 15px 15px 0;
+            font-style: italic;
+        }
+
+        .toggle-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-toggle {
+            background: var(--hero-blue-main);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 5px solid var(--hero-blue-dark);
+        }
+
+        .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-container { width: 100%; overflow-x: auto; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        table { width: 100%; border-collapse: collapse; background: #102a43; }
+        th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
+        td { padding: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1.1rem; }
+        tr:hover { background: rgba(129, 212, 250, 0.05); }
+
+        .adj-text { color: var(--hero-yellow); font-weight: bold; }
+        .obj-text { color: var(--hero-cyan); font-weight: bold; }
+
+        /* VIDEO BOX STYLING */
+        .video-box {
+            background: #102a43;
+            border: 3px solid var(--hero-blue-main);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 0 25px rgba(2, 136, 209, 0.3);
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000;
+            animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+
+        .pickle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top: 20px; }
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>WORD ORDER COMMAND CENTER</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 THE RULES OF ENGAGEMENT</h2>
+        <div class="explanation-text">
+            Luister goed, rekruut! In het Nederlands zijn we een beetje "lui" met de volgorde. We schuiven met woorden wanneer we willen. 
+            Maar in het Engels is de <strong>S-V-O-P-T</strong> volgorde een wet. <br><br>
+            De belangrijkste regel? <strong>Plaats (Place) en Tijd (Time) staan ALTIJD aan het einde van de zin.</strong> 
+            En vergeet niet: de Plaats komt altijd vóór de Tijd. Je kunt ze niet zomaar ergens anders neerzetten zonder de missie te verpesten!
+        </div>
+
+        <div class="formula-container">
+            <div class="formula-part">S<br><small>Onderwerp</small></div>
+            <div class="formula-part">V<br><small>Werkwoord</small></div>
+            <div class="formula-part">O<br><small>Lijdend Voorwerp</small></div>
+            <div class="formula-part">P<br><small>Plaats</small></div>
+            <div class="formula-part">T<br><small>Tijd</small></div>
+        </div>
+
+        <div class="definition-list">
+            <div class="definition-item"><strong>S (Subject):</strong> Wie of wat doet het? (De held)</div>
+            <div class="definition-item"><strong>V (Verb):</strong> Wat gebeurt er? (De actie)</div>
+            <div class="definition-item"><strong>O (Object):</strong> Wie of wat ondergaat de actie?</div>
+            <div class="definition-item"><strong>P (Place):</strong> Waar gebeurt het? (Altijd achteraan!)</div>
+            <div class="definition-item"><strong>T (Time):</strong> Wanneer gebeurt het? (Helemaal als laatst!)</div>
+        </div>
+
+        <div class="tip-box">
+            <strong style="color:var(--hero-yellow)">🎨 ADJECTIVE Rule:</strong> 
+            In het Engels plakken we eigenschappen (zoals 'red' of 'big') <strong>altijd direct voor</strong> het object. Je zegt nooit "the car red", maar altijd "the red car".
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'basic', 'KA-POW!')">S-V-O (De Kern)</button>
+        <button class="btn-toggle" onclick="showSection(event, 'advanced', 'ZAP!')">P-T (De Finale)</button>
+        <button class="btn-toggle" onclick="showSection(event, 'adjectives', 'BOOST!')">Adjective Power</button>
+    </div>
+
+    <div id="basic" class="content-section" style="display: block;">
+        <h3>Stap 1: De Onbreekbare Kern</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Onderwerp (S)</th><th>Werkwoord (V)</th><th>Object (O)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>The superhero</td><td>saves</td><td>the city.</td></tr>
+                    <tr><td>I</td><td>eat</td><td>a giant pizza.</td></tr>
+                    <tr><td>The teacher</td><td>gives</td><td>a difficult test.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="advanced" class="content-section">
+        <h3>Stap 2: Plaats en Tijd (P-T)</h3>
+        <p style="text-align: center;"><em>Onthoud: Plaats komt VOOR Tijd!</em></p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>S-V-O</th><th>Plaats (P)</th><th>Tijd (T)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>We play football</td><td>in the park</td><td>every Sunday.</td></tr>
+                    <tr><td>She buys a comic</td><td>at the store</td><td>now.</td></tr>
+                    <tr><td>They find a clue</td><td>in the dark room</td><td>at midnight.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="adjectives" class="content-section">
+        <h3>Stap 3: Adjective Boost</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>S + V</th><th>Adjective + Object</th><th>P / T</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>He drives</td><td>a <span class="adj-text">fast</span> <span class="obj-text">car</span></td><td>in London.</td></tr>
+                    <tr><td>The spy drinks</td><td><span class="adj-text">hot</span> <span class="obj-text">coffee</span></td><td>today.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="video-box">
+        <h2>🎥 TACTICAL VIDEO BRIEFING</h2>
+        <p>Bekijk deze video voordat je aan de Pickle Missions begint!</p>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" onclick="createExplosion(event, 'CRUNCH!')">
+            <span style="font-size: 3rem;">🧩</span>
+            <div class="title">Pickle 1</div>
+            <p>Sorteer de zinsdelen</p>
+        </div>
+        <div class="card" onclick="createExplosion(event, 'SQUASH!')">
+            <span style="font-size: 3rem;">⚖️</span>
+            <div class="title">Pickle 2</div>
+            <p>P of T Check</p>
+        </div>
+        <div class="card" onclick="createExplosion(event, 'BAM!')">
+            <span style="font-size: 3rem;">🔍</span>
+            <div class="title">Pickle 3</div>
+            <p>Foutzoeker</p>
+        </div>
+        <div class="card" onclick="createExplosion(event, 'ZAP!')">
+            <span style="font-size: 3rem;">⏳</span>
+            <div class="title">Pickle 4</div>
+            <p>Time Travel</p>
+        </div>
+        <div class="card" onclick="createExplosion(event, 'BOOM!')">
+            <span style="font-size: 3rem;">👹</span>
+            <div class="title">Pickle 5</div>
+            <p>Eindbaas Gevecht</p>
+        </div>
+    </div>
+</main>
+
+<script>
+    function showSection(e, id, boomMessage) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, boomMessage);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX;
+        const y = e.clientY;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+</script>
+
+</body>
+</html>
