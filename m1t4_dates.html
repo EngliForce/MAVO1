@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Date & Time Masterclass</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
+
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 50px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .video-container {
+            background: #000;
+            border: 4px solid var(--hero-blue-main);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            padding-top: 56.25%; 
+            margin-bottom: 40px;
+            box-shadow: 0 0 40px rgba(2, 136, 209, 0.4);
+        }
+
+        .video-container iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+        }
+
+        .explanation-text {
+            font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
+            border-left: 4px solid var(--hero-orange); padding-left: 20px;
+            background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
+        }
+
+        .formula-container {
+            display: flex; justify-content: center; gap: 15px; margin: 30px 0;
+        }
+
+        .formula-part {
+            background: var(--hero-blue-dark); border: 2px solid var(--hero-cyan);
+            padding: 20px; border-radius: 15px; font-weight: bold; text-align: center;
+            flex: 1; max-width: 250px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .toggle-container {
+            display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
+        }
+
+        .btn-toggle {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.3rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 5px solid var(--hero-blue-dark);
+        }
+
+        .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #102a43; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
+        td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
+        tr:hover { background: rgba(129, 212, 250, 0.05); }
+
+        .highlight { color: var(--hero-yellow); font-weight: bold; }
+        .comma-alert { color: var(--hero-orange); font-weight: bold; text-decoration: underline; }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+
+        .pickle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top: 20px; }
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
+        .card .title { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>DATE & TIME COMMAND CENTER</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: DATUM EN TIJD</h2>
+        <div class="explanation-text">
+            Let op! De Britten en de Amerikanen schrijven datums anders op. <br><br>
+            Welke je gebruikt, mag je zelf weten, maar let er wel goed op, hoe je de data noteert!<br><br>
+            <strong>Gouden Regel 1:</strong> Dagen en maanden schrijf je <u>ALTIJD</u> met een <strong>HOOFDLETTER</strong>.<br>
+            <strong>Gouden Regel 2:</strong> Gebruik in de Amerikaanse stijl <span class="comma-alert">ALTIJD een komma</span> voor het jaar!
+        </div>
+
+        <div class="formula-container">
+            <div class="formula-part">BRITISH<br><small>Day - Month - Year</small></div>
+            <div class="formula-part">AMERICAN<br><small>Month - Day <span class="highlight">,</span> Year</small></div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'differences', 'ZAP!')">Brits vs Amerikaans</button>
+        <button class="btn-toggle" onclick="showSection(event, 'examples', 'KA-POW!')">Voorbeelden</button>
+        <button class="btn-toggle" onclick="showSection(event, 'ordinals', 'BOOST!')">Rangtelwoorden</button>
+        <button class="btn-toggle" onclick="showSection(event, 'days', 'POW!')">Dagen</button>
+        <button class="btn-toggle" onclick="showSection(event, 'months', 'BOOM!')">Maanden</button>
+    </div>
+
+    <div id="differences" class="content-section" style="display: block;">
+        <h3>Tactisch Overzicht: Datumnotatie</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Type</th><th>Volgorde</th><th>Voorbeeld</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>British English</td><td>Day / Month / Year</td><td>the fourteenth of February 2026</td></tr>
+                    <tr><td>American English</td><td>Month / Day / Year</td><td>February fourteenth<span class="highlight">,</span> 2026</td></tr>
+                    <tr><td>Numeriek (UK)</td><td>DD/MM/YYYY</td><td>14/02/2026</td></tr>
+                    <tr><td>Numeriek (US)</td><td>MM/DD/YYYY</td><td>02/14/2026</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="examples" class="content-section">
+        <h3>The Comparison Lab: UK vs US</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Gebeurtenis</th><th>British Style (Full)</th><th>American Style (Full)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Christmas</strong></td><td>the twenty-fifth of December</td><td>December the twenty-fifth<span class="highlight">,</span> 2026</td></tr>
+                    <tr><td><strong>New Year</strong></td><td>the first of January</td><td>January the first<span class="highlight">,</span> 2026</td></tr>
+                    <tr><td><strong>Halloween</strong></td><td>the thirty-first of October</td><td>October the thirty-first<span class="highlight">,</span> 2026</td></tr>
+                    <tr><td><strong>Star Wars Day</strong></td><td>the fourth of May</td><td>May the fourth<span class="highlight">,</span> 2026</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="ordinals" class="content-section">
+        <h3>Ordinal Numbers (1st - 31st)</h3>
+        <div class="explanation-text">In datums gebruiken we rangtelwoorden. Let vooral op de afwijkende spelling van <strong>fifth</strong>, <strong>eighth</strong>, <strong>ninth</strong> en <strong>twelfth</strong>!</div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Cijfer</th><th>Voluit geschreven</th><th>Cijfer</th><th>Voluit geschreven</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1st</td><td>first</td><td>17th</td><td>seventeenth</td></tr>
+                    <tr><td>2nd</td><td>second</td><td>18th</td><td>eighteenth</td></tr>
+                    <tr><td>3rd</td><td>third</td><td>19th</td><td>nineteenth</td></tr>
+                    <tr><td>4th</td><td>fourth</td><td>20th</td><td>twentieth</td></tr>
+                    <tr><td>5th</td><td><span class="highlight">fifth</span></td><td>21st</td><td>twenty-first</td></tr>
+                    <tr><td>6th</td><td>sixth</td><td>22nd</td><td>twenty-second</td></tr>
+                    <tr><td>7th</td><td>seventh</td><td>23rd</td><td>twenty-third</td></tr>
+                    <tr><td>8th</td><td><span class="highlight">eighth</span></td><td>24th</td><td>twenty-fourth</td></tr>
+                    <tr><td>9th</td><td><span class="highlight">ninth</span></td><td>25th</td><td>twenty-fifth</td></tr>
+                    <tr><td>10th</td><td>tenth</td><td>26th</td><td>twenty-sixth</td></tr>
+                    <tr><td>11th</td><td>eleventh</td><td>27th</td><td>twenty-seventh</td></tr>
+                    <tr><td>12th</td><td><span class="highlight">twelfth</span></td><td>28th</td><td>twenty-eighth</td></tr>
+                    <tr><td>13th</td><td>thirteenth</td><td>29th</td><td>twenty-ninth</td></tr>
+                    <tr><td>14th</td><td>fourteenth</td><td>30th</td><td>thirtieth</td></tr>
+                    <tr><td>15th</td><td>fifteenth</td><td>31st</td><td>thirty-first</td></tr>
+                    <tr><td>16th</td><td>sixteenth</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="days" class="content-section">
+        <h3>De Zeven Dagen</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Nederlands</th><th>Engels</th></tr></thead>
+                <tbody>
+                    <tr><td>Maandag</td><td><span class="highlight">M</span>onday</td></tr>
+                    <tr><td>Dinsdag</td><td><span class="highlight">T</span>uesday</td></tr>
+                    <tr><td>Woensdag</td><td><span class="highlight">W</span>ednesday</td></tr>
+                    <tr><td>Donderdag</td><td><span class="highlight">T</span>hursday</td></tr>
+                    <tr><td>Vrijdag</td><td><span class="highlight">F</span>riday</td></tr>
+                    <tr><td>Zaterdag</td><td><span class="highlight">S</span>aturday</td></tr>
+                    <tr><td>Zondag</td><td><span class="highlight">S</span>unday</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="months" class="content-section">
+        <h3>De Twaalf Maanden</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Maand</th><th>Engels</th><th>Maand</th><th>Engels</th></tr></thead>
+                <tbody>
+                    <tr><td>Januari</td><td><span class="highlight">J</span>anuary</td><td>Juli</td><td><span class="highlight">J</span>uly</td></tr>
+                    <tr><td>Februari</td><td><span class="highlight">F</span>ebruary</td><td>Augustus</td><td><span class="highlight">A</span>ugust</td></tr>
+                    <tr><td>Maart</td><td><span class="highlight">M</span>arch</td><td>September</td><td><span class="highlight">S</span>eptember</td></tr>
+                    <tr><td>April</td><td><span class="highlight">A</span>pril</td><td>Oktober</td><td><span class="highlight">O</span>ctober</td></tr>
+                    <tr><td>Mei</td><td><span class="highlight">M</span>ay</td><td>November</td><td><span class="highlight">N</span>ovember</td></tr>
+                    <tr><td>Juni</td><td><span class="highlight">J</span>une</td><td>December</td><td><span class="highlight">D</span>ecember</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <h2>🎬 MISSION BRIEFING VIDEO</h2>
+    <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0" allowfullscreen></iframe>
+    </div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t4_dates_pickle_1.html')">
+            <span style="font-size: 3rem;">📅</span>
+            <div class="title">Pickle 1</div>
+            <p>UK of US Formaat?</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'SQUASH!', '#')">
+            <span style="font-size: 3rem;">🔡</span>
+            <div class="title">Pickle 2</div>
+            <p>Spelling Bee</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'BAM!', '#')">
+            <span style="font-size: 3rem;">🔢</span>
+            <div class="title">Pickle 3</div>
+            <p>Ordinal Master</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'WHAM!', '#')">
+            <span style="font-size: 3rem;">⏰</span>
+            <div class="title">Pickle 4</div>
+            <p>Time Detective</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'KABOOM!', '#')">
+            <span style="font-size: 3rem;">🏆</span>
+            <div class="title">Pickle 5</div>
+            <p>Ultimate Exam</p>
+        </div>
+    </div>
+</main>
+
+<script>
+    function openMission(e, message, url) {
+        createExplosion(e, message);
+        setTimeout(() => { if(url !== '#') window.location.href = url; }, 400);
+    }
+
+    function showSection(e, id, boomMessage) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, boomMessage);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX; const y = e.clientY;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+</script>
+
+</body>
+</html>
