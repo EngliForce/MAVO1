@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Pickle: Vocabulary Detective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background: var(--hero-blue-main);
+            padding: 2rem 0;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            margin-bottom: 20px;
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); color: white; }
+        
+        .container { max-width: 700px; width: 90%; margin: 20px auto; }
+
+        .section {
+            background: rgba(16, 42, 67, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .instructions { font-size: 0.9rem; color: var(--hero-cyan); line-height: 1.5; margin-bottom: 20px; }
+
+        label { display: block; margin-top: 1rem; font-family: 'Bangers'; color: var(--hero-yellow); font-size: 1.2rem; }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 2px solid var(--hero-blue-main);
+            background: #0b1a2a;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+            margin: 10px 5px 0 0;
+            width: 100%;
+        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn-small { width: auto; font-size: 1.1rem; padding: 10px 20px; }
+        .btn-blue { background: var(--hero-blue-main); border-bottom-color: var(--hero-blue-dark); }
+
+        /* Game Elements */
+        .turn { font-family: 'Bangers'; font-size: 2.2rem; color: var(--hero-yellow); text-align: center; margin-bottom: 10px; }
+        
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--hero-blue-main);
+        }
+
+        .word-card {
+            background: #102a43;
+            border: 3px solid var(--hero-blue-main);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .hint-text {
+            font-size: 1.2rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .answer-reveal {
+            font-family: 'Bangers';
+            font-size: 2rem;
+            color: var(--hero-yellow);
+            display: none;
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px dashed var(--hero-yellow);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            width: 100%;
+        }
+
+        .flex-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>PICKLE 3: VOCABULARY DETECTIVE</h1>
+</header>
+
+<div class="container">
+    <div class="section" id="setup">
+        <div class="instructions">
+            🔎 <strong>missie:</strong> raad het woord met zo min mogelijk hints.<br>
+            🌟 <strong>bonus:</strong> gebruik engelse hints voor +1 extra punt!
+        </div>
+        
+        <label>aantal agenten:</label>
+        <select id="playerCount" onchange="togglePlayer2()">
+            <option value="1">1 agent</option>
+            <option value="2" selected>2 agenten</option>
+        </select>
+
+        <label>agent 1:</label>
+        <input type="text" id="player1" placeholder="naam agent 1" />
+
+        <div id="player2Section">
+            <label>agent 2:</label>
+            <input type="text" id="player2" placeholder="naam agent 2" />
+        </div>
+
+        <button class="btn" style="margin-top: 30px;" onclick="startGame()">start missie 🚀</button>
+    </div>
+
+    <div id="game" style="display: none;">
+        <div class="turn" id="turnIndicator">beurt: ...</div>
+        
+        <div class="scoreboard">
+            <div><span id="name1"></span>: <span id="score1" style="color:var(--hero-yellow)">0</span></div>
+            <div id="p2ScoreDisplay"><span id="name2"></span>: <span id="score2" style="color:var(--hero-yellow)">0</span></div>
+        </div>
+
+        <div class="word-card">
+            <div class="answer-reveal" id="word-reveal">antwoord: ...</div>
+            
+            <label>taal van de hint:</label>
+            <select id="hintLanguage" onchange="resetClue()">
+                <option value="nl">nederlands</option>
+                <option value="en">english (bonus +1)</option>
+            </select>
+
+            <div class="hint-text" id="hintBox">klik op 'volgende hint' om te starten</div>
+
+            <div class="flex-buttons">
+                <button class="btn btn-blue" onclick="nextHint()">volgende hint 💡</button>
+                <button class="btn btn-blue" onclick="showWord()">toon antwoord 👁️</button>
+                <button class="btn" style="background:#4caf50; border-color:#2e7d32;" onclick="correctGuess()">correct ✅</button>
+                <button class="btn" style="background:var(--hero-orange); border-color:#bf360c;" onclick="wrongGuess()">fout ❌</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 EngliForce: Make English Your Superpower!
+</footer>
+
+<script>
+const words = [
+    { en: "breakfast", hints: { nl: ["de eerste maaltijd van de dag.", "je eet dit in de ochtend.", "meestal met melk of brood."], en: ["the first meal of the day.", "you eat this in the morning.", "often with cereal or toast."] }},
+    { en: "lunch", hints: { nl: ["maaltijd in de middag.", "je neemt dit vaak mee naar school.", "tussen ontbijt en diner."], en: ["a meal in the afternoon.", "you often take this to school.", "between breakfast and dinner."] }},
+    { en: "dinner", hints: { nl: ["de laatste grote maaltijd.", "meestal warm eten.", "je eet dit in de avond."], en: ["the last big meal.", "usually a warm meal.", "you eat this in the evening."] }},
+    { en: "dessert", hints: { nl: ["iets zoets na het eten.", "bijvoorbeeld ijs of pudding.", "het toetje."], en: ["something sweet after dinner.", "for example ice cream or pudding.", "the final course."] }},
+    { en: "takeaway", hints: { nl: ["eten dat je afhaalt.", "je eet het niet in het restaurant.", "bijvoorbeeld pizza of friet."], en: ["food you pick up.", "you don't eat it at the restaurant.", "like pizza or fries."] }},
+    { en: "packed lunch", hints: { nl: ["lunch in een trommel.", "neem je mee van huis.", "broodjes voor onderweg."], en: ["lunch in a box.", "you take it from home.", "sandwiches for on the go."] }},
+    { en: "menu", hints: { nl: ["een lijst met eten.", "staat in een restaurant.", "je kiest hier je gerecht uit."], en: ["a list of food.", "found in a restaurant.", "you choose your dish from here."] }},
+    { en: "shopping list", hints: { nl: ["lijstje voor de winkel.", "zodat je niets vergeet.", "boodschappenbriefje."], en: ["a list for the shop.", "so you don't forget anything.", "grocery list."] }},
+    { en: "supermarket", nl: "supermarkt", hints: { nl: ["een grote winkel.", "hier koop je al je eten.", "bijv. aldi of ah."], en: ["a large shop.", "where you buy all your food.", "e.g. walmart or tesco."] }},
+    { en: "fridge", hints: { nl: ["houdt eten koud.", "hier staat de melk in.", "apparaat in de keuken."], en: ["keeps food cold.", "the milk is in here.", "kitchen appliance."] }},
+    { en: "oven", hints: { nl: ["wordt heel heet.", "om pizza in te bakken.", "niet de magnetron."], en: ["gets very hot.", "to bake pizza in.", "not the microwave."] }},
+    { en: "table", hints: { nl: ["hier zit je aan.", "meubelstuk met vier poten.", "om aan te eten."], en: ["you sit at this.", "furniture with four legs.", "to eat your meal at."] }},
+    { en: "plate", hints: { nl: ["hier ligt je eten op.", "rond en van porselein.", "je eet van een..."], en: ["your food is on this.", "round and made of china.", "you eat from a..."] }},
+    { en: "vegetarian", hints: { nl: ["eet geen vlees.", "houdt van groenten.", "geen vis of kip."], en: ["doesn't eat meat.", "loves vegetables.", "no fish or chicken."] }},
+    { en: "hungry", hints: { nl: ["gevoel in je maag.", "je wilt graag eten.", "rammelen van de..."], en: ["feeling in your stomach.", "you want to eat.", "opposite of full."] }}
+];
+
+let p1 = '', p2 = '', playerCount = 2;
+let score = [0, 0];
+let currentIndex = 0;
+let currentHint = 0;
+let currentPlayer = 0;
+
+function togglePlayer2() {
+    const val = document.getElementById("playerCount").value;
+    document.getElementById("player2Section").style.display = (val === "1") ? "none" : "block";
+}
+
+function startGame() {
+    playerCount = parseInt(document.getElementById("playerCount").value);
+    p1 = document.getElementById("player1").value || "agent 1";
+    p2 = document.getElementById("player2").value || "agent 2";
+
+    words.sort(() => 0.5 - Math.random());
+    score = [0, 0];
+    currentIndex = 0;
+    currentPlayer = 0;
+
+    document.getElementById("name1").textContent = p1;
+    document.getElementById("name2").textContent = (playerCount === 2) ? p2 : "";
+    document.getElementById("p2ScoreDisplay").style.visibility = (playerCount === 2) ? "visible" : "hidden";
+
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    
+    updateScore();
+    showTurn();
+    resetWordCard();
+}
+
+function showTurn() {
+    const name = currentPlayer === 0 ? p1 : p2;
+    document.getElementById("turnIndicator").textContent = (playerCount === 1) ? `agent: ${p1}` : `beurt: ${name}`;
+}
+
+function resetWordCard() {
+    currentHint = 0;
+    document.getElementById("hintBox").textContent = "klik op 'volgende hint' om te starten";
+    document.getElementById("word-reveal").style.display = "none";
+}
+
+function nextHint() {
+    if (currentHint >= 3) return;
+    const lang = document.getElementById("hintLanguage").value;
+    const hint = words[currentIndex].hints[lang][currentHint];
+    document.getElementById("hintBox").textContent = `hint ${currentHint + 1}: ${hint}`;
+    currentHint++;
+}
+
+function showWord() {
+    document.getElementById("word-reveal").textContent = `antwoord: ${words[currentIndex].en}`;
+    document.getElementById("word-reveal").style.display = "block";
+}
+
+function correctGuess() {
+    const lang = document.getElementById("hintLanguage").value;
+    // Punten: 3 hints gebruikt = 1pt, 2 hints = 2pt, 1 hint = 3pt
+    let points = Math.max(1, 4 - currentHint);
+    if (lang === "en") points += 1; // Bonus voor Engels
+    
+    score[currentPlayer] += points;
+    nextWord();
+}
+
+function wrongGuess() {
+    nextWord();
+}
+
+function nextWord() {
+    currentIndex++;
+    if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+    updateScore();
+    
+    if (currentIndex >= words.length) {
+        document.getElementById("turnIndicator").textContent = "missie volbracht!";
+        document.getElementById("hintBox").textContent = "alle woorden zijn geraden!";
+        document.getElementById("word-reveal").style.display = "none";
+    } else {
+        showTurn();
+        resetWordCard();
+    }
+}
+
+function updateScore() {
+    document.getElementById("score1").textContent = score[0] + " pt";
+    document.getElementById("score2").textContent = score[1] + " pt";
+}
+
+function resetClue() {
+    resetWordCard();
+}
+</script>
+</body>
+</html>
