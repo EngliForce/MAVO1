@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Possessive Power ('s vs s')</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
+
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 50px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .explanation-text {
+            font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
+            border-left: 4px solid var(--hero-orange); padding-left: 20px;
+            background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
+        }
+
+        .formula-container {
+            display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap;
+        }
+
+        .formula-part {
+            background: var(--hero-blue-dark); border: 2px solid var(--hero-cyan);
+            padding: 20px; border-radius: 15px; font-weight: bold; text-align: center;
+            flex: 1; min-width: 250px; max-width: 350px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .toggle-container {
+            display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
+        }
+
+        .btn-toggle {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.3rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 5px solid var(--hero-blue-dark);
+        }
+
+        .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #102a43; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
+        td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
+        tr:hover { background: rgba(129, 212, 250, 0.05); }
+
+        .highlight { color: var(--hero-yellow); font-weight: bold; }
+        .rule-special { color: var(--hero-orange); font-weight: bold; }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+
+        .pickle-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } }
+
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
+        .card .title { font-family: 'Bangers'; font-size: 1.3rem; color: var(--hero-yellow); margin: 10px 0; }
+        
+        .type-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .tag-singular { background: var(--hero-green); color: white; }
+        .tag-plural { background: var(--hero-red); color: white; }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 2px solid var(--hero-blue-dark);
+            margin-top: 50px;
+        }
+        .footer-text { font-family: 'Lexend', sans-serif; font-weight: bold; letter-spacing: 0.5px; }
+        .footer-highlight { color: var(--hero-yellow); }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>POSSESSIVE POSSESSIONS CONTROL</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🛰️ MISSION: THE APOSTROPHE</h2>
+        <div class="explanation-text">
+            In het Engels gebruik je een apostrof om aan te geven dat iets van iemand is.<br><br>
+            <strong>Gouden Regel 1:</strong> Bij één persoon (enkelvoud) gebruik je <span class="highlight">'s</span>.<br>
+            <strong>Gouden Regel 2:</strong> Bij meer personen die eindigen op een -s (meervoud) zet je alleen de apostrof <span class="highlight">'</span> erachter.<br>
+            <strong>Gouden Regel 3:</strong> Onregelmatig meervoud (zoals <i>children</i>) krijgt gewoon <span class="highlight">'s</span>.
+        </div>
+
+        <div class="formula-container">
+            <div class="formula-part">Naam / Enkelvoud + <span class="highlight">'s</span><br><small>The boy's bike</small><br><div class="type-tag tag-singular">Singular</div></div>
+            <div class="formula-part">Meervoud op -s + <span class="highlight">'</span><br><small>The boys' bikes</small><br><div class="type-tag tag-plural">Plural</div></div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'rules', 'TARGET ACQUIRED!')">Wanneer Welke?</button>
+        <button class="btn-toggle" onclick="showSection(event, 'examples', 'SCANNING...')">Checklist</button>
+    </div>
+
+    <div id="rules" class="content-section" style="display: block;">
+        <h3>Tactisch Overzicht: Bezit</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Situatie</th><th>Regel</th><th>Voorbeeld</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1 Persoon</strong></td><td>Stam + <span class="highlight">'s</span></td><td>The <span class="highlight">hero's</span> cape.</td></tr>
+                    <tr><td><strong>Groep (meervoud op -s)</strong></td><td>Stam + <span class="highlight">'</span></td><td>The <span class="highlight">villains'</span> hideout.</td></tr>
+                    <tr><td><strong>Naam op -s (bijv. James)</strong></td><td>Meestal + <span class="highlight">'s</span></td><td><span class="highlight">James's</span> shield.</td></tr>
+                    <tr><td><strong>Onregelmatig Meervoud</strong></td><td>Stam + <span class="highlight">'s</span></td><td>The <span class="rule-special">children's</span> toys.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="examples" class="content-section">
+        <h3>The Ownership Lab: Field Test</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Wie is de eigenaar?</th><th>Type</th><th>Resultaat</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1 girl (meisje)</td><td><span class="type-tag tag-singular">Enkelvoud</span></td><td>The girl<span class="highlight">'s</span> hat.</td></tr>
+                    <tr><td>2 girls (meisjes)</td><td><span class="type-tag tag-plural">Meervoud</span></td><td>The girls<span class="highlight">'</span> hats.</td></tr>
+                    <tr><td>The men (mannen)</td><td><span class="rule-special">Onregelmatig</span></td><td>The men<span class="highlight">'s</span> room.</td></tr>
+                    <tr><td>My brother (broer)</td><td><span class="type-tag tag-singular">Enkelvoud</span></td><td>My brother<span class="highlight">'s</span> car.</td></tr>
+                    <tr><td>My parents (ouders)</td><td><span class="type-tag tag-plural">Meervoud</span></td><td>My parents<span class="highlight">'</span> house.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <h2>⚔️ PICKLE MISSIONS: APOSTROPHE ATTACK</h2>
+    <div class="pickle-grid">
+        <div class="card" onclick="openMission(event, 'POINT!', '#')">
+            <span style="font-size: 2.5rem;">🎯</span>
+            <div class="title">Pickle 1</div>
+            <p style="font-size: 0.9rem;">Find the Owner</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'SPLIT!', '#')">
+            <span style="font-size: 2.5rem;">✂️</span>
+            <div class="title">Pickle 2</div>
+            <p style="font-size: 0.9rem;">Singular vs Plural</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'FIX IT!', '#')">
+            <span style="font-size: 2.5rem;">🔧</span>
+            <div class="title">Pickle 3</div>
+            <p style="font-size: 0.9rem;">The Broken Apostrophe</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'SEARCH!', '#')">
+            <span style="font-size: 2.5rem;">🔍</span>
+            <div class="title">Pickle 4</div>
+            <p style="font-size: 0.9rem;">Special Plurals</p>
+        </div>
+        <div class="card" onclick="openMission(event, 'MASTER!', '#')">
+            <span style="font-size: 2.5rem;">🎖️</span>
+            <div class="title">Pickle 5</div>
+            <p style="font-size: 0.9rem;">Apostrophe Legend</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-text">
+        &copy; EngliForce: <span class="footer-highlight">Make English Your Superpower!</span>
+    </div>
+</footer>
+
+<script>
+    function openMission(e, message, url) {
+        createExplosion(e, message);
+        setTimeout(() => { if(url !== '#') window.location.href = url; }, 400);
+    }
+
+    function showSection(e, id, boomMessage) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, boomMessage);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX; const y = e.clientY;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+</script>
+
+</body>
+</html>
