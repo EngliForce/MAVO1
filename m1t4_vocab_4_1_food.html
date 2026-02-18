@@ -203,7 +203,7 @@
     <section class="briefing-box">
         <h2>🚨 MISSION: VOCABULARY BRIEFING</h2>
         <div class="explanation-text">
-            Het is tijd om je woordenschat over eten en de keuken te versterken. <br><br>
+            Het is tijd om je woordenschat over eten keuken te versterken. <br><br>
             <strong>Tactische tips:</strong> Gebruik de video om de uitspraak te oefenen en Flashcards om jezelf te overhoren!
         </div>
     </section>
@@ -272,14 +272,33 @@
 
     <div class="section-divider"></div>
 
-    <h2>⚔️ PICKLE MISSIONS</h2>
-    <div class="pickle-grid">
-        <div class="mission-card" onclick="createExplosion(event, 'CRUNCH!')"><div class="title">Pickle 1</div><p>Drag & Drop</p></div>
-        <div class="mission-card" onclick="createExplosion(event, 'SQUASH!')"><div class="title">Pickle 2</div><p>Grid Challenge</p></div>
-        <div class="mission-card" onclick="createExplosion(event, 'KABOOM!')"><div class="title">Pickle 3</div><p>Word Search</p></div>
-        <div class="mission-card" onclick="createExplosion(event, 'BAM!')"><div class="title">Pickle 4</div><p>Sentence Builder</p></div>
-        <div class="mission-card" onclick="createExplosion(event, 'ZAP!')"><div class="title">Pickle 5</div><p>Time Trial</p></div>
+   <h2>⚔️ PICKLE MISSIONS</h2>
+<div class="pickle-grid">
+    <div class="mission-card" onclick="createExplosion(event, 'CRUNCH!'); setTimeout(() => window.open('LINK_HIER', '_blank'), 400)">
+        <div class="title">Pickle 1</div>
+        <p>Drag & Drop</p>
     </div>
+
+    <div class="mission-card" onclick="createExplosion(event, 'SQUASH!'); setTimeout(() => window.open('LINK_HIER', '_blank'), 400)">
+        <div class="title">Pickle 2</div>
+        <p>Grid Challenge</p>
+    </div>
+
+    <div class="mission-card" onclick="createExplosion(event, 'KABOOM!'); setTimeout(() => window.open('LINK_HIER', '_blank'), 400)">
+        <div class="title">Pickle 3</div>
+        <p>Word Search</p>
+    </div>
+
+    <div class="mission-card" onclick="createExplosion(event, 'BAM!'); setTimeout(() => window.open('LINK_HIER', '_blank'), 400)">
+        <div class="title">Pickle 4</div>
+        <p>Sentence Builder</p>
+    </div>
+
+    <div class="mission-card" onclick="createExplosion(event, 'ZAP!'); setTimeout(() => window.open('LINK_HIER', '_blank'), 400)">
+        <div class="title">Pickle 5</div>
+        <p>Time Trial</p>
+    </div>
+</div>
 </main>
 
 <footer>
@@ -373,4 +392,5 @@
     window.onload = init;
 </script>
 </body>
+
 </html>
