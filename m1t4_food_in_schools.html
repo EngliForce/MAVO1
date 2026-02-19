@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy - School Lunch Mission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue: #0288d1;
+            --hero-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --hero-orange: #ff5722;
+            --success: #4caf50;
+            --danger: #f44336;
+            --modal-bg: rgba(0, 0, 0, 0.9);
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            padding-bottom: 100px;
+        }
+
+        header {
+            background: var(--hero-blue);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-family: 'Bangers'; font-size: 3.5rem; margin: 0; text-shadow: 4px 4px 0px var(--hero-dark); letter-spacing: 2px; }
+
+        .container { max-width: 850px; margin: 30px auto; padding: 0 20px; }
+
+        .level-selector { display: flex; gap: 15px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+        
+        .level-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Bangers';
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn-easy { background: var(--success); color: white; }
+        .btn-medium { background: var(--hero-yellow); color: var(--hero-dark); }
+        .btn-hard { background: var(--hero-orange); color: white; }
+        .level-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .level-btn:active { transform: translateY(2px); }
+
+        .mission-card {
+            background: rgba(16, 42, 67, 0.95);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 25px;
+            padding: 40px;
+            display: none;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        }
+
+        .question-box {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 6px solid var(--hero-cyan);
+        }
+
+        .teacher-badge {
+            background: var(--hero-orange);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid white;
+            text-transform: uppercase;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background: #f0f4f8;
+            color: #102a43;
+            font-family: 'Lexend';
+        }
+
+        input[type="text"]:focus, textarea:focus { border-color: var(--hero-yellow); outline: none; }
+
+        .feedback-area {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--hero-yellow);
+        }
+
+        .teacher-feedback-area {
+            border: 2px solid var(--hero-orange) !important;
+            background: rgba(255, 87, 34, 0.15) !important;
+        }
+
+        .correct-answer { color: var(--hero-yellow); font-weight: bold; }
+
+        .action-btns { display: flex; gap: 15px; margin-top: 15px; }
+        .self-correct-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-family: 'Lexend';
+            transition: 0.2s;
+        }
+        .self-correct-btn:hover { opacity: 0.9; transform: scale(1.05); }
+
+        .check-mission-btn {
+            background: var(--hero-yellow);
+            color: var(--hero-dark);
+            width: 100%;
+            padding: 25px;
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 6px 0 var(--hero-dark);
+            text-transform: uppercase;
+        }
+
+        .check-mission-btn:active { transform: translateY(4px); box-shadow: none; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--modal-bg);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--hero-dark);
+            padding: 45px;
+            border-radius: 30px;
+            border: 6px solid var(--hero-yellow);
+            text-align: center;
+            max-width: 550px;
+            box-shadow: 0 0 60px rgba(0,0,0,0.8);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-content h2 { font-family: 'Bangers'; font-size: 3rem; margin-top: 0; color: var(--hero-yellow); text-shadow: 2px 2px black; }
+        .modal-content p { font-size: 1.3rem; margin-bottom: 35px; line-height: 1.5; }
+        .modal-close {
+            background: var(--hero-yellow);
+            color: var(--hero-dark);
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+        }
+
+        .score-display {
+            text-align: center;
+            font-family: 'Bangers';
+            font-size: 3rem;
+            color: var(--hero-yellow);
+            margin-top: 40px;
+            text-shadow: 3px 3px 0px var(--hero-dark);
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px 0;
+            font-weight: 700;
+            border-top: 3px solid var(--hero-yellow);
+            margin-top: 60px;
+            background: rgba(0,0,0,0.3);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>SCHOOL LUNCH MISSION</h1>
+    <p>ENGLIFORCE ACADEMY TRAINING MODULE</p>
+</header>
+
+<div id="teacherModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>🚨 MISSION UPDATE</h2>
+        <p>Vragen 6 t/m 10 zijn <strong>open vragen</strong> voor de leraar.<br><br>Roep je instructeur erbij om deze te valideren!</p>
+        <button class="modal-close" onclick="closeModal()">REPORT TO TEACHER</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="level-selector">
+        <button class="level-btn btn-easy" onclick="showLevel('easy')">🟢 EASY</button>
+        <button class="level-btn btn-medium" onclick="showLevel('medium')">🟡 MEDIUM</button>
+        <button class="level-btn btn-hard" onclick="showLevel('hard')">🔴 HARD</button>
+    </div>
+
+    <div id="easy" class="mission-card">
+        <h2>Target: Basic Understanding</h2>
+        <div id="easy-questions"></div>
+        <button class="check-mission-btn" onclick="checkAnswers('easy')">COMPLETE MISSION</button>
+    </div>
+
+    <div id="medium" class="mission-card">
+        <h2>Target: Intermediate Production</h2>
+        <div id="medium-questions"></div>
+        <button class="check-mission-btn" onclick="checkAnswers('medium')">COMPLETE MISSION</button>
+    </div>
+
+    <div id="hard" class="mission-card">
+        <h2>Target: Elite Comparison</h2>
+        <div id="hard-questions"></div>
+        <button class="check-mission-btn" onclick="checkAnswers('hard')">COMPLETE MISSION</button>
+    </div>
+
+    <div id="score" class="score-display"></div>
+</div>
+
+<footer>
+    © EngliForce: Make English Your Superpower!
+</footer>
+
+<script>
+    let points = 0;
+    const data = {
+        easy: {
+            questions: [
+                { q: "The students eat …", options: ["at home", "at the school canteen", "in a restaurant"], type: "mc", a: "at the school canteen" },
+                { q: "They can choose …", options: ["only one meal", "different meals", "no drinks"], type: "mc", a: "different meals" },
+                { q: "One healthy drink is …", options: ["fizzy drink", "water", "cola"], type: "mc", a: "water" },
+                { q: "One unhealthy snack is …", options: ["crisps", "salad", "chicken"], type: "mc", a: "crisps" },
+                { q: "The students talk about their …", options: ["breakfast", "school lunch", "dinner"], type: "mc", a: "school lunch" },
+                { q: "The students eat in the school __________.", type: "fill", a: "canteen" },
+                { q: "Some students drink __________ with their lunch.", type: "fill", a: "water" },
+                { q: "One student eats __________ for lunch.", type: "fill", a: "pizza" },
+                { q: "The school wants to give __________ food.", type: "fill", a: "healthy" },
+                { q: "Another drink in the video is __________.", type: "fill", a: "milk" }
+            ]
+        },
+        medium: {
+            questions: [
+                { q: "Where do the students eat lunch?", type: "open", a: "The students eat lunch in the school canteen." },
+                { q: "Name one food from the video.", type: "open", a: "Pizza / Chicken / Pasta / Salad" },
+                { q: "Name one drink from the video.", type: "open", a: "Water / Milk / Juice" },
+                { q: "Is the food always healthy?", type: "open", a: "No, the food is not always healthy." },
+                { q: "Do the students like their lunch?", type: "open", a: "Yes, most students like their lunch." },
+                { q: "The students eat their lunch in the __________.", type: "fill", a: "canteen" },
+                { q: "They can choose different __________.", type: "fill", a: "meals" },
+                { q: "Some students drink __________.", type: "fill", a: "water / milk" },
+                { q: "The school wants to give __________ meals.", type: "fill", a: "healthy" },
+                { q: "Students sometimes eat __________.", type: "fill", a: "pizza / crisps" }
+            ]
+        },
+        hard: {
+            questions: [
+                { q: "Why do students eat in the canteen?", type: "open", a: "Because it's easy and they can choose food." },
+                { q: "What healthy food do they mention?", type: "open", a: "Salad, chicken, fruit." },
+                { q: "What unhealthy food do they mention?", type: "open", a: "Crisps, pizza, snacks." },
+                { q: "What drinks can students choose?", type: "open", a: "Water, milk or juice." },
+                { q: "Do you think the school food is good? Why?", type: "open", a: "Personal opinion in English." },
+                { q: "Is school food in the UK similar to your school?", type: "teacher", a: "Teacher will evaluate logic and grammar." },
+                { q: "What is different?", type: "teacher", a: "Teacher will evaluate logic and grammar." },
+                { q: "What is better in your school?", type: "teacher", a: "Teacher will evaluate logic and grammar." },
+                { q: "What would you change?", type: "teacher", a: "Teacher will evaluate ideas." },
+                { q: "What is a healthy school lunch?", type: "teacher", a: "Teacher will evaluate definition." }
+            ]
+        }
+    };
+
+    function showLevel(level) {
+        points = 0;
+        document.querySelectorAll('.mission-card').forEach(card => card.style.display = 'none');
+        const container = document.getElementById(level + '-questions');
+        container.innerHTML = '';
+        document.getElementById('score').innerText = '';
+
+        data[level].questions.forEach((item, index) => {
+            const box = document.createElement('div');
+            box.className = 'question-box';
+            let html = `<p><strong>${index + 1}. ${item.q}</strong></p>`;
+            
+            if (item.type === 'teacher') {
+                html = `<div class="teacher-badge">👤 TEACHER CHECK</div>` + html;
+                html += `<textarea id="${level}-q${index}" rows="2" placeholder="Write your full sentence..."></textarea>`;
+            } else if (item.type === 'mc') {
+                html += `<select id="${level}-q${index}"><option value="">Choose your answer...</option>`;
+                item.options.forEach(opt => html += `<option value="${opt}">${opt}</option>`);
+                html += `</select>`;
+            } else {
+                html += `<input type="text" id="${level}-q${index}" placeholder="Type here...">`;
+            }
+
+            const feedbackClass = item.type === 'teacher' ? 'feedback-area teacher-feedback-area' : 'feedback-area';
+            html += `<div id="feedback-${level}-${index}" class="${feedbackClass}">
+                        <p><strong>Student Entry:</strong> <span id="user-ans-${level}-${index}"></span></p>
+                        ${item.type !== 'teacher' ? `<p><strong>Correct:</strong> <span class="correct-answer">${item.a}</span></p>` : `<p style="color:var(--hero-orange)"><em>Teacher review required for point award.</em></p>`}
+                        <div class="action-btns">
+                            <button class="self-correct-btn" style="background:var(--success)" onclick="mark(this, true)">🟢 Correct</button>
+                            <button class="self-correct-btn" style="background:var(--danger)" onclick="mark(this, false)">🔴 Incorrect</button>
+                        </div>
+                    </div>`;
+            box.innerHTML = html;
+            container.appendChild(box);
+        });
+        document.getElementById(level).style.display = 'block';
+    }
+
+    function checkAnswers(level) {
+        let needsTeacher = false;
+        data[level].questions.forEach((item, index) => {
+            const input = document.getElementById(`${level}-q${index}`);
+            const feedback = document.getElementById(`feedback-${level}-${index}`);
+            feedback.style.display = 'block';
+            document.getElementById(`user-ans-${level}-${index}`).innerText = input.value || "(empty field)";
+            if (item.type === 'teacher') needsTeacher = true;
+        });
+        if (needsTeacher) document.getElementById('teacherModal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('teacherModal').style.display = 'none'; }
+
+    function mark(btn, isCorrect) {
+        if (!btn.parentElement.classList.contains('marked')) {
+            if (isCorrect) points++;
+            btn.parentElement.classList.add('marked');
+            btn.parentElement.innerHTML = isCorrect ? "<b style='color:var(--success)'>🚀 Mission Progress: +1 Point</b>" : "<b style='color:var(--danger)'>⚠️ No point awarded</b>";
+            document.getElementById('score').innerText = "TOTAL SCORE: " + points;
+        }
+    }
+</script>
+
+</body>
+</html>
