@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Cooking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
+
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 50px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .explanation-text {
+            font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
+            border-left: 4px solid var(--hero-orange); padding-left: 20px;
+            background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
+        }
+
+        .keyword { color: var(--hero-orange); font-weight: 700; }
+
+        .controls {
+            background: rgba(16, 42, 67, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--hero-cyan);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .controls label { font-family: 'Bangers'; font-size: 1.1rem; color: var(--hero-cyan); }
+
+        .flashcards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 20px;
+            min-height: 300px;
+        }
+
+        .card {
+            width: 280px;
+            height: 220px;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            box-sizing: border-box;
+            border: 4px solid var(--hero-cyan);
+        }
+
+        .card-front { background: var(--hero-blue-dark); color: white; font-size: 1.8rem; font-family: 'Bangers'; }
+        .card-back { background: var(--hero-yellow); color: var(--dark-bg); transform: rotateY(180deg); font-size: 1.6rem; font-family: 'Bangers'; }
+
+        .card-example {
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            font-style: italic;
+            color: rgba(255,255,255,0.8);
+            backface-visibility: hidden;
+        }
+        .card-back .card-example { color: rgba(0,0,0,0.7); }
+
+        .known-status {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--hero-cyan);
+            color: var(--hero-blue-dark);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .toggle-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 10px 20px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.1rem; cursor: pointer; transition: 0.2s; border-bottom: 4px solid var(--hero-blue-dark);
+        }
+        .btn-toggle:hover { transform: translateY(-2px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+        .btn-action { background: var(--hero-orange); border-bottom-color: #bf360c; }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-container { width: 100%; border-radius: 15px; background: #102a43; overflow: hidden; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--hero-blue-main); padding: 15px; text-align: left; font-family: 'Bangers'; }
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 4rem; z-index: 2001;
+            text-shadow: 3px 3px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+
+        .pickle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top: 20px; }
+        .mission-card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .mission-card:hover { border-color: var(--hero-yellow); transform: scale(1.05); }
+        .mission-card .title { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); margin: 10px 0; }
+
+        footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>Cooking</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: VOCABULARY BRIEFING</h2>
+        <div class="explanation-text">
+            Het is tijd om je woordenschat over koken te versterken. <br><br>
+            <strong>Tactische tips:</strong> Gebruik de video om de uitspraak te oefenen en Flashcards om jezelf te overhoren!
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'vocab-list', 'ZAP!')">Lijst</button>
+        <button class="btn-toggle" onclick="showSection(event, 'context-list', 'KA-POW!')">Context</button>
+        <button class="btn-toggle" onclick="showSection(event, 'flashcards-section', 'BOOST!')">Flashcards</button>
+        <button class="btn-toggle" onclick="showSection(event, 'video-section', 'BOOM!')">Video</button>
+    </div>
+
+    <div id="vocab-list" class="content-section" style="display: block;">
+        <h3>Tactisch Overzicht</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Engels</th><th>Nederlands</th></tr></thead>
+                <tbody id="vocab-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="context-list" class="content-section">
+        <h3>Action Lab</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Woord</th><th>Zin</th></tr></thead>
+                <tbody id="context-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="flashcards-section" class="content-section">
+        <h3>Flashcard Simulator</h3>
+        <div class="controls">
+            <label>Aantal: 
+                <select id="card-count" onchange="generateCards()">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15" selected>Alle</option>
+                </select>
+            </label>
+            <label><input type="checkbox" id="show-examples" onchange="generateCards()"> Voorbeeldzinnen</label>
+            <label><input type="checkbox" id="reverse-cards" onchange="generateCards()"> NL → EN</label>
+            <button class="btn-toggle btn-action" onclick="generateCards()">Husselen 🔄</button>
+        </div>
+        <div class="toggle-container">
+            <button class="btn-toggle" onclick="practiceFilter('unknown')">Ken ik (nog) niet 🎯</button>
+            <button class="btn-toggle" onclick="practiceFilter('known')">Ken ik wel ✅</button>
+            <button class="btn-toggle" onclick="generateCards()">Alles 🔄</button>
+        </div>
+        <div class="flashcards-container" id="flashcards-container"></div>
+    </div>
+
+    <div id="video-section" class="content-section">
+        <h3>🎬 Uitspraak Training</h3>
+        <div style="max-width: 800px; margin: auto;">
+            <div style="position: relative; padding-top: 56.25%; border: 4px solid var(--hero-blue-main); border-radius: 20px; overflow: hidden;">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="https://www.youtube.com/embed/er7EcCBdU-c?rel=0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="mission-card" onclick="createExplosion(event, 'CRUNCH!')"><div class="title">Pickle 1</div><p>Drag & Drop</p></div>
+        <div class="mission-card" onclick="createExplosion(event, 'SQUASH!')"><div class="title">Pickle 2</div><p>Grid Challenge</p></div>
+        <div class="mission-card" onclick="createExplosion(event, 'KABOOM!')"><div class="title">Pickle 3</div><p>Word Search</p></div>
+        <div class="mission-card" onclick="createExplosion(event, 'BAM!')"><div class="title">Pickle 4</div><p>Sentence Builder</p></div>
+        <div class="mission-card" onclick="createExplosion(event, 'ZAP!')"><div class="title">Pickle 5</div><p>Time Trial</p></div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2026 EngliForce: Make English Your Superpower!</p>
+</footer>
+
+<script>
+    const flashcardsData = [
+        { en: 'instruction', nl: 'instructie', exEN: 'Follow the instruction to cook the rice.', exNL: 'Volg de instructie om de rijst te koken.' },
+        { en: 'step', nl: 'stap', exEN: 'What is the next step in the recipe?', exNL: 'Wat is de volgende stap in het recept?' },
+        { en: 'on purpose', nl: 'expres', exEN: 'I didn\'t break the glass on purpose.', exNL: 'Ik heb het glas niet expres gebroken.' },
+        { en: 'ruin', nl: 'verpesten', exEN: 'Don\'t add too much salt, it will ruin the soup.', exNL: 'Voeg niet te veel zout toe, het zal de soep verpesten.' },
+        { en: 'choke', nl: 'stikken', exEN: 'Be careful with small bones, you might choke.', exNL: 'Wees voorzichtig met kleine botjes, je zou kunnen stikken.' },
+        { en: 'butter knife', nl: 'botermes', exEN: 'Use a butter knife to spread the jam.', exNL: 'Gebruik een botermes om de jam te smeren.' },
+        { en: 'jar', nl: 'pot', exEN: 'There is a jar of honey in the cupboard.', exNL: 'Er staat een pot honing in de kast.' },
+        { en: 'lid', nl: 'deksel', exEN: 'Put the lid on the pan.', exNL: 'Doe de deksel op de pan.' },
+        { en: 'scoop', nl: 'scheppen', exEN: 'Can I have a scoop of ice cream?', exNL: 'Mag ik een schepje ijs?' },
+        { en: 'spread', nl: 'smeren', exEN: 'I like to spread butter on my toast.', exNL: 'Ik hou ervan om boter op mijn toast te smeren.' },
+        { en: 'squeeze', nl: 'knijpen', exEN: 'Squeeze some lemon over the fish.', exNL: 'Knijp wat citroen uit over de vis.' },
+        { en: 'rub', nl: 'wrijven', exEN: 'Rub the garlic on the bread.', exNL: 'Wrijf de knoflook over het brood.' },
+        { en: 'blank', nl: 'leeg', exEN: 'The label on the jar is blank.', exNL: 'Het etiket op de pot is leeg.' },
+        { en: 'joke', nl: 'grap', exEN: 'He told a funny joke at dinner.', exNL: 'Hij vertelde een grappige grap tijdens het eten.' },
+        { en: 'expected', nl: 'verwachtte', exEN: 'The meal was better than I expected.', exNL: 'De maaltijd was beter dan ik verwachtte.' }
+    ];
+
+    const knownWords = new Set();
+
+    function init() {
+        const vBody = document.getElementById('vocab-table-body');
+        const cBody = document.getElementById('context-table-body');
+        vBody.innerHTML = '';
+        cBody.innerHTML = '';
+        flashcardsData.forEach(item => {
+            vBody.innerHTML += `<tr><td>${item.en}</td><td>${item.nl}</td></tr>`;
+            const highlightedEx = item.exEN.replace(new RegExp(item.en, 'gi'), match => `<span class="keyword">${match}</span>`);
+            cBody.innerHTML += `<tr><td>${item.en}</td><td>${highlightedEx}<br><small style="opacity:0.6">${item.exNL}</small></td></tr>`;
+        });
+        generateCards();
+    }
+
+    function generateCards(filterData = null) {
+        const container = document.getElementById('flashcards-container');
+        const countSelect = document.getElementById('card-count');
+        const count = countSelect.value === 'Alle' ? flashcardsData.length : parseInt(countSelect.value);
+        const showEx = document.getElementById('show-examples').checked;
+        const reversed = document.getElementById('reverse-cards').checked;
+        container.innerHTML = '';
+        let data = filterData || [...flashcardsData].sort(() => 0.5 - Math.random()).slice(0, count);
+        if (data.length === 0) { container.innerHTML = "<p>Geen woorden gevonden!</p>"; return; }
+        data.forEach(word => {
+            const cardWrap = document.createElement('div'); cardWrap.className = 'card';
+            const inner = document.createElement('div'); inner.className = 'card-inner';
+            inner.onclick = () => cardWrap.classList.toggle('flipped');
+            const front = document.createElement('div'); front.className = 'card-front';
+            front.innerHTML = reversed ? word.nl : word.en;
+            if (showEx) front.innerHTML += `<div class="card-example">${reversed ? word.exNL : word.exEN}</div>`;
+            const back = document.createElement('div'); back.className = 'card-back';
+            back.innerHTML = reversed ? word.en : word.nl;
+            if (showEx) back.innerHTML += `<div class="card-example">${reversed ? word.exEN : word.exNL}</div>`;
+            const status = document.createElement('div'); status.className = 'known-status';
+            status.innerHTML = knownWords.has(word.en) ? '✅ Gekend' : '⬜ Ken ik?';
+            status.onclick = (e) => {
+                e.stopPropagation();
+                if (knownWords.has(word.en)) { knownWords.delete(word.en); status.innerHTML = '⬜ Ken ik?'; }
+                else { knownWords.add(word.en); status.innerHTML = '✅ Gekend'; createExplosion(e, 'GREAT!'); }
+            };
+            inner.appendChild(front); inner.appendChild(back);
+            cardWrap.appendChild(inner); cardWrap.appendChild(status);
+            container.appendChild(cardWrap);
+        });
+    }
+
+    function practiceFilter(type) {
+        let filtered = type === 'known' ? flashcardsData.filter(w => knownWords.has(w.en)) : flashcardsData.filter(w => !knownWords.has(w.en));
+        generateCards(filtered);
+    }
+
+    function showSection(e, id, msg) {
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, msg);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX || window.innerWidth/2; const y = e.clientY || window.innerHeight/2;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3'; document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+        const txt = document.createElement('div'); txt.className = 'boom-text'; txt.innerText = message;
+        txt.style.left = (x - 50) + 'px'; txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt); setTimeout(() => txt.remove(), 600);
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
