@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EngliForce Pickle: Time Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: var(--hero-blue-main);
+            padding: 2rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); text-align: center; font-size: 2rem; }
+        main { flex: 1; max-width: 800px; margin: 20px auto; padding: 20px; width: 90%; }
+        section {
+            background: rgba(16, 42, 67, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .hidden { display: none; }
+        label { display: block; margin-top: 1rem; font-family: 'Bangers'; color: var(--hero-cyan); font-size: 1.2rem; }
+        input[type=text], select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid var(--hero-blue-main);
+            background: #0b1a2a;
+            color: white;
+            font-family: 'Lexend', sans-serif;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+            margin: 10px 5px;
+        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn-blue { background: var(--hero-blue-main); border-bottom-color: var(--hero-blue-dark); }
+        #current-players { font-family: 'Bangers'; font-size: 2.2rem; color: var(--hero-yellow); margin-bottom: 10px; }
+        .timer-box { font-size: 1.4rem; margin-bottom: 20px; color: var(--hero-cyan); }
+        .timer-num { color: var(--hero-orange); font-weight: bold; font-size: 2rem; }
+        .question { font-size: 1.5rem; font-weight: bold; margin: 20px 0; color: white; }
+        .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .answers button {
+            padding: 15px;
+            background: var(--hero-blue-dark);
+            color: white;
+            border: 2px solid var(--hero-cyan);
+            border-radius: 12px;
+            font-family: 'Lexend';
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .answers button:hover { background: var(--hero-blue-main); transform: scale(1.02); }
+        .results-list { text-align: left; background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; list-style: none; }
+        .results-list li { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+        .score-display { font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin: 20px 0; }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+<header>    <h1>PICKLE 4: TIME CHALLENGE</h1></header>
+<main>
+    <section id="start-screen">
+        <h2>🎮 mission setup</h2>
+        <input type="text" id="player1" placeholder="naam agent 1">
+        <input type="text" id="player2" placeholder="naam agent 2 (optioneel)">
+        <label>modus:</label>
+        <select id="mode">
+            <option value="en-nl">english → nederlands</option>
+            <option value="nl-en">nederlands → english</option>
+            <option value="mixed">mixed mode</option>
+        </select>
+        <label>type vragen:</label>
+        <select id="questionType">
+            <option value="mc">multiple choice</option>
+            <option value="open">open vragen</option>
+        </select>
+        <button class="btn" onclick="startGame()">start missie 🚀</button>
+    </section>
+
+    <section id="quiz-section" class="hidden">
+        <h2 id="current-players"></h2>
+        <div class="timer-box">
+            ⏳ tijd over: <span class="timer-num" id="timer">60</span> sec
+        </div>
+        <div class="question" id="question"></div>
+        <div class="answers" id="answers"></div>
+        <div id="open-answer-section" class="hidden">
+            <input type="text" id="openAnswer" placeholder="type je antwoord...">
+            <button class="btn btn-blue" onclick="submitOpenAnswer()">check ✅</button>
+        </div>
+    </section>
+
+    <section id="game-over" class="hidden">
+        <h2>⏰ tijd is om!</h2>
+        <p id="winner-text" style="font-size: 1.5rem;"></p>
+        <div class="score-display" id="final-score"></div>
+        <h3>foutjes om te leren:</h3>
+        <ul class="results-list" id="wrong-answers-list"></ul>
+        <button class="btn" onclick="restartGame()">opnieuw 🔁</button>
+    </section>
+</main>
+<footer>    &copy; 2026 EngliForce: Make English Your Superpower!</footer>
+
+<script>
+    const words = [
+        { en: ["juice"], nl: ["sap"] },
+        { en: ["lemonade"], nl: ["limonade"] },
+        { en: ["soft drink"], nl: ["frisdrank"] },
+        { en: ["bottle"], nl: ["fles"] },
+        { en: ["cup"], nl: ["kopje"] },
+        { en: ["mug"], nl: ["mok"] },
+        { en: ["guest"], nl: ["gast"] },
+        { en: ["shop"], nl: ["winkel"] },
+        { en: ["host"], nl: ["gastheer", "gastvrouw"] },
+        { en: ["sugar-free"], nl: ["suikervrij"] },
+        { en: ["traditional"], nl: ["traditioneel"] },
+        { en: ["healthy"], nl: ["gezond"] },
+        { en: ["celebration"], nl: ["viering"] },
+        { en: ["flavour"], nl: ["smaak"] },
+        { en: ["encourage"], nl: ["aanmoedigen"] }
+    ];
+
+    let settings = { mode: "en-nl", questionType: "mc", players: [] };
+    let questions = [];
+    let current = 0;
+    let correctCount = 0;
+    let wrongAnswers = [];
+    let timeLeft = 60;
+    let timer;
+    let currentPlayerIndex = 0;
+    let playerResults = [];
+
+    function startGame() {
+        const p1 = document.getElementById("player1").value.trim() || "agent 1";
+        const p2 = document.getElementById("player2").value.trim();
+        settings.players = [p1];
+        if (p2) settings.players.push(p2);
+        settings.mode = document.getElementById("mode").value;
+        settings.questionType = document.getElementById("questionType").value;
+        currentPlayerIndex = 0;
+        playerResults = [];
+        startPlayerTurn();
+    }
+
+    function startPlayerTurn() {
+        document.getElementById("start-screen").classList.add("hidden");
+        document.getElementById("game-over").classList.add("hidden");
+        document.getElementById("quiz-section").classList.remove("hidden");
+        const currentPlayer = settings.players[currentPlayerIndex];
+        document.getElementById("current-players").textContent = currentPlayer;
+        correctCount = 0;
+        wrongAnswers = [];
+        current = 0;
+        generateQuestions();
+        showQuestion();
+        startTimer();
+    }
+
+    function generateQuestions() {
+        questions = words.map(w => {
+            let q, correct;
+            let currentMode = settings.mode;
+            if (currentMode === "mixed") currentMode = Math.random() > 0.5 ? "en-nl" : "nl-en";
+            if (currentMode === "en-nl") {
+                q = `wat is "${w.en[0]}"?`;
+                correct = w.nl;
+            } else {
+                q = `wat is "${w.nl[0]}"?`;
+                correct = w.en;
+            }
+            const otherWords = words.filter(item => item !== w);
+            const wrongOptions = otherWords
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3)
+                .map(item => currentMode === "en-nl" ? item.nl[0] : item.en[0]);
+            let allOptions = [correct[0], ...wrongOptions].sort(() => Math.random() - 0.5);
+            return { q, correct, options: allOptions };
+        }).sort(() => Math.random() - 0.5);
+    }
+
+    function startTimer() {
+        timeLeft = 60;
+        document.getElementById("timer").textContent = timeLeft;
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById("timer").textContent = timeLeft;
+            if (timeLeft <= 0) endGame();
+        }, 1000);
+    }
+
+    function showQuestion() {
+        if (current >= questions.length) {
+            current = 0;
+            generateQuestions();
+        }
+        const q = questions[current];
+        document.getElementById("question").textContent = q.q;
+        const answersDiv = document.getElementById("answers");
+        answersDiv.innerHTML = "";
+        if (settings.questionType === "mc") {
+            document.getElementById("open-answer-section").classList.add("hidden");
+            answersDiv.classList.remove("hidden");
+            q.options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt);
+                answersDiv.appendChild(btn);
+            });
+        } else {
+            document.getElementById("open-answer-section").classList.remove("hidden");
+            answersDiv.classList.add("hidden");
+            document.getElementById("openAnswer").value = "";
+            document.getElementById("openAnswer").focus();
+        }
+    }
+
+    function submitOpenAnswer() {
+        const answer = document.getElementById("openAnswer").value.trim();
+        if(answer) checkAnswer(answer);
+    }
+
+    function checkAnswer(choice) {
+        const qObj = questions[current];
+        const isCorrect = qObj.correct.some(ans => ans.toLowerCase() === choice.toLowerCase());
+        if (isCorrect) {
+            correctCount++;
+        } else {
+            wrongAnswers.push({
+                question: qObj.q,
+                given: choice || "(leeg)",
+                correct: qObj.correct.join(" / ")
+            });
+        }
+        current++;
+        showQuestion();
+    }
+
+    function endGame() {
+        clearInterval(timer);
+        const playerName = settings.players[currentPlayerIndex];
+        playerResults.push({ name: playerName, correct: correctCount, wrong: [...wrongAnswers] });
+        if (settings.players.length === 2 && currentPlayerIndex === 0) {
+            currentPlayerIndex = 1;
+            alert("Tijd is op! Wissel van agent.");
+            startPlayerTurn();
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function showFinalResults() {
+        document.getElementById("quiz-section").classList.add("hidden");
+        document.getElementById("game-over").classList.remove("hidden");
+        const list = document.getElementById("wrong-answers-list");
+        list.innerHTML = "";
+        let resultText = "";
+        let scoreText = "";
+        if (playerResults.length === 2) {
+            const [p1, p2] = playerResults;
+            if (p1.correct > p2.correct) resultText = `🏆 ${p1.name} wint!`;
+            else if (p2.correct > p1.correct) resultText = `🏆 ${p2.name} wint!`;
+            else resultText = `🤝 gelijkspel!`;
+            scoreText = `${p1.name}: ${p1.correct} | ${p2.name}: ${p2.correct}`;
+            [...p1.wrong, ...p2.wrong].slice(0, 8).forEach(item => {
+                const li = document.createElement("li");
+                li.innerHTML = `<strong>${item.question}</strong><br>❌ ${item.given} | ✅ ${item.correct}`;
+                list.appendChild(li);
+            });
+        } else {
+            const p = playerResults[0];
+            resultText = "training voltooid!";
+            scoreText = `${p.correct} punten gescoord!`;
+            p.wrong.forEach(item => {
+                const li = document.createElement("li");
+                li.innerHTML = `<strong>${item.question}</strong><br>❌ ${item.given} | ✅ ${item.correct}`;
+                list.appendChild(li);
+            });
+        }
+        document.getElementById("winner-text").textContent = resultText;
+        document.getElementById("final-score").textContent = scoreText;
+    }
+
+    function restartGame() {
+        document.getElementById("game-over").classList.add("hidden");
+        document.getElementById("start-screen").classList.remove("hidden");
+    }
+
+    document.getElementById("openAnswer").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") submitOpenAnswer();
+    });
+</script>
+</body>
+</html>
