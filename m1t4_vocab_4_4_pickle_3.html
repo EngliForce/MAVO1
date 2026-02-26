@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Pickle: Restaurant Detective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background: var(--hero-blue-main);
+            padding: 2rem 0;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            margin-bottom: 20px;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); color: white; }
+        .container { max-width: 700px; width: 90%; margin: 20px auto; }
+        .section {
+            background: rgba(16, 42, 67, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .instructions { font-size: 0.9rem; color: var(--hero-cyan); line-height: 1.5; margin-bottom: 20px; }
+        label { display: block; margin-top: 1rem; font-family: 'Bangers'; color: var(--hero-yellow); font-size: 1.2rem; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 2px solid var(--hero-blue-main);
+            background: #0b1a2a;
+            color: white;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+            margin: 10px 5px 0 0;
+            width: 100%;
+        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn-blue { background: var(--hero-blue-main); border-bottom-color: var(--hero-blue-dark); }
+        .turn { font-family: 'Bangers'; font-size: 2.2rem; color: var(--hero-yellow); text-align: center; margin-bottom: 10px; }
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--hero-blue-main);
+        }
+        .word-card {
+            background: #102a43;
+            border: 3px solid var(--hero-blue-main);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        .hint-text {
+            font-size: 1.2rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .answer-reveal {
+            font-family: 'Bangers';
+            font-size: 2rem;
+            color: var(--hero-yellow);
+            display: none;
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px dashed var(--hero-yellow);
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            width: 100%;
+        }
+        .flex-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>PICKLE 3: DETECTIVE</h1>
+</header>
+<div class="container">
+    <div class="section" id="setup">
+        <div class="instructions">
+            🔎 <strong>missie:</strong> raad het woord met zo min mogelijk hints.<br>
+            🌟 <strong>bonus:</strong> gebruik engelse hints voor +1 extra punt!
+        </div>
+        <label>aantal agenten:</label>
+        <select id="playerCount" onchange="togglePlayer2()">
+            <option value="1">1 agent</option>
+            <option value="2" selected>2 agenten</option>
+        </select>
+        <label>agent 1:</label>
+        <input type="text" id="player1" placeholder="naam agent 1" />
+        <div id="player2Section">
+            <label>agent 2:</label>
+            <input type="text" id="player2" placeholder="naam agent 2" />
+        </div>
+        <button class="btn" style="margin-top: 30px;" onclick="startGame()">start missie 🚀</button>
+    </div>
+
+    <div id="game" style="display: none;">
+        <div class="turn" id="turnIndicator">beurt: ...</div>
+        <div class="scoreboard">
+            <div><span id="name1"></span>: <span id="score1" style="color:var(--hero-yellow)">0</span></div>
+            <div id="p2ScoreDisplay"><span id="name2"></span>: <span id="score2" style="color:var(--hero-yellow)">0</span></div>
+        </div>
+        <div class="word-card">
+            <div class="answer-reveal" id="word-reveal">antwoord: ...</div>
+            <label>taal van de hint:</label>
+            <select id="hintLanguage" onchange="resetClue()">
+                <option value="nl">nederlands</option>
+                <option value="en">english (bonus +1)</option>
+            </select>
+            <div class="hint-text" id="hintBox">klik op 'volgende hint' om te starten</div>
+            <div class="flex-buttons">
+                <button class="btn btn-blue" onclick="nextHint()">volgende hint 💡</button>
+                <button class="btn btn-blue" onclick="showWord()">toon antwoord 👁️</button>
+                <button class="btn" style="background:#4caf50; border-color:#2e7d32;" onclick="correctGuess()">correct ✅</button>
+                <button class="btn" style="background:var(--hero-orange); border-color:#bf360c;" onclick="wrongGuess()">fout ❌</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    &copy; 2026 EngliForce: Make English Your Superpower!
+</footer>
+
+<script>
+const words = [
+    { en: "order", hints: { nl: ["Vragen om eten of drinken.", "Dit doe je bij de ober.", "Iets bestellen in een restaurant."], en: ["Asking for food or drinks.", "You do this with the waiter.", "To request something in a restaurant."] }},
+    { en: "fries", hints: { nl: ["Gemaakt van aardappels.", "Lange, dunne reepjes uit de frituur.", "Lekker met mayonaise."], en: ["Made from potatoes.", "Long, thin strips from the deep fryer.", "Great with mayonnaise."] }},
+    { en: "steak", hints: { nl: ["Een groot stuk vlees.", "Meestal van een koe.", "Je bakt het 'rare', 'medium' of 'well-done'."], en: ["A large piece of meat.", "Usually from a cow.", "You cook it rare, medium, or well-done."] }},
+    { en: "spicy", hints: { nl: ["Eten met veel peper.", "Je krijgt er een warm gevoel van in je mond.", "Het tegenovergestelde van 'mild'."], en: ["Food with a lot of peppers.", "It gives you a hot feeling in your mouth.", "The opposite of mild."] }},
+    { en: "cheap", hints: { nl: ["Het kost bijna niets.", "Een lage prijs.", "Het tegenovergestelde van duur."], en: ["It costs almost nothing.", "A low price.", "The opposite of expensive."] }},
+    { en: "delicious", hints: { nl: ["Heel erg lekker.", "Een ander woord voor heerlijk.", "Als het eten perfect smaakt."], en: ["Tastes very good.", "Another word for yummy.", "When the food tastes perfect."] }},
+    { en: "location", hints: { nl: ["De plek waar iets is.", "Het adres van een gebouw.", "Waar vind ik het restaurant?"], en: ["The place where something is.", "The address of a building.", "Where can I find the restaurant?"] }},
+    { en: "furniture", hints: { nl: ["Spullen in je huis.", "Tafels, stoelen en kasten.", "Je interieur."], en: ["Items inside your house.", "Tables, chairs, and cabinets.", "Your interior."] }},
+    { en: "service", hints: { nl: ["Hoe de bediening is.", "De hulp die je krijgt.", "Soms is dit traag of juist snel."], en: ["How you are being served.", "The help you receive.", "Sometimes it is slow or very fast."] }},
+    { en: "polite", hints: { nl: ["Nette manieren hebben.", "U zeggen en beleefd zijn.", "Niet brutaal."], en: ["Having good manners.", "Being respectful.", "Not rude."] }},
+    { en: "friendly", hints: { nl: ["Aardig zijn tegen anderen.", "Een vrolijke ober is vaak...", "Met een glimlach."], en: ["Being kind to others.", "A happy waiter is often...", "With a smile."] }},
+    { en: "chef", hints: { nl: ["De baas in de keuken.", "Degene die het eten kookt.", "Draagt vaak een hoge witte muts."], en: ["The boss in the kitchen.", "The person who cooks the food.", "Often wears a tall white hat."] }},
+    { en: "suggest", hints: { nl: ["Een idee geven.", "Iets aanraden op de kaart.", "Een voorstel doen."], en: ["Giving an idea.", "Recommending something on the menu.", "Making a proposal."] }},
+    { en: "treat", hints: { nl: ["Iets lekkers voor een ander betalen.", "Iemand trakteren.", "Een cadeautje of uitje."], en: ["Paying for someone else's snack.", "To buy someone something nice.", "A gift or a special outing."] }},
+    { en: "tip", hints: { nl: ["Extra geld voor de ober.", "Een fooi geven.", "Als de bediening erg goed was."], en: ["Extra money for the waiter.", "Giving a gratuity.", "When the service was very good."] }}
+];
+
+let p1 = '', p2 = '', playerCount = 2;
+let score = [0, 0];
+let currentIndex = 0;
+let currentHint = 0;
+let currentPlayer = 0;
+
+function togglePlayer2() {
+    const val = document.getElementById("playerCount").value;
+    document.getElementById("player2Section").style.display = (val === "1") ? "none" : "block";
+}
+
+function startGame() {
+    playerCount = parseInt(document.getElementById("playerCount").value);
+    p1 = document.getElementById("player1").value || "agent 1";
+    p2 = document.getElementById("player2").value || "agent 2";
+
+    words.sort(() => 0.5 - Math.random());
+    score = [0, 0];
+    currentIndex = 0;
+    currentPlayer = 0;
+
+    document.getElementById("name1").textContent = p1;
+    document.getElementById("name2").textContent = (playerCount === 2) ? p2 : "";
+    document.getElementById("p2ScoreDisplay").style.visibility = (playerCount === 2) ? "visible" : "hidden";
+
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    updateScore();
+    showTurn();
+    resetWordCard();
+}
+
+function showTurn() {
+    const name = currentPlayer === 0 ? p1 : p2;
+    document.getElementById("turnIndicator").textContent = (playerCount === 1) ? `agent: ${p1}` : `beurt: ${name}`;
+}
+
+function resetWordCard() {
+    currentHint = 0;
+    document.getElementById("hintBox").textContent = "klik op 'volgende hint' om te starten";
+    document.getElementById("word-reveal").style.display = "none";
+}
+
+function nextHint() {
+    if (currentHint >= 3) return;
+    const lang = document.getElementById("hintLanguage").value;
+    const hint = words[currentIndex].hints[lang][currentHint];
+    document.getElementById("hintBox").textContent = `hint ${currentHint + 1}: ${hint}`;
+    currentHint++;
+}
+
+function showWord() {
+    document.getElementById("word-reveal").textContent = `antwoord: ${words[currentIndex].en}`;
+    document.getElementById("word-reveal").style.display = "block";
+}
+
+function correctGuess() {
+    const lang = document.getElementById("hintLanguage").value;
+    let points = Math.max(1, 4 - currentHint);
+    if (lang === "en") points += 1;
+    score[currentPlayer] += points;
+    nextWord();
+}
+
+function wrongGuess() {
+    nextWord();
+}
+
+function nextWord() {
+    currentIndex++;
+    if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+    updateScore();
+    if (currentIndex >= words.length) {
+        document.getElementById("turnIndicator").textContent = "missie volbracht!";
+        document.getElementById("hintBox").textContent = "alle woorden zijn ontrafeld!";
+        document.getElementById("word-reveal").style.display = "none";
+    } else {
+        showTurn();
+        resetWordCard();
+    }
+}
+
+function updateScore() {
+    document.getElementById("score1").textContent = score[0] + " pt";
+    document.getElementById("score2").textContent = score[1] + " pt";
+}
+
+function resetClue() {
+    if (currentHint > 0) {
+        const lang = document.getElementById("hintLanguage").value;
+        const hint = words[currentIndex].hints[lang][currentHint - 1];
+        document.getElementById("hintBox").textContent = `hint ${currentHint}: ${hint}`;
+    }
+}
+</script>
+</body>
+</html>
