@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little vs Few - Glassmorphism Whack-a-Mole</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --accent: #00d2ff;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%, #6dd5ed 100%);
+            margin: 0; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            color: white; overflow: hidden; touch-action: manipulation;
+        }
+
+        /* Glassmorphism Containers */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .header {
+            width: 90%; max-width: 600px; padding: 20px;
+            margin-top: 20px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+
+        .stats {
+            display: flex; justify-content: space-between; width: 100%;
+            font-size: 1.2rem; font-weight: bold; color: #00d2ff;
+        }
+
+        .sentence-box { font-size: 1.5rem; font-weight: 700; min-height: 2em; line-height: 1.4; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
+        .game-area {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+            padding: 30px; width: 90%; max-width: 500px;
+            margin-top: 20px;
+        }
+
+        .hole {
+            width: 90px; height: 90px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%; position: relative; overflow: hidden;
+            box-shadow: inset 0 10px 15px rgba(0,0,0,0.5);
+            margin: 0 auto;
+        }
+
+        .mole {
+            width: 80%; height: 80%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            position: absolute; left: 10%; top: 100%; border-radius: 50%;
+            transition: top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; justify-content: center;
+            color: #333; font-weight: bold; font-size: 1.1rem; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.6);
+            text-transform: uppercase;
+        }
+
+        .mole.up { top: 10%; }
+        .mole:hover { filter: brightness(1.1); }
+
+        #overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px); z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+        }
+
+        .overlay-card { padding: 40px; width: 90%; max-width: 450px; }
+        
+        .btn {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            color: white; border: none; padding: 12px 25px;
+            border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+            margin: 10px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.4);
+        }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0, 210, 255, 0.5); }
+
+        .highscores-box {
+            margin-top: 20px; font-size: 1rem; color: #a29bfe;
+            background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px;
+        }
+
+        .feedback {
+            position: fixed; font-size: 2.5rem; font-weight: bold;
+            pointer-events: none; animation: floatUp 0.8s forwards; z-index: 50;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        @keyframes floatUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-80px); } }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="overlay">
+        <div class="glass-panel overlay-card">
+            <h1>🔨 Little vs Few</h1>
+            <p>Kies de juiste mol!<br><b>Few</b> = telbaar (-s) | <b>Little</b> = ontelbaar</p>
+            
+            <div class="highscores-box">
+                <b>🏆 Jouw Highscores:</b><br>
+                1 min: <span id="hs-1">0</span> | 
+                3 min: <span id="hs-3">0</span> | 
+                5 min: <span id="hs-5">0</span>
+            </div>
+
+            <h3 style="margin-top:20px;">Kies je tijd:</h3>
+            <button class="btn" onclick="startGame(60)">1 Minuut</button>
+            <button class="btn" onclick="startGame(180)">3 Minuten</button>
+            <button class="btn" onclick="startGame(300)">5 Minuten</button>
+        </div>
+    </div>
+
+    <div class="glass-panel header">
+        <div class="stats">
+            <span>Score: <span id="score" style="color:white;">0</span></span>
+            <span>Tijd: <span id="timer" style="color:white;">0:00</span></span>
+        </div>
+        <div class="sentence-box" id="sentence">Loading...</div>
+    </div>
+
+    <div class="glass-panel game-area">
+        <div class="hole"><div class="mole" onclick="whack(this)"></div></div>
+        <div class="hole"><div class="mole" onclick="whack(this)"></div></div>
+        <div class="hole"><div class="mole" onclick="whack(this)"></div></div>
+        <div class="hole"><div class="mole" onclick="whack(this)"></div></div>
+        <div class="hole"><div class="mole" onclick="whack(this)"></div></div>
+        <div class="hole"><div class="mole" onclick="whack(this)"></div></div>
+    </div>
+
+<script>
+    // Exact 100 vragen gemixt (50x few, 50x little)
+    const questions = [
+        // FEW (Countable)
+        { s: "I have ___ friends in this city.", a: "few" }, { s: "She bought a ___ apples.", a: "few" },
+        { s: "There are ___ cars on the road today.", a: "few" }, { s: "He asked a ___ questions.", a: "few" },
+        { s: "I need a ___ days to finish this.", a: "few" }, { s: "Only a ___ people know the secret.", a: "few" },
+        { s: "She has ___ books on her desk.", a: "few" }, { s: "Can I borrow a ___ chairs?", a: "few" },
+        { s: "We saw a ___ dogs in the park.", a: "few" }, { s: "I made a ___ mistakes on the test.", a: "few" },
+        { s: "There are ___ coins in my pocket.", a: "few" }, { s: "He brought a ___ toys for the kids.", a: "few" },
+        { s: "She packed a ___ bags for the trip.", a: "few" }, { s: "I need a ___ new shirts.", a: "few" },
+        { s: "They planted a ___ trees.", a: "few" }, { s: "I picked a ___ flowers for you.", a: "few" },
+        { s: "We saw a ___ birds flying.", a: "few" }, { s: "A ___ students were late.", a: "few" },
+        { s: "There are a ___ teachers in the hall.", a: "few" }, { s: "Can I have a ___ pens?", a: "few" },
+        { s: "She visited a ___ countries.", a: "few" }, { s: "I have lived in a ___ cities.", a: "few" },
+        { s: "We played a ___ games yesterday.", a: "few" }, { s: "There are a ___ bottles left.", a: "few" },
+        { s: "She broke a ___ cups.", a: "few" }, { s: "He washed a ___ plates.", a: "few" },
+        { s: "I ate a ___ cookies.", a: "few" }, { s: "We bought a ___ bananas.", a: "few" },
+        { s: "I received a ___ messages.", a: "few" }, { s: "She sent a ___ emails.", a: "few" },
+        { s: "He took a ___ photos.", a: "few" }, { s: "They sang a ___ songs.", a: "few" },
+        { s: "He told a ___ jokes.", a: "few" }, { s: "It takes a ___ minutes.", a: "few" },
+        { s: "We waited for a ___ hours.", a: "few" }, { s: "It happened a ___ months ago.", a: "few" },
+        { s: "I will leave in a ___ weeks.", a: "few" }, { s: "They built a ___ new buildings.", a: "few" },
+        { s: "We walked across a ___ streets.", a: "few" }, { s: "I want to say a ___ words.", a: "few" },
+        { s: "She lost a ___ keys.", a: "few" }, { s: "He gave her a ___ rings.", a: "few" },
+        { s: "I bought a ___ tickets.", a: "few" }, { s: "We wrote a ___ cards.", a: "few" },
+        { s: "They opened a ___ gifts.", a: "few" }, { s: "I have a ___ ideas.", a: "few" },
+        { s: "There are a ___ problems to solve.", a: "few" }, { s: "A ___ children were playing.", a: "few" },
+        { s: "She wears a ___ bracelets.", a: "few" }, { s: "I see a ___ clouds in the sky.", a: "few" },
+        
+        // LITTLE (Uncountable)
+        { s: "There is ___ water in the glass.", a: "little" }, { s: "I have ___ money left.", a: "little" },
+        { s: "We have very ___ time.", a: "little" }, { s: "Could I have a ___ milk?", a: "little" },
+        { s: "Add a ___ sugar to the tea.", a: "little" }, { s: "He showed ___ patience.", a: "little" },
+        { s: "There is ___ hope for us.", a: "little" }, { s: "I need a ___ help with my homework.", a: "little" },
+        { s: "She gave me a ___ information.", a: "little" }, { s: "There is a ___ coffee in the pot.", a: "little" },
+        { s: "He has very ___ experience.", a: "little" }, { s: "Add a ___ salt to the soup.", a: "little" },
+        { s: "I put a ___ pepper on my food.", a: "little" }, { s: "We need a ___ flour to bake.", a: "little" },
+        { s: "Can I have a ___ bread?", a: "little" }, { s: "She ate a ___ butter.", a: "little" },
+        { s: "I bought a ___ cheese.", a: "little" }, { s: "They eat very ___ meat.", a: "little" },
+        { s: "Cook a ___ rice for dinner.", a: "little" }, { s: "There is a ___ pasta left.", a: "little" },
+        { s: "There is ___ space in this room.", a: "little" }, { s: "We have ___ room for mistakes.", a: "little" },
+        { s: "There is ___ light in the basement.", a: "little" }, { s: "I feel a ___ darkness.", a: "little" },
+        { s: "We need a ___ fresh air.", a: "little" }, { s: "The patient needs a ___ oxygen.", a: "little" },
+        { s: "There was ___ rain yesterday.", a: "little" }, { s: "We expect a ___ snow tonight.", a: "little" },
+        { s: "There is ___ wind today.", a: "little" }, { s: "I want a ___ sunshine.", a: "little" },
+        { s: "I listen to a ___ music every day.", a: "little" }, { s: "There is too ___ noise here.", a: "little" },
+        { s: "I enjoy a ___ silence.", a: "little" }, { s: "There is ___ news about the event.", a: "little" },
+        { s: "Can you give me a ___ advice?", a: "little" }, { s: "He has ___ knowledge of coding.", a: "little" },
+        { s: "She has ___ education in art.", a: "little" }, { s: "I have a ___ homework to do.", a: "little" },
+        { s: "There is a ___ housework left.", a: "little" }, { s: "He does very ___ work.", a: "little" },
+        { s: "We had a ___ luck today.", a: "little" }, { s: "They had a ___ fun at the party.", a: "little" },
+        { s: "She brings a ___ happiness.", a: "little" }, { s: "I felt a ___ sadness.", a: "little" },
+        { s: "It takes a ___ courage.", a: "little" }, { s: "I have very ___ energy left.", a: "little" },
+        { s: "The machine uses ___ power.", a: "little" }, { s: "There is ___ traffic this morning.", a: "little" },
+        { s: "They bought a ___ furniture.", a: "little" }, { s: "I carry very ___ luggage.", a: "little" }
+    ];
+
+    let score = 0;
+    let timeLeft = 0;
+    let currentMode = 0;
+    let currentQuestion;
+    let gameActive = false;
+    let timerId;
+    let moleTimerId;
+
+    const moles = document.querySelectorAll('.mole');
+    const scoreDisplay = document.getElementById('score');
+    const timerDisplay = document.getElementById('timer');
+    const sentenceDisplay = document.getElementById('sentence');
+
+    // Highscores ophalen uit LocalStorage
+    let highscores = JSON.parse(localStorage.getItem('whackScores')) || { 60: 0, 180: 0, 300: 0 };
+    updateHighscoreUI();
+
+    function updateHighscoreUI() {
+        document.getElementById('hs-1').innerText = highscores[60];
+        document.getElementById('hs-3').innerText = highscores[180];
+        document.getElementById('hs-5').innerText = highscores[300];
+    }
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function startGame(timeInSeconds) {
+        score = 0;
+        currentMode = timeInSeconds;
+        timeLeft = timeInSeconds;
+        gameActive = true;
+        
+        document.getElementById('overlay').style.display = 'none';
+        scoreDisplay.innerText = score;
+        timerDisplay.innerText = formatTime(timeLeft);
+        
+        nextQuestion();
+        
+        timerId = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = formatTime(timeLeft);
+            if(timeLeft <= 0) endGame();
+        }, 1000);
+
+        showMoles();
+    }
+
+    function nextQuestion() {
+        currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+        // Gaten in de zin opvullen met ___
+        sentenceDisplay.innerHTML = currentQuestion.s.replace('___', '<span style="color:#00d2ff;">___</span>');
+    }
+
+    function showMoles() {
+        if(!gameActive) return;
+
+        const randomHole = Math.floor(Math.random() * moles.length);
+        const mole = moles[randomHole];
+        
+        // Kies willekeurig little of few voor deze mol
+        const type = Math.random() > 0.5 ? 'little' : 'few';
+        mole.innerText = type;
+        mole.dataset.type = type;
+        
+        mole.classList.add('up');
+
+        // Spel wordt sneller naarmate je meer punten hebt
+        const speed = Math.max(600, 1500 - (score * 15)); 
+
+        moleTimerId = setTimeout(() => {
+            mole.classList.remove('up');
+            if(gameActive) setTimeout(showMoles, Math.random() * 400 + 100);
+        }, speed);
+    }
+
+    function whack(mole) {
+        if(!mole.classList.contains('up') || !gameActive) return;
+        
+        const isCorrect = mole.dataset.type === currentQuestion.a;
+        mole.classList.remove('up');
+
+        const rect = mole.getBoundingClientRect();
+        showFeedback(isCorrect ? "+1" : "-2s", rect.left, rect.top, isCorrect);
+
+        if(isCorrect) {
+            score++;
+            scoreDisplay.innerText = score;
+            nextQuestion();
+        } else {
+            timeLeft = Math.max(0, timeLeft - 2); // 2 seconden straf!
+            timerDisplay.innerText = formatTime(timeLeft);
+        }
+    }
+
+    function showFeedback(text, x, y, isCorrect) {
+        const div = document.createElement('div');
+        div.className = 'feedback';
+        div.innerText = text;
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+        div.style.color = isCorrect ? '#00ff88' : '#ff4757';
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 800);
+    }
+
+    function endGame() {
+        gameActive = false;
+        clearInterval(timerId);
+        clearTimeout(moleTimerId);
+        
+        let isNewHighscore = false;
+        if(score > highscores[currentMode]) {
+            highscores[currentMode] = score;
+            localStorage.setItem('whackScores', JSON.stringify(highscores));
+            isNewHighscore = true;
+            updateHighscoreUI();
+        }
+
+        document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('overlay').innerHTML = `
+            <div class="glass-panel overlay-card">
+                <h1>⏰ Tijd is op!</h1>
+                <p style="font-size:1.5rem">Jouw score: <b style="color:#00d2ff">${score}</b></p>
+                ${isNewHighscore ? '<h3 style="color:#00ff88">🎉 NIEUWE HIGHSCORE! 🎉</h3>' : ''}
+                <button class="btn" onclick="location.reload()" style="margin-top:20px">SPEEL OPNIEUW</button>
+            </div>
+        `;
+    }
+</script>
+</body>
+</html>
