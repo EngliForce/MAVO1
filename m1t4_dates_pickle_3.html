@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>English Date Master</title>
+  <style>
+    :root { --glass: rgba(255, 255, 255, 0.12); --glass-border: rgba(255, 255, 255, 0.2); --accent: #00d2ff; }
+    body { font-family: 'Quicksand', sans-serif; background: radial-gradient(circle at top, #1b2735 0%, #090a0f 100%); min-height: 100vh; margin: 0; color: white; display: flex; flex-direction: column; align-items: center; }
+    .header { padding: 0.5rem; text-align: center; width: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
+    .header h1 { margin: 5px 0; font-size: 1.2rem; }
+    .container { width: 100%; max-width: 500px; margin-top: 15px; padding: 10px; }
+    .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.5); text-align: center; }
+    .calendar-container { width: 130px; background: white; border-radius: 15px; overflow: hidden; margin: 0 auto 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+    .cal-header { background: #ff4757; color: white; padding: 5px; font-weight: bold; font-size: 0.9rem; text-transform: lowercase; }
+    .cal-content { color: #2f3542; padding: 10px 5px; }
+    .cal-day-num { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+    .cal-month-name { font-size: 1rem; font-weight: 600; color: #747d8c; text-transform: lowercase; }
+    input[type="text"] { width: 100%; padding: 12px; border-radius: 10px; border: none; background: rgba(255, 255, 255, 0.95); font-size: 1.1rem; margin-bottom: 1rem; color: #1a1a1a; text-align: center; }
+    .btn { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 12px 30px; border-radius: 10px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+    #grid-view { display: none; }
+    .grid { display: grid; grid-template-columns: repeat(5, 60px); gap: 10px; justify-content: center; margin-top: 15px; }
+    .cell { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .cell.miss { background: #ff4757; }
+    .cell.gold { background: #ffa502; box-shadow: 0 0 20px #ffa502; }
+    #feedback { margin: 15px 0; font-weight: 600; min-height: 60px; font-size: 0.9rem; }
+    .status { color: #ffa502; font-weight: bold; font-size: 1rem; }
+    #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div id="overlay">
+    <div class="glass-card" style="max-width: 300px;">
+      <h2>📅 Date Master</h2>
+      <button class="btn" onclick="preGame(1)">1 Speler</button>
+      <button class="btn" onclick="preGame(2)" style="margin-top:10px">2 Spelers</button>
+      <div id="setup-form" style="margin-top: 15px;"></div>
+    </div>
+  </div>
+
+  <div class="header">
+    <h1>🏆 English Date Hunt</h1>
+    <div id="player-indicator" class="status"></div>
+  </div>
+
+  <div class="container">
+    <div id="question-view" class="glass-card">
+      <div class="calendar-container">
+        <div class="cal-header" id="nl-day"></div>
+        <div class="cal-content">
+          <div class="cal-day-num" id="nl-num"></div>
+          <div class="cal-month-name" id="nl-month"></div>
+        </div>
+      </div>
+      <input type="text" id="ans-input" autocomplete="off" spellcheck="false" placeholder="Typ de datum...">
+      <button class="btn" onclick="check()">Controleer</button>
+      <div id="feedback"></div>
+    </div>
+
+    <div id="grid-view" class="glass-card">
+      <h3>Schatkaart</h3>
+      <div class="grid" id="grid"></div>
+      <div id="winner-display" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+<script>
+  const nlMaanden = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+  const nlDagen = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
+  const enMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const enDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const ordinals = { 1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth", 6: "sixth", 7: "seventh", 8: "eighth", 9: "ninth", 10: "tenth", 11: "eleventh", 12: "twelfth", 13: "thirteenth", 14: "fourteenth", 15: "fifteenth", 16: "sixteenth", 17: "seventeenth", 18: "eighteenth", 19: "nineteenth", 20: "twentieth", 21: "twenty-first", 22: "twenty-second", 23: "twenty-third", 24: "twenty-fourth", 25: "twenty-fifth", 26: "twenty-sixth", 27: "twenty-seventh", 28: "twenty-eighth", 29: "twenty-ninth", 30: "thirtieth", 31: "thirty-first" };
+
+  let players = [], turn = 0, currentUK, currentUS, treasure = Math.floor(Math.random() * 25);
+
+  function preGame(n) {
+    const f = document.getElementById('setup-form');
+    f.innerHTML = '';
+    for(let i=0; i<n; i++) f.innerHTML += `<input type="text" id="n${i}" placeholder="Naam ${i+1}" style="width:100%; margin-bottom:8px; padding:8px; border-radius:5px; border:none;"><br>`;
+    f.innerHTML += `<button class="btn" onclick="start(${n})">Start</button>`;
+  }
+
+  function start(n) {
+    for(let i=0; i<n; i++) players.push(document.getElementById(`n${i}`).value || `Speler ${i+1}`);
+    document.getElementById('overlay').style.display = 'none';
+    initGrid();
+    generateQuestion();
+  }
+
+  function generateQuestion() {
+    document.getElementById('grid-view').style.display = 'none';
+    document.getElementById('question-view').style.display = 'block';
+    const d = new Date(2026, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+    document.getElementById('nl-day').innerText = nlDagen[d.getDay()];
+    document.getElementById('nl-num').innerText = d.getDate();
+    document.getElementById('nl-month').innerText = nlMaanden[d.getMonth()];
+    currentUK = enDays[d.getDay()] + " the " + ordinals[d.getDate()] + " of " + enMonths[d.getMonth()];
+    currentUS = enDays[d.getDay()] + ", " + enMonths[d.getMonth()] + " the " + ordinals[d.getDate()];
+    document.getElementById('player-indicator').innerText = `🎯 Beurt: ${players[turn]}`;
+    document.getElementById('ans-input').value = '';
+    document.getElementById('ans-input').focus();
+    document.getElementById('feedback').innerText = '';
+  }
+
+  function check() {
+    let input = document.getElementById('ans-input').value.trim().replace(/\s+/g, ' ');
+    if (input === currentUK || input === currentUS) {
+      document.getElementById('feedback').innerHTML = "<span style='color:#00ff88'>✅ Correct!</span>";
+      setTimeout(() => { document.getElementById('question-view').style.display = 'none'; document.getElementById('grid-view').style.display = 'block'; }, 600);
+    } else {
+      document.getElementById('feedback').innerHTML = `<span style='color:#ff4757'>❌ Fout.<br><small style="color:white">UK: ${currentUK}<br>US: ${currentUS}</small></span>`;
+      setTimeout(() => { turn = (turn + 1) % players.length; generateQuestion(); }, 6000);
+    }
+  }
+
+  function initGrid() {
+    const g = document.getElementById('grid'); g.innerHTML = '';
+    for(let i=0; i<25; i++) {
+      const c = document.createElement('div'); c.className = 'cell';
+      c.onclick = () => {
+        if(c.innerText !== '') return;
+        if(i === treasure) {
+          c.innerText = '💰'; c.classList.add('gold');
+          document.getElementById('winner-display').innerHTML = `<b>🏆 ${players[turn]} Wint!</b><br><button class="btn" onclick="location.reload()" style="margin-top:10px">Reset</button>`;
+        } else {
+          c.innerText = '❌'; c.classList.add('miss');
+          setTimeout(() => { turn = (turn + 1) % players.length; generateQuestion(); }, 1000);
+        }
+      };
+      g.appendChild(c);
+    }
+  }
+  document.getElementById('ans-input').addEventListener('keypress', e => { if(e.key === 'Enter') check(); });
+</script>
+</body>
+</html>
