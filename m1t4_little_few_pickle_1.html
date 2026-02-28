@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Little vs Few - Glassmorphism Whack-a-Mole</title>
+    <title>Little vs Few - Whack-a-Mole</title>
     <style>
         :root {
             --glass-bg: rgba(255, 255, 255, 0.15);
@@ -108,26 +108,26 @@
     <div id="overlay">
         <div class="glass-panel overlay-card">
             <h1>🔨 Little vs Few</h1>
-            <p>Kies de juiste mol!<br><b>Few</b> = telbaar (-s) | <b>Little</b> = ontelbaar</p>
+            <p>Hit the correct mole!<br><b>Few</b> = telbaar | <b>Little</b> = ontelbaar</p>
             
             <div class="highscores-box">
-                <b>🏆 Jouw Highscores:</b><br>
+                <b>🏆 Your Highscores:</b><br>
                 1 min: <span id="hs-1">0</span> | 
                 3 min: <span id="hs-3">0</span> | 
                 5 min: <span id="hs-5">0</span>
             </div>
 
-            <h3 style="margin-top:20px;">Kies je tijd:</h3>
-            <button class="btn" onclick="startGame(60)">1 Minuut</button>
-            <button class="btn" onclick="startGame(180)">3 Minuten</button>
-            <button class="btn" onclick="startGame(300)">5 Minuten</button>
+            <h3 style="margin-top:20px;">Time:</h3>
+            <button class="btn" onclick="startGame(60)">1 Minute</button>
+            <button class="btn" onclick="startGame(180)">3 Minutes</button>
+            <button class="btn" onclick="startGame(300)">5 Minutes</button>
         </div>
     </div>
 
     <div class="glass-panel header">
         <div class="stats">
             <span>Score: <span id="score" style="color:white;">0</span></span>
-            <span>Tijd: <span id="timer" style="color:white;">0:00</span></span>
+            <span>Time: <span id="timer" style="color:white;">0:00</span></span>
         </div>
         <div class="sentence-box" id="sentence">Loading...</div>
     </div>
@@ -291,7 +291,7 @@
             scoreDisplay.innerText = score;
             nextQuestion();
         } else {
-            timeLeft = Math.max(0, timeLeft - 2); // 2 seconden straf!
+            timeLeft = Math.max(0, timeLeft - 2); // 2 second penalty!
             timerDisplay.innerText = formatTime(timeLeft);
         }
     }
@@ -323,13 +323,14 @@
         document.getElementById('overlay').style.display = 'flex';
         document.getElementById('overlay').innerHTML = `
             <div class="glass-panel overlay-card">
-                <h1>⏰ Tijd is op!</h1>
+                <h1>⏰ Time's up!</h1>
                 <p style="font-size:1.5rem">Jouw score: <b style="color:#00d2ff">${score}</b></p>
-                ${isNewHighscore ? '<h3 style="color:#00ff88">🎉 NIEUWE HIGHSCORE! 🎉</h3>' : ''}
-                <button class="btn" onclick="location.reload()" style="margin-top:20px">SPEEL OPNIEUW</button>
+                ${isNewHighscore ? '<h3 style="color:#00ff88">🎉 NEW HIGHSCORE! 🎉</h3>' : ''}
+                <button class="btn" onclick="location.reload()" style="margin-top:20px">Play again</button>
             </div>
         `;
     }
 </script>
 </body>
+
 </html>
