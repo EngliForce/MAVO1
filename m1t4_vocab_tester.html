@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Trainer 🚀</title>
+    <style>
+        /* Stabiele, coole achtergrond */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e0533, #110a5c);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Container */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+        }
+
+        h1 { margin-top: 0; font-size: 28px; letter-spacing: 1px; color: #00e5ff; }
+        h2 { font-size: 20px; color: #ff00ea; }
+
+        .settings-group {
+            text-align: left;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        label.group-title { display: block; margin-bottom: 12px; font-size: 16px; font-weight: bold; }
+        
+        input[type="number"], select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        input[type="text"]:focus { border-color: #00e5ff; }
+
+        /* Fix voor de dropdown opties: donkere achtergrond zodat witte tekst leesbaar is */
+        select option {
+            background: #1e0533; 
+            color: white;
+        }
+
+        /* Coole Toggles (Schuifjes) */
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #ff00ea; /* Neon roze als hij aan staat */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Knoppen */
+        button {
+            background: linear-gradient(45deg, #00e5ff, #0077ff);
+            border: none;
+            padding: 12px 25px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 229, 255, 0.4);
+        }
+
+        .hidden { display: none; }
+
+        /* Quiz Elementen */
+        .context-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 1.5;
+            border-left: 4px solid #ff00ea;
+        }
+        .highlight { color: #00e5ff; font-weight: bold; }
+        
+        #feedback { margin-top: 15px; font-weight: bold; min-height: 24px; }
+        .correct { color: #00ff88; }
+        .wrong { color: #ff3366; }
+
+        .progress { margin-bottom: 15px; font-size: 14px; color: #aaa; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel" id="app">
+        
+        <div id="start-screen">
+            <h1>🚀 Vocab Tester</h1>
+            <p>Test your English! Choose your lists and start the challenge.</p>
+
+            <div class="settings-group">
+                <label class="group-title">Choose your vocabulary lists:</label>
+                
+                <div class="toggle-container">
+                    <span>Vocabulary 4.1 (Food)</span>
+                    <label class="switch">
+                        <input type="checkbox" value="4.1" class="list-cb" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="toggle-container">
+                    <span>Vocabulary 4.2 (Drinks)</span>
+                    <label class="switch">
+                        <input type="checkbox" value="4.2" class="list-cb" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-container">
+                    <span>Vocabulary 4.3 (Cooking)</span>
+                    <label class="switch">
+                        <input type="checkbox" value="4.3" class="list-cb">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-container">
+                    <span>Vocabulary 4.4 (Eating out)</span>
+                    <label class="switch">
+                        <input type="checkbox" value="4.4" class="list-cb">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label for="num-questions" class="group-title">Number of questions:</label>
+                <input type="number" id="num-questions" value="10" min="1" max="60">
+            </div>
+
+            <div class="settings-group">
+                <label for="mode" class="group-title">Choose the direction:</label>
+                <select id="mode">
+                    <option value="mixed">Mixed (EN-NL & NL-EN)</option>
+                    <option value="en-nl">English ➔ Dutch</option>
+                    <option value="nl-en">Dutch ➔ English</option>
+                </select>
+            </div>
+
+            <button onclick="startQuiz()">Start the Quiz!</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <div class="progress" id="progress">Question 1 of 10</div>
+            <div class="context-box" id="question-text">The sentence goes here...</div>
+            
+            <input type="text" id="answer-input" placeholder="Type your answer here..." autocomplete="off">
+            
+            <div id="feedback"></div>
+            
+            <button id="action-btn" onclick="checkAnswer()">Check</button>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h1>🎉 Finished!</h1>
+            <h2 id="final-score">Your score: 0 / 10</h2>
+            <p id="score-message"></p>
+            <button onclick="resetApp()">Practice Again</button>
+        </div>
+
+    </div>
+
+    <script>
+        const vocabData = [
+            // 4.1 Food
+            { list: "4.1", en: "breakfast", nl: "ontbijt", context: "I eat bread for [WORD] in the morning." },
+            { list: "4.1", en: "lunch", nl: "lunch / middagmaal", context: "We eat our [WORD] at school at 12 o'clock." },
+            { list: "4.1", en: "dinner", nl: "avondeten", context: "We have [WORD] at 6 o'clock in the evening." },
+            { list: "4.1", en: "dessert", nl: "nagerecht", context: "I want sweet ice cream for [WORD]." },
+            { list: "4.1", en: "takeaway", nl: "afhaalmaaltijd", context: "Let's get a [WORD] pizza tonight." },
+            { list: "4.1", en: "packed lunch", nl: "lunchpakket", context: "I take my [WORD] to school in a bag." },
+            { list: "4.1", en: "menu", nl: "menukaart", context: "Can I see the [WORD], please? I want to choose my food." },
+            { list: "4.1", en: "shopping list", nl: "boodschappenlijst", context: "Look at the [WORD]. We need milk and bread." },
+            { list: "4.1", en: "supermarket", nl: "supermarkt", context: "We buy our food at the large [WORD]." },
+            { list: "4.1", en: "fridge", nl: "koelkast", context: "Put the milk in the [WORD], please." },
+            { list: "4.1", en: "oven", nl: "oven", context: "We bake the cake in the [WORD]." },
+            { list: "4.1", en: "table", nl: "tafel", context: "The food is ready. Please sit at the [WORD]." },
+            { list: "4.1", en: "plate", nl: "bord", context: "Put the sandwich on your [WORD]." },
+            { list: "4.1", en: "vegetarian", nl: "vegetariër", context: "He does not eat meat. He is a [WORD]." },
+            { list: "4.1", en: "hungry", nl: "hongerig", context: "I did not eat today. I am very [WORD]." },
+            
+            // 4.2 Drinks
+            { list: "4.2", en: "juice", nl: "sap", context: "I drink sweet orange [WORD] with my breakfast." },
+            { list: "4.2", en: "lemonade", nl: "limonade", context: "I like cold [WORD] on a hot day." },
+            { list: "4.2", en: "soft drink", nl: "frisdrank", context: "Cola is a sweet [WORD]." },
+            { list: "4.2", en: "bottle", nl: "fles", context: "Can I buy a [WORD] of water?" },
+            { list: "4.2", en: "cup", nl: "kopje", context: "I drink my tea from a small [WORD]." },
+            { list: "4.2", en: "mug", nl: "mok", context: "He drinks hot coffee from a large [WORD]." },
+            { list: "4.2", en: "guest", nl: "gast", context: "We have a [WORD] in our house today." },
+            { list: "4.2", en: "shop", nl: "winkel", context: "I go to the [WORD] to buy some drinks." },
+            { list: "4.2", en: "host", nl: "gastheer / gastvrouw", context: "The [WORD] gives us drinks at the party." },
+            { list: "4.2", en: "sugar-free", nl: "suikervrij", context: "This drink is [WORD], so it is good for your teeth." },
+            { list: "4.2", en: "traditional", nl: "traditioneel", context: "Tea with milk is a [WORD] English drink." },
+            { list: "4.2", en: "healthy", nl: "gezond", context: "Water and fruit are very [WORD]." },
+            { list: "4.2", en: "celebration", nl: "viering", context: "A birthday party is a happy [WORD]." },
+            { list: "4.2", en: "flavour", nl: "smaak", context: "Strawberry is my favourite ice cream [WORD]." },
+            { list: "4.2", en: "encourage", nl: "aanmoedigen", context: "Good teachers [WORD] you to do your best." },
+
+            // 4.3 Instructions
+            { list: "4.3", en: "instruction", nl: "instructie", context: "Read the [WORD] before you play the game." },
+            { list: "4.3", en: "step", nl: "stap", context: "The first [WORD] is to open the box." },
+            { list: "4.3", en: "on purpose", nl: "expres", context: "I am sorry I broke your pen. It was not [WORD]." },
+            { list: "4.3", en: "ruin", nl: "verpesten", context: "Rain can [WORD] a nice day at the beach." },
+            { list: "4.3", en: "choke", nl: "stikken", context: "Eat slowly, or you will [WORD] on your food." },
+            { list: "4.3", en: "butter knife", nl: "botermes", context: "Use a [WORD] to put butter on your bread." },
+            { list: "4.3", en: "jar", nl: "pot", context: "The jam is in a glass [WORD]." },
+            { list: "4.3", en: "lid", nl: "deksel", context: "Close the bottle. Put the [WORD] back on." },
+            { list: "4.3", en: "scoop", nl: "scheppen", context: "Can you [WORD] the ice cream into a bowl?" },
+            { list: "4.3", en: "spread", nl: "smeren", context: "Please [WORD] the butter on the bread." },
+            { list: "4.3", en: "squeeze", nl: "knijpen", context: "You must [WORD] the orange to get the juice." },
+            { list: "4.3", en: "rub", nl: "wrijven", context: "If your hands are cold, [WORD] them together." },
+            { list: "4.3", en: "blank", nl: "leeg", context: "Write your name here. Do not leave it [WORD]." },
+            { list: "4.3", en: "joke", nl: "grap", context: "He told a funny [WORD] and we all laughed." },
+            { list: "4.3", en: "expected", nl: "verwachtte", context: "I [WORD] to win the game, but I lost." },
+
+            // 4.4 Restaurants
+            { list: "4.4", en: "order", nl: "bestellen", context: "I am ready to [WORD] my food now." },
+            { list: "4.4", en: "fries", nl: "friet", context: "I want a burger and some [WORD]." },
+            { list: "4.4", en: "steak", nl: "biefstuk", context: "I will have a large piece of meat, the [WORD], please." },
+            { list: "4.4", en: "spicy", nl: "pittig", context: "I need water! This chili pepper is very [WORD]." },
+            { list: "4.4", en: "cheap", nl: "goedkoop", context: "This meal was only 5 euros. It is very [WORD]." },
+            { list: "4.4", en: "delicious", nl: "heerlijk", context: "This cake is very good. It is [WORD]!" },
+            { list: "4.4", en: "location", nl: "locatie", context: "The restaurant is in a beautiful [WORD] near the river." },
+            { list: "4.4", en: "furniture", nl: "meubels", context: "Beds, tables, and chairs are [WORD]." },
+            { list: "4.4", en: "service", nl: "bediening", context: "The waiters are very fast. The [WORD] is good." },
+            { list: "4.4", en: "polite", nl: "beleefd", context: "The boy says 'please' and 'thank you'. He is very [WORD]." },
+            { list: "4.4", en: "friendly", nl: "vriendelijk", context: "The girl smiled and said hello. She is [WORD]." },
+            { list: "4.4", en: "chef", nl: "kok", context: "The [WORD] cooks the food in the kitchen." },
+            { list: "4.4", en: "suggest", nl: "voorstellen", context: "What food do you [WORD] we eat tonight?" },
+            { list: "4.4", en: "treat", nl: "traktatie", context: "I will pay for the ice cream. It is my [WORD]." },
+            { list: "4.4", en: "tip", nl: "fooi", context: "The food was great. Let's give the waiter a [WORD] of 5 euros." }
+        ];
+
+        let quizQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswering = true; 
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startQuiz() {
+            const checkboxes = document.querySelectorAll('.list-cb');
+            const selectedLists = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+
+            if (selectedLists.length === 0) {
+                alert("Please select at least 1 vocabulary list!");
+                return;
+            }
+
+            let pool = vocabData.filter(word => selectedLists.includes(word.list));
+            shuffleArray(pool);
+
+            const numRequested = parseInt(document.getElementById('num-questions').value) || 10;
+            const finalNum = Math.min(numRequested, pool.length);
+            pool = pool.slice(0, finalNum);
+
+            const modeSetting = document.getElementById('mode').value;
+
+            quizQuestions = pool.map(item => {
+                let currentMode = modeSetting;
+                if (currentMode === "mixed") {
+                    currentMode = Math.random() > 0.5 ? "en-nl" : "nl-en";
+                }
+
+                if (currentMode === "en-nl") {
+                    return {
+                        questionText: `Translate the highlighted word to Dutch:<br><br><i>"${item.context.replace('[WORD]', `<span class='highlight'>${item.en}</span>`)}"</i>`,
+                        correctAnswer: item.nl,
+                        hint: item.en
+                    };
+                } else {
+                    return {
+                        questionText: `Fill in the English word (Hint: <span class='highlight'>${item.nl}</span>):<br><br><i>"${item.context.replace('[WORD]', `_______`)}"</i>`,
+                        correctAnswer: item.en,
+                        hint: item.nl
+                    };
+                }
+            });
+
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizQuestions[currentQuestionIndex];
+            document.getElementById('progress').innerText = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+            document.getElementById('question-text').innerHTML = q.questionText;
+            
+            const inputField = document.getElementById('answer-input');
+            inputField.value = "";
+            inputField.disabled = false;
+            inputField.focus();
+
+            document.getElementById('feedback').innerHTML = "";
+            document.getElementById('action-btn').innerText = "Check";
+            isAnswering = true;
+        }
+
+        function cleanString(str) {
+            return str.toLowerCase().trim();
+        }
+
+        function checkAnswer() {
+            if (!isAnswering) {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizQuestions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+                return;
+            }
+
+            const q = quizQuestions[currentQuestionIndex];
+            const userAnswer = cleanString(document.getElementById('answer-input').value);
+            
+            const possibleAnswers = q.correctAnswer.split('/').map(s => cleanString(s));
+            const isCorrect = possibleAnswers.includes(userAnswer);
+
+            const feedbackEl = document.getElementById('feedback');
+            const inputField = document.getElementById('answer-input');
+
+            if (isCorrect) {
+                feedbackEl.innerHTML = `<span class="correct">✅ Great job!</span>`;
+                score++;
+            } else {
+                feedbackEl.innerHTML = `<span class="wrong">❌ Oops! The correct answer was: <b>${q.correctAnswer}</b></span>`;
+            }
+
+            inputField.disabled = true;
+            document.getElementById('action-btn').innerText = "Next";
+            isAnswering = false;
+        }
+
+        document.getElementById('answer-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = `Your score: ${score} / ${quizQuestions.length}`;
+            
+            const percentage = score / quizQuestions.length;
+            let msg = "";
+            if (percentage === 1) msg = "Perfect! You are a language whiz! 🏆";
+            else if (percentage >= 0.7) msg = "Very well done! Almost perfect! 🌟";
+            else if (percentage >= 0.5) msg = "Good job, but keep practicing to get even better! 👍";
+            else msg = "Practice makes perfect, don't give up! 💪";
+            
+            document.getElementById('score-message').innerText = msg;
+        }
+
+        function resetApp() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
