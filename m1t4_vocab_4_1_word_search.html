@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engelse Woordzoeker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1e293b;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #38bdf8;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        p.subtitle {
+            margin-bottom: 30px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            max-width: 1000px;
+        }
+
+        /* Puzzel Grid */
+        #grid {
+            display: grid;
+            gap: 2px;
+            background-color: #334155;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            user-select: none;
+        }
+
+        .cell {
+            width: 32px;
+            height: 32px;
+            background-color: #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .cell:hover {
+            background-color: #475569;
+        }
+
+        .cell.selected {
+            background-color: #f59e0b;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .cell.found {
+            background-color: #10b981;
+            color: #fff;
+        }
+
+        /* Woordenlijst */
+        .word-list-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 250px;
+        }
+
+        .word-list-container h2 {
+            margin-top: 0;
+            font-size: 1.2em;
+            color: #e2e8f0;
+            border-bottom: 2px solid #38bdf8;
+            padding-bottom: 10px;
+        }
+
+        #word-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .word-item {
+            font-size: 1em;
+            color: #cbd5e1;
+            transition: color 0.3s, text-decoration 0.3s;
+        }
+
+        .word-item.found-word {
+            text-decoration: line-through;
+            color: #10b981;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Food Word search</h1>
+    <p class="subtitle">Click on the <b>first</b> and <b>last</b> letter of the English word.</p>
+
+    <div class="container">
+        <div id="grid"></div>
+        
+        <div class="word-list-container">
+            <h2>Find the English translation:</h2>
+            <ul id="word-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            { eng: "BREAKFAST", nl: "ontbijt" },
+            { eng: "LUNCH", nl: "lunch / middagmaal" },
+            { eng: "DINNER", nl: "avondeten" },
+            { eng: "DESSERT", nl: "nagerecht" },
+            { eng: "TAKEAWAY", nl: "afhaalmaaltijd" },
+            { eng: "PACKEDLUNCH", nl: "lunchpakket" },
+            { eng: "MENU", nl: "menukaart" },
+            { eng: "SHOPPINGLIST", nl: "boodschappenlijst" },
+            { eng: "SUPERMARKET", nl: "supermarkt" },
+            { eng: "FRIDGE", nl: "koelkast" },
+            { eng: "OVEN", nl: "oven" },
+            { eng: "TABLE", nl: "tafel" },
+            { eng: "PLATE", nl: "bord" },
+            { eng: "VEGETARIAN", nl: "vegetariër" },
+            { eng: "HUNGRY", nl: "hongerig" }
+        ];
+
+        // Zwarte lijst met woorden die we NIET per ongeluk willen genereren
+        const badWords = ["KUT", "LUL", "PIK", "FUCK", "SHIT", "DICK", "HOER", "HOMO", "SEKS", "PORNO", "GAY", "ASS", "SLET", "TET", "BITCH", "CUNT"];
+
+        const gridSize = 15;
+        let grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
+        let isTargetCell = Array.from({ length: gridSize }, () => Array(gridSize).fill(false)); // Houdt bij welke letters echt zijn
+        
+        let firstCell = null;
+        let foundWordsCount = 0;
+
+        const wordListEl = document.getElementById('word-list');
+        words.forEach(wordObj => {
+            const li = document.createElement('li');
+            li.textContent = wordObj.nl;
+            li.id = `word-${wordObj.eng}`;
+            li.className = 'word-item';
+            wordListEl.appendChild(li);
+        });
+
+        const directions = [
+            [0, 1], [1, 0], [1, 1], [1, -1], [0, -1], [-1, 0], [-1, -1], [-1, 1]
+        ];
+
+        // Plaats de echte woorden
+        words.forEach(wordObj => {
+            let placed = false;
+            let word = wordObj.eng;
+            while (!placed) {
+                let dir = directions[Math.floor(Math.random() * directions.length)];
+                let r = Math.floor(Math.random() * gridSize);
+                let c = Math.floor(Math.random() * gridSize);
+
+                if (canPlaceWord(word, r, c, dir)) {
+                    for (let i = 0; i < word.length; i++) {
+                        let newR = r + i * dir[0];
+                        let newC = c + i * dir[1];
+                        grid[newR][newC] = word[i];
+                        isTargetCell[newR][newC] = true; // Markeer deze cel als onderdeel van een echt woord
+                    }
+                    placed = true;
+                }
+            }
+        });
+
+        function canPlaceWord(word, r, c, dir) {
+            for (let i = 0; i < word.length; i++) {
+                let newR = r + i * dir[0];
+                let newC = c + i * dir[1];
+                if (newR < 0 || newR >= gridSize || newC < 0 || newC >= gridSize) return false;
+                if (grid[newR][newC] !== '' && grid[newR][newC] !== word[i]) return false;
+            }
+            return true;
+        }
+
+        // Vul overige vakjes op met willekeurige letters
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (let r = 0; r < gridSize; r++) {
+            for (let c = 0; c < gridSize; c++) {
+                if (grid[r][c] === '') {
+                    grid[r][c] = letters.charAt(Math.floor(Math.random() * letters.length));
+                }
+            }
+        }
+
+        // CHECK VOOR ONGEWENSTE WOORDEN
+        function cleanGrid() {
+            // Check rijen horizontaal
+            for (let r = 0; r < gridSize; r++) {
+                let rowStr = grid[r].join('');
+                badWords.forEach(badWord => {
+                    if (rowStr.includes(badWord) || rowStr.includes(badWord.split('').reverse().join(''))) {
+                        for(let c = 0; c < gridSize; c++) {
+                            // Verander een willekeurige letter die NIET bij een echt antwoord hoort in een 'Q'
+                            if(!isTargetCell[r][c]) {
+                                grid[r][c] = 'Q'; 
+                            }
+                        }
+                    }
+                });
+            }
+            // Check kolommen verticaal
+            for (let c = 0; c < gridSize; c++) {
+                let colStr = '';
+                for(let r = 0; r < gridSize; r++) colStr += grid[r][c];
+                
+                badWords.forEach(badWord => {
+                    if (colStr.includes(badWord) || colStr.includes(badWord.split('').reverse().join(''))) {
+                        for(let r = 0; r < gridSize; r++) {
+                            if(!isTargetCell[r][c]) {
+                                grid[r][c] = 'X';
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Voer de schoonmaakactie uit voordat het grid getoond wordt
+        cleanGrid();
+
+        // Render het grid naar de pagina
+        const gridEl = document.getElementById('grid');
+        gridEl.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+        for (let r = 0; r < gridSize; r++) {
+            for (let c = 0; c < gridSize; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.textContent = grid[r][c];
+                cell.dataset.r = r;
+                cell.dataset.c = c;
+                
+                cell.addEventListener('click', () => handleCellClick(cell, r, c));
+                gridEl.appendChild(cell);
+            }
+        }
+
+        function handleCellClick(cell, r, c) {
+            if (cell.classList.contains('found')) return;
+
+            if (!firstCell) {
+                firstCell = { cell, r, c };
+                cell.classList.add('selected');
+            } else {
+                let r1 = firstCell.r, c1 = firstCell.c;
+                let r2 = r, c2 = c;
+                
+                checkWord(r1, c1, r2, c2);
+                
+                firstCell.cell.classList.remove('selected');
+                firstCell = null;
+            }
+        }
+
+        function checkWord(r1, c1, r2, c2) {
+            let dr = r2 - r1;
+            let dc = c2 - c1;
+            
+            let steps = Math.max(Math.abs(dr), Math.abs(dc));
+            
+            if (steps === 0) return;
+            if (dr !== 0 && dc !== 0 && Math.abs(dr) !== Math.abs(dc)) return;
+
+            let stepR = dr === 0 ? 0 : dr / steps;
+            let stepC = dc === 0 ? 0 : dc / steps;
+
+            let selectedWord = "";
+            let selectedCells = [];
+
+            for (let i = 0; i <= steps; i++) {
+                let currentR = r1 + i * stepR;
+                let currentC = c1 + i * stepC;
+                selectedWord += grid[currentR][currentC];
+                selectedCells.push(document.querySelector(`.cell[data-r="${currentR}"][data-c="${currentC}"]`));
+            }
+
+            let reversedWord = selectedWord.split('').reverse().join('');
+            let matchedWordObj = words.find(w => w.eng === selectedWord || w.eng === reversedWord);
+
+            if (matchedWordObj) {
+                selectedCells.forEach(cell => cell.classList.add('found'));
+                
+                let listItem = document.getElementById(`word-${matchedWordObj.eng}`);
+                if (!listItem.classList.contains('found-word')) {
+                    listItem.classList.add('found-word');
+                    foundWordsCount++;
+                    
+                    if (foundWordsCount === words.length) {
+                        setTimeout(() => alert("Gefeliciteerd! Je hebt alle woorden gevonden!"), 300);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
