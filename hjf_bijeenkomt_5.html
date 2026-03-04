@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faalangstreductietraining - Bijeenkomst 5</title>
+    <style>
+        :root {
+            --primary-color: #6B9080;
+            --bg-color: #F6FFF8;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --button-hover: #A4C3B2;
+            --accent-color: #CCE3DE;
+            --page-badge-bg: #EAF4F4;
+            --modal-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Voorkomt scrollen op de pagina */
+            font-size: clamp(20px, 2.6vh, 32px); /* Grote tekst voor achterin de klas */
+            line-height: 1.4;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 98vw;
+            height: 96vh;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 25px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .page-badge {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background-color: var(--page-badge-bg);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.4rem;
+            border: 2px solid var(--accent-color);
+            z-index: 10;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0 0 10px 0;
+            font-size: clamp(2.5rem, 5vh, 4rem);
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: clamp(1.8rem, 3.5vh, 2.8rem);
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            font-size: clamp(1.4rem, 2.5vh, 2.2rem);
+            margin: 10px 0;
+        }
+
+        .step {
+            display: none;
+            flex-grow: 1;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 0.4s ease-in-out;
+            height: 100%;
+        }
+
+        .step.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 3px solid var(--accent-color);
+            padding-top: 15px;
+            flex-shrink: 0;
+        }
+
+        button.nav-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.6rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button.nav-btn:hover:not(:disabled) {
+            background-color: var(--button-hover);
+            color: #333;
+        }
+
+        button.nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        ul { list-style: none; padding: 0; margin: 5px 0; }
+        ul li {
+            background: var(--accent-color);
+            margin: 8px 0;
+            padding: 12px 25px;
+            border-radius: 12px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Mood Selector Area */
+        .mood-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .mood-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 20px;
+            border-radius: 20px;
+            background: var(--bg-color);
+            border: 3px solid transparent;
+            min-width: 150px;
+        }
+
+        .mood-item:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+        }
+
+        .mood-emoji {
+            font-size: 5rem;
+            margin-bottom: 10px;
+        }
+
+        .mood-counter {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: white;
+            padding: 5px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Video Area */
+        .video-box {
+            flex-grow: 1;
+            background-color: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .video-box iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Alphabet Tool */
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .letter-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .letter-btn:hover { background-color: var(--button-hover); color: #333; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 85%;
+            max-height: 80%;
+            padding: 40px;
+            border-radius: 20px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .quality-item {
+            padding: 15px;
+            margin: 8px 0;
+            background: var(--bg-color);
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .quality-item:hover { border-color: var(--primary-color); }
+
+        .quality-explanation {
+            display: none;
+            font-size: 1.2rem;
+            color: #555;
+            margin-top: 5px;
+            font-style: italic;
+            border-top: 1px solid var(--accent-color);
+            padding-top: 5px;
+        }
+
+        /* Inputs */
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 3px solid var(--accent-color);
+            border-radius: 15px;
+            font-size: 1.6rem;
+            box-sizing: border-box;
+        }
+
+        /* Pitfall table */
+        .pitfall-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background-color: var(--accent-color);
+            padding: 5px;
+            border-radius: 15px;
+        }
+        .table-head { background: var(--primary-color); color: white; padding: 15px; font-weight: bold; text-align: center; border-radius: 10px; }
+        .table-cell { background: white; padding: 15px; border-radius: 10px; font-size: 1.4rem; }
+
+        .progress-bar {
+            height: 12px;
+            background-color: var(--accent-color);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <!-- Stap 0: Gevoelsmeter -->
+    <div class="step active" id="step-0">
+        <h1>Bijeenkomst 5</h1>
+        <h2>Hoe voel je je vandaag?</h2>
+        <div class="mood-container">
+            <div class="mood-item" onclick="registerMood('bliksem')">
+                <span class="mood-emoji">⚡</span>
+                <span class="mood-counter" id="count-bliksem">0</span>
+            </div>
+            <div class="mood-item" onclick="registerMood('regen')">
+                <span class="mood-emoji">🌧️</span>
+                <span class="mood-counter" id="count-regen">0</span>
+            </div>
+            <div class="mood-item" onclick="registerMood('wolken')">
+                <span class="mood-emoji">☁️</span>
+                <span class="mood-counter" id="count-wolken">0</span>
+            </div>
+            <div class="mood-item" onclick="registerMood('zon-wolken')">
+                <span class="mood-emoji">⛅</span>
+                <span class="mood-counter" id="count-zon-wolken">0</span>
+            </div>
+            <div class="mood-item" onclick="registerMood('zon')">
+                <span class="mood-emoji">☀️</span>
+                <span class="mood-counter" id="count-zon">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stap 1: Introductievideo -->
+    <div class="step" id="step-1">
+        <div class="page-badge">Intro</div>
+        <h1>Bijeenkomst 5</h1>
+        <h2>Introductie</h2>
+        <div class="video-box">
+            <iframe src="https://www.youtube.com/embed/Wj9YxZJAZYA" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Stap 2: Huiswerk -->
+    <div class="step" id="step-2">
+        <div class="page-badge">Blz. 37</div>
+        <h2>Terugblik: Huiswerk</h2>
+        <p>Je hebt aan 5 mensen gevraagd wat jouw kwaliteiten zijn.</p>
+        <ul style="font-size: 1.5rem;">
+            <li>💭 Hoe was het om dit te lezen?</li>
+            <li>✨ Welke kwaliteiten hebben jou het meest verrast?</li>
+            <li>✅ Ben jij het met alle kwaliteiten eens?</li>
+            <li>💡 Zat er iets bij dat je zelf nooit zo had gezien?</li>
+        </ul>
+        <input type="text" placeholder="Wat was de mooiste kwaliteit die je hoorde?">
+    </div>
+
+    <!-- Stap 3: Wat zijn kwaliteiten -->
+    <div class="step" id="step-3">
+        <div class="page-badge">Blz. 37</div>
+        <h2>Wat zijn kwaliteiten?</h2>
+        <div class="grid-2">
+            <ul>
+                <li>🌟 Positieve eigenschappen bij jou</li>
+                <li>💪 Dingen waar je goed in bent</li>
+                <li>🌿 Hoe je van nature reageert</li>
+                <li>😊 Gedrag waar others blij van worden</li>
+            </ul>
+            <div style="background: var(--page-badge-bg); padding: 30px; border-radius: 20px; border: 3px dashed var(--primary-color);">
+                <p><strong>Voorbeelden:</strong> Humor, Geduld, Creativiteit, Betrouwbaarheid.</p>
+                <p style="margin-top: 15px;"><em>Een kwaliteit geeft je energie als je hem inzet!</em></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stap 4: Alfabet Opdracht -->
+    <div class="step" id="step-4">
+        <div class="page-badge">Blz. 38</div>
+        <h2>Jouw Naam, Jouw Kwaliteiten!</h2>
+        <p style="font-size: 1.3rem;">Klik op een letter om 10 kwaliteiten + uitleg te zien voor je verticale naam-opdracht.</p>
+        <div class="alphabet-grid" id="alpha-grid">
+            <!-- Dynamisch gegenereerd -->
+        </div>
+        <div style="margin-top: 20px; text-align: center; font-size: 1.1rem; color: #666;">
+            💡 <em>Schrijf je naam verticaal en kies bij elke letter een kwaliteit die bij jou past.</em>
+        </div>
+    </div>
+
+    <!-- Stap 5: Valkuilen -->
+    <div class="step" id="step-5">
+        <div class="page-badge">Blz. 39</div>
+        <h2>Wat zijn valkuilen?</h2>
+        <p>Een valkuil is een <strong>doorgeschoten kwaliteit</strong>. Te veel van het goede.</p>
+        <div class="pitfall-table">
+            <div class="table-head">Kwaliteit</div>
+            <div class="table-head">Valkuil (Te veel...)</div>
+            <div class="table-cell">Behulpzaam</div> <div class="table-cell">Jezelf wegcijferen</div>
+            <div class="table-cell">Zorgvuldig</div> <div class="table-cell">Perfectionistisch / Stress</div>
+            <div class="table-cell">Doorzetter</div> <div class="table-cell">Niet kunnen stoppen</div>
+            <div class="table-cell">Enthousiast</div> <div class="table-cell">Te druk of chaotisch</div>
+        </div>
+    </div>
+
+    <!-- Stap 6: Valkuil naar Kracht -->
+    <div class="step" id="step-6">
+        <div class="page-badge">Blz. 39</div>
+        <h2>Van valkuil naar kracht</h2>
+        <p>Je valkuil is geen slechte eigenschap. Het is je <strong>kwaliteit</strong> die té groot wordt.</p>
+        <div class="grid-2">
+            <div style="background: #fff3cd; padding: 25px; border-radius: 20px; border: 2px solid #856404;">
+                <h3 style="color: #856404; margin-top: 0;">De Valkuil</h3>
+                <p>Je bent zó zorgvuldig dat je nooit klaar bent en stress krijgt.</p>
+            </div>
+            <div style="background: #d1e7dd; padding: 25px; border-radius: 20px; border: 2px solid #0f5132;">
+                <h3 style="color: #0f5132; margin-top: 0;">De Kracht</h3>
+                <p>Je leert 'doseren'. Je blijft zorgvuldig, maar accepteert dat 'goed' genoeg is.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stap 7: Oefening Stappen 1-3 -->
+    <div class="step" id="step-7">
+        <div class="page-badge">Blz. 40</div>
+        <h2>Aan de slag (Deel 1)</h2>
+        <p style="font-size: 1.5rem;">Kies één kwaliteit en onderzoek deze:</p>
+        <input type="text" placeholder="1. Mijn kwaliteit (bijv. Behulpzaam)">
+        <input type="text" placeholder="2. Mijn valkuil (wanneer wordt dit te veel?)">
+        <input type="text" placeholder="3. Herkennen (Stress, gedachten, lichaam?)">
+    </div>
+
+    <!-- Stap 8: Oefening Stap 4 -->
+    <div class="step" id="step-8">
+        <div class="page-badge">Blz. 40</div>
+        <h2>Bijsturen</h2>
+        <p>Welke helpende gedachte helpt jou om weer in je kracht te komen?</p>
+        <div style="background: var(--page-badge-bg); padding: 20px; border-radius: 15px; margin-bottom: 10px;">
+            💡 <em>"Iedereen maakt fouten"</em> of <em>"Ik mag ook nee zeggen"</em>
+        </div>
+        <input type="text" placeholder="Mijn niet-helpende gedachte (bijv. Ik moet perfect zijn)">
+        <input type="text" placeholder="Mijn helpende gedachte (bijv. Goed genoeg is ook prima)">
+    </div>
+
+    <!-- Stap 9: Evaluatie -->
+    <div class="step" id="step-9">
+        <div class="page-badge">Blz. 41</div>
+        <h2>Reflectie & Evaluatie</h2>
+        <div class="grid-2">
+            <div style="font-size: 1.4rem;">
+                <p>✅ Jij BÉNT niet je valkuil.</p>
+                <p>✅ Je hebt een kwaliteit die soms te groot is.</p>
+                <p>✅ Onder elke valkuil zit een kracht.</p>
+            </div>
+            <div>
+                <input type="text" placeholder="Wat neem je mee van vandaag?">
+                <input type="text" placeholder="Wat ga je deze week proberen?">
+            </div>
+        </div>
+        <h3 style="text-align: center; color: var(--primary-color); margin-top: 30px; font-size: 2.8rem;">Mooi gewerkt vandaag! 🚀</h3>
+    </div>
+
+    <div class="btn-container">
+        <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)" disabled>Vorige</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">Volgende</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="qualityModal">
+    <div class="modal-content">
+        <h2 id="modalTitle" style="text-align: center; border-bottom: 3px solid var(--accent-color); padding-bottom: 10px;">Kwaliteiten</h2>
+        <div id="qualityList"></div>
+        <button onclick="closeModal()" style="margin-top: 25px; width: 100%; background: var(--primary-color); color: white; border: none; padding: 15px; font-size: 1.5rem; border-radius: 15px; cursor: pointer; font-weight: bold;">Sluiten</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 0;
+    const moodCounts = {
+        bliksem: 0,
+        regen: 0,
+        wolken: 0,
+        'zon-wolken': 0,
+        zon: 0
+    };
+
+    function registerMood(type) {
+        moodCounts[type]++;
+        document.getElementById(`count-${type}`).innerText = moodCounts[type];
+        
+        // Kleine animatie feedback
+        const el = document.getElementById(`count-${type}`).parentElement;
+        el.style.transform = "scale(1.2)";
+        setTimeout(() => el.style.transform = "scale(1.1)", 100);
+    }
+
+    const totalSteps = document.querySelectorAll('.step').length;
+
+    // Database van 10 kwaliteiten per letter
+    const qualitiesDB = {
+        'A': [['Aardig', 'Vriendelijk zijn voor anderen.'], ['Assertief', 'Durven opkomen voor jezelf.'], ['Analytisch', 'Goed kunnen nadenken over hoe iets werkt.'], ['Authentiek', 'Echt jezelf durven zijn.'], ['Ambitieus', 'Graag je doelen willen bereiken.'], ['Attent', 'Oog hebben voor de behoeften van anderen.'], ['Avontuurlijk', 'Nieuwe dingen durven proberen.'], ['Aanmoedigend', 'Anderen motiveren.'], ['Alert', 'Snel zien wat er gebeurt.'], ['Aanpassingsvermogen', 'Makkelijk wennen aan veranderingen.']],
+        'B': [['Behulpzaam', 'Graag klaarstaan voor een ander.'], ['Betrouwbaar', 'Doen wat je belooft.'], ['Bescheiden', 'Niet hoeven opscheppen over jezelf.'], ['Besluitvaardig', 'Knopen durven doorhakken.'], ['Bevlogen', 'Dingen doen met veel passie.'], ['Beheerst', 'Rustig blijven in lastige momenten.'], ['Bedachtzaam', 'Eerst nadenken voor je doet.'], ['Benaderbaar', 'Mensen durven makkelijk naar je toe te komen.'], ['Balans', 'Weten wanneer je moet stoppen.'], ['Beleefd', 'Respectvol omgaan met anderen.']],
+        'C': [['Creatief', 'Makkelijk nieuwe oplossingen bedenken.'], ['Charismatisch', 'Een fijne uitstraling hebben.'], ['Consequent', 'Duidelijk zijn in wat je doet.'], ['Communicatief', 'Goed kunnen vertellen wat je denkt.'], ['Compassie', 'Melevend zijn met anderen.'], ['Constructief', 'Meebouwen aan een oplossing.'], ['Concurrerend', 'Houden van een uitdaging.'], ['Controle', 'De boel goed in de gaten kunnen houden.'], ['Courage (Moed)', 'Dingen durven die spannend zijn.'], ['Conceptueel', 'Het grote plaatje kunnen zien.']],
+        'D': [['Doorzetter', 'Niet opgeven als het moeilijk wordt.'], ['Dapper', 'Je angsten onder ogen durven zien.'], ['Discipline', 'Je aan je eigen regels kunnen houden.'], ['Duidelijk', 'Mensen weten precies wat ze aan je hebben.'], ['Dankbaar', 'Waarderen wat je hebt.'], ['Diplomatiek', 'Zaken rustig kunnen oplossen.'], ['Dynamisch', 'Vol energie en beweging.'], ['Dienstbaar', 'Graag nuttig willen zijn voor anderen.'], ['Doelgericht', 'Recht op je doel af gaan.'], ['Diepgang', 'Geen genoegen nemen met simpele antwoorden.']],
+        'E': [['Eerlijk', 'De waarheid spreken.'], ['Enthousiast', 'Positief en vol energie.'], ['Empathisch', 'Gevoelens van anderen goed snappen.'], ['Eigenzinnig', 'Je eigen pad durven volgen.'], ['Energiek', 'Veel zin hebben om dingen te doen.'], ['Efficiënt', 'Dingen slim en snel aanpakken.'], ['Elegant', 'Dingen op een mooie manier doen.'], ['Ervaren', 'Leren van je fouten.'], ['Expressief', 'Goed kunnen laten zien wat je voelt.'], ['Extravert', 'Energie krijgen van andere mensen.']],
+        'F': [['Flexibel', 'Meebewegen als plannen veranderen.'], ['Fantasierijk', 'Veel mooie beelden in je hoofd hebben.'], ['Feitelijk', 'Kijken naar wat echt waar is.'], ['Focus', 'Je heel goed op één ding kunnen richten.'], ['Fijngevoelig', 'Snel merken hoe de sfeer is.'], ['Fair', 'Eerlijk spelen volgens de regels.'], ['Frivool', 'Luchtig en vrolijk zijn.'], ['Filosofisch', 'Nadenken over de zin van dingen.'], ['Fervent', 'Ergens heel erg fan van zijn.'], ['Fris', 'Op een nieuwe manier naar dingen kijken.']],
+        'G': [['Geduldig', 'Goed kunnen wachten.'], ['Gulle', 'Graag delen met anderen.'], ['Gevoelig', 'Dingen diep aanvoelen.'], ['Geestig', 'Makkelijk grappen maken.'], ['Gedisciplineerd', 'Dingen doen die moeten, ook zonder zin.'], ['Gedreven', 'Ergens echt voor willen gaan.'], ['Gelijkwaardig', 'Iedereen als gelijk zien.'], ['Gezellig', 'Sfeer brengen in de groep.'], ['Grenzen stellen', 'Weten wanneer je stop moet zeggen.'], ['Geloofwaardig', 'Mensen geloven wat je zegt.']],
+        'H': [['Humor', 'Dingen minder zwaar maken met een lach.'], ['Hulpvaardig', 'Nuttig willen zijn voor anderen.'], ['Helder', 'Dingen simpel kunnen uitleggen.'], ['Hartelijk', 'Warm en vriendelijk zijn.'], ['Hoopvol', 'Geloven dat het goed komt.'], ['Herstelkracht', 'Snel opkrabbelen na een tegenslag.'], ['Handig', 'Goed zijn met praktische zaken.'], ['Hulde geven', 'Anderen graag complimenten geven.'], ['Hoogstaand', 'Gaan voor de beste kwaliteit.'], ['Hartstochtelijk', 'Dingen met je hele hart doen.']],
+        'I': [['Inlevingsvermogen', 'Snappen hoe een ander zich voelt.'], ['Intelligent', 'Moeilijke dingen snel snappen.'], ['Inspirerend', 'Anderen zin geven om iets te doen.'], ['Innovatief', 'Nieuwe dingen bedenken.'], ['Integer', 'Eerlijk zijn naar jezelf en anderen.'], ['Initiatiefrijk', 'Zelf als eerste beginnen.'], ['Ingetogen', 'Rustig aanwezig zijn.'], ['Idealistisch', 'Geloven in een betere wereld.'], ['Informatief', 'Veel kunnen vertellen over een onderwerp.'], ['Intuïtief', 'Luisteren naar je onderbuikgevoel.']],
+        'J': [['Joviaal', 'Hartelijk en sociaal zijn.'], ['Just (Rechtvaardig)', 'Houden van eerlijkheid.'], ['Jeugdig', 'Fris en speels blijven kijken.'], ['Juistheid', 'Dingen op de juiste manier doen.'], ['Jubbelend', 'Intens blij kunnen zijn.'], ['Joker', 'Vrolijkheid brengen als het nodig is.'], ['Jargon-vrij', 'Begrijpelijke taal spreken.'], ['Joiner', 'Graag meedoen met de groep.'], ['Judicious', 'Verstandig keuzes maken.'], ['Jumper', 'Stappen durven zetten.']],
+        'K': [['Krachtig', 'Een sterke persoonlijkheid hebben.'], ['Kritisch', 'Vragen stellen bij wat je hoort.'], ['Kleurrijk', 'Een bijzonder persoon zijn.'], ['Klantvriendelijk', 'Anderen heel goed willen helpen.'], ['Kalm', 'Rust uitstralen.'], ['Keurig', 'Netjes en verzorgd werken.'], ['Kameraadschappelijk', 'Een goede vriend zijn.'], ['Kenner', 'Veel weten van een onderwerp.'], ['Kordaat', 'Beslist optreden.'], ['Kwetsbaar', 'Eerlijk durven zijn over je onzekerheid.']],
+        'L': [['Loyaal', 'Trouw zijn aan je vrienden.'], ['Levendig', 'Vol energie en leven zijn.'], ['Leergierig', 'Alles willen weten.'], ['Lief', 'Zachtaardig zijn voor anderen.'], ['Luistervaardig', 'Echt aandacht geven aan een verhaal.'], ['Leidinggevend', 'De groep durven sturen.'], ['Laconiek', 'Je niet snel druk maken.'], ['Logisch', 'Helder en stap-voor-stap nadenken.'], ['Licht', 'De sfeer niet te zwaar maken.'], ['Lankmoedig', 'Veel geduld hebben.']],
+        'M': [['Meelevend', 'Meleven met wat een ander doormaakt.'], ['Moedig', 'Dingen doen ondanks je angst.'], ['Modest (Bescheiden)', 'Niet hoeven opvallen.'], ['Metodisch', 'Gestructureerd werken.'], ['Mild', 'Niet te streng zijn.'], ['Maatschappelijk', 'Betrokken zijn bij de wereld.'], ['Multitasking', 'Meerdere dingen tegelijk kunnen.'], ['Motiverend', 'Anderen aanzetten tot actie.'], ['Mindful', 'In het hier en nu zijn.'], ['Mensgericht', 'Mensen belangrijker vinden dan prestaties.']],
+        'N': [['Nuchter', 'Met beide benen op de grond staan.'], ['Nauwkeurig', 'Heel precies werken.'], ['Nieuwsgierig', 'Dingen willen ontdekken.'], ['Natuurlijk', 'Zelf zijn zonder masker.'], ['Nobel', 'Goede bedoelingen hebben.'], ['Neutraliserend', 'Sfeer rustig maken.'], ['Nuttig', 'Echt iets toevoegen.'], ['Netjes', 'Houden van orde.'], ['Niet-oordelend', 'Anderen accepteren zoals ze zijn.'], ['Navigatie', 'Altijd de weg weten te vinden.']],
+        'O': [['Oprecht', 'Menens wat je zegt.'], ['Optimistisch', 'Kansen zien en geloven in succes.'], ['Ondernemend', 'Werk zien liggen en aanpakken.'], ['Open-minded', 'Openstaan voor andere ideeën.'], ['Onafhankelijk', 'Zelf je keuzes kunnen maken.'], ['Oordeelkundig', 'Situaties goed kunnen inschatten.'], ['Orderlijk', 'Overzicht kunnen houden.'], ['Oorspronkelijk', 'Eigen ideeën hebben.'], ['Overtuigend', 'Anderen kunnen meekrijgen.'], ['Opmerkzaam', 'Details zien die anderen missen.']],
+        'P': [['Positief', 'Focussen op wat goed gaat.'], ['Precies', 'Houden van nauwkeurig werk.'], ['Passievol', 'Dingen met je hele hart doen.'], ['Pionier', 'Als eerste iets nieuws proberen.'], ['Praktisch', 'Kiezen voor wat echt werkt.'], ['Punctueel', 'Altijd op tijd zijn.'], ['Populair', 'Anderen zijn graag bij jou.'], ['Plannend', 'Goed met tijd kunnen omgaan.'], ['Principieel', 'Vasthouden aan je waarden.'], ['Productief', 'Veel gedaan krijgen.']],
+        'Q': [['Qualified', 'Heel bekwaam zijn.'], ['Quiet', 'Een rustige aanwezigheid zijn.'], ['Quick-witted', 'Scherp en slim reageren.'], ['Quality-minded', 'Gaan voor de beste kwaliteit.'], ['Quest-seeking', 'Houden van uitdagingen.'], ['Quaint', 'Op een leuke manier anders zijn.'], ['Quietude', 'Rust en vrede meebrengen.'], ['Quotidian', 'Elke dag betrouwbaar zijn.'], ['Querist', 'De juiste vragen stellen.'], ['Quick', 'Snel nieuwe stof snappen.']],
+        'R': [['Rustig', 'Kalmte uitstralen.'], ['Rechtvaardig', 'Willen dat iedereen eerlijk wordt behandeld.'], ['Realistisch', 'Kijken naar wat echt kan.'], ['Respectvol', 'Anderen netjes behandelen.'], ['Relativerend', 'Inzien dat het niet zo erg is.'], ['Reflectief', 'Nadenken over je eigen gedrag.'], ['Royaal', 'Gul zijn met tijd en aandacht.'], ['Rechtstreeks', 'Eerlijk zeggen waar het op staat.'], ['Razendsnel', 'Vlot in denken of doen.'], ['Resoluut', 'Niet twijfelen aan je besluit.']],
+        'S': [['Sociaal', 'Makkelijk contact maken.'], ['Sportief', 'Goed tegen je verlies kunnen.'], ['Stabiel', 'Constant en betrouwbaar zijn.'], ['Slim', 'Dingen goed snappen.'], ['Spontaan', 'Onverwacht leuke dingen doen.'], ['Sympathiek', 'Aardig overkomen.'], ['Samenwerker', 'Goed in een team kunnen.'], ['Stipt', 'Nauwkeurig in afspraken.'], ['Serieus', 'Focus hebben op je werk.'], ['Sfeermaker', 'Zorgen voor gezelligheid.']],
+        'T': [['Tolerant', 'Accepteren dat others anders zijn.'], ['Trouw', 'Je vrienden niet in de steek laten.'], ['Toegewijd', 'Er volledig voor gaan.'], ['Tactvol', 'Lastige dingen netjes kunnen zeggen.'], ['Toekomstgericht', 'Vooruit kijken naar wat komt.'], ['Teamplayer', 'Groep boven eigen belang stellen.'], ['Temperamentvol', 'Passie laten zien.'], ['Tevreden', 'Blij zijn met wie je bent.'], ['Transparant', 'Open en eerlijk zijn over wat je doet.'], ['Talentvol', 'Aanleg hebben voor dingen.']],
+        'U': [['Uitgesproken', 'Duidelijke mening durven geven.'], ['Uniek', 'Je eigen bijzondere zelf zijn.'], ['Uithoudingsvermogen', 'Lang kunnen volhouden.'], ['Uitmuntend', 'Dingen erg goed doen.'], ['Uitnodigend', 'Anderen welkom laten voelen.'], ['Up-to-date', 'Weten wat er nu speelt.'], ['Uitbundig', 'Enthousiasme groot laten zien.'], ['Uitgebalanceerd', 'Stabiel en in evenwicht.'], ['Urgente aanpak', 'Dingen direct oppakken.'], ['Uitzonderlijk', 'Bijzonder uitblinken.']],
+        'V': [['Verantwoordelijk', 'Taken serieus nemen.'], ['Vriendelijk', 'Aardig zijn voor iedereen.'], ['Vrolijk', 'Goed humeur meebrengen.'], ['Vindingrijk', 'Slimme oplossingen bedenken.'], ['Vergevingsgezind', 'Niet lang boos blijven.'], ['Vrijgevig', 'Graag delen.'], ['Vertrouwen', 'Geloven in goede bedoelingen.'], ['Vlijtig', 'Hard werken.'], ['Veelzijdig', 'Veel verschillende dingen kunnen.'], ['Vastberaden', 'Niet laten afleiden van je doel.']],
+        'W': [['Warm', 'Hartelijk persoon zijn.'], ['Wijze', 'Goed advies kunnen geven.'], ['Wilskracht', 'Sterke wil hebben om te slagen.'], ['Waakzaam', 'Goed op de veiligheid letten.'], ['Waardig', 'Zelfrespect tonen.'], ['Welbespraakt', 'Je woorden goed kunnen kiezen.'], ['Werkzaam', 'Graag nuttig bezig zijn.'], ['Wispelturig (Creatief)', 'Verrassend en nooit saai.'], ['Wijs', 'Leren van het leven.'], ['Wederkerig', 'Iets terugdoen voor een ander.']],
+        'X': [['Expertise', 'Veel weten van één ding.'], ['Xenofiel', 'Openstaan voor het vreemde.'], ['X-factor', 'Speciale uitstraling hebben.'], ['eXtravert', 'Energie halen uit mensen.'], ['eXcentriek', 'Leuk anders zijn.'], ['eXpressief', 'Gevoelens goed uiten.'], ['eXact', 'Uiterst nauwkeurig zijn.'], ['eXuberant', 'Levendig en vol energie.'], ['eXperimenteel', 'Nieuwe methodes proberen.'], ['eXcellent', 'Streven naar het beste.']],
+        'Y': [['Yoga-stijl', 'Flexibel in lichaam en geest.'], ['Yearning (Leergierig)', 'Willen leren.'], ['Yielding (Meegaand)', 'Meebewegen met de groep.'], ['Young-at-heart', 'Speelse instelling hebben.'], ['Yes-mentality', 'Kansen zien.'], ['Ying-Yang', 'Balans brengen.'], ['Y-factor (Nieuwsgierig)', 'Zich afvragen "waarom".'], ['Year-round support', 'Constante steun zijn.'], ['Yardstick', 'Een voorbeeld zijn.'], ['Yummy (Creatief)', 'Dingen maken waar anderen blij van worden.']],
+        'Z': [['Zorgzaam', 'Graag voor anderen zorgen.'], ['Zelfstandig', 'Dingen goed alleen kunnen.'], ['Zelfverzekerd', 'Geloven in eigen kunnen.'], ['Zorgvuldig', 'Aandacht besteden aan werk.'], ['Zachtmoedig', 'Mild en vriendelijk zijn.'], ['Zwijgzaam (Luisterend)', 'Goed kunnen luisteren.'], ['Zakelijk', 'Gericht en professioneel werken.'], ['Zintuiglijk', 'Wereld bewust waarnemen.'], ['Zoeker', 'Op zoek naar groei.'], ['Zinvol', 'Dingen doen die nut hebben.']]
+    };
+
+    function initAlphabet() {
+        const grid = document.getElementById('alpha-grid');
+        for (let i = 65; i <= 90; i++) {
+            const letter = String.fromCharCode(i);
+            const btn = document.createElement('button');
+            btn.className = 'letter-btn';
+            btn.innerText = letter;
+            btn.onclick = () => openModal(letter);
+            grid.appendChild(btn);
+        }
+    }
+
+    function openModal(letter) {
+        const modal = document.getElementById('qualityModal');
+        const title = document.getElementById('modalTitle');
+        const list = document.getElementById('qualityList');
+        
+        title.innerText = `Kwaliteiten met de ${letter}`;
+        list.innerHTML = '';
+        
+        const qualities = qualitiesDB[letter] || [];
+        qualities.forEach(q => {
+            const item = document.createElement('div');
+            item.className = 'quality-item';
+            item.innerHTML = `<div style="font-size: 1.8rem; font-weight: bold; color: var(--primary-color);">${q[0]}</div><div class="quality-explanation">${q[1]}</div>`;
+            item.onclick = () => {
+                const exp = item.querySelector('.quality-explanation');
+                exp.style.display = (exp.style.display === 'block') ? 'none' : 'block';
+            };
+            list.appendChild(item);
+        });
+        
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('qualityModal').style.display = 'none';
+    }
+
+    function updateProgress() {
+        const percentage = (currentStep / (totalSteps - 1)) * 100;
+        document.getElementById('progress-fill').style.width = percentage + '%';
+    }
+
+    function changeStep(n) {
+        let steps = document.querySelectorAll('.step');
+        steps[currentStep].classList.remove('active');
+        currentStep += n;
+
+        if (currentStep < 0) currentStep = 0;
+        if (currentStep >= totalSteps) currentStep = totalSteps - 1;
+
+        steps[currentStep].classList.add('active');
+
+        document.getElementById('prevBtn').disabled = currentStep === 0;
+        document.getElementById('nextBtn').style.display = currentStep === totalSteps - 1 ? 'none' : 'block';
+
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('qualityModal');
+        if (event.target == modal) closeModal();
+    }
+
+    initAlphabet();
+    updateProgress();
+</script>
+
+</body>
+</html>
