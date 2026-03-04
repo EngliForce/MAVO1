@@ -15,7 +15,6 @@
             --hero-orange: #ff5722;
             --hero-green: #4caf50;
         }
-
         body {
             font-family: 'Lexend', sans-serif;
             background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
@@ -26,7 +25,6 @@
             flex-direction: column;
             overflow-x: hidden;
         }
-
         header {
             background: var(--hero-blue-main);
             padding: 2.5rem 1rem;
@@ -34,13 +32,11 @@
             clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
             border-bottom: 5px solid var(--hero-yellow);
         }
-
         h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
         h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
         h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
-
         main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
-
+        
         .section-divider {
             height: 4px;
             background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
@@ -49,7 +45,6 @@
             border-radius: 2px;
             box-shadow: 0 0 15px var(--hero-cyan);
         }
-
         .briefing-box {
             background: rgba(16, 42, 67, 0.9);
             border: 2px solid var(--hero-cyan);
@@ -58,7 +53,6 @@
             margin-bottom: 30px;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-
         .video-container {
             background: #000;
             border: 4px solid var(--hero-blue-main);
@@ -69,52 +63,41 @@
             margin-bottom: 40px;
             box-shadow: 0 0 40px rgba(2, 136, 209, 0.4);
         }
-
         .video-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
-
         .explanation-text {
             font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
             border-left: 4px solid var(--hero-orange); padding-left: 20px;
             background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
         }
-
         .formula-container {
             display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap;
         }
-
         .formula-part {
             background: var(--hero-blue-dark); border: 2px solid var(--hero-cyan);
             padding: 20px; border-radius: 15px; font-weight: bold; text-align: center;
             flex: 1; min-width: 200px; max-width: 300px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-
         .toggle-container {
             display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
         }
-
         .btn-toggle {
             background: var(--hero-blue-main); color: white; border: none;
             padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
             font-size: 1.3rem; cursor: pointer; transition: 0.2s;
             border-bottom: 5px solid var(--hero-blue-dark);
         }
-
         .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
-
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #102a43; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
         td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
         tr:hover { background: rgba(129, 212, 250, 0.05); }
-
         .highlight { color: var(--hero-yellow); font-weight: bold; }
         .rule-alert { color: var(--hero-orange); font-weight: bold; }
-
         .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
         .boom-text {
             position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
@@ -124,7 +107,7 @@
         @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
         .shake { animation: shake 0.2s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
-
+        
         .pickle-grid { 
             display: grid; 
             grid-template-columns: repeat(5, 1fr); 
@@ -133,14 +116,41 @@
         }
         @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 600px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } }
-
-        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
         .card .title { font-family: 'Bangers'; font-size: 1.3rem; color: var(--hero-yellow); margin: 10px 0; }
-        
         .type-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
         .tag-countable { background: var(--hero-green); color: white; }
         .tag-uncountable { background: var(--hero-orange); color: white; }
+
+        /* Niewe stijlen voor de Mission Completed knop */
+        .btn-complete {
+            background: transparent;
+            border: 2px solid var(--hero-green);
+            color: var(--hero-green);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-family: 'Bangers', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+        .btn-complete:hover {
+            background: rgba(76, 175, 80, 0.2);
+        }
+        .btn-complete.completed {
+            background: var(--hero-green);
+            color: white;
+            border-color: var(--hero-green);
+        }
+        .card.completed {
+            border-color: var(--hero-green);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
 
         footer {
             background: #05101a;
@@ -173,7 +183,6 @@
             <strong>Gouden Regel 1:</strong> Gebruik <span class="highlight">LITTLE</span> voor dingen die je kunt tellen (Countable).<br>
             <strong>Gouden Regel 2:</strong> Gebruik <span class="highlight">FEW</span> voor dingen die je niet kunt tellen (Uncountable).
         </div>
-
         <div class="formula-container">
             <div class="formula-part">LITTLE<br><small>betekent: weinig</small><br><div class="type-tag tag-countable">Telbaar</div></div>
             <div class="formula-part">FEW<br><small>betekent: weinig</small><br><div class="type-tag tag-uncountable">Ontelbaar</div></div>
@@ -185,6 +194,7 @@
     <div class="toggle-container">
         <button class="btn-toggle" onclick="showSection(event, 'rules', 'ZAP!')">Basis Regels</button>
         <button class="btn-toggle" onclick="showSection(event, 'examples', 'KA-POW!')">Checklist</button>
+        <button class="btn-toggle" onclick="showSection(event, 'video-section', 'BOOM!')">Missie Video</button>
     </div>
 
     <div id="rules" class="content-section" style="display: block;">
@@ -221,41 +231,46 @@
         </div>
     </div>
 
-    <div class="section-divider"></div>
-
-    <h2>🎬 MISSION BRIEFING VIDEO</h2>
-    <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/S2X_fG_651o?rel=0" allowfullscreen title="Few vs Little Explanation"></iframe>
+    <div id="video-section" class="content-section">
+        <h3>🎬 MISSION BRIEFING VIDEO</h3>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/-YzafDsrGsw?rel=0" allowfullscreen title="Few vs Little Explanation"></iframe>
+        </div>
     </div>
 
     <div class="section-divider"></div>
 
     <h2>⚔️ PICKLE MISSIONS</h2>
     <div class="pickle-grid">
-        <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t4_little_few_pickle_1.html')">
+        <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'm1t4_little_few_pickle_1.html')">
             <span style="font-size: 2.5rem;">🔨</span>
             <div class="title">Pickle 1</div>
             <p style="font-size: 0.9rem;">Whack-a-Mole</p>
+            <button id="btn-p1" class="btn-complete" onclick="toggleComplete(event, 'p1')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'SQUASH!', 'm1t4_little_few_pickle_2.html')">
+        <div class="card" id="card-p2" onclick="openMission(event, 'SQUASH!', 'm1t4_little_few_pickle_2.html')">
             <span style="font-size: 2.5rem;">💧</span>
             <div class="title">Pickle 2</div>
             <p style="font-size: 0.9rem;">Uncountable Flow</p>
+            <button id="btn-p2" class="btn-complete" onclick="toggleComplete(event, 'p2')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'BAM!', 'm1t4_little_few_pickle_3.html')">
+        <div class="card" id="card-p3" onclick="openMission(event, 'BAM!', 'm1t4_little_few_pickle_3.html')">
             <span style="font-size: 2.5rem;">⚖️</span>
             <div class="title">Pickle 3</div>
             <p style="font-size: 0.9rem;">Little or Few?</p>
+            <button id="btn-p3" class="btn-complete" onclick="toggleComplete(event, 'p3')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'WHAM!', 'm1t4_little_few_pickle_4.html')">
+        <div class="card" id="card-p4" onclick="openMission(event, 'WHAM!', 'm1t4_little_few_pickle_4.html')">
             <span style="font-size: 2.5rem;">🕵️‍♂️</span>
             <div class="title">Pickle 4</div>
             <p style="font-size: 0.9rem;">Error Detective</p>
+            <button id="btn-p4" class="btn-complete" onclick="toggleComplete(event, 'p4')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'KABOOM!', 'm1t4_little_few_pickle_5.html')">
+        <div class="card" id="card-p5" onclick="openMission(event, 'KABOOM!', 'm1t4_little_few_pickle_5.html')">
             <span style="font-size: 2.5rem;">🏆</span>
             <div class="title">Pickle 5</div>
             <p style="font-size: 0.9rem;">Ultimate Master</p>
+            <button id="btn-p5" class="btn-complete" onclick="toggleComplete(event, 'p5')">Mission Incomplete</button>
         </div>
     </div>
 </main>
@@ -279,6 +294,38 @@
         createExplosion(e, boomMessage);
     }
 
+    // Nieuwe functionaliteit voor het bijhouden van de voltooide Pickles
+    function toggleComplete(e, id) {
+        e.stopPropagation(); // Voorkomt dat het klikken op de knop ook de missie-link opent
+        const btn = document.getElementById('btn-' + id);
+        const card = document.getElementById('card-' + id);
+        
+        const isCompleted = btn.classList.toggle('completed');
+        card.classList.toggle('completed');
+        
+        if(isCompleted) {
+            btn.innerText = '✅ Mission Completed';
+            localStorage.setItem('pickle_' + id + '_completed', 'true');
+            createExplosion(e, 'AWESOME!');
+        } else {
+            btn.innerText = 'Mission Incomplete';
+            localStorage.setItem('pickle_' + id + '_completed', 'false');
+        }
+    }
+
+    // Laad opgeslagen statussen wanneer de pagina laadt
+    document.addEventListener("DOMContentLoaded", () => {
+        ['p1', 'p2', 'p3', 'p4', 'p5'].forEach(id => {
+            if(localStorage.getItem('pickle_' + id + '_completed') === 'true') {
+                const btn = document.getElementById('btn-' + id);
+                const card = document.getElementById('card-' + id);
+                btn.classList.add('completed');
+                btn.innerText = '✅ Mission Completed';
+                card.classList.add('completed');
+            }
+        });
+    });
+
     function createExplosion(e, message) {
         const x = e.clientX; const y = e.clientY;
         const flash = document.getElementById('flash');
@@ -295,7 +342,6 @@
         setTimeout(() => txt.remove(), 600);
     }
 </script>
-
 </body>
 </html>
 
