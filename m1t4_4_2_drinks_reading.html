@@ -12,74 +12,191 @@
             --hero-yellow: #ffb703;
             --hero-cyan: #81d4fa;
             --dark-bg: #0b1a2a;
-            --hero-orange: #ff5722;
+            --hero-orange: #ff9800; /* Aangepast naar echt oranje voor Average */
+            --success: #4caf50; /* Groen voor Easy */
+            --error: #f44336; /* Rood voor Hard */
         }
+
         body {
             font-family: 'Lexend', sans-serif;
             background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
             color: white;
             margin: 0;
-            line-height: 1.8;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
+
         header {
             background: var(--hero-blue-main);
-            padding: 2.5rem 1rem;
+            padding: 1.5rem;
             text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
             border-bottom: 5px solid var(--hero-yellow);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+            z-index: 10;
         }
-        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
-        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.5rem; margin-top: 50px; border-bottom: 2px solid var(--hero-blue-main); padding-bottom: 10px; }
-        main { max-width: 850px; margin: 20px auto; padding: 20px; }
-        .briefing-card {
-            background: rgba(16, 42, 67, 0.95);
-            border: 2px solid var(--hero-cyan);
+
+        h1 { font-family: 'Bangers', cursive; font-size: 2.8rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); letter-spacing: 2px;}
+
+        .level-selector {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Basis styling voor de knoppen */
+        .level-btn {
+            padding: 10px 25px;
             border-radius: 25px;
-            padding: 40px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.6);
-            margin-bottom: 40px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.3s;
+            border: 2px solid transparent;
         }
-        .intro-text { 
-             font-size: 1.25rem; 
-             color: var(--hero-cyan); 
-             font-weight: 700; 
-             margin-bottom: 30px;
+
+        /* Kleuren per niveau */
+        .btn-easy { border-color: var(--success); color: var(--success); }
+        .btn-easy.active, .btn-easy:hover { background: var(--success); color: white; box-shadow: 0 0 15px var(--success); }
+
+        .btn-average { border-color: var(--hero-orange); color: var(--hero-orange); }
+        .btn-average.active, .btn-average:hover { background: var(--hero-orange); color: white; box-shadow: 0 0 15px var(--hero-orange); }
+
+        .btn-hard { border-color: var(--error); color: var(--error); }
+        .btn-hard.active, .btn-hard:hover { background: var(--error); color: white; box-shadow: 0 0 15px var(--error); }
+
+
+        .app-container { display: flex; flex: 1; overflow: hidden; }
+
+        /* Left Side: Full Text */
+        .text-panel {
+            flex: 1.2;
+            overflow-y: auto;
+            padding: 40px;
+            border-right: 3px solid var(--hero-blue-main);
+            background: rgba(16, 42, 67, 0.4);
+            line-height: 1.8;
+        }
+
+        .intro-text {
+            font-size: 1.25rem;
+            color: var(--hero-cyan);
+            font-weight: 700;
+            margin-bottom: 30px;
             line-height: 1.6;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-        .vocab {
-            color: var(--hero-yellow);
-            font-weight: 700;
-            border-bottom: 2px dashed var(--hero-orange);
-            cursor: help;
-            position: relative;
+
+        .text-panel h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2rem; margin-top: 40px; border-bottom: 2px solid var(--hero-blue-main); padding-bottom: 10px; }
+
+        /* Right Side: Questions */
+        .question-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            background: rgba(11, 26, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid var(--hero-yellow);
+            transition: 0.3s;
+        }
+
+        .question-card h3 { font-family: 'Bangers', cursive; color: var(--hero-yellow); margin: 0 0 10px 0; letter-spacing: 1px; }
+        
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: 1px solid var(--hero-cyan);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Lexend', sans-serif;
+            resize: vertical;
+            margin-top: 10px;
+            box-sizing: border-box;
+            min-height: 80px;
+        }
+
+        .check-btn {
+            background: #0288d1;
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.4rem;
+            font-family: 'Bangers', cursive;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 40px;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            border: 2px solid var(--hero-cyan);
+        }
+
+        .check-btn:hover { background: var(--hero-cyan); color: var(--dark-bg); transform: scale(1.02); }
+
+        .feedback-box {
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid #444;
+        }
+
+        .model-ans { color: var(--hero-cyan); font-weight: bold; display: block; margin-bottom: 15px; }
+
+        .self-correct-btns { display: flex; gap: 10px; }
+        .btn-correct { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; flex: 1; font-weight: bold; }
+        .btn-wrong { background: var(--error); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; flex: 1; font-weight: bold; }
+        
+        .btn-correct.selected { outline: 3px solid white; box-shadow: 0 0 15px var(--success); }
+        .btn-wrong.selected { outline: 3px solid white; box-shadow: 0 0 15px var(--error); }
+
+        .score-banner {
+            position: sticky;
+            top: 0;
+            background: var(--hero-yellow);
+            color: var(--dark-bg);
+            padding: 15px;
+            text-align: center;
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            z-index: 5;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .vocab { color: var(--hero-yellow); font-weight: 700; border-bottom: 2px dashed #ff5722; cursor: help; position: relative; }
         .vocab:hover::after {
             content: attr(data-nl);
-            position: absolute;
-            bottom: 130%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--hero-orange);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            z-index: 100;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+            background: #ff5722; color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.9rem; white-space: nowrap; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.4);
         }
-        .highlight-quote {
-            background: rgba(255, 183, 3, 0.1);
-            border-left: 5px solid var(--hero-yellow);
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 0 15px 15px 0;
-            font-style: italic;
+
+        .highlight-quote { background: rgba(255, 183, 3, 0.1); border-left: 5px solid var(--hero-yellow); padding: 20px; margin: 30px 0; border-radius: 0 15px 15px 0; font-style: italic; }
+
+        footer { text-align: center; padding: 40px 0 20px 0; opacity: 0.5; font-size: 0.9rem;}
+
+        @media (max-width: 1000px) {
+            .app-container { flex-direction: column; overflow-y: auto; }
+            .text-panel { border-right: none; border-bottom: 5px solid var(--hero-blue-main); overflow: visible; }
+            .question-panel { overflow: visible; }
+            body { overflow: auto; height: auto; }
         }
-        footer { text-align: center; padding: 60px 0; opacity: 0.5; }
-        @media (max-width: 600px) { .briefing-card { padding: 20px; } h1 { font-size: 2.5rem; } }
     </style>
 </head>
 <body>
@@ -89,68 +206,165 @@
     <p>DRINKS IN THE UNITED KINGDOM</p>
 </header>
 
-<main>
-    <article class="briefing-card">
-        <p class="intro-text">In the United Kingdom, people drink many different drinks every day. Children and adults both enjoy these drinks at home, at school, at work, and in cafés. Some drinks are <span class="vocab" data-nl="traditioneel">traditional</span>, and some are more modern. The most famous British drink is tea, but there are many other popular drinks too.</p>
+<div class="level-selector">
+    <button class="level-btn btn-easy active" onclick="setLevel('Easy', this)">Easy</button>
+    <button class="level-btn btn-average" onclick="setLevel('Average', this)">Average</button>
+    <button class="level-btn btn-hard" onclick="setLevel('Hard', this)">Hard</button>
+</div>
 
-        <h2>Tea – The Most Famous Drink</h2>
-        <p>Tea is very important in British culture. Many people drink tea every day. Some people drink several <span class="vocab" data-nl="kopje">cups</span> of tea a day. Most people drink black tea. They usually add milk, and sometimes they add sugar. British tea is often strong and hot.</p>
-        
-        <p>People drink tea in the morning with breakfast. They also drink tea in the afternoon and in the evening. When a <span class="vocab" data-nl="gast">guest</span> visits a house, the <span class="vocab" data-nl="gastheer / gastvrouw">host</span> often asks, “Would you like a <span class="vocab" data-nl="kopje">cup</span> of tea?” Offering tea is a friendly and polite thing to do.</p>
-        
-        <p>People usually drink tea from a <span class="vocab" data-nl="kopje">cup</span>. A <span class="vocab" data-nl="kopje">cup</span> is quite small and often comes with a saucer. However, some people prefer to drink tea from a <span class="vocab" data-nl="mok">mug</span>. A <span class="vocab" data-nl="mok">mug</span> is bigger than a <span class="vocab" data-nl="kopje">cup</span> and does not usually have a saucer. Many people use a <span class="vocab" data-nl="mok">mug</span> at home because it holds more tea.</p>
+<div class="app-container">
+    <div class="text-panel">
+        <article>
+            <p class="intro-text">In the United Kingdom, people drink many different drinks every day. Children and adults both enjoy these drinks at home, at school, at work, and in cafés. Some drinks are <span class="vocab" data-nl="traditioneel">traditional</span>, and some are more modern. The most famous British drink is tea, but there are many other popular drinks too.</p>
+            
+            <h2>Tea – The Most Famous Drink</h2>
+            <p>Tea is very important in British culture. Many people drink tea every day. Some people drink several <span class="vocab" data-nl="kopje">cups</span> of tea a day. Most people drink black tea. They usually add milk, and sometimes they add sugar. British tea is often strong and hot.</p>                
+            <p>People drink tea in the morning with breakfast. They also drink tea in the afternoon and in the evening. When a <span class="vocab" data-nl="gast">guest</span> visits a house, the <span class="vocab" data-nl="gastheer / gastvrouw">host</span> often asks, “Would you like a <span class="vocab" data-nl="kopje">cup</span> of tea?” Offering tea is a friendly and polite thing to do.</p>                
+            <p>People usually drink tea from a <span class="vocab" data-nl="kopje">cup</span>. A <span class="vocab" data-nl="kopje">cup</span> is quite small and often comes with a saucer. However, some people prefer to drink tea from a <span class="vocab" data-nl="mok">mug</span>. A <span class="vocab" data-nl="mok">mug</span> is bigger than a <span class="vocab" data-nl="kopje">cup</span> and does not usually have a saucer. Many people use a <span class="vocab" data-nl="mok">mug</span> at home because it holds more tea.</p>
+            
+            <div class="highlight-quote">
+                "There is also something called <strong>'afternoon tea.'</strong> This is a light meal in the afternoon with tea, small sandwiches, and cakes. It is popular in hotels and cafés. Many tourists like to try afternoon tea when they visit the UK."
+            </div>
+            
+            <p>Today, people also drink herbal tea and green tea. Some people choose these because they think they are healthier.</p>
+            
+            <h2>Coffee – Popular and Modern</h2>
+            <p>Coffee is also very popular in the UK. In the past, tea was much more popular than coffee. Today, many people drink coffee every day, especially young adults.</p>                
+            <p>There are many coffee <span class="vocab" data-nl="winkel">shops</span> in British cities and towns. People buy drinks such as lattes and cappuccinos. Some people drink black coffee, and others add milk and sugar. Many workers buy a takeaway coffee on their way to work.</p>                
+            <p>Coffee is often served in a <span class="vocab" data-nl="mok">mug</span> at home. In cafés, it can be served in a <span class="vocab" data-nl="kopje">cup</span> or a <span class="vocab" data-nl="mok">mug</span>, depending on the type of coffee. A <span class="vocab" data-nl="mok">mug</span> is often used for larger drinks. Students and friends often meet in coffee <span class="vocab" data-nl="winkel">shops</span>. These cafés are places to relax, talk, or do homework.</p>
+            
+            <h2>Soft Drinks and Squash</h2>
+            <p>Children and teenagers often drink <span class="vocab" data-nl="frisdrank">soft drinks</span>. These include <span class="vocab" data-nl="limonade">lemonade</span>, cola, and fruit <span class="vocab" data-nl="sap">juice</span>. Many families buy <span class="vocab" data-nl="frisdrank">soft drinks</span> in <span class="vocab" data-nl="winkel">shops</span> to keep in the fridge.</p>                
+            <p>Another popular British drink is called “squash.” Squash is a sweet liquid with fruit <span class="vocab" data-nl="smaak">flavour</span>. You do not drink it alone. You mix it with water. Squash can be orange, lemon, or blackcurrant <span class="vocab" data-nl="smaak">flavour</span>. Many children drink squash at home.</p>                
+            <p>Fruit <span class="vocab" data-nl="sap">juice</span> is also common. People often drink orange <span class="vocab" data-nl="sap">juice</span> in the morning. Apple <span class="vocab" data-nl="sap">juice</span> is also popular. Some <span class="vocab" data-nl="sap">juices</span> contain a lot of sugar, so many families choose drinks with less sugar.</p>
+            
+            <h2>Milk and Hot Chocolate</h2>
+            <p>Milk is an important drink in the UK. Many children drink milk every day. It is often part of breakfast with cereal. Some schools give milk to younger children.</p>                
+            <p>Hot chocolate is very popular in autumn and winter. When it is cold outside, people like to drink something warm and sweet. Hot chocolate is often made with milk and cocoa powder. Some people add cream or marshmallows on top.</p>                
+            <p>Hot chocolate is usually served in a <span class="vocab" data-nl="mok">mug</span> because it is bigger than a <span class="vocab" data-nl="kopje">cup</span>. A <span class="vocab" data-nl="mok">mug</span> keeps the drink warm for longer.</p>
+            
+            <h2>Water and Healthy Choices</h2>
+            <p>Water is very important for everyone. In the UK, tap water is safe to drink. People can drink water directly from the tap in the kitchen. Many people carry a reusable water <span class="vocab" data-nl="fles">bottle</span> during the day.</p>                
+            <p>Schools <span class="vocab" data-nl="aanmoedigen">encourage</span> students to drink water. Many children bring a <span class="vocab" data-nl="fles">bottle</span> of water to school. Water is more <span class="vocab" data-nl="gezond">healthy</span> than drinks with a lot of sugar.</p>                
+            <p>Today, many families try to choose healthier drinks. Some people drink <span class="vocab" data-nl="suikervrij">sugar-free</span> <span class="vocab" data-nl="frisdrank">soft drinks</span>. Others drink more water and less cola. People think more about <span class="vocab" data-nl="gezond">healthy</span> food and drinks than in the past.</p>
+            
+            <h2>Drinks at Home and Outside</h2>
+            <p>Most drinks are drunk at home. Families buy tea, milk, <span class="vocab" data-nl="sap">juice</span>, and squash in <span class="vocab" data-nl="winkel">shops</span>. People drink tea in the morning, water during the day, and maybe hot chocolate in the evening.</p>                
+            <p>People also drink drinks in cafés, restaurants, and at parties. At birthday parties, children often drink <span class="vocab" data-nl="limonade">lemonade</span> or <span class="vocab" data-nl="sap">juice</span>. At family dinners, people may drink water or <span class="vocab" data-nl="frisdrank">soft drinks</span>.</p>                
+            <p>During <span class="vocab" data-nl="viering">celebration</span> events, such as Christmas, people sometimes drink special drinks, like sparkling apple <span class="vocab" data-nl="sap">juice</span>.</p>
+            
+            <h2>Conclusion</h2>
+            <p>Drinks are an important part of daily life in the United Kingdom. <span class="vocab" data-nl="traditioneel">Traditional</span> tea is the most famous. Coffee is popular in cities and towns. Children often drink squash, <span class="vocab" data-nl="sap">juice</span>, and milk. Water is <span class="vocab" data-nl="gezond">healthy</span> and easy to get because tap water is safe to drink.</p>                
+            <p>Whether people use a <span class="vocab" data-nl="kopje">cup</span> or a <span class="vocab" data-nl="mok">mug</span>, a warm drink is an important part of British life.</p>
 
-        <div class="highlight-quote">
-            "There is also something called <strong>'afternoon tea.'</strong> This is a light meal in the afternoon with tea, small sandwiches, and cakes. It is popular in hotels and cafés. Many tourists like to try afternoon tea when they visit the UK."
+            <footer>
+                <p>&copy; 2026 EngliForce: Make English Your Superpower!</p>
+            </footer>
+        </article>
+    </div>
+
+    <div class="question-panel" id="questionPanel">
         </div>
+</div>
 
-        <p>Today, people also drink herbal tea and green tea. Some people choose these because they think they are healthier.</p>
+<script>
+    const allQuestions = {
+        Easy: [
+            { q: "What is the most famous drink in the UK?", a: "Tea" },
+            { q: "What do people usually add to black tea?", a: "Milk (and sometimes sugar)" },
+            { q: "When do people usually drink tea with breakfast?", a: "In the morning" },
+            { q: "Is a 'mug' bigger or smaller than a 'cup'?", a: "Bigger" },
+            { q: "Who drinks a lot of coffee today in the UK?", a: "Young adults" },
+            { q: "What do many workers buy on their way to work?", a: "A takeaway coffee" },
+            { q: "What is 'squash' mixed with?", a: "Water" },
+            { q: "Name one flavor of squash mentioned in the text.", a: "Orange, lemon, or blackcurrant" },
+            { q: "Is it safe to drink water from the tap in the UK?", a: "Yes, it is safe" },
+            { q: "Where do families buy tea, milk, and juice?", a: "In shops" }
+        ],
+        Average: [
+            { q: "Why is offering tea to a guest considered important?", a: "Because it is a friendly and polite thing to do in British culture" },
+            { q: "What is the main difference in how a cup and a mug look?", a: "A cup is small and usually has a saucer; a mug is bigger and usually has no saucer" },
+            { q: "Describe what 'afternoon tea' is.", a: "A light meal in the afternoon with tea, small sandwiches, and cakes" },
+            { q: "How has the popularity of coffee changed compared to the past?", a: "In the past tea was much more popular, but now coffee is very popular too" },
+            { q: "Why do some people choose to drink herbal tea or green tea?", a: "Because they think these options are healthier" },
+            { q: "Explain what squash is.", a: "It is a sweet liquid with fruit flavour that you mix with water" },
+            { q: "Why is hot chocolate especially popular in autumn and winter?", a: "Because it is warm and sweet when it is cold outside" },
+            { q: "How do schools encourage healthy habits?", a: "By encouraging students to drink water instead of sugary drinks" },
+            { q: "When might people drink sparkling apple juice?", a: "During celebration events like Christmas" },
+            { q: "Why do many people use a mug for hot chocolate instead of a cup?", a: "Because a mug is bigger and keeps the drink warm for longer" }
+        ],
+        Hard: [
+            { q: "Analyze why tea is considered more than just a drink in the UK.", a: "It acts as a cultural symbol of hospitality and a social ritual when guests visit" },
+            { q: "Explain the 'takeaway coffee' trend mentioned in the text.", a: "It is popular among workers who buy coffee in shops to drink while commuting to work" },
+            { q: "Compare the health benefits of water versus soft drinks as described in the text.", a: "Water is healthier and schools encourage it, while soft drinks often contain a lot of sugar" },
+            { q: "Why might a hotel or café be a good place to find 'afternoon tea'?", a: "Because it is a traditional light meal that tourists and locals like to enjoy in a nice setting" },
+            { q: "How does the text distinguish between traditional and modern drinking habits?", a: "Tea is traditional; coffee, sugar-free drinks, and reusable water bottles represent more modern habits" },
+            { q: "What does the use of 'reusable bottles' tell us about modern UK habits?", a: "It shows an increasing awareness of health and easy access to safe tap water" },
+            { q: "Why is 'squash' a specifically mentioned part of British life for children?", a: "Because it is a very common, traditional sweet drink found in many family homes that children enjoy" },
+            { q: "Evaluate the role of coffee shops for students.", a: "They serve as social hubs where students can relax, talk, or do their homework" },
+            { q: "Summarize the variety of drinks people might have during different events.", a: "Lemonade at birthdays, water/soft drinks at family dinners, and sparkling apple juice at Christmas" },
+            { q: "How does the text explain the shift towards healthier families today?", a: "Families choose sugar-free soft drinks, drink more water, and consume less cola than in the past" }
+        ]
+    };
 
-        <h2>Coffee – Popular and Modern</h2>
-        <p>Coffee is also very popular in the UK. In the past, tea was much more popular than coffee. Today, many people drink coffee every day, especially young adults.</p>
-        
-        <p>There are many coffee <span class="vocab" data-nl="winkel">shops</span> in British cities and towns. People buy drinks such as lattes and cappuccinos. Some people drink black coffee, and others add milk and sugar. Many workers buy a takeaway coffee on their way to work.</p>
-        
-        <p>Coffee is often served in a <span class="vocab" data-nl="mok">mug</span> at home. In cafés, it can be served in a <span class="vocab" data-nl="kopje">cup</span> or a <span class="vocab" data-nl="mok">mug</span>, depending on the type of coffee. A <span class="vocab" data-nl="mok">mug</span> is often used for larger drinks. Students and friends often meet in coffee <span class="vocab" data-nl="winkel">shops</span>. These cafés are places to relax, talk, or do homework.</p>
+    let currentLevel = 'Easy';
+    let userScores = Array(10).fill(null);
 
-        <h2>Soft Drinks and Squash</h2>
-        <p>Children and teenagers often drink <span class="vocab" data-nl="frisdrank">soft drinks</span>. These include <span class="vocab" data-nl="limonade">lemonade</span>, cola, and fruit <span class="vocab" data-nl="sap">juice</span>. Many families buy <span class="vocab" data-nl="frisdrank">soft drinks</span> in <span class="vocab" data-nl="winkel">shops</span> to keep in the fridge.</p>
-        
-        <p>Another popular British drink is called “squash.” Squash is a sweet liquid with fruit <span class="vocab" data-nl="smaak">flavour</span>. You do not drink it alone. You mix it with water. Squash can be orange, lemon, or blackcurrant <span class="vocab" data-nl="smaak">flavour</span>. Many children drink squash at home.</p>
-        
-        <p>Fruit <span class="vocab" data-nl="sap">juice</span> is also common. People often drink orange <span class="vocab" data-nl="sap">juice</span> in the morning. Apple <span class="vocab" data-nl="sap">juice</span> is also popular. Some <span class="vocab" data-nl="sap">juices</span> contain a lot of sugar, so many families choose drinks with less sugar.</p>
+    function setLevel(level, btn) {
+        currentLevel = level;
+        userScores = Array(10).fill(null);
+        document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderQuestions();
+    }
 
-        <h2>Milk and Hot Chocolate</h2>
-        <p>Milk is an important drink in the UK. Many children drink milk every day. It is often part of breakfast with cereal. Some schools give milk to younger children.</p>
+    function renderQuestions() {
+        const container = document.getElementById('questionPanel');
+        let html = `<div id="scoreBanner" class="score-banner">Score: 0 / 10</div>`;
+        html += `<h2>Assignment: ${currentLevel} (10 Questions)</h2>`;
         
-        <p>Hot chocolate is very popular in autumn and winter. When it is cold outside, people like to drink something warm and sweet. Hot chocolate is often made with milk and cocoa powder. Some people add cream or marshmallows on top.</p>
-        
-        <p>Hot chocolate is usually served in a <span class="vocab" data-nl="mok">mug</span> because it is bigger than a <span class="vocab" data-nl="kopje">cup</span>. A <span class="vocab" data-nl="mok">mug</span> keeps the drink warm for longer.</p>
+        allQuestions[currentLevel].forEach((item, index) => {
+            html += `
+                <div class="question-card">
+                    <h3>Question ${index + 1}</h3>
+                    <p>${item.q}</p>
+                    <textarea id="ans-${index}" placeholder="Type your answer here..."></textarea>
+                    <div id="fb-box-${index}" class="feedback-box" style="display:none;">
+                        <span class="model-ans">Model Answer: <br><span style="color: white; font-weight: normal;">${item.a}</span></span>
+                        <div class="self-correct-btns">
+                            <button id="btn-c-${index}" class="btn-correct" onclick="markAnswer(${index}, true)">Correct ✅</button>
+                            <button id="btn-w-${index}" class="btn-wrong" onclick="markAnswer(${index}, false)">Wrong ❌</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
 
-        <h2>Water and Healthy Choices</h2>
-        <p>Water is very important for everyone. In the UK, tap water is safe to drink. People can drink water directly from the tap in the kitchen. Many people carry a reusable water <span class="vocab" data-nl="fles">bottle</span> during the day.</p>
-        
-        <p>Schools <span class="vocab" data-nl="aanmoedigen">encourage</span> students to drink water. Many children bring a <span class="vocab" data-nl="fles">bottle</span> of water to school. Water is more <span class="vocab" data-nl="gezond">healthy</span> than drinks with a lot of sugar.</p>
-        
-        <p>Today, many families try to choose healthier drinks. Some people drink <span class="vocab" data-nl="suikervrij">sugar-free</span> <span class="vocab" data-nl="frisdrank">soft drinks</span>. Others drink more water and less cola. People think more about <span class="vocab" data-nl="gezond">healthy</span> food and drinks than in the past.</p>
+        html += `<button class="check-btn" onclick="revealFeedback()">CHECK ALL ANSWERS</button>`;
+        container.innerHTML = html;
+        container.scrollTop = 0;
+    }
 
-        <h2>Drinks at Home and Outside</h2>
-        <p>Most drinks are drunk at home. Families buy tea, milk, <span class="vocab" data-nl="sap">juice</span>, and squash in <span class="vocab" data-nl="winkel">shops</span>. People drink tea in the morning, water during the day, and maybe hot chocolate in the evening.</p>
-        
-        <p>People also drink drinks in cafés, restaurants, and at parties. At birthday parties, children often drink <span class="vocab" data-nl="limonade">lemonade</span> or <span class="vocab" data-nl="sap">juice</span>. At family dinners, people may drink water or <span class="vocab" data-nl="frisdrank">soft drinks</span>.</p>
-        
-        <p>During <span class="vocab" data-nl="viering">celebration</span> events, such as Christmas, people sometimes drink special drinks, like sparkling apple <span class="vocab" data-nl="sap">juice</span>.</p>
+    function revealFeedback() {
+        allQuestions[currentLevel].forEach((_, index) => {
+            document.getElementById(`fb-box-${index}`).style.display = 'block';
+        });
+        document.getElementById('scoreBanner').style.display = 'block';
+        document.getElementById('scoreBanner').scrollIntoView({ behavior: 'smooth' });
+    }
 
-        <h2>Conclusion</h2>
-        <p>Drinks are an important part of daily life in the United Kingdom. <span class="vocab" data-nl="traditioneel">Traditional</span> tea is the most famous. Coffee is popular in cities and towns. Children often drink squash, <span class="vocab" data-nl="sap">juice</span>, and milk. Water is <span class="vocab" data-nl="gezond">healthy</span> and easy to get because tap water is safe to drink.</p>
+    function markAnswer(index, isCorrect) {
+        userScores[index] = isCorrect;
         
-        <p>Whether people use a <span class="vocab" data-nl="kopje">cup</span> or a <span class="vocab" data-nl="mok">mug</span>, a warm drink is an important part of British life.</p>
-    </article>
-</main>
+        document.getElementById(`btn-c-${index}`).classList.toggle('selected', isCorrect);
+        document.getElementById(`btn-w-${index}`).classList.toggle('selected', !isCorrect);
 
-<footer>
-    <p>&copy; 2026 EngliForce: Make English Your Superpower!</p>
-</footer>
+        const score = userScores.filter(x => x === true).length;
+        document.getElementById('scoreBanner').innerText = `Score: ${score} / 10`;
+    }
+
+    renderQuestions();
+</script>
 
 </body>
 </html>
