@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Wide-Screen Quiz</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-green: #22c55e;
+            --accent-yellow: #fbbf24;
+            --accent-pink: #ec4899;
+            --text: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b, #050505);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+        }
+
+        /* Screens */
+        .screen { display: none; width: 95%; max-width: 1600px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Setup Grid */
+        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        /* Toggles */
+        .topic-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 8px; border-radius: 10px; background: rgba(255,255,255,0.02); }
+        .switch { position: relative; width: 50px; height: 26px; }
+        .switch input { opacity: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: var(--accent-blue); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* Quiz Layout (Wide) */
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .questions-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
+            gap: 20px; 
+            width: 100%;
+            padding-bottom: 180px; 
+        }
+
+        .q-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .q-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); }
+        
+        /* INSTRUCTIE */
+        .q-instruction { 
+            font-size: 1.2rem; 
+            font-weight: 800; 
+            color: var(--accent-yellow); 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 15px;
+            background: rgba(251, 191, 36, 0.15);
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: inline-block;
+            align-self: center;
+        }
+        
+        /* Highlight voor het specifieke woord */
+        .hl {
+            color: var(--accent-pink);
+            font-weight: 900;
+        }
+
+        .q-text { font-size: 2rem; font-weight: 600; margin-bottom: 15px; line-height: 1.4; }
+        .a-text { font-size: 2.2rem; font-weight: 800; color: var(--accent-green); display: none; border-top: 1px solid var(--border); padding-top: 15px; line-height: 1.5; }
+
+        /* Controls */
+        .btn { border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
+        .btn-primary { background: var(--accent-blue); color: white; }
+        .btn-secondary { background: var(--accent-purple); color: white; }
+        
+        /* CLASS MANAGEMENT */
+        .class-btn { background: #222; color: white; border: 1px solid var(--border); padding: 10px 18px; border-radius: 8px; margin: 5px 5px 5px 0; cursor: pointer; font-size: 1.1rem;}
+        .class-btn.selected { border-color: var(--accent-blue); background: var(--accent-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        .add-class-container { display: flex; gap: 10px; margin-bottom: 15px; margin-top: 10px;}
+        .add-class-input { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; padding: 10px 15px; border-radius: 8px; flex-grow: 1; font-size: 1.1rem; }
+        .add-class-btn { background: var(--accent-green); color: #000; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
+        textarea { width: 100%; height: 120px; background: #111; color: white; border: 1px solid var(--border); border-radius: 10px; padding: 15px; font-size: 1.1rem; box-sizing: border-box; resize: vertical; }
+        
+        /* ZWEVENDE NAMENKIEZER - SUBTIEL */
+        .floating-picker {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(15, 15, 20, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 15px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 900;
+            min-width: 220px;
+            transition: transform 0.2s;
+        }
+
+        #name-display { 
+            font-size: 2rem; 
+            font-weight: 800; 
+            color: #fff; 
+            margin-bottom: 12px;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+        }
+
+        .btn-magic {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .btn-magic:hover { background: var(--accent-purple); border-color: var(--accent-purple); }
+        .btn-magic:active { transform: scale(0.95); }
+
+        /* FULLSCREEN WINNER OVERLAY */
+        .fullscreen-winner {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .fullscreen-winner.show {
+            opacity: 1;
+            pointer-events: all;
+            cursor: pointer;
+        }
+        
+        #huge-winner-text {
+            font-size: 8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-align: center;
+            background: -webkit-linear-gradient(45deg, #fbbf24, #ec4899, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: scale(0.5);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .fullscreen-winner.show #huge-winner-text {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+<div id="fullscreen-overlay" class="fullscreen-winner" onclick="closeOverlay()">
+    <div id="huge-winner-text">NAME</div>
+</div>
+
+<div id="setup-screen" class="screen active glass">
+    <h1 style="text-align: center; font-size: 3rem; margin-top: 0;">Quiz Configurator</h1>
+    <div class="setup-grid">
+        <div>
+            <h2>1. Classes & Names</h2>
+            
+            <div class="add-class-container">
+                <input type="text" id="new-class-input" class="add-class-input" placeholder="E.g., Class 1A" onkeypress="if(event.key === 'Enter') addClass()">
+                <button class="add-class-btn" onclick="addClass()">+ Add Class</button>
+            </div>
+            
+            <div id="class-btns" style="margin-bottom: 15px; min-height: 40px;"></div>
+            
+            <textarea id="names-input" placeholder="Select a class and paste student names here (separated by comma or enter)..." disabled onchange="saveCurrentClass()"></textarea>
+            
+            <h2 style="margin-top: 30px;">2. Settings</h2>
+            <button class="btn btn-primary" style="width: 100%; font-size: 1.5rem;" onclick="startQuiz()">START QUIZ</button>
+        </div>
+        <div>
+            <h2>3. Topics</h2>
+            <div id="topic-toggles"></div>
+        </div>
+    </div>
+</div>
+
+<div id="quiz-screen" class="screen">
+    <div class="quiz-header glass">
+        <div>
+            <span id="active-class-title" style="font-size: 1.5rem; font-weight: bold; color: var(--accent-blue);">CLASS: -</span>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn btn-primary" onclick="generateQuestions()">NEW QUESTIONS</button>
+            <button class="btn" style="background: #333; color: white;" onclick="showSetup()">EXIT</button>
+        </div>
+    </div>
+
+    <div id="questions-area" class="questions-container"></div>
+
+    <div class="floating-picker">
+        <div id="name-display">Ready</div>
+        <button class="btn-magic" onclick="pickStudent()">🎲 PICK STUDENT</button>
+    </div>
+</div>
+
+<script>
+    const data = {
+        "Vocabulary 4.1": [
+            {i: "Translate to Dutch", q: "I eat <span class='hl'>breakfast</span> at 7 AM.", a: "Ontbijt"},
+            {i: "Vertaal naar Engels", q: "Wat eet jij als <span class='hl'>ontbijt</span>?", a: "Breakfast"},
+            {i: "Translate to Dutch", q: "We have <span class='hl'>lunch</span> at school.", a: "Lunch / middagmaal"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>lunch</span> was heerlijk.", a: "Lunch"},
+            {i: "Translate to Dutch", q: "What time is <span class='hl'>dinner</span>?", a: "Avondeten"},
+            {i: "Vertaal naar Engels", q: "Het <span class='hl'>avondeten</span> is klaar.", a: "Dinner"},
+            {i: "Translate to Dutch", q: "Ice cream is my favorite <span class='hl'>dessert</span>.", a: "Nagerecht / toetje"},
+            {i: "Vertaal naar Engels", q: "Wil je een <span class='hl'>nagerecht</span>?", a: "Dessert"},
+            {i: "Translate to Dutch", q: "Let's get a Chinese <span class='hl'>takeaway</span>.", a: "Afhaalmaaltijd"},
+            {i: "Vertaal naar Engels", q: "Ik heb zin in een <span class='hl'>afhaalmaaltijd</span>.", a: "Takeaway"},
+            {i: "Translate to Dutch", q: "I brought a <span class='hl'>packed lunch</span> to work.", a: "Lunchpakket"},
+            {i: "Vertaal naar Engels", q: "Zit er fruit in je <span class='hl'>lunchpakket</span>?", a: "Packed lunch"},
+            {i: "Translate to Dutch", q: "Can I see the <span class='hl'>menu</span>, please?", a: "Menukaart"},
+            {i: "Vertaal naar Engels", q: "De ober bracht de <span class='hl'>menukaart</span>.", a: "Menu"},
+            {i: "Translate to Dutch", q: "Put milk on the <span class='hl'>shopping list</span>.", a: "Boodschappenlijst"},
+            {i: "Vertaal naar Engels", q: "Ik ben mijn <span class='hl'>boodschappenlijst</span> vergeten.", a: "Shopping list"},
+            {i: "Translate to Dutch", q: "We buy food at the <span class='hl'>supermarket</span>.", a: "Supermarkt"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>supermarkt</span> is open.", a: "Supermarket"},
+            {i: "Translate to Dutch", q: "Keep the milk in the <span class='hl'>fridge</span>.", a: "Koelkast"},
+            {i: "Vertaal naar Engels", q: "Zet het vlees in de <span class='hl'>koelkast</span>.", a: "Fridge"},
+            {i: "Translate to Dutch", q: "Bake the pizza in the <span class='hl'>oven</span>.", a: "Oven"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>oven</span> is erg heet.", a: "Oven"},
+            {i: "Translate to Dutch", q: "Put the plates on the <span class='hl'>table</span>.", a: "Tafel"},
+            {i: "Vertaal naar Engels", q: "We zitten aan <span class='hl'>tafel</span>.", a: "Table"},
+            {i: "Translate to Dutch", q: "You need a <span class='hl'>plate</span> for your food.", a: "Bord"},
+            {i: "Vertaal naar Engels", q: "Mijn <span class='hl'>bord</span> is leeg.", a: "Plate"},
+            {i: "Translate to Dutch", q: "My sister is a <span class='hl'>vegetarian</span>.", a: "Vegetariër"},
+            {i: "Vertaal naar Engels", q: "Een <span class='hl'>vegetariër</span> eet geen vlees.", a: "Vegetarian"},
+            {i: "Translate to Dutch", q: "I didn't eat, so I am <span class='hl'>hungry</span>.", a: "Hongerig / ik heb honger"},
+            {i: "Vertaal naar Engels", q: "De hond is erg <span class='hl'>hongerig</span>.", a: "Hungry"}
+        ],
+        "Vocabulary 4.2": [
+            {i: "Translate to Dutch", q: "I drink orange <span class='hl'>juice</span>.", a: "Sap"},
+            {i: "Vertaal naar Engels", q: "Wil je een glas <span class='hl'>sap</span>?", a: "Juice"},
+            {i: "Translate to Dutch", q: "She made fresh <span class='hl'>lemonade</span>.", a: "Limonade"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>limonade</span> is erg zoet.", a: "Lemonade"},
+            {i: "Translate to Dutch", q: "Cola is a popular <span class='hl'>soft drink</span>.", a: "Frisdrank"},
+            {i: "Vertaal naar Engels", q: "Ik drink liever water dan <span class='hl'>frisdrank</span>.", a: "Soft drink"},
+            {i: "Translate to Dutch", q: "He drank a whole <span class='hl'>bottle</span> of water.", a: "Fles"},
+            {i: "Vertaal naar Engels", q: "Mag ik een <span class='hl'>fles</span> wijn?", a: "Bottle"},
+            {i: "Translate to Dutch", q: "Would you like a <span class='hl'>cup</span> of tea?", a: "Kopje"},
+            {i: "Vertaal naar Engels", q: "Het <span class='hl'>kopje</span> is gevallen.", a: "Cup"},
+            {i: "Translate to Dutch", q: "I need a large <span class='hl'>mug</span> for my coffee.", a: "Mok"},
+            {i: "Vertaal naar Engels", q: "Hij kocht een nieuwe <span class='hl'>mok</span>.", a: "Mug"},
+            {i: "Translate to Dutch", q: "We have a <span class='hl'>guest</span> staying over.", a: "Gast"},
+            {i: "Vertaal naar Engels", q: "Geef de <span class='hl'>gast</span> iets te drinken.", a: "Guest"},
+            {i: "Translate to Dutch", q: "I need to go to the <span class='hl'>shop</span>.", a: "Winkel"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>winkel</span> sluit om zes uur.", a: "Shop"},
+            {i: "Translate to Dutch", q: "The <span class='hl'>host</span> welcomed us warmly.", a: "Gastheer / gastvrouw"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>gastheer</span> nam onze jassen aan.", a: "Host"},
+            {i: "Translate to Dutch", q: "Do you have <span class='hl'>sugar-free</span> gum?", a: "Suikervrij"},
+            {i: "Vertaal naar Engels", q: "Deze drank is <span class='hl'>suikervrij</span>.", a: "Sugar-free"},
+            {i: "Translate to Dutch", q: "We ate a <span class='hl'>traditional</span> meal.", a: "Traditioneel"},
+            {i: "Vertaal naar Engels", q: "Dat is een <span class='hl'>traditioneel</span> Brits gerecht.", a: "Traditional"},
+            {i: "Translate to Dutch", q: "Vegetables are very <span class='hl'>healthy</span>.", a: "Gezond"},
+            {i: "Vertaal naar Engels", q: "Je moet <span class='hl'>gezond</span> eten.", a: "Healthy"},
+            {i: "Translate to Dutch", q: "The <span class='hl'>celebration</span> lasted all night.", a: "Viering / feest"},
+            {i: "Vertaal naar Engels", q: "Het was een grote <span class='hl'>viering</span>.", a: "Celebration"},
+            {i: "Translate to Dutch", q: "Which <span class='hl'>flavour</span> of ice cream do you want?", a: "Smaak"},
+            {i: "Vertaal naar Engels", q: "De soep heeft niet veel <span class='hl'>smaak</span>.", a: "Flavour"},
+            {i: "Translate to Dutch", q: "We <span class='hl'>encourage</span> you to try again.", a: "Aanmoedigen"},
+            {i: "Vertaal naar Engels", q: "Mijn ouders <span class='hl'>aanmoedigen</span> mij altijd.", a: "Encourage"}
+        ],
+        "Vocabulary 4.3": [
+            {i: "Translate to Dutch", q: "Follow the <span class='hl'>instruction</span> carefully.", a: "Instructie"},
+            {i: "Vertaal naar Engels", q: "Lees eerst de <span class='hl'>instructie</span>.", a: "Instruction"},
+            {i: "Translate to Dutch", q: "This is the first <span class='hl'>step</span>.", a: "Stap"},
+            {i: "Vertaal naar Engels", q: "We zijn bij de laatste <span class='hl'>stap</span>.", a: "Step"},
+            {i: "Translate to Dutch", q: "He broke my pen <span class='hl'>on purpose</span>.", a: "Expres"},
+            {i: "Vertaal naar Engels", q: "Sorry, ik deed het niet <span class='hl'>expres</span>.", a: "On purpose"},
+            {i: "Translate to Dutch", q: "Don't <span class='hl'>ruin</span> the surprise!", a: "Verpesten"},
+            {i: "Vertaal naar Engels", q: "De regen zal het feestje <span class='hl'>verpesten</span>.", a: "Ruin"},
+            {i: "Translate to Dutch", q: "Chew your food or you will <span class='hl'>choke</span>.", a: "Stikken"},
+            {i: "Vertaal naar Engels", q: "Kijk uit dat je niet zult <span class='hl'>stikken</span>.", a: "Choke"},
+            {i: "Translate to Dutch", q: "Use a <span class='hl'>butter knife</span> for the bread.", a: "Botermes"},
+            {i: "Vertaal naar Engels", q: "Waar ligt het <span class='hl'>botermes</span>?", a: "Butter knife"},
+            {i: "Translate to Dutch", q: "I bought a <span class='hl'>jar</span> of peanut butter.", a: "Pot"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>pot</span> honing is leeg.", a: "Jar"},
+            {i: "Translate to Dutch", q: "Put the <span class='hl'>lid</span> back on the box.", a: "Deksel"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>deksel</span> zit te strak vast.", a: "Lid"},
+            {i: "Translate to Dutch", q: "I want one <span class='hl'>scoop</span> of ice cream.", a: "Scheppen / bolletje"},
+            {i: "Vertaal naar Engels", q: "Je moet het zand <span class='hl'>scheppen</span>.", a: "Scoop"},
+            {i: "Translate to Dutch", q: "Can you <span class='hl'>spread</span> the butter on the toast?", a: "Smeren"},
+            {i: "Vertaal naar Engels", q: "Hij wil jam op zijn brood <span class='hl'>smeren</span>.", a: "Spread"},
+            {i: "Translate to Dutch", q: "You need to <span class='hl'>squeeze</span> the lemon.", a: "Knijpen / uitpersen"},
+            {i: "Vertaal naar Engels", q: "Je mag niet zo hard <span class='hl'>knijpen</span>.", a: "Squeeze"},
+            {i: "Translate to Dutch", q: "You must <span class='hl'>rub</span> the lamp to see the genie.", a: "Wrijven"},
+            {i: "Vertaal naar Engels", q: "Niet in je ogen <span class='hl'>wrijven</span>.", a: "Rub"},
+            {i: "Translate to Dutch", q: "The piece of paper was <span class='hl'>blank</span>.", a: "Leeg / blanco"},
+            {i: "Vertaal naar Engels", q: "Mijn scherm is opeens <span class='hl'>leeg</span>.", a: "Blank"},
+            {i: "Translate to Dutch", q: "He told a very funny <span class='hl'>joke</span>.", a: "Grap"},
+            {i: "Vertaal naar Engels", q: "Dat was een slechte <span class='hl'>grap</span>.", a: "Joke"},
+            {i: "Translate to Dutch", q: "I <span class='hl'>expected</span> you to be here.", a: "Verwachtte"},
+            {i: "Vertaal naar Engels", q: "Ze <span class='hl'>verwachtte</span> een ander antwoord.", a: "Expected"}
+        ],
+        "Vocabulary 4.4": [
+            {i: "Translate to Dutch", q: "Are you ready to <span class='hl'>order</span>?", a: "Bestellen"},
+            {i: "Vertaal naar Engels", q: "Wat ga jij <span class='hl'>bestellen</span>?", a: "Order"},
+            {i: "Translate to Dutch", q: "I would like a burger with <span class='hl'>fries</span>.", a: "Friet / patat"},
+            {i: "Vertaal naar Engels", q: "Deze <span class='hl'>friet</span> is erg zout.", a: "Fries"},
+            {i: "Translate to Dutch", q: "He ordered a big <span class='hl'>steak</span>.", a: "Biefstuk"},
+            {i: "Vertaal naar Engels", q: "Hoe wil je je <span class='hl'>biefstuk</span> gebakken?", a: "Steak"},
+            {i: "Translate to Dutch", q: "This Mexican food is very <span class='hl'>spicy</span>.", a: "Pittig"},
+            {i: "Vertaal naar Engels", q: "Ik hou niet van <span class='hl'>pittig</span> eten.", a: "Spicy"},
+            {i: "Translate to Dutch", q: "That restaurant is very <span class='hl'>cheap</span>.", a: "Goedkoop"},
+            {i: "Vertaal naar Engels", q: "Die telefoon is niet <span class='hl'>goedkoop</span>.", a: "Cheap"},
+            {i: "Translate to Dutch", q: "The chocolate cake was <span class='hl'>delicious</span>.", a: "Heerlijk"},
+            {i: "Vertaal naar Engels", q: "Het eten was <span class='hl'>heerlijk</span>.", a: "Delicious"},
+            {i: "Translate to Dutch", q: "The <span class='hl'>location</span> of the hotel is great.", a: "Locatie"},
+            {i: "Vertaal naar Engels", q: "Stuur me je <span class='hl'>locatie</span>.", a: "Location"},
+            {i: "Translate to Dutch", q: "They bought new <span class='hl'>furniture</span> for the living room.", a: "Meubels"},
+            {i: "Vertaal naar Engels", q: "De hond mag niet op de <span class='hl'>meubels</span>.", a: "Furniture"},
+            {i: "Translate to Dutch", q: "The <span class='hl'>service</span> at this place is very fast.", a: "Bediening / service"},
+            {i: "Vertaal naar Engels", q: "De <span class='hl'>bediening</span> was erg onvriendelijk.", a: "Service"},
+            {i: "Translate to Dutch", q: "It is important to be <span class='hl'>polite</span> to teachers.", a: "Beleefd"},
+            {i: "Vertaal naar Engels", q: "Dat is geen <span class='hl'>beleefd</span> antwoord.", a: "Polite"},
+            {i: "Translate to Dutch", q: "The dog is very <span class='hl'>friendly</span>.", a: "Vriendelijk"},
+            {i: "Vertaal naar Engels", q: "Mijn buren zijn erg <span class='hl'>vriendelijk</span>.", a: "Friendly"},
+            {i: "Translate to Dutch", q: "The <span class='hl'>chef</span> cooked a wonderful meal.", a: "Kok / chef"},
+            {i: "Vertaal naar Engels", q: "Mijn vader is een <span class='hl'>kok</span>.", a: "Chef"},
+            {i: "Translate to Dutch", q: "Can you <span class='hl'>suggest</span> a good movie?", a: "Voorstellen / aanraden"},
+            {i: "Vertaal naar Engels", q: "Ik wil graag een nieuw idee <span class='hl'>voorstellen</span>.", a: "Suggest"},
+            {i: "Translate to Dutch", q: "Ice cream is a nice <span class='hl'>treat</span> on a hot day.", a: "Traktatie"},
+            {i: "Vertaal naar Engels", q: "Ik heb een lekkere <span class='hl'>traktatie</span> voor je.", a: "Treat"},
+            {i: "Translate to Dutch", q: "We left a big <span class='hl'>tip</span> for the waiter.", a: "Fooi"},
+            {i: "Vertaal naar Engels", q: "Geef jij altijd een <span class='hl'>fooi</span>?", a: "Tip"}
+        ],
+       "Grammar: Dates": [
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Maandag 1 mei</span>", a: "<b>UK:</b> Monday the first of May<br><b>US:</b> Monday, May first"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Dinsdag 2 februari</span>", a: "<b>UK:</b> Tuesday the second of February<br><b>US:</b> Tuesday, February second"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Woensdag 3 maart</span>", a: "<b>UK:</b> Wednesday the third of March<br><b>US:</b> Wednesday, March third"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Donderdag 4 april</span>", a: "<b>UK:</b> Thursday the fourth of April<br><b>US:</b> Thursday, April fourth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Vrijdag 5 mei</span>", a: "<b>UK:</b> Friday the fifth of May<br><b>US:</b> Friday, May fifth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Zaterdag 8 juni</span>", a: "<b>UK:</b> Saturday the eighth of June<br><b>US:</b> Saturday, June eighth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Zondag 9 juli</span>", a: "<b>UK:</b> Sunday the ninth of July<br><b>US:</b> Sunday, July ninth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Maandag 10 augustus</span>", a: "<b>UK:</b> Monday the tenth of August<br><b>US:</b> Monday, August tenth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Dinsdag 11 september</span>", a: "<b>UK:</b> Tuesday the eleventh of September<br><b>US:</b> Tuesday, September eleventh"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Woensdag 12 oktober</span>", a: "<b>UK:</b> Wednesday the twelfth of October<br><b>US:</b> Wednesday, October twelfth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Donderdag 13 november</span>", a: "<b>UK:</b> Thursday the thirteenth of November<br><b>US:</b> Thursday, November thirteenth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Vrijdag 15 december</span>", a: "<b>UK:</b> Friday the fifteenth of December<br><b>US:</b> Friday, December fifteenth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Zaterdag 20 januari</span>", a: "<b>UK:</b> Saturday the twentieth of January<br><b>US:</b> Saturday, January twentieth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Zondag 21 februari</span>", a: "<b>UK:</b> Sunday the twenty-first of February<br><b>US:</b> Sunday, February twenty-first"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Maandag 22 maart</span>", a: "<b>UK:</b> Monday the twenty-second of March<br><b>US:</b> Monday, March twenty-second"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Dinsdag 23 april</span>", a: "<b>UK:</b> Tuesday the twenty-third of April<br><b>US:</b> Tuesday, April twenty-third"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Woensdag 24 mei</span>", a: "<b>UK:</b> Wednesday the twenty-fourth of May<br><b>US:</b> Wednesday, May twenty-fourth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Donderdag 25 juni</span>", a: "<b>UK:</b> Thursday the twenty-fifth of June<br><b>US:</b> Thursday, June twenty-fifth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Vrijdag 28 juli</span>", a: "<b>UK:</b> Friday the twenty-eighth of July<br><b>US:</b> Friday, July twenty-eighth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Zaterdag 30 augustus</span>", a: "<b>UK:</b> Saturday the thirtieth of August<br><b>US:</b> Saturday, August thirtieth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Zondag 31 september</span>", a: "<b>UK:</b> Sunday the thirty-first of September<br><b>US:</b> Sunday, September thirty-first"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Maandag 14 oktober</span>", a: "<b>UK:</b> Monday the fourteenth of October<br><b>US:</b> Monday, October fourteenth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Dinsdag 18 november</span>", a: "<b>UK:</b> Tuesday the eighteenth of November<br><b>US:</b> Tuesday, November eighteenth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Woensdag 19 december</span>", a: "<b>UK:</b> Wednesday the nineteenth of December<br><b>US:</b> Wednesday, December nineteenth"},
+            {i: "Vertaal de datum (UK & US)", q: "<span class='hl'>Donderdag 29 januari</span>", a: "<b>UK:</b> Thursday the twenty-ninth of January<br><b>US:</b> Thursday, January twenty-ninth"}
+        ],
+      "Grammar: Little / Few": [
+            {i: "Vul in: little of few", q: "I have <span class='hl'>___</span> time to finish this test.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "There are <span class='hl'>___</span> apples left in the basket.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "He is very poor; he has <span class='hl'>___</span> money.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "<span class='hl'>___</span> people know the secret password.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "There is <span class='hl'>___</span> milk in the fridge, we need to buy more.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "She is lonely because she has <span class='hl'>___</span> friends.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "We had <span class='hl'>___</span> rain this summer, the plants are dry.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "It's very quiet; there are <span class='hl'>___</span> cars on the road.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "He speaks <span class='hl'>___</span> English, so communication is hard.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "I made <span class='hl'>___</span> mistakes in the test, so I got a good grade.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "The situation is bad, there is <span class='hl'>___</span> hope left.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "<span class='hl'>___</span> students understood the difficult lesson.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "She showed <span class='hl'>___</span> interest in my story.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "We have <span class='hl'>___</span> days left before the holiday starts.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "He drinks <span class='hl'>___</span> water, which is bad for his health.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "I have read <span class='hl'>___</span> books this year, I should read more.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "There is <span class='hl'>___</span> space in this small room.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "We bought <span class='hl'>___</span> chairs because we don't have many guests.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "My teacher is easily angry; she has <span class='hl'>___</span> patience.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "<span class='hl'>___</span> ideas were suggested at the meeting.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "There is <span class='hl'>___</span> food on the table, I am still hungry.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "I saw <span class='hl'>___</span> birds in the sky today.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "He gave me <span class='hl'>___</span> information about the project.", a: "Little (uncountable)"},
+            {i: "Vul in: little of few", q: "There are <span class='hl'>___</span> houses in this dark street.", a: "Few (countable)"},
+            {i: "Vul in: little of few", q: "The angry players showed <span class='hl'>___</span> respect to the referee.", a: "Little (uncountable)"}
+        ],
+        "Grammar: Prepositions": [
+            {i: "Vul in: in, on of at", q: "I am waiting for you <span class='hl'>___</span> the bus stop.", a: "at"},
+            {i: "Vul in: in, on of at", q: "Look at that beautiful picture <span class='hl'>___</span> the wall.", a: "on"},
+            {i: "Vul in: in, on of at", q: "My uncle lives <span class='hl'>___</span> London.", a: "in"},
+            {i: "Vul in: in, on of at", q: "Please don't put your shoes <span class='hl'>___</span> the table.", a: "on"},
+            {i: "Vul in: in, on of at", q: "She left her keys <span class='hl'>___</span> the car.", a: "in"},
+            {i: "Vul in: in, on of at", q: "I will meet you <span class='hl'>___</span> the train station.", a: "at"},
+            {i: "Vul in: in, on of at", q: "There is a fly walking <span class='hl'>___</span> the ceiling.", a: "on"},
+            {i: "Vul in: in, on of at", q: "I have exactly five euros <span class='hl'>___</span> my pocket.", a: "in"},
+            {i: "Vul in: in, on of at", q: "Who is that man standing <span class='hl'>___</span> the door?", a: "at"},
+            {i: "Vul in: in, on of at", q: "Our classroom is <span class='hl'>___</span> the first floor.", a: "on"},
+            {i: "Vul in: in, on of at", q: "Does your mother work <span class='hl'>___</span> an office?", a: "in"},
+            {i: "Vul in: in, on of at", q: "Please write your name <span class='hl'>___</span> the top of the page.", a: "at"},
+            {i: "Vul in: in, on of at", q: "Don't sit <span class='hl'>___</span> the floor, it is very dirty.", a: "on"},
+            {i: "Vul in: in, on of at", q: "The children are swimming <span class='hl'>___</span> the pool.", a: "in"},
+            {i: "Vul in: in, on of at", q: "My older brother is studying <span class='hl'>___</span> university.", a: "at"},
+            {i: "Vul in: in, on of at", q: "There are many old trees <span class='hl'>___</span> the park.", a: "in"},
+            {i: "Vul in: in, on of at", q: "You will find the supermarket <span class='hl'>___</span> the left.", a: "on"},
+            {i: "Vul in: in, on of at", q: "Who is that girl looking out <span class='hl'>___</span> the window?", a: "at"},
+            {i: "Vul in: in, on of at", q: "I read a funny story <span class='hl'>___</span> a magazine.", a: "in"},
+            {i: "Vul in: in, on of at", q: "The dog is sleeping <span class='hl'>___</span> the grass.", a: "on"},
+            {i: "Vul in: in, on of at", q: "My dad is currently <span class='hl'>___</span> work.", a: "at"},
+            {i: "Vul in: in, on of at", q: "Can you put the milk back <span class='hl'>___</span> the fridge?", a: "in"},
+            {i: "Vul in: in, on of at", q: "There is a lot of traffic <span class='hl'>___</span> the road today.", a: "on"},
+            {i: "Vul in: in, on of at", q: "We had to stand <span class='hl'>___</span> the back of the line.", a: "at"},
+            {i: "Vul in: in, on of at", q: "Paris is a very famous city <span class='hl'>___</span> France.", a: "in"}
+        ],
+        "Grammar: Comparisons": [
+            {i: "Vul de juiste vorm in (more / most)", q: "A Ferrari is <span class='hl'>(expensive)</span> than a Fiat.", a: "more expensive"},
+            {i: "Vul de juiste vorm in (more / most)", q: "That is the <span class='hl'>(expensive)</span> phone in the shop.", a: "most expensive"},
+            {i: "Vul de juiste vorm in (more / most)", q: "I think history is <span class='hl'>(interesting)</span> than math.", a: "more interesting"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This is the <span class='hl'>(interesting)</span> book I have ever read.", a: "most interesting"},
+            {i: "Vul de juiste vorm in (more / most)", q: "A shark is <span class='hl'>(dangerous)</span> than a dolphin.", a: "more dangerous"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This is the <span class='hl'>(dangerous)</span> road in the mountains.", a: "most dangerous"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This flower is <span class='hl'>(beautiful)</span> than that one.", a: "more beautiful"},
+            {i: "Vul de juiste vorm in (more / most)", q: "She is the <span class='hl'>(beautiful)</span> girl in our class.", a: "most beautiful"},
+            {i: "Vul de juiste vorm in (more / most)", q: "Football is <span class='hl'>(popular)</span> than tennis in Europe.", a: "more popular"},
+            {i: "Vul de juiste vorm in (more / most)", q: "Who is the <span class='hl'>(popular)</span> singer in the world?", a: "most popular"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This new chair is <span class='hl'>(comfortable)</span> than the old one.", a: "more comfortable"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This is the <span class='hl'>(comfortable)</span> bed in the whole house.", a: "most comfortable"},
+            {i: "Vul de juiste vorm in (more / most)", q: "The English test was <span class='hl'>(difficult)</span> than the French test.", a: "more difficult"},
+            {i: "Vul de juiste vorm in (more / most)", q: "Level 10 is the <span class='hl'>(difficult)</span> level of the game.", a: "most difficult"},
+            {i: "Vul de juiste vorm in (more / most)", q: "Riding a rollercoaster is <span class='hl'>(exciting)</span> than walking.", a: "more exciting"},
+            {i: "Vul de juiste vorm in (more / most)", q: "It was the <span class='hl'>(exciting)</span> match of the season.", a: "most exciting"},
+            {i: "Vul de juiste vorm in (more / most)", q: "Drinking water is <span class='hl'>(important)</span> than drinking cola.", a: "more important"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This is the <span class='hl'>(important)</span> rule of the school.", a: "most important"},
+            {i: "Vul de juiste vorm in (more / most)", q: "You need to be <span class='hl'>(careful)</span> next time.", a: "more careful"},
+            {i: "Vul de juiste vorm in (more / most)", q: "That movie was <span class='hl'>(boring)</span> than the book.", a: "more boring"},
+            {i: "Vul de juiste vorm in (more / most)", q: "He is the <span class='hl'>(boring)</span> teacher we have.", a: "most boring"},
+            {i: "Vul de juiste vorm in (more / most)", q: "The weather today is <span class='hl'>(terrible)</span> than yesterday.", a: "more terrible"},
+            {i: "Vul de juiste vorm in (more / most)", q: "A smartphone is <span class='hl'>(useful)</span> than a normal phone.", a: "more useful"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This is the <span class='hl'>(useful)</span> app on my tablet.", a: "most useful"},
+            {i: "Vul de juiste vorm in (more / most)", q: "This is the <span class='hl'>(delicious)</span> pizza in town.", a: "most delicious"}
+        ],
+       "Grammar: Imperatives": [
+            {i: "Vertaal het bevel naar het Engels", q: "De leraar zegt: <span class='hl'>(Kom hier!)</span>", a: "Come here!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Op een bordje: <span class='hl'>(Verboden te praten!)</span>", a: "Don't talk!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Als ik iets uitleg: <span class='hl'>(Luister naar mij!)</span>", a: "Listen to me!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Aan het begin van de les: <span class='hl'>(Maak je boek open!)</span>", a: "Open your book!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Het is koud: <span class='hl'>(Doe het raam dicht!)</span>", a: "Close the window!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Op een bord in het park: <span class='hl'>(Verboden op het gras te lopen!)</span>", a: "Don't walk on the grass!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Als je antwoord geeft: <span class='hl'>(Sta op!)</span>", a: "Stand up!"},
+            {i: "Vertaal het verbod naar het Engels", q: "In de dierentuin: <span class='hl'>(Verboden de dieren te voeren!)</span>", a: "Don't feed the animals!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Ik schrijf iets op: <span class='hl'>(Kijk naar het bord!)</span>", a: "Look at the board!"},
+            {i: "Vertaal het verbod naar het Engels", q: "In het museum: <span class='hl'>(Verboden foto's te maken!)</span>", a: "Don't take photos!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Voor de volgende les: <span class='hl'>(Vergeet je huiswerk niet!)</span>", a: "Don't forget your homework!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Bij de ingang: <span class='hl'>(Verboden te roken!)</span>", a: "Don't smoke!"},
+            {i: "Vertaal het verbod naar het Engels", q: "In de bibliotheek: <span class='hl'>(Verboden te eten!)</span>", a: "Don't eat!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Ik ben nog niet klaar: <span class='hl'>(Wacht op mij!)</span>", a: "Wait for me!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Op straat: <span class='hl'>(Verboden te parkeren!)</span>", a: "Don't park here!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Thuis: <span class='hl'>(Help je broertje!)</span>", a: "Help your brother!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Tijdens de film: <span class='hl'>(Zet je telefoon uit!)</span>", a: "Turn off your phone!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Tijdens het spel: <span class='hl'>(Verboden vals te spelen!)</span>", a: "Don't cheat!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Ik heb niets om mee te schrijven: <span class='hl'>(Geef me die pen!)</span>", a: "Give me that pen!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Bij het zwembad: <span class='hl'>(Verboden te rennen!)</span>", a: "Don't run!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Huiswerk voor vandaag: <span class='hl'>(Lees de tekst!)</span>", a: "Read the text!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Bij het ondiepe water: <span class='hl'>(Verboden te duiken!)</span>", a: "Don't dive!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Voor het eten: <span class='hl'>(Was je handen!)</span>", a: "Wash your hands!"},
+            {i: "Vertaal het verbod naar het Engels", q: "Bij een kunstwerk: <span class='hl'>(Verboden aan te raken!)</span>", a: "Don't touch!"},
+            {i: "Vertaal het bevel naar het Engels", q: "Als je weggaat: <span class='hl'>(Doe de deur op slot!)</span>", a: "Lock the door!"}
+        ],
+        "Grammar: Can / Can't": [
+            {i: "Vertaal naar het Engels", q: "Ik <span class='hl'>kan</span> zwemmen.", a: "I can swim."},
+            {i: "Vertaal naar het Engels", q: "Hij <span class='hl'>kan niet</span> autorijden.", a: "He can't drive a car."},
+            {i: "Vertaal de vraag naar het Engels", q: "<span class='hl'>Kun jij</span> Engels spreken?", a: "Can you speak English?"},
+            {i: "Vul in: can of can't", q: "A bird <span class='hl'>___</span> fly in the sky.", a: "can"},
+            {i: "Vul in: can of can't", q: "Penguins are birds, but they <span class='hl'>___</span> fly.", a: "can't"},
+            {i: "Vertaal naar het Engels", q: "Zij <span class='hl'>kan</span> heel goed zingen.", a: "She can sing very well."},
+            {i: "Vertaal naar het Engels", q: "Wij <span class='hl'>kunnen</span> dat bord <span class='hl'>niet</span> lezen.", a: "We can't read that sign."},
+            {i: "Vertaal de vraag naar het Engels", q: "<span class='hl'>Kan jouw broer</span> gitaar spelen?", a: "Can your brother play the guitar?"},
+            {i: "Vul in: can of can't", q: "I <span class='hl'>___</span> hear you, the music is too loud!", a: "can't"},
+            {i: "Vul in: can of can't", q: "Cheetahs <span class='hl'>___</span> run very fast.", a: "can"},
+            {i: "Vertaal naar het Engels", q: "Ik <span class='hl'>kan</span> je <span class='hl'>niet</span> helpen.", a: "I can't help you."},
+            {i: "Vertaal naar het Engels", q: "Mijn opa <span class='hl'>kan</span> drie talen spreken.", a: "My grandfather can speak three languages."},
+            {i: "Vertaal de vraag naar het Engels", q: "<span class='hl'>Kunnen vissen</span> onder water ademen?", a: "Can fish breathe under water?"},
+            {i: "Vul in: can of can't", q: "A newborn baby <span class='hl'>___</span> walk or talk yet.", a: "can't"},
+            {i: "Vul in: can of can't", q: "Superman <span class='hl'>___</span> lift very heavy things.", a: "can"},
+            {i: "Vertaal naar het Engels", q: "Ik <span class='hl'>kan</span> mijn sleutels <span class='hl'>niet</span> vinden.", a: "I can't find my keys."},
+            {i: "Vertaal naar het Engels", q: "Zij <span class='hl'>kan</span> een lekkere taart bakken.", a: "She can bake a delicious cake."},
+            {i: "Vertaal de vraag naar het Engels", q: "<span class='hl'>Kun jij</span> over dat hek springen?", a: "Can you jump over that fence?"},
+            {i: "Vul in: can of can't", q: "Owls <span class='hl'>___</span> see very well in the dark.", a: "can"},
+            {i: "Vul in: can of can't", q: "I have a broken leg, so I <span class='hl'>___</span> play football today.", a: "can't"},
+            {i: "Vertaal naar het Engels", q: "Wij <span class='hl'>kunnen</span> heel snel rennen.", a: "We can run very fast."},
+            {i: "Vertaal naar het Engels", q: "Hij <span class='hl'>kan</span> die zware doos <span class='hl'>niet</span> tillen.", a: "He can't lift that heavy box."},
+            {i: "Vertaal de vraag naar het Engels", q: "<span class='hl'>Kunnen jullie</span> mij horen?", a: "Can you hear me?"},
+            {i: "Vul in: can of can't", q: "Monkeys <span class='hl'>___</span> climb trees easily.", a: "can"},
+            {i: "Vul in: can of can't", q: "A snake <span class='hl'>___</span> walk because it has no legs.", a: "can't"}
+        ],
+       "Grammar: Word order": [
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / bought / I / red / new / car</span>", a: "I bought a new red car."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>lives / in / a / big / house / old / she</span>", a: "She lives in a big old house."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>is / a / very / smart / he / boy</span>", a: "He is a very smart boy."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>really / a / read / I / good / book</span>", a: "I read a really good book."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>has / small / a / black / cat / he</span>", a: "He has a small black cat."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>is / wearing / a / blue / beautiful / dress / she</span>", a: "She is wearing a beautiful blue dress."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / very / tall / is / man / he</span>", a: "He is a very tall man."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>found / a / small / they / green / box</span>", a: "They found a small green box."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>has / hair / long / blonde / she</span>", a: "She has long blonde hair."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / very / it / cold / is / day</span>", a: "It is a very cold day."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>delicious / a / baked / she / chocolate / cake</span>", a: "She baked a delicious chocolate cake."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>are / playing / with / a / small / ball / red / they</span>", a: "They are playing with a small red ball."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / really / fast / is / animal / a cheetah</span>", a: "A cheetah is a really fast animal."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>bought / he / a / very / expensive / watch</span>", a: "He bought a very expensive watch."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>saw / I / a / big / scary / dog</span>", a: "I saw a big scary dog."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / famous / is / pop / singer / she</span>", a: "She is a famous pop singer."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>has / he / short / brown / hair</span>", a: "He has short brown hair."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / beautiful / is / sunny / it / morning</span>", a: "It is a beautiful sunny morning."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>really / a / it / was / bad / idea</span>", a: "It was a really bad idea."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / very / funny / told / joke / he</span>", a: "He told a very funny joke."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>lives / in / a / modern / apartment / small / he</span>", a: "He lives in a small modern apartment."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>bought / some / red / apples / delicious / we</span>", a: "We bought some delicious red apples."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / really / fast / computer / it / is</span>", a: "It is a really fast computer."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>wearing / a / old / dirty / T-shirt / he / is</span>", a: "He is wearing a dirty old T-shirt."},
+            {i: "Zet de woorden in de juiste volgorde", q: "<span class='hl'>a / very / difficult / was / question / it</span>", a: "It was a very difficult question."}
+        ],
+      "Grammar: 's / s'": [
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De fiets van <span class='hl'>Tom</span>", a: "Tom's bike"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De auto van <span class='hl'>mijn vader</span>", a: "My dad's car"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De tas van <span class='hl'>het meisje</span>", a: "The girl's bag"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De tassen van <span class='hl'>de meisjes</span> (meervoud)", a: "The girls' bags"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De bal van <span class='hl'>de hond</span>", a: "The dog's ball"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "Het speelgoed van <span class='hl'>de honden</span> (meervoud)", a: "The dogs' toys"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De slaapkamer van <span class='hl'>mijn broer</span>", a: "My brother's bedroom"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De slaapkamer van <span class='hl'>mijn broers</span> (meervoud)", a: "My brothers' bedroom"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "Het speelgoed van <span class='hl'>de kinderen</span> (onregelmatig meervoud)", a: "The children's toys"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De jassen van <span class='hl'>de mannen</span> (onregelmatig meervoud)", a: "The men's coats"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De boeken van <span class='hl'>de vrouwen</span> (onregelmatig meervoud)", a: "The women's books"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "Het huis van <span class='hl'>mijn ouders</span> (meervoud)", a: "My parents' house"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De laptop van <span class='hl'>de leraar</span>", a: "The teacher's laptop"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De laptops van <span class='hl'>de leraren</span> (meervoud)", a: "The teachers' laptops"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De naam van <span class='hl'>de kat</span>", a: "The cat's name"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "Het kantoor van <span class='hl'>de baas</span>", a: "The boss's office"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De vriend van <span class='hl'>mijn zus</span>", a: "My sister's friend"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De vrienden van <span class='hl'>mijn zussen</span> (meervoud)", a: "My sisters' friends"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De telefoon van <span class='hl'>Emma</span>", a: "Emma's phone"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De fietsen van <span class='hl'>de studenten</span> (meervoud)", a: "The students' bikes"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De schoenen van <span class='hl'>het kind</span>", a: "The child's shoes"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "De auto van <span class='hl'>John</span>", a: "John's car"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "Het bureau van <span class='hl'>de manager</span>", a: "The manager's desk"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "Het eten van <span class='hl'>de baby</span>", a: "The baby's food"},
+            {i: "Vertaal naar het Engels (let op de apostrof)", q: "Het feestje van <span class='hl'>de buren</span> (meervoud)", a: "The neighbours' party"}
+        ]
+    };
+
+    let classes = {};
+    let currentClass = null;
+    let overlayTimeout = null;
+
+    function init() {
+        const savedClasses = localStorage.getItem('englishQuizClasses');
+        if (savedClasses) {
+            try {
+                classes = JSON.parse(savedClasses);
+            } catch (e) {
+                classes = {};
+            }
+        }
+
+        renderClasses();
+        
+        const toggles = document.getElementById('topic-toggles');
+        Object.keys(data).forEach(t => {
+            const row = document.createElement('div');
+            row.className = 'topic-row';
+            row.innerHTML = `<span>${t}</span><label class="switch"><input type="checkbox" checked data-topic="${t}"><span class="slider"></span></label>`;
+            toggles.appendChild(row);
+        });
+    }
+
+    function saveToMemory() {
+        localStorage.setItem('englishQuizClasses', JSON.stringify(classes));
+    }
+
+    function saveCurrentClass() {
+        if (currentClass) {
+            classes[currentClass] = document.getElementById('names-input').value.split(/[\n,]+/).map(s => s.trim()).filter(s => s);
+            saveToMemory();
+        }
+    }
+
+    function addClass() {
+        const input = document.getElementById('new-class-input');
+        const val = input.value.trim();
+        
+        if (val && !classes[val]) {
+            classes[val] = []; 
+            input.value = '';
+            saveToMemory();
+            selectClass(val);
+        } else if (classes[val]) {
+            alert("This class already exists!");
+        }
+    }
+
+    function renderClasses() {
+        const btns = document.getElementById('class-btns');
+        const textArea = document.getElementById('names-input');
+        
+        btns.innerHTML = '';
+        const classNames = Object.keys(classes);
+        
+        if (classNames.length === 0) {
+            btns.innerHTML = '<span style="color: #888; font-style: italic;">No classes yet. Add one above.</span>';
+            textArea.value = '';
+            textArea.disabled = true;
+            return;
+        }
+        
+        textArea.disabled = false;
+        
+        classNames.forEach(c => {
+            const b = document.createElement('button');
+            b.className = 'class-btn ' + (c === currentClass ? 'selected' : '');
+            b.innerText = c;
+            b.onclick = () => selectClass(c);
+            btns.appendChild(b);
+        });
+    }
+
+    function selectClass(c) {
+        saveCurrentClass();
+        currentClass = c;
+        renderClasses();
+        document.getElementById('names-input').value = classes[c] ? classes[c].join(', ') : '';
+    }
+
+    function startQuiz() {
+        if (!currentClass) return alert("Please add a class first!");
+        
+        saveCurrentClass(); 
+        
+        if (classes[currentClass].length === 0) {
+            return alert("Please enter at least one name for this class!");
+        }
+
+        document.getElementById('active-class-title').innerText = "CLASS: " + currentClass;
+        document.getElementById('name-display').innerText = "Ready";
+        
+        document.getElementById('setup-screen').classList.remove('active');
+        document.getElementById('quiz-screen').classList.add('active');
+        generateQuestions();
+    }
+
+    function showSetup() {
+        document.getElementById('quiz-screen').classList.remove('active');
+        document.getElementById('setup-screen').classList.add('active');
+    }
+
+    function generateQuestions() {
+        const activeTopics = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(i => i.dataset.topic);
+        if(activeTopics.length === 0) return alert("Please select at least one topic!");
+        
+        let topicsMap = {};
+        activeTopics.forEach(t => {
+            let shuffledQuestions = [...data[t]].sort(() => 0.5 - Math.random());
+            topicsMap[t] = shuffledQuestions.map(q => ({...q, topic: t}));
+        });
+        
+        let chosen = [];
+        let topicKeys = [...activeTopics].sort(() => 0.5 - Math.random()); 
+        
+        let keepGoing = true;
+        while (chosen.length < 5 && keepGoing) {
+            keepGoing = false; 
+            
+            for (let i = 0; i < topicKeys.length; i++) {
+                let t = topicKeys[i];
+                if (topicsMap[t].length > 0) {
+                    chosen.push(topicsMap[t].pop());
+                    keepGoing = true; 
+                }
+                if (chosen.length === 5) break; 
+            }
+        }
+        
+        chosen = chosen.sort(() => 0.5 - Math.random());
+        
+        const area = document.getElementById('questions-area');
+        area.innerHTML = '';
+        chosen.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'q-card glass';
+            card.onclick = function() { this.querySelector('.a-text').style.display = 'block'; };
+            card.innerHTML = `
+                <div class="q-instruction">${item.i}</div>
+                <div class="q-text">${item.q}</div>
+                <div class="a-text">${item.a}</div>
+            `;
+            area.appendChild(card);
+        });
+    }
+
+    function pickStudent() {
+        const students = classes[currentClass];
+        if(students.length === 0) return;
+        
+        const display = document.getElementById('name-display');
+        const overlay = document.getElementById('fullscreen-overlay');
+        const hugeText = document.getElementById('huge-winner-text');
+        
+        closeOverlay();
+        
+        let i = 0;
+        const interval = setInterval(() => {
+            display.style.color = 'rgba(255,255,255,0.7)';
+            display.innerText = students[Math.floor(Math.random() * students.length)];
+            i++;
+            if(i > 15) {
+                clearInterval(interval);
+                const winner = students[Math.floor(Math.random() * students.length)];
+                
+                display.innerText = winner;
+                display.style.color = 'var(--accent-purple)'; 
+                
+                hugeText.innerText = winner;
+                overlay.classList.add('show');
+                
+                overlayTimeout = setTimeout(() => {
+                    closeOverlay();
+                }, 5000);
+            }
+        }, 80);
+    }
+    
+    function closeOverlay() {
+        clearTimeout(overlayTimeout);
+        document.getElementById('fullscreen-overlay').classList.remove('show');
+    }
+
+    init();
+</script>
+</body>
+</html>
