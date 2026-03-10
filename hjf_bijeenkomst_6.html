@@ -28,7 +28,8 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            font-size: clamp(20px, 2.6vh, 32px);
+            /* Vergroot voor betere leesbaarheid achterin de klas */
+            font-size: clamp(26px, 3.5vh, 40px);
             line-height: 1.4;
         }
 
@@ -54,7 +55,7 @@
             padding: 10px 20px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             border: 2px solid var(--accent-color);
             z-index: 10;
         }
@@ -62,13 +63,13 @@
         h1 {
             color: var(--primary-color);
             margin: 0 0 10px 0;
-            font-size: clamp(2.5rem, 5vh, 4rem);
+            font-size: clamp(3.5rem, 6vh, 5rem);
             text-align: center;
         }
 
         h2 {
             color: var(--primary-color);
-            font-size: clamp(1.8rem, 3.5vh, 2.8rem);
+            font-size: clamp(2.2rem, 4.5vh, 3.5rem);
             margin: 0 0 15px 0;
             text-align: center;
         }
@@ -91,35 +92,61 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Subtielere navigatieknoppen */
         .btn-container {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
-            border-top: 3px solid var(--accent-color);
             padding-top: 15px;
             flex-shrink: 0;
         }
 
         button.nav-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            font-size: 1.6rem;
-            border-radius: 40px;
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 3px solid var(--primary-color);
+            width: 70px;
+            height: 70px;
+            font-size: 2.5rem;
+            border-radius: 50%;
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         button.nav-btn:hover:not(:disabled) {
-            background-color: var(--button-hover);
-            color: #333;
+            background-color: var(--primary-color);
+            color: white;
         }
 
         button.nav-btn:disabled {
-            background-color: #ccc;
+            border-color: #ccc;
+            color: #ccc;
             cursor: not-allowed;
+        }
+
+        /* Video styling */
+        .video-container {
+            position: relative;
+            width: 80%;
+            margin: 0 auto;
+            padding-bottom: 45%; /* 16:9 ratio adjusted for smaller width */
+            height: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* Mood Selector Area - No Text */
@@ -144,10 +171,10 @@
 
         .mood-item:hover { transform: scale(1.15); background: var(--accent-color); }
 
-        .mood-emoji { font-size: 7rem; margin-bottom: 15px; }
+        .mood-emoji { font-size: 8rem; margin-bottom: 15px; }
 
         .mood-counter {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
             color: var(--primary-color);
             background: white;
@@ -180,7 +207,7 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             color: #666;
         }
 
@@ -194,7 +221,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 2.6rem;
             font-weight: bold;
             color: var(--text-color);
             transition: border-color 0.3s;
@@ -215,6 +242,7 @@
             font-weight: bold;
             margin-bottom: 10px;
             display: inline-block;
+            font-size: 1.4rem;
         }
 
         .fixed-badge { background-color: var(--fixed-color); }
@@ -225,7 +253,7 @@
             border-radius: 15px;
             background: #fff;
             border: 3px solid var(--primary-color);
-            font-size: 1.6rem;
+            font-size: 2rem;
             font-style: italic;
             display: flex;
             align-items: center;
@@ -246,18 +274,37 @@
             overflow: hidden;
             flex-shrink: 0;
         }
+        
         .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
 
         input[type="text"] {
             width: 100%;
-            padding: 15px;
+            padding: 20px;
             margin: 10px 0;
             border: 3px solid var(--accent-color);
             border-radius: 15px;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
+            box-sizing: border-box;
         }
 
-        .hand-icon-small { font-size: 2.5rem; }
+        .hand-icon-small { font-size: 3rem; }
+        
+        button.action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.8rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        button.action-btn:hover {
+            background-color: var(--button-hover);
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -267,7 +314,6 @@
         <div class="progress-fill" id="progress-fill"></div>
     </div>
 
-    <!-- Stap 0: Gevoelsmeter -->
     <div class="step active" id="step-0">
         <h1>Welkom!</h1>
         <h2>Klik op hoe je je voelt</h2>
@@ -295,37 +341,42 @@
         </div>
     </div>
 
-    <!-- Stap 1: Intro Mindset -->
     <div class="step" id="step-1">
+        <h2>Kijk mee naar deze video</h2>
+        <div class="video-container">
+            <iframe src="HIER_JOUW_VIDEO_LINK_PLAKKEN" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="step" id="step-2">
         <div class="page-badge">Blz. 42</div>
         <h1>Mindsets</h1>
         <p>Mindsets zijn de manier waarop je denkt over jezelf en wat je kunt leren.</p>
         <div class="grid-2">
             <div style="background: #fef2f2; padding: 20px; border-radius: 15px; border: 2px solid #fee2e2;">
                 <h3>🔴 Vaste mindset</h3>
-                <p style="font-size: 1.3rem;">"Ik ben hier gewoon niet goed in."<br>Je denkt dat je talent vaststaat en fouten voelen als falen.</p>
+                <p style="font-size: 1.6rem;">"Ik ben hier gewoon niet goed in."<br>Je denkt dat je talent vaststaat en fouten voelen als falen.</p>
             </div>
             <div style="background: #f0fdf4; padding: 20px; border-radius: 15px; border: 2px solid #dcfce7;">
                 <h3>🟢 Groeimindset</h3>
-                <p style="font-size: 1.3rem;">"Ik kan dit <strong>nog</strong> niet, maar door te oefenen word ik beter!"<br>Je ziet fouten als leermomenten.</p>
+                <p style="font-size: 1.6rem;">"Ik kan dit <strong>nog</strong> niet, maar door te oefenen word ik beter!"<br>Je ziet fouten als leermomenten.</p>
             </div>
         </div>
         <p style="text-align: center; margin-top: 20px;"><em>Je kunt jezelf trainen om in een groeimindset te denken!</em></p>
     </div>
 
-    <!-- Stap 2: Gecombineerde Mindset Game -->
-    <div class="step" id="step-2">
-        <div class="page-badge">Bl. 42</div>
+    <div class="step" id="step-3">
+        <div class="page-badge">Blz. 42</div>
         <h2>Mindset Omdenken Game</h2>
         <div class="game-area">
             <div class="voting-guide">
                 <div class="vote-hand">
                     <span class="hand-icon-small">🖐️</span>
-                    <span><strong>Links:</strong> Fixed Mindset</span>
+                    <span><strong>Links:</strong> Fixed</span>
                 </div>
                 <div class="vote-hand">
                     <span class="hand-icon-small">✋</span>
-                    <span><strong>Rechts:</strong> Growth Mindset</span>
+                    <span><strong>Rechts:</strong> Growth</span>
                 </div>
             </div>
 
@@ -334,36 +385,34 @@
             </div>
             
             <div id="actionButtons">
-                <button class="nav-btn" onclick="drawStatement()">Trek een uitspraak</button>
-                <button id="revealBtn" class="nav-btn" style="display:none; background-color: #333;" onclick="revealCounterpart()">Toon tegenhanger</button>
+                <button class="action-btn" onclick="drawStatement()">Trek een uitspraak</button>
+                <button id="revealBtn" class="action-btn" style="display:none; background-color: #333;" onclick="revealCounterpart()">Toon tegenhanger</button>
             </div>
 
             <div class="reveal-area" id="revealArea">
                 <div id="typeInfo">
                     <span id="typeBadge" class="mindset-type-badge"></span>
-                    <p style="font-size: 1.1rem; margin-top: 5px;">Wat is de tegenhanger?</p>
+                    <p style="font-size: 1.4rem; margin-top: 5px;">Wat is de tegenhanger?</p>
                 </div>
                 <div class="counterpart-box" id="counterpartDisplay"></div>
             </div>
         </div>
     </div>
 
-    <!-- Stap 3: Hack je mindset -->
-    <div class="step" id="step-3">
+    <div class="step" id="step-4">
         <div class="page-badge">Blz. 43</div>
         <h2>Hack je mindset</h2>
-        <div style="font-size: 1.3rem;">
+        <div style="font-size: 1.8rem; line-height: 1.6;">
             <p><strong>Stap 1: Herken je gedachten.</strong> Let op wat je zegt als iets moeilijk is.</p>
             <p><strong>Stap 2: Daag je mindset uit.</strong> Vraag jezelf: "Wat kan ik hiervan leren?"</p>
             <p><strong>Stap 3: Oefen met 'NOG'.</strong> Zeg niet "Ik kan het niet", maar "Ik kan het <strong>nog niet</strong>".</p>
         </div>
         <div style="text-align: center; margin-top: 10px;">
-            <i class="fas fa-brain" style="font-size: 3rem; color: var(--primary-color);"></i>
+            <span style="font-size: 6rem;">🧠</span>
         </div>
     </div>
 
-    <!-- Stap 4: Mijn faalangst nu -->
-    <div class="step" id="step-4">
+    <div class="step" id="step-5">
         <div class="page-badge">Blz. 43-44</div>
         <h2>Mijn faalangst nu</h2>
         <p>In de eerste les tekende je jouw faalangst op blz. 6.</p>
@@ -374,21 +423,20 @@
         </p>
     </div>
 
-    <!-- Stap 5: Evaluatie -->
-    <div class="step" id="step-5">
+    <div class="step" id="step-6">
         <div class="page-badge">Blz. 45</div>
         <h2>Evaluatie</h2>
         <input type="text" placeholder="1. Wat was de beste tip uit de training?">
         <input type="text" placeholder="2. Aan welke oefening heb je het meest gehad?">
         <div style="margin-top: 20px; text-align: center;">
             <p><strong>Onthoud:</strong> Spanning betekent dat je iets belangrijk vindt.<br>Je hebt nu de vaardigheden om hiermee om te gaan!</p>
-            <h3 style="font-size: 3rem; margin-top: 20px;">Succes! Je kunt het! 🚀</h3>
+            <h3 style="font-size: 4rem; margin-top: 20px; color: var(--primary-color);">Succes! Je kunt het! 🚀</h3>
         </div>
     </div>
 
     <div class="btn-container">
-        <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)" disabled>Vorige</button>
-        <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">Volgende</button>
+        <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)" disabled>←</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">→</button>
     </div>
 </div>
 
@@ -470,12 +518,11 @@
         steps[currentStep].classList.add('active');
 
         document.getElementById('prevBtn').disabled = currentStep === 0;
-        document.getElementById('nextBtn').style.display = currentStep === steps.length - 1 ? 'none' : 'block';
+        document.getElementById('nextBtn').style.visibility = currentStep === steps.length - 1 ? 'hidden' : 'visible';
 
         const percentage = (currentStep / (steps.length - 1)) * 100;
         document.getElementById('progress-fill').style.width = percentage + '%';
     }
 </script>
-
 </body>
 </html>
