@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engels Leren - Kruiswoordpuzzel Neon</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #07080d; 
+            color: #fff;
+            margin: 0; 
+            padding: 0;
+            height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; 
+        }
+        
+        h1 { 
+            color: #0ff; 
+            text-align: center; 
+            font-size: 28px;
+            margin: 5px 0 15px 0; 
+            text-shadow: 0 0 10px #0ff, 0 0 25px #0ff, 0 0 40px #0ff;
+            text-transform: lowercase; 
+            letter-spacing: 2px;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 25px 30px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.1);
+            max-width: 95vw;
+            max-height: 90vh; 
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-selector input[type="radio"] {
+            display: none; 
+        }
+
+        .mode-selector label {
+            cursor: pointer;
+            color: #0ff;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: rgba(0, 255, 255, 0.05);
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.1);
+        }
+
+        .mode-selector input[type="radio"]:checked + label {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), inset 0 0 10px rgba(0, 255, 255, 0.2);
+            color: #fff;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        .active-hint-container {
+            background: rgba(255, 0, 255, 0.15);
+            border: 1px solid rgba(255, 0, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3), inset 0 0 10px rgba(255, 0, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            min-height: 55px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #active-hint {
+            color: #fff;
+            font-size: 18px;
+            margin: 0;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        #active-hint strong {
+            color: #f0f;
+            text-shadow: 0 0 10px #f0f, 0 0 20px #f0f;
+        }
+
+        .crossword-grid {
+            display: grid;
+            gap: 5px; 
+            margin-bottom: 25px;
+        }
+
+        .cell {
+            width: 36px; 
+            height: 36px;
+            background-color: transparent; 
+            position: relative;
+        }
+
+        .cell.active { 
+            background: rgba(0, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 255, 0.6);
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.4), inset 0 0 8px rgba(0, 255, 255, 0.2);
+        }
+
+        .cell input {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 22px; 
+            font-weight: bold;
+            color: #fff;
+            text-transform: lowercase; 
+            outline: none;
+            background: transparent;
+            cursor: pointer;
+            text-shadow: 0 0 8px #fff;
+            transition: all 0.2s ease;
+        }
+
+        .cell input.highlight { 
+            background-color: rgba(255, 0, 255, 0.35); 
+            box-shadow: inset 0 0 15px rgba(255, 0, 255, 0.6);
+        }
+        
+        .cell input:focus { 
+            background-color: rgba(255, 0, 255, 0.6); 
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px #f0f, inset 0 0 20px #f0f;
+        }
+
+        .cell input.correct { 
+            background-color: rgba(0, 255, 0, 0.3) !important; 
+            border: 2px solid #0f0 !important;
+            box-shadow: 0 0 15px #0f0, inset 0 0 15px #0f0 !important;
+            color: #fff; 
+            text-shadow: 0 0 8px #0f0;
+        }
+        
+        .cell input.wrong { 
+            background-color: rgba(255, 0, 0, 0.3) !important; 
+            border: 2px solid #f00 !important;
+            box-shadow: 0 0 15px #f00, inset 0 0 15px #f00 !important;
+            color: #fff; 
+            text-shadow: 0 0 8px #f00;
+        }
+
+        .cell .number {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #0ff; 
+            text-shadow: 0 0 5px #0ff;
+            pointer-events: none;
+        }
+
+        .buttons { display: flex; gap: 15px; }
+        
+        button { 
+            padding: 12px 24px; 
+            font-size: 14px; 
+            cursor: pointer; 
+            background: rgba(0, 255, 255, 0.1);
+            color: #0ff; 
+            border: 2px solid #0ff; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease; 
+        }
+        
+        button:hover { 
+            background-color: #0ff; 
+            color: #000;
+            box-shadow: 0 0 25px #0ff, inset 0 0 15px #0ff;
+            text-shadow: none;
+        }
+
+        .btn-new { 
+            background: rgba(255, 0, 255, 0.1);
+            color: #f0f; 
+            border-color: #f0f;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4), inset 0 0 10px rgba(255, 0, 255, 0.2);
+        }
+        
+        .btn-new:hover { 
+            background-color: #f0f; 
+            color: #000;
+            box-shadow: 0 0 25px #f0f, inset 0 0 15px #f0f;
+        }
+
+        #message { 
+            margin-top: 20px; 
+            font-weight: bold; 
+            font-size: 18px; 
+            text-align: center; 
+            min-height: 25px; 
+            letter-spacing: 1px;
+            text-transform: lowercase;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Engelse kruiswoordpuzzel</h1>
+    
+    <div class="game-container">
+        
+        <div class="mode-selector">
+            <input type="radio" name="mode" id="mode-nl-en" value="nl-en" checked onchange="generatePuzzle()">
+            <label for="mode-nl-en">nl ➔ en</label>
+            
+            <input type="radio" name="mode" id="mode-en-nl" value="en-nl" onchange="generatePuzzle()">
+            <label for="mode-en-nl">en ➔ nl</label>
+            
+            <input type="radio" name="mode" id="mode-mix" value="mix" onchange="generatePuzzle()">
+            <label for="mode-mix">mix</label>
+        </div>
+
+        <div class="active-hint-container">
+            <h2 id="active-hint">klik op een vakje om te beginnen!</h2>
+        </div>
+
+        <div id="crossword-grid" class="crossword-grid"></div>
+
+        <div class="buttons">
+            <button class="btn-check" onclick="checkAnswers()">controleer antwoorden</button>
+            <button class="btn-new" onclick="generatePuzzle()">nieuwe puzzel</button>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        // Let op de extra optie 'hintEn' voor de twee host-woorden!
+        const wordDatabase = [
+            { nl: "sap", en: "juice" }, { nl: "limonade", en: "lemonade" }, { nl: "frisdrank", en: "soft drink" },
+            { nl: "fles", en: "bottle" }, { nl: "kopje", en: "cup" }, { nl: "mok", en: "mug" },
+            { nl: "gast", en: "guest" }, { nl: "winkel", en: "shop" }, 
+            { nl: "gastheer", en: "host", hintEn: "host (man)" }, 
+            { nl: "gastvrouw", en: "host", hintEn: "host (woman)" },
+            { nl: "suikervrij", en: "sugar-free" }, { nl: "traditioneel", en: "traditional" }, { nl: "gezond", en: "healthy" },
+            { nl: "viering", en: "celebration" }, { nl: "smaak", en: "flavour" }, { nl: "aanmoedigen", en: "encourage" }
+        ];
+
+        let gridSize = 30; 
+        let grid = [];
+        let placedWords = [];
+        let currentDirection = 'h';
+
+        function shuffleArray(array) {
+            let shuffled = array.slice();
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function canPlace(word, startX, startY, dir) {
+            if (startX < 0 || startY < 0) return false;
+            if (dir === 0 && startX + word.length > gridSize) return false;
+            if (dir === 1 && startY + word.length > gridSize) return false;
+
+            for (let i = 0; i < word.length; i++) {
+                let x = startX + (dir === 0 ? i : 0);
+                let y = startY + (dir === 1 ? i : 0);
+                if (grid[y][x] !== '' && grid[y][x] !== word[i]) return false;
+
+                if (grid[y][x] === '') {
+                    if (dir === 0) {
+                        if (y > 0 && grid[y-1][x] !== '') return false;
+                        if (y < gridSize-1 && grid[y+1][x] !== '') return false;
+                    } else {
+                        if (x > 0 && grid[y][x-1] !== '') return false;
+                        if (x < gridSize-1 && grid[y][x+1] !== '') return false;
+                    }
+                }
+            }
+
+            if (dir === 0) {
+                if (startX > 0 && grid[startY][startX-1] !== '') return false;
+                if (startX + word.length < gridSize && grid[startY][startX+word.length] !== '') return false;
+            } else {
+                if (startY > 0 && grid[startY-1][startX] !== '') return false;
+                if (startY + word.length < gridSize && grid[startY+word.length][startX] !== '') return false;
+            }
+            return true;
+        }
+
+        function generatePuzzle() {
+            document.getElementById('message').textContent = '';
+            document.getElementById('active-hint').textContent = 'klik op een vakje om te beginnen!';
+            
+            const mode = document.querySelector('input[name="mode"]:checked').value;
+            
+            grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+            placedWords = [];
+            let shuffled = shuffleArray(wordDatabase);
+            
+            for (let item of shuffled) {
+                let gridWordOriginal = '';
+                let hintWord = '';
+
+                // Slimme logica die controleert of er een specifieke Engelse hint beschikbaar is (zoals "host (man)")
+                if (mode === 'nl-en') {
+                    gridWordOriginal = item.en;
+                    hintWord = item.nl;
+                } else if (mode === 'en-nl') {
+                    gridWordOriginal = item.nl;
+                    hintWord = item.hintEn ? item.hintEn : item.en; 
+                } else if (mode === 'mix') {
+                    if (Math.random() < 0.5) {
+                        gridWordOriginal = item.en;
+                        hintWord = item.nl;
+                    } else {
+                        gridWordOriginal = item.nl;
+                        hintWord = item.hintEn ? item.hintEn : item.en;
+                    }
+                }
+
+                let wordClean = gridWordOriginal.replace(/[\s\-\/]/g, '').toLowerCase(); 
+                let placed = false;
+
+                if (placedWords.length === 0) {
+                    let x = Math.floor(gridSize/2) - Math.floor(wordClean.length/2);
+                    let y = Math.floor(gridSize/2);
+                    if (canPlace(wordClean, x, y, 0)) {
+                        for(let i=0; i<wordClean.length; i++) grid[y][x+i] = wordClean[i];
+                        placedWords.push({ hintWord: hintWord, word: wordClean, x: x, y: y, dir: 0 });
+                    }
+                } else {
+                    for (let i = 0; i < wordClean.length && !placed; i++) {
+                        for (let pw of placedWords) {
+                            for (let j = 0; j < pw.word.length && !placed; j++) {
+                                if (wordClean[i] === pw.word[j]) {
+                                    let dir = pw.dir === 0 ? 1 : 0;
+                                    let startX = pw.dir === 0 ? pw.x + j : pw.x - i;
+                                    let startY = pw.dir === 0 ? pw.y - i : pw.y + j;
+
+                                    if (canPlace(wordClean, startX, startY, dir)) {
+                                        for(let k=0; k<wordClean.length; k++) {
+                                            grid[startY + (dir === 1 ? k : 0)][startX + (dir === 0 ? k : 0)] = wordClean[k];
+                                        }
+                                        placedWords.push({ hintWord: hintWord, word: wordClean, x: startX, y: startY, dir: dir });
+                                        placed = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if(placedWords.length === 10) break;
+            }
+            drawGrid();
+        }
+
+        function updateActiveState(cx, cy) {
+            let wordH = placedWords.find(pw => pw.dir === 0 && pw.y === cy && cx >= pw.x && cx < pw.x + pw.word.length);
+            let wordV = placedWords.find(pw => pw.dir === 1 && pw.x === cx && cy >= pw.y && cy < pw.y + pw.word.length);
+
+            let clickedInput = document.querySelector(`input[data-x="${cx}"][data-y="${cy}"]`);
+
+            if (wordH && wordV) {
+                if (clickedInput && clickedInput.dataset.focused === "true") {
+                    currentDirection = (currentDirection === 'h') ? 'v' : 'h';
+                }
+            } else if (wordH) {
+                currentDirection = 'h';
+            } else if (wordV) {
+                currentDirection = 'v';
+            }
+
+            let activeWord = (currentDirection === 'h') ? wordH : wordV;
+            if (!activeWord && currentDirection === 'h') activeWord = wordV; 
+            if (!activeWord && currentDirection === 'v') activeWord = wordH;
+
+            document.querySelectorAll('.cell input').forEach(inp => {
+                inp.classList.remove('highlight');
+                inp.dataset.focused = "false";
+            });
+
+            if (activeWord) {
+                currentDirection = activeWord.dir === 0 ? 'h' : 'v'; 
+                
+                for (let i = 0; i < activeWord.word.length; i++) {
+                    let hx = activeWord.dir === 0 ? activeWord.x + i : activeWord.x;
+                    let hy = activeWord.dir === 0 ? activeWord.y : activeWord.y + i;
+                    let input = document.querySelector(`input[data-x="${hx}"][data-y="${hy}"]`);
+                    if (input) input.classList.add('highlight');
+                }
+                
+                const dirText = activeWord.dir === 0 ? "horizontaal" : "verticaal";
+                document.getElementById('active-hint').innerHTML = `<strong>${activeWord.number} ${dirText}:</strong> vertaal "<em>${activeWord.hintWord.toLowerCase()}</em>"`;
+            }
+
+            if (clickedInput) clickedInput.dataset.focused = "true";
+        }
+
+        function drawGrid() {
+            let minX = gridSize, maxX = 0, minY = gridSize, maxY = 0;
+            placedWords.forEach(pw => {
+                if (pw.x < minX) minX = pw.x;
+                if (pw.y < minY) minY = pw.y;
+                if (pw.dir === 0) {
+                    if (pw.x + pw.word.length > maxX) maxX = pw.x + pw.word.length;
+                    if (pw.y > maxY) maxY = pw.y;
+                } else {
+                    if (pw.x > maxX) maxX = pw.x;
+                    if (pw.y + pw.word.length > maxY) maxY = pw.y + pw.word.length;
+                }
+            });
+
+            placedWords.sort((a, b) => a.y === b.y ? a.x - b.x : a.y - b.y);
+            let currentNumber = 1;
+            placedWords.forEach((pw, index) => {
+                let sharedStart = placedWords.find((other, otherIndex) => otherIndex < index && other.x === pw.x && other.y === pw.y);
+                if (sharedStart) { pw.number = sharedStart.number; } 
+                else { pw.number = currentNumber++; }
+            });
+
+            const gridContainer = document.getElementById('crossword-grid');
+            gridContainer.style.gridTemplateColumns = `repeat(${maxX - minX + 1}, 36px)`;
+            gridContainer.innerHTML = '';
+
+            for (let y = minY; y <= maxY; y++) {
+                for (let x = minX; x <= maxX; x++) {
+                    let cellDiv = document.createElement('div');
+                    cellDiv.className = 'cell';
+
+                    if (grid[y][x] !== '') {
+                        cellDiv.classList.add('active');
+                        let input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = 1;
+                        input.dataset.answer = grid[y][x];
+                        input.dataset.x = x;
+                        input.dataset.y = y;
+                        input.dataset.focused = "false";
+                        
+                        let startingWord = placedWords.find(pw => pw.x === x && pw.y === y);
+                        if (startingWord) {
+                            let numSpan = document.createElement('span');
+                            numSpan.className = 'number';
+                            numSpan.textContent = startingWord.number;
+                            cellDiv.appendChild(numSpan);
+                        }
+                        
+                        input.addEventListener('click', function() {
+                            let cx = parseInt(this.dataset.x);
+                            let cy = parseInt(this.dataset.y);
+                            updateActiveState(cx, cy);
+                        });
+
+                        input.addEventListener('input', function() {
+                            this.value = this.value.toLowerCase();
+                            this.classList.remove('correct', 'wrong');
+
+                            if (this.value.length === 1) {
+                                let cx = parseInt(this.dataset.x);
+                                let cy = parseInt(this.dataset.y);
+                                let nextInput = (currentDirection === 'h') 
+                                    ? document.querySelector(`input[data-x="${cx+1}"][data-y="${cy}"]`)
+                                    : document.querySelector(`input[data-x="${cx}"][data-y="${cy+1}"]`);
+
+                                if (nextInput) {
+                                    nextInput.focus();
+                                    nextInput.click(); 
+                                }
+                            }
+                        });
+
+                        input.addEventListener('keydown', function(e) {
+                            if (e.key === 'Backspace' && this.value === '') {
+                                let cx = parseInt(this.dataset.x);
+                                let cy = parseInt(this.dataset.y);
+                                let prevInput = (currentDirection === 'h') 
+                                    ? document.querySelector(`input[data-x="${cx-1}"][data-y="${cy}"]`)
+                                    : document.querySelector(`input[data-x="${cx}"][data-y="${cy-1}"]`);
+
+                                if (prevInput) {
+                                    prevInput.focus();
+                                    prevInput.click();
+                                }
+                            }
+                        });
+
+                        cellDiv.appendChild(input);
+                    }
+                    gridContainer.appendChild(cellDiv);
+                }
+            }
+        }
+
+        function checkAnswers() {
+            const inputs = document.querySelectorAll('.cell.active input');
+            let allCorrect = true;
+
+            inputs.forEach(input => {
+                const correctAnswer = input.dataset.answer.toLowerCase();
+                const userAnswer = input.value.toLowerCase();
+
+                input.classList.remove('correct', 'wrong');
+
+                if (userAnswer === correctAnswer && userAnswer !== '') {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('wrong');
+                    allCorrect = false;
+                }
+            });
+
+            const messageEl = document.getElementById('message');
+            if (allCorrect) {
+                messageEl.textContent = "fantastisch! alles is gekraakt! 🚀";
+                messageEl.style.color = "#0f0";
+                messageEl.style.textShadow = "0 0 15px #0f0";
+            } else {
+                messageEl.textContent = "systeemfout... check de rode vakjes!";
+                messageEl.style.color = "#f00";
+                messageEl.style.textShadow = "0 0 15px #f00";
+            }
+        }
+
+        window.onload = generatePuzzle;
+    </script>
+</body>
+</html>
