@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Quizzes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --hover-color: #357abd;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-color: #27ae60;
+            --wrong-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 650px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin: 20px;
+            box-sizing: border-box;
+        }
+
+        .step { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1, h2 { color: var(--primary-color); margin-top: 0; }
+        p { font-size: 1.1em; line-height: 1.6; }
+
+        .highlight-box {
+            background-color: #eef5fc;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; font-weight: bold;
+        }
+
+        .btn-container { display: flex; justify-content: space-between; margin-top: 30px; }
+        
+        button {
+            background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; font-size: 1em; border-radius: 6px; cursor: pointer; transition: background-color 0.3s; font-weight: bold;
+        }
+        
+        button:hover { background-color: var(--hover-color); }
+        button.btn-back { background-color: #95a5a6; }
+        button.btn-back:hover { background-color: #7f8c8d; }
+        button.btn-large { width: 100%; padding: 15px; font-size: 1.2em; background-color: #2ecc71; margin-top: 10px; }
+        button.btn-large:hover { background-color: #27ae60; }
+
+        .progress { text-align: center; font-size: 0.9em; color: #7f8c8d; margin-bottom: 20px; }
+
+        /* Quiz Styles */
+        .question-block {
+            margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #fafafa;
+        }
+        .question-text { font-weight: bold; margin-bottom: 10px; }
+        
+        input[type="text"] {
+            width: 100%; padding: 10px; font-size: 1em; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box; transition: 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none; border-color: var(--primary-color);
+        }
+        
+        /* Styles voor nakijken */
+        input[type="text"].correct-input {
+            border-color: var(--correct-color); background-color: #eafaf1; color: #1e8449; font-weight: bold;
+        }
+        input[type="text"].wrong-input {
+            border-color: var(--wrong-color); background-color: #fadbd8; color: #922b21; text-decoration: line-through;
+        }
+        input[type="text"]:disabled { cursor: not-allowed; }
+
+        .feedback-msg { display: none; font-size: 0.95em; margin-top: 8px; padding: 8px; border-radius: 4px; }
+        .feedback-msg.correct { display: block; color: #1e8449; background-color: #d5f5e3; border-left: 4px solid var(--correct-color); }
+        .feedback-msg.wrong { display: block; color: #922b21; background-color: #f5b7b1; border-left: 4px solid var(--wrong-color); }
+
+        .error-msg {
+            color: var(--wrong-color); font-weight: bold; font-size: 0.9em; display: none; margin-bottom: 10px;
+        }
+
+        .score-box {
+            background-color: #ffffff; border: 3px solid var(--primary-color); padding: 20px; text-align: center; border-radius: 10px; margin-top: 20px;
+        }
+        .score-box h3 { margin: 0 0 10px 0; font-size: 1.5em; }
+        .score-box .student-name-display { color: var(--primary-color); font-size: 1.8em; text-transform: uppercase; margin-bottom: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="step active" id="step-0">
+        <h1>Welcome to the Quizzes! 👋</h1>
+        <p>In this app, you will complete your online English assignments.</p>
+        <div class="highlight-box">
+            Important:<br>
+            You will need to fill in your name and complete 5 quizzes. At the end, you will download a picture of your score to send to your teacher.
+        </div>
+        <div class="btn-container" style="justify-content: flex-end;">
+            <button onclick="nextStep()">Start &rarr;</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-1">
+        <h1>Let's get started! 📝</h1>
+        <p>Before you begin the digital quizzes, please let us know who you are.</p>
+        <div class="highlight-box">
+            Please enter your full name below.
+        </div>
+        <input type="text" id="studentName" placeholder="Type your first and last name here...">
+        <div id="nameError" class="error-msg">Please type your name before you continue!</div>
+        <div class="btn-container">
+            <button class="btn-back" onclick="prevStep()">&larr; Back</button>
+            <button onclick="checkNameAndNext()">Start Quizzes &rarr;</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-2">
+        <div class="progress">Quiz 1 of 5</div>
+        <h2>Grammar: Demonstrative Pronouns</h2>
+        <p>Type the missing word: <em>this, that, these</em> or <em>those</em>.</p>
+        <div id="quiz-dem"></div>
+        <div id="error-dem" class="error-msg">Please answer all 10 questions!</div>
+        <div class="btn-container">
+            <button onclick="handleQuizAction('dem', 'error-dem', this, false)">Check Answers &rarr;</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-3">
+        <div class="progress">Quiz 2 of 5</div>
+        <h2>Grammar: Possessives</h2>
+        <p>Type the correct form using <strong>'s</strong>, <strong>s'</strong> or <strong>of</strong>. Type the whole phrase.</p>
+        <div class="highlight-box" style="font-weight: normal; font-size: 0.9em; margin-top: 0;">
+            <em>Example for a person:</em> the boy / the bag &rarr; <strong>the boy's bag</strong><br>
+            <em>Example for a thing:</em> the house / the roof &rarr; <strong>the roof of the house</strong>
+        </div>
+        <div id="quiz-poss"></div>
+        <div id="error-poss" class="error-msg">Please answer all 10 questions!</div>
+        <div class="btn-container">
+            <button onclick="handleQuizAction('poss', 'error-poss', this, false)">Check Answers &rarr;</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-4">
+        <div class="progress">Quiz 3 of 5</div>
+        <h2>Grammar: Imperative</h2>
+        <p>Type the correct verb to make a command (gebiedende wijs).</p>
+        <div id="quiz-imp"></div>
+        <div id="error-imp" class="error-msg">Please answer all 10 questions!</div>
+        <div class="btn-container">
+            <button onclick="handleQuizAction('imp', 'error-imp', this, false)">Check Answers &rarr;</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-5">
+        <div class="progress">Quiz 4 of 5</div>
+        <h2>Vocabulary 4.1 & 4.2 (To Dutch)</h2>
+        <p>Translate the English word to Dutch.</p>
+        <div id="quiz-voc"></div>
+        <div id="error-voc" class="error-msg">Please answer all 10 questions!</div>
+        <div class="btn-container">
+            <button onclick="handleQuizAction('voc', 'error-voc', this, false)">Check Answers &rarr;</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-6">
+        <div class="progress">Quiz 5 of 5</div>
+        <h2>Vocabulary 4.1 & 4.2 (To English)</h2>
+        <p>Translate the Dutch word to English. (e.g., if it's a verb, you can type it with or without 'to')</p>
+        <div id="quiz-voc-nlen"></div>
+        <div id="error-voc-nlen" class="error-msg">Please answer all 10 questions!</div>
+        <div class="btn-container">
+            <button onclick="handleQuizAction('voc_nlen', 'error-voc-nlen', this, true)">Check Answers &rarr;</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-7">
+        <h1>Finished! 🎉</h1>
+        
+        <div class="highlight-box" style="text-align: left; background-color: #fff3cd; border-color: #ffc107;">
+            <strong>STEP 1:</strong> Click the green button to download your score.<br>
+            <strong>STEP 2:</strong> Send the downloaded picture to your teacher on Teams.
+        </div>
+
+        <button class="btn-large" onclick="takeScreenshot()">📸 Click here to Download Score</button>
+
+        <div class="score-box" id="capture-area">
+            <div class="student-name-display" id="displayName">NAME</div>
+            <h3>Final Scores:</h3>
+            <p><strong>Demonstrative Pronouns:</strong> <span id="score-dem"></span> / 10</p>
+            <p><strong>Possessives:</strong> <span id="score-poss"></span> / 10</p>
+            <p><strong>Imperative:</strong> <span id="score-imp"></span> / 10</p>
+            <p><strong>Vocabulary (To Dutch):</strong> <span id="score-voc"></span> / 10</p>
+            <p><strong>Vocabulary (To English):</strong> <span id="score-voc-nlen"></span> / 10</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- DATABASES ---
+    const dbDem = [
+        { q: "Look at ___ bird in the sky!", a: ["that"] },
+        { q: "___ shoes I am wearing are very comfortable.", a: ["these"] },
+        { q: "Can you pass me ___ book on the table over there?", a: ["that"] },
+        { q: "___ is my friend, Sarah. She is standing right next to me.", a: ["this"] },
+        { q: "Do you remember ___ days when we were young?", a: ["those"] },
+        { q: "I don't like ___ apple in my hand. It is sour.", a: ["this"] },
+        { q: "Who are ___ people across the street?", a: ["those"] },
+        { q: "___ pizza we are eating is delicious!", a: ["this"] },
+        { q: "I want to buy ___ car we saw yesterday in the shop.", a: ["that"] },
+        { q: "Are ___ your keys on my desk?", a: ["these"] },
+        { q: "Hello, ___ is John speaking. (on the phone)", a: ["this"] },
+        { q: "Is ___ your brother standing near the door?", a: ["that"] },
+        { q: "___ cookies here are baked by my mom.", a: ["these"] },
+        { q: "Please put the boxes in ___ corner over there.", a: ["that"] },
+        { q: "___ mountains in the distance are beautiful.", a: ["those"] },
+        { q: "Why did you buy ___ ugly hat you are holding?", a: ["this"] },
+        { q: "___ jeans over there are too expensive.", a: ["those"] },
+        { q: "___ watch on my wrist was a gift.", a: ["this"] },
+        { q: "Take ___ bags and put them in the car, please.", a: ["these"] },
+        { q: "Who is ___ boy playing outside?", a: ["that"] },
+        { q: "I love ___ pictures we took on our holiday last year.", a: ["those"] },
+        { q: "___ tea I am drinking is too hot.", a: ["this"] },
+        { q: "Can you see ___ stars tonight? They are so bright.", a: ["those"] },
+        { q: "___ pencil is broken. Do you have another one?", a: ["this"] },
+        { q: "Look at ___ puppies in the window of the pet shop!", a: ["those"] },
+        { q: "___ flowers here are for you.", a: ["these"] },
+        { q: "Was ___ a ghost we just saw?!", a: ["that"] },
+        { q: "___ children playing in the park look happy.", a: ["those"] },
+        { q: "Did you drop ___ coin on the floor here?", a: ["this"] },
+        { q: "I will never forget ___ moment in 2018.", a: ["that"] }
+    ];
+
+    const dbPoss = [
+        { q: "the boy / the bag", a: ["the boy's bag"] },
+        { q: "the girls / the bikes", a: ["the girls' bikes"] },
+        { q: "the house / the roof", a: ["the roof of the house", "the roof of a house"] },
+        { q: "my mom / the phone", a: ["my mom's phone"] },
+        { q: "the babies / the toys", a: ["the babies' toys"] },
+        { q: "the mountain / the top", a: ["the top of the mountain"] },
+        { q: "John / the car", a: ["john's car"] },
+        { q: "the game / the rules", a: ["the rules of the game"] },
+        { q: "the dog / the tail", a: ["the dog's tail"] },
+        { q: "the students / the books", a: ["the students' books"] },
+        { q: "the room / the back", a: ["the back of the room", "the back of a room"] },
+        { q: "my parents / the house", a: ["my parents' house"] },
+        { q: "the street / the name", a: ["the name of the street"] },
+        { q: "the teacher / the desk", a: ["the teacher's desk"] },
+        { q: "the boys / the computers", a: ["the boys' computers"] },
+        { q: "the movie / the end", a: ["the end of the movie", "the end of a movie"] },
+        { q: "Tom / the sister", a: ["tom's sister"] },
+        { q: "the ladies / the bags", a: ["the ladies' bags"] },
+        { q: "the night / the middle", a: ["the middle of the night"] },
+        { q: "my brother / the shoes", a: ["my brother's shoes"] },
+        { q: "the table / the legs", a: ["the legs of the table", "the legs of a table"] },
+        { q: "my grandparents / the car", a: ["my grandparents' car"] },
+        { q: "the shop / the window", a: ["the window of the shop"] },
+        { q: "Sarah / the ideas", a: ["sarah's ideas"] },
+        { q: "the birds / the cages", a: ["the birds' cages"] },
+        { q: "the page / the corner", a: ["the corner of the page", "the corner of a page"] },
+        { q: "the man / the jacket", a: ["the man's jacket"] },
+        { q: "the cats / the food", a: ["the cats' food"] },
+        { q: "the phone / the price", a: ["the price of the phone"] },
+        { q: "my friend / the house", a: ["my friend's house"] }
+    ];
+
+    const dbImp = [
+        { q: "___ down and open your books. (to sit)", a: ["sit"] },
+        { q: "___ so loud! The baby is sleeping. (not / to talk)", a: ["don't talk", "do not talk"] },
+        { q: "___ me the salt, please. (to pass)", a: ["pass"] },
+        { q: "___ late for school! (not / to be)", a: ["don't be", "do not be"] },
+        { q: "___ your homework before dinner. (to do)", a: ["do"] },
+        { q: "___ your phone in class. (not / to use)", a: ["don't use", "do not use"] },
+        { q: "___ carefully to the instructions. (to listen)", a: ["listen"] },
+        { q: "___ the door, it's cold outside. (to close)", a: ["close"] },
+        { q: "___ your brother hit you! (not / to let)", a: ["don't let", "do not let"] },
+        { q: "___ quiet! (to be)", a: ["be"] },
+        { q: "___ on the grass. (not / to walk)", a: ["don't walk", "do not walk"] },
+        { q: "___ your room today. (to clean)", a: ["clean"] },
+        { q: "___ me when I'm working. (not / to bother)", a: ["don't bother", "do not bother"] },
+        { q: "___ straight and then turn left. (to go)", a: ["go"] },
+        { q: "___ the dog chocolate! (not / to give)", a: ["don't give", "do not give"] },
+        { q: "___ me a text when you arrive. (to send)", a: ["send"] },
+        { q: "___ TV all day. Go outside! (not / to watch)", a: ["don't watch", "do not watch"] },
+        { q: "___ your hands before eating. (to wash)", a: ["wash"] },
+        { q: "___ to call your grandmother. (not / to forget)", a: ["don't forget", "do not forget"] },
+        { q: "___ your name at the top of the paper. (to write)", a: ["write"] },
+        { q: "___ in the corridors! (not / to run)", a: ["don't run", "do not run"] },
+        { q: "___ me the truth. (to tell)", a: ["tell"] },
+        { q: "___ up, we are late! (to hurry)", a: ["hurry"] },
+        { q: "___ my food! (not / to touch)", a: ["don't touch", "do not touch"] },
+        { q: "___ the lights when you leave. (to turn off)", a: ["turn off"] },
+        { q: "___ afraid of the dark. (not / to be)", a: ["don't be", "do not be"] },
+        { q: "___ the ball to me! (to throw)", a: ["throw"] },
+        { q: "___ at me! (not / to shout)", a: ["don't shout", "do not shout"] },
+        { q: "___ a deep breath and relax. (to take)", a: ["take"] },
+        { q: "___ up so late tonight. (not / to stay)", a: ["don't stay", "do not stay"] }
+    ];
+
+    const dbVoc = [
+        { q: "accident", a: ["ongeluk", "een ongeluk"] },
+        { q: "bit", a: ["stukje", "een stukje"] },
+        { q: "chocolate bar", a: ["chocoladereep", "een chocoladereep"] },
+        { q: "to examine", a: ["onderzoeken", "om te onderzoeken"] },
+        { q: "to fry", a: ["bakken", "braden"] },
+        { q: "to get angry", a: ["boos worden", "kwaad worden"] },
+        { q: "glue", a: ["lijm", "de lijm"] },
+        { q: "to happen", a: ["gebeuren"] },
+        { q: "to melt", a: ["smelten"] },
+        { q: "potato", a: ["aardappel", "een aardappel"] },
+        { q: "powder", a: ["poeder", "het poeder"] },
+        { q: "to pull off", a: ["los trekken", "eraf trekken"] },
+        { q: "to put", a: ["doen", "plaatsen", "zetten"] },
+        { q: "to slice", a: ["in plakjes snijden", "snijden"] },
+        { q: "to stick to", a: ["plakken aan", "vastplakken aan"] },
+        { q: "until", a: ["tot", "totdat"] },
+        { q: "weak", a: ["zwak"] },
+        { q: "at least", a: ["ten minste", "minstens"] },
+        { q: "bracelet", a: ["armband", "een armband"] },
+        { q: "contest", a: ["wedstrijd", "een wedstrijd"] },
+        { q: "to design", a: ["ontwerpen"] },
+        { q: "to draw", a: ["tekenen"] },
+        { q: "good luck", a: ["succes", "veel succes"] },
+        { q: "to expect", a: ["verwachten"] },
+        { q: "inventor", a: ["uitvinder", "een uitvinder"] },
+        { q: "kind of", a: ["soort", "een soort", "soort van"] },
+        { q: "Mrs", a: ["mevrouw"] },
+        { q: "next", a: ["volgende"] },
+        { q: "original", a: ["origineel"] },
+        { q: "to pop up", a: ["opkomen", "verschijnen"] },
+        { q: "to recommend", a: ["aanbevelen", "aanraden"] },
+        { q: "rubber band", a: ["elastiek", "een elastiek", "elastiekje"] },
+        { q: "to seem", a: ["lijken"] },
+        { q: "silly", a: ["dom", "flauw", "dom, flauw", "dwaas"] },
+        { q: "solution", a: ["oplossing", "een oplossing"] },
+        { q: "step", a: ["stap", "een stap"] },
+        { q: "tin", a: ["blikje", "een blikje", "blik"] },
+        { q: "tube", a: ["buis", "een buis", "tube", "een tube"] },
+        { q: "Yours sincerely,", a: ["met vriendelijke groet,", "met vriendelijke groet", "vriendelijke groeten"] }
+    ];
+
+    const dbVocNlToEn = [
+        { q: "ongeluk", a: ["accident", "an accident"] },
+        { q: "stukje", a: ["bit", "a bit", "piece", "a piece"] },
+        { q: "chocoladereep", a: ["chocolate bar", "a chocolate bar"] },
+        { q: "onderzoeken", a: ["examine", "to examine"] },
+        { q: "bakken", a: ["fry", "to fry", "bake", "to bake"] },
+        { q: "boos worden", a: ["get angry", "to get angry"] },
+        { q: "lijm", a: ["glue", "the glue"] },
+        { q: "gebeuren", a: ["happen", "to happen"] },
+        { q: "smelten", a: ["melt", "to melt"] },
+        { q: "aardappel", a: ["potato", "a potato"] },
+        { q: "poeder", a: ["powder", "the powder"] },
+        { q: "los trekken", a: ["pull off", "to pull off"] },
+        { q: "doen (zetten/plaatsen)", a: ["put", "to put"] },
+        { q: "in plakjes snijden", a: ["slice", "to slice"] },
+        { q: "plakken aan", a: ["stick to", "to stick to"] },
+        { q: "tot", a: ["until", "till"] },
+        { q: "zwak", a: ["weak"] },
+        { q: "ten minste", a: ["at least"] },
+        { q: "armband", a: ["bracelet", "a bracelet"] },
+        { q: "wedstrijd", a: ["contest", "a contest", "match", "game"] },
+        { q: "ontwerpen", a: ["design", "to design"] },
+        { q: "tekenen", a: ["draw", "to draw"] },
+        { q: "succes", a: ["good luck", "luck"] },
+        { q: "verwachten", a: ["expect", "to expect"] },
+        { q: "uitvinder", a: ["inventor", "an inventor"] },
+        { q: "soort", a: ["kind of", "type of", "sort of"] },
+        { q: "mevrouw", a: ["mrs", "mrs."] },
+        { q: "volgende", a: ["next"] },
+        { q: "origineel", a: ["original"] },
+        { q: "opkomen", a: ["pop up", "to pop up"] },
+        { q: "aanbevelen", a: ["recommend", "to recommend"] },
+        { q: "elastiek", a: ["rubber band", "a rubber band"] },
+        { q: "lijken", a: ["seem", "to seem"] },
+        { q: "dom, flauw", a: ["silly", "stupid"] },
+        { q: "oplossing", a: ["solution", "a solution"] },
+        { q: "stap", a: ["step", "a step"] },
+        { q: "blikje", a: ["tin", "a tin", "can", "a can"] },
+        { q: "buis", a: ["tube", "a tube"] },
+        { q: "Met vriendelijke groet,", a: ["yours sincerely,", "yours sincerely"] }
+    ];
+
+    // --- SCRIPT LOGIC ---
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+    let userScores = { dem: 0, poss: 0, imp: 0, voc: 0, voc_nlen: 0 };
+    let activeQuestions = { dem: [], poss: [], imp: [], voc: [], voc_nlen: [] };
+    let quizCheckedStatus = { dem: false, poss: false, imp: false, voc: false, voc_nlen: false };
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function buildQuiz(db, containerId, quizId) {
+        const container = document.getElementById(containerId);
+        let shuffledDb = shuffleArray([...db]).slice(0, 10);
+        activeQuestions[quizId] = shuffledDb;
+        
+        let html = "";
+        shuffledDb.forEach((item, index) => {
+            html += `<div class="question-block">
+                        <div class="question-text">${index + 1}. ${item.q}</div>
+                        <input type="text" id="q_${quizId}_${index}" autocomplete="off" placeholder="Type your answer...">
+                        <div id="fb_${quizId}_${index}" class="feedback-msg"></div>
+                     </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    window.onload = () => {
+        buildQuiz(dbDem, 'quiz-dem', 'dem');
+        buildQuiz(dbPoss, 'quiz-poss', 'poss');
+        buildQuiz(dbImp, 'quiz-imp', 'imp');
+        buildQuiz(dbVoc, 'quiz-voc', 'voc');
+        buildQuiz(dbVocNlToEn, 'quiz-voc-nlen', 'voc_nlen'); 
+    };
+
+    function showStep(stepIndex) {
+        steps.forEach(step => step.classList.remove('active'));
+        steps[stepIndex].classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep() {
+        if (currentStep < steps.length - 1) { currentStep++; showStep(currentStep); }
+    }
+    
+    function prevStep() {
+        if (currentStep > 0) { currentStep--; showStep(currentStep); }
+    }
+
+    function checkNameAndNext() {
+        const nameInput = document.getElementById('studentName').value.trim();
+        const errorMsg = document.getElementById('nameError');
+        
+        if (nameInput === "") {
+            errorMsg.style.display = 'block';
+        } else {
+            errorMsg.style.display = 'none';
+            document.getElementById('displayName').innerText = nameInput;
+            nextStep();
+        }
+    }
+
+    function handleQuizAction(quizId, errorId, btnElement, isFinal) {
+        const errorMsg = document.getElementById(errorId);
+        
+        // Eerste klik: nakijken
+        if (!quizCheckedStatus[quizId]) {
+            let allAnswered = true;
+            
+            // Controleer of alles is ingevuld
+            for (let i = 0; i < 10; i++) {
+                let inputField = document.getElementById(`q_${quizId}_${i}`);
+                if (inputField.value.trim() === "") {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Alles is ingevuld
+            errorMsg.style.display = 'none';
+            let score = 0;
+
+            for (let i = 0; i < 10; i++) {
+                let inputField = document.getElementById(`q_${quizId}_${i}`);
+                let feedbackDiv = document.getElementById(`fb_${quizId}_${i}`);
+                
+                let userAnswerRaw = inputField.value.trim();
+                let cleanAnswer = userAnswerRaw.replace(/[.,!?]+$/, "").trim();
+                let userAnswer = cleanAnswer.toLowerCase().replace(/’/g, "'").replace(/\s+/g, " ");
+                
+                let correctAnswers = activeQuestions[quizId][i].a;
+                
+                if (correctAnswers.includes(userAnswer)) {
+                    score++;
+                    inputField.classList.add('correct-input');
+                    feedbackDiv.innerHTML = "✔️ Correct!";
+                    feedbackDiv.className = "feedback-msg correct";
+                } else {
+                    inputField.classList.add('wrong-input');
+                    feedbackDiv.innerHTML = "❌ Wrong! Correct answer: <strong>" + correctAnswers[0] + "</strong>";
+                    feedbackDiv.className = "feedback-msg wrong";
+                }
+                
+                inputField.disabled = true;
+            }
+
+            userScores[quizId] = score;
+            quizCheckedStatus[quizId] = true;
+
+            if (isFinal) {
+                btnElement.innerHTML = "Finish & View Score ✔️";
+            } else {
+                btnElement.innerHTML = "Next &rarr;";
+            }
+
+        // Tweede klik: door naar volgende
+        } else {
+            if (isFinal) {
+                document.getElementById('score-dem').innerText = userScores.dem;
+                document.getElementById('score-poss').innerText = userScores.poss;
+                document.getElementById('score-imp').innerText = userScores.imp;
+                document.getElementById('score-voc').innerText = userScores.voc;
+                document.getElementById('score-voc-nlen').innerText = userScores.voc_nlen;
+            }
+            nextStep();
+        }
+    }
+
+    // Screenshot functie
+    function takeScreenshot() {
+        const captureArea = document.getElementById('capture-area');
+        const studentName = document.getElementById('displayName').innerText.replace(/\s+/g, '_'); 
+        
+        html2canvas(captureArea, { backgroundColor: "#ffffff", scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Score_${studentName}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
+</script>
+</body>
+</html>
