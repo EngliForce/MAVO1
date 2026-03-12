@@ -53,8 +53,10 @@
             margin-bottom: 30px;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
+        
+        /* Video Container Update */
         .video-container {
-            background: #000;
+            background: radial-gradient(circle, #01579b 0%, #000 100%);
             border: 4px solid var(--hero-blue-main);
             border-radius: 20px;
             overflow: hidden;
@@ -62,10 +64,45 @@
             padding-top: 56.25%; 
             margin-bottom: 40px;
             box-shadow: 0 0 40px rgba(2, 136, 209, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .video-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
+        
+        /* Grote Play Knop */
+        .btn-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border-bottom: 5px solid #d84315;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .btn-play:hover {
+            transform: translate(-50%, -55%) scale(1.05);
+            background: var(--hero-yellow);
+            color: var(--dark-bg);
+            border-bottom-color: #f57f17;
+            box-shadow: 0 15px 30px rgba(255, 183, 3, 0.4);
+        }
+        .play-icon { font-size: 2.2rem; }
+
         .explanation-text {
             font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
             border-left: 4px solid var(--hero-orange); padding-left: 20px;
@@ -124,7 +161,6 @@
         .tag-countable { background: var(--hero-green); color: white; }
         .tag-uncountable { background: var(--hero-orange); color: white; }
 
-        /* Niewe stijlen voor de Mission Completed knop */
         .btn-complete {
             background: transparent;
             border: 2px solid var(--hero-green);
@@ -139,18 +175,9 @@
             width: 100%;
             letter-spacing: 1px;
         }
-        .btn-complete:hover {
-            background: rgba(76, 175, 80, 0.2);
-        }
-        .btn-complete.completed {
-            background: var(--hero-green);
-            color: white;
-            border-color: var(--hero-green);
-        }
-        .card.completed {
-            border-color: var(--hero-green);
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
-        }
+        .btn-complete:hover { background: rgba(76, 175, 80, 0.2); }
+        .btn-complete.completed { background: var(--hero-green); color: white; border-color: var(--hero-green); }
+        .card.completed { border-color: var(--hero-green); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
 
         footer {
             background: #05101a;
@@ -177,15 +204,15 @@
     <section class="briefing-box">
         <h2>🚨 MISSION: LITTLE VS FEW</h2>
         <div class="explanation-text">
-            Wat is het verschil tussen <strong>LITTLE</strong> en <strong>FEW</strong>?. <br><br>
+            Wat is het verschil tussen <strong>LITTLE</strong> en <strong>FEW</strong>? <br><br>
             Beide woorden betekenen in het Nederlands <span class="highlight">WEINIG</span>. <br><br>
             Het geheim zit hem in het zelfstandig naamwoord dat erachter komt. Kun je het tellen of niet?<br><br>
-            <strong>Gouden Regel 1:</strong> Gebruik <span class="highlight">LITTLE</span> voor dingen die je kunt tellen (Countable).<br>
-            <strong>Gouden Regel 2:</strong> Gebruik <span class="highlight">FEW</span> voor dingen die je niet kunt tellen (Uncountable).
+            <strong>Gouden Regel 1:</strong> Gebruik <span class="highlight">LITTLE</span> voor dingen die je niet kunt tellen (Uncountable).<br>
+            <strong>Gouden Regel 2:</strong> Gebruik <span class="highlight">FEW</span> voor dingen die je wel kunt tellen (Countable).
         </div>
         <div class="formula-container">
-            <div class="formula-part">LITTLE<br><small>betekent: weinig</small><br><div class="type-tag tag-countable">Telbaar</div></div>
-            <div class="formula-part">FEW<br><small>betekent: weinig</small><br><div class="type-tag tag-uncountable">Ontelbaar</div></div>
+            <div class="formula-part">LITTLE<br><small>betekent: weinig</small><br><div class="type-tag tag-uncountable">Ontelbaar</div></div>
+            <div class="formula-part">FEW<br><small>betekent: weinig</small><br><div class="type-tag tag-countable">Telbaar</div></div>
         </div>
     </section>
 
@@ -205,10 +232,10 @@
                     <tr><th>Categorie</th><th>Wat is het?</th><th>Gebruik (Weinig)</th><th>Voorbeeld</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Countable</td><td>Dingen met een meervoud (s)</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">friends</span></td></tr>
-                    <tr><td>Countable</td><td>Dingen die je 1, 2, 3 kunt tellen</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">cars</span></td></tr>
-                    <tr><td>Uncountable</td><td>Vloeistoffen, poedertjes en gassen</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">water</span></td></tr>
-                    <tr><td>Uncountable</td><td>Gevoelens en begrippen</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">time</span></td></tr>
+                    <tr><td>Countable</td><td>Dingen met een meervoud (s)</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">friends</span></td></tr>
+                    <tr><td>Countable</td><td>Dingen die je 1, 2, 3 kunt tellen</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">cars</span></td></tr>
+                    <tr><td>Uncountable</td><td>Vloeistoffen, poedertjes en gassen</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">water</span></td></tr>
+                    <tr><td>Uncountable</td><td>Gevoelens en begrippen</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">time</span></td></tr>
                 </tbody>
             </table>
         </div>
@@ -222,10 +249,10 @@
                     <tr><th>Woord</th><th>Type</th><th>Betekenis: Weinig...</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Coins</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Little coins</td></tr>
-                    <tr><td><strong>Apples</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Little apples</td></tr>                    
-                    <tr><td><strong>Money</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Few money</td></tr>
-                    <tr><td><strong>Information</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Few information</td></tr>
+                    <tr><td><strong>Coins</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Few coins</td></tr>
+                    <tr><td><strong>Apples</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Few apples</td></tr>                  
+                    <tr><td><strong>Money</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Little money</td></tr>
+                    <tr><td><strong>Information</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Little information</td></tr>
                 </tbody>
             </table>
         </div>
@@ -233,8 +260,10 @@
 
     <div id="video-section" class="content-section">
         <h3>🎬 MISSION BRIEFING VIDEO</h3>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/-YzafDsrGsw?rel=0" allowfullscreen title="Few vs Little Explanation"></iframe>
+        <div class="video-container" id="video-player-box">
+            <button class="btn-play" onclick="loadYoutubeVideo(event)">
+                <span class="play-icon">▶</span> START MISSIE VIDEO
+            </button>
         </div>
     </div>
 
@@ -282,6 +311,14 @@
 </footer>
 
 <script>
+    // Nieuwe functie om de video in te laden bij een klik
+    function loadYoutubeVideo(e) {
+        createExplosion(e, 'ACTION!');
+        const box = document.getElementById('video-player-box');
+        // We voegen autoplay toe, zodat de video gelijk start na het klikken op de knop!
+        box.innerHTML = '<iframe src="https://www.youtube.com/embed/-YzafDsrGsw?rel=0&autoplay=1" allow="autoplay; fullscreen" allowfullscreen title="Few vs Little Explanation"></iframe>';
+    }
+
     function openMission(e, message, url) {
         createExplosion(e, message);
         setTimeout(() => { if(url !== '#') window.location.href = url; }, 400);
@@ -294,9 +331,8 @@
         createExplosion(e, boomMessage);
     }
 
-    // Nieuwe functionaliteit voor het bijhouden van de voltooide Pickles
     function toggleComplete(e, id) {
-        e.stopPropagation(); // Voorkomt dat het klikken op de knop ook de missie-link opent
+        e.stopPropagation(); 
         const btn = document.getElementById('btn-' + id);
         const card = document.getElementById('card-' + id);
         
@@ -313,7 +349,6 @@
         }
     }
 
-    // Laad opgeslagen statussen wanneer de pagina laadt
     document.addEventListener("DOMContentLoaded", () => {
         ['p1', 'p2', 'p3', 'p4', 'p5'].forEach(id => {
             if(localStorage.getItem('pickle_' + id + '_completed') === 'true') {
@@ -327,7 +362,9 @@
     });
 
     function createExplosion(e, message) {
-        const x = e.clientX; const y = e.clientY;
+        const x = e.clientX || window.innerWidth / 2; 
+        const y = e.clientY || window.innerHeight / 2;
+        
         const flash = document.getElementById('flash');
         flash.style.opacity = '0.3';
         document.body.classList.add('shake');
