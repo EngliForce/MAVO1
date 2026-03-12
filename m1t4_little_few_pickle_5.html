@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Pickle 5 - Ultimate Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-purple: #9c27b0;
+        }
+        
+        /* Voorkomt scrollen op ELK apparaat */
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            touch-action: none; /* Voorkomt pull-to-refresh op mobiel */
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at top, #1a0b1b 0%, #000000 100%); 
+            color: white;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: clamp(5px, 1vh, 10px);
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: clamp(1.2rem, 3vh, 1.8rem); 
+            letter-spacing: 2px; 
+            margin: 0; 
+            text-shadow: 2px 2px 0px var(--hero-blue-dark); 
+        }
+        
+        main { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: clamp(5px, 2vh, 15px) 15px; 
+            flex: 1; 
+            width: 100%; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: space-between;
+            min-height: 0; /* Belangrijk voor flex-krimpen */
+        }
+
+        /* Boss Arena UI */
+        .boss-arena {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            margin-bottom: clamp(5px, 1vh, 10px);
+        }
+
+        .boss-icon {
+            font-size: clamp(3rem, 10vh, 5rem);
+            margin-bottom: 5px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px var(--hero-purple));
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .boss-shake { animation: bossHit 0.3s; filter: drop-shadow(0 0 30px var(--hero-red)) hue-rotate(90deg); }
+        @keyframes bossHit { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-10px, 10px); } 50% { transform: translate(10px, -10px); } 75% { transform: translate(-10px, -5px); } }
+
+        /* HP Bars */
+        .hp-label-title {
+            font-family: 'Bangers'; 
+            font-size: clamp(1rem, 2vh, 1.2rem); 
+            margin-bottom: 2px;
+            text-align: left;
+            width: 100%;
+        }
+        .hp-container {
+            width: 100%;
+            background: #222;
+            border: 2px solid #444;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            height: clamp(15px, 3vh, 25px);
+            box-shadow: inset 0 0 10px #000;
+        }
+        .hp-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s ease-out;
+        }
+        .boss-hp-fill { background: linear-gradient(90deg, var(--hero-purple), var(--hero-red)); }
+        .player-hp-fill { background: linear-gradient(90deg, var(--hero-green), var(--hero-cyan)); }
+        
+        .hp-label {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Bangers', cursive;
+            font-size: clamp(0.9rem, 2vh, 1.1rem);
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* Combat Zone (De Vraag) - Flexibel en krimpt/groeit mee */
+        .combat-zone {
+            background: rgba(20, 30, 50, 0.8);
+            border: 3px solid var(--hero-cyan);
+            border-radius: 15px;
+            padding: clamp(10px, 2vh, 20px);
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 15px rgba(129, 212, 250, 0.2);
+            flex: 1; 
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: clamp(5px, 1vh, 10px);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .challenge-text {
+            font-family: 'Lexend', sans-serif;
+            font-size: clamp(1.2rem, 3.5vh, 2rem);
+            line-height: 1.3;
+            color: #fff;
+        }
+        .word-mode { 
+            font-family: 'Bangers', cursive; 
+            font-size: clamp(2.5rem, 8vh, 4rem); 
+            text-shadow: 3px 3px 0 var(--hero-blue-dark); 
+            letter-spacing: 2px;
+        }
+        
+        .gap {
+            display: inline-block;
+            min-width: 50px;
+            border-bottom: 3px dashed var(--hero-yellow);
+            color: var(--hero-yellow);
+            font-family: 'Bangers', cursive;
+            padding: 0 5px;
+            margin: 0 5px;
+        }
+
+        /* Attack Timer */
+        .attack-timer {
+            width: 100%;
+            height: clamp(6px, 1vh, 10px);
+            background: #222;
+            border-radius: 5px;
+            margin-top: clamp(10px, 2vh, 20px);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .attack-timer-fill {
+            height: 100%;
+            width: 100%;
+            background: var(--hero-yellow);
+        }
+
+        /* Player HP sectie */
+        .player-hp-section {
+            width: 100%;
+            flex-shrink: 0;
+            margin-bottom: clamp(10px, 2vh, 15px);
+        }
+
+        /* Actieknoppen */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            flex-shrink: 0;
+            padding-bottom: clamp(5px, 1vh, 15px);
+        }
+
+        .btn-action {
+            flex: 1;
+            max-width: 250px;
+            padding: clamp(15px, 3vh, 20px);
+            font-family: 'Bangers', cursive;
+            font-size: clamp(1.8rem, 4vh, 2.5rem);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            color: white;
+            transition: 0.1s;
+            box-shadow: 0 6px 0px rgba(0,0,0,0.6);
+        }
+        .btn-action:active { transform: translateY(6px); box-shadow: 0 0px 0px rgba(0,0,0,0.6); }
+
+        .btn-little { background: var(--hero-orange); border-bottom: 6px solid #bf360c; }
+        .btn-few { background: var(--hero-green); border-bottom: 6px solid #2e7d32; }
+
+        /* Screens */
+        #end-screen, #start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 5, 15, 0.98);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 20;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #end-screen { display: none; }
+        
+        .btn-start {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: clamp(1.4rem, 3vh, 1.8rem); cursor: pointer; transition: 0.2s;
+            border-bottom: 5px solid var(--hero-blue-dark);
+            margin-top: 15px;
+        }
+        .btn-start:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        /* Effects */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .flash-red { background: var(--hero-red); }
+        .flash-blue { background: var(--hero-cyan); }
+        
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: clamp(3rem, 8vh, 5rem); z-index: 2001;
+            text-shadow: 4px 4px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(1.5) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-10px, 10px); } 40% { transform: translate(10px, -10px); } 60% { transform: translate(-10px, 5px); } 80% { transform: translate(10px, -5px); } }
+
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+</header>
+
+<main>
+    <div id="start-screen">
+        <h2 style="font-family: 'Bangers'; color: var(--hero-purple); font-size: clamp(3rem, 8vh, 4rem); margin: 0; text-shadow: 0 0 20px var(--hero-purple);">THE CHAOS CORE</h2>
+        <p style="font-family: 'Lexend'; font-size: clamp(1rem, 2.5vh, 1.2rem); max-width: 500px; margin-bottom: 20px; color: #ccc;">
+            FINAL BOSS BATTLE! De Chaos Core vuurt razendsnel woorden én zinnen op je af. Ben je te traag of maak je een fout? Dan verlies jij HP!
+        </p>
+        <button class="btn-start" onclick="initGame()">⚔️ ENGAGE BOSS</button>
+    </div>
+
+    <div id="end-screen">
+        <h2 id="end-title" style="font-family: 'Bangers'; font-size: clamp(3rem, 8vh, 4rem); margin-bottom: 0;"></h2>
+        <p id="end-subtitle" style="font-family: 'Lexend'; font-size: clamp(1rem, 2.5vh, 1.2rem); margin-bottom: 20px;"></p>
+        <button class="btn-start" onclick="initGame()">↻ PLAY AGAIN</button>
+        <br>
+        <a href="index.html" style="color: var(--hero-cyan); text-decoration: none; font-size: 1rem; margin-top: 15px; display: inline-block;">← Terug naar Command Center</a>
+    </div>
+
+    <div class="boss-arena">
+        <div class="boss-icon" id="boss-sprite">👾</div>
+        
+        <div style="width: 100%; padding: 0;">
+            <div class="hp-label-title" style="color: var(--hero-purple);">CHAOS CORE HP</div>
+            <div class="hp-container">
+                <div class="hp-fill boss-hp-fill" id="boss-hp-bar"></div>
+                <div class="hp-label" id="boss-hp-text">20/20</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="combat-zone">
+        <div id="challenge-display" class="challenge-text">READY?</div>
+        <div class="attack-timer">
+            <div class="attack-timer-fill" id="timer-bar"></div>
+        </div>
+    </div>
+
+    <div class="player-hp-section">
+        <div class="hp-label-title" style="color: var(--hero-cyan);">PLAYER HP</div>
+        <div class="hp-container">
+            <div class="hp-fill player-hp-fill" id="player-hp-bar"></div>
+            <div class="hp-label" id="player-hp-text">5/5</div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn-action btn-little" onclick="checkAnswer(event, 'little')">LITTLE</button>
+        <button class="btn-action btn-few" onclick="checkAnswer(event, 'few')">FEW</button>
+    </div>
+</main>
+
+<script>
+    // De Grote Chaos Database (Mix van zinnen en woorden)
+    const masterDatabase = [
+        // Zinnen (Few)
+        { q: "I have very ___ friends in this city.", ans: "few", type: "sentence" },
+        { q: "She made ___ mistakes on her math test.", ans: "few", type: "sentence" },
+        { q: "There are ___ apples left on the tree.", ans: "few", type: "sentence" },
+        { q: "Only a ___ students passed the difficult exam.", ans: "few", type: "sentence" },
+        { q: "I've visited a ___ countries in Europe.", ans: "few", type: "sentence" },
+        { q: "There are ___ cars on the road tonight.", ans: "few", type: "sentence" },
+        { q: "I need to buy a ___ things from the shop.", ans: "few", type: "sentence" },
+        { q: "He has ___ original ideas for the new project.", ans: "few", type: "sentence" },
+        { q: "There were ___ people at the boring party.", ans: "few", type: "sentence" },
+        { q: "We have a ___ days left until the deadline.", ans: "few", type: "sentence" },
+        
+        // Zinnen (Little)
+        { q: "There is ___ water left in the bottle.", ans: "little", type: "sentence" },
+        { q: "We have ___ time to waste, hurry up!", ans: "little", type: "sentence" },
+        { q: "He gave me ___ advice about my career.", ans: "little", type: "sentence" },
+        { q: "I have ___ money, so I can't buy it.", ans: "little", type: "sentence" },
+        { q: "There is ___ sugar in my bitter coffee.", ans: "little", type: "sentence" },
+        { q: "We have ___ information about the suspect.", ans: "little", type: "sentence" },
+        { q: "She showed ___ interest in the boring story.", ans: "little", type: "sentence" },
+        { q: "There is ___ milk left in the fridge.", ans: "little", type: "sentence" },
+        { q: "They received ___ help from the government.", ans: "little", type: "sentence" },
+        { q: "We had ___ luck with the weather.", ans: "little", type: "sentence" },
+
+        // Woorden (Few)
+        { q: "books", ans: "few", type: "word" }, { q: "coins", ans: "few", type: "word" },
+        { q: "chairs", ans: "few", type: "word" }, { q: "tables", ans: "few", type: "word" },
+        { q: "dogs", ans: "few", type: "word" }, { q: "cats", ans: "few", type: "word" },
+        { q: "houses", ans: "few", type: "word" }, { q: "trees", ans: "few", type: "word" },
+        { q: "phones", ans: "few", type: "word" }, { q: "cups", ans: "few", type: "word" },
+        { q: "questions", ans: "few", type: "word" }, { q: "answers", ans: "few", type: "word" },
+
+        // Woorden (Little)
+        { q: "coffee", ans: "little", type: "word" }, { q: "tea", ans: "little", type: "word" },
+        { q: "bread", ans: "little", type: "word" }, { q: "butter", ans: "little", type: "word" },
+        { q: "cheese", ans: "little", type: "word" }, { q: "meat", ans: "little", type: "word" },
+        { q: "rice", ans: "little", type: "word" }, { q: "snow", ans: "little", type: "word" },
+        { q: "rain", ans: "little", type: "word" }, { q: "music", ans: "little", type: "word" },
+        { q: "art", ans: "little", type: "word" }, { q: "love", ans: "little", type: "word" }
+    ];
+
+    // Combat Stats
+    const MAX_BOSS_HP = 20;
+    const MAX_PLAYER_HP = 5;
+    let bossHP = MAX_BOSS_HP;
+    let playerHP = MAX_PLAYER_HP;
+    
+    let currentChallenge = null;
+    let isGameOver = true;
+    
+    // Timer
+    let timeLeft = 100; 
+    let baseTimeDrain = 0.5; // Relatief snel!
+    let timerInterval = null;
+
+    // DOM Elements
+    const challengeEl = document.getElementById('challenge-display');
+    const timerBar = document.getElementById('timer-bar');
+    const bossHpBar = document.getElementById('boss-hp-bar');
+    const playerHpBar = document.getElementById('player-hp-bar');
+    const bossHpText = document.getElementById('boss-hp-text');
+    const playerHpText = document.getElementById('player-hp-text');
+    const bossSprite = document.getElementById('boss-sprite');
+    
+    const startScreen = document.getElementById('start-screen');
+    const endScreen = document.getElementById('end-screen');
+    const endTitle = document.getElementById('end-title');
+    const endSubtitle = document.getElementById('end-subtitle');
+
+    function initGame() {
+        bossHP = MAX_BOSS_HP;
+        playerHP = MAX_PLAYER_HP;
+        isGameOver = false;
+        
+        updateHealthBars();
+        startScreen.style.display = 'none';
+        endScreen.style.display = 'none';
+        bossSprite.innerText = "👾"; 
+        
+        nextTurn();
+    }
+
+    function nextTurn() {
+        if(isGameOver) return;
+        
+        timeLeft = 100;
+        timerBar.style.width = '100%';
+        timerBar.style.background = 'var(--hero-yellow)';
+
+        // Kies willekeurige challenge
+        const randomIndex = Math.floor(Math.random() * masterDatabase.length);
+        currentChallenge = masterDatabase[randomIndex];
+        
+        // Display aanpassen aan type
+        if (currentChallenge.type === "sentence") {
+            challengeEl.className = "challenge-text";
+            challengeEl.innerHTML = currentChallenge.q.replace("___", '<span class="gap">?</span>');
+        } else {
+            challengeEl.className = "challenge-text word-mode";
+            challengeEl.innerHTML = currentChallenge.q.toUpperCase();
+        }
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(updateTimer, 30);
+    }
+
+    function updateTimer() {
+        if(isGameOver) return;
+
+        timeLeft -= baseTimeDrain;
+        timerBar.style.width = timeLeft + '%';
+
+        if (timeLeft < 30) { timerBar.style.background = 'var(--hero-red)'; }
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            playerTakesDamage("TOO LATE!");
+        }
+    }
+
+    function checkAnswer(e, answer) {
+        if (isGameOver) return;
+        clearInterval(timerInterval); 
+
+        if (answer === currentChallenge.ans) {
+            bossTakesDamage(e);
+        } else {
+            playerTakesDamage("WRONG!");
+        }
+    }
+
+    function bossTakesDamage(e) {
+        bossHP--;
+        updateHealthBars();
+        bossSprite.classList.add('boss-shake');
+        bossSprite.innerText = "😵";
+        setTimeout(() => { bossSprite.classList.remove('boss-shake'); bossSprite.innerText = "👾"; }, 300);
+
+        // Feedback in beeld
+        if (currentChallenge.type === "sentence") {
+            challengeEl.innerHTML = currentChallenge.q.replace("___", `<span class="gap" style="color: var(--hero-green); border-color: var(--hero-green);">${currentChallenge.ans.toUpperCase()}</span>`);
+        } else {
+            challengeEl.style.color = "var(--hero-green)";
+        }
+
+        createExplosion(e, "CRITICAL HIT!", false);
+
+        if (bossHP <= 0) {
+            setTimeout(() => endGame(true), 800);
+        } else {
+            setTimeout(nextTurn, 800);
+        }
+    }
+
+    function playerTakesDamage(msg) {
+        playerHP--;
+        updateHealthBars();
+        
+        if (currentChallenge.type === "sentence") {
+            challengeEl.innerHTML = currentChallenge.q.replace("___", `<span class="gap" style="color: var(--hero-red); border-color: var(--hero-red);">${currentChallenge.ans.toUpperCase()}</span>`);
+        } else {
+            challengeEl.style.color = "var(--hero-red)";
+        }
+
+        createExplosion(null, msg, true); 
+
+        if (playerHP <= 0) {
+            setTimeout(() => endGame(false), 800);
+        } else {
+            setTimeout(nextTurn, 1000); 
+        }
+    }
+
+    function updateHealthBars() {
+        bossHpText.innerText = `${bossHP}/${MAX_BOSS_HP}`;
+        bossHpBar.style.width = `${(bossHP / MAX_BOSS_HP) * 100}%`;
+        
+        playerHpText.innerText = `${playerHP}/${MAX_PLAYER_HP}`;
+        playerHpBar.style.width = `${(playerHP / MAX_PLAYER_HP) * 100}%`;
+    }
+
+    function endGame(isWin) {
+        isGameOver = true;
+        clearInterval(timerInterval);
+        endScreen.style.display = 'flex';
+
+        if (isWin) {
+            endTitle.innerText = "VICTORY!";
+            endTitle.style.color = "var(--hero-green)";
+            endSubtitle.innerHTML = "Je hebt de Chaos Core verslagen. Je bent een ware <strong>ULTIMATE MASTER!</strong>";
+            localStorage.setItem('pickle_p5_completed', 'true');
+        } else {
+            endTitle.innerText = "DEFEATED!";
+            endTitle.style.color = "var(--hero-red)";
+            endSubtitle.innerHTML = "De Chaos Core was te sterk... Train je vaardigheden en probeer het opnieuw!";
+        }
+    }
+
+    function createExplosion(e, message, isError) {
+        let x = window.innerWidth / 2; 
+        let y = window.innerHeight / 2;
+
+        if (e && e.clientX) {
+            x = e.clientX;
+            y = e.clientY - 50; 
+        }
+
+        const flash = document.getElementById('flash');
+        
+        if (isError) {
+            flash.classList.add('flash-red');
+            flash.classList.remove('flash-blue');
+            document.body.classList.add('shake');
+        } else {
+            flash.classList.add('flash-blue');
+            flash.classList.remove('flash-red');
+        }
+
+        flash.style.opacity = isError ? '0.7' : '0.4';
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 300);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.color = isError ? 'var(--hero-red)' : 'var(--hero-cyan)';
+        txt.style.left = (x - 80) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+        if (isGameOver) return;
+        if (e.key === 'ArrowLeft') { checkAnswer(null, 'little'); }
+        else if (e.key === 'ArrowRight') { checkAnswer(null, 'few'); }
+    });
+</script>
+</body>
+</html>
