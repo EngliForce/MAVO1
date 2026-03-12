@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Pickle 2 - Gravity Drop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100dvh; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+            user-select: none;
+        }
+        header {
+            background: var(--hero-blue-main);
+            padding: 0.8rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 1.8rem; letter-spacing: 2px; margin: 0; text-shadow: 2px 2px 0px var(--hero-blue-dark); }
+        
+        main { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 10px; 
+            flex: 1; 
+            width: 100%; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+
+        /* Game UI */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 10px;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+        .score-container { display: flex; align-items: center; gap: 15px; }
+        .score { color: var(--hero-yellow); }
+        .combo-badge { 
+            background: var(--hero-orange); 
+            color: white; 
+            font-size: 1rem; 
+            padding: 3px 10px; 
+            border-radius: 20px; 
+            display: none; 
+            animation: pulse 0.5s infinite alternate;
+        }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+        .lives { color: var(--hero-red); letter-spacing: 2px; }
+
+        /* Het Gravity Speelveld - Nu VEEL groter */
+        .game-area {
+            flex: 1; /* Zorgt dat het vak alle overgebleven ruimte pakt */
+            width: 100%;
+            background: radial-gradient(circle at top, #01579b 0%, #000 100%);
+            border: 3px solid var(--hero-blue-main);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+            margin-bottom: 15px;
+        }
+        
+        /* Bewegende sterren achtergrond */
+        .stars {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: scrollStars 10s linear infinite;
+            opacity: 0.3;
+        }
+        @keyframes scrollStars { from { background-position: 0 0; } to { background-position: 0 200px; } }
+
+        /* De vallende woorden */
+        .falling-word {
+            position: absolute;
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            color: white;
+            white-space: nowrap;
+            text-shadow: 0 0 10px var(--hero-cyan), 2px 2px 0 var(--hero-blue-dark);
+            z-index: 5;
+        }
+
+        /* Actieknoppen - Nu kleiner en strakker */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            padding-bottom: 15px;
+        }
+
+        .btn-action {
+            flex: 1;
+            max-width: 200px;
+            padding: 12px 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            color: white;
+            transition: 0.1s;
+            box-shadow: 0 6px 0px rgba(0,0,0,0.4);
+            position: relative;
+            letter-spacing: 1px;
+        }
+        .btn-action:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0px rgba(0,0,0,0.4);
+        }
+
+        .btn-little { background: var(--hero-orange); border-bottom: 6px solid #bf360c; }
+        .btn-little:hover { background: #ff7043; }
+        
+        .btn-few { background: var(--hero-green); border-bottom: 6px solid #2e7d32; }
+        .btn-few:hover { background: #66bb6a; }
+
+        /* End Screen */
+        #end-screen, #start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 26, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 20;
+        }
+        #end-screen { display: none; }
+        
+        .btn-start, .btn-restart {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 12px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.5rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 4px solid var(--hero-blue-dark);
+            margin-top: 20px;
+        }
+        .btn-start:hover, .btn-restart:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        /* Effects */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .flash-red { background: var(--hero-red); }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 3.5rem; z-index: 2001;
+            text-shadow: 3px 3px 0px #000; animation: boomAnim 0.5s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(1.5) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-10px, 10px); } 40% { transform: translate(10px, -10px); } 60% { transform: translate(-10px, 5px); } 80% { transform: translate(10px, -5px); } }
+        
+        /* De laser bodem */
+        .laser-bottom {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--hero-red);
+            box-shadow: 0 0 15px var(--hero-red);
+            opacity: 0.8;
+            z-index: 4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+</header>
+
+<main>
+    <div class="stats-bar">
+        <div class="score-container">
+            <div class="score">SCORE: <span id="score-display">0</span></div>
+            <div class="combo-badge" id="combo-badge">COMBO x2</div>
+        </div>
+        <div class="lives" id="lives-display">❤️❤️❤️</div>
+    </div>
+
+    <div class="game-area" id="game-area">
+        <div class="stars" id="starfield"></div>
+
+        <div id="start-screen">
+            <h2 style="font-family: 'Bangers'; color: var(--hero-yellow); font-size: 3rem; margin: 0;">GRAVITY DROP</h2>
+            <p style="font-family: 'Lexend'; margin-bottom: 20px;">Sorteer de woorden voordat ze de grond raken!<br>Tip: Maak een combo voor bonuspunten.</p>
+            <button class="btn-start" onclick="initGame()">▶ START MISSION</button>
+        </div>
+
+        <div id="end-screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; margin-bottom: 0;">MISSION OVER</h2>
+            <p style="font-family: 'Bangers'; font-size: 2rem; color: var(--hero-cyan);">SCORE: <span id="final-score" style="color: var(--hero-yellow);">0</span></p>
+            <p id="rank-message" style="font-size: 1.1rem; margin-bottom: 20px; padding: 0 20px;"></p>
+            <button class="btn-restart" onclick="initGame()">↻ RETRY</button>
+            <br>
+            <a href="index.html" style="color: var(--hero-cyan); text-decoration: none; font-size: 0.9rem; margin-top: 15px; display: inline-block;">← Terug naar Command Center</a>
+        </div>
+
+        <div class="laser-bottom"></div>
+        <div class="falling-word" id="falling-word" style="display: none;">WORD</div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn-action btn-little" onclick="checkAnswer(event, 'little')">LITTLE</button>
+        <button class="btn-action btn-few" onclick="checkAnswer(event, 'few')">FEW</button>
+    </div>
+</main>
+
+<script>
+    // Database (Mix van makkelijk en instinkers)
+   const wordDatabase = [
+        // FEW (Telbaar - Meervoud)
+        { word: "apples", type: "few" }, { word: "friends", type: "few" }, { word: "cars", type: "few" },
+        { word: "books", type: "few" }, { word: "ideas", type: "few" }, { word: "coins", type: "few" },
+        { word: "people", type: "few" }, { word: "chairs", type: "few" }, { word: "tables", type: "few" },
+        { word: "pens", type: "few" }, { word: "dogs", type: "few" }, { word: "cats", type: "few" },
+        { word: "houses", type: "few" }, { word: "trees", type: "few" }, { word: "phones", type: "few" },
+        { word: "cups", type: "few" }, { word: "plates", type: "few" }, { word: "shoes", type: "few" },
+        { word: "shirts", type: "few" }, { word: "windows", type: "few" }, { word: "doors", type: "few" },
+        { word: "keys", type: "few" }, { word: "bags", type: "few" }, { word: "bottles", type: "few" },
+        { word: "boxes", type: "few" }, { word: "toys", type: "few" }, { word: "games", type: "few" },
+        { word: "songs", type: "few" }, { word: "movies", type: "few" }, { word: "days", type: "few" },
+        { word: "weeks", type: "few" }, { word: "months", type: "few" }, { word: "years", type: "few" },
+        { word: "hours", type: "few" }, { word: "minutes", type: "few" }, { word: "seconds", type: "few" },
+        { word: "questions", type: "few" }, { word: "answers", type: "few" }, { word: "mistakes", type: "few" },
+        { word: "problems", type: "few" }, { word: "students", type: "few" }, { word: "teachers", type: "few" },
+        { word: "cities", type: "few" }, { word: "countries", type: "few" }, { word: "animals", type: "few" },
+        { word: "plants", type: "few" }, { word: "stars", type: "few" }, { word: "planets", type: "few" },
+        { word: "rules", type: "few" }, { word: "tools", type: "few" },
+
+        // LITTLE (Ontelbaar)
+        { word: "water", type: "little" }, { word: "money", type: "little" }, { word: "time", type: "little" },
+        { word: "information", type: "little" }, { word: "sugar", type: "little" }, { word: "milk", type: "little" },
+        { word: "advice", type: "little" }, { word: "coffee", type: "little" }, { word: "tea", type: "little" },
+        { word: "juice", type: "little" }, { word: "bread", type: "little" }, { word: "butter", type: "little" },
+        { word: "cheese", type: "little" }, { word: "meat", type: "little" }, { word: "rice", type: "little" },
+        { word: "pasta", type: "little" }, { word: "salt", type: "little" }, { word: "pepper", type: "little" },
+        { word: "flour", type: "little" }, { word: "sand", type: "little" }, { word: "snow", type: "little" },
+        { word: "rain", type: "little" }, { word: "air", type: "little" }, { word: "traffic", type: "little" },
+        { word: "weather", type: "little" }, { word: "furniture", type: "little" }, { word: "luggage", type: "little" },
+        { word: "baggage", type: "little" }, { word: "equipment", type: "little" }, { word: "gold", type: "little" },
+        { word: "silver", type: "little" }, { word: "iron", type: "little" }, { word: "wood", type: "little" },
+        { word: "plastic", type: "little" }, { word: "glass", type: "little" }, { word: "paper", type: "little" },
+        { word: "cotton", type: "little" }, { word: "wool", type: "little" }, { word: "music", type: "little" },
+        { word: "art", type: "little" }, { word: "love", type: "little" }, { word: "happiness", type: "little" },
+        { word: "sadness", type: "little" }, { word: "anger", type: "little" }, { word: "fear", type: "little" },
+        { word: "courage", type: "little" }, { word: "knowledge", type: "little" }, { word: "power", type: "little" },
+        { word: "energy", type: "little" }, { word: "luck", type: "little" }
+    ];
+
+    // Game Variables
+    let score = 0;
+    let lives = 3;
+    let combo = 0;
+    let currentWordObj = null;
+    let isGameOver = true;
+    
+    // Physics
+    let currentY = -50;
+    let currentX = 0;
+    let baseSpeed = 1.2; 
+    let speedMultiplier = 1.0; 
+    let animationId = null;
+
+    // DOM Elements
+    const wordEl = document.getElementById('falling-word');
+    const gameAreaEl = document.getElementById('game-area');
+    const scoreEl = document.getElementById('score-display');
+    const livesEl = document.getElementById('lives-display');
+    const comboBadge = document.getElementById('combo-badge');
+    const startScreen = document.getElementById('start-screen');
+    const endScreen = document.getElementById('end-screen');
+    const starfield = document.getElementById('starfield');
+    const finalScore = document.getElementById('final-score');
+    const rankMessage = document.getElementById('rank-message');
+
+    const hitMessages = ["BAM!", "ZAP!", "NICE!", "BOOM!"];
+
+    function initGame() {
+        score = 0;
+        lives = 3;
+        combo = 0;
+        baseSpeed = 1.2; // Start iets langzamer zodat ze erin komen
+        speedMultiplier = 1.0;
+        isGameOver = false;
+        
+        starfield.style.animationDuration = '10s'; // Sterren op normale snelheid
+        updateUI();
+        startScreen.style.display = 'none';
+        endScreen.style.display = 'none';
+        wordEl.style.display = 'block';
+        
+        spawnWord();
+        
+        if(animationId) cancelAnimationFrame(animationId);
+        gameLoop();
+    }
+
+    function spawnWord() {
+        const randomIndex = Math.floor(Math.random() * wordDatabase.length);
+        currentWordObj = wordDatabase[randomIndex];
+        wordEl.innerText = currentWordObj.word.toUpperCase();
+        
+        currentY = -60; 
+        
+        // Zorg dat het woord binnen de zijkanten past (rekening houdend met woordbreedte)
+        const maxW = gameAreaEl.offsetWidth - wordEl.offsetWidth - 20; 
+        currentX = Math.random() * (maxW > 0 ? maxW : 0) + 10;
+        
+        wordEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+    }
+
+    function gameLoop() {
+        if (isGameOver) return;
+
+        const currentSpeed = baseSpeed * speedMultiplier;
+        currentY += currentSpeed;
+        wordEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+        // Check of het woord de bodem (laser) raakt
+        if (currentY > gameAreaEl.offsetHeight - 50) {
+            loseLife("TOO SLOW!");
+        } else {
+            animationId = requestAnimationFrame(gameLoop);
+        }
+    }
+
+    function checkAnswer(e, answerType) {
+        if (isGameOver) return;
+
+        if (answerType === currentWordObj.type) {
+            // GOED!
+            combo++;
+            let pointsEarned = 1;
+            
+            // Combo Systeem
+            if (combo >= 6) { pointsEarned = 3; comboBadge.innerText = "COMBO x3!"; comboBadge.style.display = "block"; }
+            else if (combo >= 3) { pointsEarned = 2; comboBadge.innerText = "COMBO x2!"; comboBadge.style.display = "block"; }
+            else { comboBadge.style.display = "none"; }
+
+            score += pointsEarned;
+            speedMultiplier += 0.04; // Maak het langzaam moeilijker
+            
+            // Laat de achtergrond sterren sneller bewegen
+            const newStarSpeed = Math.max(2, 10 - (speedMultiplier * 2));
+            starfield.style.animationDuration = `${newStarSpeed}s`;
+
+            const randomMsg = hitMessages[Math.floor(Math.random() * hitMessages.length)];
+            createExplosion(e, randomMsg, false);
+            updateUI();
+            
+            spawnWord();
+        } else {
+            // FOUT!
+            combo = 0; // Combo reset
+            comboBadge.style.display = "none";
+            loseLife("OOF!");
+        }
+    }
+
+    function loseLife(msg) {
+        lives--;
+        combo = 0;
+        comboBadge.style.display = "none";
+        createExplosion(null, msg, true); 
+        updateUI();
+
+        if (lives <= 0) {
+            endGame();
+        } else {
+            spawnWord(); 
+            animationId = requestAnimationFrame(gameLoop); 
+        }
+    }
+
+    function updateUI() {
+        scoreEl.innerText = score;
+        livesEl.innerText = '❤️'.repeat(lives) + '🖤'.repeat(3 - lives);
+    }
+
+    function endGame() {
+        isGameOver = true;
+        cancelAnimationFrame(animationId);
+        wordEl.style.display = 'none';
+        endScreen.style.display = 'flex';
+        comboBadge.style.display = "none";
+        finalScore.innerText = score;
+
+        if (score >= 40) {
+            rankMessage.innerHTML = "🏆 <strong>RANK: JEDI MASTER!</strong> Je combo's waren legendarisch!";
+            localStorage.setItem('pickle_p2_completed', 'true');
+        } else if (score >= 20) {
+            rankMessage.innerHTML = "🎖️ <strong>RANK: SHARPSHOOTER.</strong> Geweldige reactietijd!";
+            localStorage.setItem('pickle_p2_completed', 'true');
+        } else {
+            rankMessage.innerHTML = "⚠️ <strong>RANK: ROOKIE.</strong> Oefen je combo's!";
+        }
+    }
+
+    function createExplosion(e, message, isError) {
+        let x = window.innerWidth / 2; 
+        let y = window.innerHeight / 2;
+
+        if (e && e.clientX) {
+            x = e.clientX;
+            y = e.clientY - 50; 
+        } else if (!isError) {
+            const rect = wordEl.getBoundingClientRect();
+            x = rect.left + (rect.width / 2);
+            y = rect.top;
+        }
+
+        const flash = document.getElementById('flash');
+        
+        if (isError) {
+            flash.classList.add('flash-red');
+            document.body.classList.add('shake');
+        } else {
+            flash.classList.remove('flash-red');
+        }
+
+        flash.style.opacity = isError ? '0.6' : '0.2';
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 300);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.color = isError ? 'var(--hero-red)' : 'var(--hero-yellow)';
+        txt.style.left = (x - 40) + 'px';
+        txt.style.top = (y - 40) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+        if (isGameOver) return;
+        if (e.key === 'ArrowLeft') { checkAnswer(null, 'little'); }
+        else if (e.key === 'ArrowRight') { checkAnswer(null, 'few'); }
+    });
+</script>
+</body>
+</html>
