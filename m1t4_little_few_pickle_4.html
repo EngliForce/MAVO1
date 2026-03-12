@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Pickle 4 - Sentence Defuser</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a0b12 0%, #000000 100%); 
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100dvh; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+            user-select: none;
+        }
+        header {
+            background: var(--hero-blue-main);
+            padding: 0.8rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 1.8rem; letter-spacing: 2px; margin: 0; text-shadow: 2px 2px 0px var(--hero-blue-dark); }
+        
+        main { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 10px; 
+            flex: 1; 
+            width: 100%; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        /* Game UI */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: rgba(42, 16, 16, 0.9);
+            border: 2px solid var(--hero-red);
+            border-radius: 10px;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px rgba(211, 47, 47, 0.5);
+        }
+        .score { color: var(--hero-yellow); }
+        .lives { color: var(--hero-red); letter-spacing: 2px; }
+
+        /* Het Speelveld / De Bom */
+        .bomb-container {
+            background: #111;
+            border: 5px solid #333;
+            border-radius: 20px;
+            padding: 30px 20px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: inset 0 0 50px rgba(0,0,0,1), 0 10px 30px rgba(0,0,0,0.8);
+            margin-bottom: 30px;
+            transition: transform 0.1s;
+        }
+
+        /* De Timer Balk */
+        .timer-track {
+            width: 100%;
+            height: 25px;
+            background: #222;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 2px solid #444;
+            box-shadow: inset 0 0 10px #000;
+        }
+        .timer-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--hero-yellow), var(--hero-red));
+            transition: width 0.1s linear;
+        }
+        .timer-warning {
+            animation: pulse-red 0.4s infinite;
+        }
+        @keyframes pulse-red { 0% { background: var(--hero-red); } 50% { background: #ffaaaa; } 100% { background: var(--hero-red); } }
+
+        /* De Zin */
+        .sentence-box {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.8rem;
+            line-height: 1.5;
+            color: #ddd;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+        }
+        .gap {
+            display: inline-block;
+            min-width: 80px;
+            border-bottom: 4px dashed var(--hero-cyan);
+            color: var(--hero-cyan);
+            font-family: 'Bangers', cursive;
+            font-size: 2.2rem;
+            padding: 0 10px;
+            margin: 0 10px;
+            text-shadow: 0 0 10px rgba(129, 212, 250, 0.5);
+        }
+
+        /* Actieknoppen */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-action {
+            flex: 1;
+            max-width: 250px;
+            padding: 25px 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 2.5rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            color: white;
+            transition: 0.1s;
+            box-shadow: 0 8px 0px rgba(0,0,0,0.6);
+            position: relative;
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-action:active { transform: translateY(8px); box-shadow: 0 0px 0px rgba(0,0,0,0.6); }
+
+        .btn-little { background: var(--hero-orange); border-bottom: 8px solid #bf360c; }
+        .btn-little:hover { background: #ff7043; }
+        
+        .btn-few { background: var(--hero-green); border-bottom: 8px solid #2e7d32; }
+        .btn-few:hover { background: #66bb6a; }
+
+        /* End Screen */
+        #end-screen, #start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 26, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 20;
+        }
+        #end-screen { display: none; }
+        
+        .btn-start, .btn-restart {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 15px 40px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.8rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 5px solid var(--hero-blue-dark);
+            margin-top: 20px;
+        }
+        .btn-start:hover, .btn-restart:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        /* Effects */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .flash-red { background: var(--hero-red); }
+        .flash-green { background: var(--hero-green); }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 4rem; z-index: 2001;
+            text-shadow: 4px 4px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(1.5) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.3s ease-in-out; }
+        .shake-intense { animation: shakeIntense 0.1s infinite; } /* Voor als de bom bijna afgaat! */
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-15px, 15px); } 40% { transform: translate(15px, -15px); } 60% { transform: translate(-15px, 5px); } 80% { transform: translate(15px, -5px); } }
+        @keyframes shakeIntense { 0% { transform: translate(2px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(0px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(2px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(2px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+
+        @media (max-width: 600px) {
+            .btn-action { font-size: 2rem; padding: 20px 10px; }
+            .sentence-box { font-size: 1.4rem; }
+            .gap { font-size: 1.8rem; min-width: 60px; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+</header>
+
+<main>
+    <div class="stats-bar">
+        <div class="score">DEFUSED: <span id="score-display">0</span></div>
+        <div class="lives" id="lives-display">❤️❤️❤️</div>
+    </div>
+
+    <div id="start-screen">
+        <h2 style="font-family: 'Bangers'; color: var(--hero-red); font-size: 3.5rem; margin: 0;">SENTENCE DEFUSER</h2>
+        <p style="font-family: 'Lexend'; font-size: 1.2rem; max-width: 400px; margin-bottom: 30px;">
+            De zinnen staan op ontploffen! Lees de zin en knip snel de juiste draad door om de bom te ontmantelen. Let op: de klok tikt steeds sneller!
+        </p>
+        <button class="btn-start" onclick="initGame()">▶ START MISSION</button>
+    </div>
+
+    <div id="end-screen">
+        <h2 style="font-family: 'Bangers'; font-size: 3.5rem; margin-bottom: 0;">KABOOM! MISSION FAILED</h2>
+        <p style="font-family: 'Bangers'; font-size: 2rem; color: var(--hero-cyan);">BOMBS DEFUSED: <span id="final-score" style="color: var(--hero-yellow);">0</span></p>
+        <p id="rank-message" style="font-size: 1.2rem; margin-bottom: 20px; padding: 0 15px;"></p>
+        <button class="btn-restart" onclick="initGame()">↻ RETRY MISSION</button>
+        <br>
+        <a href="index.html" style="color: var(--hero-cyan); text-decoration: none; font-size: 1rem; margin-top: 15px; display: inline-block;">← Terug naar Command Center</a>
+    </div>
+
+    <div class="bomb-container" id="game-area">
+        <div class="timer-track">
+            <div class="timer-fill" id="timer-bar"></div>
+        </div>
+        
+        <div class="sentence-box" id="sentence-display">
+            We have <span class="gap">?</span> time left.
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn-action btn-little" onclick="checkAnswer(event, 'little')">LITTLE</button>
+        <button class="btn-action btn-few" onclick="checkAnswer(event, 'few')">FEW</button>
+    </div>
+</main>
+
+<script>
+    // 100 Zinnen Database (50x Little, 50x Few)
+    const sentenceDatabase = [
+        // FEW (Countable Nouns)
+        { text: "I have very ___ friends in this city.", answer: "few" },
+        { text: "She made ___ mistakes on her math test.", answer: "few" },
+        { text: "There are ___ apples left on the tree.", answer: "few" },
+        { text: "Only a ___ students passed the difficult exam.", answer: "few" },
+        { text: "I've visited a ___ countries in Europe.", answer: "few" },
+        { text: "There are ___ cars on the road tonight.", answer: "few" },
+        { text: "I need to buy a ___ things from the shop.", answer: "few" },
+        { text: "He has ___ original ideas for the new project.", answer: "few" },
+        { text: "There were ___ people at the boring party.", answer: "few" },
+        { text: "I can only speak a ___ words of Spanish.", answer: "few" },
+        { text: "We have a ___ days left until the deadline.", answer: "few" },
+        { text: "She asked a ___ questions during the meeting.", answer: "few" },
+        { text: "He has read very ___ books this year.", answer: "few" },
+        { text: "A ___ birds were singing in the tall trees.", answer: "few" },
+        { text: "I found a ___ coins in my winter jacket.", answer: "few" },
+        { text: "There are ___ good restaurants in this small town.", answer: "few" },
+        { text: "Only a ___ chairs were available in the room.", answer: "few" },
+        { text: "She owns a ___ rare stamps in her collection.", answer: "few" },
+        { text: "We took a ___ pictures at the sunny beach.", answer: "few" },
+        { text: "A ___ dogs were barking loudly in the street.", answer: "few" },
+        { text: "I saw a ___ cats sleeping on the roof.", answer: "few" },
+        { text: "There are ___ houses on this quiet street.", answer: "few" },
+        { text: "A ___ trees were blown down by the storm.", answer: "few" },
+        { text: "He has broken a ___ phones in his life.", answer: "few" },
+        { text: "We need a ___ cups for the tea party.", answer: "few" },
+        { text: "She bought a ___ plates for her new kitchen.", answer: "few" },
+        { text: "I have a ___ shoes that need to be cleaned.", answer: "few" },
+        { text: "He packed a ___ shirts for the weekend trip.", answer: "few" },
+        { text: "There are ___ windows in the dark basement.", answer: "few" },
+        { text: "A ___ doors were left open by accident.", answer: "few" },
+        { text: "I lost a ___ keys last week.", answer: "few" },
+        { text: "She was carrying a ___ heavy bags.", answer: "few" },
+        { text: "We recycled a ___ bottles yesterday.", answer: "few" },
+        { text: "There are a ___ boxes blocking the hallway.", answer: "few" },
+        { text: "He donated a ___ toys to the charity.", answer: "few" },
+        { text: "I played a ___ games on my computer.", answer: "few" },
+        { text: "She sang a ___ songs at the karaoke bar.", answer: "few" },
+        { text: "We watched a ___ movies during the flight.", answer: "few" },
+        { text: "It took a ___ weeks to finish the painting.", answer: "few" },
+        { text: "I will be back in a ___ months.", answer: "few" },
+        { text: "He lived there for a ___ years.", answer: "few" },
+        { text: "The trip will take a ___ hours.", answer: "few" },
+        { text: "Give me a ___ minutes to get ready.", answer: "few" },
+        { text: "The bomb exploded a ___ seconds later.", answer: "few" },
+        { text: "We faced a ___ problems along the way.", answer: "few" },
+        { text: "A ___ teachers complained about the noise.", answer: "few" },
+        { text: "I have lived in a ___ cities across the country.", answer: "few" },
+        { text: "We saw a ___ wild animals in the forest.", answer: "few" },
+        { text: "She bought a ___ new plants for the garden.", answer: "few" },
+        { text: "I can see a ___ stars in the cloudy sky.", answer: "few" },
+
+        // LITTLE (Uncountable Nouns)
+        { text: "There is ___ water left in the bottle.", answer: "little" },
+        { text: "We have ___ time to waste, hurry up!", answer: "little" },
+        { text: "He gave me ___ advice about my career.", answer: "little" },
+        { text: "I have ___ money, so I can't buy it.", answer: "little" },
+        { text: "There is ___ sugar in my bitter coffee.", answer: "little" },
+        { text: "We have ___ information about the suspect.", answer: "little" },
+        { text: "She showed ___ interest in the boring story.", answer: "little" },
+        { text: "There is ___ milk left in the fridge.", answer: "little" },
+        { text: "They received ___ help from the government.", answer: "little" },
+        { text: "We had ___ luck with the weather during our holiday.", answer: "little" },
+        { text: "He has very ___ patience for foolishness.", answer: "little" },
+        { text: "There is ___ space left in the car's trunk.", answer: "little" },
+        { text: "I got very ___ sleep last night.", answer: "little" },
+        { text: "There is ___ traffic on the highway today.", answer: "little" },
+        { text: "She showed ___ respect for the strict rules.", answer: "little" },
+        { text: "He has ___ experience in this specific field.", answer: "little" },
+        { text: "There is ___ hope left for the losing team.", answer: "little" },
+        { text: "I have ___ energy to exercise today.", answer: "little" },
+        { text: "They made ___ progress on the difficult project.", answer: "little" },
+        { text: "There was ___ evidence to convict the thief.", answer: "little" },
+        { text: "I prefer ___ tea in the afternoon.", answer: "little" },
+        { text: "We have very ___ bread left for sandwiches.", answer: "little" },
+        { text: "Add a ___ butter to the frying pan.", answer: "little" },
+        { text: "There is ___ cheese on this pizza.", answer: "little" },
+        { text: "We eat very ___ meat nowadays.", answer: "little" },
+        { text: "She cooked a ___ rice for dinner.", answer: "little" },
+        { text: "I need a ___ more pasta on my plate.", answer: "little" },
+        { text: "Add a ___ salt to the soup.", answer: "little" },
+        { text: "He put a ___ pepper on his steak.", answer: "little" },
+        { text: "We need a ___ flour to bake the cake.", answer: "little" },
+        { text: "There is ___ sand in my shoes.", answer: "little" },
+        { text: "We expect ___ snow this winter.", answer: "little" },
+        { text: "There was very ___ rain during the summer.", answer: "little" },
+        { text: "I just need a ___ fresh air.", answer: "little" },
+        { text: "We had ___ bad weather on our trip.", answer: "little" },
+        { text: "They have ___ furniture in their huge house.", answer: "little" },
+        { text: "I traveled with very ___ luggage.", answer: "little" },
+        { text: "We brought ___ baggage to the airport.", answer: "little" },
+        { text: "They have ___ modern equipment in the lab.", answer: "little" },
+        { text: "There is ___ gold left in this old mine.", answer: "little" },
+        { text: "He found a ___ silver in the river.", answer: "little" },
+        { text: "We need a ___ wood for the fireplace.", answer: "little" },
+        { text: "This toy uses very ___ plastic.", answer: "little" },
+        { text: "There is ___ broken glass on the floor.", answer: "little" },
+        { text: "I have very ___ paper left in the printer.", answer: "little" },
+        { text: "She listens to ___ music while studying.", answer: "little" },
+        { text: "He understands very ___ about modern art.", answer: "little" },
+        { text: "There was ___ love left in their relationship.", answer: "little" },
+        { text: "She had ___ homework to do this weekend.", answer: "little" },
+        { text: "I need a ___ space to think clearly.", answer: "little" }
+    ];
+
+    // Game Variables
+    let score = 0;
+    let lives = 3;
+    let currentSentenceObj = null;
+    let isGameOver = true;
+    
+    // Timer Variables
+    let timeLeft = 100; // Percentage (100% tot 0%)
+    let baseTimeDrain = 0.25; // Basis drain per tick (iets verlaagd als start)
+    let timeDrainMultiplier = 1.0; // Dit gaat agressief omhoog!
+    let timerInterval = null;
+
+    // DOM Elements
+    const gameArea = document.getElementById('game-area');
+    const sentenceEl = document.getElementById('sentence-display');
+    const timerBar = document.getElementById('timer-bar');
+    const scoreEl = document.getElementById('score-display');
+    const livesEl = document.getElementById('lives-display');
+    const startScreen = document.getElementById('start-screen');
+    const endScreen = document.getElementById('end-screen');
+    const finalScore = document.getElementById('final-score');
+    const rankMessage = document.getElementById('rank-message');
+
+    function initGame() {
+        score = 0;
+        lives = 3;
+        timeDrainMultiplier = 1.0; 
+        isGameOver = false;
+        
+        updateUI();
+        startScreen.style.display = 'none';
+        endScreen.style.display = 'none';
+        
+        nextBomb();
+    }
+
+    function nextBomb() {
+        if(isGameOver) return;
+        
+        // Reset Timer Visuals
+        timeLeft = 100;
+        timerBar.style.width = '100%';
+        timerBar.classList.remove('timer-warning');
+        gameArea.classList.remove('shake-intense');
+
+        // Kies willekeurige zin uit de 100
+        const randomIndex = Math.floor(Math.random() * sentenceDatabase.length);
+        currentSentenceObj = sentenceDatabase[randomIndex];
+        
+        // Formatteer de zin
+        const formattedSentence = currentSentenceObj.text.replace("___", '<span class="gap">?</span>');
+        sentenceEl.innerHTML = formattedSentence;
+
+        // Start de klok
+        clearInterval(timerInterval);
+        timerInterval = setInterval(updateTimer, 30); // Elke 30ms update
+    }
+
+    function updateTimer() {
+        if(isGameOver) return;
+
+        // Tijd gaat sneller op basis van multiplier
+        timeLeft -= (baseTimeDrain * timeDrainMultiplier);
+        timerBar.style.width = timeLeft + '%';
+
+        // Visuele stress-effecten als de tijd bijna op is!
+        if (timeLeft < 30 && !timerBar.classList.contains('timer-warning')) {
+            timerBar.classList.add('timer-warning');
+        }
+        if (timeLeft < 15 && !gameArea.classList.contains('shake-intense')) {
+            gameArea.classList.add('shake-intense');
+        }
+
+        if (timeLeft <= 0) {
+            // BOOM!
+            clearInterval(timerInterval);
+            loseLife("TIME'S UP!");
+        }
+    }
+
+    function checkAnswer(e, answerType) {
+        if (isGameOver) return;
+        clearInterval(timerInterval); 
+        gameArea.classList.remove('shake-intense');
+
+        if (answerType === currentSentenceObj.answer) {
+            // DEFUSED!
+            score++;
+            
+            // De klok gaat aggressiever sneller!
+            timeDrainMultiplier += 0.12; 
+            
+            sentenceEl.innerHTML = currentSentenceObj.text.replace("___", `<span class="gap" style="color: var(--hero-green); border-color: var(--hero-green);">${answerType.toUpperCase()}</span>`);
+            
+            createExplosion(e, "DEFUSED!", false);
+            updateUI();
+            
+            setTimeout(nextBomb, 500);
+        } else {
+            // FOUTE DRAAD
+            sentenceEl.innerHTML = currentSentenceObj.text.replace("___", `<span class="gap" style="color: var(--hero-red); border-color: var(--hero-red);">${answerType.toUpperCase()}</span>`);
+            loseLife("KABOOM!");
+        }
+    }
+
+    function loseLife(msg) {
+        lives--;
+        gameArea.classList.remove('shake-intense');
+        createExplosion(null, msg, true); 
+        updateUI();
+
+        if (lives <= 0) {
+            setTimeout(endGame, 800);
+        } else {
+            // Zelfs als ze een leven verliezen, blijft de snelheid hoog!
+            setTimeout(nextBomb, 1000); 
+        }
+    }
+
+    function updateUI() {
+        scoreEl.innerText = score;
+        livesEl.innerText = '❤️'.repeat(lives) + '🖤'.repeat(3 - lives);
+    }
+
+    function endGame() {
+        isGameOver = true;
+        clearInterval(timerInterval);
+        endScreen.style.display = 'flex';
+        finalScore.innerText = score;
+
+        if (score >= 30) {
+            rankMessage.innerHTML = "🏆 <strong>RANK: BOMB SQUAD COMMANDER!</strong> Je bent niet te stoppen!";
+            localStorage.setItem('pickle_p4_completed', 'true');
+        } else if (score >= 15) {
+            rankMessage.innerHTML = "🎖️ <strong>RANK: SPECIALIST.</strong> Zeer strak gespeeld onder hoge druk!";
+            localStorage.setItem('pickle_p4_completed', 'true');
+        } else {
+            rankMessage.innerHTML = "⚠️ <strong>RANK: ROOKIE.</strong> De druk was te hoog. Nog even oefenen!";
+        }
+    }
+
+    // Explosie & Flits Effecten
+    function createExplosion(e, message, isError) {
+        let x = window.innerWidth / 2; 
+        let y = window.innerHeight / 2;
+
+        if (e && e.clientX) {
+            x = e.clientX;
+            y = e.clientY - 50; 
+        }
+
+        const flash = document.getElementById('flash');
+        
+        if (isError) {
+            flash.classList.add('flash-red');
+            flash.classList.remove('flash-green');
+            document.body.classList.add('shake');
+        } else {
+            flash.classList.add('flash-green');
+            flash.classList.remove('flash-red');
+        }
+
+        flash.style.opacity = isError ? '0.7' : '0.3';
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 300);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.color = isError ? 'var(--hero-red)' : 'var(--hero-green)';
+        txt.style.left = (x - 80) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    // Toetsenbord ondersteuning
+    document.addEventListener('keydown', (e) => {
+        if (isGameOver) return;
+        if (e.key === 'ArrowLeft') { checkAnswer(null, 'little'); }
+        else if (e.key === 'ArrowRight') { checkAnswer(null, 'few'); }
+    });
+</script>
+</body>
+</html>
