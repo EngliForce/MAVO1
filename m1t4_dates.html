@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngliForce Academy: Date & Time Masterclass</title>
+    <title>EngliForce Academy: Few vs Little Masterclass</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,17 +13,18 @@
             --hero-cyan: #81d4fa;
             --dark-bg: #0b1a2a;
             --hero-orange: #ff5722;
+            --hero-green: #4caf50;
         }
-
         body {
             font-family: 'Lexend', sans-serif;
             background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
             color: white;
             margin: 0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
         }
-
         header {
             background: var(--hero-blue-main);
             padding: 2.5rem 1rem;
@@ -31,13 +32,11 @@
             clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
             border-bottom: 5px solid var(--hero-yellow);
         }
-
         h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
         h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
         h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
-
-        main { max-width: 1200px; margin: 20px auto; padding: 20px; }
-
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+        
         .section-divider {
             height: 4px;
             background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
@@ -46,7 +45,6 @@
             border-radius: 2px;
             box-shadow: 0 0 15px var(--hero-cyan);
         }
-
         .briefing-box {
             background: rgba(16, 42, 67, 0.9);
             border: 2px solid var(--hero-cyan);
@@ -55,9 +53,10 @@
             margin-bottom: 30px;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-
+        
+        /* Video Container */
         .video-container {
-            background: #000;
+            background: radial-gradient(circle, #01579b 0%, #000 100%);
             border: 4px solid var(--hero-blue-main);
             border-radius: 20px;
             overflow: hidden;
@@ -65,53 +64,77 @@
             padding-top: 56.25%; 
             margin-bottom: 40px;
             box-shadow: 0 0 40px rgba(2, 136, 209, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
         .video-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
+        
+        /* Grote Play Knop */
+        .btn-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border-bottom: 5px solid #d84315;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .btn-play:hover {
+            transform: translate(-50%, -55%) scale(1.05);
+            background: var(--hero-yellow);
+            color: var(--dark-bg);
+            border-bottom-color: #f57f17;
+            box-shadow: 0 15px 30px rgba(255, 183, 3, 0.4);
+        }
+        .play-icon { font-size: 2.2rem; }
 
         .explanation-text {
             font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
             border-left: 4px solid var(--hero-orange); padding-left: 20px;
             background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
         }
-
         .formula-container {
-            display: flex; justify-content: center; gap: 15px; margin: 30px 0;
+            display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap;
         }
-
         .formula-part {
             background: var(--hero-blue-dark); border: 2px solid var(--hero-cyan);
             padding: 20px; border-radius: 15px; font-weight: bold; text-align: center;
-            flex: 1; max-width: 250px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            flex: 1; min-width: 200px; max-width: 300px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-
         .toggle-container {
             display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
         }
-
         .btn-toggle {
             background: var(--hero-blue-main); color: white; border: none;
             padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
             font-size: 1.3rem; cursor: pointer; transition: 0.2s;
             border-bottom: 5px solid var(--hero-blue-dark);
         }
-
         .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
-
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #102a43; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
         td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
         tr:hover { background: rgba(129, 212, 250, 0.05); }
-
         .highlight { color: var(--hero-yellow); font-weight: bold; }
-        .comma-alert { color: var(--hero-orange); font-weight: bold; text-decoration: underline; }
-
+        .rule-alert { color: var(--hero-orange); font-weight: bold; }
         .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
         .boom-text {
             position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
@@ -121,11 +144,51 @@
         @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
         .shake { animation: shake 0.2s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
-
-        .pickle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top: 20px; }
-        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; }
+        
+        .pickle-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } }
+        
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
-        .card .title { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); margin: 10px 0; }
+        .card .title { font-family: 'Bangers'; font-size: 1.3rem; color: var(--hero-yellow); margin: 10px 0; }
+        .type-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .tag-countable { background: var(--hero-green); color: white; }
+        .tag-uncountable { background: var(--hero-orange); color: white; }
+
+        .btn-complete {
+            background: transparent;
+            border: 2px solid var(--hero-green);
+            color: var(--hero-green);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-family: 'Bangers', cursive;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+        .btn-complete:hover { background: rgba(76, 175, 80, 0.2); }
+        .btn-complete.completed { background: var(--hero-green); color: white; border-color: var(--hero-green); }
+        .card.completed { border-color: var(--hero-green); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 2px solid var(--hero-blue-dark);
+            margin-top: 50px;
+        }
+        .footer-text { font-family: 'Lexend', sans-serif; font-weight: bold; letter-spacing: 0.5px; }
+        .footer-highlight { color: var(--hero-yellow); }
     </style>
 </head>
 <body>
@@ -134,170 +197,128 @@
 
 <header>
     <h1>ENGLIFORCE ACADEMY</h1>
-    <p>DATE & TIME COMMAND CENTER</p>
+    <p>LITTLE & FEW COMMAND CENTER</p>
 </header>
 
 <main>
     <section class="briefing-box">
-        <h2>🚨 MISSION: DATUM EN TIJD</h2>
+        <h2>🚨 MISSION: LITTLE VS FEW</h2>
         <div class="explanation-text">
-            Let op! De Britten en de Amerikanen schrijven datums anders op. <br><br>
-            Welke je gebruikt, mag je zelf weten, maar let er wel goed op, hoe je de data noteert!<br><br>
-            <strong>Gouden Regel 1:</strong> Dagen en maanden schrijf je <u>ALTIJD</u> met een <strong>HOOFDLETTER</strong>.<br>
-            <strong>Gouden Regel 2:</strong> Gebruik in de Amerikaanse stijl <span class="comma-alert">ALTIJD een komma</span> voor het jaar!
+            Wat is het verschil tussen <strong>LITTLE</strong> en <strong>FEW</strong>? <br><br>
+            Beide woorden betekenen in het Nederlands <span class="highlight">WEINIG</span>. <br><br>
+            Het geheim zit hem in het zelfstandig naamwoord dat erachter komt. Kun je het tellen of niet?<br><br>
+            <strong>Gouden Regel 1:</strong> Gebruik <span class="highlight">LITTLE</span> voor dingen die je niet kunt tellen (Uncountable).<br>
+            <strong>Gouden Regel 2:</strong> Gebruik <span class="highlight">FEW</span> voor dingen die je wel kunt tellen (Countable).
         </div>
-
         <div class="formula-container">
-            <div class="formula-part">BRITISH<br><small>Day - Month - Year</small></div>
-            <div class="formula-part">AMERICAN<br><small>Month - Day<span class="highlight">,</span> Year</small></div>
+            <div class="formula-part">LITTLE<br><small>betekent: weinig</small><br><div class="type-tag tag-uncountable">Ontelbaar</div></div>
+            <div class="formula-part">FEW<br><small>betekent: weinig</small><br><div class="type-tag tag-countable">Telbaar</div></div>
         </div>
     </section>
 
     <div class="section-divider"></div>
 
     <div class="toggle-container">
-        <button class="btn-toggle" onclick="showSection(event, 'differences', 'ZAP!')">Brits vs Amerikaans</button>
-        <button class="btn-toggle" onclick="showSection(event, 'examples', 'KA-POW!')">Voorbeelden</button>
-        <button class="btn-toggle" onclick="showSection(event, 'ordinals', 'BOOST!')">Rangtelwoorden</button>
-        <button class="btn-toggle" onclick="showSection(event, 'days', 'POW!')">Dagen</button>
-        <button class="btn-toggle" onclick="showSection(event, 'months', 'BOOM!')">Maanden</button>
+        <button class="btn-toggle" onclick="showSection(event, 'rules', 'ZAP!')">Basis Regels</button>
+        <button class="btn-toggle" onclick="showSection(event, 'examples', 'KA-POW!')">Checklist</button>
+        <button class="btn-toggle" onclick="showSection(event, 'video-section', 'BOOM!')">Missie Video</button>
     </div>
 
-    <div id="differences" class="content-section" style="display: block;">
-        <h3>Tactisch Overzicht: Datumnotatie</h3>
+    <div id="rules" class="content-section" style="display: block;">
+        <h3>Tactisch Overzicht: Telbaarheid</h3>
         <div class="table-container">
             <table>
                 <thead>
-                    <tr><th>Type</th><th>Volgorde</th><th>Voorbeeld</th></tr>
+                    <tr><th>Categorie</th><th>Wat is het?</th><th>Gebruik (Weinig)</th><th>Voorbeeld</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>British English</td><td>Day / Month / Year</td><td>the fourteenth of February 2026</td></tr>
-                    <tr><td>American English</td><td>Month / Day / Year</td><td>February fourteenth<span class="highlight">,</span> 2026</td></tr>
+                    <tr><td>Countable</td><td>Dingen met een meervoud (s)</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">friends</span></td></tr>
+                    <tr><td>Countable</td><td>Dingen die je 1, 2, 3 kunt tellen</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">cars</span></td></tr>
+                    <tr><td>Uncountable</td><td>Vloeistoffen, poedertjes en gassen</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">water</span></td></tr>
+                    <tr><td>Uncountable</td><td>Gevoelens en begrippen</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">time</span></td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <div id="examples" class="content-section">
-        <h3>The Comparison Lab: UK vs US</h3>
+        <h3>The Comparison Lab: Countable vs Uncountable</h3>
         <div class="table-container">
             <table>
                 <thead>
-                    <tr><th>Gebeurtenis</th><th>British Style (Full)</th><th>American Style (Full)</th></tr>
+                    <tr><th>Woord</th><th>Type</th><th>Betekenis: Weinig...</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td><strong>Christmas</strong></td><td>the twenty-fifth of December</td><td>December the twenty-fifth<span class="highlight">,</span> 2026</td></tr>
-                    <tr><td><strong>New Year</strong></td><td>the first of January</td><td>January the first<span class="highlight">,</span> 2026</td></tr>
-                    <tr><td><strong>Halloween</strong></td><td>the thirty-first of October</td><td>October the thirty-first<span class="highlight">,</span> 2026</td></tr>
-                    <tr><td><strong>Star Wars Day</strong></td><td>the fourth of May</td><td>May the fourth<span class="highlight">,</span> 2026</td></tr>
+                    <tr><td><strong>Coins</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Few coins</td></tr>
+                    <tr><td><strong>Apples</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Few apples</td></tr>                  
+                    <tr><td><strong>Money</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Little money</td></tr>
+                    <tr><td><strong>Information</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Little information</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div id="ordinals" class="content-section">
-        <h3>Ordinal Numbers (1st - 31st)</h3>
-        <div class="explanation-text">In datums gebruiken we rangtelwoorden. Let vooral op de afwijkende spelling van <strong>fifth</strong>, <strong>eighth</strong>, <strong>ninth</strong> en <strong>twelfth</strong>!</div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>Cijfer</th><th>Voluit geschreven</th><th>Cijfer</th><th>Voluit geschreven</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>1st</td><td>first</td><td>17th</td><td>seventeenth</td></tr>
-                    <tr><td>2nd</td><td>second</td><td>18th</td><td>eighteenth</td></tr>
-                    <tr><td>3rd</td><td>third</td><td>19th</td><td>nineteenth</td></tr>
-                    <tr><td>4th</td><td>fourth</td><td>20th</td><td>twentieth</td></tr>
-                    <tr><td>5th</td><td><span class="highlight">fifth</span></td><td>21st</td><td>twenty-first</td></tr>
-                    <tr><td>6th</td><td>sixth</td><td>22nd</td><td>twenty-second</td></tr>
-                    <tr><td>7th</td><td>seventh</td><td>23rd</td><td>twenty-third</td></tr>
-                    <tr><td>8th</td><td><span class="highlight">eighth</span></td><td>24th</td><td>twenty-fourth</td></tr>
-                    <tr><td>9th</td><td><span class="highlight">ninth</span></td><td>25th</td><td>twenty-fifth</td></tr>
-                    <tr><td>10th</td><td>tenth</td><td>26th</td><td>twenty-sixth</td></tr>
-                    <tr><td>11th</td><td>eleventh</td><td>27th</td><td>twenty-seventh</td></tr>
-                    <tr><td>12th</td><td><span class="highlight">twelfth</span></td><td>28th</td><td>twenty-eighth</td></tr>
-                    <tr><td>13th</td><td>thirteenth</td><td>29th</td><td>twenty-ninth</td></tr>
-                    <tr><td>14th</td><td>fourteenth</td><td>30th</td><td>thirtieth</td></tr>
-                    <tr><td>15th</td><td>fifteenth</td><td>31st</td><td>thirty-first</td></tr>
-                    <tr><td>16th</td><td>sixteenth</td><td></td><td></td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="days" class="content-section">
-        <h3>De Zeven Dagen</h3>
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Nederlands</th><th>Engels</th></tr></thead>
-                <tbody>
-                    <tr><td>Maandag</td><td><span class="highlight">M</span>onday</td></tr>
-                    <tr><td>Dinsdag</td><td><span class="highlight">T</span>uesday</td></tr>
-                    <tr><td>Woensdag</td><td><span class="highlight">W</span>ednesday</td></tr>
-                    <tr><td>Donderdag</td><td><span class="highlight">T</span>hursday</td></tr>
-                    <tr><td>Vrijdag</td><td><span class="highlight">F</span>riday</td></tr>
-                    <tr><td>Zaterdag</td><td><span class="highlight">S</span>aturday</td></tr>
-                    <tr><td>Zondag</td><td><span class="highlight">S</span>unday</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="months" class="content-section">
-        <h3>De Twaalf Maanden</h3>
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Maand</th><th>Engels</th><th>Maand</th><th>Engels</th></tr></thead>
-                <tbody>
-                    <tr><td>Januari</td><td><span class="highlight">J</span>anuary</td><td>Juli</td><td><span class="highlight">J</span>uly</td></tr>
-                    <tr><td>Februari</td><td><span class="highlight">F</span>ebruary</td><td>Augustus</td><td><span class="highlight">A</span>ugust</td></tr>
-                    <tr><td>Maart</td><td><span class="highlight">M</span>arch</td><td>September</td><td><span class="highlight">S</span>eptember</td></tr>
-                    <tr><td>April</td><td><span class="highlight">A</span>pril</td><td>Oktober</td><td><span class="highlight">O</span>ctober</td></tr>
-                    <tr><td>Mei</td><td><span class="highlight">M</span>ay</td><td>November</td><td><span class="highlight">N</span>ovember</td></tr>
-                    <tr><td>Juni</td><td><span class="highlight">J</span>une</td><td>December</td><td><span class="highlight">D</span>ecember</td></tr>
-                </tbody>
-            </table>
+    <div id="video-section" class="content-section">
+        <h3>🎬 MISSION BRIEFING VIDEO</h3>
+        <div class="video-container" id="video-player-box">
+            <button class="btn-play" onclick="loadYoutubeVideo(event)">
+                <span class="play-icon">▶</span> START MISSIE VIDEO
+            </button>
         </div>
     </div>
 
     <div class="section-divider"></div>
 
-    <h2>🎬 MISSION BRIEFING VIDEO</h2>
-    <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0" allowfullscreen></iframe>
-    </div>
-
     <h2>⚔️ PICKLE MISSIONS</h2>
     <div class="pickle-grid">
-        <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t4_dates_pickle_1.html')">
-            <span style="font-size: 3rem;">📅</span>
+        <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'm1t4_little_few_pickle_1.html')">
+            <span style="font-size: 2.5rem;">🔨</span>
             <div class="title">Pickle 1</div>
-            <p>Write the dates</p>
+            <p style="font-size: 0.9rem;">Whack-a-Mole</p>
+            <button id="btn-p1" class="btn-complete" onclick="toggleComplete(event, 'p1')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'SQUASH!', 'https://msga-1.github.io/msga/dates_tower.html')">
-            <span style="font-size: 3rem;">🔡</span>
+        <div class="card" id="card-p2" onclick="openMission(event, 'SQUASH!', 'm1t4_little_few_pickle_2.html')">
+            <span style="font-size: 2.5rem;">💧</span>
             <div class="title">Pickle 2</div>
-            <p>Dates Tower Builder</p>
+            <p style="font-size: 0.9rem;">Gravity Drop</p>
+            <button id="btn-p2" class="btn-complete" onclick="toggleComplete(event, 'p2')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'BAM!', '#')">
-            <span style="font-size: 3rem;">🔢</span>
+        <div class="card" id="card-p3" onclick="openMission(event, 'BAM!', 'm1t4_little_few_pickle_3.html')">
+            <span style="font-size: 2.5rem;">⚖️</span>
             <div class="title">Pickle 3</div>
-            <p>Ordinal Master</p>
+            <p style="font-size: 0.9rem;">Energy Sorter</p>
+            <button id="btn-p3" class="btn-complete" onclick="toggleComplete(event, 'p3')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'WHAM!', '#')">
-            <span style="font-size: 3rem;">⏰</span>
+        <div class="card" id="card-p4" onclick="openMission(event, 'WHAM!', 'm1t4_little_few_pickle_4.html')">
+            <span style="font-size: 2.5rem;">💣</span>
             <div class="title">Pickle 4</div>
-            <p>Time Detective</p>
+            <p style="font-size: 0.9rem;">Sentence Defuser</p>
+            <button id="btn-p4" class="btn-complete" onclick="toggleComplete(event, 'p4')">Mission Incomplete</button>
         </div>
-        <div class="card" onclick="openMission(event, 'KABOOM!', '#')">
-            <span style="font-size: 3rem;">🏆</span>
+        <div class="card" id="card-p5" onclick="openMission(event, 'KABOOM!', 'm1t4_little_few_pickle_5.html')">
+            <span style="font-size: 2.5rem;">🏆</span>
             <div class="title">Pickle 5</div>
-            <p>Ultimate Exam</p>
+            <p style="font-size: 0.9rem;">Ultimate Master</p>
+            <button id="btn-p5" class="btn-complete" onclick="toggleComplete(event, 'p5')">Mission Incomplete</button>
         </div>
     </div>
 </main>
 
+<footer>
+    <div class="footer-text">
+        &copy; EngliForce: <span class="footer-highlight">Make English Your Superpower!</span>
+    </div>
+</footer>
+
 <script>
+    // Functie om de nieuwe video in te laden bij een klik
+    function loadYoutubeVideo(e) {
+        createExplosion(e, 'ACTION!');
+        const box = document.getElementById('video-player-box');
+        // Hier staat nu de nieuwe video-ID: qH-Vnj9lP08
+        box.innerHTML = '<iframe src="https://www.youtube.com/embed/qH-Vnj9lP08?rel=0&autoplay=1" allow="autoplay; fullscreen" allowfullscreen title="Few vs Little Explanation"></iframe>';
+    }
+
     function openMission(e, message, url) {
         createExplosion(e, message);
         setTimeout(() => { if(url !== '#') window.location.href = url; }, 400);
@@ -310,8 +331,40 @@
         createExplosion(e, boomMessage);
     }
 
+    function toggleComplete(e, id) {
+        e.stopPropagation(); 
+        const btn = document.getElementById('btn-' + id);
+        const card = document.getElementById('card-' + id);
+        
+        const isCompleted = btn.classList.toggle('completed');
+        card.classList.toggle('completed');
+        
+        if(isCompleted) {
+            btn.innerText = '✅ Mission Completed';
+            localStorage.setItem('pickle_' + id + '_completed', 'true');
+            createExplosion(e, 'AWESOME!');
+        } else {
+            btn.innerText = 'Mission Incomplete';
+            localStorage.setItem('pickle_' + id + '_completed', 'false');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        ['p1', 'p2', 'p3', 'p4', 'p5'].forEach(id => {
+            if(localStorage.getItem('pickle_' + id + '_completed') === 'true') {
+                const btn = document.getElementById('btn-' + id);
+                const card = document.getElementById('card-' + id);
+                btn.classList.add('completed');
+                btn.innerText = '✅ Mission Completed';
+                card.classList.add('completed');
+            }
+        });
+    });
+
     function createExplosion(e, message) {
-        const x = e.clientX; const y = e.clientY;
+        const x = e.clientX || window.innerWidth / 2; 
+        const y = e.clientY || window.innerHeight / 2;
+        
         const flash = document.getElementById('flash');
         flash.style.opacity = '0.3';
         document.body.classList.add('shake');
@@ -326,9 +379,8 @@
         setTimeout(() => txt.remove(), 600);
     }
 </script>
-
 </body>
-
 </html>
+
 
 
