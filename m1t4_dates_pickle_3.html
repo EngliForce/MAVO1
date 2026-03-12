@@ -1,138 +1,351 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>English Date Master</title>
-  <style>
-    :root { --glass: rgba(255, 255, 255, 0.12); --glass-border: rgba(255, 255, 255, 0.2); --accent: #00d2ff; }
-    body { font-family: 'Quicksand', sans-serif; background: radial-gradient(circle at top, #1b2735 0%, #090a0f 100%); min-height: 100vh; margin: 0; color: white; display: flex; flex-direction: column; align-items: center; }
-    .header { padding: 0.5rem; text-align: center; width: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border); }
-    .header h1 { margin: 5px 0; font-size: 1.2rem; }
-    .container { width: 100%; max-width: 500px; margin-top: 15px; padding: 10px; }
-    .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.5rem; box-shadow: 0 8px 32px rgba(0,0,0,0.5); text-align: center; }
-    .calendar-container { width: 130px; background: white; border-radius: 15px; overflow: hidden; margin: 0 auto 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
-    .cal-header { background: #ff4757; color: white; padding: 5px; font-weight: bold; font-size: 0.9rem; text-transform: lowercase; }
-    .cal-content { color: #2f3542; padding: 10px 5px; }
-    .cal-day-num { font-size: 2.5rem; font-weight: 800; line-height: 1; }
-    .cal-month-name { font-size: 1rem; font-weight: 600; color: #747d8c; text-transform: lowercase; }
-    input[type="text"] { width: 100%; padding: 12px; border-radius: 10px; border: none; background: rgba(255, 255, 255, 0.95); font-size: 1.1rem; margin-bottom: 1rem; color: #1a1a1a; text-align: center; }
-    .btn { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 12px 30px; border-radius: 10px; font-size: 1rem; cursor: pointer; font-weight: bold; }
-    #grid-view { display: none; }
-    .grid { display: grid; grid-template-columns: repeat(5, 60px); gap: 10px; justify-content: center; margin-top: 15px; }
-    .cell { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-    .cell.miss { background: #ff4757; }
-    .cell.gold { background: #ffa502; box-shadow: 0 0 20px #ffa502; }
-    #feedback { margin: 15px 0; font-weight: 600; min-height: 60px; font-size: 0.9rem; }
-    .status { color: #ffa502; font-weight: bold; font-size: 1rem; }
-    #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: The Date Spinner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin: 0;}
+
+        main { max-width: 900px; margin: 20px auto; padding: 20px; flex-grow: 1; width: 100%; box-sizing: border-box; }
+
+        .game-container {
+            background: rgba(16, 42, 67, 0.9);
+            border: 3px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .hud {
+            display: flex; justify-content: space-between; font-family: 'Bangers'; font-size: 1.5rem;
+            color: var(--hero-yellow); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 20px;
+        }
+
+        .wheels-wrapper {
+            display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap;
+        }
+
+        .wheel {
+            background: var(--hero-blue-dark);
+            border: 4px solid var(--hero-cyan);
+            border-radius: 15px;
+            width: 180px;
+            height: 100px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold;
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3);
+            text-transform: lowercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wheel.num-wheel { width: 100px; font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow); }
+
+        .spin-anim { animation: slotMachine 0.1s linear infinite; }
+        @keyframes slotMachine { 0% { transform: translateY(-10px); opacity: 0.5; } 50% { transform: translateY(10px); opacity: 1; } 100% { transform: translateY(-10px); opacity: 0.5; } }
+
+        .btn-action {
+            background: var(--hero-orange); color: white; border: none;
+            padding: 15px 40px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.8rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 6px solid #bf360c; margin-top: 10px;
+        }
+        .btn-action:hover { transform: translateY(-3px); background: #ff7043; border-bottom-color: #d84315; }
+        .btn-action:disabled { background: #555; border-bottom-color: #333; cursor: not-allowed; transform: none; }
+
+        .question-area { margin-top: 30px; display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .prompt-text { font-size: 1.5rem; margin-bottom: 15px; }
+        .prompt-choice { color: var(--hero-yellow); font-weight: bold; font-family: 'Bangers'; font-size: 2rem; letter-spacing: 2px;}
+
+        input[type="text"] {
+            width: 100%; max-width: 600px; padding: 15px; font-size: 1.2rem;
+            border: 3px solid var(--hero-cyan); border-radius: 10px;
+            background: #0b1a2a; color: white; font-family: 'Lexend', sans-serif;
+            text-align: center; margin-bottom: 20px; outline: none;
+        }
+        input[type="text"]:focus { border-color: var(--hero-yellow); box-shadow: 0 0 15px rgba(255, 183, 3, 0.5); }
+
+        .feedback-box {
+            margin-top: 20px; padding: 20px; border-radius: 10px; font-size: 1.2rem; display: none; font-weight: bold;
+        }
+        .feedback-correct { background: rgba(76, 175, 80, 0.2); border: 2px solid #4CAF50; color: #81c784; }
+        .feedback-wrong { background: rgba(244, 67, 54, 0.2); border: 2px solid #F44336; color: #e57373; }
+        .feedback-rule { color: var(--hero-yellow); margin-top: 10px; display: block; font-size: 1.1rem; }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+
+        .end-screen { display: none; text-align: center; animation: fadeIn 0.5s; }
+        .final-score { font-family: 'Bangers'; font-size: 4rem; color: var(--hero-yellow); margin: 20px 0; }
+    </style>
 </head>
 <body>
 
-  <div id="overlay">
-    <div class="glass-card" style="max-width: 300px;">
-      <h2>📅 Date Master</h2>
-      <button class="btn" onclick="preGame(1)">1 Speler</button>
-      <button class="btn" onclick="preGame(2)" style="margin-top:10px">2 Spelers</button>
-      <div id="setup-form" style="margin-top: 15px;"></div>
-    </div>
-  </div>
+<div class="flash-effect" id="flash"></div>
 
-  <div class="header">
-    <h1>🏆 English Date Hunt</h1>
-    <div id="player-indicator" class="status"></div>
-  </div>
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>PICKLE MISSION: THE DATE SLOTMACHINE</p>
+</header>
 
-  <div class="container">
-    <div id="question-view" class="glass-card">
-      <div class="calendar-container">
-        <div class="cal-header" id="nl-day"></div>
-        <div class="cal-content">
-          <div class="cal-day-num" id="nl-num"></div>
-          <div class="cal-month-name" id="nl-month"></div>
+<main>
+    <div class="game-container" id="game-panel">
+        <div class="hud">
+            <div>VRAAG: <span id="q-counter">1</span> / 10</div>
+            <div>SCORE: <span id="score-counter">0</span></div>
         </div>
-      </div>
-      <input type="text" id="ans-input" autocomplete="off" spellcheck="false" placeholder="Typ de datum...">
-      <button class="btn" onclick="check()">Controleer</button>
-      <div id="feedback"></div>
+
+        <div class="wheels-wrapper">
+            <div class="wheel" id="w-day">...</div>
+            <div class="wheel num-wheel" id="w-num">?</div>
+            <div class="wheel" id="w-month">...</div>
+        </div>
+
+        <button class="btn-action" id="btn-spin" onclick="startSpin(event)">SPIN THE WHEELS!</button>
+
+        <div class="question-area" id="q-area">
+            <div class="prompt-text">Schrijf deze datum voluit in het Engels:<br><span class="prompt-choice">🇬🇧 BRITS OF 🇺🇸 AMERIKAANS? KIES ZELF!</span></div>
+            <input type="text" id="answer-input" placeholder="Typ hier de volledige Engelse zin..." autocomplete="off" onkeypress="handleEnter(event)">
+            <br>
+            <button class="btn-action" id="btn-check" style="background: var(--hero-blue-main); border-color: var(--hero-blue-dark);" onclick="checkAnswer(event)">CHECK MIJN ANTWOORD</button>
+        </div>
+
+        <div id="feedback" class="feedback-box"></div>
+        <button class="btn-action" id="btn-next" style="display: none; margin-top: 20px;" onclick="nextQuestion()">VOLGENDE VRAAG ➔</button>
     </div>
 
-    <div id="grid-view" class="glass-card">
-      <h3>Schatkaart</h3>
-      <div class="grid" id="grid"></div>
-      <div id="winner-display" style="margin-top:10px"></div>
+    <div class="game-container end-screen" id="end-panel">
+        <h2>MISSION ACCOMPLISHED!</h2>
+        <p>Je hebt de Date Spinner overleefd. Hier is je score:</p>
+        <div class="final-score" id="final-score-text">0 / 10</div>
+        <button class="btn-action" onclick="location.reload()">PLAY AGAIN!</button>
+        <button class="btn-action" style="background: var(--hero-blue-main); border-color: var(--hero-blue-dark); margin-left: 10px;" onclick="location.href='index.html'">TERUG NAAR DE BASIS</button>
     </div>
-  </div>
+</main>
 
 <script>
-  const nlMaanden = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
-  const nlDagen = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
-  const enMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const enDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const ordinals = { 1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth", 6: "sixth", 7: "seventh", 8: "eighth", 9: "ninth", 10: "tenth", 11: "eleventh", 12: "twelfth", 13: "thirteenth", 14: "fourteenth", 15: "fifteenth", 16: "sixteenth", 17: "seventeenth", 18: "eighteenth", 19: "nineteenth", 20: "twentieth", 21: "twenty-first", 22: "twenty-second", 23: "twenty-third", 24: "twenty-fourth", 25: "twenty-fifth", 26: "twenty-sixth", 27: "twenty-seventh", 28: "twenty-eighth", 29: "twenty-ninth", 30: "thirtieth", 31: "thirty-first" };
+    // Data
+    const nlDays = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
+    const enDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    
+    const nlMonths = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+    const enMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const maxDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // Max days per month
+    
+    const ordinals = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth', 'twenty-first', 'twenty-second', 'twenty-third', 'twenty-fourth', 'twenty-fifth', 'twenty-sixth', 'twenty-seventh', 'twenty-eighth', 'twenty-ninth', 'thirtieth', 'thirty-first'];
 
-  let players = [], turn = 0, currentUK, currentUS, treasure = Math.floor(Math.random() * 25);
+    // State
+    let currentQ = 1;
+    let score = 0;
+    let spinInterval;
+    
+    // Beide correcte opties
+    let targetUK = "";
+    let targetUS = "";
 
-  function preGame(n) {
-    const f = document.getElementById('setup-form');
-    f.innerHTML = '';
-    for(let i=0; i<n; i++) f.innerHTML += `<input type="text" id="n${i}" placeholder="Naam ${i+1}" style="width:100%; margin-bottom:8px; padding:8px; border-radius:5px; border:none;"><br>`;
-    f.innerHTML += `<button class="btn" onclick="start(${n})">Start</button>`;
-  }
+    // Elements
+    const wDay = document.getElementById('w-day');
+    const wNum = document.getElementById('w-num');
+    const wMonth = document.getElementById('w-month');
+    const btnSpin = document.getElementById('btn-spin');
+    const qArea = document.getElementById('q-area');
+    const inputAns = document.getElementById('answer-input');
+    const feedback = document.getElementById('feedback');
+    const btnCheck = document.getElementById('btn-check');
+    const btnNext = document.getElementById('btn-next');
 
-  function start(n) {
-    for(let i=0; i<n; i++) players.push(document.getElementById(`n${i}`).value || `Speler ${i+1}`);
-    document.getElementById('overlay').style.display = 'none';
-    initGrid();
-    generateQuestion();
-  }
+    function startSpin(e) {
+        createExplosion(e, 'SPIN!');
+        btnSpin.style.display = 'none';
+        qArea.style.display = 'none';
+        feedback.style.display = 'none';
+        inputAns.value = "";
+        inputAns.classList.remove('shake');
+        
+        wDay.classList.add('spin-anim');
+        wNum.classList.add('spin-anim');
+        wMonth.classList.add('spin-anim');
 
-  function generateQuestion() {
-    document.getElementById('grid-view').style.display = 'none';
-    document.getElementById('question-view').style.display = 'block';
-    const d = new Date(2026, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
-    document.getElementById('nl-day').innerText = nlDagen[d.getDay()];
-    document.getElementById('nl-num').innerText = d.getDate();
-    document.getElementById('nl-month').innerText = nlMaanden[d.getMonth()];
-    currentUK = enDays[d.getDay()] + " the " + ordinals[d.getDate()] + " of " + enMonths[d.getMonth()];
-    currentUS = enDays[d.getDay()] + ", " + enMonths[d.getMonth()] + " the " + ordinals[d.getDate()];
-    document.getElementById('player-indicator').innerText = `🎯 Beurt: ${players[turn]}`;
-    document.getElementById('ans-input').value = '';
-    document.getElementById('ans-input').focus();
-    document.getElementById('feedback').innerText = '';
-  }
+        // Fake slot machine effect
+        spinInterval = setInterval(() => {
+            wDay.innerText = nlDays[Math.floor(Math.random() * nlDays.length)];
+            wNum.innerText = Math.floor(Math.random() * 31) + 1;
+            wMonth.innerText = nlMonths[Math.floor(Math.random() * nlMonths.length)];
+        }, 50);
 
-  function check() {
-    let input = document.getElementById('ans-input').value.trim().replace(/\s+/g, ' ');
-    if (input === currentUK || input === currentUS) {
-      document.getElementById('feedback').innerHTML = "<span style='color:#00ff88'>✅ Correct!</span>";
-      setTimeout(() => { document.getElementById('question-view').style.display = 'none'; document.getElementById('grid-view').style.display = 'block'; }, 600);
-    } else {
-      document.getElementById('feedback').innerHTML = `<span style='color:#ff4757'>❌ Fout.<br><small style="color:white">UK: ${currentUK}<br>US: ${currentUS}</small></span>`;
-      setTimeout(() => { turn = (turn + 1) % players.length; generateQuestion(); }, 6000);
+        setTimeout(stopSpin, 1200);
     }
-  }
 
-  function initGrid() {
-    const g = document.getElementById('grid'); g.innerHTML = '';
-    for(let i=0; i<25; i++) {
-      const c = document.createElement('div'); c.className = 'cell';
-      c.onclick = () => {
-        if(c.innerText !== '') return;
-        if(i === treasure) {
-          c.innerText = '💰'; c.classList.add('gold');
-          document.getElementById('winner-display').innerHTML = `<b>🏆 ${players[turn]} Wint!</b><br><button class="btn" onclick="location.reload()" style="margin-top:10px">Reset</button>`;
-        } else {
-          c.innerText = '❌'; c.classList.add('miss');
-          setTimeout(() => { turn = (turn + 1) % players.length; generateQuestion(); }, 1000);
+    function stopSpin() {
+        clearInterval(spinInterval);
+        wDay.classList.remove('spin-anim');
+        wNum.classList.remove('spin-anim');
+        wMonth.classList.remove('spin-anim');
+
+        // Generate actual valid logic
+        const dayIdx = Math.floor(Math.random() * nlDays.length);
+        const monthIdx = Math.floor(Math.random() * nlMonths.length);
+        const dayNum = Math.floor(Math.random() * maxDays[monthIdx]) + 1;
+
+        // Set visual text (Dutch, lowercase)
+        wDay.innerText = nlDays[dayIdx];
+        wNum.innerText = dayNum;
+        wMonth.innerText = nlMonths[monthIdx];
+
+        // Construct both correct answers
+        const enDayWord = enDays[dayIdx];
+        const enMonthWord = enMonths[monthIdx];
+        const ordWord = ordinals[dayNum];
+
+        targetUK = `${enDayWord} the ${ordWord} of ${enMonthWord}`;
+        targetUS = `${enDayWord}, ${enMonthWord} ${ordWord}`;
+
+        qArea.style.display = 'block';
+        btnCheck.style.display = 'inline-block';
+        inputAns.focus();
+    }
+
+    function handleEnter(e) {
+        if (e.key === 'Enter') {
+            checkAnswer(e);
         }
-      };
-      g.appendChild(c);
     }
-  }
-  document.getElementById('ans-input').addEventListener('keypress', e => { if(e.key === 'Enter') check(); });
+
+    function checkAnswer(e) {
+        let userAns = inputAns.value.trim().replace(/\s+/g, ' '); // normalize spaces
+        if(userAns === "") return;
+
+        btnCheck.style.display = 'none';
+        inputAns.disabled = true;
+
+        // Controleer of het exact overeenkomt met een van beide opties
+        let isCorrect = (userAns === targetUK || userAns === targetUS);
+        let feedbackHTML = "";
+
+        if (isCorrect) {
+            score++;
+            document.getElementById('score-counter').innerText = score;
+            feedback.className = "feedback-box feedback-correct";
+            feedbackHTML = "💥 BOOM! Helemaal perfect!";
+            createExplosion(e, 'KABOOM!');
+        } else {
+            feedback.className = "feedback-box feedback-wrong";
+            inputAns.classList.add('shake');
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 400);
+
+            let lowerUser = userAns.toLowerCase();
+            let lowerUK = targetUK.toLowerCase();
+            let lowerUS = targetUS.toLowerCase();
+
+            // Smart feedback op basis van wat ze waarschijnlijk probeerden
+            if (lowerUser === lowerUK || lowerUser === lowerUS) {
+                feedbackHTML = `Oeps! Je hebt de juiste woorden, maar let op je HOOFDLETTERS! <br><span class="feedback-rule">Gouden regel 1: Dagen en maanden krijgen altijd een hoofdletter.</span>`;
+            } else if (lowerUser === lowerUS.replace(',', '')) {
+                feedbackHTML = `Bijna perfect Amerikaans! Maar je bent één heel belangrijk ding vergeten... <br><span class="feedback-rule">Gouden regel 2: ALTIJD een komma na de dag in het Amerikaans!</span>`;
+            } else if (lowerUser === lowerUK.replace('the ', '').replace(' of', '') || lowerUser === lowerUK.replace(' of', '')) {
+                feedbackHTML = `Bijna perfect Brits! Maar je bent de kleine woordjes vergeten. <br><span class="feedback-rule">Vergeet "the" en "of" niet in de Britse uitspraak!</span>`;
+            } else {
+                feedbackHTML = `Helaas! Kijk goed naar de spelling van de rangtelwoorden en de maanden.`;
+            }
+
+            feedbackHTML += `<br><br>Je had twee juiste opties:<br>
+            🇬🇧 Brits: <strong style="color:white; font-size:1.3rem;">${targetUK}</strong><br>
+            🇺🇸 Amerikaans: <strong style="color:white; font-size:1.3rem;">${targetUS}</strong>`;
+        }
+
+        feedback.innerHTML = feedbackHTML;
+        feedback.style.display = 'block';
+        btnNext.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        if (currentQ >= 10) {
+            endGame();
+            return;
+        }
+
+        currentQ++;
+        document.getElementById('q-counter').innerText = currentQ;
+        
+        btnNext.style.display = 'none';
+        feedback.style.display = 'none';
+        inputAns.disabled = false;
+        btnSpin.style.display = 'inline-block';
+        qArea.style.display = 'none';
+        
+        wDay.innerText = "...";
+        wNum.innerText = "?";
+        wMonth.innerText = "...";
+    }
+
+    function endGame() {
+        document.getElementById('game-panel').style.display = 'none';
+        document.getElementById('end-panel').style.display = 'block';
+        document.getElementById('final-score-text').innerText = `${score} / 10`;
+    }
+
+    function createExplosion(e, message) {
+        if(!e) return;
+        const x = e.clientX || window.innerWidth / 2; 
+        const y = e.clientY || window.innerHeight / 2;
+        
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        setTimeout(() => { flash.style.opacity = '0'; }, 150);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 80) + 'px';
+        txt.style.top = (y - 80) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 800);
+    }
 </script>
+
 </body>
 </html>
