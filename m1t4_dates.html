@@ -1,386 +1,282 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngliForce Academy: Few vs Little Masterclass</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Date Spinner - Mister Seb's Grammar Apps</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
-        :root {
-            --hero-blue-main: #0288d1;
-            --hero-blue-dark: #01579b;
-            --hero-yellow: #ffb703;
-            --hero-cyan: #81d4fa;
-            --dark-bg: #0b1a2a;
-            --hero-orange: #ff5722;
-            --hero-green: #4caf50;
-        }
-        body {
-            font-family: 'Lexend', sans-serif;
-            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
-            color: white;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-        header {
-            background: var(--hero-blue-main);
-            padding: 2.5rem 1rem;
-            text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-            border-bottom: 5px solid var(--hero-yellow);
-        }
-        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
-        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
-        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
-        main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;700;900&display=swap');
         
-        .section-divider {
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
-            margin: 50px 0;
-            opacity: 0.8;
-            border-radius: 2px;
-            box-shadow: 0 0 15px var(--hero-cyan);
-        }
-        .briefing-box {
-            background: rgba(16, 42, 67, 0.9);
-            border: 2px solid var(--hero-cyan);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        body, html { 
+            margin: 0; padding: 0;
+            font-family: 'Outfit', sans-serif; 
+            background: #0f172a; 
+            min-height: 100dvh;
+            color: #f8fafc;
+            touch-action: manipulation;
         }
         
-        /* Video Container */
-        .video-container {
-            background: radial-gradient(circle, #01579b 0%, #000 100%);
-            border: 4px solid var(--hero-blue-main);
-            border-radius: 20px;
-            overflow: hidden;
+        .font-bungee { font-family: 'Bungee', cursive; }
+
+        /* Spinner Specifieke Styling */
+        .wheel-container {
             position: relative;
-            padding-top: 56.25%; 
-            margin-bottom: 40px;
-            box-shadow: 0 0 40px rgba(2, 136, 209, 0.4);
+            width: 160px;
+            height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .video-container iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+
+        @media (min-width: 768px) {
+            .wheel-container { width: 192px; height: 192px; }
         }
-        
-        /* Grote Play Knop */
-        .btn-play {
+
+        .neon-wheel {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--hero-orange);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 50px;
-            font-family: 'Bangers', cursive;
-            font-size: 1.8rem;
-            cursor: pointer;
-            transition: 0.3s;
-            border-bottom: 5px solid #d84315;
-            z-index: 10;
+            inset: 0;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #f472b6, #8b5cf6, #3b82f6, #2dd4bf, #f472b6);
+            border: 6px solid #1e293b;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
             display: flex;
             align-items: center;
-            gap: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            justify-content: center;
+            overflow: hidden;
         }
-        .btn-play:hover {
-            transform: translate(-50%, -55%) scale(1.05);
-            background: var(--hero-yellow);
-            color: var(--dark-bg);
-            border-bottom-color: #f57f17;
-            box-shadow: 0 15px 30px rgba(255, 183, 3, 0.4);
-        }
-        .play-icon { font-size: 2.2rem; }
 
-        .explanation-text {
-            font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
-            border-left: 4px solid var(--hero-orange); padding-left: 20px;
-            background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
+        .neon-wheel::after {
+            content: '';
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            background: #0f172a;
+            z-index: 1;
         }
-        .formula-container {
-            display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap;
-        }
-        .formula-part {
-            background: var(--hero-blue-dark); border: 2px solid var(--hero-cyan);
-            padding: 20px; border-radius: 15px; font-weight: bold; text-align: center;
-            flex: 1; min-width: 200px; max-width: 300px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .toggle-container {
-            display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
-        }
-        .btn-toggle {
-            background: var(--hero-blue-main); color: white; border: none;
-            padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
-            font-size: 1.3rem; cursor: pointer; transition: 0.2s;
-            border-bottom: 5px solid var(--hero-blue-dark);
-        }
-        .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
-        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #102a43; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
-        td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
-        tr:hover { background: rgba(129, 212, 250, 0.05); }
-        .highlight { color: var(--hero-yellow); font-weight: bold; }
-        .rule-alert { color: var(--hero-orange); font-weight: bold; }
-        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
-        .boom-text {
-            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
-            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
-            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
-        }
-        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
-        .shake { animation: shake 0.2s ease-in-out; }
-        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
-        
-        .pickle-grid { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 15px; 
-            margin-top: 20px; 
-        }
-        @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 600px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } }
-        
-        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
-        .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
-        .card .title { font-family: 'Bangers'; font-size: 1.3rem; color: var(--hero-yellow); margin: 10px 0; }
-        .type-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
-        .tag-countable { background: var(--hero-green); color: white; }
-        .tag-uncountable { background: var(--hero-orange); color: white; }
 
-        .btn-complete {
-            background: transparent;
-            border: 2px solid var(--hero-green);
-            color: var(--hero-green);
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-family: 'Bangers', cursive;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: 0.3s;
-            width: 100%;
-            letter-spacing: 1px;
-        }
-        .btn-complete:hover { background: rgba(76, 175, 80, 0.2); }
-        .btn-complete.completed { background: var(--hero-green); color: white; border-color: var(--hero-green); }
-        .card.completed { border-color: var(--hero-green); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
+        .wheel-content { z-index: 2; font-size: 3rem; }
+        .spinner-active { animation: ultra-spin 0.5s linear infinite; }
+        @keyframes ultra-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .idle-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
-        footer {
-            background: #05101a;
-            color: rgba(255,255,255,0.8);
-            text-align: center;
-            padding: 30px 20px;
-            border-top: 2px solid var(--hero-blue-dark);
-            margin-top: 50px;
+        /* UI Componenten */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .footer-text { font-family: 'Lexend', sans-serif; font-weight: bold; letter-spacing: 0.5px; }
-        .footer-highlight { color: var(--hero-yellow); }
+
+        .title-gradient {
+            background: linear-gradient(to right, #f472b6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .date-row {
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
+    <div id="root" class="flex flex-col min-h-screen"></div>
 
-<div class="flash-effect" id="flash"></div>
+    <script type="text/babel">
+        const { useState } = React;
 
-<header>
-    <h1>ENGLIFORCE ACADEMY</h1>
-    <p>LITTLE & FEW COMMAND CENTER</p>
-</header>
-
-<main>
-    <section class="briefing-box">
-        <h2>🚨 MISSION: LITTLE VS FEW</h2>
-        <div class="explanation-text">
-            Wat is het verschil tussen <strong>LITTLE</strong> en <strong>FEW</strong>? <br><br>
-            Beide woorden betekenen in het Nederlands <span class="highlight">WEINIG</span>. <br><br>
-            Het geheim zit hem in het zelfstandig naamwoord dat erachter komt. Kun je het tellen of niet?<br><br>
-            <strong>Gouden Regel 1:</strong> Gebruik <span class="highlight">LITTLE</span> voor dingen die je niet kunt tellen (Uncountable).<br>
-            <strong>Gouden Regel 2:</strong> Gebruik <span class="highlight">FEW</span> voor dingen die je wel kunt tellen (Countable).
-        </div>
-        <div class="formula-container">
-            <div class="formula-part">LITTLE<br><small>betekent: weinig</small><br><div class="type-tag tag-uncountable">Ontelbaar</div></div>
-            <div class="formula-part">FEW<br><small>betekent: weinig</small><br><div class="type-tag tag-countable">Telbaar</div></div>
-        </div>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <div class="toggle-container">
-        <button class="btn-toggle" onclick="showSection(event, 'rules', 'ZAP!')">Basis Regels</button>
-        <button class="btn-toggle" onclick="showSection(event, 'examples', 'KA-POW!')">Checklist</button>
-        <button class="btn-toggle" onclick="showSection(event, 'video-section', 'BOOM!')">Missie Video</button>
-    </div>
-
-    <div id="rules" class="content-section" style="display: block;">
-        <h3>Tactisch Overzicht: Telbaarheid</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>Categorie</th><th>Wat is het?</th><th>Gebruik (Weinig)</th><th>Voorbeeld</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Countable</td><td>Dingen met een meervoud (s)</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">friends</span></td></tr>
-                    <tr><td>Countable</td><td>Dingen die je 1, 2, 3 kunt tellen</td><td><span class="highlight">Few</span></td><td>Few <span class="rule-alert">cars</span></td></tr>
-                    <tr><td>Uncountable</td><td>Vloeistoffen, poedertjes en gassen</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">water</span></td></tr>
-                    <tr><td>Uncountable</td><td>Gevoelens en begrippen</td><td><span class="highlight">Little</span></td><td>Little <span class="rule-alert">time</span></td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="examples" class="content-section">
-        <h3>The Comparison Lab: Countable vs Uncountable</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>Woord</th><th>Type</th><th>Betekenis: Weinig...</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Coins</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Few coins</td></tr>
-                    <tr><td><strong>Apples</strong></td><td><span class="type-tag tag-countable">Telbaar</span></td><td>Few apples</td></tr>                  
-                    <tr><td><strong>Money</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Little money</td></tr>
-                    <tr><td><strong>Information</strong></td><td><span class="type-tag tag-uncountable">Ontelbaar</span></td><td>Little information</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="video-section" class="content-section">
-        <h3>🎬 MISSION BRIEFING VIDEO</h3>
-        <div class="video-container" id="video-player-box">
-            <button class="btn-play" onclick="loadYoutubeVideo(event)">
-                <span class="play-icon">▶</span> START MISSIE VIDEO
-            </button>
-        </div>
-    </div>
-
-    <div class="section-divider"></div>
-
-    <h2>⚔️ PICKLE MISSIONS</h2>
-    <div class="pickle-grid">
-        <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'm1t4_little_few_pickle_1.html')">
-            <span style="font-size: 2.5rem;">🔨</span>
-            <div class="title">Pickle 1</div>
-            <p style="font-size: 0.9rem;">Whack-a-Mole</p>
-            <button id="btn-p1" class="btn-complete" onclick="toggleComplete(event, 'p1')">Mission Incomplete</button>
-        </div>
-        <div class="card" id="card-p2" onclick="openMission(event, 'SQUASH!', 'm1t4_little_few_pickle_2.html')">
-            <span style="font-size: 2.5rem;">💧</span>
-            <div class="title">Pickle 2</div>
-            <p style="font-size: 0.9rem;">Gravity Drop</p>
-            <button id="btn-p2" class="btn-complete" onclick="toggleComplete(event, 'p2')">Mission Incomplete</button>
-        </div>
-        <div class="card" id="card-p3" onclick="openMission(event, 'BAM!', 'm1t4_little_few_pickle_3.html')">
-            <span style="font-size: 2.5rem;">⚖️</span>
-            <div class="title">Pickle 3</div>
-            <p style="font-size: 0.9rem;">Energy Sorter</p>
-            <button id="btn-p3" class="btn-complete" onclick="toggleComplete(event, 'p3')">Mission Incomplete</button>
-        </div>
-        <div class="card" id="card-p4" onclick="openMission(event, 'WHAM!', 'm1t4_little_few_pickle_4.html')">
-            <span style="font-size: 2.5rem;">💣</span>
-            <div class="title">Pickle 4</div>
-            <p style="font-size: 0.9rem;">Sentence Defuser</p>
-            <button id="btn-p4" class="btn-complete" onclick="toggleComplete(event, 'p4')">Mission Incomplete</button>
-        </div>
-        <div class="card" id="card-p5" onclick="openMission(event, 'KABOOM!', 'm1t4_little_few_pickle_5.html')">
-            <span style="font-size: 2.5rem;">🏆</span>
-            <div class="title">Pickle 5</div>
-            <p style="font-size: 0.9rem;">Ultimate Master</p>
-            <button id="btn-p5" class="btn-complete" onclick="toggleComplete(event, 'p5')">Mission Incomplete</button>
-        </div>
-    </div>
-</main>
-
-<footer>
-    <div class="footer-text">
-        &copy; EngliForce: <span class="footer-highlight">Make English Your Superpower!</span>
-    </div>
-</footer>
-
-<script>
-    // Functie om de nieuwe video in te laden bij een klik
-    function loadYoutubeVideo(e) {
-        createExplosion(e, 'ACTION!');
-        const box = document.getElementById('video-player-box');
-        // Hier staat nu de nieuwe video-ID: qH-Vnj9lP08
-        box.innerHTML = '<iframe src="https://www.youtube.com/embed/qH-Vnj9lP08?rel=0&autoplay=1" allow="autoplay; fullscreen" allowfullscreen title="Few vs Little Explanation"></iframe>';
-    }
-
-    function openMission(e, message, url) {
-        createExplosion(e, message);
-        setTimeout(() => { if(url !== '#') window.location.href = url; }, 400);
-    }
-
-    function showSection(e, id, boomMessage) {
-        const sections = document.querySelectorAll('.content-section');
-        sections.forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-        createExplosion(e, boomMessage);
-    }
-
-    function toggleComplete(e, id) {
-        e.stopPropagation(); 
-        const btn = document.getElementById('btn-' + id);
-        const card = document.getElementById('card-' + id);
+        const DAYS_NL = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
+        const DAYS_EN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         
-        const isCompleted = btn.classList.toggle('completed');
-        card.classList.toggle('completed');
-        
-        if(isCompleted) {
-            btn.innerText = '✅ Mission Completed';
-            localStorage.setItem('pickle_' + id + '_completed', 'true');
-            createExplosion(e, 'AWESOME!');
-        } else {
-            btn.innerText = 'Mission Incomplete';
-            localStorage.setItem('pickle_' + id + '_completed', 'false');
-        }
-    }
+        const ORDINALS_FULL = [
+            "", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth",
+            "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth",
+            "twenty-first", "twenty-second", "twenty-third", "twenty-fourth", "twenty-fifth", "twenty-sixth", "twenty-seventh", "twenty-eighth", "twenty-ninth", "thirtieth", "thirty-first"
+        ];
 
-    document.addEventListener("DOMContentLoaded", () => {
-        ['p1', 'p2', 'p3', 'p4', 'p5'].forEach(id => {
-            if(localStorage.getItem('pickle_' + id + '_completed') === 'true') {
-                const btn = document.getElementById('btn-' + id);
-                const card = document.getElementById('card-' + id);
-                btn.classList.add('completed');
-                btn.innerText = '✅ Mission Completed';
-                card.classList.add('completed');
+        const generateFiveUniqueDates = () => {
+            const result = [];
+            const usedDays = new Set();
+            const usedMonths = new Set();
+            
+            while (result.length < 5) {
+                const monthIdx = Math.floor(Math.random() * 12);
+                const daysInMonth = new Date(2024, monthIdx + 1, 0).getDate();
+                const day = Math.floor(Math.random() * daysInMonth) + 1;
+                
+                const tempDate = new Date(2024, monthIdx, day);
+                const dayIdx = tempDate.getDay();
+                
+                if (!usedMonths.has(monthIdx) && !usedDays.has(dayIdx)) {
+                    usedMonths.add(monthIdx);
+                    usedDays.add(dayIdx);
+                    
+                    result.push({
+                        question: `${DAYS_NL[dayIdx]} ${day}-${monthIdx + 1}`,
+                        british: `${DAYS_EN[dayIdx]} the ${ORDINALS_FULL[day]} of ${MONTHS_EN[monthIdx]}`,
+                        american: `${DAYS_EN[dayIdx]}, ${MONTHS_EN[monthIdx]} ${ORDINALS_FULL[day]}`,
+                        revealed: false // Toegevoegd om status per vraag bij te houden
+                    });
+                }
             }
-        });
-    });
+            return result;
+        };
 
-    function createExplosion(e, message) {
-        const x = e.clientX || window.innerWidth / 2; 
-        const y = e.clientY || window.innerHeight / 2;
-        
-        const flash = document.getElementById('flash');
-        flash.style.opacity = '0.3';
-        document.body.classList.add('shake');
-        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+        const App = () => {
+            const [dates, setDates] = useState([]);
+            const [isSpinning, setIsSpinning] = useState(false);
 
-        const txt = document.createElement('div');
-        txt.className = 'boom-text';
-        txt.innerText = message;
-        txt.style.left = (x - 50) + 'px';
-        txt.style.top = (y - 50) + 'px';
-        document.body.appendChild(txt);
-        setTimeout(() => txt.remove(), 600);
-    }
-</script>
+            const startSpin = () => {
+                setIsSpinning(true);
+                setDates([]);
+                
+                setTimeout(() => {
+                    setDates(generateFiveUniqueDates());
+                    setIsSpinning(false);
+                }, 1200);
+            };
+
+            const toggleReveal = (index) => {
+                setDates(prevDates => prevDates.map((date, i) => 
+                    i === index ? { ...date, revealed: !date.revealed } : date
+                ));
+            };
+
+            // Controleer of er ten minste één antwoord zichtbaar is
+            const anyRevealed = dates.some(date => date.revealed);
+
+            return (
+                <>
+                    {/* Template Navigatie zonder Back knop */}
+                    <nav className="border-b border-slate-800 bg-slate-900/50 px-6 py-5">
+                        <div className="max-w-6xl mx-auto flex justify-center items-center">
+                            <span className="font-bungee text-xl title-gradient tracking-tighter text-center">
+                                Date Spinner
+                            </span>
+                        </div>
+                    </nav>
+
+                    {/* Main Content (Spinner Logic) */}
+                    <main className="flex-grow p-4 md:p-8 max-w-2xl mx-auto w-full">
+                        <header className="text-center mb-8">
+                            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Use pen and paper to write down your answers!</p>
+                        </header>
+
+                        <div className="relative flex flex-col items-center justify-center mb-10">
+                            <div className="wheel-container">
+                                <div className={`neon-wheel ${isSpinning ? 'spinner-active' : ''}`}>
+                                    <div className={`wheel-content ${!isSpinning ? 'idle-pulse' : ''}`}>📅</div>
+                                </div>
+                                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-8 bg-pink-500 rounded-b-full shadow-[0_0_15px_#ec4899] z-20"></div>
+                            </div>
+
+                            <button 
+                                onClick={startSpin} 
+                                disabled={isSpinning}
+                                className={`mt-10 w-full md:w-72 py-5 rounded-full text-xl font-black shadow-2xl transition-all transform active:scale-95 tracking-tighter uppercase
+                                    ${isSpinning ? 'bg-slate-700 text-slate-500' : 'bg-gradient-to-r from-violet-600 to-pink-600 hover:scale-105 text-white border-b-4 border-violet-800'}`}
+                            >
+                                {isSpinning ? 'SPINNING...' : 'GET NEW DATES'}
+                            </button>
+                        </div>
+
+                        <div className="space-y-4 mb-8">
+                            {dates.map((date, i) => (
+                                <div key={i} className="date-row glass-card p-4 md:p-6 rounded-2xl" style={{ animationDelay: `${i * 0.1}s` }}>
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="w-10 h-10 shrink-0 rounded-lg bg-slate-800 flex items-center justify-center font-black text-violet-400 border border-violet-500/30">
+                                                {i + 1}
+                                            </div>
+                                            <span className="text-xl sm:text-2xl font-black text-white">{date.question}</span>
+                                        </div>
+                                        
+                                        {/* Individuele Check Knop */}
+                                        <button 
+                                            onClick={() => toggleReveal(i)}
+                                            className={`shrink-0 px-5 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all active:scale-95 shadow-lg ${
+                                                date.revealed 
+                                                ? 'bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700' 
+                                                : 'bg-violet-600 text-white border border-violet-500 hover:bg-violet-500 shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                                            }`}
+                                        >
+                                            {date.revealed ? 'Hide' : 'Check'}
+                                        </button>
+                                    </div>
+                                    
+                                    {/* Antwoorden sectie (wordt per item getoond) */}
+                                    {date.revealed && (
+                                        <div className="mt-4 grid grid-cols-1 gap-4 pt-4 border-t border-slate-700">
+                                            <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                                                <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">British (UK)</span>
+                                                <p className="text-indigo-100 font-bold text-lg leading-tight">{date.british}</p>
+                                            </div>
+                                            <div className="p-3 rounded-xl bg-pink-500/10 border border-pink-500/20">
+                                                <span className="text-[10px] font-black text-pink-400 uppercase tracking-widest">American (US)</span>
+                                                <p className="text-pink-100 font-bold text-lg leading-tight">{date.american}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Pro Tips sectie wordt pas zichtbaar na nakijken */}
+                        {dates.length > 0 && anyRevealed && (
+                            <div className="space-y-4">                                
+                                <div className="p-6 bg-gradient-to-br from-slate-800 to-slate-900 text-slate-300 rounded-3xl shadow-2xl border border-slate-700 relative overflow-hidden">
+                                    <div className="absolute -right-4 -top-4 text-6xl opacity-10">💡</div>
+                                    <h3 className="font-black text-lg mb-3 text-white uppercase tracking-tight">Pro Tips:</h3>
+                                    <ul className="space-y-2 text-sm font-medium">
+                                        <li className="flex items-center">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-violet-500 mr-2" />
+                                            <span>Hoofdletters voor <strong>dagen</strong> en <strong>maanden</strong>!</span>
+                                        </li>
+                                        <li className="flex items-center">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-pink-500 mr-2" />
+                                            <span>Rangtelwoorden (first, twelfth, etc) schrijf je <strong>voluit</strong>.</span>
+                                        </li>
+                                        <li className="flex items-center">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 mr-2" />
+                                            <span><strong>Amerikaans:</strong> gebruik een komma na de maand en dag.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Template Footer */}
+                    <footer className="mt-auto border-t border-slate-800 bg-slate-900/80 py-8 px-6">
+                        <div className="max-w-6xl mx-auto text-center md:text-left">
+                            <div className="font-bungee text-slate-600 text-sm tracking-widest">
+                                © Mister Seb's Grammar Apps 2026
+                            </div>
+                        </div>
+                    </footer>
+                </>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
+
 
 
 
