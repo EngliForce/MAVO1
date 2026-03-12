@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Date Spinner - Mister Seb's Grammar Apps</title>
+    <title>EngliForce Academy: Date Spinner</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -11,18 +11,45 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700;900&display=swap');
         
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+        }
+
         body, html { 
             margin: 0; padding: 0;
-            font-family: 'Outfit', sans-serif; 
-            background: #0f172a; 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
             min-height: 100dvh;
-            color: #f8fafc;
+            color: white;
             touch-action: manipulation;
         }
         
-        .font-bungee { font-family: 'Bungee', cursive; }
+        .font-bangers { font-family: 'Bangers', cursive; }
+
+        /* Blauwe EngliForce Header */
+        header {
+            background: var(--hero-blue-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+        
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 3.5rem; 
+            letter-spacing: 3px; 
+            margin: 0; 
+            text-shadow: 4px 4px 0px var(--hero-blue-dark); 
+        }
 
         /* Spinner Specifieke Styling */
         .wheel-container {
@@ -42,9 +69,9 @@
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            background: conic-gradient(from 0deg, #f472b6, #8b5cf6, #3b82f6, #2dd4bf, #f472b6);
-            border: 6px solid #1e293b;
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            background: conic-gradient(from 0deg, var(--hero-orange), var(--hero-yellow), var(--hero-cyan), var(--hero-green), var(--hero-orange));
+            border: 6px solid var(--hero-blue-dark);
+            box-shadow: 0 0 30px rgba(255, 183, 3, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -57,7 +84,7 @@
             width: 85%;
             height: 85%;
             border-radius: 50%;
-            background: #0f172a;
+            background: #102a43;
             z-index: 1;
         }
 
@@ -69,15 +96,9 @@
 
         /* UI Componenten */
         .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .title-gradient {
-            background: linear-gradient(to right, #f472b6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
         }
 
         .date-row {
@@ -89,6 +110,21 @@
             from { opacity: 0; transform: scale(0.9) translateY(10px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
+        
+        .btn-check {
+            background: transparent;
+            border: 2px solid var(--hero-green);
+            color: var(--hero-green);
+            transition: 0.3s;
+        }
+        .btn-check:hover { background: rgba(76, 175, 80, 0.2); }
+        .btn-hide {
+            background: var(--hero-green);
+            color: white;
+            border: 2px solid var(--hero-green);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -97,7 +133,7 @@
     <script type="text/babel">
         const { useState } = React;
 
-        const DAYS_NL = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
+        const DAYS_NL = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
         const DAYS_EN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         const MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         
@@ -111,19 +147,24 @@
             const result = [];
             const usedDays = new Set();
             const usedMonths = new Set();
+            
             while (result.length < 5) {
                 const monthIdx = Math.floor(Math.random() * 12);
                 const daysInMonth = new Date(2024, monthIdx + 1, 0).getDate();
                 const day = Math.floor(Math.random() * daysInMonth) + 1;
+                
                 const tempDate = new Date(2024, monthIdx, day);
                 const dayIdx = tempDate.getDay();
+                
                 if (!usedMonths.has(monthIdx) && !usedDays.has(dayIdx)) {
                     usedMonths.add(monthIdx);
                     usedDays.add(dayIdx);
+                    
                     result.push({
                         question: `${DAYS_NL[dayIdx]} ${day}-${monthIdx + 1}`,
                         british: `${DAYS_EN[dayIdx]} the ${ORDINALS_FULL[day]} of ${MONTHS_EN[monthIdx]}`,
-                        american: `${DAYS_EN[dayIdx]}, ${MONTHS_EN[monthIdx]} ${ORDINALS_FULL[day]}`
+                        american: `${DAYS_EN[dayIdx]}, ${MONTHS_EN[monthIdx]} ${ORDINALS_FULL[day]}`,
+                        revealed: false
                     });
                 }
             }
@@ -133,48 +174,52 @@
         const App = () => {
             const [dates, setDates] = useState([]);
             const [isSpinning, setIsSpinning] = useState(false);
-            const [showAnswers, setShowAnswers] = useState(false);
 
             const startSpin = () => {
                 setIsSpinning(true);
-                setShowAnswers(false);
                 setDates([]);
+                
                 setTimeout(() => {
                     setDates(generateFiveUniqueDates());
                     setIsSpinning(false);
                 }, 1200);
             };
 
+            const toggleReveal = (index) => {
+                setDates(prevDates => prevDates.map((date, i) => 
+                    i === index ? { ...date, revealed: !date.revealed } : date
+                ));
+            };
+
+            const anyRevealed = dates.some(date => date.revealed);
+
             return (
                 <>
-                    {/* Template Navigatie zonder Back knop */}
-                    <nav className="border-b border-slate-800 bg-slate-900/50 px-6 py-5">
-                        <div className="max-w-6xl mx-auto flex justify-center items-center">
-                            <span className="font-bungee text-xl title-gradient tracking-tighter text-center">
-                                Date Spinner
-                            </span>
-                        </div>
-                    </nav>
+                    <header>
+                        <h1>ENGLIFORCE ACADEMY</h1>
+                        <p className="font-bangers text-[var(--hero-yellow)] text-xl tracking-widest mt-2">DATE SPINNER MISSION</p>
+                    </header>
 
-                    {/* Main Content (Spinner Logic) */}
                     <main className="flex-grow p-4 md:p-8 max-w-2xl mx-auto w-full">
-                        <header className="text-center mb-8">
-                            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Use pen and paper to write down your answers!</p>
-                        </header>
+                        <div className="text-center mb-8">
+                            <p className="text-slate-300 font-bold uppercase tracking-widest text-xs border-l-4 border-[var(--hero-orange)] pl-3 inline-block bg-[rgba(255,87,34,0.1)] py-2 pr-4">
+                                Use pen and paper to write down your answers!
+                            </p>
+                        </div>
 
                         <div className="relative flex flex-col items-center justify-center mb-10">
                             <div className="wheel-container">
                                 <div className={`neon-wheel ${isSpinning ? 'spinner-active' : ''}`}>
                                     <div className={`wheel-content ${!isSpinning ? 'idle-pulse' : ''}`}>📅</div>
                                 </div>
-                                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-8 bg-pink-500 rounded-b-full shadow-[0_0_15px_#ec4899] z-20"></div>
+                                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-8 bg-[var(--hero-red)] rounded-b-full shadow-[0_0_15px_var(--hero-red)] z-20"></div>
                             </div>
 
                             <button 
                                 onClick={startSpin} 
                                 disabled={isSpinning}
-                                className={`mt-10 w-full md:w-72 py-5 rounded-full text-xl font-black shadow-2xl transition-all transform active:scale-95 tracking-tighter uppercase
-                                    ${isSpinning ? 'bg-slate-700 text-slate-500' : 'bg-gradient-to-r from-violet-600 to-pink-600 hover:scale-105 text-white border-b-4 border-violet-800'}`}
+                                className={`mt-10 w-full md:w-72 py-5 rounded-full text-2xl font-bangers shadow-2xl transition-all transform active:scale-95 tracking-widest
+                                    ${isSpinning ? 'bg-slate-700 text-slate-500' : 'bg-[var(--hero-orange)] hover:bg-[var(--hero-yellow)] hover:text-slate-900 text-white border-b-6 border-[#bf360c]'}`}
                             >
                                 {isSpinning ? 'SPINNING...' : 'GET NEW DATES'}
                             </button>
@@ -182,23 +227,34 @@
 
                         <div className="space-y-4 mb-8">
                             {dates.map((date, i) => (
-                                <div key={i} className="date-row glass-card p-6 rounded-2xl" style={{ animationDelay: `${i * 0.1}s` }}>
-                                    <div className="flex items-center space-x-4">
-                                        <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center font-black text-violet-400 border border-violet-500/30">
-                                            {i + 1}
+                                <div key={i} className="date-row glass-card p-4 md:p-6 rounded-2xl" style={{ animationDelay: `${i * 0.1}s` }}>
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="w-10 h-10 shrink-0 rounded-lg bg-[var(--hero-blue-dark)] flex items-center justify-center font-black text-white border border-[var(--hero-cyan)]">
+                                                {i + 1}
+                                            </div>
+                                            <span className="text-xl sm:text-2xl font-black text-white">{date.question}</span>
                                         </div>
-                                        <span className="text-2xl font-black text-white">{date.question}</span>
+                                        
+                                        <button 
+                                            onClick={() => toggleReveal(i)}
+                                            className={`shrink-0 px-5 py-2.5 rounded-xl font-bangers text-xl tracking-wider transition-all active:scale-95 ${
+                                                date.revealed ? 'btn-hide' : 'btn-check'
+                                            }`}
+                                        >
+                                            {date.revealed ? 'HIDE' : 'CHECK'}
+                                        </button>
                                     </div>
                                     
-                                    {showAnswers && (
-                                        <div className="mt-4 grid grid-cols-1 gap-4 pt-4 border-t border-slate-700">
-                                            <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                                                <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">British (UK)</span>
-                                                <p className="text-indigo-100 font-bold text-lg leading-tight">{date.british}</p>
+                                    {date.revealed && (
+                                        <div className="mt-4 grid grid-cols-1 gap-4 pt-4 border-t border-[rgba(255,255,255,0.1)]">
+                                            <div className="p-3 rounded-xl bg-[rgba(129,212,250,0.1)] border border-[rgba(129,212,250,0.3)] border-l-4 border-l-[var(--hero-cyan)]">
+                                                <span className="text-[10px] font-black text-[var(--hero-cyan)] uppercase tracking-widest">British (UK)</span>
+                                                <p className="text-white font-bold text-lg leading-tight">{date.british}</p>
                                             </div>
-                                            <div className="p-3 rounded-xl bg-pink-500/10 border border-pink-500/20">
-                                                <span className="text-[10px] font-black text-pink-400 uppercase tracking-widest">American (US)</span>
-                                                <p className="text-pink-100 font-bold text-lg leading-tight">{date.american}</p>
+                                            <div className="p-3 rounded-xl bg-[rgba(255,183,3,0.1)] border border-[rgba(255,183,3,0.3)] border-l-4 border-l-[var(--hero-yellow)]">
+                                                <span className="text-[10px] font-black text-[var(--hero-yellow)] uppercase tracking-widest">American (US)</span>
+                                                <p className="text-white font-bold text-lg leading-tight">{date.american}</p>
                                             </div>
                                         </div>
                                     )}
@@ -206,45 +262,33 @@
                             ))}
                         </div>
 
-                        {dates.length > 0 && (
-                            <div className="space-y-4">
-                                <button 
-                                    onClick={() => setShowAnswers(!showAnswers)}
-                                    className="w-full bg-slate-800 text-white py-4 rounded-2xl font-black text-lg border-2 border-slate-700 hover:bg-slate-700 transition-all active:scale-95 shadow-xl"
-                                >
-                                    {showAnswers ? 'HIDE ANSWERS' : 'CHECK ANSWERS'}
-                                </button>
-                                
-                                {showAnswers && (
-                                    <div className="p-6 bg-gradient-to-br from-slate-800 to-slate-900 text-slate-300 rounded-3xl shadow-2xl border border-slate-700 relative overflow-hidden">
-                                        <div className="absolute -right-4 -top-4 text-6xl opacity-10">💡</div>
-                                        <h3 className="font-black text-lg mb-3 text-white uppercase tracking-tight">Pro Tips:</h3>
-                                        <ul className="space-y-2 text-sm font-medium">
-                                            <li className="flex items-center">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-violet-500 mr-2" />
-                                                <span>Hoofdletters voor <strong>dagen</strong> en <strong>maanden</strong>!</span>
-                                            </li>
-                                            <li className="flex items-center">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-pink-500 mr-2" />
-                                                <span>Rangtelwoorden (first, twelfth, etc) schrijf je <strong>voluit</strong>.</span>
-                                            </li>
-                                            <li className="flex items-center">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 mr-2" />
-                                                <span><strong>Amerikaans:</strong> gebruik een komma na de maand en dag.</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                )}
+                        {dates.length > 0 && anyRevealed && (
+                            <div className="space-y-4">                                
+                                <div className="p-6 bg-[#05101a] text-slate-300 rounded-3xl shadow-2xl border-2 border-[var(--hero-blue-dark)] relative overflow-hidden">
+                                    <div className="absolute -right-4 -top-4 text-6xl opacity-10">💡</div>
+                                    <h3 className="font-bangers text-2xl mb-3 text-[var(--hero-cyan)] uppercase tracking-tight">Pro Tips:</h3>
+                                    <ul className="space-y-2 text-sm font-medium">
+                                        <li className="flex items-center">
+                                            <div className="w-2 h-2 rounded-full bg-[var(--hero-yellow)] mr-3" />
+                                            <span>Hoofdletters voor <strong>dagen</strong> en <strong>maanden</strong>!</span>
+                                        </li>
+                                        <li className="flex items-center">
+                                            <div className="w-2 h-2 rounded-full bg-[var(--hero-orange)] mr-3" />
+                                            <span>Rangtelwoorden (first, twelfth, etc) schrijf je <strong>voluit</strong>.</span>
+                                        </li>
+                                        <li className="flex items-center">
+                                            <div className="w-2 h-2 rounded-full bg-[var(--hero-green)] mr-3" />
+                                            <span><strong>Amerikaans:</strong> gebruik een komma na de maand en dag.</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         )}
                     </main>
 
-                    {/* Template Footer */}
-                    <footer className="mt-auto border-t border-slate-800 bg-slate-900/80 py-8 px-6">
-                        <div className="max-w-6xl mx-auto text-center md:text-left">
-                            <div className="font-bungee text-slate-600 text-sm tracking-widest">
-                                © Mister Seb's Grammar Apps 2026
-                            </div>
+                    <footer className="mt-auto border-t-2 border-[var(--hero-blue-dark)] bg-[#05101a] py-8 px-6">
+                        <div className="max-w-6xl mx-auto text-center font-bold tracking-widest text-[rgba(255,255,255,0.7)]">
+                            &copy; EngliForce: <span className="text-[var(--hero-yellow)]">Make English Your Superpower!</span>
                         </div>
                     </footer>
                 </>
