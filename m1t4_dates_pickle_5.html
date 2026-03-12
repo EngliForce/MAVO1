@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Date Bomb</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --hero-orange: #ff5722;
+            --danger: #ff5252;
+            --safe: #4CAF50;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white; margin: 0; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        header {
+            background: var(--hero-blue-main); width: 100%; padding: 1rem;
+            text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 { font-family: 'Bangers'; font-size: 2.5rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        
+        .game-info { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-cyan); margin: 15px 0; }
+
+        /* De Grid */
+        .grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+            width: 95%; max-width: 500px; margin-bottom: 20px;
+        }
+
+        .box {
+            aspect-ratio: 1; background: var(--hero-blue-dark);
+            border: 3px solid var(--hero-cyan); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; cursor: pointer; transition: 0.2s;
+            position: relative;
+        }
+
+        .box:hover:not(.revealed) { background: var(--hero-blue-main); transform: scale(1.05); }
+        .box.revealed { cursor: default; }
+        .box.safe { background: var(--safe); border-color: #2e7d32; }
+        .box.bomb { background: var(--danger); border-color: #b71c1c; animation: shake 0.2s infinite; }
+
+        /* Modal / Overlay */
+        #input-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; z-index: 100;
+        }
+
+        .modal-content {
+            background: #102a43; border: 4px solid var(--hero-orange);
+            padding: 30px; border-radius: 20px; text-align: center; width: 100%; max-width: 450px;
+        }
+
+        .dutch-date { font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin-bottom: 20px; }
+
+        input[type="text"] {
+            width: 100%; padding: 15px; font-size: 1.2rem; border-radius: 10px;
+            border: 3px solid var(--hero-cyan); background: #0b1a2a; color: white;
+            text-align: center; margin-bottom: 20px;
+        }
+
+        .btn {
+            font-family: 'Bangers'; font-size: 1.8rem; padding: 10px 30px;
+            background: var(--hero-orange); color: white; border: none;
+            border-bottom: 5px solid #bf360c; border-radius: 50px; cursor: pointer;
+        }
+
+        #feedback { margin-top: 15px; font-weight: bold; line-height: 1.4; display: none; }
+        .rule-hint { color: var(--hero-yellow); display: block; margin-top: 10px; font-size: 0.9rem; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        .game-over-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--danger); display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 200;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>DATE BOMB: DEFUSAL</h1>
+</header>
+
+<div class="game-info">DOZEN VEILIG: <span id="safe-count">0</span> / 24</div>
+
+<div class="grid" id="grid"></div>
+
+<div id="input-overlay">
+    <div class="modal-content">
+        <div id="instruction">Vertaal deze datum om de kist te openen:</div>
+        <div class="dutch-date" id="current-nl-date">...</div>
+        <input type="text" id="answer-input" placeholder="Typ de Engelse datum..." autocomplete="off">
+        <div id="feedback"></div>
+        <button class="btn" id="check-btn" onclick="processAnswer()">ONTGRENDEL</button>
+        <button class="btn" id="next-btn" style="display:none; background:var(--hero-blue-main); border-color:var(--hero-blue-dark)" onclick="closeModal()">VERDER</button>
+    </div>
+</div>
+
+<div class="game-over-screen" id="game-over">
+    <h1 style="font-size: 5rem;">BOOOOOM!</h1>
+    <p style="font-size: 1.5rem;">Je hebt de bom geraakt!</p>
+    <button class="btn" onclick="location.reload()">PROBEER OPNIEUW</button>
+</div>
+
+<div class="game-over-screen" id="win-screen" style="background: var(--safe);">
+    <h1 style="font-size: 5rem;">MISSION COMPLETE!</h1>
+    <p style="font-size: 1.5rem;">Alle 24 veilige kisten zijn gevonden!</p>
+    <button class="btn" onclick="location.reload()">NOG EEN KEER</button>
+</div>
+
+<script>
+    const nlDays = ['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'];
+    const enDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const nlMonths = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+    const enMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const ordinals = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth', 'twenty-first', 'twenty-second', 'twenty-third', 'twenty-fourth', 'twenty-fifth', 'twenty-sixth', 'twenty-seventh', 'twenty-eighth', 'twenty-ninth', 'thirtieth', 'thirty-first'];
+
+    let bombIndex = Math.floor(Math.random() * 25);
+    let boxesData = [];
+    let activeBoxIndex = null;
+    let safeOpened = 0;
+
+    // Grid genereren
+    const gridEl = document.getElementById('grid');
+    for (let i = 0; i < 25; i++) {
+        const dIdx = Math.floor(Math.random() * 7);
+        const mIdx = Math.floor(Math.random() * 12);
+        const dNum = Math.floor(Math.random() * 28) + 1;
+        
+        boxesData.push({
+            nl: `${nlDays[dIdx]} ${dNum} ${nlMonths[mIdx]}`,
+            uk: `${enDays[dIdx]} the ${ordinals[dNum]} of ${enMonths[mIdx]}`,
+            us: `${enDays[dIdx]}, ${enMonths[mIdx]} ${ordinals[dNum]}`,
+            isBomb: (i === bombIndex),
+            day: enDays[dIdx],
+            month: enMonths[mIdx]
+        });
+
+        const box = document.createElement('div');
+        box.className = 'box';
+        box.innerText = '📦';
+        box.onclick = () => openInputModal(i);
+        gridEl.appendChild(box);
+    }
+
+    function openInputModal(index) {
+        const boxEl = gridEl.children[index];
+        if (boxEl.classList.contains('revealed')) return;
+
+        activeBoxIndex = index;
+        document.getElementById('current-nl-date').innerText = boxesData[index].nl;
+        document.getElementById('input-overlay').style.display = 'flex';
+        document.getElementById('answer-input').value = "";
+        document.getElementById('answer-input').focus();
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('check-btn').style.display = 'inline-block';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function processAnswer() {
+        const input = document.getElementById('answer-input');
+        const userAns = input.value.trim().replace(/\s+/g, ' ');
+        const data = boxesData[activeBoxIndex];
+        const feedback = document.getElementById('feedback');
+
+        if (!userAns) return;
+
+        const isCorrect = (userAns === data.uk || userAns === data.us);
+
+        if (isCorrect) {
+            revealBox(activeBoxIndex);
+            document.getElementById('input-overlay').style.display = 'none';
+        } else {
+            // Slimme feedback
+            feedback.style.display = 'block';
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'inline-block';
+            
+            const lowUser = userAns.toLowerCase();
+            const lowUK = data.uk.toLowerCase();
+            const lowUS = data.us.toLowerCase();
+            let hint = "Helaas, niet helemaal goed.";
+
+            if (lowUser === lowUS.replace(',', '')) {
+                hint = "Kijk uit! Je bent de <strong>komma</strong> na de dag vergeten.";
+            } else if (lowUser === lowUK || lowUser === lowUS) {
+                hint = "Bijna! De woorden kloppen, maar je bent de <strong>hoofdletters</strong> vergeten.";
+            } else if (lowUser.includes(data.day.toLowerCase()) && lowUser.includes(data.month.toLowerCase()) && (!lowUser.includes('the') || !lowUser.includes('of'))) {
+                hint = "In het Brits moet je altijd <strong>'the'</strong> en <strong>'of'</strong> gebruiken.";
+            }
+
+            feedback.innerHTML = `<span style="color:var(--danger)">FOUT!</span><br>${hint}<br><span class="rule-hint">Juist was: ${data.uk}<br>of: ${data.us}</span>`;
+        }
+    }
+
+    function revealBox(index) {
+        const boxEl = gridEl.children[index];
+        const data = boxesData[index];
+        boxEl.classList.add('revealed');
+
+        if (data.isBomb) {
+            boxEl.classList.add('bomb');
+            boxEl.innerText = '💣';
+            setTimeout(() => { document.getElementById('game-over').style.display = 'flex'; }, 600);
+        } else {
+            boxEl.classList.add('safe');
+            boxEl.innerText = '✅';
+            safeOpened++;
+            document.getElementById('safe-count').innerText = safeOpened;
+            if (safeOpened === 24) {
+                setTimeout(() => { document.getElementById('win-screen').style.display = 'flex'; }, 600);
+            }
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('input-overlay').style.display = 'none';
+    }
+
+    // Enter toets fix
+    document.getElementById('answer-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            if (document.getElementById('check-btn').style.display !== 'none') {
+                processAnswer();
+            } else {
+                closeModal();
+            }
+        }
+    });
+</script>
+</body>
+</html>
