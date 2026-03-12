@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Pickle 3 - Little vs Few Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            /* Zorgt dat het exact 1 scherm hoog is zonder scrollen */
+            height: 100dvh; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+            user-select: none;
+        }
+        header {
+            background: var(--hero-blue-main);
+            padding: 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            flex-shrink: 0;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; letter-spacing: 2px; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.8rem; margin: 5px 0 15px 0; }
+        
+        main { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 10px 20px; 
+            flex: 1; 
+            width: 100%; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        /* Game UI */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 15px;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .progress { color: var(--hero-cyan); }
+        .score { color: var(--hero-yellow); }
+
+        .game-board {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .word-display {
+            font-family: 'Bangers', cursive;
+            font-size: 4.5rem;
+            color: white;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 0 20px var(--hero-cyan), 4px 4px 0 var(--hero-blue-dark);
+            margin-bottom: 30px;
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-action {
+            flex: 1;
+            max-width: 250px;
+            padding: 30px 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            color: white;
+            transition: 0.1s;
+            box-shadow: 0 10px 0px rgba(0,0,0,0.4);
+            position: relative;
+            letter-spacing: 2px;
+        }
+        .btn-action:active {
+            transform: translateY(10px);
+            box-shadow: 0 0px 0px rgba(0,0,0,0.4);
+        }
+
+        .btn-little { background: var(--hero-orange); border-bottom: 10px solid #bf360c; }
+        .btn-little:hover { background: #ff7043; box-shadow: 0 10px 30px rgba(255, 87, 34, 0.5); }
+        
+        .btn-few { background: var(--hero-green); border-bottom: 10px solid #2e7d32; }
+        .btn-few:hover { background: #66bb6a; box-shadow: 0 10px 30px rgba(76, 175, 80, 0.5); }
+
+        /* End Screen */
+        #end-screen {
+            display: none;
+            text-align: center;
+            background: rgba(16, 42, 67, 0.95);
+            border: 4px solid var(--hero-yellow);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(255, 183, 3, 0.3);
+            width: 100%;
+            max-width: 500px;
+        }
+        .btn-restart {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.5rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 5px solid var(--hero-blue-dark);
+            margin-top: 20px;
+        }
+        .btn-restart:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        /* Effects */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .flash-red { background: var(--hero-red); }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-10px, 10px); } 40% { transform: translate(10px, -10px); } 60% { transform: translate(-10px, 5px); } 80% { transform: translate(10px, -5px); } }
+        
+        @media (max-width: 600px) {
+            .btn-action { font-size: 2.2rem; padding: 25px 10px; }
+            .word-display { font-size: 3.5rem; }
+            .stats-bar { font-size: 1.2rem; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+</header>
+
+<main>
+    <div id="game-container" class="game-board">
+        <h2>⚡ ENERGY SORTER ⚡</h2>
+        
+        <div class="stats-bar">
+            <div class="progress">WOORD: <span id="round-display">1/10</span></div>
+            <div class="score">SCORE: <span id="score-display">0</span></div>
+        </div>
+
+        <div class="word-display" id="word-display">READY?</div>
+
+        <div class="action-buttons">
+            <button class="btn-action btn-little" onclick="checkAnswer(event, 'little')">LITTLE</button>
+            <button class="btn-action btn-few" onclick="checkAnswer(event, 'few')">FEW</button>
+        </div>
+    </div>
+
+    <div id="end-screen">
+        <h2 style="font-size: 3rem; margin-bottom: 0;">MISSION OVER</h2>
+        <p style="font-family: 'Bangers'; font-size: 2rem; color: var(--hero-cyan);">SCORE: <span id="final-score" style="color: var(--hero-yellow);">0 / 10</span></p>
+        <p id="rank-message" style="font-size: 1.2rem; margin-bottom: 30px;"></p>
+        <button class="btn-restart" onclick="startGame()">↻ RESTART MISSION</button>
+        <br><br>
+        <a href="index.html" style="color: var(--hero-cyan); text-decoration: none; font-family: 'Lexend'; margin-top: 15px; display: inline-block;">← Terug naar Command Center</a>
+    </div>
+</main>
+
+<script>
+    // 100 Woorden: 50 few (countable), 50 little (uncountable)
+    const fullWordDatabase = [
+        // FEW (Telbaar - Meervoud)
+        { word: "apples", type: "few" }, { word: "friends", type: "few" }, { word: "cars", type: "few" },
+        { word: "books", type: "few" }, { word: "ideas", type: "few" }, { word: "coins", type: "few" },
+        { word: "people", type: "few" }, { word: "chairs", type: "few" }, { word: "tables", type: "few" },
+        { word: "pens", type: "few" }, { word: "dogs", type: "few" }, { word: "cats", type: "few" },
+        { word: "houses", type: "few" }, { word: "trees", type: "few" }, { word: "phones", type: "few" },
+        { word: "cups", type: "few" }, { word: "plates", type: "few" }, { word: "shoes", type: "few" },
+        { word: "shirts", type: "few" }, { word: "windows", type: "few" }, { word: "doors", type: "few" },
+        { word: "keys", type: "few" }, { word: "bags", type: "few" }, { word: "bottles", type: "few" },
+        { word: "boxes", type: "few" }, { word: "toys", type: "few" }, { word: "games", type: "few" },
+        { word: "songs", type: "few" }, { word: "movies", type: "few" }, { word: "days", type: "few" },
+        { word: "weeks", type: "few" }, { word: "months", type: "few" }, { word: "years", type: "few" },
+        { word: "hours", type: "few" }, { word: "minutes", type: "few" }, { word: "seconds", type: "few" },
+        { word: "questions", type: "few" }, { word: "answers", type: "few" }, { word: "mistakes", type: "few" },
+        { word: "problems", type: "few" }, { word: "students", type: "few" }, { word: "teachers", type: "few" },
+        { word: "cities", type: "few" }, { word: "countries", type: "few" }, { word: "animals", type: "few" },
+        { word: "plants", type: "few" }, { word: "stars", type: "few" }, { word: "planets", type: "few" },
+        { word: "rules", type: "few" }, { word: "tools", type: "few" },
+
+        // LITTLE (Ontelbaar)
+        { word: "water", type: "little" }, { word: "money", type: "little" }, { word: "time", type: "little" },
+        { word: "information", type: "little" }, { word: "sugar", type: "little" }, { word: "milk", type: "little" },
+        { word: "advice", type: "little" }, { word: "coffee", type: "little" }, { word: "tea", type: "little" },
+        { word: "juice", type: "little" }, { word: "bread", type: "little" }, { word: "butter", type: "little" },
+        { word: "cheese", type: "little" }, { word: "meat", type: "little" }, { word: "rice", type: "little" },
+        { word: "pasta", type: "little" }, { word: "salt", type: "little" }, { word: "pepper", type: "little" },
+        { word: "flour", type: "little" }, { word: "sand", type: "little" }, { word: "snow", type: "little" },
+        { word: "rain", type: "little" }, { word: "air", type: "little" }, { word: "traffic", type: "little" },
+        { word: "weather", type: "little" }, { word: "furniture", type: "little" }, { word: "luggage", type: "little" },
+        { word: "baggage", type: "little" }, { word: "equipment", type: "little" }, { word: "gold", type: "little" },
+        { word: "silver", type: "little" }, { word: "iron", type: "little" }, { word: "wood", type: "little" },
+        { word: "plastic", type: "little" }, { word: "glass", type: "little" }, { word: "paper", type: "little" },
+        { word: "cotton", type: "little" }, { word: "wool", type: "little" }, { word: "music", type: "little" },
+        { word: "art", type: "little" }, { word: "love", type: "little" }, { word: "happiness", type: "little" },
+        { word: "sadness", type: "little" }, { word: "anger", type: "little" }, { word: "fear", type: "little" },
+        { word: "courage", type: "little" }, { word: "knowledge", type: "little" }, { word: "power", type: "little" },
+        { word: "energy", type: "little" }, { word: "luck", type: "little" }
+    ];
+
+    let gameWords = [];
+    let currentRoundIndex = 0;
+    let score = 0;
+    const TOTAL_ROUNDS = 10;
+    const hitMessages = ["BAM!", "ZAP!", "POW!", "SMASH!", "BOOM!"];
+
+    // DOM Elementen
+    const wordDisplay = document.getElementById('word-display');
+    const scoreDisplay = document.getElementById('score-display');
+    const roundDisplay = document.getElementById('round-display');
+    const gameContainer = document.getElementById('game-container');
+    const endScreen = document.getElementById('end-screen');
+    const finalScore = document.getElementById('final-score');
+    const rankMessage = document.getElementById('rank-message');
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startGame() {
+        score = 0;
+        currentRoundIndex = 0;
+        
+        // Schud de 100 woorden en pak de eerste 10
+        const shuffledDB = shuffleArray([...fullWordDatabase]);
+        gameWords = shuffledDB.slice(0, TOTAL_ROUNDS);
+
+        updateStats();
+        gameContainer.style.display = 'flex';
+        endScreen.style.display = 'none';
+        nextWord();
+    }
+
+    function nextWord() {
+        if (currentRoundIndex >= TOTAL_ROUNDS) {
+            setTimeout(showGameOver, 500);
+            return;
+        }
+
+        // Herstart de pop-animatie
+        wordDisplay.style.animation = 'none';
+        wordDisplay.offsetHeight; // Trigger reflow
+        wordDisplay.style.animation = 'popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+
+        // Toon het huidige woord
+        const currentWordObj = gameWords[currentRoundIndex];
+        wordDisplay.innerText = currentWordObj.word.toUpperCase();
+        
+        // Update het ronde-nummer in het scherm (tel er 1 bij op voor de weergave)
+        roundDisplay.innerText = (currentRoundIndex + 1) + "/" + TOTAL_ROUNDS;
+    }
+
+    function checkAnswer(e, answer) {
+        if (currentRoundIndex >= TOTAL_ROUNDS) return;
+
+        const currentWordObj = gameWords[currentRoundIndex];
+
+        if (answer === currentWordObj.type) {
+            score++;
+            const randomMsg = hitMessages[Math.floor(Math.random() * hitMessages.length)];
+            createExplosion(e, randomMsg, false);
+        } else {
+            createExplosion(e, "OOF!", true);
+        }
+
+        currentRoundIndex++;
+        updateStats();
+        nextWord();
+    }
+
+    function updateStats() {
+        scoreDisplay.innerText = score;
+    }
+
+    function showGameOver() {
+        gameContainer.style.display = 'none';
+        endScreen.style.display = 'block';
+        finalScore.innerText = score + " / " + TOTAL_ROUNDS;
+
+        // Beoordeling op basis van score
+        if (score === 10) {
+            rankMessage.innerHTML = "🏆 <strong>RANK: SUPERHERO!</strong> Foutloos! Jij bent een legend.";
+            // Markeer de missie lokaal als succesvol voor de m1t4_little_few.html
+            localStorage.setItem('pickle_p3_completed', 'true');
+        } else if (score >= 7) {
+            rankMessage.innerHTML = "🎖️ <strong>RANK: SIDEKICK.</strong> Goed gedaan! Nog even oefenen voor de 10.";
+            localStorage.setItem('pickle_p3_completed', 'true'); // Optioneel: missie gehaald
+        } else {
+            rankMessage.innerHTML = "⚠️ <strong>RANK: ROOKIE.</strong> Dit was lastig. Bekijk de regels nog een keer!";
+        }
+    }
+
+    function createExplosion(e, message, isError) {
+        const x = e.clientX || window.innerWidth / 2; 
+        const y = e.clientY || window.innerHeight / 2;
+        
+        const flash = document.getElementById('flash');
+        
+        if (isError) {
+            flash.classList.add('flash-red');
+            document.body.classList.add('shake');
+        } else {
+            flash.classList.remove('flash-red');
+        }
+
+        flash.style.opacity = isError ? '0.5' : '0.2';
+        
+        setTimeout(() => { 
+            flash.style.opacity = '0'; 
+            document.body.classList.remove('shake'); 
+        }, 300);
+
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.color = isError ? 'var(--hero-red)' : 'var(--hero-yellow)';
+        txt.style.left = (x - 50) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    // Start de game direct als de pagina laadt
+    window.onload = startGame;
+</script>
+</body>
+</html>
