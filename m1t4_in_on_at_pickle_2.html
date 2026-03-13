@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Preposition Roulette</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #4CAF50;
+            --danger-red: #F44336;
+        }
+
+        * { box-sizing: border-box; touch-action: manipulation; }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white; margin: 0; min-height: 100vh; overflow-x: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 1.2rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow);
+            flex-shrink: 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; letter-spacing: 2px; margin: 0; text-shadow: 2px 2px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.5rem; margin: 5px 0; }
+
+        main { 
+            flex-grow: 1; display: flex; flex-direction: column; 
+            align-items: center; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto;
+        }
+
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .hud-bar {
+            display: flex; justify-content: space-between;
+            background: var(--hero-blue-dark);
+            padding: 10px 20px; border-radius: 25px;
+            margin-bottom: 20px; border: 2px solid var(--hero-cyan);
+            font-family: 'Bangers'; font-size: 1.3rem; width: 100%;
+        }
+
+        /* --- SPINNER --- */
+        .spinner-container {
+            background: #000;
+            border: 4px solid var(--hero-orange);
+            border-radius: 20px;
+            width: 200px;
+            height: 100px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(255, 87, 34, 0.5), 0 5px 15px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .spinner-container:hover { transform: scale(1.05); box-shadow: inset 0 0 30px rgba(255, 87, 34, 0.8), 0 5px 20px rgba(0,0,0,0.7); }
+        .spinner-container.disabled { pointer-events: none; opacity: 0.8; transform: none; }
+        
+        .spinner-text {
+            font-family: 'Bangers';
+            font-size: 3.5rem;
+            color: var(--hero-yellow);
+            text-shadow: 3px 3px 0 #000;
+            letter-spacing: 2px;
+        }
+
+        .spin-anim { animation: slotMachine 0.1s linear infinite; }
+        @keyframes slotMachine { 0% { transform: translateY(-15px); opacity: 0.5; } 50% { transform: translateY(15px); opacity: 1; } 100% { transform: translateY(-15px); opacity: 0.5; } }
+
+        /* --- SENTENCE CARDS --- */
+        .sentences-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .sentence-card {
+            background: var(--hero-blue-dark);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            position: relative;
+            pointer-events: none; /* Disabled until spun */
+            opacity: 0.6;
+        }
+
+        .sentence-card.active {
+            pointer-events: auto;
+            opacity: 1;
+        }
+        .sentence-card.active:hover { background: var(--hero-blue-main); transform: translateX(10px); border-color: var(--hero-yellow); }
+        
+        .sentence-card.correct { background: rgba(76, 175, 80, 0.3); border-color: var(--success-green); box-shadow: 0 0 15px var(--success-green); }
+        .sentence-card.wrong { background: rgba(244, 67, 54, 0.3); border-color: var(--danger-red); box-shadow: 0 0 15px var(--danger-red); }
+
+        .blank {
+            display: inline-block;
+            width: 50px;
+            border-bottom: 3px solid var(--hero-yellow);
+            margin: 0 5px;
+        }
+
+        .btn-opt {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 15px 30px; border-radius: 10px; font-family: 'Bangers', cursive;
+            font-size: 1.5rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 4px solid var(--hero-blue-dark); width: 100%; margin-top: 20px;
+        }
+        .btn-opt:hover { background: var(--hero-cyan); color: var(--hero-blue-dark); }
+
+        .hidden { display: none !important; }
+
+        /* Effects */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers';
+            color: var(--hero-yellow); font-size: 4rem; z-index: 2001;
+            text-shadow: 4px 4px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(1.5) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        @media (min-width: 768px) {
+            .sentences-grid { flex-direction: row; }
+            .sentence-card { flex: 1; text-align: center; }
+            .sentence-card.active:hover { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p style="margin:0; font-size:0.9rem; font-weight:bold; letter-spacing:1px;">PREPOSITION ROULETTE</p>
+</header>
+
+<main>
+    <div id="start-screen" class="briefing-box">
+        <h2>🚨 MISSION BRIEFING</h2>
+        <p style="font-size: 1.1rem; line-height: 1.5; margin: 15px 0;">
+            1. Draai aan het rad om een voorzetsel (IN, ON, AT) te krijgen.<br>
+            2. Klik op de zin waar dit woord perfect in past.<br>
+            3. Wees snel en precies!
+        </p>
+        <button class="btn-opt" onclick="startGame()">START MISSION</button>
+    </div>
+
+    <div id="game-screen" class="hidden" style="width:100%;">
+        <div class="hud-bar">
+            <div>RONDE: <span id="round-display">1</span>/10</div>
+            <div>SCORE: <span id="score-display">0</span></div>
+        </div>
+
+        <div class="spinner-container" id="spinner-btn" onclick="spinWheel()">
+            <div class="spinner-text" id="spinner-text">DRAAI!</div>
+        </div>
+
+        <div style="text-align: center; color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.2rem; margin-bottom: 10px;" id="instruction-text">
+            👆 KLIK OP HET RAD OM TE BEGINNEN!
+        </div>
+
+        <div class="sentences-grid" id="sentences-container">
+            </div>
+
+        <button id="btn-next" class="btn-opt hidden" onclick="nextRound()">VOLGENDE RONDE ➔</button>
+    </div>
+
+    <div id="end-screen" class="briefing-box hidden">
+        <h2>MISSION COMPLETE!</h2>
+        <p style="font-size: 1.2rem;">Je hebt de Roulette overleefd!</p>
+        <div style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow); margin: 10px 0;">SCORE: <span id="final-score">0</span></div>
+        
+        <button id="complete-btn" class="btn-opt" style="background:var(--success-green); border-bottom-color: #2e7d32;" onclick="saveProgress()">✅ MISSIE OPSLAAN</button>
+        <button class="btn-opt" onclick="location.reload()">OPNIEUW SPELEN</button>
+    </div>
+</main>
+
+<script>
+    // Database verdeeld per categorie voor makkelijke selectie
+   // --- DATABASE: IN (50 zinnen - Maanden, Jaren, Seizoenen, Binnenkanten, Landen, etc.) ---
+    const inDB = [
+        {q: "It snows ___ winter."}, {q: "I drink coffee ___ the morning."}, {q: "We go away ___ July."},
+        {q: "He was born ___ 2010."}, {q: "Flowers bloom ___ spring."}, {q: "I'll be back ___ ten minutes."},
+        {q: "We watch TV ___ the evening."}, {q: "It's hot ___ August."}, {q: "Life was hard ___ the 19th century."},
+        {q: "I'll finish my homework ___ an hour."}, {q: "She arrived ___ the afternoon."}, {q: "The project ends ___ 2026."},
+        {q: "I woke up ___ the middle of the night."}, {q: "The leaves fall ___ autumn."}, {q: "They met ___ the 90s."},
+        {q: "I live ___ Amsterdam."}, {q: "The keys are ___ my bag."}, {q: "He's swimming ___ the pool."},
+        {q: "France is ___ Europe."}, {q: "There's milk ___ the fridge."}, {q: "She lives ___ a small flat."},
+        {q: "Wait ___ the car for a minute."}, {q: "Look at that man ___ the photo."}, {q: "I have a coin ___ my pocket."},
+        {q: "The stars are ___ the sky."}, {q: "I'm sitting ___ an armchair."}, {q: "There's a lot of salt ___ the soup."},
+        {q: "He works ___ the city."}, {q: "The kids play ___ the garden."}, {q: "Is there any water ___ the bottle?"},
+        {q: "I read about it ___ the newspaper."}, {q: "We are sitting ___ a row."}, {q: "I saw a big fish ___ the river."},
+        {q: "He is currently ___ prison."}, {q: "She is sleeping ___ bed."}, {q: "There is a fly ___ my coffee."},
+        {q: "I live ___ a quiet village."}, {q: "Who is that girl ___ the picture?"}, {q: "I'm sitting ___ the back of the car."},
+        {q: "Keep that thought ___ your mind."}, {q: "We are stuck ___ a traffic jam."}, {q: "Leave your clothes ___ the closet."},
+        {q: "I found a secret letter ___ the book."}, {q: "Put the beautiful flowers ___ a vase."}, {q: "There is a monster ___ the dark forest."},
+        {q: "I saw a boat ___ the distance."}, {q: "He is standing ___ the living room."}, {q: "I have a lot of money ___ the bank."},
+        {q: "Don't run ___ the classroom."}, {q: "Look at yourself ___ the mirror."}
+    ];
+
+    // --- DATABASE: ON (50 zinnen - Dagen, Data, Oppervlaktes, Vervoer, Media) ---
+    const onDB = [
+        {q: "I have a test ___ Monday."}, {q: "My birthday is ___ 5th May."}, {q: "We go out ___ Fridays."},
+        {q: "Christmas is ___ December 25th."}, {q: "I'll see you ___ New Year's Day."}, {q: "We met ___ a sunny day."},
+        {q: "They arrive ___ Tuesday morning."}, {q: "The party is ___ Saturday night."}, {q: "I was born ___ a Wednesday."},
+        {q: "She left ___ her birthday."}, {q: "I work ___ weekdays."}, {q: "The meeting is ___ the 1st of June."},
+        {q: "I'll call you ___ Thursday."}, {q: "It happened ___ 12th July."}, {q: "I visit my grandma ___ Sundays."},
+        {q: "The book is ___ the table."}, {q: "There's a fly ___ the wall."}, {q: "I'm ___ the bus to school."},
+        {q: "We live ___ the second floor."}, {q: "Sit ___ the floor, please."}, {q: "I saw it ___ TV."},
+        {q: "He has a scar ___ his arm."}, {q: "There's a dark mark ___ the ceiling."}, {q: "I heard the new song ___ the radio."},
+        {q: "I'm ___ the train to Paris."}, {q: "The keys are ___ the shelf."}, {q: "Don't walk ___ the grass."},
+        {q: "I found it ___ the internet."}, {q: "There's a label ___ the bottle."}, {q: "He's riding ___ his bike."},
+        {q: "The shop is ___ the left."}, {q: "I left my bag ___ the bench."}, {q: "They live ___ a beautiful island."},
+        {q: "Put the stamp ___ the envelope."}, {q: "We are flying ___ the plane right now."}, {q: "Look at the menu ___ the board."},
+        {q: "I'm standing ___ the balcony."}, {q: "He is ___ his way home."}, {q: "There is a smudge ___ the window."},
+        {q: "The cat is sleeping ___ the roof."}, {q: "I read it ___ a cool website."}, {q: "She wears a ring ___ her finger."},
+        {q: "The bank is ___ the right."}, {q: "Write it ___ a piece of paper."}, {q: "I saw a funny video ___ YouTube."},
+        {q: "We went for a ride ___ a horse."}, {q: "He is talking ___ the phone."}, {q: "The farm is ___ the coast."},
+        {q: "Please put your cup ___ the coaster."}, {q: "The answer is ___ page 42."}
+    ];
+
+    // --- DATABASE: AT (50 zinnen - Kloktijden, Punten, Evenementen, Feestperiodes) ---
+    const atDB = [
+        {q: "I have a meeting ___ 9 AM."}, {q: "The stars shine ___ night."}, {q: "Lunch is ___ noon."},
+        {q: "The train arrives ___ midnight."}, {q: "We eat ___ lunchtime."}, {q: "I'm busy ___ the moment."},
+        {q: "See you ___ sunset."}, {q: "The movie starts ___ 8:30 PM."}, {q: "He left ___ the end of the day."},
+        {q: "The store opens ___ dawn."}, {q: "We always visit them ___ Easter."}, {q: "See you ___ the weekend."},
+        {q: "She's working ___ present."}, {q: "The sun is hot ___ midday."}, {q: "I woke up ___ exactly 3 o'clock."},
+        {q: "Wait ___ the bus stop."}, {q: "I'll meet you ___ the entrance."}, {q: "Turn left ___ the traffic lights."},
+        {q: "She's sitting ___ her desk."}, {q: "I am ___ school right now."}, {q: "Who is standing ___ the door?"},
+        {q: "We met ___ the airport."}, {q: "Write your name ___ the top."}, {q: "He's waiting ___ the corner."},
+        {q: "I saw him ___ the supermarket."}, {q: "They work ___ a large bank."}, {q: "I'm ___ the doctor's."},
+        {q: "The station is ___ the end of the street."}, {q: "We danced a lot ___ a party."}, {q: "She is studying ___ university."},
+        {q: "I'm staying ___ a nice hotel."}, {q: "Wait for me ___ the bottom of the stairs."}, {q: "I saw a great play ___ the theatre."},
+        {q: "He is looking out ___ the window."}, {q: "I live ___ number 42 High Street."}, {q: "There is someone waiting ___ the gate."},
+        {q: "We ate a lot of cake ___ a wedding."}, {q: "I'll be relaxing ___ home all day."}, {q: "She is asking a question ___ the reception."},
+        {q: "The car is parked ___ the car park."}, {q: "Look ___ the board, please."}, {q: "We are sitting ___ the table eating dinner."},
+        {q: "Throw the ball ___ me!"}, {q: "I bought this fresh bread ___ the baker's."}, {q: "Hand in your papers ___ the end of the test."},
+        {q: "I left my winter coat ___ the office."}, {q: "He arrived ___ the station late."}, {q: "We had a great time ___ the concert."},
+        {q: "Please sign your name ___ the bottom."}, {q: "Meet me ___ the crossroads."}
+    ];
+
+    let currentRound = 1;
+    let score = 0;
+    let currentSentences = [];
+    let targetPreposition = "";
+    let isSpinning = false;
+    let hasSpun = false;
+
+    // Kopieën om uit te putten zonder herhaling
+    let poolIn = [...inDB].sort(() => 0.5 - Math.random());
+    let poolOn = [...onDB].sort(() => 0.5 - Math.random());
+    let poolAt = [...atDB].sort(() => 0.5 - Math.random());
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        loadRound();
+    }
+
+    function loadRound() {
+        hasSpun = false;
+        document.getElementById('round-display').innerText = currentRound;
+        document.getElementById('btn-next').classList.add('hidden');
+        
+        const spinnerBtn = document.getElementById('spinner-btn');
+        const spinnerText = document.getElementById('spinner-text');
+        spinnerBtn.classList.remove('disabled');
+        spinnerText.innerText = "DRAAI!";
+        spinnerText.style.color = "var(--hero-yellow)";
+        document.getElementById('instruction-text').innerText = "👆 KLIK OP HET RAD OM TE BEGINNEN!";
+
+        // Zorg voor genoeg vragen in de pool
+        if(poolIn.length === 0) poolIn = [...inDB].sort(() => 0.5 - Math.random());
+        if(poolOn.length === 0) poolOn = [...onDB].sort(() => 0.5 - Math.random());
+        if(poolAt.length === 0) poolAt = [...atDB].sort(() => 0.5 - Math.random());
+
+        // Pak 1 van elk
+        let sIn = poolIn.pop(); sIn.ans = "IN";
+        let sOn = poolOn.pop(); sOn.ans = "ON";
+        let sAt = poolAt.pop(); sAt.ans = "AT";
+
+        // Shuffle de 3 zinnen
+        currentSentences = [sIn, sOn, sAt].sort(() => 0.5 - Math.random());
+
+        // Render de kaarten (disabled)
+        const container = document.getElementById('sentences-container');
+        container.innerHTML = "";
+        
+        currentSentences.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = "sentence-card";
+            card.innerHTML = item.q.replace("___", "<span class='blank'></span>");
+            card.onclick = () => checkAnswer(item.ans, card);
+            container.appendChild(card);
+        });
+    }
+
+    function spinWheel() {
+        if (isSpinning || hasSpun) return;
+        isSpinning = true;
+        
+        const spinnerBtn = document.getElementById('spinner-btn');
+        const spinnerText = document.getElementById('spinner-text');
+        spinnerText.classList.add('spin-anim');
+        document.getElementById('instruction-text').innerText = "BEZIG MET SCANNEN...";
+
+        const options = ["IN", "ON", "AT"];
+        let spinInterval = setInterval(() => {
+            spinnerText.innerText = options[Math.floor(Math.random() * options.length)];
+        }, 80);
+
+        // Stop na 1.5 seconden
+        setTimeout(() => {
+            clearInterval(spinInterval);
+            spinnerText.classList.remove('spin-anim');
+            
+            // Kies het uiteindelijke doelwit
+            targetPreposition = options[Math.floor(Math.random() * options.length)];
+            spinnerText.innerText = targetPreposition;
+            spinnerText.style.color = "#fff";
+            
+            isSpinning = false;
+            hasSpun = true;
+            spinnerBtn.classList.add('disabled'); // Rad mag niet meer geklikt worden
+
+            // Maak zinnen actief
+            document.getElementById('instruction-text').innerText = `👇 KLIK OP DE ZIN WAAR '${targetPreposition}' IN PAST!`;
+            document.querySelectorAll('.sentence-card').forEach(card => card.classList.add('active'));
+            
+            triggerExplosion(null, "ZOEK!");
+        }, 1500);
+    }
+
+    function checkAnswer(chosenPrep, cardEl) {
+        if (!hasSpun) return; // Kan niet klikken zonder te draaien
+
+        // Maak alle kaarten onklikbaar
+        document.querySelectorAll('.sentence-card').forEach(c => c.classList.remove('active'));
+
+        if (chosenPrep === targetPreposition) {
+            // GOED
+            score += 10;
+            document.getElementById('score-display').innerText = score;
+            cardEl.classList.add('correct');
+            
+            // Vul het woord in
+            cardEl.innerHTML = cardEl.innerHTML.replace("<span class=\"blank\"></span>", `<span style="color:var(--hero-yellow); font-weight:bold;">${targetPreposition}</span>`);
+            
+            triggerExplosion(event, "BOOM!");
+            document.getElementById('instruction-text').innerText = "✅ PERFECT GEDAAN!";
+        } else {
+            // FOUT
+            cardEl.classList.add('wrong');
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 300);
+            
+            // Laat zien welke het wél was
+            document.querySelectorAll('.sentence-card').forEach((c, index) => {
+                if (currentSentences[index].ans === targetPreposition) {
+                    c.style.border = "2px dashed var(--success-green)";
+                    c.innerHTML = c.innerHTML.replace("<span class=\"blank\"></span>", `<span style="color:var(--success-green); font-weight:bold;">${targetPreposition}</span>`);
+                }
+            });
+            document.getElementById('instruction-text').innerText = "❌ HELAAS, DAT WAS HEM NIET!";
+        }
+
+        document.getElementById('btn-next').classList.remove('hidden');
+    }
+
+    function nextRound() {
+        if (currentRound >= 10) {
+            endGame();
+        } else {
+            currentRound++;
+            loadRound();
+        }
+    }
+
+    function endGame() {
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+    }
+
+    function saveProgress() {
+        // Sla op onder de naam 'roulette_mission'
+        localStorage.setItem('roulette_mission', 'completed');
+        const btn = document.getElementById('complete-btn');
+        btn.innerText = "GEREGISTREERD! 💾";
+        btn.disabled = true;
+        btn.style.opacity = "0.7";
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function triggerExplosion(e, message) {
+        const x = e ? e.clientX : window.innerWidth / 2; 
+        const y = e ? e.clientY : window.innerHeight / 2;
+        
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        setTimeout(() => flash.style.opacity = '0', 150);
+        
+        const txt = document.createElement('div');
+        txt.className = 'boom-text'; 
+        txt.innerText = message;
+        txt.style.left = (x - 60) + 'px'; 
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+</script>
+</body>
+</html>
