@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Meteor Defender</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #4CAF50;
+            --danger-red: #F44336;
+        }
+
+        * { box-sizing: border-box; touch-action: manipulation; }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white; margin: 0; height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 0.8rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow);
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 1.8rem; letter-spacing: 2px; margin: 0; text-shadow: 2px 2px 0px var(--hero-blue-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.3rem; margin: 5px 0; }
+
+        main { 
+            flex-grow: 1; display: flex; flex-direction: column; 
+            align-items: center; padding: 10px; width: 100%; max-width: 800px; margin: 0 auto;
+            position: relative;
+        }
+
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 100%;
+        }
+
+        .hud-bar {
+            display: flex; justify-content: space-between;
+            background: rgba(0,0,0,0.8);
+            padding: 8px 15px; border-radius: 15px;
+            margin-bottom: 10px; border: 2px solid var(--hero-orange);
+            font-family: 'Bangers'; font-size: 1.2rem; width: 100%;
+            z-index: 50;
+        }
+        .lives-display { color: var(--danger-red); letter-spacing: 2px; }
+
+        #game-area {
+            flex-grow: 1; width: 100%; position: relative;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==');
+            overflow: hidden; border-radius: 15px; border: 2px solid rgba(255,255,255,0.1);
+            border-bottom: 4px solid var(--danger-red); /* Visual ground indicator */
+        }
+
+        .meteor {
+            position: absolute; 
+            width: 85%; max-width: 280px; 
+            background: radial-gradient(circle at 30% 30%, #4a4e69, #2c3e50 60%, #1a1a2e);
+            border-radius: 40px; display: flex; align-items: center; justify-content: center;
+            font-family: 'Lexend', sans-serif; font-weight: 700; font-size: 0.95rem; 
+            color: #fff; text-shadow: 1px 1px 2px #000; line-height: 1.3;
+            text-align: center; padding: 12px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            border: 2px solid #5c6bc0;
+            z-index: 10;
+        }
+        .meteor::after {
+            content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 16px; background: var(--hero-orange);
+            filter: blur(10px); border-radius: 50%; opacity: 0.8;
+        }
+
+        .laser-beam {
+            position: absolute; bottom: 0; width: 12px; background: var(--hero-cyan);
+            border-radius: 10px; box-shadow: 0 0 20px var(--hero-cyan), 0 0 40px #fff;
+            z-index: 5; display: none;
+        }
+
+        .controls-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+            width: 100%; margin-top: 10px; z-index: 50;
+        }
+
+        .btn-laser {
+            background: var(--hero-blue-main); color: white; border: none;
+            padding: 15px; border-radius: 10px; font-family: 'Bangers', cursive;
+            font-size: 1.6rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 4px solid var(--hero-blue-dark);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+        .btn-laser:active { transform: translateY(4px); border-bottom-width: 0px; }
+        .btn-laser#btn-in { border-color: #01579b; }
+        .btn-laser#btn-on { background: var(--hero-yellow); color: #000; border-color: #f57f17; text-shadow: none; }
+        .btn-laser#btn-at { background: var(--hero-cyan); color: #000; border-color: #0097a7; text-shadow: none; }
+
+        .feedback-msg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Bangers'; font-size: 3rem; text-shadow: 4px 4px 0 #000;
+            display: none; z-index: 100; pointer-events: none;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Animations */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers';
+            color: var(--hero-yellow); font-size: 3rem; z-index: 2001;
+            text-shadow: 3px 3px 0px #000; animation: boomAnim 0.5s ease-out forwards;
+        }
+        @keyframes boomAnim { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p style="margin:0; font-size:0.8rem; font-weight:bold; letter-spacing:1px;">METEOR DEFENDER</p>
+</header>
+
+<main>
+    <div id="start-screen" class="briefing-box">
+        <h2>🚨 MISSION BRIEFING</h2>
+        <p style="font-size: 1rem; line-height: 1.5; margin: 10px 0;">
+            Read the sentence on the falling pod.<br>
+            Fire the correct laser (**IN**, **ON**, or **AT**) to complete it and destroy the pod!<br>
+            Don't let them hit the ground (❤️)!
+        </p>
+        <button class="btn-laser" style="padding: 12px 40px; font-size: 1.3rem;" onclick="startGame()">START DEFENSE</button>
+    </div>
+
+    <div id="game-screen" class="hidden" style="display: flex; flex-direction: column; width:100%; height:100%;">
+        <div class="hud-bar">
+            <div>SCORE: <span id="score-display">0</span></div>
+            <div class="lives-display" id="lives-display">❤️❤️❤️</div>
+        </div>
+
+        <div id="game-area">
+            <div class="laser-beam" id="laser"></div>
+            <div class="feedback-msg" id="central-feedback">WRONG!</div>
+        </div>
+
+        <div class="controls-grid">
+            <button class="btn-laser" id="btn-in" onclick="fireLaser('in')">IN</button>
+            <button class="btn-laser" id="btn-on" onclick="fireLaser('on')">ON</button>
+            <button class="btn-laser" id="btn-at" onclick="fireLaser('at')">AT</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="briefing-box hidden">
+        <h2>MISSION FAILED!</h2>
+        <p style="font-size: 1.1rem;">The base was destroyed...</p>
+        <div style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin: 10px 0;">FINAL SCORE: <span id="final-score">0</span></div>
+        
+        <button id="complete-btn" class="btn-laser" style="background:var(--success-green); width:100%; border-bottom-color: #2e7d32; margin-bottom:10px;" onclick="saveProgress()">✅ SAVE MISSION</button>
+        <button class="btn-laser" style="width:100%;" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+</main>
+
+<script>
+    const meteorDB = [
+        // --- IN ---
+        {q: "It snows ___ winter.", c: "in"}, {q: "I drink coffee ___ the morning.", c: "in"}, {q: "We go away ___ July.", c: "in"},
+        {q: "He was born ___ 2010.", c: "in"}, {q: "Flowers bloom ___ spring.", c: "in"}, {q: "I'll be back ___ ten minutes.", c: "in"},
+        {q: "We watch TV ___ the evening.", c: "in"}, {q: "It's hot ___ August.", c: "in"}, {q: "Life was hard ___ the 19th century.", c: "in"},
+        {q: "I'll finish it ___ an hour.", c: "in"}, {q: "She arrived ___ the afternoon.", c: "in"}, {q: "The project ends ___ 2026.", c: "in"},
+        {q: "I woke up ___ the middle of the night.", c: "in"}, {q: "The leaves fall ___ autumn.", c: "in"}, {q: "They met ___ the 90s.", c: "in"},
+        {q: "I live ___ Amsterdam.", c: "in"}, {q: "The keys are ___ my bag.", c: "in"}, {q: "He's swimming ___ the pool.", c: "in"},
+        {q: "France is ___ Europe.", c: "in"}, {q: "There's milk ___ the fridge.", c: "in"}, {q: "She lives ___ a small flat.", c: "in"},
+        {q: "Wait ___ the car for a minute.", c: "in"}, {q: "Look at that man ___ the photo.", c: "in"}, {q: "I have a coin ___ my pocket.", c: "in"},
+        {q: "The stars are ___ the sky.", c: "in"}, {q: "I'm sitting ___ an armchair.", c: "in"}, {q: "There's a lot of salt ___ the soup.", c: "in"},
+        {q: "He works ___ the city.", c: "in"}, {q: "The kids play ___ the garden.", c: "in"}, {q: "Is there any water ___ the bottle?", c: "in"},
+        {q: "I read about it ___ the newspaper.", c: "in"}, {q: "We are sitting ___ a row.", c: "in"}, {q: "I saw a big fish ___ the river.", c: "in"},
+        {q: "He is currently ___ prison.", c: "in"}, {q: "She is sleeping ___ bed.", c: "in"}, {q: "There is a fly ___ my coffee.", c: "in"},
+        {q: "I live ___ a quiet village.", c: "in"}, {q: "Who is that girl ___ the picture?", c: "in"}, {q: "I'm sitting ___ the back of the car.", c: "in"},
+        {q: "Keep that thought ___ your mind.", c: "in"}, {q: "We are stuck ___ a traffic jam.", c: "in"}, {q: "Leave your clothes ___ the closet.", c: "in"},
+        {q: "I found a letter ___ the book.", c: "in"}, {q: "Put the flowers ___ a vase.", c: "in"}, {q: "There is a monster ___ the forest.", c: "in"},
+        {q: "I saw a boat ___ the distance.", c: "in"}, {q: "He is standing ___ the living room.", c: "in"}, {q: "I have money ___ the bank.", c: "in"},
+        {q: "Don't run ___ the classroom.", c: "in"}, {q: "Look at yourself ___ the mirror.", c: "in"},
+
+        // --- ON ---
+        {q: "I have a test ___ Monday.", c: "on"}, {q: "My birthday is ___ 5th May.", c: "on"}, {q: "We go out ___ Fridays.", c: "on"},
+        {q: "Christmas is ___ December 25th.", c: "on"}, {q: "See you ___ New Year's Day.", c: "on"}, {q: "We met ___ a sunny day.", c: "on"},
+        {q: "They arrive ___ Tuesday morning.", c: "on"}, {q: "The party is ___ Saturday night.", c: "on"}, {q: "I was born ___ a Wednesday.", c: "on"},
+        {q: "She left ___ her birthday.", c: "on"}, {q: "I work ___ weekdays.", c: "on"}, {q: "The meeting is ___ the 1st of June.", c: "on"},
+        {q: "I'll call you ___ Thursday.", c: "on"}, {q: "It happened ___ 12th July.", c: "on"}, {q: "I visit my grandma ___ Sundays.", c: "on"},
+        {q: "The book is ___ the table.", c: "on"}, {q: "There's a fly ___ the wall.", c: "on"}, {q: "I'm ___ the bus to school.", c: "on"},
+        {q: "We live ___ the second floor.", c: "on"}, {q: "Sit ___ the floor, please.", c: "on"}, {q: "I saw it ___ TV.", c: "on"},
+        {q: "He has a scar ___ his arm.", c: "on"}, {q: "There's a mark ___ the ceiling.", c: "on"}, {q: "I heard the song ___ the radio.", c: "on"},
+        {q: "I'm ___ the train to Paris.", c: "on"}, {q: "The keys are ___ the shelf.", c: "on"}, {q: "Don't walk ___ the grass.", c: "on"},
+        {q: "I found it ___ the internet.", c: "on"}, {q: "There's a label ___ the bottle.", c: "on"}, {q: "He's riding ___ his bike.", c: "on"},
+        {q: "The shop is ___ the left.", c: "on"}, {q: "I left my bag ___ the bench.", c: "on"}, {q: "They live ___ an island.", c: "on"},
+        {q: "Put the stamp ___ the envelope.", c: "on"}, {q: "We are flying ___ the plane.", c: "on"}, {q: "Look at the menu ___ the board.", c: "on"},
+        {q: "I'm standing ___ the balcony.", c: "on"}, {q: "He is ___ his way home.", c: "on"}, {q: "There is a smudge ___ the window.", c: "on"},
+        {q: "The cat is sleeping ___ the roof.", c: "on"}, {q: "I read it ___ a website.", c: "on"}, {q: "She wears a ring ___ her finger.", c: "on"},
+        {q: "The bank is ___ the right.", c: "on"}, {q: "Write it ___ a piece of paper.", c: "on"}, {q: "I saw a video ___ YouTube.", c: "on"},
+        {q: "We went for a ride ___ a horse.", c: "on"}, {q: "He is talking ___ the phone.", c: "on"}, {q: "The farm is ___ the coast.", c: "on"},
+        {q: "Put your cup ___ the coaster.", c: "on"}, {q: "The answer is ___ page 42.", c: "on"},
+
+        // --- AT ---
+        {q: "I have a meeting ___ 9 AM.", c: "at"}, {q: "The stars shine ___ night.", c: "at"}, {q: "Lunch is ___ noon.", c: "at"},
+        {q: "The train arrives ___ midnight.", c: "at"}, {q: "We eat ___ lunchtime.", c: "at"}, {q: "I'm busy ___ the moment.", c: "at"},
+        {q: "See you ___ sunset.", c: "at"}, {q: "The movie starts ___ 8:30 PM.", c: "at"}, {q: "He left ___ the end of the day.", c: "at"},
+        {q: "The store opens ___ dawn.", c: "at"}, {q: "We visit them ___ Easter.", c: "at"}, {q: "See you ___ the weekend.", c: "at"},
+        {q: "She's working ___ present.", c: "at"}, {q: "The sun is hot ___ midday.", c: "at"}, {q: "I woke up ___ 3 o'clock.", c: "at"},
+        {q: "Wait ___ the bus stop.", c: "at"}, {q: "I'll meet you ___ the entrance.", c: "at"}, {q: "Turn left ___ the traffic lights.", c: "at"},
+        {q: "She's sitting ___ her desk.", c: "at"}, {q: "I am ___ school right now.", c: "at"}, {q: "Who is standing ___ the door?", c: "at"},
+        {q: "We met ___ the airport.", c: "at"}, {q: "Write your name ___ the top.", c: "at"}, {q: "He's waiting ___ the corner.", c: "at"},
+        {q: "I saw him ___ the supermarket.", c: "at"}, {q: "They work ___ a large bank.", c: "at"}, {q: "I'm ___ the doctor's.", c: "at"},
+        {q: "The station is ___ the end.", c: "at"}, {q: "We danced a lot ___ a party.", c: "at"}, {q: "She is studying ___ university.", c: "at"},
+        {q: "I'm staying ___ a nice hotel.", c: "at"}, {q: "Wait ___ the bottom of the stairs.", c: "at"}, {q: "I saw a play ___ the theatre.", c: "at"},
+        {q: "He is looking out ___ the window.", c: "at"}, {q: "I live ___ number 42 High Street.", c: "at"}, {q: "Someone is waiting ___ the gate.", c: "at"},
+        {q: "We ate cake ___ a wedding.", c: "at"}, {q: "I'll be relaxing ___ home all day.", c: "at"}, {q: "She is ___ the reception.", c: "at"},
+        {q: "The car is parked ___ the car park.", c: "at"}, {q: "Look ___ the board, please.", c: "at"}, {q: "We are sitting ___ the table.", c: "at"},
+        {q: "Throw the ball ___ me!", c: "at"}, {q: "I bought bread ___ the baker's.", c: "at"}, {q: "Hand in papers ___ the end.", c: "at"},
+        {q: "I left my coat ___ the office.", c: "at"}, {q: "He arrived ___ the station late.", c: "at"}, {q: "We had a great time ___ the concert.", c: "at"},
+        {q: "Please sign ___ the bottom.", c: "at"}, {q: "Meet me ___ the crossroads.", c: "at"}
+    ];
+
+    let gameState = {
+        score: 0, 
+        lives: 3, 
+        speed: 1.2, // Start speed
+        currentMeteor: null, 
+        loop: null, 
+        active: false
+    };
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        gameState.active = true;
+        
+        spawnMeteor();
+        requestAnimationFrame(gameLoop);
+    }
+
+    function gameLoop() {
+        if (!gameState.active) return;
+        
+        const areaHeight = document.getElementById('game-area').offsetHeight;
+        
+        if (gameState.currentMeteor) {
+            let m = gameState.currentMeteor;
+            m.y += gameState.speed;
+            m.el.style.transform = `translateY(${m.y}px)`;
+
+            // Als hij de bodem raakt
+            if (m.y + m.height >= areaHeight) {
+                handleMiss();
+            }
+        }
+        
+        gameState.loop = requestAnimationFrame(gameLoop);
+    }
+
+    function spawnMeteor() {
+        if (!gameState.active) return;
+        
+        const area = document.getElementById('game-area');
+        const data = meteorDB[Math.floor(Math.random() * meteorDB.length)];
+        
+        const meteorEl = document.createElement('div');
+        meteorEl.className = 'meteor';
+        
+        meteorEl.innerHTML = data.q.replace("___", "<span style='color:var(--hero-yellow);'>...</span>"); 
+        
+        meteorEl.style.top = '0px'; 
+        area.appendChild(meteorEl);
+        
+        const mWidth = meteorEl.offsetWidth;
+        const mHeight = meteorEl.offsetHeight;
+        
+        const maxX = Math.max(0, area.offsetWidth - mWidth - 10);
+        const xPos = Math.random() * maxX;
+        meteorEl.style.left = xPos + 'px';
+        
+        const startY = -mHeight - 20; 
+        meteorEl.style.transform = `translateY(${startY}px)`;
+
+        gameState.currentMeteor = { el: meteorEl, prep: data.c, y: startY, x: xPos, width: mWidth, height: mHeight };
+    }
+
+    function fireLaser(prep) {
+        if (!gameState.active || !gameState.currentMeteor) return;
+
+        const targetMeteor = gameState.currentMeteor;
+        
+        // Teken de laserstraal
+        const laserEl = document.getElementById('laser');
+        const areaHeight = document.getElementById('game-area').offsetHeight;
+        laserEl.style.left = (targetMeteor.x + (targetMeteor.width / 2) - 6) + 'px';
+        laserEl.style.height = (areaHeight - (targetMeteor.y + (targetMeteor.height / 2))) + 'px';
+        laserEl.style.display = 'block';
+        setTimeout(() => laserEl.style.display = 'none', 100);
+
+        if (prep === targetMeteor.prep) {
+            handleHit();
+        } else {
+            handleWrongShot();
+        }
+    }
+
+    function handleHit() {
+        gameState.score += 10;
+        document.getElementById('score-display').innerText = gameState.score;
+        
+        // Maak het spel iets sneller bij elk goed antwoord (max snelheid 5.0)
+        if (gameState.speed < 5.0) {
+            gameState.speed += 0.08; 
+        }
+
+        const area = document.getElementById('game-area');
+        const rect = area.getBoundingClientRect();
+        let m = gameState.currentMeteor;
+        
+        createExplosion(m.x + rect.left + (m.width / 2), m.y + rect.top + (m.height / 2), "BOOM!");
+        
+        m.el.remove();
+        gameState.currentMeteor = null;
+
+        // Korte pauze voordat de volgende verschijnt
+        setTimeout(spawnMeteor, 200);
+    }
+
+    function handleMiss() {
+        gameState.lives--;
+        updateLivesHud();
+        document.body.classList.add('shake');
+        triggerFlash();
+        
+        const feedback = document.getElementById('central-feedback');
+        feedback.innerText = "❤️ LIFE LOST!";
+        feedback.style.color = "var(--danger-red)";
+        feedback.style.display = "block";
+        setTimeout(() => feedback.style.display = "none", 800);
+        
+        gameState.currentMeteor.el.remove();
+        gameState.currentMeteor = null;
+        setTimeout(() => document.body.classList.remove('shake'), 300);
+
+        if (gameState.lives <= 0) {
+            endGame();
+        } else {
+            setTimeout(spawnMeteor, 500);
+        }
+    }
+
+    function handleWrongShot() {
+        document.getElementById('game-screen').classList.add('shake');
+        const feedback = document.getElementById('central-feedback');
+        feedback.innerText = "MISS!";
+        feedback.style.color = "var(--hero-orange)";
+        feedback.style.display = "block";
+        
+        setTimeout(() => {
+            document.getElementById('game-screen').classList.remove('shake');
+            feedback.style.display = "none";
+        }, 300);
+    }
+
+    function updateLivesHud() {
+        let hearts = "";
+        for (let i = 0; i < gameState.lives; i++) hearts += "❤️";
+        for (let i = 0; i < (3 - gameState.lives); i++) hearts += "🖤";
+        document.getElementById('lives-display').innerText = hearts;
+    }
+
+    function endGame() {
+        gameState.active = false;
+        cancelAnimationFrame(gameState.loop);
+        
+        document.getElementById('game-area').style.display = 'none';
+        document.querySelector('.controls-grid').style.display = 'none';
+        document.querySelector('.hud-bar').style.display = 'none';
+        
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = gameState.score;
+        
+        if (gameState.currentMeteor) {
+            gameState.currentMeteor.el.remove();
+            gameState.currentMeteor = null;
+        }
+    }
+
+    function saveProgress() {
+        localStorage.setItem('meteor_defender', 'completed'); 
+        const btn = document.getElementById('complete-btn');
+        btn.innerText = "SAVED! 💾";
+        btn.disabled = true;
+        btn.style.opacity = "0.7";
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function triggerFlash() {
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.5';
+        setTimeout(() => flash.style.opacity = '0', 150);
+    }
+
+    function createExplosion(x, y, message) {
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 60) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+        
+        confetti({
+            particleCount: 20, spread: 50, startVelocity: 15,
+            colors: ['#ff5722', '#ffb703', '#fff'],
+            origin: { x: x / window.innerWidth, y: y / window.innerHeight },
+            zIndex: 3000
+        });
+    }
+
+    // Keyboard support (Voor Chromebooks)
+    document.addEventListener('keydown', (e) => {
+        if (!gameState.active) return;
+        if (e.key.toLowerCase() === 'i' || e.key === '1') fireLaser('in');
+        if (e.key.toLowerCase() === 'o' || e.key === '2') fireLaser('on');
+        if (e.key.toLowerCase() === 'a' || e.key === '3') fireLaser('at');
+    });
+</script>
+
+</body>
+</html>
