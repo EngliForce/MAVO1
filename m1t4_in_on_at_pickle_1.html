@@ -1,18 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preposition Trials | EngliForce Academy</title>
+    <title>Time Preposition Trials | EngliForce Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* EngliForce Header Colors */
             --hero-blue-main: #0288d1;
             --hero-blue-dark: #01579b;
             --hero-yellow: #ffb703;
-            
-            /* Original Star Wars Theme Colors */
             --jedi-blue: #00d2ff;
             --sith-red: #ff003c;
             --lightsaber-color: #39ff14;
@@ -24,44 +21,23 @@
 
         body {
             background: var(--space-black);
-            background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-                               radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.05), transparent);
+            background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), 
+                              radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.05), transparent);
             color: #fff; font-family: 'Segoe UI', sans-serif;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
             min-height: 100vh; margin: 0; overflow: hidden;
         }
 
-        /* --- DE ENGLIFORCE HEADER --- */
         header {
             background: var(--hero-blue-main);
-            width: 100%;
-            padding: 1.5rem 1rem 2.5rem 1rem;
-            text-align: center;
+            width: 100%; padding: 1.5rem 1rem 2.5rem 1rem; text-align: center;
             clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
             border-bottom: 5px solid var(--hero-yellow);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            flex-shrink: 0;
-            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
         }
 
-        header h1 {
-            font-family: 'Bangers', cursive;
-            font-size: 3rem;
-            letter-spacing: 3px;
-            margin: 0;
-            color: white;
-            text-shadow: 4px 4px 0px var(--hero-blue-dark);
-        }
-
-        header p {
-            font-family: 'Lexend', sans-serif;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-top: 5px;
-            margin-bottom: 0;
-            color: white;
-        }
-        /* ---------------------------- */
+        header h1 { font-family: 'Bangers', cursive; font-size: 3rem; letter-spacing: 3px; margin: 0; color: white; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
+        header p { font-family: 'Lexend', sans-serif; font-weight: bold; letter-spacing: 2px; margin-top: 5px; color: white; }
 
         @keyframes shake {
             0%, 100% { transform: translate(0, 0); }
@@ -74,20 +50,14 @@
             width: 90vw; max-width: 850px; background: var(--glass);
             backdrop-filter: blur(20px); border: 1px solid rgba(0, 210, 255, 0.3);
             border-radius: 24px; padding: 40px 30px 20px 30px; text-align: center;
-            position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            margin: auto; /* Zorgt dat hij perfect in het midden staat onder de header */
-        }
-
-        .app-title {
-            font-size: 1rem; font-weight: 900; letter-spacing: 5px;
-            color: #fff; text-transform: uppercase; margin-bottom: 10px; opacity: 0.6;
+            position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin: auto;
         }
 
         .nav-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px; }
         .rank-tag { color: var(--lightsaber-color); font-weight: 900; text-shadow: 0 0 10px var(--lightsaber-color); letter-spacing: 1px; }
 
         .saber-wrapper { display: flex; align-items: center; margin: 25px 0; }
-        .hilt { width: 65px; height: 30px; background: linear-gradient(to bottom, #95a5a6, #2c3e50, #95a5a6); border-radius: 6px 2px 2px 6px; border-right: 8px solid #111; box-shadow: 5px 0 15px rgba(0,0,0,0.7); }
+        .hilt { width: 65px; height: 30px; background: linear-gradient(to bottom, #95a5a6, #2c3e50, #95a5a6); border-radius: 6px 2px 2px 6px; border-right: 8px solid #111; }
         .saber-container { flex-grow: 1; height: 18px; background: #000; border-radius: 0 12px 12px 0; overflow: hidden; border: 1px solid #333; }
         #progress-bar { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 25px var(--lightsaber-color); transition: 1s ease; }
 
@@ -97,7 +67,6 @@
             background: radial-gradient(circle at 30% 30%, #888, #444 60%, #222);
             clip-path: polygon(20% 0%, 80% 0%, 100% 30%, 100% 70%, 80% 100%, 20% 100%, 0% 70%, 0% 30%);
             cursor: pointer; transition: 0.4s; display: flex; align-items: center; justify-content: center;
-            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.5), 5px 10px 20px rgba(0,0,0,0.4);
             animation: float 4s infinite ease-in-out;
         }
 
@@ -106,16 +75,12 @@
             box-shadow: 0 0 40px var(--lightsaber-color); transform: scale(1.2); z-index: 10;
             clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
         }
-        .stone.revealed.legendary {
-            background: linear-gradient(135deg, #fff, var(--legendary-purple) 60%, #3a005c);
-            box-shadow: 0 0 50px var(--legendary-purple);
-        }
+        .stone.revealed.legendary { background: linear-gradient(135deg, #fff, var(--legendary-purple) 60%, #3a005c); box-shadow: 0 0 50px var(--legendary-purple); }
 
         .stone.missed {
             background: linear-gradient(135deg, #e0e0e0, #a0a0a0);
             opacity: 0.9; cursor: default; animation: none;
             clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
-            box-shadow: inset 2px 2px 5px rgba(255,255,255,0.8);
         }
         .stone.missed .val { color: #111 !important; text-shadow: none !important; opacity: 1 !important; }
 
@@ -127,11 +92,7 @@
         }
         button.opt:hover:not(:disabled) { background: var(--accent-color); color: #000; }
 
-        .copyright {
-            margin-top: 40px; font-size: 0.75rem; opacity: 0.3; letter-spacing: 2px;
-            border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;
-        }
-
+        .copyright { margin-top: 40px; font-size: 0.75rem; opacity: 0.3; letter-spacing: 2px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .hidden { display: none !important; }
     </style>
@@ -140,7 +101,7 @@
 
     <header>
         <h1>ENGLIFORCE ACADEMY</h1>
-        <p>PREPOSITION TRIALS</p>
+        <p>TIME PREPOSITION TRIALS</p>
     </header>
 
     <div id="app-window">
@@ -150,24 +111,23 @@
         </div>
 
         <div id="start-screen">
-            <h1 style="font-size: 2.5rem; color: var(--jedi-blue); margin-top: 0; font-family: 'Segoe UI', sans-serif;">THE TRIALS</h1>
-            <p>Master the prepositions of the Galaxy (In, On, At) and forge your destiny.</p>
-            <button onclick="startGame()" style="background:var(--jedi-blue); border:none; color:#000; padding: 18px 50px; border-radius: 40px; font-weight: 900; cursor: pointer; margin-top: 20px; font-size: 1rem;">I AM READY</button>
+            <h1 style="font-size: 2.5rem; color: var(--jedi-blue); margin-top: 0;">TIME TRIALS</h1>
+            <p>Master In, On and At (Time Edition) to forge your destiny.</p>
+            <button onclick="startGame()" style="background:var(--jedi-blue); border:none; color:#000; padding: 18px 50px; border-radius: 40px; font-weight: 900; cursor: pointer; margin-top: 20px;">I AM READY</button>
         </div>
 
         <div id="game-screen" class="hidden">
             <div class="saber-wrapper"><div class="hilt"></div><div class="saber-container"><div id="progress-bar"></div></div></div>
-            <h2 id="question-text" style="min-height: 70px; margin: 0 0 20px 0; font-family: 'Segoe UI', sans-serif;"></h2>
+            <h2 id="question-text" style="min-height: 70px; margin: 0 0 20px 0;"></h2>
             <div id="options" class="options-grid"></div>
 
             <div id="stone-zone" class="hidden">
                 <p style="color: var(--jedi-blue); font-weight: 900; letter-spacing: 2px; font-size: 0.8rem;">TRUST YOUR INSTINCTS</p>
                 <div class="stone-container" id="stone-list"></div>
             </div>
-            
+                        
             <div id="feedback-msg" style="margin-top: 25px; min-height: 60px;">
                 <div id="main-feedback" style="font-weight: 900; font-size: 1.3rem;"></div>
-                <div id="sub-feedback" style="font-style: italic; opacity: 0.8; margin-top: 5px;"></div>
             </div>
         </div>
 
@@ -175,7 +135,7 @@
     </div>
 
 <script>
-       const timeDB = [
+    const timeDB = [
     // AT (Tijdstippen, specifieke momenten, feestperiodes)
     { q: "I have a meeting ___ 9 AM.", c: "at" },
     { q: "The shop closes ___ midnight.", c: "at" },
@@ -332,19 +292,14 @@
     { q: "I'll be ready ___ a second.", c: "in" },
     { q: "We lived there ___ the 90s.", c: "in" }
 ];
-    
-    while(database.length < 150) {
-        database.push(...database.slice(0, 50));
-    }
 
     let questions = [];
     let current = 0; let score = 0;
     const ranks = ["YOUNGLING", "PADAWAN", "JEDI KNIGHT", "JEDI MASTER"];
 
     function startGame() {
-        questions = database.sort(() => 0.5 - Math.random()).slice(0, 10);
-        current = 0;
-        score = 0;
+        questions = timeDB.sort(() => 0.5 - Math.random()).slice(0, 10);
+        current = 0; score = 0;
         document.getElementById('score-label').innerText = "0 KYBER CRYSTALS";
         document.getElementById('rank-tag').innerText = "YOUNGLING";
         document.getElementById('start-screen').classList.add('hidden');
@@ -358,7 +313,6 @@
         document.getElementById('question-text').innerText = questions[current].q;
         document.getElementById('stone-zone').classList.add('hidden');
         document.getElementById('main-feedback').innerText = "";
-        document.getElementById('sub-feedback').innerText = "";
         document.getElementById('options').classList.remove('hidden');
         
         const opts = ["in", "on", "at"];
@@ -385,7 +339,7 @@
         list.innerHTML = "";
 
         let pool = [];
-        let available = Array.from({length: 14}, (_, i) => i + 2);
+        let available = Array.from({length: 14}, (_, i) => i + 2); // Waardes 2 t/m 15
         for(let i=0; i<5; i++) {
             let rIdx = Math.floor(Math.random() * available.length);
             pool.push(available.splice(rIdx, 1)[0]);
@@ -410,7 +364,7 @@
                 } else {
                     document.getElementById('main-feedback').innerText = `+${val} KYBER CRYSTALS`;
                 }
-                
+
                 all.forEach(s => {
                     s.onclick = null;
                     if (!s.classList.contains('revealed')) {
@@ -418,7 +372,7 @@
                         s.querySelector('.val').style.display = 'block';
                     }
                 });
-                
+
                 score += val;
                 document.getElementById('score-label').innerText = `${score} KYBER CRYSTALS`;
                 document.getElementById('rank-tag').innerText = ranks[Math.min(Math.floor(score/40), 3)];
@@ -432,7 +386,7 @@
 
     function endGame() {
         document.getElementById('game-screen').innerHTML = `
-            <h1 style="margin-top:0; font-family:'Segoe UI', sans-serif;">TRIALS COMPLETE</h1>
+            <h1 style="margin-top:0;">TRIALS COMPLETE</h1>
             <h2>FINAL RANK: ${document.getElementById('rank-tag').innerText}</h2>
             <div style="font-size:5rem; color:var(--lightsaber-color); text-shadow: 0 0 20px var(--lightsaber-color);">${score}</div>
             <p>Kyber Crystals secured.</p>
