@@ -16,6 +16,10 @@
             --page-badge-bg: #EAF4F4;
             --fixed-color: #E07A5F;
             --growth-color: #81B29A;
+            --geel-zelfvertrouwen: #FFD700;
+            --blauw-motivatie: #0077B6;
+            --paars-acceptatie: #8E44AD;
+            --roze-presteren: #FF69B4;
         }
 
         body {
@@ -28,9 +32,9 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
-            font-size: clamp(26px, 3.5vh, 40px);
-            line-height: 1.5;
+            width: 100vw;
+            overflow: hidden; /* Voorkomt scrollen op de hele pagina */
+            line-height: 1.4;
         }
 
         .container {
@@ -39,7 +43,7 @@
             height: 94vh;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            padding: 40px;
+            padding: 3vh 4vw;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -48,31 +52,79 @@
 
         .page-badge {
             position: absolute;
-            top: 20px;
-            right: 30px;
+            top: 2vh;
+            right: 2vw;
             background-color: var(--page-badge-bg);
             color: var(--primary-color);
-            padding: 10px 25px;
+            padding: 1vh 2vw;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 1.6rem;
+            font-size: clamp(1rem, 2vh, 1.6rem);
             border: 2px solid var(--accent-color);
             z-index: 10;
         }
 
-        .progress-bar { height: 12px; background-color: var(--accent-color); border-radius: 6px; margin-bottom: 20px; overflow: hidden; flex-shrink: 0; }
+        /* Navigatie en Progressie: Vaste hoogtes zodat ze niet wegdrukken */
+        .progress-bar { height: 1.5vh; background-color: var(--accent-color); border-radius: 6px; margin-bottom: 2vh; overflow: hidden; flex-shrink: 0; }
         .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1.5vh;
+            flex-shrink: 0;
+            border-top: 2px solid var(--bg-color);
+            height: 8vh;
+            align-items: center;
+        }
 
-        h1 { color: var(--primary-color); font-size: clamp(3.5rem, 6vh, 5rem); margin: 0 0 10px 0; text-align: center; }
-        h2 { color: var(--primary-color); font-size: clamp(2.5rem, 4.5vh, 3.5rem); margin: 0 0 15px 0; text-align: center; }
+        button.nav-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 3px solid var(--primary-color);
+            width: 7vh;
+            height: 7vh;
+            font-size: clamp(1.5rem, 3vh, 2.5rem);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button.nav-btn:hover:not(:disabled) { background-color: var(--primary-color); color: white; }
+        button.nav-btn:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
 
+        .action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1.5vh 3vw;
+            font-size: clamp(1.2rem, 2.5vh, 1.8rem);
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .action-btn:hover { background-color: var(--button-hover); color: var(--text-color); }
+
+        /* Typografie dynamisch met clamp() */
+        h1 { color: var(--primary-color); font-size: clamp(2.5rem, 5vh, 4.5rem); margin: 0 0 1vh 0; text-align: center; }
+        h2 { color: var(--primary-color); font-size: clamp(2rem, 4vh, 3.2rem); margin: 0 0 2vh 0; text-align: center; }
+        p, li, div { font-size: clamp(1rem, 2.2vh, 1.6rem); }
+
+        /* Flexbox lay-out voor de stappen */
         .step {
             display: none;
             flex-grow: 1;
             flex-direction: column;
-            justify-content: center;
+            justify-content: center; /* Zorgt dat content in het midden staat */
+            align-items: center;
             animation: fadeIn 0.4s ease-in-out;
             height: 100%;
+            overflow: hidden; /* Geen scrollbalken IN de step */
+            width: 100%;
         }
         .step.active { display: flex; }
 
@@ -81,135 +133,71 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Navigatie Knoppen */
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding-top: 10px;
-            flex-shrink: 0;
-            border-top: 2px solid var(--bg-color);
-        }
-
-        button.nav-btn {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 4px solid var(--primary-color);
-            width: 80px;
-            height: 80px;
-            font-size: 2.8rem;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            justify-content: center;
+        .content-box { 
+            width: 100%; 
+            max-width: 1200px; 
+            display: flex; 
+            flex-direction: column; 
             align-items: center;
+            justify-content: center;
+            gap: 2vh;
         }
-
-        button.nav-btn:hover:not(:disabled) { background-color: var(--primary-color); color: white; }
-        button.nav-btn:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
-
-        /* Actie Knop */
-        .action-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 1.8rem;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .action-btn:hover { background-color: var(--button-hover); color: var(--text-color); }
 
         /* Gevoelsmeter */
-        .mood-container { display: flex; justify-content: space-around; align-items: center; flex-grow: 1; }
-        .mood-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 20px; border-radius: 25px; background: var(--bg-color); min-width: 150px; }
+        .mood-container { display: flex; justify-content: space-around; align-items: center; width: 100%; flex-grow: 1; }
+        .mood-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 2vh; border-radius: 20px; background: var(--bg-color); min-width: 12vw; }
         .mood-item:hover { transform: scale(1.15); background: var(--accent-color); }
-        .mood-emoji { font-size: 6rem; margin-bottom: 10px; }
-        .mood-counter { font-size: 2.2rem; font-weight: bold; color: var(--primary-color); background: white; padding: 5px 25px; border-radius: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .mood-emoji { font-size: clamp(4rem, 10vh, 8rem); margin-bottom: 1vh; }
+        .mood-counter { font-size: clamp(1.5rem, 3vh, 2.2rem); font-weight: bold; color: var(--primary-color); background: white; padding: 0.5vh 2vw; border-radius: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* Video stabiliteit */
-        .video-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; flex-grow: 1; min-height: 0; }
-        .video-container { width: 65%; aspect-ratio: 16 / 9; max-height: 50vh; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); background: #000; }
+        /* Video */
+        .video-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; flex-grow: 1; }
+        .video-container { height: 50vh; aspect-ratio: 16 / 9; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); background: #000; }
         .video-container iframe { width: 100%; height: 100%; border: none; }
 
-        /* Kennismaking */
-        .card-drawer { text-align: center; padding: 40px; background-color: var(--page-badge-bg); border-radius: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px dashed var(--primary-color); }
-        #drawn-card { font-size: 4.5rem; font-weight: bold; color: var(--primary-color); margin-top: 30px; min-height: 120px; display: flex; align-items: center; text-align: center; }
+        /* Grids (Tentje, Gedachten, etc.) */
+        .grid-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vh 2vw; width: 100%; max-width: 1000px; }
+        .grid-list div { background: var(--page-badge-bg); padding: 1.5vh 2vw; border-radius: 15px; border-left: 8px solid var(--primary-color); font-weight: bold; display: flex; align-items: center; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; width: 100%; max-width: 1100px; }
+        .info-panel { background: var(--page-badge-bg); padding: 2.5vh 3vw; border-radius: 20px; border-left: 8px solid var(--primary-color); width: 100%; max-width: 1000px; text-align: left; }
 
-        /* Lists & Layouts */
-        .content-box { max-width: 1100px; margin: 0 auto; width: 100%; }
-        .grid-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 0 auto; max-width: 1000px; }
-        .grid-list div { background: var(--page-badge-bg); padding: 20px; border-radius: 15px; border-left: 8px solid var(--primary-color); font-size: 1.3rem; font-weight: bold; color: var(--text-color); }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
-
-        /* -------------------------------------
-           BOX BREATHING PERFECT SYNC (ZONDER PIJLEN)
-           ------------------------------------- */
-        .breathing-wrapper {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 0;
-            padding-top: 5vh;
+        /* Kaart styling Stap 4 */
+        .card-drawer { text-align: center; padding: 2vh; background-color: var(--page-badge-bg); border-radius: 20px; width: 100%; max-width: 800px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 4px dashed var(--primary-color); flex-grow: 1; max-height: 60vh; }
+        .card-visual {
+            width: 25vh; height: 35vh; background: white; border-radius: 15px; border: 8px solid var(--primary-color);
+            display: flex; justify-content: center; align-items: center; margin: 2vh auto; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            font-size: clamp(3rem, 8vh, 6rem); font-weight: bold; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: scale(0.8); opacity: 0;
         }
+        .card-visual.show { transform: scale(1) translateY(-10px); opacity: 1; }
 
-        .box-area {
-            position: relative;
-            width: 45vh; 
-            height: 45vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            margin-bottom: 2vh;
-        }
+        /* Afspraken Stap 5 */
+        .rules-container { display: flex; flex-direction: column; gap: 2vh; align-items: center; width: 100%; }
+        .rule-box { background: var(--page-badge-bg); padding: 2vh 3vw; border-radius: 15px; border-left: 8px solid var(--primary-color); width: 80%; text-align: center; font-weight: bold; font-size: clamp(1.2rem, 2.5vh, 1.8rem); }
 
-        /* Het Vierkant (Schaal en Kleur) */
+        /* Kleurenkaarten Stap 8 */
+        .color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vh; width: 100%; max-width: 1000px; margin-bottom: 1.5vh; }
+        .color-box { padding: 1.5vh; border-radius: 15px; font-weight: bold; background: white; text-align: center; }
+
+        /* Ademhaling */
+        .breathing-wrapper { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .box-area { position: relative; width: 40vh; height: 40vh; display: flex; justify-content: center; align-items: center; margin-bottom: 2vh; }
         .breathing-box {
-            position: relative;
-            width: 25vh; height: 25vh; background-color: var(--accent-color); border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 40px rgba(107, 144, 128, 0.4);
-            z-index: 2;
+            width: 20vh; height: 20vh; background-color: var(--accent-color); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(107, 144, 128, 0.4); z-index: 2;
         }
-        
-        .animating .breathing-box {
-            animation: boxScale 16s infinite linear;
-        }
-
-        @keyframes boxScale {
-            0%, 100% { transform: scale(1); background-color: var(--accent-color); } /* Inademen begint / Einde rust */
-            25%  { transform: scale(1.6); background-color: var(--button-hover); }   /* Inademen klaar */
-            50%  { transform: scale(1.6); background-color: var(--button-hover); }   /* Vast klaar */
-            75%  { transform: scale(1); background-color: var(--accent-color); }     /* Uitademen klaar */
-        }
-
-        /* Teksten in het vierkant (Opacity toggle) */
-        .breath-text {
-            position: absolute;
-            font-weight: bold; font-size: 3rem; color: var(--primary-color);
-            opacity: 0; /* Standaard onzichtbaar */
-        }
-        
-        /* Bij initialisatie laten we 'In...' zien */
-        .text-in { opacity: 1; } 
-
+        .animating .breathing-box { animation: boxScale 16s infinite linear; }
+        @keyframes boxScale { 0%, 100% { transform: scale(1); background-color: var(--accent-color); } 25%, 50% { transform: scale(1.6); background-color: var(--button-hover); } 75% { transform: scale(1); background-color: var(--accent-color); } }
+        .breath-text { position: absolute; font-weight: bold; font-size: clamp(1.5rem, 4vh, 3rem); color: var(--primary-color); opacity: 0; }
+        .text-in { opacity: 1; }
         .animating .text-in { animation: fadeText1 16s infinite linear; }
         .animating .text-hold1 { animation: fadeText2 16s infinite linear; }
         .animating .text-out { animation: fadeText3 16s infinite linear; }
         .animating .text-hold2 { animation: fadeText4 16s infinite linear; }
-
-        /* Elke fase duurt EXACT 4 seconden (25% van 16s) */
         @keyframes fadeText1 { 0%, 24.9% { opacity: 1; } 25%, 100% { opacity: 0; } }
         @keyframes fadeText2 { 0%, 24.9% { opacity: 0; } 25%, 49.9% { opacity: 1; } 50%, 100% { opacity: 0; } }
         @keyframes fadeText3 { 0%, 49.9% { opacity: 0; } 50%, 74.9% { opacity: 1; } 75%, 100% { opacity: 0; } }
         @keyframes fadeText4 { 0%, 74.9% { opacity: 0; } 75%, 99.9% { opacity: 1; } 100% { opacity: 0; } }
-
     </style>
 </head>
 <body>
@@ -223,26 +211,11 @@
         <h1>Bijeenkomst 1: Kennismaking</h1>
         <h2>Hoe voel je je vandaag?</h2>
         <div class="mood-container">
-            <div class="mood-item" onclick="registerMood('bliksem')">
-                <span class="mood-emoji">⚡</span>
-                <span class="mood-counter" id="count-bliksem">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('regen')">
-                <span class="mood-emoji">🌧️</span>
-                <span class="mood-counter" id="count-regen">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('wolken')">
-                <span class="mood-emoji">☁️</span>
-                <span class="mood-counter" id="count-wolken">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('zon-wolken')">
-                <span class="mood-emoji">⛅</span>
-                <span class="mood-counter" id="count-zon-wolken">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('zon')">
-                <span class="mood-emoji">☀️</span>
-                <span class="mood-counter" id="count-zon">0</span>
-            </div>
+            <div class="mood-item" onclick="registerMood('bliksem')"><span class="mood-emoji">⚡</span><span class="mood-counter" id="count-bliksem">0</span></div>
+            <div class="mood-item" onclick="registerMood('regen')"><span class="mood-emoji">🌧️</span><span class="mood-counter" id="count-regen">0</span></div>
+            <div class="mood-item" onclick="registerMood('wolken')"><span class="mood-emoji">☁️</span><span class="mood-counter" id="count-wolken">0</span></div>
+            <div class="mood-item" onclick="registerMood('zon-wolken')"><span class="mood-emoji">⛅</span><span class="mood-counter" id="count-zon-wolken">0</span></div>
+            <div class="mood-item" onclick="registerMood('zon')"><span class="mood-emoji">☀️</span><span class="mood-counter" id="count-zon">0</span></div>
         </div>
     </div>
 
@@ -260,16 +233,16 @@
         <div class="page-badge">Blz. 1</div>
         <h2>Welkom bij de training</h2>
         <div class="content-box">
-            <div style="background: var(--page-badge-bg); padding: 30px; border-radius: 20px; border-left: 8px solid var(--primary-color); font-size: 1.3rem; margin-bottom: 30px;">
+            <div class="info-panel">
                 <p style="margin-top: 0;"><strong>Spannend? Dat is helemaal oké.</strong></p>
                 <p>Veel leerlingen voelen zich zo wanneer ze aan iets nieuws beginnen. Iedereen in deze groep heeft weleens last van faalangst. Deze training is geen plek waar alles perfect hoeft te gaan. Hier mag je fouten maken, lachen om jezelf en ontdekken hoe jij denkt en voelt.</p>
             </div>
             
             <div style="text-align: center;">
-                <h3 style="color: var(--primary-color); font-size: 2.2rem; margin-bottom: 20px;">Wat zijn onze doelen?</h3>
-                <ul style="list-style: none; padding: 0; font-size: 1.6rem; font-weight: bold; display: inline-block; text-align: left;">
-                    <li style="margin-bottom: 15px;">🎯 Kennismaken</li>
-                    <li style="margin-bottom: 15px;">🧠 Leren wat faalangst is</li>
+                <h3 style="color: var(--primary-color); font-size: clamp(1.5rem, 3vh, 2.2rem); margin: 1vh 0;">Wat zijn onze doelen?</h3>
+                <ul style="list-style: none; padding: 0; font-weight: bold; display: inline-block; text-align: left; margin: 0;">
+                    <li style="margin-bottom: 1vh;">🎯 Kennismaken</li>
+                    <li style="margin-bottom: 1vh;">🧠 Leren wat faalangst is</li>
                     <li>💡 Anders leren denken</li>
                 </ul>
             </div>
@@ -279,15 +252,17 @@
     <div class="step" id="step-3">
         <div class="page-badge">Blz. 1</div>
         <h2>Namententje maken</h2>
-        <div class="grid-list">
-            <div>Stap 1: ✏️ Vel horizontaal (liggend)</div>
-            <div>Stap 2: ✏️ In de lengte dubbelvouwen</div>
-            <div>Stap 3: ✏️ Randen netjes op elkaar</div>
-            <div>Stap 4: ✏️ Vouw scherp maken</div>
-            <div>Stap 5: ✏️ Buitenkanten naar midden dubbelvouwen</div>
-            <div>Stap 6: ✏️ Vouwen weer scherp maken</div>
-            <div>Stap 7: ✏️ Tentje neerzetten</div>
-            <div>Stap 8: ✏️ Naam groot opschrijven</div>
+        <div class="content-box">
+            <div class="grid-list">
+                <div>Stap 1: ✏️ Vel horizontaal (liggend)</div>
+                <div>Stap 2: ✏️ In de lengte dubbelvouwen</div>
+                <div>Stap 3: ✏️ Randen netjes op elkaar</div>
+                <div>Stap 4: ✏️ Vouw scherp maken</div>
+                <div>Stap 5: ✏️ Buitenkanten naar midden dubbelvouwen</div>
+                <div>Stap 6: ✏️ Vouwen weer scherp maken</div>
+                <div>Stap 7: ✏️ Tentje neerzetten</div>
+                <div>Stap 8: ✏️ Naam groot opschrijven</div>
+            </div>
         </div>
     </div>
 
@@ -295,9 +270,9 @@
         <div class="page-badge">Blz. 2</div>
         <h2>Kennismakingsspel</h2>
         <div class="card-drawer">
+            <div id="card-visual" class="card-visual">?</div>
             <button onclick="drawCard()" class="action-btn">Trek een kaart 🃏</button>
-            <div id="drawn-card">Klik op de knop om te starten...</div>
-            <p style="font-size: 1.2rem; margin-top: 20px; color: #555;">(De vragen staan in jullie werkboek!)</p>
+            <p style="margin-top: 1.5vh; color: #555;">(De vragen staan in jullie werkboek op blz. 2!)</p>
         </div>
     </div>
 
@@ -305,17 +280,11 @@
         <div class="page-badge">Blz. 2</div>
         <h2>Samen Veilig: Afspraken</h2>
         <div class="content-box">
-            <p style="text-align: center; font-size: 1.6rem; margin-bottom: 30px;">Voor een fijne groep maken we de volgende afspraken:</p>
-            <div style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
-                <div style="background: var(--page-badge-bg); padding: 25px; border-radius: 15px; border-left: 8px solid var(--primary-color); font-size: 1.8rem; width: 80%;">
-                    🤝 <strong>Respect voor elkaar</strong>
-                </div>
-                <div style="background: var(--page-badge-bg); padding: 25px; border-radius: 15px; border-left: 8px solid var(--primary-color); font-size: 1.8rem; width: 80%;">
-                    🤫 <strong>Alles wat hier verteld wordt, blijft hier</strong>
-                </div>
-                <div style="background: var(--page-badge-bg); padding: 25px; border-radius: 15px; border-left: 8px solid var(--primary-color); font-size: 1.8rem; width: 80%;">
-                    👍 <strong>Niet antwoorden is oké</strong>
-                </div>
+            <p style="text-align: center; font-weight: bold; margin-bottom: 2vh;">Voor een fijne groep maken we de volgende afspraken:</p>
+            <div class="rules-container">
+                <div class="rule-box">🤝 Respect voor elkaar</div>
+                <div class="rule-box">🤫 Alles wat hier verteld wordt, blijft hier</div>
+                <div class="rule-box">👍 Niet antwoorden is oké</div>
             </div>
         </div>
     </div>
@@ -324,11 +293,11 @@
         <div class="page-badge">Blz. 2</div>
         <h2>Wat is faalangst?</h2>
         <div class="content-box" style="text-align: center;">
-            <p style="font-size: 1.4rem; margin-bottom: 20px;">
+            <p>
                 <strong>Faalangst is de angst om te falen als je iets moet presteren.</strong><br>
                 Je maakt je vooraf al veel zorgen. Dit zorgt ervoor dat je zenuwachtig wordt, minder goed kunt nadenken of zelfs helemaal blokkeert.
             </p>
-            <div style="background: var(--page-badge-bg); padding: 40px; border-radius: 20px; border: 4px dashed var(--primary-color); font-size: 1.6rem; margin-top: 30px; font-weight: bold;">
+            <div style="background: var(--page-badge-bg); padding: 3vh 3vw; border-radius: 20px; border: 4px dashed var(--primary-color); font-weight: bold; margin-top: 2vh;">
                 Zorgen maken ➔ Zenuwen ➔ Minder goed nadenken ➔ Blokkeren
             </div>
         </div>
@@ -338,23 +307,20 @@
         <div class="page-badge">Blz. 3</div>
         <h2>Helpende Gedachten</h2>
         <div class="content-box">
-            
-            <p style="text-align: center; font-size: 1.3rem; margin-bottom: 20px;">
-                Zenuwachtig? Vervang je angstige gedachten door <strong>helpende gedachten</strong>. Dit zijn vriendelijke zinnen die je tegen jezelf zegt (of opschrijft). Ze zorgen ervoor dat je minder bang wordt, beter kunt focussen en zelfverzekerder bent. 
+            <p style="text-align: center;">
+                Zenuwachtig? Vervang je angstige gedachten door <strong>helpende gedachten</strong>. Dit zijn vriendelijke zinnen die je tegen jezelf zegt (of opschrijft). Ze zorgen ervoor dat je minder bang wordt, beter kunt focussen en zelfverzekerder bent.
             </p>
-
             <div class="grid-2">
-                <div style="background: #FFE5E5; padding: 25px; border-radius: 20px; border: 3px solid #FAD2D2;">
-                    <h3 style="margin-top:0; color: #D64545; font-size: 1.8rem;">❌ Angstige gedachte</h3>
-                    <p style="font-size: 1.2rem;">"Ik ga dit nooit kunnen."<br><br>"Iedereen lacht me uit als ik een fout maak."</p>
+                <div style="background: #FFE5E5; padding: 2vh 2vw; border-radius: 20px; border: 3px solid #FAD2D2;">
+                    <h3 style="margin-top:0; color: #D64545; font-size: clamp(1.2rem, 2.5vh, 1.8rem);">❌ Angstige gedachte</h3>
+                    <p style="margin: 0;">"Ik ga dit nooit kunnen."<br><br>"Iedereen lacht me uit als ik een fout maak."</p>
                 </div>
-                <div style="background: #E5F9E0; padding: 25px; border-radius: 20px; border: 3px solid #C3EBC0;">
-                    <h3 style="margin-top:0; color: #4A8C45; font-size: 1.8rem;">✅ Helpende gedachte</h3>
-                    <p style="font-size: 1.2rem;">"Ik heb geoefend en ik ga mijn best doen."<br><br>"Het is oké om fouten te maken, daar leer ik van."</p>
+                <div style="background: #E5F9E0; padding: 2vh 2vw; border-radius: 20px; border: 3px solid #C3EBC0;">
+                    <h3 style="margin-top:0; color: #4A8C45; font-size: clamp(1.2rem, 2.5vh, 1.8rem);">✅ Helpende gedachte</h3>
+                    <p style="margin: 0;">"Ik heb geoefend en ik ga mijn best doen."<br><br>"Het is oké om fouten te maken, daar leer ik van."</p>
                 </div>
             </div>
-            
-            <p style="text-align: center; font-size: 1.1rem; margin-top: 20px; color: var(--primary-color); font-weight: bold;">
+            <p style="text-align: center; color: var(--primary-color); font-weight: bold; margin-top: 2vh;">
                 Tip: Combineer dit met rustig ademen of veel oefenen, zodat je brein leert dat het niet eng is!
             </p>
         </div>
@@ -363,13 +329,34 @@
     <div class="step" id="step-8">
         <div class="page-badge">Blz. 4</div>
         <h2>Jouw Kaartje</h2>
-        <div class="content-box" style="text-align: center;">
-            <p>Kies één helpende gedachte die voor jou goed werkt.</p>
-            <div style="background: #FFF; border-top: 12px solid var(--growth-color); border-radius: 20px; padding: 40px; display: inline-block; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 20px;">
-                <ul style="list-style: none; padding: 0; margin: 0; font-size: 1.5rem; font-weight: bold;">
-                    <li style="margin-bottom: 20px;">1️⃣ Schrijf hem groot op het kaartje.</li>
-                    <li style="margin-bottom: 20px;">2️⃣ Versier hem met kleuren of stickers.</li>
-                    <li>3️⃣ Geef hem een speciaal plekje.</li>
+        <div class="content-box">
+            <p style="text-align: center; font-weight: bold; margin: 0 0 1.5vh 0;">Kies een helpende gedachte die voor jou goed werkt.</p>
+            
+            <div class="color-grid">
+                <div class="color-box" style="border: 4px solid var(--geel-zelfvertrouwen);">
+                    <span style="color: var(--geel-zelfvertrouwen);">Geel: Zelfvertrouwen</span><br>
+                    <span style="font-weight: normal; font-size: clamp(0.9rem, 2vh, 1.3rem);">"Ik kan dit" / "Ik geloof in mijzelf"</span>
+                </div>
+                <div class="color-box" style="border: 4px solid var(--blauw-motivatie);">
+                    <span style="color: var(--blauw-motivatie);">Blauw: Actie & Motivatie</span><br>
+                    <span style="font-weight: normal; font-size: clamp(0.9rem, 2vh, 1.3rem);">"Ik begin gewoon" / "Stap voor stap"</span>
+                </div>
+                <div class="color-box" style="border: 4px solid var(--paars-acceptatie);">
+                    <span style="color: var(--paars-acceptatie);">Paars: Accepteren & Aanvaarden</span><br>
+                    <span style="font-weight: normal; font-size: clamp(0.9rem, 2vh, 1.3rem);">"Fouten maken mag" / "Het is wat het is"</span>
+                </div>
+                <div class="color-box" style="border: 4px solid var(--roze-presteren);">
+                    <span style="color: var(--roze-presteren);">Roze: Presteren</span><br>
+                    <span style="font-weight: normal; font-size: clamp(0.9rem, 2vh, 1.3rem);">"Ik doe mijn best" / "Focus op de taak"</span>
+                </div>
+            </div>
+
+            <div style="background: #FFF; border-top: 8px solid var(--growth-color); border-radius: 15px; padding: 2vh 3vw; width: 100%; max-width: 900px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <ul style="list-style: none; padding: 0; margin: 0; font-weight: bold;">
+                    <li style="margin-bottom: 1vh;">1️⃣ Kies een kleur die bij jouw gedachte past.</li>
+                    <li style="margin-bottom: 1vh;">2️⃣ Schrijf de gedachte groot op het kaartje.</li>
+                    <li style="margin-bottom: 1vh;">3️⃣ Versier hem met kleuren of stickers.</li>
+                    <li>4️⃣ Geef hem een speciaal plekje.</li>
                 </ul>
             </div>
         </div>
@@ -387,7 +374,7 @@
                     <span class="breath-text text-hold2">Vast...</span>
                 </div>
             </div>
-            <p style="text-align: center; color: #666; font-size: 1.4rem; margin-top: 0;">Volg het vierkant: elke stap duurt 4 seconden.</p>
+            <p style="text-align: center; color: #666; margin-top: 0;">Volg het vierkant: elke stap duurt 4 seconden.</p>
         </div>
     </div>
 
@@ -395,8 +382,8 @@
         <div class="page-badge">Blz. 5</div>
         <h1>Heel goed gewerkt vandaag!</h1>
         <div class="content-box" style="text-align: center;">
-            <p style="font-size: 2rem; margin-top: 40px;"><strong>Wat ga je komende week uitproberen?</strong></p>
-            <h2 style="margin-top: 60px;">Tot volgende week! 🚀</h2>
+            <p style="font-weight: bold; margin-top: 4vh;">Wat ga je komende week uitproberen?</p>
+            <h2 style="margin-top: 6vh;">Tot volgende week! 🚀</h2>
         </div>
     </div>
 
@@ -410,20 +397,11 @@
     let currentStep = 0;
     const steps = document.querySelectorAll('.step');
     const moodCounts = { bliksem: 0, regen: 0, wolken: 0, 'zon-wolken': 0, zon: 0 };
-    
-    const questions = [
-        "Joker 🃏",
-        "Klaver ♣️",
-        "Schoppen ♠️",
-        "Ruiten ♦️",
-        "Harten ❤️"
-    ];
+    const questions = ["Joker 🃏", "Klaver ♣️", "Schoppen ♠️", "Ruiten ♦️", "Harten ❤️"];
 
     function startBreathingLogic() {
         const boxArea = document.getElementById('breathingBoxArea');
         if (!boxArea) return;
-        
-        // Reset de animatie voor een schone start
         boxArea.classList.remove('animating');
         void boxArea.offsetWidth;
         boxArea.classList.add('animating');
@@ -443,13 +421,22 @@
     }
 
     function drawCard() {
+        const cardDisplay = document.getElementById('card-visual');
         const randomIndex = Math.floor(Math.random() * questions.length);
-        const cardDisplay = document.getElementById('drawn-card');
-        cardDisplay.style.opacity = 0;
+        
+        cardDisplay.classList.remove('show');
+        
         setTimeout(() => {
             cardDisplay.innerText = questions[randomIndex];
-            cardDisplay.style.opacity = 1;
-        }, 300);
+            if (questions[randomIndex].includes("♦️") || questions[randomIndex].includes("❤️")) {
+                cardDisplay.style.color = "#D64545";
+                cardDisplay.style.borderColor = "#D64545";
+            } else {
+                cardDisplay.style.color = "var(--primary-color)";
+                cardDisplay.style.borderColor = "var(--primary-color)";
+            }
+            cardDisplay.classList.add('show');
+        }, 150);
     }
 
     function changeStep(n) {
@@ -457,7 +444,6 @@
         currentStep += n;
         steps[currentStep].classList.add('active');
 
-        // Ademhaling is nu slide ID step-9
         if (steps[currentStep].id === 'step-9') {
             startBreathingLogic();
         } else {
@@ -475,6 +461,5 @@
         }
     }
 </script>
-
 </body>
 </html>
