@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HACK JE FAALANGST - Bijeenkomst 3</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary-color: #6B9080;
@@ -13,6 +14,10 @@
             --button-hover: #A4C3B2;
             --accent-color: #CCE3DE;
             --page-badge-bg: #EAF4F4;
+            --fixed-color: #E07A5F;
+            --growth-color: #81B29A;
+            --actief-color: #2E7D32;
+            --passief-color: #D32F2F;
         }
 
         body {
@@ -25,9 +30,9 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
-            font-size: clamp(18px, 2.2vh, 28px);
-            line-height: 1.4;
+            width: 100vw;
+            overflow: hidden; /* Geen scrollbalken */
+            line-height: 1.3;
         }
 
         .container {
@@ -36,197 +41,146 @@
             height: 96vh;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            padding: 25px;
+            padding: 2vh 3vw;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
         }
 
         .page-badge {
             position: absolute;
-            top: 20px;
-            right: 30px;
+            top: 2vh;
+            right: 2vw;
             background-color: var(--page-badge-bg);
             color: var(--primary-color);
-            padding: 8px 18px;
+            padding: 1vh 2vw;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 2.2vh, 1.5rem);
             border: 2px solid var(--accent-color);
             z-index: 10;
         }
 
-        h1 {
-            color: var(--primary-color);
-            margin: 0 0 10px 0;
-            font-size: clamp(2.2rem, 4.5vh, 3.5rem);
-            text-align: center;
+        /* Navigatie en Progressie */
+        .progress-bar { height: 1.5vh; background-color: var(--accent-color); border-radius: 6px; margin-bottom: 1vh; overflow: hidden; flex-shrink: 0; }
+        .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1.5vh;
+            flex-shrink: 0;
+            border-top: 3px solid var(--accent-color);
+            height: 8vh;
+            align-items: center;
         }
 
-        h2 {
+        button.nav-btn {
+            background-color: transparent;
             color: var(--primary-color);
-            font-size: clamp(1.6rem, 3vh, 2.5rem);
-            margin: 0 0 10px 0;
-            text-align: center;
+            border: 3px solid var(--primary-color);
+            width: 7vh;
+            height: 7vh;
+            font-size: clamp(1.5rem, 3vh, 2.5rem);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+        button.nav-btn:hover:not(:disabled) { background-color: var(--primary-color); color: white; }
+        button.nav-btn:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
 
-        h3 {
-            color: var(--primary-color);
-            font-size: 1.4rem;
-            margin: 5px 0;
-        }
+        /* Typografie: Extra groot voor leesbaarheid achterin de klas */
+        h1 { color: var(--primary-color); font-size: clamp(2.5rem, 5vh, 4rem); margin: 0 0 1vh 0; text-align: center; }
+        h2 { color: var(--primary-color); font-size: clamp(2rem, 4vh, 3.2rem); margin: 0 0 1.5vh 0; text-align: center; }
+        p, li, div { font-size: clamp(1.2rem, 2.5vh, 1.8rem); margin: 0; }
 
         .step {
             display: none;
             flex-grow: 1;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             animation: fadeIn 0.4s ease-in-out;
             height: 100%;
+            width: 100%;
+            min-height: 0;
         }
-
-        .step.active {
-            display: flex;
-        }
+        .step.active { display: flex; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            border-top: 3px solid var(--accent-color);
-            padding-top: 15px;
-            flex-shrink: 0;
-        }
-
-        button.nav-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            font-size: 1.4rem;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        button.nav-btn:hover:not(:disabled) {
-            background-color: var(--button-hover);
-            color: #333;
-        }
-
-        button.nav-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .content-box { 
+            width: 100%; 
+            max-width: 1300px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+            gap: 1.5vh;
+            flex-grow: 1;
+            min-height: 0;
         }
 
         /* Gevoelsmeter */
-        .mood-container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-grow: 1;
-        }
+        .mood-container { display: flex; justify-content: space-around; align-items: center; width: 100%; flex-grow: 1; }
+        .mood-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 2vh; border-radius: 20px; background: var(--bg-color); min-width: 12vw; }
+        .mood-item:hover { transform: scale(1.15); background: var(--accent-color); }
+        .mood-emoji { font-size: clamp(4rem, 10vh, 7rem); margin-bottom: 1vh; }
+        .mood-counter { font-size: clamp(1.8rem, 3.5vh, 2.5rem); font-weight: bold; color: var(--primary-color); background: white; padding: 0.5vh 2vw; border-radius: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        .mood-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* Video */
+        .video-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; flex-grow: 1; max-height: 55vh; margin-top: 1vh; }
+        .video-container { height: 50vh; aspect-ratio: 16 / 9; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); background: #000; }
+        .video-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* Grids & Panels */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5vw; width: 100%; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vw; width: 100%; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1vw; width: 100%; }
+        
+        .info-panel { background: var(--page-badge-bg); padding: 2vh 2vw; border-radius: 20px; border-left: 8px solid var(--primary-color); text-align: left; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+        .info-panel h3 { margin-bottom: 0.5vh; color: var(--primary-color); font-size: clamp(1.4rem, 3vh, 2.2rem); font-weight: bold; }
+
+        .highlight-box { background: #FFF9E6; border: 4px solid #FFD966; border-radius: 20px; padding: 2.5vh 3vw; width: 100%; font-weight: bold; }
+
+        /* Muziek Knoppen */
+        .music-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1.5vh 2vw;
+            font-size: clamp(1rem, 2vh, 1.5rem);
+            border-radius: 20px;
             cursor: pointer;
-            transition: transform 0.2s;
-            padding: 20px;
-            border-radius: 30px;
-            background: var(--bg-color);
-            min-width: 140px;
-        }
-
-        .mood-item:hover { transform: scale(1.1); background: var(--accent-color); }
-        .mood-emoji { font-size: 6rem; margin-bottom: 10px; }
-        .mood-counter {
-            font-size: 2rem;
             font-weight: bold;
-            color: var(--primary-color);
-            background: white;
-            padding: 5px 25px;
-            border-radius: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .music-btn:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+        .music-btn.playing {
+            background-color: var(--fixed-color);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(224, 122, 95, 0.4);
+            animation: pulse-music 1.5s infinite;
         }
 
-        /* Grid Layouts */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-
-        .checklist-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 15px;
+        @keyframes pulse-music {
+            0% { box-shadow: 0 0 0 0 rgba(224, 122, 95, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(224, 122, 95, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(224, 122, 95, 0); }
         }
-
-        .checklist-item {
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            background: white;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-            cursor: pointer;
-        }
-
-        .checklist-item input { margin-right: 10px; transform: scale(1.2); }
-
-        .info-box {
-            background: var(--accent-color);
-            padding: 15px;
-            border-radius: 15px;
-            border: 2px solid var(--primary-color);
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin: 5px 0;
-            border: 3px solid var(--accent-color);
-            border-radius: 12px;
-            font-size: 1.4rem;
-            box-sizing: border-box;
-        }
-
-        .progress-bar {
-            height: 10px;
-            background-color: var(--accent-color);
-            border-radius: 5px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
-
-        /* Animation placeholder */
-        .video-box {
-            flex-grow: 1;
-            background-color: #E8ECEA;
-            border: 4px dashed var(--primary-color);
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 5px;
-            text-align: center;
-        }
-
-        ul { list-style: none; padding: 0; margin: 0; }
-        ul li { background: var(--accent-color); margin: 4px 0; padding: 8px 15px; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -236,289 +190,367 @@
         <div class="progress-fill" id="progress-fill"></div>
     </div>
 
-    <!-- Stap 0: Gevoelsmeter -->
     <div class="step active" id="step-0">
-        <h1>Bijeenkomst 3</h1>
-        <h2>Hoe kom je vandaag binnen?</h2>
+        <h1>Bijeenkomst 3: Faalangst en je lichaam</h1>
+        <h2>Hoe voel je je vandaag?</h2>
         <div class="mood-container">
-            <div class="mood-item" onclick="registerMood('bliksem')">
-                <span class="mood-emoji">⚡</span>
-                <span class="mood-counter" id="count-bliksem">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('regen')">
-                <span class="mood-emoji">🌧️</span>
-                <span class="mood-counter" id="count-regen">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('wolken')">
-                <span class="mood-emoji">☁️</span>
-                <span class="mood-counter" id="count-wolken">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('zon-wolken')">
-                <span class="mood-emoji">⛅</span>
-                <span class="mood-counter" id="count-zon-wolken">0</span>
-            </div>
-            <div class="mood-item" onclick="registerMood('zon')">
-                <span class="mood-emoji">☀️</span>
-                <span class="mood-counter" id="count-zon">0</span>
-            </div>
+            <div class="mood-item" onclick="registerMood('bliksem')"><span class="mood-emoji">⚡</span><span class="mood-counter" id="count-bliksem">0</span></div>
+            <div class="mood-item" onclick="registerMood('regen')"><span class="mood-emoji">🌧️</span><span class="mood-counter" id="count-regen">0</span></div>
+            <div class="mood-item" onclick="registerMood('wolken')"><span class="mood-emoji">☁️</span><span class="mood-counter" id="count-wolken">0</span></div>
+            <div class="mood-item" onclick="registerMood('zon-wolken')"><span class="mood-emoji">⛅</span><span class="mood-counter" id="count-zon-wolken">0</span></div>
+            <div class="mood-item" onclick="registerMood('zon')"><span class="mood-emoji">☀️</span><span class="mood-counter" id="count-zon">0</span></div>
         </div>
     </div>
 
-    <!-- Stap 1: De Braindump -->
     <div class="step" id="step-1">
-        <div class="page-badge">Blz. 15</div>
-        <h1>De Braindump</h1>
-        <div class="grid-2">
-            <div class="info-box">
-                <p>1. Schrijf <strong>alles</strong> op wat je stress geeft (school, vrienden, sport).</p>
-                <p>2. Wat kun je controleren? Wat niet?</p>
-                <p>3. Maak van je papier een <strong>prop</strong>.</p>
-            </div>
-            <div style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                <span style="font-size: 5rem;">🗑️</span>
-                <p><strong>Gooi je zorgen letterlijk weg!</strong></p>
-                <p style="font-size: 1.1rem;">Hoe voelt het om dit los te laten?</p>
+        <h1>Faalangst & Je Lichaam</h1>
+        <div class="content-box" style="text-align: center;">
+            <p style="font-size: clamp(1.8rem, 3.5vh, 2.5rem); font-weight: bold; margin-bottom: 3vh;">Wat gaan we vandaag leren?</p>
+            <div class="grid-2">
+                <div class="info-panel" style="border-left-color: var(--fixed-color); background: #fdf2ef; text-align: center;">
+                    <span style="font-size: clamp(3rem, 6vh, 4rem);">🧠 ⚡ 🫀</span>
+                    <h3 style="color: var(--fixed-color);">Lichaamsreacties</h3>
+                    <p>Wat doet faalangst fysiek met je lichaam?</p>
+                </div>
+                <div class="info-panel" style="border-left-color: var(--primary-color); text-align: center;">
+                    <span style="font-size: clamp(3rem, 6vh, 4rem);">🫁 🧘 🎶</span>
+                    <h3>Ontspannen</h3>
+                    <p>Welke soorten ademhaling en oefeningen helpen je rustig te worden?</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Stap 2: Faalangst en je lichaam -->
     <div class="step" id="step-2">
-        <div class="page-badge">Blz. 16</div>
-        <h2>Wat doet faalangst met je lichaam?</h2>
-        <p style="font-size: 1.1rem;">Je lichaam reageert razendsnel om je te beschermen:</p>
-        <ul style="font-size: 1rem;">
-            <li>🚨 <strong>Alarm:</strong> Hersenen sturen een 'help'-signaal.</li>
-            <li>🔋 <strong>Adrenaline:</strong> Stresshormonen maken je klaar voor actie.</li>
-            <li>💓 <strong>Reactie:</strong> Hart klopt sneller, zweterige handen, knoop in je maag.</li>
-            <li>🏁 <strong>Rust:</strong> Na de prestatie keert de rust langzaam terug.</li>
-        </ul>
+        <h2>De Braindump Oefening</h2>
+        <div class="content-box">
+            <p style="text-align: center; font-weight: bold; margin-bottom: 2vh;">Stop al je stress in één prop papier!</p>
+            <div class="grid-5" style="gap: 1vw;">
+                <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--primary-color);">
+                    <h3 style="margin-bottom: 1vh;">1. Schrijf</h3>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Schrijf alles wat je stress geeft op je vel papier. Alles mag!</p>
+                </div>
+                <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--primary-color);">
+                    <h3 style="margin-bottom: 1vh;">2. Kijk</h3>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Kijk ernaar. Heb je er controle over, of neemt het alleen ruimte in?</p>
+                </div>
+                <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--primary-color);">
+                    <h3 style="margin-bottom: 1vh;">3. Prop</h3>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Maak een grote prop. Je zorgen zitten erin, je hoeft ze niet vast te houden.</p>
+                </div>
+                <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--fixed-color);">
+                    <h3 style="color: var(--fixed-color); margin-bottom: 1vh;">4. Gooi!</h3>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Sta op en gooi je prop zo hard als je kunt weg. Laat het los!</p>
+                </div>
+                <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--growth-color);">
+                    <h3 style="color: var(--growth-color); margin-bottom: 1vh;">5. Voel</h3>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Hoe voelt dat? Heeft het geholpen om even stil te staan bij je stress?</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Stap 3: Waarom is angst belangrijk? -->
     <div class="step" id="step-3">
-        <div class="page-badge">Blz. 16</div>
-        <h2>Is angst altijd slecht?</h2>
-        <div class="grid-2">
-            <div class="info-box" style="background: #E5F9E0;">
-                <h3>Nuttig ✅</h3>
-                <p style="font-size: 0.9rem;">Maakt je alert, geeft een energie-boost en helpt bij concentratie (bijv. vlak voor een toets).</p>
-            </div>
-            <div class="info-box" style="background: #FFE5E5;">
-                <h3>Probleem 🛑</h3>
-                <p style="font-size: 0.9rem;">Té veel angst blokkeert logisch nadenken. Het kost veel energie en maakt je uitgeput.</p>
+        <h2>Faalangst & Je Brein</h2>
+        <p style="text-align: center; margin-bottom: 2vh; font-weight: bold;">Kijk mee wat er precies in je lichaam gebeurt als je het spannend vindt.</p>
+        <div class="video-wrapper">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/W4sxvapYpec" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <!-- Stap 4: Jouw ervaring -->
     <div class="step" id="step-4">
-        <div class="page-badge">Blz. 17</div>
-        <h2>Wat voel jij?</h2>
-        <p>Denk eens goed na: wat voel jij in je lichaam als je bang bent?</p>
-        <input type="text" placeholder="Als ik angstig ben voel ik...">
-        <p style="text-align: center; margin-top: 15px;"><strong>En waar voel je dat precies?</strong></p>
-        <div style="text-align: center; font-size: 3rem;">🧍</div>
+        <h2>Wat doet faalangst met je lichaam?</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 1.5vh;">Je lichaam reageert razendsnel om je te beschermen.</p>
+            <div class="grid-3">
+                <div class="info-panel" style="border-color: var(--fixed-color);">
+                    <h3 style="color: var(--fixed-color);">🚨 1. Alarm</h3>
+                    <p>Je voelt angst. Je hersenen sturen een "help!" signaal naar je lichaam.</p>
+                </div>
+                <div class="info-panel" style="border-color: #D97706;">
+                    <h3 style="color: #D97706;">⚡ 2. Hormonen</h3>
+                    <p>Je maakt adrenaline aan. Dit maakt je klaar om te vechten of te vluchten.</p>
+                </div>
+                <div class="info-panel" style="border-color: var(--primary-color);">
+                    <h3>🫀 3. Lichaam</h3>
+                    <p>Hart klopt sneller, knoop in je maag, zweten of sneller ademen.</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 2vh; text-align: center;">
+                Na de spanning keert de rust langzaam weer terug. Maar soms blokkeer je!
+            </div>
+        </div>
     </div>
 
-    <!-- Stap 5: Symptoom Checklist Deel 1 -->
     <div class="step" id="step-5">
-        <div class="page-badge">Blz. 18</div>
-        <h2>Wat heb jij ervaren?</h2>
-        <div class="checklist-container">
-            <label class="checklist-item"><input type="checkbox"> Hoofdpijn</label>
-            <label class="checklist-item"><input type="checkbox"> Buikpijn</label>
-            <label class="checklist-item"><input type="checkbox"> Misselijkheid</label>
-            <label class="checklist-item"><input type="checkbox"> Moe zijn</label>
-            <label class="checklist-item"><input type="checkbox"> Slecht slapen</label>
-            <label class="checklist-item"><input type="checkbox"> Hartkloppingen</label>
-            <label class="checklist-item"><input type="checkbox"> Zweten</label>
-            <label class="checklist-item"><input type="checkbox"> Trillen</label>
-            <label class="checklist-item"><input type="checkbox"> Geen trek</label>
-            <label class="checklist-item"><input type="checkbox"> Piekeren</label>
-            <label class="checklist-item"><input type="checkbox"> Boosheid</label>
-            <label class="checklist-item"><input type="checkbox"> Spierpijn</label>
-            <label class="checklist-item"><input type="checkbox"> Duizelig</label>
-            <label class="checklist-item"><input type="checkbox"> Snel ademen</label>
-            <label class="checklist-item"><input type="checkbox"> Droge mond</label>
-            <label class="checklist-item"><input type="checkbox"> Tics</label>
+        <h2>Waarom is angst belangrijk?</h2>
+        <div class="content-box">
+            <div class="grid-2">
+                <div class="info-panel" style="background: #eef7f2; border-color: var(--actief-color);">
+                    <h3 style="color: var(--actief-color);">✅ Het nut van angst</h3>
+                    <ul style="padding-left: 2vw; margin-top: 1vh; line-height: 1.4;">
+                        <li style="margin-bottom: 1vh;">Maakt je alert.</li>
+                        <li style="margin-bottom: 1vh;">Geeft je een energie-boost bij gevaar.</li>
+                        <li>Een beetje spanning helpt je concentreren bij een toets.</li>
+                    </ul>
+                </div>
+                <div class="info-panel" style="background: #fdf2ef; border-color: var(--passief-color);">
+                    <h3 style="color: var(--passief-color);">❌ Wanneer het een probleem wordt</h3>
+                    <ul style="padding-left: 2vw; margin-top: 1vh; line-height: 1.4;">
+                        <li style="margin-bottom: 1vh;">Als je té bang bent, schakelt je bewuste denken uit.</li>
+                        <li style="margin-bottom: 1vh;">Het put je lichaam uit (kost veel energie).</li>
+                        <li>Zorgt voor hoofdpijn, buikpijn of moeheid.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Stap 6: Symptoom Checklist Deel 2 -->
     <div class="step" id="step-6">
-        <div class="page-badge">Blz. 18</div>
-        <h2>En deze...?</h2>
-        <div class="checklist-container">
-            <label class="checklist-item"><input type="checkbox"> Klamme handen</label>
-            <label class="checklist-item"><input type="checkbox"> Concentratie</label>
-            <label class="checklist-item"><input type="checkbox"> Vergeetachtig</label>
-            <label class="checklist-item"><input type="checkbox"> Prikkelbaar</label>
-            <label class="checklist-item"><input type="checkbox"> Druk in oren</label>
-            <label class="checklist-item"><input type="checkbox"> Tandenknarsen</label>
-            <label class="checklist-item"><input type="checkbox"> Verdriet</label>
-            <label class="checklist-item"><input type="checkbox"> Weinig energie</label>
-            <label class="checklist-item"><input type="checkbox"> Onrustig</label>
-            <label class="checklist-item"><input type="checkbox"> Moeie ogen</label>
-            <label class="checklist-item"><input type="checkbox"> Druk op borst</label>
-            <label class="checklist-item"><input type="checkbox"> Geen interesse</label>
-            <label class="checklist-item"><input type="checkbox"> Huidproblemen</label>
-            <label class="checklist-item"><input type="checkbox"> Eten wisselt</label>
-            <label class="checklist-item"><input type="checkbox"> Paniek</label>
-            <label class="checklist-item"><input type="checkbox"> Hopeloos</label>
+        <h2>Wat voel jij in je lichaam?</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 3vh; font-size: clamp(1.8rem, 4vh, 2.8rem);">
+                Vul de vragen in op <strong>bladzijde 18</strong> van je werkboek.
+            </p>
+            <div style="background: #FFF9E6; border: 6px dashed #FFD966; border-radius: 20px; padding: 5vh 5vw; width: 80%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <p style="color: var(--passief-color); font-weight: bold; font-size: clamp(2rem, 5vh, 3.5rem); margin: 0; line-height: 1.4;">
+                    Hoe meer kruisjes je hebt gezet, hoe belangrijker het is om je te leren ontspannen!
+                </p>
+            </div>
         </div>
-        <p style="text-align: center; font-size: 1rem; margin-top: 10px;">Hoe meer kruisjes, hoe belangrijker het is om te ontspannen!</p>
     </div>
 
-    <!-- Stap 7: Soorten Ademhaling -->
     <div class="step" id="step-7">
-        <div class="page-badge">Blz. 19</div>
-        <h2>Drie manieren van ademen</h2>
-        <div class="grid-3">
-            <div class="info-box">
-                <h3>1. Borst</h3>
-                <p style="font-size: 0.8rem;">Kort en hoog. Vertelt je lichaam dat er stress is. Niet ideaal.</p>
-            </div>
-            <div class="info-box">
-                <h3>2. Flank</h3>
-                <p style="font-size: 0.8rem;">Ribbenkast naar buiten. Goed voor dagelijks gebruik.</p>
-            </div>
-            <div class="info-box" style="background: #E5F9E0;">
-                <h3>3. Buik 🌟</h3>
-                <p style="font-size: 0.8rem;">Diep en rustig. Geeft het signaal dat je veilig bent. Beste om te kalmeren!</p>
+        <h2>3 Soorten Ademhaling</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 2vh;">Ademen stuurt je brein. Rustig ademen = 'Ik ben veilig'. Snel ademen = 'Gevaar!'.</p>
+            <div class="grid-3">
+                <div class="info-panel" style="border-color: var(--passief-color);">
+                    <h3 style="color: var(--passief-color);">1. Borstademhaling</h3>
+                    <p><strong>Hoog en kort.</strong> Je buik blijft stil. Gebeurt automatisch bij stress. Niet ideaal om te ontspannen.</p>
+                </div>
+                <div class="info-panel" style="border-color: #D97706;">
+                    <h3 style="color: #D97706;">2. Flankademhaling</h3>
+                    <p><strong>Zijkant.</strong> Ribben zetten uit. Goed voor lichte inspanning of wandelen. Voelt al rustiger.</p>
+                </div>
+                <div class="info-panel" style="border-color: var(--actief-color);">
+                    <h3 style="color: var(--actief-color);">3. Buikademhaling</h3>
+                    <p><strong>Diep.</strong> Buik wordt een ballon. De beste en meest ontspannen manier om jezelf te kalmeren!</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Stap 8: Neusgatenademhaling -->
     <div class="step" id="step-8">
-        <div class="page-badge">Blz. 21</div>
-        <h2>De neusgatenademhaling</h2>
-        <div class="grid-2">
-            <ul style="font-size: 1rem;">
-                <li>1. Rechter neusgat dicht (duim).</li>
-                <li>2. Adem in door links. Vast...</li>
-                <li>3. Adem uit door links.</li>
-                <li>4. Linker neusgat dicht (ringvinger).</li>
-                <li>5. Adem in door rechts. Vast...</li>
-                <li>6. Adem uit door rechts.</li>
-            </ul>
-            <div class="info-box">
-                <p><strong>Waarom?</strong><br>Maakt je ademhaling rustig, je hoofd helder en helpt bij concentratie.</p>
+        <h2>De Neusgatenademhaling</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 2vh;">Deze oefening maakt je rustig en je hoofd helder.</p>
+            <div class="highlight-box" style="display: flex; flex-direction: column; gap: 1.5vh; font-weight: normal; text-align: left;">
+                <div>👃 <strong>Stap 1 & 2:</strong> Hou je rechter neusgat dicht met je duim en adem rustig in door links.</div>
+                <div>⏸️ <strong>Stap 3 & 4:</strong> Houd adem even vast, adem dan langzaam uit door links.</div>
+                <div>🔄 <strong>Stap 5 & 6:</strong> Wissel! Hou je linker neusgat dicht met je ringvinger en adem in door rechts.</div>
+                <div>⏸️ <strong>Stap 7 & 8:</strong> Houd adem vast, adem langzaam uit door rechts.</div>
+                <div>🔁 <strong>Stap 9:</strong> Herhaal dit een paar keer rustig en kalm. Dit kan zelfs onopvallend in de klas!</div>
             </div>
         </div>
     </div>
 
-    <!-- Stap 9: Spierspanning -->
     <div class="step" id="step-9">
-        <div class="page-badge">Blz. 21</div>
-        <h2>Spierspanning</h2>
-        <p>Angst maakt je spieren klaar voor actie (vechten/vluchten).</p>
-        <div class="grid-2">
-            <div class="info-box">
-                <p><strong>Waar voel je het?</strong><br>Nek, schouders, kaak en handen (vuisten).</p>
-            </div>
-            <div class="info-box">
-                <p><strong>Gevolg:</strong><br>Stijfheid, hoofdpijn en vermoeidheid als het te lang duurt.</p>
+        <h2>Spierspanning & Stress</h2>
+        <div class="content-box">
+            <div class="grid-2">
+                <div class="info-panel" style="border-color: var(--fixed-color);">
+                    <h3 style="color: var(--fixed-color);">Wat gebeurt er?</h3>
+                    <p>Bij angst spannen je spieren automatisch aan (nek, kaak, buik, vuisten) door adrenaline. Je lichaam bereidt zich voor op actie.</p>
+                    <p style="margin-top: 1vh; font-size: 0.9em; font-weight: bold;">Gevolg: Pijn in je nek, spanningshoofdpijn en extreme vermoeidheid.</p>
+                </div>
+                <div class="info-panel" style="border-color: var(--growth-color);">
+                    <h3 style="color: var(--growth-color);">Wat kun je doen?</h3>
+                    <ul style="padding-left: 2vw; margin-top: 1vh; line-height: 1.4;">
+                        <li style="margin-bottom: 1vh;"><strong>Ademhalen:</strong> Kalmeert direct je zenuwstelsel.</li>
+                        <li style="margin-bottom: 1vh;"><strong>Spierontspanning:</strong> Spieren kort hard aanspannen en dan loslaten.</li>
+                        <li><strong>Beweging:</strong> Sport, wandel of rek je uit om spanning af te voeren.</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Stap 10: De Bodyscan -->
     <div class="step" id="step-10">
-        <div class="page-badge">Blz. 23</div>
         <h2>De Bodyscan</h2>
-        <p style="font-size: 1.1rem;">Focus je aandacht op het hier en nu:</p>
-        <div class="info-box">
-            <p>Scan stap voor stap: voeten 🦶 → enkels → benen → buik → rug → armen → nek → hoofd 🧠.</p>
-            <p>Je hoeft niets te veranderen, alleen maar te voelen. Dwalen je gedachten af? Breng ze rustig terug.</p>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 2vh;">Richt je aandacht op het 'hier en nu' en voel waar spanning zit.</p>
+            <div class="info-panel" style="background: #eef; border-left-color: #4A90E2; width: 85%; padding: 4vh 4vw;">
+                <h3 style="color: #4A90E2; font-size: clamp(2rem, 4vh, 3rem); text-align: center; margin-bottom: 3vh;">🧘 Hoe werkt het?</h3>
+                <ul style="padding-left: 2vw; line-height: 1.6;">
+                    <li style="margin-bottom: 1vh;">Kies een comfortabele plek en sluit je ogen.</li>
+                    <li style="margin-bottom: 1vh;">Scan je lichaam stap voor stap: begin bij je voeten en ga langzaam omhoog naar je hoofd.</li>
+                    <li style="margin-bottom: 1vh;">Neem voor elk deel even de tijd. Je hoeft niets te veranderen, alleen te vóélen.</li>
+                    <li>Dwalen je gedachten af? Breng ze dan rustig weer terug naar je lichaam.</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <!-- Stap 11: De 5-tellen oefening -->
     <div class="step" id="step-11">
-        <div class="page-badge">Blz. 24</div>
-        <h2>Aanspannen & Loslaten</h2>
-        <div class="grid-2">
-            <ul style="font-size: 1.1rem;">
-                <li>1. Maak vuisten.</li>
-                <li>2. Knijp 5 seconden <strong>keihard</strong>.</li>
-                <li>3. Laat nu <strong>ineens</strong> los.</li>
-                <li>4. Herhaal dit bij je schouders en benen.</li>
-            </ul>
-            <div style="text-align: center; font-size: 4rem;">✊✨✋</div>
+        <h2>De 5-Tellen Oefening</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 2vh;">Laat spierspanning los door de spieren eerst hard aan te spannen.</p>
+            <div class="info-panel" style="background: #fff4e6; border-left-color: #F5A623; width: 85%; padding: 4vh 4vw;">
+                <h3 style="color: #F5A623; font-size: clamp(2rem, 4vh, 3rem); text-align: center; margin-bottom: 3vh;">✊ Hoe werkt het?</h3>
+                <ul style="padding-left: 2vw; line-height: 1.6;">
+                    <li style="margin-bottom: 1vh;">Maak vuisten en knijp zo hard als je kunt. Houd dit <strong>5 seconden</strong> vast.</li>
+                    <li style="margin-bottom: 1vh;">Laat langzaam los en voel hoe je handen zich ontspannen.</li>
+                    <li style="margin-bottom: 1vh;">Doe hetzelfde met andere delen: trek je schouders op, span je benen aan, knijp je ogen dicht.</li>
+                    <li>Houd elk lichaamsdeel steeds 5 seconden aangespannen, en... LOS!</li>
+                </ul>
+            </div>
         </div>
     </div>
 
-    <!-- Stap 12: Muziek -->
     <div class="step" id="step-12">
-        <div class="page-badge">Blz. 24-25</div>
-        <h2>Muziek als hulp</h2>
-        <p style="font-size: 1.1rem;">Muziek kan je stemming direct veranderen:</p>
-        <div class="grid-2">
-            <ul>
-                <li>🌿 Rustig worden (natuurgeluiden)</li>
-                <li>❤️ Emoties kwijtraken</li>
-                <li>🧠 Afleiding (muziek zonder tekst)</li>
-                <li>🚀 Meer energie krijgen</li>
-            </ul>
-            <input type="text" placeholder="Wat is jouw favoriete relax-muziek?">
+        <h2>Muziek als Medicijn</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 2vh;">Muziek heeft direct invloed op hoe je je voelt. Welke muziek helpt jou?</p>
+            <div class="grid-2">
+                <div class="info-panel" style="justify-content: flex-start;">
+                    <ul style="list-style: none; padding: 0; line-height: 1.4;">
+                        <li style="margin-bottom: 1.5vh;">🎧 <strong>Rustig worden:</strong> Klassiek of natuurgeluiden verlagen je hartslag.</li>
+                        <li style="margin-bottom: 1.5vh;">🎧 <strong>Afleiding:</strong> Muziek zonder tekst is perfect om te focussen of te studeren.</li>
+                        <li>🎧 <strong>Energie:</strong> Vrolijke, uptempo muziek geeft je een boost als je moe bent.</li>
+                    </ul>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 1vw; margin-top: 3vh;">
+                        <button class="music-btn" onclick="playAudio('audio-klassiek', this)">🎵 Klassiek</button>
+                        <button class="music-btn" onclick="playAudio('audio-natuur', this)">🌧️ Natuur</button>
+                        <button class="music-btn" onclick="playAudio('audio-focus', this)">🎧 Focus</button>
+                        <button class="music-btn" onclick="playAudio('audio-energie', this)">⚡ Energie</button>
+                    </div>
+
+                    <audio id="audio-klassiek" loop>
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/4/4b/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg.mp3" type="audio/mpeg">
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Mozart_-_Eine_kleine_Nachtmusik_-_1._Allegro.ogg" type="audio/ogg">
+                    </audio>
+                    <audio id="audio-natuur" loop>
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/0/07/Heavy_rain.ogg/Heavy_rain.ogg.mp3" type="audio/mpeg">
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/0/07/Heavy_rain.ogg" type="audio/ogg">
+                    </audio>
+                    <audio id="audio-focus" loop>
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/7/74/Snowdrop_-_Ambient_music.ogg/Snowdrop_-_Ambient_music.ogg.mp3" type="audio/mpeg">
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/7/74/Snowdrop_-_Ambient_music.ogg" type="audio/ogg">
+                    </audio>
+                    <audio id="audio-energie" loop>
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/7/76/Disco_con_Tutti.ogg/Disco_con_Tutti.ogg.mp3" type="audio/mpeg">
+                        <source src="https://upload.wikimedia.org/wikipedia/commons/7/76/Disco_con_Tutti.ogg" type="audio/ogg">
+                    </audio>
+
+                </div>
+                <div class="highlight-box" style="display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 2vh;">
+                    <h3 style="margin-top: 0; color: #D97706; font-size: clamp(2rem, 4vh, 3rem);">Tip: Maak een Playlist!</h3>
+                    <p style="font-weight: normal;">Zet liedjes bij elkaar die je fijn vindt en speel die af zodra je gespannen bent in je hoofd of lichaam.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Stap 13: Evaluatie -->
     <div class="step" id="step-13">
-        <div class="page-badge">Blz. 25</div>
-        <h2>Evaluatie</h2>
-        <p>Wat neem je mee uit de les van vandaag?</p>
-        <input type="text" placeholder="1. Ik heb geleerd dat...">
-        <input type="text" placeholder="2. Ik ga oefenen met...">
-        <h3 style="text-align: center; color: var(--primary-color); margin-top: 20px;">Adem in... adem uit... Je kunt het! 🌬️</h3>
+        <h2>Afsluiting</h2>
+        <div class="content-box" style="text-align: center;">
+            <p style="font-weight: bold; font-size: clamp(2rem, 4.5vh, 3.5rem); color: var(--actief-color); margin-bottom: 3vh;">
+                Top gedaan vandaag! 🎉
+            </p>
+            <p style="font-weight: bold; font-size: clamp(1.8rem, 3.5vh, 2.5rem); max-width: 900px; margin-bottom: 4vh; line-height: 1.5;">
+                Je weet nu precies hoe snel jouw lichaam reageert op stress, én wat je kunt doen om de controle weer terug te pakken met je ademhaling en spieren.
+            </p>
+            <h3 style="color: var(--primary-color); margin-top: 2vh; font-size: clamp(2.5rem, 5vh, 4rem);">
+                Oefen deze week en wees de baas over je angst! 💪
+            </h3>
+        </div>
     </div>
 
     <div class="btn-container">
-        <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)" disabled>Vorige</button>
-        <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">Volgende</button>
+        <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)" disabled>←</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">→</button>
     </div>
 </div>
 
 <script>
     let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
     const moodCounts = { bliksem: 0, regen: 0, wolken: 0, 'zon-wolken': 0, zon: 0 };
 
     function registerMood(type) {
         moodCounts[type]++;
         document.getElementById(`count-${type}`).innerText = moodCounts[type];
+        
         const el = document.getElementById(`count-${type}`).parentElement;
         el.style.transform = "scale(1.2)";
         setTimeout(() => el.style.transform = "scale(1.15)", 150);
     }
 
-    function updateProgress() {
-        const steps = document.querySelectorAll('.step');
-        const percentage = (currentStep / (steps.length - 1)) * 100;
-        document.getElementById('progress-fill').style.width = percentage + '%';
-    }
-
     function changeStep(n) {
-        let steps = document.querySelectorAll('.step');
+        stopAudio(); // Stop de muziek altijd als we van dia wisselen
+
         steps[currentStep].classList.remove('active');
         currentStep += n;
-
-        if (currentStep < 0) currentStep = 0;
-        if (currentStep >= steps.length) currentStep = steps.length - 1;
-
         steps[currentStep].classList.add('active');
 
         document.getElementById('prevBtn').disabled = currentStep === 0;
-        document.getElementById('nextBtn').style.display = currentStep === steps.length - 1 ? 'none' : 'block';
+        document.getElementById('nextBtn').style.visibility = currentStep === steps.length - 1 ? 'hidden' : 'visible';
 
-        updateProgress();
-        window.scrollTo(0, 0);
+        const percentage = (currentStep / (steps.length - 1)) * 100;
+        document.getElementById('progress-fill').style.width = percentage + '%';
+
+        if (currentStep === steps.length - 1) {
+            confetti({ 
+                particleCount: 200, 
+                spread: 90, 
+                origin: { y: 0.6 }, 
+                colors: ['#6B9080', '#A4C3B2', '#E07A5F', '#FFD700', '#4A90E2'] 
+            });
+        }
     }
 
-    updateProgress();
-</script>
+    /* --- Audio Functies met Foutafhandeling --- */
+    function playAudio(id, btnElement) {
+        const allAudios = document.querySelectorAll('audio');
+        const allBtns = document.querySelectorAll('.music-btn');
+        
+        const targetAudio = document.getElementById(id);
+        const isPlaying = !targetAudio.paused;
 
+        // Stop alles eerst
+        allAudios.forEach(a => { a.pause(); a.currentTime = 0; });
+        allBtns.forEach(b => b.classList.remove('playing'));
+
+        // Als hij nog NIET speelde, start hem dan nu
+        if (!isPlaying) {
+            let playPromise = targetAudio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Audio speelt succesvol af
+                    btnElement.classList.add('playing');
+                }).catch(error => {
+                    // Browser blokkeert de audio (bijv. auto-play policy van Apple/Safari)
+                    alert("Je browser blokkeert het geluid. Zorg dat je apparaat niet op 'Stil' staat of klik eerst in het scherm!");
+                    console.log("Audio fout:", error);
+                });
+            }
+        }
+    }
+
+    function stopAudio() {
+        document.querySelectorAll('audio').forEach(a => {
+            a.pause();
+            a.currentTime = 0;
+        });
+        document.querySelectorAll('.music-btn').forEach(b => {
+            b.classList.remove('playing');
+        });
+    }
+</script>
 </body>
 </html>
