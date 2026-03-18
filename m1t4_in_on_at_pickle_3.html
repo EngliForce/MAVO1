@@ -17,16 +17,13 @@
             --success-green: #4CAF50;
             --danger-red: #F44336;
         }
-
         * { box-sizing: border-box; touch-action: manipulation; }
-
         body {
             font-family: 'Lexend', sans-serif;
             background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
             color: white; margin: 0; height: 100vh; overflow: hidden;
             display: flex; flex-direction: column;
         }
-
         header {
             background: var(--hero-blue-main);
             padding: 0.8rem 1rem;
@@ -36,79 +33,58 @@
             flex-shrink: 0; z-index: 100;
             box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
-
         h1 { font-family: 'Bangers', cursive; font-size: 1.8rem; letter-spacing: 2px; margin: 0; text-shadow: 2px 2px 0px var(--hero-blue-dark); }
-        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.3rem; margin: 5px 0; }
-
         main { 
             flex-grow: 1; display: flex; flex-direction: column; 
             align-items: center; padding: 10px; width: 100%; max-width: 800px; margin: 0 auto;
             position: relative;
         }
-
         .briefing-box {
             background: rgba(16, 42, 67, 0.9);
             border: 2px solid var(--hero-cyan);
-            border-radius: 15px; padding: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-radius: 15px; padding: 20px;
             text-align: center; width: 100%;
         }
-
         .hud-bar {
             display: flex; justify-content: space-between;
             background: rgba(0,0,0,0.8);
             padding: 8px 15px; border-radius: 15px;
             margin-bottom: 10px; border: 2px solid var(--hero-orange);
             font-family: 'Bangers'; font-size: 1.2rem; width: 100%;
-            z-index: 50;
         }
-
         #game-area {
             flex-grow: 1; width: 100%; position: relative;
-            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==');
+            background: rgba(255,255,255,0.03);
             overflow: hidden; border-radius: 15px; border: 2px solid rgba(255,255,255,0.1);
             border-bottom: 4px solid var(--danger-red);
         }
-
         .meteor {
             position: absolute; 
             width: 85%; max-width: 280px; 
             background: radial-gradient(circle at 30% 30%, #4a4e69, #2c3e50 60%, #1a1a2e);
-            border-radius: 40px; display: flex; align-items: center; justify-content: center;
-            font-family: 'Lexend', sans-serif; font-weight: 700; font-size: 0.95rem; 
-            color: #fff; text-shadow: 1px 1px 2px #000; line-height: 1.3;
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.95rem; color: #fff; 
             text-align: center; padding: 12px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.7);
             border: 2px solid #5c6bc0; z-index: 10;
         }
-
         .laser-beam {
-            position: absolute; bottom: 0; width: 12px; background: var(--hero-cyan);
-            border-radius: 10px; box-shadow: 0 0 20px var(--hero-cyan), 0 0 40px #fff;
-            z-index: 5; display: none;
+            position: absolute; bottom: 0; width: 8px; background: #fff;
+            box-shadow: 0 0 15px var(--hero-cyan), 0 0 30px #fff;
+            z-index: 5; display: none; pointer-events: none;
         }
-
         .controls-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-            width: 100%; margin-top: 10px; z-index: 50;
+            width: 100%; margin-top: 10px;
         }
-
         .btn-laser {
             background: var(--hero-blue-main); color: white; border: none;
             padding: 15px; border-radius: 10px; font-family: 'Bangers', cursive;
-            font-size: 1.6rem; cursor: pointer; transition: 0.2s;
+            font-size: 1.6rem; cursor: pointer; transition: 0.1s;
             border-bottom: 4px solid var(--hero-blue-dark);
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
         }
-        .btn-laser:active { transform: translateY(4px); border-bottom-width: 0px; }
-        .btn-laser#btn-in { border-color: #01579b; }
-        .btn-laser#btn-on { background: var(--hero-yellow); color: #000; border-color: #f57f17; text-shadow: none; }
-        .btn-laser#btn-at { background: var(--hero-cyan); color: #000; border-color: #0097a7; text-shadow: none; }
-
-        .feedback-msg {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: 'Bangers'; font-size: 3rem; text-shadow: 4px 4px 0 #000;
-            display: none; z-index: 100; pointer-events: none;
-        }
+        .btn-laser:active { transform: translateY(2px); border-bottom-width: 2px; }
+        #btn-on { background: var(--hero-yellow); color: #000; border-color: #f57f17; }
+        #btn-at { background: var(--hero-cyan); color: #000; border-color: #0097a7; }
 
         .hidden { display: none !important; }
         .shake { animation: shake 0.3s ease-in-out; }
@@ -119,18 +95,14 @@
 
 <header>
     <h1>ENGLIFORCE ACADEMY</h1>
-    <p style="margin:0; font-size:0.8rem; font-weight:bold; letter-spacing:1px;">TIME PREPOSITION DEFENDER</p>
+    <p style="margin:0; font-size:0.8rem; font-weight:bold;">TIME PREPOSITION DEFENDER</p>
 </header>
 
 <main>
     <div id="start-screen" class="briefing-box">
-        <h2>🚨 MISSION BRIEFING: TIME TRIALS</h2>
-        <p style="font-size: 1rem; line-height: 1.5; margin: 10px 0;">
-            De vloot wordt aangevallen door tijds-pods!<br>
-            Vuur de juiste laser (**IN**, **ON**, of **AT**) om de zin af te maken.<br>
-            Laat ze de basis niet raken!
-        </p>
-        <button class="btn-laser" style="padding: 12px 40px; font-size: 1.3rem;" onclick="startGame()">START DEFENSE</button>
+        <h2>🚨 MISSION START</h2>
+        <p>Vuur de juiste laser om de meteorieten te vernietigen!</p>
+        <button class="btn-laser" style="padding: 10px 40px;" onclick="startGame()">START DEFENSE</button>
     </div>
 
     <div id="game-screen" class="hidden" style="display: flex; flex-direction: column; width:100%; height:100%;">
@@ -138,12 +110,9 @@
             <div>SCORE: <span id="score-display">0</span></div>
             <div id="lives-display">❤️❤️❤️</div>
         </div>
-
         <div id="game-area">
             <div class="laser-beam" id="laser"></div>
-            <div class="feedback-msg" id="central-feedback">WRONG!</div>
         </div>
-
         <div class="controls-grid">
             <button class="btn-laser" id="btn-in" onclick="fireLaser('in')">IN</button>
             <button class="btn-laser" id="btn-on" onclick="fireLaser('on')">ON</button>
@@ -152,23 +121,23 @@
     </div>
 
     <div id="end-screen" class="briefing-box hidden">
-        <h2 id="end-title">MISSION FAILED!</h2>
-        <div style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin: 10px 0;">SCORE: <span id="final-score">0</span></div>
-        <button class="btn-laser" style="width:100%;" onclick="location.reload()">RESTART MISSION</button>
+        <h2>MISSION FAILED!</h2>
+        <div style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow);">SCORE: <span id="final-score">0</span></div>
+        <button class="btn-laser" style="width:100%;" onclick="location.reload()">RESTART</button>
     </div>
 </main>
 
 <script>
     const meteorDB = [
-        // AT (50 vragen)
+        // AT (50)
         {q: "I have a meeting ___ 9 AM.", c: "at"}, {q: "The shop closes ___ midnight.", c: "at"}, {q: "I'm busy ___ the moment.", c: "at"}, {q: "I love to look at the stars ___ night.", c: "at"}, {q: "I’ll see you ___ lunchtime.", c: "at"}, {q: "What are you doing ___ the weekend?", c: "at"}, {q: "The train leaves ___ 6:30.", c: "at"}, {q: "The birds sing ___ sunrise.", c: "at"}, {q: "I feel tired ___ the end of the day.", c: "at"}, {q: "The pool opens ___ 8 o'clock.", c: "at"}, {q: "I'm leaving ___ half past seven.", c: "at"}, {q: "We usually visit them ___ Easter.", c: "at"}, {q: "I usually wake up ___ dawn.", c: "at"}, {q: "The meeting is ___ 10:45.", c: "at"}, {q: "I'll be home ___ sunset.", c: "at"}, {q: "The store opens ___ noon.", c: "at"}, {q: "We have a break ___ 3 PM.", c: "at"}, {q: "We usually have dinner ___ 7 o'clock.", c: "at"}, {q: "She’s busy ___ present.", c: "at"}, {q: "I can't sleep ___ night.", c: "at"}, {q: "I'll pay you ___ the end of the month.", c: "at"}, {q: "We had a meeting ___ 2 o'clock.", c: "at"}, {q: "She left ___ the end of the party.", c: "at"}, {q: "The bank opens ___ 9:00.", c: "at"}, {q: "I'll see you ___ dinner time.", c: "at"}, {q: "They arrived ___ the same time.", c: "at"}, {q: "I like to relax ___ bedtime.", c: "at"}, {q: "The bell rings ___ the end of the lesson.", c: "at"}, {q: "We met ___ sunset.", c: "at"}, {q: "I am working ___ the moment.", c: "at"}, {q: "The bus arrives ___ 11:15.", c: "at"}, {q: "I don't like to go out ___ night.", c: "at"}, {q: "He woke up ___ midnight.", c: "at"}, {q: "What were you doing ___ 8 PM?", c: "at"}, {q: "I will call you ___ lunchtime.", c: "at"}, {q: "We meet ___ every weekend.", c: "at"}, {q: "The stars shine bright ___ midnight.", c: "at"}, {q: "I have an appointment ___ 4:45.", c: "at"}, {q: "Let's talk ___ the end of the day.", c: "at"}, {q: "The movie starts ___ noon.", c: "at"}, {q: "I was sleeping ___ 3 AM.", c: "at"}, {q: "I'll be back ___ sunset.", c: "at"}, {q: "We celebrate ___ Christmas.", c: "at"}, {q: "The postman comes ___ 10:00.", c: "at"}, {q: "I'll see you ___ break time.", c: "at"}, {q: "The shop closes ___ 6 PM.", c: "at"}, {q: "He is never home ___ night.", c: "at"}, {q: "I'll see you ___ half past eight.", c: "at"}, {q: "The birds sing ___ dawn.", c: "at"}, {q: "They finished ___ the same time.", c: "at"},
-        // ON (50 vragen)
-        {q: "Jane is arriving ___ Monday.", c: "on"}, {q: "The concert is ___ 15th April.", c: "on"}, {q: "I'll see you ___ Friday.", c: "on"}, {q: "I have piano lessons ___ Tuesdays.", c: "on"}, {q: "We went out ___ my birthday.", c: "on"}, {q: "What did you do ___ New Year's Day?", c: "on"}, {q: "We're meeting ___ Thursday morning.", c: "on"}, {q: "She was born ___ Christmas Day.", c: "on"}, {q: "See you ___ Saturday!", c: "on"}, {q: "It's hard to work ___ such a hot day.", c: "on"}, {q: "I was very happy ___ my wedding day.", c: "on"}, {q: "The shop is closed ___ Sundays.", c: "on"}, {q: "What are you doing ___ Friday night?", c: "on"}, {q: "The exam is ___ next Monday.", c: "on"}, {q: "We celebrate ___ 31st December.", c: "on"}, {q: "I like to relax ___ Sundays.", c: "on"}, {q: "The party is ___ Saturday night.", c: "on"}, {q: "I’ll see you ___ tomorrow morning.", c: "on"}, {q: "The accident happened ___ Monday morning.", c: "on"}, {q: "The course starts ___ 12th January.", c: "on"}, {q: "I have a surprise ___ your birthday.", c: "on"}, {q: "We usually eat fish ___ Fridays.", c: "on"}, {q: "What happened ___ the 1st of May?", c: "on"}, {q: "I'll see you ___ Tuesday afternoon.", c: "on"}, {q: "The office is closed ___ public holidays.", c: "on"}, {q: "I was born ___ a sunny day.", c: "on"}, {q: "We go to church ___ Sundays.", c: "on"}, {q: "The meeting is ___ Wednesday.", c: "on"}, {q: "I'll call you ___ Saturday morning.", c: "on"}, {q: "The show is ___ October 1st.", c: "on"}, {q: "We had a party ___ Halloween.", c: "on"}, {q: "I have an interview ___ Monday morning.", c: "on"}, {q: "It rained heavily ___ my wedding day.", c: "on"}, {q: "The results come out ___ Thursday.", c: "on"}, {q: "I'll be there ___ your big day.", c: "on"}, {q: "She left ___ a cold winter morning.", c: "on"}, {q: "I don't work ___ weekends.", c: "on"}, {q: "We met ___ a very special day.", c: "on"}, {q: "The shop opens ___ weekdays.", c: "on"}, {q: "I like to sleep in ___ Saturdays.", c: "on"}, {q: "My vacation starts ___ Monday.", c: "on"}, {q: "I have a doctor's visit ___ Friday.", c: "on"}, {q: "We are traveling ___ the 20th of July.", c: "on"}, {q: "I am going to a concert ___ Saturday.", c: "on"}, {q: "He arrived ___ a Tuesday.", c: "on"}, {q: "What did you get ___ your birthday?", c: "on"}, {q: "The shop is open ___ Christmas Eve.", c: "on"}, {q: "I'll see you ___ New Year's Day.", c: "on"}, {q: "We always have fun ___ my birthday.", c: "on"}, {q: "The test is ___ Friday morning.", c: "on"},
-        // IN (50 vragen)
+        // ON (50)
+        {q: "Jane is arriving ___ Monday.", c: "on"}, {q: "The concert is ___ 15th April.", c: "on"}, {q: "I'll see you ___ Friday.", c: "on"}, {q: "I have piano lessons ___ Tuesdays.", c: "on"}, {q: "We went out ___ my birthday.", c: "on"}, {q: "What did you do ___ New Year's Day?", c: "on"}, {q: "We're meeting ___ Thursday morning.", c: "on"}, {q: "She was born ___ Christmas Day.", c: "on"}, {q: "See you ___ Saturday!", c: "on"}, {q: "It's hard to work ___ such a hot day.", c: "on"}, {q: "I was very happy ___ my wedding day.", c: "on"}, {q: "The shop is closed ___ Sundays.", c: "on"}, {q: "What are you doing ___ Friday night?", c: "on"}, {q: "The exam is ___ next Monday.", c: "on"}, {q: "We celebrate ___ 31st December.", c: "on"}, {q: "I like to relax ___ Sundays.", c: "on"}, {q: "The party is ___ Saturday night.", c: "on"}, {q: "The accident happened ___ Monday morning.", c: "on"}, {q: "The course starts ___ 12th January.", c: "on"}, {q: "I have a surprise ___ your birthday.", c: "on"}, {q: "We usually eat fish ___ Fridays.", c: "on"}, {q: "What happened ___ the 1st of May?", c: "on"}, {q: "I'll see you ___ Tuesday afternoon.", c: "on"}, {q: "The office is closed ___ public holidays.", c: "on"}, {q: "I was born ___ a sunny day.", c: "on"}, {q: "We go to church ___ Sundays.", c: "on"}, {q: "The meeting is ___ Wednesday.", c: "on"}, {q: "I'll call you ___ Saturday morning.", c: "on"}, {q: "The show is ___ October 1st.", c: "on"}, {q: "We had a party ___ Halloween.", c: "on"}, {q: "I have an interview ___ Monday morning.", c: "on"}, {q: "It rained heavily ___ my wedding day.", c: "on"}, {q: "The results come out ___ Thursday.", c: "on"}, {q: "I'll be there ___ your big day.", c: "on"}, {q: "She left ___ a cold winter morning.", c: "on"}, {q: "I don't work ___ weekends.", c: "on"}, {q: "We met ___ a very special day.", c: "on"}, {q: "The shop opens ___ weekdays.", c: "on"}, {q: "I like to sleep in ___ Saturdays.", c: "on"}, {q: "My vacation starts ___ Monday.", c: "on"}, {q: "I have a doctor's visit ___ Friday.", c: "on"}, {q: "We are traveling ___ the 20th of July.", c: "on"}, {q: "I am going to a concert ___ Saturday.", c: "on"}, {q: "He arrived ___ a Tuesday.", c: "on"}, {q: "What did you get ___ your birthday?", c: "on"}, {q: "The shop is open ___ Christmas Eve.", c: "on"}, {q: "I'll see you ___ New Year's Day.", c: "on"}, {q: "We always have fun ___ my birthday.", c: "on"}, {q: "The test is ___ Friday morning.", c: "on"}, {q: "He arrives ___ the tenth.", c: "on"},
+        // IN (50)
         {q: "We're going on holiday ___ July.", c: "in"}, {q: "It's very cold ___ winter.", c: "in"}, {q: "I'll see you ___ the morning.", c: "in"}, {q: "They got married ___ 2015.", c: "in"}, {q: "My birthday is ___ June.", c: "in"}, {q: "I was born ___ 1998.", c: "in"}, {q: "I'll be there ___ five minutes.", c: "in"}, {q: "The school starts ___ September.", c: "in"}, {q: "I like to read ___ the evening.", c: "in"}, {q: "It happened ___ the 19th century.", c: "in"}, {q: "I'll finish the report ___ the afternoon.", c: "in"}, {q: "Humans walked on the moon ___ 1969.", c: "in"}, {q: "The flowers bloom ___ spring.", c: "in"}, {q: "The movie starts ___ 20 minutes.", c: "in"}, {q: "The leaves fall ___ autumn.", c: "in"}, {q: "I’ll call you ___ an hour.", c: "in"}, {q: "I started working here ___ May.", c: "in"}, {q: "They met ___ the 80s.", c: "in"}, {q: "I drink coffee ___ the morning.", c: "in"}, {q: "I visited Rome ___ 2012.", c: "in"}, {q: "The project ends ___ December.", c: "in"}, {q: "I'll see you ___ two weeks.", c: "in"}, {q: "I graduated ___ 2020.", c: "in"}, {q: "We go for a walk ___ the evening.", c: "in"}, {q: "I’ll be back ___ a few days.", c: "in"}, {q: "He woke up ___ the middle of the night.", c: "in"}, {q: "The bus arrives ___ ten minutes.", c: "in"}, {q: "It rains a lot ___ April.", c: "in"}, {q: "I’m going away ___ a few weeks.", c: "in"}, {q: "I'll be finished ___ five minutes.", c: "in"}, {q: "The house was built ___ 1920.", c: "in"}, {q: "I'll see you ___ the summer.", c: "in"}, {q: "It's beautiful here ___ autumn.", c: "in"}, {q: "I was born ___ August.", c: "in"}, {q: "We are ___ the 21st century.", c: "in"}, {q: "I like to swim ___ the summer.", c: "in"}, {q: "He'll be back ___ an hour.", c: "in"}, {q: "Life was different ___ the 1950s.", c: "in"}, {q: "The meeting is ___ the afternoon.", c: "in"}, {q: "It gets dark early ___ winter.", c: "in"}, {q: "I'll see you ___ January.", c: "in"}, {q: "The snow falls ___ February.", c: "in"}, {q: "She will arrive ___ ten minutes.", c: "in"}, {q: "We will meet ___ the future.", c: "in"}, {q: "I read the news ___ the morning.", c: "in"}, {q: "The park is lovely ___ spring.", c: "in"}, {q: "They traveled to Japan ___ 2019.", c: "in"}, {q: "The shop opened ___ March.", c: "in"}, {q: "I'll be ready ___ a second.", c: "in"}, {q: "We lived there ___ the 90s.", c: "in"}
     ];
 
-    let gameState = { score: 0, lives: 3, speed: 1.0, currentMeteor: null, loop: null, active: false };
+    let gameState = { score: 0, lives: 3, speed: 1.2, currentMeteor: null, loop: null, active: false };
 
     function startGame() {
         document.getElementById('start-screen').classList.add('hidden');
@@ -180,12 +149,17 @@
 
     function gameLoop() {
         if (!gameState.active) return;
-        const areaHeight = document.getElementById('game-area').offsetHeight;
+        const area = document.getElementById('game-area');
+        const areaHeight = area.offsetHeight;
+
         if (gameState.currentMeteor) {
             let m = gameState.currentMeteor;
             m.y += gameState.speed;
             m.el.style.transform = `translateY(${m.y}px)`;
-            if (m.y + m.height >= areaHeight) handleMiss();
+            
+            if (m.y >= areaHeight) {
+                handleMiss();
+            }
         }
         gameState.loop = requestAnimationFrame(gameLoop);
     }
@@ -194,53 +168,76 @@
         if (!gameState.active) return;
         const area = document.getElementById('game-area');
         const data = meteorDB[Math.floor(Math.random() * meteorDB.length)];
+        
         const meteorEl = document.createElement('div');
         meteorEl.className = 'meteor';
-        meteorEl.innerHTML = data.q.replace("___", "<span style='color:var(--hero-yellow);'>...</span>"); 
-        meteorEl.style.top = '0px'; 
+        meteorEl.innerHTML = data.q.replace("___", "<span style='color:var(--hero-yellow);'>...</span>");
         area.appendChild(meteorEl);
+
         const mWidth = meteorEl.offsetWidth;
         const mHeight = meteorEl.offsetHeight;
-        const xPos = Math.random() * (area.offsetWidth - mWidth - 10);
+        const xPos = Math.random() * (area.offsetWidth - mWidth);
+        
         meteorEl.style.left = xPos + 'px';
-        const startY = -mHeight - 20; 
-        meteorEl.style.transform = `translateY(${startY}px)`;
+        const startY = -mHeight; 
+        
         gameState.currentMeteor = { el: meteorEl, prep: data.c, y: startY, x: xPos, width: mWidth, height: mHeight };
     }
 
     function fireLaser(prep) {
         if (!gameState.active || !gameState.currentMeteor) return;
+        
         const targetMeteor = gameState.currentMeteor;
         const laserEl = document.getElementById('laser');
-        const areaHeight = document.getElementById('game-area').offsetHeight;
-        laserEl.style.left = (targetMeteor.x + (targetMeteor.width / 2) - 6) + 'px';
-        laserEl.style.height = (areaHeight - (targetMeteor.y + (targetMeteor.height / 2))) + 'px';
+        const area = document.getElementById('game-area');
+        
+        const meteorRect = targetMeteor.el.getBoundingClientRect();
+        const areaRect = area.getBoundingClientRect();
+
+        const relativeLeft = meteorRect.left - areaRect.left + (meteorRect.width / 2) - 4;
+        const laserHeight = areaRect.bottom - meteorRect.bottom + (meteorRect.height / 2);
+
+        laserEl.style.left = relativeLeft + 'px';
+        laserEl.style.height = laserHeight + 'px';
         laserEl.style.display = 'block';
+
         setTimeout(() => laserEl.style.display = 'none', 100);
 
-        if (prep === targetMeteor.prep) handleHit();
-        else handleWrongShot();
+        if (prep === targetMeteor.prep) {
+            handleHit(meteorRect.left + meteorRect.width/2, meteorRect.top + meteorRect.height/2);
+        } else {
+            handleWrongShot();
+        }
     }
 
-    function handleHit() {
+    function handleHit(x, y) {
         gameState.score += 10;
         document.getElementById('score-display').innerText = gameState.score;
-        gameState.speed += 0.05; // Versnelt per goed antwoord
+        gameState.speed += 0.04; 
+        
         gameState.currentMeteor.el.remove();
         gameState.currentMeteor = null;
-        confetti({ particleCount: 20, spread: 50, origin: { y: 0.8 } });
-        setTimeout(spawnMeteor, 200);
+
+        confetti({ 
+            particleCount: 20, 
+            spread: 60, 
+            origin: { x: x / window.innerWidth, y: y / window.innerHeight } 
+        });
+
+        setTimeout(spawnMeteor, 300);
     }
 
     function handleMiss() {
         gameState.lives--;
         updateLivesHud();
         document.body.classList.add('shake');
-        gameState.currentMeteor.el.remove();
+        if(gameState.currentMeteor) gameState.currentMeteor.el.remove();
         gameState.currentMeteor = null;
+        
         setTimeout(() => document.body.classList.remove('shake'), 300);
+        
         if (gameState.lives <= 0) endGame();
-        else setTimeout(spawnMeteor, 500);
+        else setTimeout(spawnMeteor, 600);
     }
 
     function handleWrongShot() {
