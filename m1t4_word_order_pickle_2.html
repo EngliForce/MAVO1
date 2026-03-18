@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Word Order Warrior: SVOPT Strict</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue: #0288d1;
+            --hero-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-orange: #ff5722;
+            --success: #4CAF50;
+            --danger: #F44336;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%);
+            color: white; margin: 0; height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        header {
+            background: var(--hero-blue); padding: 1rem; text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow); flex-shrink: 0;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2rem; margin: 0; text-shadow: 2px 2px 0 var(--hero-dark); }
+        
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; max-width: 900px; margin: 0 auto; width: 100%; position: relative; overflow: hidden; }
+        
+        .menu-card {
+            background: rgba(16, 42, 67, 0.95); border: 2px solid var(--hero-blue);
+            border-radius: 20px; padding: 25px; text-align: center; width: 100%;
+        }
+
+        #game-area {
+            flex-grow: 1; width: 100%; position: relative;
+            background: rgba(255,255,255,0.02); border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.1); overflow-y: auto;
+            display: flex; flex-direction: column; align-items: center; padding: 15px;
+        }
+
+        .word-blocks-container {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 10px; width: 100%;
+        }
+
+        .word-block {
+            background: var(--hero-dark); border: 2px solid var(--hero-blue);
+            padding: 10px 16px; border-radius: 8px; cursor: pointer;
+            font-weight: 700; font-size: 1rem; transition: 0.2s;
+            box-shadow: 0 4px 0 var(--hero-blue); color: white;
+        }
+        .word-block:hover { transform: translateY(-2px); background: var(--hero-blue); }
+        .word-block.selected { opacity: 0.2; pointer-events: none; transform: scale(0.9); }
+
+        .result-zone {
+            width: 100%; min-height: 110px; border: 2px dashed var(--hero-yellow);
+            border-radius: 15px; margin-top: 15px; display: flex;
+            flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; padding: 15px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .placed-word {
+            background: var(--hero-orange); color: white; padding: 6px 12px; border-radius: 6px;
+            font-weight: 700; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
+        .btn-action {
+            background: var(--hero-yellow); color: #000; border: none;
+            padding: 15px 25px; border-radius: 10px; font-family: 'Bangers';
+            font-size: 1.5rem; cursor: pointer; border-bottom: 4px solid #cc9200; width: 100%;
+        }
+
+        .hud {
+            width: 100%; display: flex; justify-content: space-between;
+            font-family: 'Bangers'; font-size: 1.2rem; margin-bottom: 8px; color: var(--hero-yellow);
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>WORD ORDER WARRIOR</h1>
+</header>
+
+<main>
+    <div id="start-screen" class="menu-card">
+        <h2>MISSION BRIEFING</h2>
+        <p>Rule: Subject + Verb + Object + Place + Time</p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+            <button class="btn-action" onclick="startGame('short')" style="background: #4db6ac; border-color: #00897b;">LEVEL 1: SHORT</button>
+            <button class="btn-action" onclick="startGame('medium')" style="background: #7986cb; border-color: #3f51b5;">LEVEL 2: MEDIUM</button>
+            <button class="btn-action" onclick="startGame('long')" style="background: #9575cd; border-color: #5e35b1;">LEVEL 3: LONG</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+        <div class="hud">
+            <div>MISSION: <span id="round-display">1</span>/10</div>
+            <div>SCORE: <span id="score-display">0</span></div>
+        </div>
+        
+        <div id="game-area">
+            <div id="word-pool" class="word-blocks-container"></div>
+            <div id="answer-zone" class="result-zone"></div>
+            <div id="feedback-text" style="margin-top: 10px; font-family: 'Bangers'; font-size: 1.4rem;"></div>
+        </div>
+
+        <div style="display: flex; gap: 10px; width: 100%;">
+            <button class="btn-action" style="background: #e57373; border-color: #c62828; flex: 1;" onclick="resetSentence()">CLEAR</button>
+            <button class="btn-action" style="background: var(--success); border-color: #2e7d32; flex: 2;" onclick="checkOrder()">CHECK ORDER</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="menu-card hidden">
+        <h2>TRAINING COMPLETE</h2>
+        <div style="font-family: 'Bangers'; font-size: 4rem; color: var(--hero-yellow);" id="final-score">0</div>
+        <button class="btn-action" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+</main>
+
+<script>
+    const fullDatabase = {
+        // Zinnen zijn nu strikt: Subject + Verb + (Object) + Place + Time
+        short: [
+            ["I", "work", "at home", "today"], ["They", "play", "in the park", "now"], ["He", "runs", "to school", "daily"], ["We", "eat", "at the cafe", "often"], ["She", "sleeps", "in her room", "tonight"],
+            ["My brother", "drives", "to London", "on Mondays"], ["The sun", "shines", "in the sky", "now"], ["I", "swim", "in the lake", "on Saturdays"], ["She", "works", "at the clinic", "this week"], ["Dogs", "bark", "in the street", "at night"],
+            ["He", "reads", "in the library", "every Tuesday"], ["They", "travel", "to Spain", "in summer"], ["I", "dance", "at the party", "tonight"], ["We", "walk", "in the forest", "weekly"], ["She", "lives", "in a house", "now"],
+            ["He", "waits", "at the bus stop", "every morning"], ["We", "cook", "in the kitchen", "at six"], ["I", "study", "at school", "this year"], ["The train", "stops", "at the station", "soon"], ["They", "sing", "at the church", "on Sundays"],
+            ["I", "sleep", "in a tent", "in July"], ["He", "arrives", "at the office", "at nine"], ["We", "relax", "at the beach", "all day"], ["She", "stays", "at home", "today"], ["I", "exercise", "at the gym", "twice a week"],
+            ["He", "skates", "on the ice", "in January"], ["We", "wait", "at the airport", "at noon"], ["They", "sit", "at the table", "for dinner"], ["The plane", "flies", "over the sea", "tonight"], ["I", "write", "in my book", "every night"],
+            ["She", "shops", "at the mall", "on weekends"], ["We", "meet", "at the cinema", "at eight"], ["They", "run", "on the track", "every morning"], ["The kids", "play", "in the classroom", "now"], ["He", "jumps", "into the pool", "now"],
+            ["They", "listen", "to the radio", "in the car"], ["I", "paint", "at the museum", "today"], ["She", "works", "at the bank", "this month"], ["He", "prays", "at the temple", "weekly"], ["We", "camp", "in the woods", "every summer"],
+            ["They", "rest", "on the grass", "now"], ["The boat", "sails", "on the river", "daily"], ["I", "bake", "in the oven", "on Sundays"], ["He", "reads", "by the fire", "at night"], ["I", "stand", "at the gate", "now"],
+            ["She", "looks", "at the stars", "tonight"], ["He", "speaks", "at the meeting", "today"], ["We", "stay", "at the cabin", "often"], ["I", "wait", "in the line", "now"], ["She", "dances", "in the room", "at night"],
+            ["He", "works", "in the garden", "this morning"], ["They", "run", "to the shop", "now"], ["She", "listens", "to music", "today"], ["He", "drives", "on the road", "every day"], ["I", "walk", "to the bakery", "at eight"],
+            ["He", "jumps", "on the bed", "now"], ["The dog", "lies", "on the rug", "now"], ["We", "park", "in the lot", "daily"], ["They", "search", "in the box", "now"], ["I", "look", "at the clock", "every hour"],
+            ["She", "works", "at the school", "this year"], ["He", "signs", "at the desk", "now"], ["We", "study", "together", "in the morning"], ["They", "rest", "at the spa", "today"], ["I", "wait", "for the bus", "at the corner"],
+            ["She", "arrives", "at the airport", "at noon"], ["We", "eat", "pizza", "in the park", "today"], ["He", "buys", "bread", "at the shop", "daily"], ["They", "see", "the cat", "in the yard", "now"], ["I", "wash", "the car", "at home", "on Sunday"],
+            ["She", "drinks", "tea", "in the kitchen", "at seven"], ["He", "makes", "lunch", "at home", "every day"], ["We", "watch", "TV", "in the room", "at night"], ["They", "clean", "the house", "on Saturdays"], ["I", "open", "the window", "at home", "daily"],
+            ["She", "sells", "fruit", "at the market", "today"], ["He", "plays", "games", "in his room", "now"], ["We", "need", "milk", "from the shop", "today"], ["They", "find", "eggs", "at the farm", "weekly"], ["I", "like", "music", "in the car", "always"],
+            ["She", "needs", "help", "at school", "today"], ["He", "wants", "water", "at the gym", "now"], ["We", "have", "fun", "at the party", "tonight"], ["They", "take", "the bus", "to town", "daily"], ["I", "see", "the birds", "in the tree", "now"],
+            ["She", "looks", "at the map", "in the street", "today"], ["He", "works", "at the office", "on Fridays"], ["We", "play", "tennis", "at the club", "weekly"], ["They", "visit", "the zoo", "in June"], ["I", "go", "to the beach", "every summer"],
+            ["She", "sits", "on the chair", "now"], ["He", "calls", "his mom", "at home", "daily"], ["We", "meet", "friends", "at the cafe", "at five"], ["They", "buy", "clothes", "at the mall", "today"], ["I", "use", "the phone", "in the car", "now"],
+            ["She", "makes", "a cake", "at home", "today"], ["He", "finds", "a pen", "on the floor", "now"], ["We", "read", "a book", "in the garden", "now"], ["They", "eat", "fish", "at the restaurant", "tonight"], ["I", "watch", "a movie", "at the cinema", "tonight"]
+        ],
+        medium: [
+            ["The boy", "kicked", "the ball", "into the garden", "today"], ["My father", "washes", "the car", "in the street", "every week"], ["We", "bought", "some milk", "at the shop", "this morning"], ["They", "watched", "a movie", "at the cinema", "last night"], ["The chef", "cooks", "dinner", "in the kitchen", "at six"],
+            ["She", "made", "a cake", "at home", "on Sunday"], ["I", "found", "my keys", "under the table", "today"], ["He", "wrote", "a letter", "at his desk", "this morning"], ["We", "played", "football", "on the field", "after school"], ["They", "visit", "the museum", "in the city", "every month"],
+            ["The teacher", "gave", "the homework", "in the class", "today"], ["I", "drank", "my coffee", "in the garden", "this morning"], ["She", "cleaned", "the house", "in the village", "on Saturday"], ["He", "painted", "the door", "at the farm", "yesterday"], ["We", "saw", "a bird", "in the sky", "this afternoon"],
+            ["They", "brought", "the food", "to the party", "at eight"], ["I", "left", "my bag", "on the bus", "this morning"], ["She", "met", "her friend", "at the park", "yesterday"], ["The postman", "delivered", "a parcel", "to the house", "today"], ["He", "lost", "his phone", "at the beach", "last weekend"],
+            ["We", "read", "the book", "in the library", "all day"], ["They", "sent", "a card", "from London", "last week"], ["I", "took", "a photo", "at the park", "at noon"], ["She", "wears", "her coat", "in the office", "in winter"], ["The cat", "ate", "the fish", "in the kitchen", "now"],
+            ["He", "fixed", "the bike", "in the garage", "yesterday"], ["We", "bought", "a ticket", "at the station", "today"], ["They", "planted", "flowers", "in the garden", "last week"], ["I", "met", "the teacher", "at school", "on Monday"], ["She", "lost", "her ring", "in the water", "this morning"],
+            ["The boy", "broke", "the window", "at school", "yesterday"], ["He", "carried", "the box", "to the car", "today"], ["We", "had", "a picnic", "in the park", "on Sunday"], ["They", "sold", "their car", "at the market", "last week"], ["I", "finished", "my work", "at the desk", "today"],
+            ["She", "checked", "the mail", "at home", "this morning"], ["The dog", "chased", "a rabbit", "in the woods", "yesterday"], ["He", "forgot", "his bag", "at the shop", "today"], ["We", "built", "a fire", "on the beach", "last night"], ["They", "stole", "the money", "from the shop", "last year"],
+            ["I", "called", "the doctor", "at the clinic", "this morning"], ["She", "kept", "the photo", "in a box", "for years"], ["He", "showed", "the pictures", "to his friends", "yesterday"], ["We", "heard", "the music", "on the radio", "this morning"], ["They", "watched", "the game", "at the stadium", "on Saturday"],
+            ["I", "bought", "a shirt", "at the mall", "today"], ["She", "parked", "the car", "on the street", "at noon"], ["He", "studied", "the map", "in the car", "today"], ["We", "drank", "tea", "at the cafe", "this afternoon"], ["They", "played", "music", "in the park", "yesterday"],
+            ["I", "wrote", "a story", "in my book", "last night"], ["She", "sang", "a song", "at the party", "on Friday"], ["The boy", "found", "a coin", "on the floor", "today"], ["He", "ate", "an apple", "in the garden", "at ten"], ["We", "visited", "the park", "in London", "last summer"],
+            ["They", "threw", "the paper", "in the bin", "this morning"], ["I", "saw", "a film", "at the cinema", "last night"], ["She", "ordered", "a pizza", "on the phone", "today"], ["He", "sold", "bread", "at the bakery", "yesterday"], ["We", "hiked", "the hill", "in the woods", "last year"],
+            ["They", "found", "a cat", "in the street", "today"], ["I", "poured", "the juice", "in the glass", "now"], ["She", "ironed", "the shirt", "at home", "today"], ["The man", "read", "a book", "at the station", "this morning"], ["He", "took", "the dog", "to the park", "at four"],
+            ["We", "played", "chess", "at the club", "yesterday"], ["They", "lifted", "the box", "at the gym", "today"], ["I", "watched", "the birds", "in the garden", "today"], ["She", "took", "her medicine", "in the room", "daily"], ["He", "caught", "the ball", "at the match", "on Saturday"],
+            ["We", "brought", "the chairs", "to the garden", "today"], ["They", "saw", "the sea", "from the plane", "yesterday"], ["I", "put", "the book", "on the shelf", "now"], ["She", "needs", "a doctor", "at the clinic", "today"], ["He", "drove", "the truck", "to the farm", "yesterday"],
+            ["We", "watched", "the sun", "at the beach", "this morning"], ["They", "had", "breakfast", "in the hotel", "at eight"], ["I", "checked", "the time", "in the hall", "now"], ["She", "met", "her sister", "at the airport", "today"], ["He", "painted", "the wall", "in the room", "last week"],
+            ["We", "learned", "a dance", "at the studio", "on Monday"], ["They", "heard", "the bell", "in the street", "at noon"], ["I", "found", "a mistake", "in the book", "today"], ["She", "bought", "the shoes", "at the shop", "yesterday"], ["He", "fed", "the birds", "in the park", "today"],
+            ["We", "fixed", "the door", "at home", "last month"], ["They", "visited", "the zoo", "in the city", "last week"], ["I", "bought", "a book", "at the shop", "today"], ["She", "wrote", "a song", "in her room", "last night"], ["He", "carried", "the bag", "to the car", "yesterday"],
+            ["We", "met", "the guests", "at the door", "at seven"], ["They", "ate", "their lunch", "at the school", "at noon"], ["I", "used", "the computer", "at home", "all day"], ["She", "drove", "the car", "on the farm", "this morning"], ["He", "hit", "the ball", "at the park", "yesterday"],
+            ["We", "walked", "the dog", "in the park", "this evening"], ["They", "watched", "a show", "at the theatre", "last night"], ["I", "cooked", "a meal", "in the kitchen", "on Sunday"], ["She", "found", "a ball", "on the street", "today"], ["He", "opened", "the box", "at the table", "now"]
+        ],
+        long: [
+            ["The young artist", "painted", "a nice picture", "in the studio", "on Tuesday"], ["Three happy children", "found", "a small key", "in the forest", "today"], ["My old neighbor", "reads", "the newspaper", "in his garden", "every day"], ["The hungry cat", "caught", "a small mouse", "in the barn", "last night"], ["The tall teacher", "wrote", "math problems", "on the board", "this morning"],
+            ["A local policeman", "helped", "an old lady", "at the street", "today"], ["The tired doctor", "visited", "a sick man", "at the house", "last night"], ["My best friend", "bought", "a new car", "at the shop", "yesterday"], ["The professional chef", "made", "a good meal", "in the restaurant", "today"], ["The clever students", "passed", "the exam", "at school", "on Friday"],
+            ["A strong wind", "blew", "the leaves", "into the garden", "all night"], ["The curious boy", "watched", "a big spider", "in the corner", "this morning"], ["My young sister", "plays", "a flute", "in her room", "every day"], ["The brave soldier", "carried", "a heavy bag", "to the camp", "at sunset"], ["A quiet fisherman", "caught", "a big fish", "in the river", "yesterday"],
+            ["The famous actor", "signed", "a poster", "at the cinema", "last night"], ["A small white rabbit", "ate", "a carrot", "in the field", "this morning"], ["The busy manager", "sent", "an email", "from the office", "at noon"], ["A friendly guide", "showed", "the old city", "to the tourists", "yesterday"], ["The lazy dog", "slept", "on the rug", "in the room", "all afternoon"],
+            ["A noisy group", "played", "music", "on the beach", "all day"], ["The careful gardener", "planted", "red roses", "in the park", "this week"], ["An old man", "told", "a funny story", "at the club", "last night"], ["The nervous singer", "sang", "a new song", "at the club", "on Saturday"], ["A fast runner", "won", "a medal", "at the stadium", "today"],
+            ["The dark clouds", "brought", "rain", "to the village", "this afternoon"], ["A young couple", "bought", "a small house", "in the country", "last year"], ["The honest boy", "returned", "a lost bag", "to the owner", "yesterday"], ["My kind mother", "baked", "ten cookies", "in the kitchen", "this morning"], ["The local bank", "lent", "money", "to the farmer", "last month"],
+            ["A bright sun", "warmed", "the ground", "in the morning", "today"], ["The little girl", "lost", "her yellow balloon", "at the fair", "yesterday"], ["A big truck", "delivered", "fresh fruit", "to the store", "today"], ["The wild horses", "ran", "across the fields", "at sunset", "daily"], ["A red bird", "built", "a small nest", "in the tree", "in spring"],
+            ["The old clock", "rang", "twelve times", "in the hall", "at midnight"], ["A rich lady", "bought", "a ring", "at the shop", "on Monday"], ["The angry man", "shouted", "loud words", "in the street", "now"], ["A soft snow", "covered", "the mountains", "in the night", "yesterday"], ["The brave firemen", "saved", "the house", "in the city", "last night"],
+            ["A smart girl", "finished", "the puzzle", "in the library", "this morning"], ["The hungry wolves", "hunted", "the deer", "in the forest", "in winter"], ["A friendly cat", "followed", "the man", "to the shop", "today"], ["The young pilot", "landed", "the plane", "at the airport", "at noon"], ["A busy mother", "pushed", "the pram", "in the park", "every day"],
+            ["The lucky winner", "got", "a big prize", "on the stage", "last night"], ["A golden sun", "set", "behind the hills", "in the west", "at seven"], ["The thin boy", "carried", "the water", "to the hut", "this morning"], ["A wise teacher", "explained", "the rules", "to the class", "today"], ["The happy family", "ate", "a big dinner", "in the hotel", "last night"],
+            ["A black dog", "found", "a bone", "in the garden", "this morning"], ["The small boat", "hit", "a rock", "in the sea", "yesterday"], ["A young boy", "broke", "the window", "with a ball", "today"], ["The grey cat", "slept", "on the wall", "in the sun", "all day"], ["A kind doctor", "helped", "the man", "at the street", "now"],
+            ["The heavy rain", "filled", "the road", "in the valley", "last night"], ["A loud bell", "rang", "in the tower", "at ten", "today"], ["The tall woman", "wore", "a long dress", "at the party", "last night"], ["A small mouse", "stole", "some cheese", "from the kitchen", "at night"], ["The local farm", "sold", "eggs", "to the people", "every morning"],
+            ["A brave boy", "jumped", "into the river", "from the bridge", "yesterday"], ["The old tree", "lost", "its leaves", "in the wind", "last week"], ["A clever fox", "caught", "a chicken", "at the farm", "last night"], ["The young girl", "wrote", "a long letter", "at her desk", "this morning"], ["A big spider", "made", "a web", "in the window", "now"],
+            ["The old train", "arrived", "at the station", "on time", "today"], ["A busy baker", "made", "bread", "in the morning", "daily"], ["The cold wind", "hit", "the whole city", "in the night", "yesterday"], ["A red car", "hit", "the tree", "on the road", "this morning"], ["The little boy", "drew", "a face", "in the sand", "at the beach"],
+            ["A large eagle", "flew", "over the mountains", "at noon", "today"], ["The school bus", "picked", "the children", "at the gate", "at eight"], ["A quiet student", "read", "a book", "in the library", "all afternoon"], ["The strong man", "lifted", "the stone", "in the garden", "yesterday"], ["A yellow taxi", "stopped", "at the hotel", "at midnight", "last night"],
+            ["The new shop", "opened", "on the street", "at nine", "today"], ["A small kitten", "cried", "in the rain", "outside the house", "last night"], ["The local team", "won", "the match", "at the park", "on Saturday"], ["A sweet girl", "picked", "flowers", "in the field", "this morning"], ["The old sailor", "told", "stories", "at the fire", "every night"],
+            ["A busy postman", "walked", "ten miles", "in the rain", "today"], ["The tall building", "shook", "in the earthquake", "at night", "today"], ["A wild bird", "sang", "a song", "in the garden", "at dawn"], ["The happy couple", "danced", "on the floor", "at the party", "last night"], ["A green frog", "jumped", "into the pond", "at the farm", "this morning"],
+            ["The old woman", "fed", "the ducks", "at the lake", "every day"], ["A heavy box", "fell", "from the shelf", "in the garage", "yesterday"], ["The fast horse", "ran", "past the trees", "on the field", "today"], ["A small child", "found", "a toy", "under the sofa", "this morning"], ["The local mayor", "spoke", "to the people", "at the hall", "yesterday"],
+            ["A grey owl", "hunted", "mice", "in the woods", "at night"], ["The young scout", "built", "a fire", "at the camp", "at sunset"], ["A red apple", "fell", "from the tree", "in the garden", "today"], ["The loud music", "woke", "the neighbors", "in the street", "last night"], ["A pretty flower", "grew", "in the pot", "on the window", "this year"],
+            ["The bright light", "shone", "through the window", "into the room", "at dawn"], ["A busy bee", "flew", "near the flowers", "in the garden", "today"], ["The wooden door", "moved", "in the wind", "at the house", "last night"], ["A hungry bear", "found", "honey", "in the forest", "yesterday"], ["The tiny ant", "carried", "a leaf", "to the nest", "all day"]
+        ]
+    };
+
+    let sessionSentences = [];
+    let currentRound = 0;
+    let score = 0;
+    let userOrder = [];
+    let correctOrder = [];
+
+    function startGame(diff) {
+        sessionSentences = [...fullDatabase[diff]].sort(() => Math.random() - 0.5).slice(0, 10);
+        currentRound = 0;
+        score = 0;
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        document.getElementById('score-display').innerText = "0";
+        loadSentence();
+    }
+
+    function tokenize(arr) {
+        let tokens = [];
+        arr.forEach(segment => {
+            let words = segment.split(" ");
+            for (let i = 0; i < words.length; i++) {
+                let current = words[i];
+                let lower = current.toLowerCase();
+                if ((lower === "the" || lower === "a" || lower === "an") && i + 1 < words.length) {
+                    tokens.push(current + " " + words[i+1]);
+                    i++;
+                } else {
+                    tokens.push(current);
+                }
+            }
+        });
+        return tokens;
+    }
+
+    function loadSentence() {
+        const rawSentence = sessionSentences[currentRound];
+        correctOrder = tokenize(rawSentence);
+        let scrambled = [...correctOrder].sort(() => Math.random() - 0.5);
+        
+        const poolEl = document.getElementById('word-pool');
+        poolEl.innerHTML = '';
+        scrambled.forEach((word) => {
+            const btn = document.createElement('div');
+            btn.className = 'word-block';
+            btn.innerText = word;
+            btn.onclick = () => selectWord(word, btn);
+            poolEl.appendChild(btn);
+        });
+
+        resetSentence();
+        document.getElementById('round-display').innerText = currentRound + 1;
+    }
+
+    function selectWord(word, el) {
+        userOrder.push(word);
+        el.classList.add('selected');
+        const zone = document.getElementById('answer-zone');
+        const wordEl = document.createElement('div');
+        wordEl.className = 'placed-word';
+        wordEl.innerText = word;
+        zone.appendChild(wordEl);
+    }
+
+    function resetSentence() {
+        userOrder = [];
+        document.getElementById('answer-zone').innerHTML = '';
+        document.getElementById('feedback-text').innerText = '';
+        document.querySelectorAll('.word-block').forEach(b => b.classList.remove('selected'));
+    }
+
+    function checkOrder() {
+        if (userOrder.length < correctOrder.length) return;
+        const isCorrect = JSON.stringify(userOrder) === JSON.stringify(correctOrder);
+        if (isCorrect) {
+            score += 10;
+            document.getElementById('score-display').innerText = score;
+            showFeedback("PERFECT!", true);
+            confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
+            setTimeout(() => {
+                currentRound++;
+                if (currentRound < 10) loadSentence();
+                else endGame();
+            }, 1000);
+        } else {
+            showFeedback("TRY AGAIN!", false);
+            setTimeout(resetSentence, 800);
+        }
+    }
+
+    function showFeedback(msg, success) {
+        const f = document.getElementById('feedback-text');
+        f.innerText = msg;
+        f.style.color = success ? "var(--success)" : "var(--danger)";
+    }
+
+    function endGame() {
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+    }
+</script>
+</body>
+</html>
