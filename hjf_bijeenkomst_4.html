@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACK JE FAALANGST - Bijeenkomst 4</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6B9080;
+            --bg-color: #F6FFF8;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --button-hover: #A4C3B2;
+            --accent-color: #CCE3DE;
+            --page-badge-bg: #EAF4F4;
+            --fixed-color: #E07A5F;
+            --growth-color: #81B29A;
+            --actief-color: #2E7D32;
+            --passief-color: #D32F2F;
+            --whatsapp-green: #25D366;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Absolute blokkade voor scrollen */
+            line-height: 1.3;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 98vw;
+            height: 96vh;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 2vh 3vw;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-badge {
+            position: absolute;
+            top: 2vh;
+            right: 2vw;
+            background-color: var(--page-badge-bg);
+            color: var(--primary-color);
+            padding: 1vh 2vw;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: clamp(1.2rem, 2.5vh, 1.8rem);
+            border: 2px solid var(--accent-color);
+            z-index: 10;
+        }
+
+        /* Navigatie en Progressie */
+        .progress-bar { height: 1.5vh; background-color: var(--accent-color); border-radius: 6px; margin-bottom: 1vh; overflow: hidden; flex-shrink: 0; }
+        .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1vh;
+            flex-shrink: 0;
+            border-top: 3px solid var(--accent-color);
+            height: 8vh;
+            align-items: center;
+        }
+
+        button.nav-btn {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 3px solid var(--primary-color);
+            width: 7vh;
+            height: 7vh;
+            font-size: clamp(1.5rem, 3vh, 2.5rem);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button.nav-btn:hover:not(:disabled) { background-color: var(--primary-color); color: white; }
+        button.nav-btn:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
+
+        /* Typografie: Extra groot voor leesbaarheid achterin de klas */
+        h1 { color: var(--primary-color); font-size: clamp(2.5rem, 5vh, 4rem); margin: 0 0 1vh 0; text-align: center; }
+        h2 { color: var(--primary-color); font-size: clamp(2.2rem, 4.5vh, 3.5rem); margin: 0 0 1vh 0; text-align: center; }
+        p, li, div { font-size: clamp(1.3rem, 2.6vh, 1.8rem); margin: 0; } 
+
+        .step {
+            display: none;
+            flex-grow: 1;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.4s ease-in-out;
+            height: 100%;
+            width: 100%;
+            min-height: 0;
+        }
+        .step.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-box { 
+            width: 100%; 
+            max-width: 1400px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center;
+            gap: 1.5vh;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        /* Gevoelsmeter */
+        .mood-container { display: flex; justify-content: space-around; align-items: center; width: 100%; flex-grow: 1; }
+        .mood-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 2vh; border-radius: 20px; background: var(--bg-color); min-width: 12vw; }
+        .mood-item:hover { transform: scale(1.15); background: var(--accent-color); }
+        .mood-emoji { font-size: clamp(4.5rem, 11vh, 8rem); margin-bottom: 1vh; }
+        .mood-counter { font-size: clamp(2rem, 4vh, 3rem); font-weight: bold; color: var(--primary-color); background: white; padding: 0.5vh 2vw; border-radius: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* Video */
+        .video-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; flex-grow: 1; max-height: 55vh; margin-top: 1vh; }
+        .video-container { height: 50vh; aspect-ratio: 16 / 9; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); background: #000; }
+        .video-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* Grids & Panels */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vw; width: 100%; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5vw; width: 100%; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vw; width: 100%; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1vw; width: 100%; }
+        
+        .info-panel { 
+            background: var(--page-badge-bg); 
+            padding: 1.5vh 2vw; 
+            border-radius: 15px; 
+            border-left: 8px solid var(--primary-color); 
+            text-align: left; 
+            height: 100%; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
+        .info-panel h3 { margin-bottom: 0.5vh; color: var(--primary-color); font-size: clamp(1.5rem, 3vh, 2.2rem); font-weight: bold; }
+
+        .highlight-box { background: #FFF9E6; border: 4px solid #FFD966; border-radius: 15px; padding: 1.5vh 2vw; width: 100%; font-weight: bold; text-align: center; }
+
+        /* Interactieve Kaart (Omdenken) */
+        .card-drawer { text-align: center; padding: 2vh; background-color: var(--page-badge-bg); border-radius: 20px; width: 100%; max-width: 900px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 5px dashed var(--primary-color); }
+        .card-visual {
+            width: 80%; min-height: 20vh; background: white; border-radius: 15px; border: 6px solid var(--fixed-color);
+            display: flex; justify-content: center; align-items: center; margin: 1.5vh auto; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-size: clamp(1.8rem, 3.5vh, 2.6rem); font-weight: bold; color: var(--fixed-color); text-align: center; padding: 2vh 3vw;
+            transition: 0.5s; transform: scale(0.9); opacity: 0;
+        }
+        .card-visual.show { transform: scale(1) translateY(-5px); opacity: 1; }
+
+        /* Vingers Oefening */
+        .finger-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: white; border: 4px solid var(--accent-color); padding: 1.5vh 1vw; border-radius: 20px; font-weight: bold; transition: 0.3s; }
+        .finger-icon { font-size: clamp(2.5rem, 5vh, 4rem); background: var(--accent-color); width: 8vh; height: 8vh; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 1vh; transition: 0.3s; }
+        .active-finger { background-color: var(--primary-color); color: white; border-color: var(--primary-color); transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .active-finger .finger-icon { background: white; }
+
+        .action-btn { background-color: var(--fixed-color); color: white; border: none; padding: 1.5vh 3vw; font-size: clamp(1.6rem, 3vh, 2.2rem); border-radius: 40px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 1vh; }
+        .action-btn:hover { background-color: #c96248; transform: translateY(-3px); }
+        
+        .whatsapp-bubble { background-color: var(--whatsapp-green); padding: 2vh 3vw; border-radius: 20px; border-top-left-radius: 0; font-size: clamp(1.3rem, 2.6vh, 1.8rem); box-shadow: 2px 5px 10px rgba(0,0,0,0.1); width: 80%; max-width: 900px; position: relative; margin-top: 1vh; }
+        .whatsapp-bubble::before { content: ""; position: absolute; top: 0; left: -15px; border-width: 15px 15px 0 0; border-style: solid; border-color: var(--whatsapp-green) transparent transparent transparent; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="step active" id="step-0">
+        <h1>Bijeenkomst 4: Faalangst en je gedachten</h1>
+        <h2>Hoe kom je vandaag binnen?</h2>
+        <div class="mood-container">
+            <div class="mood-item" onclick="registerMood('bliksem')"><span class="mood-emoji">⚡</span><span class="mood-counter" id="count-bliksem">0</span></div>
+            <div class="mood-item" onclick="registerMood('regen')"><span class="mood-emoji">🌧️</span><span class="mood-counter" id="count-regen">0</span></div>
+            <div class="mood-item" onclick="registerMood('wolken')"><span class="mood-emoji">☁️</span><span class="mood-counter" id="count-wolken">0</span></div>
+            <div class="mood-item" onclick="registerMood('zon-wolken')"><span class="mood-emoji">⛅</span><span class="mood-counter" id="count-zon-wolken">0</span></div>
+            <div class="mood-item" onclick="registerMood('zon')"><span class="mood-emoji">☀️</span><span class="mood-counter" id="count-zon">0</span></div>
+        </div>
+    </div>
+
+    <div class="step" id="step-1">
+        <div class="page-badge">Blz. 17</div>
+        <h1>Doel van vandaag</h1>
+        <div class="content-box" style="text-align: center;">
+            <p style="font-weight: bold; margin-bottom: 2vh;">Wat gaan we vandaag leren?</p>
+            <div class="grid-3">
+                <div class="info-panel" style="text-align: center; border-color: var(--fixed-color);">
+                    <span style="font-size: clamp(3rem, 6vh, 4rem);">🔄</span>
+                    <h3 style="color: var(--fixed-color);">Omdenken</h3>
+                    <p>Leren hoe je negatieve gedachten om kunt zetten in positieve.</p>
+                </div>
+                <div class="info-panel" style="text-align: center; border-color: #D97706;">
+                    <span style="font-size: clamp(3rem, 6vh, 4rem);">🧠</span>
+                    <h3 style="color: #D97706;">5G-Denken</h3>
+                    <p>Leren wat de 5G-methode is en hoe het in je hoofd werkt.</p>
+                </div>
+                <div class="info-panel" style="text-align: center; border-color: var(--actief-color);">
+                    <span style="font-size: clamp(3rem, 6vh, 4rem);">📝</span>
+                    <h3 style="color: var(--actief-color);">Toepassen</h3>
+                    <p>Zelf leren hoe je het 5G-schema gebruikt in de praktijk.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-2">
+        <div class="page-badge">Blz. 17</div>
+        <h2>Faalangst & Je Gedachten</h2>
+        <div class="content-box">
+            <p style="text-align: center; font-weight: bold;">Kijk mee hoe onze gedachten precies werken.</p>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/W4sxvapYpec" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-3">
+        <div class="page-badge">Blz. 18</div>
+        <h2>Omdenken</h2>
+        <div class="content-box">
+            <div class="highlight-box" style="font-size: clamp(1.6rem, 3.2vh, 2.4rem); color: #D97706; margin-bottom: 1vh;">
+                "Elk probleem heeft ook een kans in zich."
+            </div>
+            <div class="card-drawer">
+                <p style="font-weight: bold; margin-bottom: 1vh;">Trek een kaartje en bedenk met de groep: Welke kans zit hierin verborgen?</p>
+                <div id="omdenk-card" class="card-visual">Klik op de knop voor een probleem!</div>
+                <button onclick="trekOmdenkKaart()" class="action-btn">Trek een probleem! 🃏</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-4">
+        <div class="page-badge">Blz. 19</div>
+        <h2>Hack je gedachten</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 1vh; font-weight: bold;">Positief denken: Denk aan wat er góéd kan gaan!</p>
+            <div class="grid-2">
+                <div class="info-panel" style="border-left: 10px solid var(--passief-color); background: #fff1f2;">
+                    <h3 style="color: var(--passief-color);">❌ In plaats van:</h3>
+                    <p style="margin-bottom: 1vh;">"Ik ga toch een slecht cijfer halen."</p>
+                    <p>"Ik ben super slecht in dit vak."</p>
+                </div>
+                <div class="info-panel" style="border-left: 10px solid var(--actief-color); background: #f0fdf4;">
+                    <h3 style="color: var(--actief-color);">✅ Denk je:</h3>
+                    <p style="margin-bottom: 1vh;">"Ik heb hard geleerd, dus ik kan dit proberen!"</p>
+                    <p>"Van fouten maken kan ik leren."</p>
+                </div>
+            </div>
+            <p style="text-align: center; font-weight: bold; color: var(--fixed-color); margin-top: 1vh;">
+                Je hoeft lastige dingen niet te negeren, maar je kijkt er op een slimmere manier naar!
+            </p>
+        </div>
+    </div>
+
+    <div class="step" id="step-5">
+        <div class="page-badge">Blz. 20</div>
+        <h2>Het 5G-Schema</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 1.5vh; font-weight: bold;">Helpt om stap voor stap te begrijpen wat er in je hoofd gebeurt.</p>
+            <div class="grid-5">
+                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
+                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">1</h3>
+                    <p style="font-weight: bold; color: var(--primary-color);">Gebeurtenis</p>
+                </div>
+                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
+                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">2</h3>
+                    <p style="font-weight: bold; color: var(--primary-color);">Gedachte</p>
+                </div>
+                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
+                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">3</h3>
+                    <p style="font-weight: bold; color: var(--primary-color);">Gevoel</p>
+                </div>
+                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
+                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">4</h3>
+                    <p style="font-weight: bold; color: var(--primary-color);">Gedrag</p>
+                </div>
+                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
+                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">5</h3>
+                    <p style="font-weight: bold; color: var(--primary-color);">Gevolg</p>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 1.5vh; font-style: italic;">Als je je gedachten (2) leert kennen, kun je je gevoel en gedrag veranderen. Dit geeft je meer controle!</p>
+        </div>
+    </div>
+
+    <div class="step" id="step-6">
+        <div class="page-badge">Blz. 21</div>
+        <h2>Voorbeeld 5G-Schema</h2>
+        <div class="content-box">
+            <div class="info-panel" style="width: 95%; background: white; border: 4px solid var(--accent-color);">
+                <ul style="list-style: none; padding: 0; line-height: 1.4; margin: 0;">
+                    <li style="margin-bottom: 1vh;"><strong>1. Gebeurtenis:</strong> "Ik moet voor de klas mijn spreekbeurt houden."</li>
+                    <li style="margin-bottom: 1vh;"><strong>2. Gedachte:</strong> "Iedereen gaat me uitlachen, het wordt een ramp."</li>
+                    <li style="margin-bottom: 1vh;"><strong>3. Gevoel:</strong> Bang, zenuwachtig, beetje misselijk.</li>
+                    <li style="margin-bottom: 1vh;"><strong>4. Gedrag:</strong> Je stelt het uit, oefent niet goed, of meldt je ziek.</li>
+                    <li><strong>5. Gevolg:</strong> Doordat je niet oefende ging het slecht. Je denkt: "Zie je wel!"</li>
+                </ul>
+            </div>
+            <p style="font-weight: bold; color: var(--passief-color); margin-top: 1vh; text-align: center;">
+                🚨 De gedachten kloppen vaak niet helemaal en maken je alleen maar banger!
+            </p>
+        </div>
+    </div>
+
+    <div class="step" id="step-7">
+        <div class="page-badge">Blz. 22</div>
+        <h2>Welke negatieve gedachten zijn er?</h2>
+        <div class="content-box">
+            <div class="grid-3" style="margin-bottom: 1vh;">
+                <div class="info-panel" style="background: #fff1f2; border-color: var(--passief-color);">
+                    <h3 style="color: var(--passief-color);">Over jezelf</h3>
+                    <ul style="padding-left: 2vw; margin: 0; line-height: 1.3;">
+                        <li>"Ik kan dit nooit."</li>
+                        <li>"Ik maak altijd fouten."</li>
+                        <li>"Ik ben niet slim."</li>
+                    </ul>
+                </div>
+                <div class="info-panel" style="background: #fff1f2; border-color: var(--passief-color);">
+                    <h3 style="color: var(--passief-color);">Over anderen</h3>
+                    <ul style="padding-left: 2vw; margin: 0; line-height: 1.3;">
+                        <li>"Ze vinden me stom."</li>
+                        <li>"Ze lachen me uit."</li>
+                        <li>"Iedereen is beter."</li>
+                    </ul>
+                </div>
+                <div class="info-panel" style="background: #fff1f2; border-color: var(--passief-color);">
+                    <h3 style="color: var(--passief-color);">Over situaties</h3>
+                    <ul style="padding-left: 2vw; margin: 0; line-height: 1.3;">
+                        <li>"Ik ga het verpesten."</li>
+                        <li>"Het heeft geen zin."</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align: center; font-weight: bold; margin-top: 1vh;">
+                Deze gedachten voelen heel echt, maar zijn vaak veel te negatief!
+            </p>
+        </div>
+    </div>
+
+    <div class="step" id="step-8">
+        <div class="page-badge">Blz. 22</div>
+        <h2>Test je gedachten!</h2>
+        <div class="content-box">
+            <p style="text-align: center; font-weight: bold; margin-bottom: 1vh;">Om te testen of een gedachte negatief (en realistisch) is, kun je jezelf twee vragen stellen. Deze vragen helpen je om de gedachte beter te onderzoeken:</p>
+            
+            <div class="grid-2">
+                <div class="info-panel" style="border-left-color: var(--passief-color);">
+                    <h3 style="color: var(--passief-color);">1. Is deze gedachte echt waar?</h3>
+                    <ul style="padding-left: 2vw; line-height: 1.4; margin: 0;">
+                        <li style="margin-bottom: 0.5vh;">"Heb ik bewijs dat dit klopt?"</li>
+                        <li>"Is er iets dat laat zien dat het niet waar is?"</li>
+                    </ul>
+                </div>
+                <div class="info-panel" style="border-left-color: var(--primary-color);">
+                    <h3 style="color: var(--primary-color);">2. Helpt deze gedachte me?</h3>
+                    <ul style="padding-left: 2vw; line-height: 1.4; margin: 0;">
+                        <li style="margin-bottom: 0.5vh;">"Maakt deze gedachte me blijer of sterker?"</li>
+                        <li>"Geeft deze gedachte me vertrouwen om iets te doen?"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 1.5vh; border-color: var(--fixed-color); color: var(--fixed-color);">
+                Als je één van deze twee vragen met ‘nee’ kunt beantwoorden, dan is het belangrijk dat je gaat kijken hoe je deze gedachte positief kunt maken.
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-9">
+        <div class="page-badge">Blz. 23</div>
+        <h2>5G vs. Positief denken</h2>
+        <div class="content-box">
+            <div class="grid-2">
+                <div class="info-panel" style="border-color: #4A90E2; background: #eef;">
+                    <h3 style="color: #4A90E2;">Positief Denken</h3>
+                    <p>Je probeert direct een negatieve gedachte om te zetten in een positieve, zonder het helemaal te onderzoeken. Dit is sneller, maar gaat minder diep.</p>
+                </div>
+                <div class="info-panel" style="border-color: var(--actief-color); background: #f0fdf4;">
+                    <h3 style="color: var(--actief-color);">De 5G-Methode</h3>
+                    <p>Je onderzoekt <em>waarom</em> je iets denkt. Je kijkt of het klopt en kiest een realistischere gedachte. Je leert hoe gevoelens hierdoor veranderen.</p>
+                </div>
+            </div>
+            <p style="text-align: center; font-weight: bold; margin-top: 2vh; color: var(--primary-color);">
+                Bij faalangst werkt de 5G-methode vaak beter, omdat je écht begrijpt wat er gebeurt!
+            </p>
+        </div>
+    </div>
+
+    <div class="step" id="step-10">
+        <div class="page-badge">Blz. 24</div>
+        <h2>De spreekbeurt OMDRAAIEN!</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 1.5vh; font-weight: bold;">We pakken hetzelfde voorbeeld, maar nu met een Helpende Gedachte.</p>
+            <div class="info-panel" style="width: 95%; background: white; border: 4px solid var(--actief-color);">
+                <ul style="list-style: none; padding: 0; line-height: 1.4; margin: 0;">
+                    <li style="margin-bottom: 1vh;"><strong>1. Gebeurtenis:</strong> "Ik moet een spreekbeurt houden."</li>
+                    <li style="margin-bottom: 1vh; color: var(--actief-color); font-weight: bold;"><strong>2. Gedachte:</strong> "Ik heb goed geoefend. Als ik een fout maak, is dat oké."</li>
+                    <li style="margin-bottom: 1vh;"><strong>3. Gevoel:</strong> Beetje zenuwachtig, maar je durft het wel aan.</li>
+                    <li style="margin-bottom: 1vh;"><strong>4. Gedrag:</strong> Je stapt voor de klas en begint gewoon.</li>
+                    <li><strong>5. Gevolg:</strong> Je houdt je spreekbeurt en voelt je daarna ontzettend trots!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-11">
+        <div class="page-badge">Blz. 25</div>
+        <h2>Oefenen met 5G</h2>
+        <div class="content-box">
+            <p style="text-align: center; font-weight: bold; margin-bottom: 1.5vh;">Kies één gebeurtenis en vul de RODE kant van je schema in.</p>
+            <div class="info-panel" style="width: 95%; background: #fff4e6; border-left-color: #D97706;">
+                <ol style="margin: 0; padding-left: 3vw; line-height: 1.4;">
+                    <li style="margin-bottom: 0.5vh;">Je moet een presentatie geven over een zelfgekozen onderwerp.</li>
+                    <li style="margin-bottom: 0.5vh;">Je hebt een belangrijke wedstrijd, als jullie winnen zijn jullie kampioen.</li>
+                    <li style="margin-bottom: 0.5vh;">Je gaat op kamp met een vereniging en je kent nog niet veel mensen.</li>
+                    <li style="margin-bottom: 0.5vh;">Je hebt een onvoldoende gehaald voor een belangrijke toets.</li>
+                    <li>Je snapt de uitleg niet en twijfelt of je je vinger zult opsteken.</li>
+                </ol>
+            </div>
+            <p style="text-align: center; margin-top: 1.5vh; font-weight: bold; color: var(--actief-color);">
+                Stel de 2 testvragen. Buig het daarna om in het GROENE (positieve) schema!
+            </p>
+        </div>
+    </div>
+
+    <div class="step" id="step-12">
+        <div class="page-badge">Blz. 26</div>
+        <h2>Jouw gedachten onderzoeken</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 1.5vh; font-weight: bold;">Probeer de komende dagen extra bewust te zijn van wat je denkt.</p>
+            <div class="grid-4">
+                <div class="info-panel" style="text-align: center;">
+                    <h3>👀 Let op</h3>
+                    <p style="font-size: 1rem;">Welke gedachten komen op als je iets spannend vindt?</p>
+                </div>
+                <div class="info-panel" style="text-align: center;">
+                    <h3>🚨 Herken</h3>
+                    <p style="font-size: 1rem;">Zijn er kritische, negatieve gedachten over jezelf of anderen?</p>
+                </div>
+                <div class="info-panel" style="text-align: center;">
+                    <h3>📝 Noteer</h3>
+                    <p style="font-size: 1rem;">Schrijf de situatie, de gedachte en je gevoel in steekwoorden op.</p>
+                </div>
+                <div class="info-panel" style="text-align: center; border-color: var(--growth-color);">
+                    <h3 style="color: var(--growth-color);">🎒 Neem mee</h3>
+                    <p style="font-size: 1rem;">Neem je aantekeningen mee naar onze volgende bijeenkomst.</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 1.5vh; border-color: var(--primary-color); background: var(--page-badge-bg);">
+                Let op: Je hoeft niets aan je gedachten te veranderen. Het alleen al herkennen is genoeg!
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-13">
+        <div class="page-badge">Blz. 27</div>
+        <h2>Kwaliteiten op WhatsApp</h2>
+        <div class="content-box">
+            <p style="text-align: center; font-weight: bold; margin-bottom: 1.5vh;">Soms zien anderen jouw kwaliteiten veel beter dan jijzelf!</p>
+            <div class="grid-2" style="align-items: center;">
+                <div class="info-panel" style="border-color: var(--whatsapp-green); text-align: center; background: white;">
+                    <h3 style="color: var(--whatsapp-green); font-size: clamp(1.8rem, 3.5vh, 2.6rem);">Scan & Stuur</h3>
+                    <p>Pak je telefoon, scan de QR-code met je camera en stuur het direct naar een ouder, docent of goede vriend(in)!</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Hallo%2C%20ik%20heb%20een%20opdracht%20voor%20school%20waarbij%20ik%20moet%20ontdekken%20welke%20kwaliteiten%20anderen%20in%20mij%20zien.%20Omdat%20ik%20jou%20waardeer%2C%20wil%20ik%20graag%20weten%20wat%20jij%20denkt!%20Kun%20je%20drie%20eigenschappen%20van%20mij%20noemen%20en%20kort%20uitleggen%20waarom%20jij%20vindt%20dat%20ze%20bij%20mij%20passen%3F" alt="WhatsApp QR Code" style="border-radius: 15px; border: 5px solid var(--whatsapp-green); box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: clamp(20vh, 30vh, 250px); height: auto;">
+                </div>
+            </div>
+            <div class="whatsapp-bubble" style="margin-top: 1vh; font-size: 1.1rem; padding: 1.5vh 2vw;">
+                "Hallo, ik heb een opdracht voor school waarbij ik moet ontdekken welke kwaliteiten anderen in mij zien. Omdat ik jou waardeer, wil ik graag weten wat jij denkt! Kun je drie eigenschappen noemen en kort uitleggen waarom ze bij mij passen?"
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-14">
+        <div class="page-badge">Blz. 28</div>
+        <h2>De Vingerfocus Oefening</h2>
+        <div class="content-box">
+            <p style="text-align: center; margin-bottom: 1.5vh; font-weight: bold;">Een stille, onopvallende oefening die spieren én gedachten kalmeert.</p>
+            <div class="info-panel" style="width: 90%;">
+                <ul style="padding-left: 2vw; line-height: 1.5; margin: 0;">
+                    <li style="margin-bottom: 0.8vh;">Ga rechtop zitten, handen op je schoot. Adem in als je een vinger aantikt, adem uit als je de zin zegt.</li>
+                    <li style="margin-bottom: 0.8vh;"><strong>Duim tegen Wijsvinger:</strong> "Ik ben rustig."</li>
+                    <li style="margin-bottom: 0.8vh;"><strong>Duim tegen Middelvinger:</strong> "Ik ben kalm."</li>
+                    <li style="margin-bottom: 0.8vh;"><strong>Duim tegen Ringvinger:</strong> "Ik ben ontspannen."</li>
+                    <li style="margin-bottom: 0.8vh;"><strong>Duim tegen Pink:</strong> "Ik ben relaxt."</li>
+                    <li>Daarna doe je de 'wandeling' weer terug in omgekeerde volgorde!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-15">
+        <div class="page-badge">Blz. 28</div>
+        <h2>Oefen mee: De Vingerwandeling</h2>
+        <div class="content-box" style="text-align: center;">
+            <p style="font-weight: bold; margin-bottom: 2vh;">Tik de oplichtende vinger aan met je duim en zeg de zin in je hoofd.</p>
+            
+            <div class="grid-4" style="max-width: 1100px;">
+                <div class="finger-card" id="focus-wijs"><div class="finger-icon">☝️</div> <span>Wijsvinger<br><br>"Ik ben rustig"</span></div>
+                <div class="finger-card" id="focus-middel"><div class="finger-icon">🖕</div> <span>Middelvinger<br><br>"Ik ben kalm"</span></div>
+                <div class="finger-card" id="focus-ring"><div class="finger-icon">💍</div> <span>Ringvinger<br><br>"Ontspannen"</span></div>
+                <div class="finger-card" id="focus-pink"><div class="finger-icon">🤙</div> <span>Pink<br><br>"Ik ben relaxt"</span></div>
+            </div>
+
+            <button id="startFocusBtn" class="action-btn" onclick="startFocusExercise()">Start Oefening</button>
+            
+            <div id="focusContainer" style="display: none; background: var(--page-badge-bg); padding: 2vh 4vw; border-radius: 20px; border: 4px solid var(--primary-color); margin-top: 2vh; width: 80%; max-width: 900px;">
+                <p id="focusInstructie" style="font-size: clamp(2.5rem, 5vh, 4rem); font-weight: bold; color: var(--primary-color); margin: 0;">
+                    Adem In...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="step" id="step-16">
+        <div class="page-badge">Blz. 29</div>
+        <h2>Afsluiting</h2>
+        <div class="content-box" style="text-align: center;">
+            <p style="font-weight: bold; font-size: clamp(2rem, 4vh, 3.5rem); color: var(--actief-color); margin-bottom: 2vh;">
+                Fantastisch gewerkt vandaag! 🎉
+            </p>
+            <p style="font-weight: bold; max-width: 1000px; margin-bottom: 3vh;">
+                Je leert steeds beter hoe je baas wordt in je eigen hoofd. Negatieve gedachten zijn normaal, maar jij weet nu hoe je ze kunt testen én ombuigen!
+            </p>
+            <h3 style="color: var(--primary-color); margin-top: 1vh; font-size: clamp(2.5rem, 5vh, 4.5rem);">
+                Tot volgende week! 💪
+            </h3>
+        </div>
+    </div>
+
+    <div class="btn-container">
+        <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)" disabled>←</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeStep(1)">→</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+    const moodCounts = { bliksem: 0, regen: 0, wolken: 0, 'zon-wolken': 0, zon: 0 };
+
+    /* --- Omdenken 25 Kaartjes --- */
+    const omdenkKaartjes = [
+        "Mijn fiets is vanochtend gestolen.", 
+        "Ik heb een dikke onvoldoende gehaald.", 
+        "Het regent gigantisch en ik moet ver fietsen.",
+        "Mijn beste vriend(in) heeft afgezegd.", 
+        "Ik ben mijn telefoon kwijtgeraakt.", 
+        "Ik moet 2 uur nablijven.",
+        "De wifi ligt er thuis al uren uit.", 
+        "Ik ben veel te laat gekomen op school.", 
+        "Ik heb flinke ruzie met mijn ouders.",
+        "Mijn lievelingstrui is gekrompen in de was.", 
+        "Ik heb het verkeerde huiswerk geleerd.",
+        "Iemand maakte een gemene opmerking tegen me.", 
+        "Ik ben niet in het basisteam gekozen.",
+        "Mijn laptop is opeens gecrasht.", 
+        "Ik moet straks een spreekbeurt houden.",
+        "Mijn broodje is helemaal geplet in mijn tas.", 
+        "Ik heb geen geld meer voor de schoolkantine.",
+        "De bus reed net voor mijn neus weg.", 
+        "Ik begreep werkelijk niets van de wiskundeles.",
+        "Ik heb per ongeluk een blamage begaan in de klas.", 
+        "Mijn wekker is vanochtend niet afgegaan.",
+        "Ik moet vandaag de hele woonkamer schoonmaken.", 
+        "Mijn broertje/zusje is super irritant vandaag.",
+        "Het waait ontzettend hard tegen op de fiets.", 
+        "Ik ben mijn boeken voor het belangrijkste vak vergeten."
+    ];
+
+    function trekOmdenkKaart() {
+        const cardDisplay = document.getElementById('omdenk-card');
+        const randomIndex = Math.floor(Math.random() * omdenkKaartjes.length);
+        
+        cardDisplay.classList.remove('show');
+        
+        setTimeout(() => {
+            cardDisplay.innerText = omdenkKaartjes[randomIndex];
+            cardDisplay.classList.add('show');
+        }, 300);
+    }
+
+    /* --- Vingerfocus Variabelen --- */
+    let focusInterval;
+    let focusIndex = 0;
+    let direction = 1; 
+    let cycles = 0;
+    const focusFingers = [
+        { id: 'focus-wijs', text: 'Adem uit: "Ik ben rustig"' },
+        { id: 'focus-middel', text: 'Adem uit: "Ik ben kalm"' },
+        { id: 'focus-ring', text: 'Adem uit: "Ik ben ontspannen"' },
+        { id: 'focus-pink', text: 'Adem uit: "Ik ben relaxt"' }
+    ];
+
+    function registerMood(type) {
+        moodCounts[type]++;
+        document.getElementById(`count-${type}`).innerText = moodCounts[type];
+        
+        const el = document.getElementById(`count-${type}`).parentElement;
+        el.style.transform = "scale(1.2)";
+        setTimeout(() => el.style.transform = "scale(1.15)", 150);
+    }
+
+    function changeStep(n) {
+        stopFocusExercise(); // Stop timer bij weggaan
+
+        steps[currentStep].classList.remove('active');
+        currentStep += n;
+        steps[currentStep].classList.add('active');
+
+        document.getElementById('prevBtn').disabled = currentStep === 0;
+        document.getElementById('nextBtn').style.visibility = currentStep === steps.length - 1 ? 'hidden' : 'visible';
+
+        const percentage = (currentStep / (steps.length - 1)) * 100;
+        document.getElementById('progress-fill').style.width = percentage + '%';
+
+        // Confetti bij de laatste dia
+        if (currentStep === steps.length - 1) {
+            confetti({ 
+                particleCount: 200, 
+                spread: 90, 
+                origin: { y: 0.6 }, 
+                colors: ['#6B9080', '#A4C3B2', '#E07A5F', '#FFD700', '#4A90E2'] 
+            });
+        }
+    }
+
+    /* --- Interactieve Vingerfocus Functies --- */
+    function startFocusExercise() {
+        document.getElementById('startFocusBtn').style.display = 'none';
+        document.getElementById('focusContainer').style.display = 'block';
+        focusIndex = 0;
+        direction = 1;
+        cycles = 0;
+        updateFocusUI();
+        
+        focusInterval = setInterval(() => {
+            focusIndex += direction;
+            
+            // Controleer richting omdraaien
+            if (focusIndex >= focusFingers.length) {
+                direction = -1;
+                focusIndex = focusFingers.length - 2; 
+            } else if (focusIndex < 0) {
+                direction = 1;
+                focusIndex = 1; 
+                cycles++;
+            }
+
+            if (cycles >= 2) { 
+                finishFocusExercise();
+            } else {
+                updateFocusUI();
+            }
+        }, 4000); 
+    }
+
+    function updateFocusUI() {
+        focusFingers.forEach(f => document.getElementById(f.id).classList.remove('active-finger'));
+        
+        const currentData = focusFingers[focusIndex];
+        document.getElementById(currentData.id).classList.add('active-finger');
+        document.getElementById('focusInstructie').innerText = currentData.text;
+    }
+
+    function finishFocusExercise() {
+        clearInterval(focusInterval);
+        focusFingers.forEach(f => document.getElementById(f.id).classList.remove('active-finger'));
+        document.getElementById('focusContainer').innerHTML = `<p style="font-size: clamp(2rem, 4vh, 3.2rem); font-weight: bold; color: var(--actief-color); margin: 0;">🎉 Oefening Voltooid!</p>`;
+    }
+
+    function stopFocusExercise() {
+        clearInterval(focusInterval);
+        focusFingers.forEach(f => document.getElementById(f.id).classList.remove('active-finger'));
+        document.getElementById('startFocusBtn').style.display = 'inline-block';
+        document.getElementById('focusContainer').style.display = 'none';
+        document.getElementById('focusContainer').innerHTML = `<p id="focusInstructie" style="font-size: clamp(2rem, 4vh, 3.2rem); font-weight: bold; color: var(--primary-color); margin: 0;">Adem In...</p>`;
+    }
+</script>
+</body>
+</html>
