@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <title>Neon Vaults - Mission: English A2 Unit 4</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #4fc3f7; --accent: #ff4081; --success: #00e676; --error: #ff5252;
+            --locked: #1e293b; --glass-border: rgba(255, 255, 255, 0.2); --gold: #ffd700;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a;
+            margin: 0; height: 100dvh; width: 100vw; overflow: hidden; color: white;
+            display: flex; justify-content: center; align-items: center; position: fixed;
+        }
+        #main-ui { text-align: center; width: 100%; z-index: 10; }
+        #map-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; width: 95vw; max-width: 800px; margin: 0 auto; padding: 10px; }
+        .vault-node {
+            background: var(--locked); border: 2px solid var(--glass-border); border-radius: 15px;
+            aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; 
+            transition: 0.3s; cursor: pointer; font-size: 2rem;
+        }
+        .active-blink { animation: pulse 1.2s infinite; border-color: var(--primary) !important; color: var(--primary) !important; box-shadow: 0 0 15px var(--primary); }
+        .completed { border-color: var(--success); color: var(--success); opacity: 0.3; pointer-events: none; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .overlay { position: fixed; inset: 0; display: none; justify-content: center; align-items: center; background: #0f172a; z-index: 1000; }
+        .glass-panel { background: #0f172a; border: 2px solid var(--glass-border); border-radius: 40px; padding: 35px; width: 90vw; max-width: 500px; text-align: center; overflow-y: auto; max-height: 90vh; }
+        .padlock-display { background: black; color: var(--primary); font-size: 2.5rem; padding: 15px; border: 3px solid var(--primary); border-radius: 20px; margin-bottom: 10px; font-family: monospace; letter-spacing: 5px; height: 60px; line-height: 60px; }
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .numpad button { padding: 18px; font-size: 1.8rem; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); border-radius: 15px; cursor: pointer; }
+        .btn-main { background: var(--primary); color: #0f172a; padding: 20px; border: none; border-radius: 20px; font-weight: 900; cursor: pointer; font-size: 1.2rem; text-transform: uppercase; margin-top: 15px; width: 100%; }
+        input[type="text"] { width: 100%; padding: 15px; font-size: 1.2rem; background: black; color: white; border: 2px solid var(--primary); border-radius: 15px; text-align: center; margin-bottom: 15px; box-sizing: border-box; }
+        .progress-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--success); width: 0%; transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen" class="overlay" style="display: flex;">
+        <div class="glass-panel">
+            <h1>NEON VAULTS</h1>
+            <p style="text-align: left;">
+                • <b>Vaults 1-9:</b> Vocabulary & Grammar (10 questions).<br>
+                • <b>Vault 10:</b> Final Exam (15 random questions).<br>
+                • <b>Vault 11:</b> The Master Vault.<br>
+                • Note down every code! You will need them.
+            </p>
+            <button class="btn-main" onclick="initGame()">Start Mission</button>
+        </div>
+    </div>
+
+    <div id="main-ui" style="display:none;">
+        <div id="timer" style="font-family: monospace; font-size: 1.5rem; color: var(--primary); margin: 15px;">TIME: 00:00</div>
+        <div id="map-container"></div>
+        <div id="master-area" style="margin-top:20px;"><div id="master-vault" style="font-size:3rem; opacity:0.1; cursor:pointer;">🔒</div></div>
+    </div>
+
+    <div id="padlock-overlay" class="overlay">
+        <div class="glass-panel">
+            <h3 id="padlock-title">ENTER ACCESS CODE</h3>
+            <div class="padlock-display" id="code-display">---</div>
+            <div class="numpad">
+                <button onclick="press(1)">1</button><button onclick="press(2)">2</button><button onclick="press(3)">3</button>
+                <button onclick="press(4)">4</button><button onclick="press(5)">5</button><button onclick="press(6)">6</button>
+                <button onclick="press(7)">7</button><button onclick="press(8)">8</button><button onclick="press(9)">9</button>
+                <button onclick="clearCode()" style="color:var(--error)">C</button>
+                <button onclick="press(0)">0</button>
+                <button onclick="checkCode()" style="color:var(--success)">OK</button>
+            </div>
+            <p onclick="closeOverlays()" style="margin-top:20px; cursor:pointer; opacity:0.5;">BACK TO MAP</p>
+        </div>
+    </div>
+
+    <div id="quiz-overlay" class="overlay">
+        <div class="glass-panel" id="quiz-content"></div>
+    </div>
+
+<script>
+    const oefeningen = [
+        { titel: "1: Vocab 4.1", type: "open", pool: [
+            {q: "Vertaal: ongeluk", c: "accident"}, {q: "Vertaal: stukje", c: "bit"}, {q: "Vertaal: bakken", c: "fry"},
+            {q: "Vertaal: smelten", c: "melt"}, {q: "Vertaal: in plakjes snijden", c: "slice"}, {q: "Vertaal: gebeuren", c: "happen"},
+            {q: "Vertaal: zwak", c: "weak"}, {q: "Vertaal: boos worden", c: "get angry"}, {q: "Vertaal: onderzoeken", c: "examine"},
+            {q: "Vertaal: plakken aan", c: "stick to"}
+        ]},
+        { titel: "2: Vocab 4.2", type: "open", pool: [
+            {q: "Vertaal: ten minste", c: "at least"}, {q: "Vertaal: armband", c: "bracelet"}, {q: "Vertaal: wedstrijd", c: "contest"},
+            {q: "Vertaal: tekenen", c: "draw"}, {q: "Vertaal: succes", c: "good luck"}, {q: "Vertaal: ontwerpen", c: "design"},
+            {q: "Vertaal: opkomen", c: "pop up"}, {q: "Vertaal: oplossing", c: "solution"}, {q: "Vertaal: dom/flauw", c: "silly"},
+            {q: "Vertaal: Met vriendelijke groet", c: "Yours sincerely"}
+        ]},
+        { titel: "3: Vocab 4.3", type: "open", pool: [
+            {q: "Vertaal: eindelijk", c: "finally"}, {q: "Vertaal: bevriezen", c: "freeze"}, {q: "Vertaal: handig", c: "useful"},
+            {q: "Vertaal: roeren", c: "stir"}, {q: "Vertaal: blinde mensen", c: "the blind"}, {q: "Vertaal: echt", c: "real"},
+            {q: "Vertaal: metalen", c: "metal"}, {q: "Vertaal: leunen", c: "lean"}, {q: "Vertaal: touw", c: "rope"},
+            {q: "Vertaal: stippuntje", c: "dot"}
+        ]},
+        { titel: "4: Vocab 4.4", type: "open", pool: [
+            {q: "Vertaal: opladen", c: "charge"}, {q: "Vertaal: eng", c: "creepy"}, {q: "Vertaal: breien", c: "knit"},
+            {q: "Vertaal: karton", c: "cardboard"}, {q: "Vertaal: mogelijk", c: "possibly"}, {q: "Vertaal: simpel", c: "simple"},
+            {q: "Vertaal: kammen", c: "comb"}, {q: "Vertaal: voorstellen (suggest)", c: "suggest"}, {q: "Vertaal: werken", c: "work"},
+            {q: "Vertaal: stroom insteken", c: "plug in"}
+        ]},
+        { titel: "5: The Imperative", type: "open", pool: [
+            {q: "(Slice) the potato!", c: "Slice"}, {q: "(Not / forget) the glue!", c: ["Don't forget", "Do not forget"]},
+            {q: "(Stir) the chocolate!", c: "Stir"}, {q: "(Not / get) angry!", c: ["Don't get", "Do not forget"]},
+            {q: "(Plug in) the charger!", c: "Plug in"}, {q: "(Not / melt) the ice!", c: ["Don't melt", "Do not melt"]},
+            {q: "(Draw) a bracelet!", c: "Draw"}, {q: "(Not / pull off) the sticker!", c: ["Don't pull off", "Do not pull off"]},
+            {q: "(Look) at the bottom!", c: "Look"}, {q: "(Wait) until Friday!", c: "Wait"}
+        ]},
+        { titel: "6: The Gerund", type: "choice", pool: [
+            {q: "I enjoy ____ (draw) bracelets.", c: "drawing", opts: ["draw", "drawing", "to draw"]},
+            {q: "____ (fry) potatoes is easy.", c: "frying", opts: ["Fry", "Frying", "To fry"]},
+            {q: "Stop ____ (pull off) the glue!", c: "pulling off", opts: ["pull off", "pulling off", "to pull off"]},
+            {q: "He is good at ____ (design) toys.", c: "designing", opts: ["design", "designing", "designs"]},
+            {q: "____ (freeze) water takes time.", c: "freezing", opts: ["Freeze", "Freezing", "Froze"]},
+            {q: "Thank you for ____ (help).", c: "helping", opts: ["help", "helping", "to help"]},
+            {q: "She likes ____ (knit).", c: "knitting", opts: ["knit", "knitting", "knits"]},
+            {q: "Avoid ____ (get) angry.", c: "getting", opts: ["get", "getting", "got"]},
+            {q: "____ (examine) the metal is hard.", c: "examining", opts: ["examine", "examining", "examines"]},
+            {q: "Keep ____ (stir) the soup.", c: "stirring", opts: ["stir", "stirring", "stirs"]}
+        ]},
+        { titel: "7: Have to", type: "open", pool: [
+            {q: "I (moet) charge my phone.", c: "have to"}, {q: "He (moet) design a tin.", c: "has to"},
+            {q: "We (moeten niet) stir the paint.", c: ["don't have to", "do not have to"]},
+            {q: "She (moet niet) fry the potato.", c: ["doesn't have to", "does not have to"]},
+            {q: "Do you (moet) wait?", c: "have to"}, {q: "They (moeten) draw a dot.", c: "have to"},
+            {q: "Does he (moet) knit?", c: "have to"}, {q: "I (moest - verleden tijd) go.", c: "had to"},
+            {q: "We (moeten) find a solution.", c: "have to"}, {q: "You (moet) lean on the rope.", c: "have to"}
+        ]},
+        { titel: "8: Possessives", type: "open", pool: [
+            {q: "The dog of Tom.", c: "Tom's dog"}, {q: "The toys of the children.", c: "the children's toys"},
+            {q: "The top (van de) page.", c: "of the"}, {q: "The color (van het) metal.", c: "of the"},
+            {q: "The bag of the girls (meervoud).", c: "the girls' bag"}, {q: "The car of Mrs Smith.", c: "Mrs Smith's car"},
+            {q: "The end (van de) contest.", c: "of the"}, {q: "The bike of my sister.", c: "my sister's bike"},
+            {q: "The solution (van de) problem.", c: "of the"}, {q: "The name (van de) inventor.", c: "of the"}
+        ]},
+        { titel: "9: Demonstratives", type: "choice", pool: [
+            {q: "Look at ____ (die daar) tin.", c: "that", opts: ["this", "that", "these", "those"]},
+            {q: "____ (deze hier) rubber bands are mine.", c: "these", opts: ["this", "that", "these", "those"]},
+            {q: "Can I ____ (een suggestie doen)?", c: "make a suggestion", opts: ["do a suggest", "make a suggestion", "give suggest"]},
+            {q: "____ (wat dacht je van) a chocolate bar?", c: "How about", opts: ["What about", "How about", "Think about"]},
+            {q: "That ____ (klinkt als) a good idea.", c: "sounds like", opts: ["sounds like", "hears like", "is like"]},
+            {q: "Vertaal: Mevrouw", c: "Mrs", opts: ["Mr", "Mrs", "Miss"]},
+            {q: "I ____ (beveel aan) this book.", c: "recommend", opts: ["recommend", "suggest", "design"]},
+            {q: "In my ____ (mening)...", c: "opinion", opts: ["think", "opinion", "idea"]},
+            {q: "____ (dit hier) dot is small.", c: "this", opts: ["this", "that", "these", "those"]},
+            {q: "____ (die daar) girls are tall.", c: "those", opts: ["this", "that", "these", "those"]}
+        ]}
+    ];
+
+    let currentStep = 0, currentQuestionInStep = 0, totalNeeded = 10;
+    let codes = [], completedLocs = [], codeInput = "", fails = 0, isMaster = false;
+    let vaultLocs = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+    let currentQuestionData = null, selectedVaultId = null, startTime, timerInt;
+    let askedQuestions = [];
+
+    function initGame() {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('main-ui').style.display = 'block';
+        startTime = new Date();
+        timerInt = setInterval(() => {
+            let d = Math.floor((new Date() - startTime) / 1000);
+            document.getElementById('timer').innerText = `TIME: ${Math.floor(d/60).toString().padStart(2,'0')}:${(d%60).toString().padStart(2,'0')}`;
+        }, 1000);
+        renderMap();
+    }
+
+    function renderMap() {
+        const container = document.getElementById('map-container');
+        container.innerHTML = "";
+        for(let i=0; i<10; i++) {
+            const node = document.createElement('div');
+            const isDone = completedLocs.includes(i);
+            const isBlinking = (i === vaultLocs[currentStep]);
+            node.className = `vault-node ${isDone ? 'completed' : ''} ${isBlinking && !isMaster ? 'active-blink' : ''}`;
+            node.innerHTML = isDone ? (i === vaultLocs[9] ? '⭐' : '✅') : '🔒';
+            node.onclick = () => { if(!isDone) { selectedVaultId = i; openPadlock(isBlinking); } };
+            container.appendChild(node);
+        }
+    }
+
+    function openPadlock(isBlinking) {
+        if(currentStep === 0 && isBlinking) startQuiz();
+        else { document.getElementById('padlock-overlay').style.display = 'flex'; clearCode(); }
+    }
+
+    function checkCode() {
+        let target = isMaster ? codes.reduce((a,b)=>a+parseInt(b),0).toString() : codes[currentStep-1];
+        if(codeInput === target && (isMaster || selectedVaultId === vaultLocs[currentStep])) {
+            document.getElementById('padlock-overlay').style.display = 'none';
+            if(isMaster) showWin(); else startQuiz();
+        } else {
+            fails++; if(fails >= 5) { alert("Mission Failed: Too many errors."); location.reload(); }
+            document.getElementById('code-display').style.color = 'var(--error)';
+            setTimeout(clearCode, 600);
+        }
+    }
+
+    function startQuiz() {
+        currentQuestionInStep = 0;
+        totalNeeded = (currentStep === 9) ? 15 : 10;
+        askedQuestions = []; 
+        nextQuestion();
+    }
+
+    function nextQuestion() {
+        document.getElementById('main-ui').style.display = 'none';
+        document.getElementById('quiz-overlay').style.display = 'flex';
+        
+        let oef;
+        let loopVeiligheid = 0;
+
+        do {
+            if(currentStep === 9) {
+                oef = oefeningen[Math.floor(Math.random() * oefeningen.length)];
+            } else {
+                oef = oefeningen[currentStep];
+            }
+            currentQuestionData = oef.pool[Math.floor(Math.random() * oef.pool.length)];
+            loopVeiligheid++;
+        } while (askedQuestions.includes(currentQuestionData.q) && loopVeiligheid < 200);
+
+        askedQuestions.push(currentQuestionData.q);
+        currentQuestionData.currentType = oef.type;
+
+        let progress = (currentQuestionInStep / totalNeeded) * 100;
+        let html = `<h3>${currentStep === 9 ? "Vault 10: THE EXAM" : oef.titel}</h3>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+                    <p>Question ${currentQuestionInStep + 1} / ${totalNeeded}</p>
+                    <p style="font-size:1.5rem; margin:20px 0;">${currentQuestionData.q}</p>`;
+
+        if(currentQuestionData.currentType === "choice") {
+            currentQuestionData.opts.forEach(o => {
+                html += `<button class="btn-main" onclick="checkAnswer('${o}')">${o}</button>`;
+            });
+        } else {
+            html += `<input type="text" id="ans-in" autocomplete="off" placeholder="Type here..."><button class="btn-main" onclick="checkAnswer()">CHECK</button>`;
+        }
+        document.getElementById('quiz-content').innerHTML = html;
+        if(currentQuestionData.currentType === "open") {
+            const input = document.getElementById('ans-in');
+            setTimeout(()=>input.focus(), 100);
+            input.onkeydown = (e) => { if(e.key === 'Enter') checkAnswer(); };
+        }
+    }
+
+    function checkAnswer(choice) {
+        const cleanStr = (str) => str.toLowerCase().replace(/[.?]/g, '').trim();
+        let rawVal = choice ? choice : document.getElementById('ans-in').value;
+        let val = cleanStr(rawVal);
+        let correct = false;
+
+        if (Array.isArray(currentQuestionData.c)) {
+            correct = currentQuestionData.c.some(ans => cleanStr(ans) === val);
+        } else {
+            correct = val === cleanStr(currentQuestionData.c);
+        }
+
+        if(correct) {
+            currentQuestionInStep++;
+            if(currentQuestionInStep >= totalNeeded) finishStep(); else nextQuestion();
+        } else {
+            if(!choice) {
+                document.getElementById('ans-in').style.borderColor = 'var(--error)';
+                document.getElementById('ans-in').style.boxShadow = '0 0 10px var(--error)';
+            } else {
+                alert("Incorrect, try again!");
+            }
+        }
+    }
+
+    function finishStep() {
+        const code = Math.floor(100 + Math.random() * 899).toString();
+        codes.push(code);
+        completedLocs.push(vaultLocs[currentStep]);
+        currentStep++;
+
+        let html = "";
+        if(currentStep < 10) {
+            html = `<h2>VAULT CRACKED!</h2><p>Your code for the next vault:</p>
+                    <div style="font-size:4rem; color:var(--accent); font-weight:900; margin:20px 0;">${code}</div>
+                    <button class="btn-main" onclick="closeOverlays()">BACK TO MAP</button>`;
+        } else {
+            html = `<h2>EXAM PASSED!</h2>
+                    <p>Your 10th and final code is:</p>
+                    <div style="font-size:4rem; color:var(--accent); font-weight:900; margin:20px 0;">${code}</div>
+                    <div style="text-align:left; background:rgba(255,255,255,0.1); padding:15px; border-radius:10px;">
+                        <b>VAULT 11 INSTRUCTION:</b><br>
+                        Add up all 10 codes you received. The sum is the final access code.
+                    </div>
+                    <button class="btn-main" onclick="activateMaster()">GO TO MASTER VAULT</button>`;
+        }
+        document.getElementById('quiz-content').innerHTML = html;
+    }
+
+    function activateMaster() {
+        closeOverlays();
+        const mv = document.getElementById('master-vault');
+        mv.style.opacity = "1"; mv.innerHTML = "💎";
+        mv.onclick = () => { isMaster = true; document.getElementById('main-ui').style.display = 'none'; document.getElementById('padlock-overlay').style.display = 'flex'; document.getElementById('padlock-title').innerText = "SUM OF ALL 10 CODES"; clearCode(); };
+    }
+
+    function closeOverlays() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); document.getElementById('main-ui').style.display='block'; renderMap(); }
+    function press(n) { if(codeInput.length < 6) { codeInput += n; document.getElementById('code-display').innerText = codeInput; } }
+    function clearCode() { codeInput = ""; document.getElementById('code-display').innerText = "---"; document.getElementById('code-display').style.color = "var(--primary)"; }
+    
+    function showWin() { 
+        clearInterval(timerInt); 
+        confetti({ particleCount: 200, spread: 80 }); 
+        let finalTime = document.getElementById('timer').innerText; 
+        document.getElementById('quiz-overlay').style.display = 'flex'; 
+        document.getElementById('quiz-content').innerHTML = `
+            <h1>💎 MISSION COMPLETE!</h1>
+            <p>Master Vault Unlocked</p>
+            <div style="font-size:2.5rem; color:var(--primary); font-family:monospace; font-weight:900; margin:20px 0;">
+                ${finalTime}
+            </div>
+            <button class="btn-main" onclick="location.reload()">RESTART MISSION</button>
+        `; 
+    }
+</script>
+</body>
+</html>
