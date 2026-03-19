@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Builder: British & American Dates</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+        body { font-family: 'Fredoka One', cursive; background: #e0f2fe; overflow: hidden; height: 100vh; }
+        
+        .block-anim {
+            animation: dropBlock 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes dropBlock {
+            0% { transform: translateY(-500px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .brick {
+            width: 380px;
+            height: 38px;
+            background: #f87171;
+            border: 2px solid #b91c1c;
+            border-radius: 6px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            box-shadow: 0 3px 0 #991b1b;
+            padding: 0 10px;
+        }
+
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            60% { transform: translateX(8px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        const DATE_TASKS = [
+            { q: "maandag 12 mei", br: "Monday, the twelfth of May", us: "Monday, May twelfth" },
+            { q: "dinsdag 1 januari", br: "Tuesday, the first of January", us: "Tuesday, January first" },
+            { q: "woensdag 22 maart", br: "Wednesday, the twenty-second of March", us: "Wednesday, March twenty-second" },
+            { q: "donderdag 3 juli", br: "Thursday, the third of July", us: "Thursday, July third" },
+            { q: "vrijdag 21 november", br: "Friday, the twenty-first of November", us: "Friday, November twenty-first" },
+            { q: "zaterdag 31 augustus", br: "Saturday, the thirty-first of August", us: "Saturday, August thirty-first" },
+            { q: "zondag 2 februari", br: "Sunday, the second of February", us: "Sunday, February second" },
+            { q: "maandag 11 november", br: "Monday, the eleventh of November", us: "Monday, November eleventh" },
+            { q: "vrijdag 13 december", br: "Friday, the thirteenth of December", us: "Friday, December thirteenth" },
+            { q: "woensdag 20 september", br: "Wednesday, the twentieth of September", us: "Wednesday, September twentieth" },
+            { q: "donderdag 4 juli", br: "Thursday, the fourth of July", us: "Thursday, July fourth" },
+            { q: "zaterdag 10 juni", br: "Saturday, the tenth of June", us: "Saturday, June tenth" },
+            { q: "dinsdag 23 april", br: "Tuesday, the twenty-third of April", us: "Tuesday, April twenty-third" },
+            { q: "zondag 9 mei", br: "Sunday, the ninth of May", us: "Sunday, May ninth" },
+            { q: "maandag 15 augustus", br: "Monday, the fifteenth of August", us: "Monday, August fifteenth" }
+        ].sort(() => Math.random() - 0.5);
+
+        const App = () => {
+            const [blocks, setBlocks] = useState([]);
+            const [currentIdx, setCurrentIdx] = useState(0);
+            const [input, setInput] = useState("");
+            const [phase, setPhase] = useState('START');
+            const [isShaking, setIsShaking] = useState(false);
+            const [lastError, setLastError] = useState("");
+
+            const checkAnswer = (e) => {
+                e.preventDefault();
+                const task = DATE_TASKS[currentIdx];
+                const userVal = input.trim();
+                
+                if (userVal === task.br || userVal === task.us) {
+                    setBlocks([...blocks, { id: Date.now(), text: input }]);
+                    setLastError("");
+                    if (blocks.length + 1 >= 15) {
+                        setPhase('WIN');
+                    } else {
+                        setCurrentIdx(prev => (prev + 1) % DATE_TASKS.length);
+                        setInput("");
+                    }
+                } else {
+                    setIsShaking(true);
+                    setLastError(`Correct: "${task.br}" of "${task.us}"`);
+                    setBlocks(prev => prev.slice(0, -1));
+                    setTimeout(() => setIsShaking(false), 500);
+                    setInput("");
+                }
+            };
+
+            return (
+                <div className="h-screen w-full flex bg-sky-100 overflow-hidden relative">
+                    <div className="w-1/2 flex flex-col items-center justify-end pb-10 border-r-4 border-white/30 bg-gradient-to-t from-green-200 to-sky-100">
+                        <div className={`flex flex-col-reverse items-center ${isShaking ? 'shake' : ''}`}>
+                            <div className="w-96 h-10 bg-green-700 rounded-t-xl border-b-4 border-green-900 flex items-center justify-center text-white text-xs">FOUNDATION</div>
+                            {blocks.map((block) => (
+                                <div key={block.id} className="brick block-anim">{block.text}</div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="w-1/2 flex flex-col items-center justify-center p-8 bg-white/40">
+                        <div className="text-center mb-6">
+                            <h1 className="text-4xl text-blue-900">Dual-Format Architect</h1>
+                            <p className="text-xs text-red-600 font-bold uppercase mt-2 tracking-widest">⚠️ UK & US Approved • Case Sensitive</p>
+                        </div>
+
+                        {phase === 'START' && (
+                            <button onClick={() => setPhase('PLAY')} className="px-12 py-6 bg-blue-600 text-white text-3xl rounded-2xl shadow-xl hover:bg-blue-700">START</button>
+                        )}
+
+                        {phase === 'PLAY' && (
+                            <div className="w-full max-w-xl bg-white p-8 rounded-[2rem] shadow-2xl border-4 border-blue-200">
+                                <div className="text-center mb-6">
+                                    <h2 className="text-3xl text-gray-800">{DATE_TASKS[currentIdx].q}</h2>
+                                </div>
+                                <form onSubmit={checkAnswer}>
+                                    <input 
+                                        autoFocus
+                                        className="w-full p-4 text-lg border-2 border-gray-100 rounded-xl outline-none focus:border-red-400 text-center mb-2"
+                                        placeholder="Typ de Engelse datum..."
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                    />
+                                    {lastError && <p className="text-red-500 text-[10px] text-center mb-4 font-bold leading-tight">{lastError}</p>}
+                                    <div className="bg-green-50 p-4 rounded-xl text-[11px] text-green-800 border border-green-200 grid grid-cols-2 gap-4">
+                                        <div>
+                                            <p className="font-bold border-b border-green-200 mb-1">British Style (UK):</p>
+                                            <p>Monday, the twelfth of May</p>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold border-b border-green-200 mb-1">American Style (US):</p>
+                                            <p>Monday, May twelfth</p>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div className="mt-6 text-center text-blue-900 font-bold">HOOGTE: {blocks.length} / 15</div>
+                            </div>
+                        )}
+
+                        {phase === 'WIN' && (
+                            <div className="text-center bg-white p-10 rounded-[2rem] shadow-2xl border-4 border-yellow-400">
+                                <h2 className="text-5xl text-yellow-500">GLOBAL BUILDER! 🌍</h2>
+                                <p className="text-xl text-blue-800 mt-4 italic">You mastered both styles.</p>
+                                <button onClick={() => window.location.reload()} className="mt-8 px-10 py-4 bg-blue-600 text-white rounded-full text-xl hover:bg-blue-700">Opnieuw</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
