@@ -48,29 +48,55 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
-        const DATE_TASKS = [
-            { q: "maandag 12 mei", br: "Monday, the twelfth of May", us: "Monday, May twelfth" },
-            { q: "dinsdag 1 januari", br: "Tuesday, the first of January", us: "Tuesday, January first" },
-            { q: "woensdag 22 maart", br: "Wednesday, the twenty-second of March", us: "Wednesday, March twenty-second" },
-            { q: "donderdag 3 juli", br: "Thursday, the third of July", us: "Thursday, July third" },
-            { q: "vrijdag 21 november", br: "Friday, the twenty-first of November", us: "Friday, November twenty-first" },
-            { q: "zaterdag 31 augustus", br: "Saturday, the thirty-first of August", us: "Saturday, August thirty-first" },
-            { q: "zondag 2 februari", br: "Sunday, the second of February", us: "Sunday, February second" },
-            { q: "maandag 11 november", br: "Monday, the eleventh of November", us: "Monday, November eleventh" },
-            { q: "vrijdag 13 december", br: "Friday, the thirteenth of December", us: "Friday, December thirteenth" },
-            { q: "woensdag 20 september", br: "Wednesday, the twentieth of September", us: "Wednesday, September twentieth" },
-            { q: "donderdag 4 juli", br: "Thursday, the fourth of July", us: "Thursday, July fourth" },
-            { q: "zaterdag 10 juni", br: "Saturday, the tenth of June", us: "Saturday, June tenth" },
-            { q: "dinsdag 23 april", br: "Tuesday, the twenty-third of April", us: "Tuesday, April twenty-third" },
-            { q: "zondag 9 mei", br: "Sunday, the ninth of May", us: "Sunday, May ninth" },
-            { q: "maandag 15 augustus", br: "Monday, the fifteenth of August", us: "Monday, August fifteenth" }
-        ].sort(() => Math.random() - 0.5);
+        const DAYS = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
+        const MONTHS = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+        
+        const DAYS_EN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        const getOrdinal = (n) => {
+            const s = ["th", "st", "nd", "rd"];
+            const v = n % 100;
+            return n + (s[(v - 20) % 10] || s[v] || s[0]);
+        };
+
+        const numberToWords = (n) => {
+            const words = {
+                1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth", 6: "sixth", 7: "seventh", 8: "eighth", 9: "ninth", 10: "tenth",
+                11: "eleventh", 12: "twelfth", 13: "thirteenth", 14: "fourteenth", 15: "fifteenth", 16: "sixteenth", 17: "seventeenth", 18: "eighteenth", 19: "nineteenth", 20: "twentieth",
+                21: "twenty-first", 22: "twenty-second", 23: "twenty-third", 24: "twenty-fourth", 25: "twenty-fifth", 26: "twenty-sixth", 27: "twenty-seventh", 28: "twenty-eighth", 29: "twenty-ninth", 30: "thirtieth", 31: "thirty-first"
+            };
+            return words[n];
+        };
+
+        const generateRandomTask = () => {
+            const dayIdx = Math.floor(Math.random() * 7);
+            const monthIdx = Math.floor(Math.random() * 12);
+            const date = Math.floor(Math.random() * 31) + 1;
+            
+            // Simpele correctie voor maanden met 30 dagen of februari
+            let finalDate = date;
+            if (monthIdx === 1 && date > 28) finalDate = 28;
+            if ([3, 5, 8, 10].includes(monthIdx) && date > 30) finalDate = 30;
+
+            const dayNL = DAYS[dayIdx];
+            const monthNL = MONTHS[monthIdx];
+            const dayEN = DAYS_EN[dayIdx];
+            const monthEN = MONTHS_EN[monthIdx];
+            const dateWord = numberToWords(finalDate);
+
+            return {
+                q: `${dayNL} ${finalDate} ${monthNL}`,
+                br: `${dayEN} the ${dateWord} of ${monthEN}`,
+                us: `${dayEN}, ${monthEN} ${dateWord}`
+            };
+        };
 
         const App = () => {
             const [blocks, setBlocks] = useState([]);
-            const [currentIdx, setCurrentIdx] = useState(0);
+            const [currentTask, setCurrentTask] = useState(generateRandomTask());
             const [input, setInput] = useState("");
             const [phase, setPhase] = useState('START');
             const [isShaking, setIsShaking] = useState(false);
@@ -78,21 +104,20 @@
 
             const checkAnswer = (e) => {
                 e.preventDefault();
-                const task = DATE_TASKS[currentIdx];
                 const userVal = input.trim();
                 
-                if (userVal === task.br || userVal === task.us) {
+                if (userVal === currentTask.br || userVal === currentTask.us) {
                     setBlocks([...blocks, { id: Date.now(), text: input }]);
                     setLastError("");
                     if (blocks.length + 1 >= 15) {
                         setPhase('WIN');
                     } else {
-                        setCurrentIdx(prev => (prev + 1) % DATE_TASKS.length);
+                        setCurrentTask(generateRandomTask());
                         setInput("");
                     }
                 } else {
                     setIsShaking(true);
-                    setLastError(`Correct: "${task.br}" of "${task.us}"`);
+                    setLastError(`Fout! Let op de komma bij US en 'the/of' bij UK.`);
                     setBlocks(prev => prev.slice(0, -1));
                     setTimeout(() => setIsShaking(false), 500);
                     setInput("");
@@ -112,8 +137,8 @@
 
                     <div className="w-1/2 flex flex-col items-center justify-center p-8 bg-white/40">
                         <div className="text-center mb-6">
-                            <h1 className="text-4xl text-blue-900">Dual-Format Architect</h1>
-                            <p className="text-xs text-red-600 font-bold uppercase mt-2 tracking-widest">⚠️ UK & US Approved • Case Sensitive</p>
+                            <h1 className="text-4xl text-blue-900">Date Architect</h1>
+                            <p className="text-xs text-red-600 font-bold uppercase mt-2 tracking-widest">⚠️ UK: No Comma • US: With Comma</p>
                         </div>
 
                         {phase === 'START' && (
@@ -123,7 +148,7 @@
                         {phase === 'PLAY' && (
                             <div className="w-full max-w-xl bg-white p-8 rounded-[2rem] shadow-2xl border-4 border-blue-200">
                                 <div className="text-center mb-6">
-                                    <h2 className="text-3xl text-gray-800">{DATE_TASKS[currentIdx].q}</h2>
+                                    <h2 className="text-3xl text-gray-800 lowercase first-letter:uppercase">{currentTask.q}</h2>
                                 </div>
                                 <form onSubmit={checkAnswer}>
                                     <input 
@@ -134,14 +159,14 @@
                                         onChange={(e) => setInput(e.target.value)}
                                     />
                                     {lastError && <p className="text-red-500 text-[10px] text-center mb-4 font-bold leading-tight">{lastError}</p>}
-                                    <div className="bg-green-50 p-4 rounded-xl text-[11px] text-green-800 border border-green-200 grid grid-cols-2 gap-4">
+                                    <div className="bg-slate-50 p-4 rounded-xl text-[11px] text-slate-600 border border-slate-200 grid grid-cols-2 gap-4">
                                         <div>
-                                            <p className="font-bold border-b border-green-200 mb-1">British Style (UK):</p>
-                                            <p>Monday, the twelfth of May</p>
+                                            <p className="font-bold border-b border-slate-200 mb-1">British (UK):</p>
+                                            <p>Day the [date] of [Month]</p>
                                         </div>
                                         <div>
-                                            <p className="font-bold border-b border-green-200 mb-1">American Style (US):</p>
-                                            <p>Monday, May twelfth</p>
+                                            <p className="font-bold border-b border-slate-200 mb-1">American (US):</p>
+                                            <p>Day, [Month] [date]</p>
                                         </div>
                                     </div>
                                 </form>
@@ -151,8 +176,8 @@
 
                         {phase === 'WIN' && (
                             <div className="text-center bg-white p-10 rounded-[2rem] shadow-2xl border-4 border-yellow-400">
-                                <h2 className="text-5xl text-yellow-500">GLOBAL BUILDER! 🌍</h2>
-                                <p className="text-xl text-blue-800 mt-4 italic">You mastered both styles.</p>
+                                <h2 className="text-5xl text-yellow-500">EXPERT BUILDER! 🌍</h2>
+                                <p className="text-xl text-blue-800 mt-4 italic">You mastered all 365 days.</p>
                                 <button onClick={() => window.location.reload()} className="mt-8 px-10 py-4 bg-blue-600 text-white rounded-full text-xl hover:bg-blue-700">Opnieuw</button>
                             </div>
                         )}
