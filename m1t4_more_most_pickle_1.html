@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Pickle 1 - More & Most</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --error-red: #ff1744;
+        }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); 
+            color: white; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; 
+        }
+        
+        /* DE BLAUWE BALK */
+        header { 
+            background: var(--hero-blue-main); 
+            padding: 1.5rem 1rem; 
+            text-align: center; 
+            border-bottom: 5px solid var(--hero-yellow); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.5rem; 
+            letter-spacing: 2px; 
+            margin: 0; 
+            text-shadow: 3px 3px 0px var(--hero-blue-dark); 
+        }
+        .subtitle {
+            font-family: 'Bangers', cursive; 
+            color: var(--hero-yellow); 
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+
+        /* MAIN CONTENT */
+        main { 
+            max-width: 800px; 
+            margin: 40px auto; 
+            padding: 20px; 
+            flex-grow: 1;
+            width: 90%;
+        }
+
+        .quiz-container {
+            background: rgba(16, 42, 67, 0.9); 
+            border: 3px solid var(--hero-cyan); 
+            border-radius: 20px; 
+            padding: 40px; 
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .score-board {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            background: var(--hero-yellow);
+            color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 3px solid var(--hero-blue-dark);
+            transform: rotate(5deg);
+            display: none;
+        }
+
+        .level-select-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-level {
+            background: #102a43;
+            color: white;
+            border: 3px solid var(--hero-cyan);
+            padding: 30px 20px;
+            border-radius: 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+        }
+        .btn-level.beginner { border-color: var(--success-green); color: var(--success-green); }
+        .btn-level.pro { border-color: var(--hero-orange); color: var(--hero-orange); }
+
+        .btn-level:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        .btn-level.beginner:hover { background: var(--success-green); color: #000; }
+        .btn-level.pro:hover { background: var(--hero-orange); color: #fff; }
+
+        .question-text {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            margin-top: 20px;
+            word-wrap: break-word; /* Voorkomt rare afbrekingen */
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-option {
+            background: var(--hero-blue-dark);
+            color: white;
+            border: 2px solid var(--hero-cyan);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 0px rgba(0,0,0,0.3);
+        }
+
+        .btn-option:hover {
+            transform: translateY(-3px);
+            background: var(--hero-blue-main);
+            box-shadow: 0 8px 10px rgba(0,0,0,0.4);
+        }
+        .btn-option:active {
+            transform: translateY(2px);
+            box-shadow: 0 0px 0px rgba(0,0,0,0.3);
+        }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .feedback-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; font-size: 6rem; z-index: 2001; text-shadow: 5px 5px 0px #000; opacity: 0; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); }
+        
+        @keyframes popIn { 
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 1; } 
+            50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 0; } 
+        }
+
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+
+        .screen { display: none; }
+        .active-screen { display: block; }
+        
+        .btn-restart { background: var(--hero-orange); border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.5rem; color: white; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #d84315; }
+        .btn-restart:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+<div class="feedback-text" id="feedback"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">PICKLE 1: MORE & MOST</div>
+</header>
+
+<main>
+    <div class="quiz-container" id="quiz-box">
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span>/10</div>
+        
+        <div id="start-screen" class="screen active-screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow); margin-top: 0;">CHOOSE YOUR DIFFICULTY</h2>
+            <p style="font-size: 1.2rem;">Kies je trainingsniveau. Je krijgt 10 willekeurige missies!</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level beginner" onclick="startGame('beginner')">
+                    BEGINNER<br>
+                    <span style="font-size: 1rem; font-family: 'Lexend'; font-weight: normal; color: white;">More / Most</span>
+                </button>
+                <button class="btn-level pro" onclick="startGame('pro')">
+                    PRO<br>
+                    <span style="font-size: 1rem; font-family: 'Lexend'; font-weight: normal; color: white;">More than / The most</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px;">MISSie <span id="current-q">1</span> / 10</h2>
+            <div class="question-text" id="question"></div>
+            <div class="options-grid" id="options"></div>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow);">MISSION ACCOMPLISHED!</h2>
+            <p style="font-size: 1.2rem;">Jouw uiteindelijke hero-score is: <strong id="final-score"></strong> van de 10.</p>
+            <button class="btn-restart" onclick="window.location.href='index.html'">TERUG NAAR COMMAND CENTER</button>
+            <button class="btn-restart" style="background: var(--hero-cyan); color: var(--hero-blue-dark); border-bottom-color: #4fc3f7; margin-left: 10px;" onclick="location.reload()">PLAY AGAIN</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // DE DATABASE GENERATOR (Alleen woorden met 3 of meer lettergrepen!)
+    const adjectives3Plus = [
+        "dangerous", "powerful", "difficult", "expensive", "exciting", 
+        "incredible", "mysterious", "invisible", "invincible", "terrifying", 
+        "important", "intelligent", "poisonous", "radioactive", "spectacular", 
+        "impossible", "unbelievable", "magnificent", "courageous", "heroic", 
+        "popular", "beautiful", "generous", "amazing", "fantastic"
+    ];
+
+    // Sjablonen om >150 unieke zinnen te genereren
+    const compTemplates = [
+        { temp: "The villain's robot is [BLANK] (ADJ) than ours!", base: "The villain's robot is [BLANK] ours!" },
+        { temp: "My new armor is [BLANK] (ADJ) than my old cape.", base: "My new armor is [BLANK] my old cape." },
+        { temp: "This laser puzzle is [BLANK] (ADJ) than the first one.", base: "This laser puzzle is [BLANK] the first one." },
+        { temp: "Captain Thunder is [BLANK] (ADJ) than Doctor Doom.", base: "Captain Thunder is [BLANK] Doctor Doom." },
+        { temp: "That explosion was [BLANK] (ADJ) than I expected.", base: "That explosion was [BLANK] I expected." }
+    ];
+
+    const supTemplates = [
+        { temp: "Captain Thunder is the [BLANK] (ADJ) hero in the city.", base: "Captain Thunder is [BLANK] hero in the city." },
+        { temp: "That was the [BLANK] (ADJ) battle I have ever seen!", base: "That was [BLANK] battle I have ever seen!" },
+        { temp: "This is the [BLANK] (ADJ) gadget in our secret lab.", base: "This is [BLANK] gadget in our secret lab." },
+        { temp: "He is the [BLANK] (ADJ) sidekick in the world.", base: "He is [BLANK] sidekick in the world." },
+        { temp: "That monster is the [BLANK] (ADJ) creature ever.", base: "That monster is [BLANK] creature ever." }
+    ];
+
+    let fullDatabaseBeginner = [];
+    let fullDatabasePro = [];
+
+    // Genereer de database (3 lettergrepen x Sjablonen = 250+ unieke zinnen)
+    adjectives3Plus.forEach(adj => {
+        compTemplates.forEach(t => {
+            // Beginner: Alleen 'more' of 'most' invullen
+            fullDatabaseBeginner.push({
+                text: t.temp.replace("[BLANK]", "<span class='blank'>___</span>").replace("ADJ", adj),
+                options: ["more", "most"], correct: 0
+            });
+            // Pro: Hele constructie invullen
+            fullDatabasePro.push({
+                text: t.base.replace("[BLANK]", "<span class='blank'>___</span> (" + adj + ")"),
+                options: ["more " + adj + " than", "the most " + adj], correct: 0
+            });
+        });
+
+        supTemplates.forEach(t => {
+            // Beginner
+            fullDatabaseBeginner.push({
+                text: t.temp.replace("[BLANK]", "<span class='blank'>___</span>").replace("ADJ", adj),
+                options: ["more", "most"], correct: 1
+            });
+            // Pro
+            fullDatabasePro.push({
+                text: t.base.replace("[BLANK]", "<span class='blank'>___</span> (" + adj + ")"),
+                options: ["more " + adj + " than", "the most " + adj], correct: 1
+            });
+        });
+    });
+
+    // Functie om de array willekeurig te husselen
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // GAME STATE
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const totalQuestions = 10; // 10 vragen per sessie
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const scoreEl = document.getElementById('score');
+    const currentQEl = document.getElementById('current-q');
+    const flashEl = document.getElementById('flash');
+    const feedbackEl = document.getElementById('feedback');
+    const quizBox = document.getElementById('quiz-box');
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(screenId).classList.add('active-screen');
+    }
+
+    function startGame(level) {
+        // Kies de juiste database, hussel hem en pak de eerste 10
+        let sourceDB = (level === 'beginner') ? fullDatabaseBeginner : fullDatabasePro;
+        activeQuestions = shuffleArray([...sourceDB]).slice(0, totalQuestions);
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        scoreEl.innerText = score;
+        
+        document.getElementById('score-board').style.display = 'block';
+        switchScreen('game-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = activeQuestions[currentQuestionIndex];
+        currentQEl.innerText = currentQuestionIndex + 1;
+        questionEl.innerHTML = q.text;
+        
+        // Opties (knoppen) husselen we ook, zodat het goede antwoord niet altijd links staat
+        let opts = [
+            { text: q.options[0], isCorrect: q.correct === 0 },
+            { text: q.options[1], isCorrect: q.correct === 1 }
+        ];
+        opts = shuffleArray(opts);
+
+        optionsEl.innerHTML = '';
+        opts.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-option';
+            btn.innerText = opt.text;
+            btn.onclick = () => checkAnswer(opt.isCorrect);
+            optionsEl.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(isCorrect) {
+        if (isCorrect) {
+            score++;
+            scoreEl.innerText = score;
+            showFeedback('SMASH!', 'var(--success-green)', 'rgba(0, 230, 118, 0.4)');
+        } else {
+            quizBox.classList.add('shake');
+            setTimeout(() => quizBox.classList.remove('shake'), 400);
+            showFeedback('ZAP!', 'var(--error-red)', 'rgba(255, 23, 68, 0.4)');
+        }
+
+        currentQuestionIndex++;
+        
+        setTimeout(() => {
+            if (currentQuestionIndex < totalQuestions) {
+                loadQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 1000);
+    }
+
+    function showFeedback(text, textColor, bgColor) {
+        flashEl.style.background = bgColor;
+        flashEl.style.opacity = '1';
+        
+        feedbackEl.innerText = text;
+        feedbackEl.style.color = textColor;
+        feedbackEl.style.animation = 'none';
+        void feedbackEl.offsetWidth; // Trigger reflow
+        feedbackEl.style.animation = 'popIn 0.8s ease-out forwards';
+
+        setTimeout(() => {
+            flashEl.style.opacity = '0';
+        }, 300);
+    }
+
+    function showEndScreen() {
+        switchScreen('end-screen');
+        document.getElementById('score-board').style.display = 'none';
+        document.getElementById('final-score').innerText = score;
+    }
+</script>
+
+</body>
+</html>
