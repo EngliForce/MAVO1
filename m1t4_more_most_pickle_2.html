@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Whack-a-Villain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --error-red: #ff1744;
+        }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); 
+            color: white; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; 
+            user-select: none; /* Voorkomt tekst selecteren tijdens snel klikken */
+        }
+        
+        header { 
+            background: var(--hero-blue-main); 
+            padding: 1.5rem 1rem; 
+            text-align: center; 
+            border-bottom: 5px solid var(--hero-yellow); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.5rem; letter-spacing: 2px; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        .subtitle { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.5rem; margin-top: 5px; }
+
+        main { max-width: 800px; margin: 20px auto; padding: 10px; flex-grow: 1; width: 95%; }
+
+        .quiz-container {
+            background: rgba(16, 42, 67, 0.9); 
+            border: 3px solid var(--hero-cyan); 
+            border-radius: 20px; 
+            padding: 30px; 
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .score-board {
+            position: absolute; top: -20px; right: 20px;
+            background: var(--hero-yellow); color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive; font-size: 1.5rem;
+            padding: 10px 20px; border-radius: 10px;
+            border: 3px solid var(--hero-blue-dark);
+            transform: rotate(5deg); display: none;
+        }
+
+        .question-text {
+            font-size: 1.4rem; line-height: 1.5; margin-bottom: 20px; margin-top: 10px;
+            min-height: 60px;
+        }
+        .blank {
+            display: inline-block; min-width: 40px; padding: 0 5px;
+            border-bottom: 3px solid var(--hero-yellow); color: var(--hero-yellow); font-weight: bold;
+        }
+
+        /* WHACK-A-MOLE GRID */
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #05101a;
+            border-radius: 15px;
+            border: 2px solid var(--hero-blue-dark);
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.8);
+        }
+
+        .hole {
+            position: relative;
+            width: 100%;
+            padding-bottom: 80%; /* Aspect ratio */
+            background: #0b1a2a;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--hero-blue-dark);
+            box-shadow: inset 0 15px 25px rgba(0,0,0,0.9), 0 5px 10px rgba(255,255,255,0.05);
+        }
+
+        .mole {
+            position: absolute;
+            left: 10%; width: 80%; height: 100%;
+            background: var(--hero-orange);
+            border-radius: 40px 40px 0 0;
+            bottom: -100%; /* Verborgen by default */
+            transition: bottom 0.2s cubic-bezier(0.25, 1.5, 0.5, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 15px;
+            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.4);
+        }
+
+        .mole.up { bottom: 0; }
+        
+        .mole-face { font-size: 2rem; margin-bottom: 5px; pointer-events: none; }
+        .mole-text {
+            font-family: 'Lexend', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            text-align: center;
+            padding: 0 5px;
+            pointer-events: none;
+            line-height: 1.1;
+        }
+
+        /* MENU STYLES */
+        .level-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid var(--hero-cyan);
+            padding: 30px 20px; border-radius: 20px; font-family: 'Bangers', cursive;
+            font-size: 2rem; cursor: pointer; transition: all 0.3s; letter-spacing: 2px;
+        }
+        .btn-level.beginner { border-color: var(--success-green); color: var(--success-green); }
+        .btn-level.pro { border-color: var(--hero-orange); color: var(--hero-orange); }
+        .btn-level:hover { transform: scale(1.05); }
+        .btn-level.beginner:hover { background: var(--success-green); color: #000; }
+        .btn-level.pro:hover { background: var(--hero-orange); color: #fff; }
+
+        .screen { display: none; }
+        .active-screen { display: block; }
+        .btn-restart { background: var(--hero-orange); border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.5rem; color: white; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #d84315; }
+        .btn-restart:hover { transform: scale(1.05); }
+
+        /* EFFECTS */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .feedback-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; font-size: 6rem; z-index: 2001; text-shadow: 5px 5px 0px #000; opacity: 0; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); }
+        @keyframes popIn { 0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 0; } }
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+
+        @media (max-width: 600px) {
+            .game-board { grid-template-columns: repeat(2, 1fr); } /* 2 kolommen op mobiel */
+            .mole-text { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+<div class="feedback-text" id="feedback"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">ZAP-A-VILLAIN: MORE & MOST</div>
+</header>
+
+<main>
+    <div class="quiz-container" id="quiz-box">
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span></div>
+        
+        <div id="start-screen" class="screen active-screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow); margin-top: 0;">CHOOSE YOUR DIFFICULTY</h2>
+            <p style="font-size: 1.2rem;">Lees de zin. Zodra de schurken omhoog komen, <strong>ZAP</strong> (klik) de schurk met het juiste antwoord voordat ze verdwijnen!</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level beginner" onclick="startGame('beginner')">BEGINNER<br><span style="font-size: 1rem; font-family: 'Lexend'; font-weight: normal; color: white;">More / Most</span></button>
+                <button class="btn-level pro" onclick="startGame('pro')">PRO<br><span style="font-size: 1rem; font-family: 'Lexend'; font-weight: normal; color: white;">More than / The most</span></button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px;">MISSie <span id="current-q">1</span> / 10</h2>
+            <div class="question-text" id="question"></div>
+            
+            <div class="game-board" id="board">
+                <div class="hole"><div class="mole" id="mole-0" onclick="whack(0)"><div class="mole-face">👾</div><div class="mole-text" id="text-0"></div></div></div>
+                <div class="hole"><div class="mole" id="mole-1" onclick="whack(1)"><div class="mole-face">🤖</div><div class="mole-text" id="text-1"></div></div></div>
+                <div class="hole"><div class="mole" id="mole-2" onclick="whack(2)"><div class="mole-face">👽</div><div class="mole-text" id="text-2"></div></div></div>
+                <div class="hole"><div class="mole" id="mole-3" onclick="whack(3)"><div class="mole-face">🦹</div><div class="mole-text" id="text-3"></div></div></div>
+                <div class="hole"><div class="mole" id="mole-4" onclick="whack(4)"><div class="mole-face">👾</div><div class="mole-text" id="text-4"></div></div></div>
+                <div class="hole"><div class="mole" id="mole-5" onclick="whack(5)"><div class="mole-face">🤖</div><div class="mole-text" id="text-5"></div></div></div>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow);">MISSION ACCOMPLISHED!</h2>
+            <p style="font-size: 1.2rem;">Jouw uiteindelijke ZAP-score is: <strong id="final-score"></strong></p>
+            <button class="btn-restart" onclick="window.location.href='index.html'">TERUG NAAR COMMAND CENTER</button>
+            <button class="btn-restart" style="background: var(--hero-cyan); color: var(--hero-blue-dark); border-bottom-color: #4fc3f7; margin-left: 10px;" onclick="location.reload()">PLAY AGAIN</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // DATABASE GENERATOR (Zelfde logica als de vorige app)
+    const adjectives3Plus = [
+        "dangerous", "powerful", "difficult", "expensive", "exciting", 
+        "incredible", "mysterious", "invisible", "invincible", "terrifying", 
+        "important", "intelligent", "poisonous", "radioactive", "spectacular"
+    ];
+
+    const compTemplates = [
+        { temp: "The villain's robot is [BLANK] (ADJ) than ours!", base: "The villain's robot is [BLANK] ours!" },
+        { temp: "My new armor is [BLANK] (ADJ) than my old cape.", base: "My new armor is [BLANK] my old cape." },
+        { temp: "Captain Thunder is [BLANK] (ADJ) than Doctor Doom.", base: "Captain Thunder is [BLANK] Doctor Doom." }
+    ];
+
+    const supTemplates = [
+        { temp: "Captain Thunder is the [BLANK] (ADJ) hero in the city.", base: "Captain Thunder is [BLANK] hero in the city." },
+        { temp: "That was the [BLANK] (ADJ) battle I have ever seen!", base: "That was [BLANK] battle I have ever seen!" },
+        { temp: "This is the [BLANK] (ADJ) gadget in our secret lab.", base: "This is [BLANK] gadget in our secret lab." }
+    ];
+
+    let fullDatabaseBeginner = [];
+    let fullDatabasePro = [];
+
+    adjectives3Plus.forEach(adj => {
+        compTemplates.forEach(t => {
+            fullDatabaseBeginner.push({ text: t.temp.replace("[BLANK]", "<span class='blank'>___</span>").replace("ADJ", adj), options: ["more", "most"], correct: 0 });
+            fullDatabasePro.push({ text: t.base.replace("[BLANK]", "<span class='blank'>___</span> (" + adj + ")"), options: ["more " + adj + " than", "the most " + adj], correct: 0 });
+        });
+        supTemplates.forEach(t => {
+            fullDatabaseBeginner.push({ text: t.temp.replace("[BLANK]", "<span class='blank'>___</span>").replace("ADJ", adj), options: ["more", "most"], correct: 1 });
+            fullDatabasePro.push({ text: t.base.replace("[BLANK]", "<span class='blank'>___</span> (" + adj + ")"), options: ["more " + adj + " than", "the most " + adj], correct: 1 });
+        });
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // GAME VARIABLES
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const totalQuestions = 10;
+    
+    let popTimer;
+    let hideTimer;
+    let activeHoles = [];
+    let currentCorrectHole = -1;
+    let isWaitingForNext = false;
+
+    const popSpeed = 2000; // Hoe lang blijven ze boven? (2 seconden)
+
+    const questionEl = document.getElementById('question');
+    const scoreEl = document.getElementById('score');
+    const currentQEl = document.getElementById('current-q');
+    const flashEl = document.getElementById('flash');
+    const feedbackEl = document.getElementById('feedback');
+    const quizBox = document.getElementById('quiz-box');
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(screenId).classList.add('active-screen');
+    }
+
+    function startGame(level) {
+        let sourceDB = (level === 'beginner') ? fullDatabaseBeginner : fullDatabasePro;
+        activeQuestions = shuffleArray([...sourceDB]).slice(0, totalQuestions);
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        scoreEl.innerText = score;
+        
+        document.getElementById('score-board').style.display = 'block';
+        switchScreen('game-screen');
+        loadNextQuestion();
+    }
+
+    function loadNextQuestion() {
+        if (currentQuestionIndex >= totalQuestions) {
+            showEndScreen();
+            return;
+        }
+
+        isWaitingForNext = false;
+        const q = activeQuestions[currentQuestionIndex];
+        currentQEl.innerText = currentQuestionIndex + 1;
+        questionEl.innerHTML = q.text;
+        
+        // Start de popping cycle voor deze vraag na een korte pauze
+        setTimeout(popMoles, 800);
+    }
+
+    function popMoles() {
+        if (isWaitingForNext) return;
+
+        // Hide alles eerst
+        hideAllMoles();
+
+        // Kies 2 willekeurige holes
+        let availableHoles = [0, 1, 2, 3, 4, 5];
+        availableHoles = shuffleArray(availableHoles);
+        activeHoles = [availableHoles[0], availableHoles[1]];
+
+        const q = activeQuestions[currentQuestionIndex];
+        
+        // Bepaal welke hole het correcte antwoord krijgt
+        currentCorrectHole = activeHoles[Math.random() > 0.5 ? 0 : 1];
+        const wrongHole = (currentCorrectHole === activeHoles[0]) ? activeHoles[1] : activeHoles[0];
+
+        // Zet teksten
+        document.getElementById('text-' + currentCorrectHole).innerText = q.options[q.correct];
+        document.getElementById('text-' + wrongHole).innerText = q.options[q.correct === 0 ? 1 : 0];
+
+        // Laat ze omhoog komen
+        document.getElementById('mole-' + activeHoles[0]).classList.add('up');
+        document.getElementById('mole-' + activeHoles[1]).classList.add('up');
+
+        // Automatisch weer naar beneden na X seconden als de speler niet klikt
+        hideTimer = setTimeout(() => {
+            hideAllMoles();
+            // Laat ze opnieuw verschijnen na 500ms (voor dezelfde vraag)
+            popTimer = setTimeout(popMoles, 500);
+        }, popSpeed);
+    }
+
+    function hideAllMoles() {
+        for (let i = 0; i < 6; i++) {
+            document.getElementById('mole-' + i).classList.remove('up');
+        }
+    }
+
+    function whack(holeIndex) {
+        if (isWaitingForNext || !activeHoles.includes(holeIndex)) return;
+
+        clearTimeout(hideTimer);
+        clearTimeout(popTimer);
+        isWaitingForNext = true;
+        hideAllMoles();
+
+        if (holeIndex === currentCorrectHole) {
+            // GOED GEKLIKT
+            score += 100;
+            scoreEl.innerText = score;
+            showFeedback('SMASH!', 'var(--success-green)', 'rgba(0, 230, 118, 0.4)');
+        } else {
+            // FOUT GEKLIKT
+            score = Math.max(0, score - 50); // Minpunten, maar niet onder 0
+            scoreEl.innerText = score;
+            quizBox.classList.add('shake');
+            setTimeout(() => quizBox.classList.remove('shake'), 400);
+            showFeedback('ZAP!', 'var(--error-red)', 'rgba(255, 23, 68, 0.4)');
+        }
+
+        currentQuestionIndex++;
+        setTimeout(loadNextQuestion, 1200);
+    }
+
+    function showFeedback(text, textColor, bgColor) {
+        flashEl.style.background = bgColor;
+        flashEl.style.opacity = '1';
+        
+        feedbackEl.innerText = text;
+        feedbackEl.style.color = textColor;
+        feedbackEl.style.animation = 'none';
+        void feedbackEl.offsetWidth; 
+        feedbackEl.style.animation = 'popIn 0.8s ease-out forwards';
+
+        setTimeout(() => { flashEl.style.opacity = '0'; }, 300);
+    }
+
+    function showEndScreen() {
+        switchScreen('end-screen');
+        document.getElementById('score-board').style.display = 'none';
+        document.getElementById('final-score').innerText = score;
+    }
+</script>
+
+</body>
+</html>
