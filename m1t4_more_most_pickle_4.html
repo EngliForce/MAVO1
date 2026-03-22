@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Transmission Intercept</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --error-red: #ff1744;
+            --terminal-green: #00ff41;
+        }
+        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        
+        header { background: var(--hero-blue-main); padding: 1.5rem 1rem; text-align: center; border-bottom: 5px solid var(--hero-yellow); box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10; }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.5rem; letter-spacing: 2px; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        .subtitle { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.5rem; margin-top: 5px; }
+
+        main { max-width: 900px; margin: 20px auto; padding: 10px; flex-grow: 1; width: 95%; display: flex; flex-direction: column; }
+
+        /* DE TERMINAL / RADAR */
+        .terminal-container {
+            background: #020a14;
+            border: 4px solid var(--hero-cyan);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: inset 0 0 20px rgba(129, 212, 250, 0.2), 0 0 30px rgba(0,0,0,0.8);
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .scanline {
+            position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: rgba(129, 212, 250, 0.3); opacity: 0.6;
+            animation: scan 4s linear infinite; pointer-events: none;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        .score-board {
+            position: absolute; top: -20px; right: 20px;
+            background: var(--hero-cyan); color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive; font-size: 1.3rem;
+            padding: 5px 15px; border-radius: 10px; border: 3px solid var(--hero-blue-dark);
+            transform: rotate(3deg); display: none; z-index: 5;
+        }
+
+        /* MENU STYLES */
+        .level-select-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid #243b53;
+            padding: 20px; border-radius: 15px; font-family: 'Bangers', cursive;
+            font-size: 1.6rem; cursor: pointer; transition: all 0.3s; letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; }
+        .btn-level.l1 { border-color: var(--hero-cyan); color: var(--hero-cyan); }
+        .btn-level.l2 { border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-level.l3 { border-color: var(--hero-orange); color: var(--hero-orange); }
+        .btn-level:hover { transform: scale(1.05); color: #000; }
+        .btn-level.l1:hover { background: var(--hero-cyan); }
+        .btn-level.l2:hover { background: var(--hero-yellow); }
+        .btn-level.l3:hover { background: var(--hero-orange); color: white; }
+
+        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .active-screen { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* IN-GAME ELEMENTS */
+        .message-box {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.8rem;
+            color: var(--terminal-green);
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            min-height: 100px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .sender { color: var(--hero-cyan); font-size: 1.2rem; margin-bottom: 10px; display: block; }
+        
+        /* De tekst die we testen in het bericht */
+        .target-phrase { color: var(--hero-yellow); text-decoration: underline; text-decoration-style: dashed; }
+
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .btn-action {
+            background: #020a14; color: white; border: 3px solid;
+            padding: 20px; border-radius: 10px; font-family: 'Bangers', cursive;
+            font-size: 2rem; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 5px 0px rgba(0,0,0,0.5); letter-spacing: 2px;
+        }
+        .btn-action.secure { border-color: var(--success-green); color: var(--success-green); }
+        .btn-action.secure:hover { background: var(--success-green); color: black; box-shadow: 0 8px 15px rgba(0, 230, 118, 0.4); transform: translateY(-3px);}
+        
+        .btn-action.corrupted { border-color: var(--error-red); color: var(--error-red); }
+        .btn-action.corrupted:hover { background: var(--error-red); color: white; box-shadow: 0 8px 15px rgba(255, 23, 68, 0.4); transform: translateY(-3px);}
+
+        /* REPAIR MENU (Verschijnt als je op CORRUPTED klikt) */
+        .repair-menu { display: none; margin-top: 20px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; border: 2px solid var(--hero-orange); animation: fadeIn 0.3s; }
+        .repair-title { font-family: 'Bangers'; color: var(--hero-orange); font-size: 1.5rem; margin-top: 0; margin-bottom: 15px; }
+        .repair-options { display: flex; flex-direction: column; gap: 10px; }
+        .btn-fix {
+            background: var(--hero-blue-dark); color: white; border: 2px solid var(--hero-cyan);
+            padding: 12px; border-radius: 8px; font-family: 'Lexend', sans-serif; font-size: 1.2rem;
+            cursor: pointer; transition: 0.2s; text-align: left;
+        }
+        .btn-fix:hover { background: var(--hero-blue-main); padding-left: 20px; }
+
+        .btn-restart { background: var(--hero-orange); border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; color: white; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #d84315; }
+        .btn-restart:hover { transform: scale(1.05); }
+
+        /* EFFECTS */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .feedback-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; opacity: 0; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); }
+        @keyframes popIn { 0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 0; } }
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+<div class="feedback-text" id="feedback"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">TRANSMISSION INTERCEPT</div>
+</header>
+
+<main>
+    <div class="terminal-container" id="terminal-box">
+        <div class="scanline"></div>
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span>/10</div>
+        
+        <div id="start-screen" class="screen active-screen">
+            <h2 style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--terminal-green); margin-top: 0;">ACTIVATE SCANNER</h2>
+            <p>Onderschep de berichten van de Rookies. Klopt de grammatica? Klik <span style="color:var(--success-green); font-weight:bold;">SECURE</span>. Zit er een fout in? Klik <span style="color:var(--error-red); font-weight:bold;">CORRUPTED</span> en repareer de fout!</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level l1" onclick="startGame(1)">
+                    Lvl 1: Rookie Radar<br><span>Check alleen lange woorden</span>
+                </button>
+                <button class="btn-level l2" onclick="startGame(2)">
+                    Lvl 2: The Mix-Up<br><span>Korte VS Lange woorden</span>
+                </button>
+                <button class="btn-level l3" onclick="startGame(3)">
+                    Lvl 3: Hacker Threat<br><span>Than/Then & Dubbele fouten</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px;">INCOMING MSG <span id="current-q">1</span>/10...</h2>
+            
+            <div class="message-box">
+                <span class="sender">From: Rookie_09</span>
+                <span id="message-text"></span>
+            </div>
+
+            <div class="action-grid" id="main-actions">
+                <button class="btn-action secure" onclick="checkTransmission(true)">✔️ SECURE<br><span style="font-size:1rem; font-family:'Lexend';">(Zin klopt)</span></button>
+                <button class="btn-action corrupted" onclick="checkTransmission(false)">❌ CORRUPTED<br><span style="font-size:1rem; font-family:'Lexend';">(Bevat een fout)</span></button>
+            </div>
+
+            <div class="repair-menu" id="repair-menu">
+                <h3 class="repair-title">REPAIR THE SIGNAL: KIES DE JUISTE FIX</h3>
+                <div class="repair-options" id="repair-options">
+                    </div>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen" style="text-align: center;">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--terminal-green); margin-top: 0;">SCAN COMPLETE!</h2>
+            <p style="font-size: 1.2rem;">Aantal geredde berichten: <strong id="final-score"></strong> van de 10.</p>
+            <button class="btn-restart" onclick="window.location.href='index.html'">COMMAND CENTER</button>
+            <button class="btn-restart" style="background: var(--hero-cyan); color: var(--hero-blue-dark); border-bottom-color: #4fc3f7; margin-left: 10px;" onclick="location.reload()">NEW SCAN</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DE DATABASE MET FOUTEN EN GOEDE ZINNEN ---
+    
+    // Level 1: Alleen focus op lange woorden (-er vs more / most vs -est)
+    const dbLevel1 = [
+        { text: "That villain is <span class='target'>more dangerous than</span> the last one.", isCorrect: true },
+        { text: "This is <span class='target'>the most expensive</span> gadget we have.", isCorrect: true },
+        { text: "Captain Thunder is <span class='target'>more powerful than</span> you.", isCorrect: true },
+        { text: "My armor is <span class='target'>beautifuler than</span> your cape.", isCorrect: false, options: ["more beautiful than", "the most beautiful"], correctFix: 0 },
+        { text: "That was <span class='target'>the most excitingest</span> battle ever!", isCorrect: false, options: ["the most exciting", "more exciting than"], correctFix: 0 },
+        { text: "He is <span class='target'>most dangerous than</span> his brother.", isCorrect: false, options: ["more dangerous than", "the most dangerous"], correctFix: 0 },
+        { text: "This laser is <span class='target'>expensiver than</span> the sword.", isCorrect: false, options: ["more expensive than", "the most expensive"], correctFix: 0 },
+        { text: "She is <span class='target'>the intelligentest</span> hero in our squad.", isCorrect: false, options: ["the most intelligent", "more intelligent than"], correctFix: 0 }
+    ];
+
+    // Level 2: Mix van korte en lange woorden (weten ze nog wanneer ze -er/-est moeten gebruiken?)
+    const dbLevel2 = [
+        { text: "The Flash is <span class='target'>faster than</span> Superman.", isCorrect: true },
+        { text: "This box is <span class='target'>more heavy than</span> the car.", isCorrect: false, options: ["heavier than", "heavyer than"], correctFix: 0 },
+        { text: "That was <span class='target'>the most fast</span> ship in the galaxy.", isCorrect: false, options: ["the fastest", "the fastst"], correctFix: 0 },
+        { text: "Neon Ninja is <span class='target'>more quiet than</span> a mouse.", isCorrect: false, options: ["quieter than", "the most quiet"], correctFix: 0 },
+        { text: "This is <span class='target'>the most difficult</span> puzzle.", isCorrect: true },
+        { text: "My cape is <span class='target'>longer than</span> yours.", isCorrect: true },
+        { text: "He is <span class='target'>the most tall</span> villain I have seen.", isCorrect: false, options: ["the tallest", "taller than"], correctFix: 0 },
+        { text: "Dr. Chaos is <span class='target'>more intelligent than</span> us.", isCorrect: true }
+    ];
+
+    // Level 3: Hacker Threat (Than vs Then en andere instinkers)
+    const dbLevel3 = [
+        { text: "My shield is <span class='target'>more powerful then</span> yours.", isCorrect: false, options: ["more powerful than", "the most powerful"], correctFix: 0 },
+        { text: "This mission is <span class='target'>more dangerous then</span> before.", isCorrect: false, options: ["more dangerous than", "the most dangerous"], correctFix: 0 },
+        { text: "He is <span class='target'>better than</span> his evil twin.", isCorrect: true },
+        { text: "That was <span class='target'>the most worst</span> idea ever.", isCorrect: false, options: ["the worst", "worse than"], correctFix: 0 },
+        { text: "She is <span class='target'>faster then</span> the speed of light.", isCorrect: false, options: ["faster than", "the fastest"], correctFix: 0 },
+        { text: "This diamond is <span class='target'>more expensive than</span> gold.", isCorrect: true },
+        { text: "We are <span class='target'>more stronger than</span> them.", isCorrect: false, options: ["stronger than", "more strong than"], correctFix: 0 },
+        { text: "It is <span class='target'>the most important</span> rule.", isCorrect: true }
+    ];
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentQ = null;
+
+    const uiMessage = document.getElementById('message-text');
+    const uiCurrentQ = document.getElementById('current-q');
+    const uiScore = document.getElementById('score');
+    const mainActions = document.getElementById('main-actions');
+    const repairMenu = document.getElementById('repair-menu');
+    const repairOptions = document.getElementById('repair-options');
+
+    function startGame(level) {
+        let sourceDB = level === 1 ? dbLevel1 : (level === 2 ? dbLevel2 : dbLevel3);
+        // We pakken de originele array, kopiëren hem, schudden hem, en dupliceren hem zo nodig om aan 10 te komen
+        let pool = shuffle([...sourceDB, ...sourceDB]).slice(0, 10);
+        activeQuestions = pool;
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        uiScore.innerText = score;
+
+        document.getElementById('score-board').style.display = 'block';
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById('game-screen').classList.add('active-screen');
+        
+        loadTransmission();
+    }
+
+    function loadTransmission() {
+        repairMenu.style.display = 'none';
+        mainActions.style.display = 'grid';
+        
+        currentQ = activeQuestions[currentQuestionIndex];
+        uiCurrentQ.innerText = currentQuestionIndex + 1;
+        
+        // Typemachine effectje
+        uiMessage.innerHTML = '';
+        let i = 0;
+        let speed = 20; // Snelheid van typen
+        
+        // Trucje om HTML tags te typen zonder ze kapot te maken
+        uiMessage.innerHTML = currentQ.text;
+    }
+
+    function checkTransmission(userSaysCorrect) {
+        const terminalBox = document.getElementById('terminal-box');
+        
+        if (userSaysCorrect === currentQ.isCorrect) {
+            // SPELER HEEFT HET GOED GEZIEN
+            if (userSaysCorrect) {
+                // Zin klopte inderdaad, en speler zei SECURE
+                givePointsAndNext();
+            } else {
+                // Zin was inderdaad CORRUPTED, nu moet de speler het nog fixen!
+                openRepairMenu();
+            }
+        } else {
+            // SPELER HEEFT HET FOUT GEZIEN
+            terminalBox.classList.add('shake');
+            setTimeout(() => terminalBox.classList.remove('shake'), 400);
+            showFeedback('SYSTEM ERROR', 'var(--error-red)', 'rgba(255, 23, 68, 0.3)');
+            nextTransmissionDelay();
+        }
+    }
+
+    function openRepairMenu() {
+        mainActions.style.display = 'none';
+        repairMenu.style.display = 'block';
+        repairOptions.innerHTML = '';
+
+        currentQ.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-fix';
+            btn.innerText = `> ${opt}`;
+            btn.onclick = () => fixSignal(index === currentQ.correctFix);
+            repairOptions.appendChild(btn);
+        });
+    }
+
+    function fixSignal(isCorrectFix) {
+        const terminalBox = document.getElementById('terminal-box');
+        if (isCorrectFix) {
+            givePointsAndNext();
+        } else {
+            terminalBox.classList.add('shake');
+            setTimeout(() => terminalBox.classList.remove('shake'), 400);
+            showFeedback('REPAIR FAILED', 'var(--error-red)', 'rgba(255, 23, 68, 0.3)');
+            nextTransmissionDelay();
+        }
+    }
+
+    function givePointsAndNext() {
+        score++;
+        uiScore.innerText = score;
+        showFeedback('SIGNAL SECURED', 'var(--success-green)', 'rgba(0, 230, 118, 0.2)');
+        nextTransmissionDelay();
+    }
+
+    function nextTransmissionDelay() {
+        currentQuestionIndex++;
+        setTimeout(() => {
+            if (currentQuestionIndex < 10) {
+                loadTransmission();
+            } else {
+                document.getElementById('game-screen').classList.remove('active-screen');
+                document.getElementById('end-screen').classList.add('active-screen');
+                document.getElementById('score-board').style.display = 'none';
+                document.getElementById('final-score').innerText = score;
+            }
+        }, 1200);
+    }
+
+    function showFeedback(text, textColor, bgColor) {
+        const flash = document.getElementById('flash');
+        const feedback = document.getElementById('feedback');
+        
+        flash.style.background = bgColor;
+        flash.style.opacity = '1';
+        
+        feedback.innerText = text;
+        feedback.style.color = textColor;
+        feedback.style.animation = 'none';
+        void feedback.offsetWidth; 
+        feedback.style.animation = 'popIn 0.8s ease-out forwards';
+
+        setTimeout(() => flash.style.opacity = '0', 300);
+    }
+</script>
+
+</body>
+</html>
