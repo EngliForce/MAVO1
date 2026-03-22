@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Super-Stats Showdown</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --error-red: #ff1744;
+            --card-bg: #102a43;
+        }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); 
+            color: white; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; 
+        }
+        
+        header { 
+            background: var(--hero-blue-main); 
+            padding: 1.5rem 1rem; 
+            text-align: center; 
+            border-bottom: 5px solid var(--hero-yellow); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.5rem; letter-spacing: 2px; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        .subtitle { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.5rem; margin-top: 5px; }
+
+        main { max-width: 1000px; margin: 20px auto; padding: 10px; flex-grow: 1; width: 95%; display: flex; flex-direction: column; }
+
+        /* DE DOSSIER KAARTEN */
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .hero-card {
+            background: var(--card-bg);
+            border: 3px solid #243b53;
+            border-radius: 15px;
+            width: 220px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+            position: relative;
+        }
+        .hero-card.clickable:hover {
+            border-color: var(--hero-cyan);
+            transform: translateY(-5px);
+            cursor: pointer;
+            box-shadow: 0 12px 25px rgba(129, 212, 250, 0.4);
+        }
+        .hero-icon { font-size: 4rem; margin-bottom: 10px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .hero-name { font-family: 'Bangers', cursive; font-size: 1.5rem; color: var(--hero-yellow); letter-spacing: 1px; margin-bottom: 15px; border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom: 5px; min-height: 40px; display: flex; align-items: center; justify-content: center;}
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; align-items: center; }
+        .stat-name { color: var(--hero-cyan); font-weight: bold; }
+        .stat-value { background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 5px; font-family: 'Bangers', cursive; font-size: 1.1rem; letter-spacing: 1px; min-width: 30px; }
+
+        /* QUIZ BEDIENING */
+        .quiz-container {
+            background: rgba(16, 42, 67, 0.9); 
+            border: 3px solid var(--hero-yellow); 
+            border-radius: 20px; 
+            padding: 25px; 
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .score-board {
+            position: absolute; top: -20px; right: 20px;
+            background: var(--hero-cyan); color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive; font-size: 1.3rem;
+            padding: 5px 15px; border-radius: 10px;
+            border: 3px solid var(--hero-blue-dark);
+            transform: rotate(3deg); display: none;
+        }
+
+        /* MENU STYLES */
+        .level-select-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid #243b53;
+            padding: 20px; border-radius: 15px; font-family: 'Bangers', cursive;
+            font-size: 1.6rem; cursor: pointer; transition: all 0.3s; letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; }
+        
+        .btn-level.l1 { border-color: var(--hero-cyan); color: var(--hero-cyan); }
+        .btn-level.l2 { border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-level.l3 { border-color: var(--hero-orange); color: var(--hero-orange); }
+        
+        .btn-level:hover { transform: scale(1.05); color: #000; }
+        .btn-level.l1:hover { background: var(--hero-cyan); }
+        .btn-level.l2:hover { background: var(--hero-yellow); }
+        .btn-level.l3:hover { background: var(--hero-orange); color: white; }
+
+        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .active-screen { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* IN-GAME ELEMENTS */
+        .question-text { font-size: 1.3rem; line-height: 1.5; margin-bottom: 20px; }
+        .highlight { color: var(--hero-yellow); font-family: 'Bangers', cursive; font-size: 1.6rem; letter-spacing: 1px;}
+        .blank { display: inline-block; min-width: 60px; padding: 0 5px; border-bottom: 3px solid var(--hero-yellow); color: var(--hero-yellow); font-weight: bold; }
+
+        .options-grid { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+        .btn-option {
+            background: var(--hero-blue-dark); color: white; border: 2px solid var(--hero-cyan);
+            padding: 12px 25px; border-radius: 10px; font-family: 'Lexend', sans-serif;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 5px 0px rgba(0,0,0,0.3); min-width: 150px;
+        }
+        .btn-option:hover { transform: translateY(-3px); background: var(--hero-blue-main); box-shadow: 0 8px 10px rgba(0,0,0,0.4); }
+        .btn-option:active { transform: translateY(2px); box-shadow: 0 0px 0px rgba(0,0,0,0.3); }
+
+        .btn-tf.true { border-color: var(--success-green); }
+        .btn-tf.true:hover { background: var(--success-green); color: black; }
+        .btn-tf.false { border-color: var(--error-red); }
+        .btn-tf.false:hover { background: var(--error-red); color: white; }
+
+        .btn-restart { background: var(--hero-orange); border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; color: white; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #d84315; }
+        .btn-restart:hover { transform: scale(1.05); }
+
+        /* EFFECTS */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .feedback-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; opacity: 0; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); }
+        @keyframes popIn { 0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 0; } }
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+
+        @media (max-width: 768px) {
+            .hero-card { width: 140px; padding: 10px; }
+            .hero-icon { font-size: 2.5rem; }
+            .hero-name { font-size: 1.1rem; }
+            .stat-row { font-size: 0.75rem; flex-direction: column; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 3px;}
+            .stat-value { font-size: 1rem; }
+            .question-text { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+<div class="feedback-text" id="feedback"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">SUPER-STATS SHOWDOWN</div>
+</header>
+
+<main>
+    <div class="cards-container" id="cards-container">
+        </div>
+
+    <div class="quiz-container" id="quiz-box">
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span>/10</div>
+        
+        <div id="start-screen" class="screen active-screen">
+            <h2 style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin-top: 0;">SELECT MISSION PROTOCOL</h2>
+            <p>De database heeft zojuist 3 willekeurige profielen geladen. Bestudeer ze en kies je training!</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level l1" onclick="startGame(1)">
+                    Lvl 1: Observer<br><span>Klik de juiste kaart aan (Most)</span>
+                </button>
+                <button class="btn-level l2" onclick="startGame(2)">
+                    Lvl 2: Analyst<br><span>Maak de zin af (More / Most)</span>
+                </button>
+                <button class="btn-level l3" onclick="startGame(3)">
+                    Lvl 3: Interrogator<br><span>True of False?</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px; margin-top: 0;">MISSie <span id="current-q">1</span> / 10</h2>
+            <div class="question-text" id="question"></div>
+            <div class="options-grid" id="options"></div>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow); margin-top: 0;">MISSION CLEARED!</h2>
+            <p style="font-size: 1.2rem;">Jouw data-analyse score is: <strong id="final-score"></strong> van de 10.</p>
+            <button class="btn-restart" onclick="window.location.href='index.html'">COMMAND CENTER</button>
+            <button class="btn-restart" style="background: var(--hero-cyan); color: var(--hero-blue-dark); border-bottom-color: #4fc3f7; margin-left: 10px;" onclick="resetDatabase()">NEW DATABASE</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DE DYNAMISCHE DATABASE GENERATOR ---
+    
+    // Grote poel van namen en icoontjes
+    const characterPool = [
+        { name: "Captain Thunder", icon: "🦸‍♂️" },
+        { name: "Dr. Chaos", icon: "🦹‍♂️" },
+        { name: "Neon Ninja", icon: "🥷" },
+        { name: "Laser Lady", icon: "🦸‍♀️" },
+        { name: "Mega Mutant", icon: "🧟" },
+        { name: "Cyber Cyborg", icon: "🤖" },
+        { name: "Phantom Rogue", icon: "👻" },
+        { name: "Galactic Guru", icon: "👽" },
+        { name: "Venom Viper", icon: "🐍" },
+        { name: "Professor X", icon: "🧠" }
+    ];
+
+    const statInfo = [
+        { key: 'powerful', label: 'Power Level' },
+        { key: 'expensive', label: 'Suit Cost' },
+        { key: 'dangerous', label: 'Danger Lvl' },
+        { key: 'intelligent', label: 'Brain IQ' },
+        { key: 'mysterious', label: 'Shadow Lvl' }
+    ];
+
+    // Array met mogelijke scores (geen dubbelen dichtbij elkaar)
+    const possibleScores = [10, 25, 33, 45, 50, 68, 75, 82, 89, 95, 99];
+
+    let activeCharacters = [];
+
+    // Functie om willekeurige karakters te trekken en scores toe te wijzen
+    function generateNewDatabase() {
+        // Kies 3 random karakters uit de poel
+        let shuffledPool = shuffle([...characterPool]);
+        activeCharacters = shuffledPool.slice(0, 3).map((char, index) => ({
+            id: index,
+            name: char.name,
+            icon: char.icon,
+            stats: {}
+        }));
+
+        // Geef ze unieke scores per stat (zodat er nooit een gelijkspel is)
+        statInfo.forEach(stat => {
+            let shuffledScores = shuffle([...possibleScores]);
+            activeCharacters[0].stats[stat.key] = shuffledScores[0];
+            activeCharacters[1].stats[stat.key] = shuffledScores[1];
+            activeCharacters[2].stats[stat.key] = shuffledScores[2];
+        });
+        
+        renderCards(false);
+    }
+
+
+    // --- RENDERING EN LOGICA ---
+
+    const cardsContainer = document.getElementById('cards-container');
+    function renderCards(isClickable) {
+        cardsContainer.innerHTML = '';
+        activeCharacters.forEach(char => {
+            let statsHtml = '';
+            statInfo.forEach(stat => {
+                statsHtml += `<div class="stat-row"><span class="stat-name">${stat.label}</span><span class="stat-value">${char.stats[stat.key]}</span></div>`;
+            });
+            
+            const card = document.createElement('div');
+            card.className = `hero-card ${isClickable ? 'clickable' : ''}`;
+            card.id = `card-${char.id}`;
+            if (isClickable) card.onclick = () => checkCardClick(char.id);
+            
+            card.innerHTML = `
+                <div class="hero-icon">${char.icon}</div>
+                <div class="hero-name">${char.name}</div>
+                ${statsHtml}
+            `;
+            cardsContainer.appendChild(card);
+        });
+    }
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    let questions = [];
+    let currentLevel = 1;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentCorrectAnswer = null;
+    let isWaiting = false;
+
+    // Vragen genereren op basis van de ACTIEVE kaarten
+    function generateQuestions(level) {
+        let qList = [];
+        
+        if (level === 1) {
+            statInfo.forEach(stat => {
+                let maxChar = activeCharacters.reduce((prev, current) => (prev.stats[stat.key] > current.stats[stat.key]) ? prev : current);
+                qList.push({ text: `Analyze the data! Who is <span class="highlight">the most ${stat.key}</span>? <br><small>(Klik op de juiste dossierkaart)</small>`, correctId: maxChar.id });
+                qList.push({ text: `Look closely. Which character is <span class="highlight">the most ${stat.key}</span> of them all?`, correctId: maxChar.id });
+            });
+        } 
+        else if (level === 2) {
+            for(let i=0; i<10; i++) {
+                let stat = statInfo[Math.floor(Math.random() * statInfo.length)].key;
+                let chars = shuffle([...activeCharacters]);
+                
+                if (Math.random() > 0.5) {
+                    let a = chars[0], b = chars[1];
+                    let isAMore = a.stats[stat] > b.stats[stat];
+                    let subject = isAMore ? a : b;
+                    let target = isAMore ? b : a;
+                    
+                    qList.push({
+                        text: `${subject.name} is <span class="blank">_____</span> (${stat}) ${target.name}.`,
+                        options: [`more ${stat} than`, `the most ${stat}`],
+                        correctIndex: 0
+                    });
+                } else {
+                    let maxChar = activeCharacters.reduce((prev, current) => (prev.stats[stat] > current.stats[stat]) ? prev : current);
+                    qList.push({
+                        text: `Out of everyone, ${maxChar.name} is <span class="blank">_____</span> (${stat}).`,
+                        options: [`more ${stat} than`, `the most ${stat}`],
+                        correctIndex: 1
+                    });
+                }
+            }
+        }
+        else if (level === 3) {
+            for(let i=0; i<10; i++) {
+                let stat = statInfo[Math.floor(Math.random() * statInfo.length)].key;
+                let chars = shuffle([...activeCharacters]);
+                let a = chars[0], b = chars[1];
+                
+                let actualTruth = a.stats[stat] > b.stats[stat];
+                let statementIsTruth = Math.random() > 0.5;
+                
+                let subject = statementIsTruth ? (actualTruth ? a : b) : (actualTruth ? b : a);
+                let target = statementIsTruth ? (actualTruth ? b : a) : (actualTruth ? a : b);
+
+                qList.push({
+                    text: `STATEMENT: "${subject.name} is <span class="highlight">more ${stat} than</span> ${target.name}."`,
+                    options: ["TRUE", "FALSE"],
+                    correctIndex: statementIsTruth ? 0 : 1
+                });
+            }
+        }
+        return shuffle(qList).slice(0, 10);
+    }
+
+    // --- UI CONTROLLERS ---
+    const uiQuestion = document.getElementById('question');
+    const uiOptions = document.getElementById('options');
+    const uiScore = document.getElementById('score');
+    const uiCurrentQ = document.getElementById('current-q');
+
+    function startGame(level) {
+        currentLevel = level;
+        questions = generateQuestions(level);
+        currentQuestionIndex = 0;
+        score = 0;
+        uiScore.innerText = score;
+        isWaiting = false;
+
+        document.getElementById('score-board').style.display = 'block';
+        renderCards(level === 1);
+        
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById('game-screen').classList.add('active-screen');
+        
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentQuestionIndex];
+        uiCurrentQ.innerText = currentQuestionIndex + 1;
+        uiQuestion.innerHTML = q.text;
+        uiOptions.innerHTML = '';
+        isWaiting = false;
+
+        document.querySelectorAll('.hero-card').forEach(c => c.style.borderColor = '#243b53');
+
+        if (currentLevel === 1) {
+            currentCorrectAnswer = q.correctId;
+        } else {
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option';
+                if(currentLevel === 3) btn.classList.add(index === 0 ? 'btn-tf' : 'btn-tf');
+                if(currentLevel === 3) btn.classList.add(index === 0 ? 'true' : 'false');
+                
+                btn.innerText = opt;
+                btn.onclick = () => handleAnswer(index === q.correctIndex);
+                uiOptions.appendChild(btn);
+            });
+        }
+    }
+
+    function checkCardClick(cardId) {
+        if (currentLevel !== 1 || isWaiting) return;
+        handleAnswer(cardId === currentCorrectAnswer);
+    }
+
+    function handleAnswer(isCorrect) {
+        if(isWaiting) return;
+        isWaiting = true;
+
+        const quizBox = document.getElementById('quiz-box');
+        const flash = document.getElementById('flash');
+        const feedback = document.getElementById('feedback');
+
+        if (isCorrect) {
+            score++;
+            uiScore.innerText = score;
+            flash.style.background = 'rgba(0, 230, 118, 0.4)';
+            feedback.innerText = 'CORRECT!';
+            feedback.style.color = 'var(--success-green)';
+        } else {
+            quizBox.classList.add('shake');
+            setTimeout(() => quizBox.classList.remove('shake'), 400);
+            flash.style.background = 'rgba(255, 23, 68, 0.4)';
+            feedback.innerText = 'ERROR!';
+            feedback.style.color = 'var(--error-red)';
+        }
+
+        flash.style.opacity = '1';
+        feedback.style.animation = 'none';
+        void feedback.offsetWidth; 
+        feedback.style.animation = 'popIn 0.8s ease-out forwards';
+        setTimeout(() => flash.style.opacity = '0', 300);
+
+        currentQuestionIndex++;
+        setTimeout(() => {
+            if (currentQuestionIndex < 10) {
+                loadQuestion();
+            } else {
+                document.getElementById('game-screen').classList.remove('active-screen');
+                document.getElementById('end-screen').classList.add('active-screen');
+                document.getElementById('score-board').style.display = 'none';
+                document.getElementById('final-score').innerText = score;
+            }
+        }, 1200);
+    }
+
+    function resetDatabase() {
+        // Genereer nieuwe karakters en scores, en ga terug naar start
+        generateNewDatabase();
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById('start-screen').classList.add('active-screen');
+    }
+
+    // Genereer de allereerste database bij het laden van de pagina
+    generateNewDatabase();
+</script>
+
+</body>
+</html>
