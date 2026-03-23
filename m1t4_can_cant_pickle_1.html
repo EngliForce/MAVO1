@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Ability Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --error-red: #ff1744;
+        }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); 
+            color: white; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; 
+        }
+        
+        header { 
+            background: var(--hero-blue-main); 
+            padding: 1.5rem 1rem; 
+            text-align: center; 
+            border-bottom: 5px solid var(--hero-yellow); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.5rem; 
+            letter-spacing: 2px; 
+            margin: 0; 
+            text-shadow: 3px 3px 0px var(--hero-blue-dark); 
+        }
+        .subtitle {
+            font-family: 'Bangers', cursive; 
+            color: var(--hero-yellow); 
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+
+        main { 
+            max-width: 800px; 
+            margin: 40px auto; 
+            padding: 20px; 
+            flex-grow: 1;
+            width: 90%;
+        }
+
+        .quiz-container {
+            background: rgba(16, 42, 67, 0.9); 
+            border: 3px solid var(--hero-cyan); 
+            border-radius: 20px; 
+            padding: 40px; 
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .score-board {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            background: var(--hero-yellow);
+            color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 3px solid var(--hero-blue-dark);
+            transform: rotate(5deg);
+            display: none;
+        }
+
+        .level-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-level {
+            background: #102a43;
+            color: white;
+            border: 3px solid var(--hero-cyan);
+            padding: 20px;
+            border-radius: 20px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; color: #ccc; }
+        
+        .btn-level.l1 { border-color: var(--success-green); color: var(--success-green); }
+        .btn-level.l2 { border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-level.l3 { border-color: var(--hero-orange); color: var(--hero-orange); }
+
+        .btn-level:hover { transform: scale(1.05); color: #000; }
+        .btn-level.l1:hover { background: var(--success-green); }
+        .btn-level.l2:hover { background: var(--hero-yellow); }
+        .btn-level.l3:hover { background: var(--hero-orange); color: #fff;}
+
+        .question-text {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            margin-top: 20px;
+            word-wrap: break-word;
+        }
+
+        /* Schone invulstreepjes zonder extra border-bottom */
+        .blank {
+            display: inline-block;
+            padding: 0 5px;
+            color: var(--hero-yellow);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn-option {
+            background: var(--hero-blue-dark);
+            color: white;
+            border: 2px solid var(--hero-cyan);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 5px 0px rgba(0,0,0,0.3);
+        }
+
+        .btn-option:hover {
+            transform: translateY(-3px);
+            background: var(--hero-blue-main);
+            box-shadow: 0 8px 10px rgba(0,0,0,0.4);
+        }
+        .btn-option:active {
+            transform: translateY(2px);
+            box-shadow: 0 0px 0px rgba(0,0,0,0.3);
+        }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .feedback-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; font-size: 6rem; z-index: 2001; text-shadow: 5px 5px 0px #000; opacity: 0; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); }
+        
+        @keyframes popIn { 
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 1; } 
+            50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 0; } 
+        }
+
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+
+        .screen { display: none; }
+        .active-screen { display: block; }
+        
+        .btn-restart { background: var(--hero-orange); border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.5rem; color: white; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #d84315; }
+        .btn-restart:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+<div class="feedback-text" id="feedback"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">ABILITY ANALYZER: CAN & CAN'T</div>
+</header>
+
+<main>
+    <div class="quiz-container" id="quiz-box">
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span>/10</div>
+        
+        <div id="start-screen" class="screen active-screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow); margin-top: 0;">CHOOSE YOUR TARGET</h2>
+            <p style="font-size: 1.2rem;">Kies een missie. De generator heeft <strong>150 missies</strong> klaargezet!</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level l1" onclick="startGame(1)">
+                    Lvl 1: Power Basics<br>
+                    <span>Wat is logisch?</span>
+                </button>
+                <button class="btn-level l2" onclick="startGame(2)">
+                    Lvl 2: Interrogation<br>
+                    <span>Vragen en korte antwoorden</span>
+                </button>
+                <button class="btn-level l3" onclick="startGame(3)">
+                    Lvl 3: Context Logic<br>
+                    <span>Let op 'but' en 'so'</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px;">MISSie <span id="current-q">1</span> / 10</h2>
+            <div class="question-text" id="question"></div>
+            <div class="options-grid" id="options"></div>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow);">ANALYSIS COMPLETE!</h2>
+            <p style="font-size: 1.2rem;">Jouw Ability Analyzer score is: <strong id="final-score"></strong> van de 10.</p>
+            <button class="btn-restart" onclick="window.location.href='index.html'">COMMAND CENTER</button>
+            <button class="btn-restart" style="background: var(--hero-cyan); color: var(--hero-blue-dark); border-bottom-color: #4fc3f7; margin-left: 10px;" onclick="location.reload()">NEW SCAN</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DE 150 VRAGEN GENERATOR ---
+    const dbLevel1 = [];
+    const dbLevel2 = [];
+    const dbLevel3 = [];
+
+    function generateDatabases() {
+        // --- LEVEL 1: Basics (50 questions) ---
+        const heroes = ["Captain Thunder", "Laser Lady", "Neon Ninja", "Mega Mutant", "Cyber Cyborg"];
+        const h_actions = ["lift a bus", "shoot lasers", "fly over buildings", "turn invisible", "run at lightspeed"];
+        heroes.forEach(h => {
+            h_actions.forEach(a => {
+                dbLevel1.push({ text: `${h} <span class='blank'>_____</span> ${a}.`, options: ["can", "can't"], correct: 0 });
+            });
+        }); // 25 vragen (CAN)
+
+        const normals = ["A normal human", "A regular dog", "A civilian", "A normal car", "A standard computer"];
+        const n_actions = ["fly without a jetpack", "breathe in space", "shoot lasers from its eyes", "teleport to the moon", "lift a mountain"];
+        normals.forEach(n => {
+            n_actions.forEach(a => {
+                dbLevel1.push({ text: `${n} <span class='blank'>_____</span> ${a}.`, options: ["can", "can't"], correct: 1 });
+            });
+        }); // 25 vragen (CAN'T)
+
+        // --- LEVEL 2: Interrogation (50 questions) ---
+        const q_subjects = ["you", "he", "she", "we", "they"];
+        const q_actions = ["hear the alarm", "see the invisible jet", "stop the countdown", "hack the mainframe", "fly a spaceship"];
+        q_subjects.forEach(s => {
+            q_actions.forEach(a => {
+                dbLevel2.push({ text: `<span class='blank'>_____</span> ${s} ${a}?`, options: ["Can", "Can't"], correct: 0 });
+            });
+        }); // 25 vragen (Vragen maken)
+
+        const ans_subjects = ["he", "she", "it", "we", "they"];
+        ans_subjects.forEach(s => {
+            // 3 varianten voor CAN (15 vragen)
+            dbLevel2.push({ text: `Can ${s} do it? Yes, ${s} <span class='blank'>_____</span>.`, options: ["can", "can't"], correct: 0 });
+            dbLevel2.push({ text: `Can ${s} fly? Yes, ${s} <span class='blank'>_____</span>.`, options: ["can", "can't"], correct: 0 });
+            dbLevel2.push({ text: `Can ${s} win? Yes, ${s} <span class='blank'>_____</span>.`, options: ["can", "can't"], correct: 0 });
+            // 2 varianten voor CAN'T (10 vragen)
+            dbLevel2.push({ text: `Can ${s} lift that? No, ${s} <span class='blank'>_____</span>.`, options: ["can", "can't"], correct: 1 });
+            dbLevel2.push({ text: `Can ${s} shoot lasers? No, ${s} <span class='blank'>_____</span>.`, options: ["can", "can't"], correct: 1 });
+        }); 
+
+        // --- LEVEL 3: Context Logic (50 questions) ---
+        const traits = [
+            { intro: "He is very strong, but he", correct: 1 }, 
+            { intro: "She is very fast, so she", correct: 0 },   
+            { intro: "The battery is dead, so it", correct: 1 }, 
+            { intro: "I have the secret code, so I", correct: 0 }, 
+            { intro: "The door is locked, so we", correct: 1 }   
+        ];
+        const actionsL3 = [
+            "open the vault", "win the race", "power the laser", "escape the room", "hack the system", 
+            "stop the villain", "defuse the bomb", "fly the jet", "save the city", "find the hidden base"
+        ];
+        traits.forEach(t => {
+            actionsL3.forEach(a => {
+                dbLevel3.push({ text: `${t.intro} <span class='blank'>_____</span> ${a}.`, options: ["can", "can't"], correct: t.correct });
+            });
+        }); // 50 vragen
+    }
+
+    // Run de generator direct bij het laden van de pagina
+    generateDatabases();
+
+    // --- GAME LOGICA ---
+    function shuffleArray(array) {
+        let shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const totalQuestions = 10; 
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const scoreEl = document.getElementById('score');
+    const currentQEl = document.getElementById('current-q');
+    const flashEl = document.getElementById('flash');
+    const feedbackEl = document.getElementById('feedback');
+    const quizBox = document.getElementById('quiz-box');
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(screenId).classList.add('active-screen');
+    }
+
+    function startGame(level) {
+        let sourceDB = (level === 1) ? dbLevel1 : (level === 2) ? dbLevel2 : dbLevel3;
+        // Pak 10 willekeurige vragen uit de poel van 50
+        activeQuestions = shuffleArray(sourceDB).slice(0, totalQuestions);
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        scoreEl.innerText = score;
+        
+        document.getElementById('score-board').style.display = 'block';
+        switchScreen('game-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = activeQuestions[currentQuestionIndex];
+        currentQEl.innerText = currentQuestionIndex + 1;
+        questionEl.innerHTML = q.text;
+        
+        optionsEl.innerHTML = '';
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-option';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index === q.correct);
+            optionsEl.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(isCorrect) {
+        if (isCorrect) {
+            score++;
+            scoreEl.innerText = score;
+            showFeedback('SMASH!', 'var(--success-green)', 'rgba(0, 230, 118, 0.4)');
+        } else {
+            quizBox.classList.add('shake');
+            setTimeout(() => quizBox.classList.remove('shake'), 400);
+            showFeedback('ZAP!', 'var(--error-red)', 'rgba(255, 23, 68, 0.4)');
+        }
+
+        currentQuestionIndex++;
+        
+        setTimeout(() => {
+            if (currentQuestionIndex < totalQuestions) {
+                loadQuestion();
+            } else {
+                showEndScreen();
+            }
+        }, 1000);
+    }
+
+    function showFeedback(text, textColor, bgColor) {
+        flashEl.style.background = bgColor;
+        flashEl.style.opacity = '1';
+        
+        feedbackEl.innerText = text;
+        feedbackEl.style.color = textColor;
+        feedbackEl.style.animation = 'none';
+        void feedbackEl.offsetWidth; 
+        feedbackEl.style.animation = 'popIn 0.8s ease-out forwards';
+
+        setTimeout(() => {
+            flashEl.style.opacity = '0';
+        }, 300);
+    }
+
+    function showEndScreen() {
+        switchScreen('end-screen');
+        document.getElementById('score-board').style.display = 'none';
+        document.getElementById('final-score').innerText = score;
+    }
+</script>
+
+</body>
+</html>

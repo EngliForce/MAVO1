@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: The Decision Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --danger-red: #ff1744;
+            --card-bg: #102a43;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white; margin: 0; min-height: 100vh; overflow-x: hidden;
+            display: flex; flex-direction: column; user-select: none;
+        }
+        
+        header {
+            background: var(--hero-blue-main); padding: 1.2rem 1rem; text-align: center;
+            border-bottom: 5px solid var(--hero-yellow); box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10; flex-shrink: 0;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; letter-spacing: 2px; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        .subtitle { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.3rem; margin-top: 5px; }
+        
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto; }
+        
+        .quiz-container {
+            background: rgba(16, 42, 67, 0.9); border: 3px solid var(--hero-cyan);
+            border-radius: 20px; padding: 25px 15px; text-align: center; width: 100%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column;
+            flex-grow: 1; min-height: 70vh;
+        }
+        
+        .score-board {
+            position: absolute; top: -15px; right: 20px; background: var(--hero-cyan); color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 5px 15px; border-radius: 10px;
+            border: 3px solid var(--hero-blue-dark); transform: rotate(3deg); display: none; z-index: 5;
+        }
+
+        .level-select-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid #243b53; padding: 15px; border-radius: 15px;
+            font-family: 'Bangers', cursive; font-size: 1.4rem; cursor: pointer; transition: all 0.3s; letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; }
+        .btn-level.l1 { border-color: var(--hero-cyan); color: var(--hero-cyan); }
+        .btn-level.l2 { border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-level.l3 { border-color: var(--hero-orange); color: var(--hero-orange); }
+        
+        .screen { display: none; animation: fadeIn 0.4s ease-out; flex-grow: 1; flex-direction: column; justify-content: center;}
+        .active-screen { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* THE CARD STACK */
+        .card-stage {
+            flex-grow: 1; display: flex; align-items: center; justify-content: center;
+            position: relative; perspective: 1000px; min-height: 250px; margin: 20px 0;
+        }
+
+        .data-card {
+            background: var(--card-bg); border: 4px solid var(--hero-yellow); border-radius: 20px;
+            width: 100%; max-width: 400px; min-height: 200px; position: absolute;
+            display: flex; align-items: center; justify-content: center; padding: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6); transition: transform 0.4s ease, opacity 0.4s ease, border-color 0.2s;
+            transform-origin: center bottom; z-index: 2;
+        }
+        
+        .data-card.bg-card { transform: scale(0.9) translateY(20px); opacity: 0.5; z-index: 1; filter: blur(2px); border-color: #555;}
+
+        /* Dynamische tekst schaling: past altijd in de kaart */
+        .sentence { font-size: clamp(1.2rem, 4vw, 1.8rem); line-height: 1.5; color: white; font-weight: bold; text-align: center; }
+        .blank { display: inline-block; color: var(--hero-cyan); font-weight: 900; padding: 0 5px; margin: 0 5px; letter-spacing: 2px; }
+
+        /* ANIMATIONS */
+        .swipe-right { transform: translateX(120%) rotate(15deg); opacity: 0; border-color: var(--success-green); }
+        .swipe-left { transform: translateX(-120%) rotate(-15deg); opacity: 0; border-color: var(--danger-red); }
+        .shake-error { animation: cardShake 0.4s ease-in-out; border-color: var(--danger-red) !important; background: rgba(255, 23, 68, 0.1); }
+        @keyframes cardShake { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-10px) rotate(-3deg); } 75% { transform: translateX(10px) rotate(3deg); } }
+
+        /* BUTTONS */
+        .action-controls {
+            display: flex; justify-content: space-between; gap: 15px; margin-top: auto;
+            width: 100%; max-width: 400px; align-self: center; z-index: 10; padding-bottom: 10px;
+        }
+
+        .btn-action {
+            flex: 1; color: white; border: none; padding: 20px 5px; border-radius: 15px;
+            font-family: 'Bangers', cursive; font-size: 2rem; cursor: pointer; transition: all 0.1s;
+            box-shadow: 0 6px 0px rgba(0,0,0,0.5); letter-spacing: 1px;
+        }
+        .btn-action:active { transform: translateY(4px); box-shadow: 0 2px 0px rgba(0,0,0,0.5); }
+        .btn-cant { background: var(--danger-red); border-bottom: 5px solid #b71c1c; }
+        .btn-can { background: var(--success-green); border-bottom: 5px solid #008b46; color: #000; }
+        
+        .btn-restart { background: var(--hero-orange); border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; color: white; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #d84315; }
+
+        .hud-text { font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px; font-size: 1.3rem; margin-top: 0; position: absolute; top: 15px; left: 15px; }
+
+        @media (max-width: 400px) {
+            .btn-action { font-size: 1.5rem; padding: 15px 5px; }
+            .data-card { padding: 15px; min-height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">THE DECISION DECK</div>
+</header>
+
+<main>
+    <div class="quiz-container" id="quiz-box">
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span>/10</div>
+        
+        <div id="start-screen" class="screen active-screen" style="justify-content: flex-start;">
+            <h2 style="font-family: 'Bangers'; font-size: 2.2rem; color: var(--hero-orange); margin-top: 0;">DATA SORTING TERMINAL</h2>
+            <p style="font-size: 1rem; line-height: 1.5;">Lees de missiekaart. Heeft de zin <strong>CAN</strong> of <strong>CAN'T</strong> nodig? Klik op de juiste knop om de kaart te swipen!</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level l1" onclick="startGame(1)">Lvl 1: Basics<br><span>Feiten en Helden</span></button>
+                <button class="btn-level l2" onclick="startGame(2)">Lvl 2: Q&A<br><span>Vragen en antwoorden</span></button>
+                <button class="btn-level l3" onclick="startGame(3)">Lvl 3: Logic<br><span>Zinnen met 'but' en 'so'</span></button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="hud-text">CARD <span id="current-q">1</span>/10</div>
+            
+            <div class="card-stage" id="card-stage">
+                <div class="data-card bg-card" id="card-next">
+                    <div class="sentence">...</div>
+                </div>
+                <div class="data-card" id="card-active">
+                    <div class="sentence" id="sentence"></div>
+                </div>
+            </div>
+
+            <div class="action-controls">
+                <button class="btn-action btn-cant" onclick="handleSwipe('cant')">❌ CAN'T</button>
+                <button class="btn-action btn-can" onclick="handleSwipe('can')">✔️ CAN</button>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen" style="align-items: center;">
+            <h2 style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--success-green); margin-top: 0;">DECK CLEARED!</h2>
+            <p style="font-size: 1.2rem;">Score: <strong id="final-score"></strong> out of 10.</p>
+            <button class="btn-restart" onclick="location.reload()">NEW DECK</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Compacte Database
+    const dbLevel1 = [
+        {start: "A bird", end: "fly in the sky.", isCan: true}, {start: "A fish", end: "breathe underwater.", isCan: true},
+        {start: "Superman", end: "lift a car easily.", isCan: true}, {start: "A cheetah", end: "run very fast.", isCan: true},
+        {start: "Spider-Man", end: "climb walls.", isCan: true}, {start: "A submarine", end: "go deep underwater.", isCan: true},
+        {start: "A dog", end: "speak English.", isCan: false}, {start: "A pig", end: "fly.", isCan: false},
+        {start: "A rock", end: "move by itself.", isCan: false}, {start: "A fish", end: "walk on the street.", isCan: false},
+        {start: "A normal car", end: "fly to the moon.", isCan: false}, {start: "A human", end: "breathe underwater.", isCan: false},
+        {start: "A baby", end: "drive a car.", isCan: false}, {start: "A cat", end: "read a book.", isCan: false}
+    ];
+
+    const dbLevel2 = [
+        {start: "", end: "you help me with my homework?", isCan: true}, {start: "", end: "she speak Spanish?", isCan: true},
+        {start: "", end: "we go home now?", isCan: true}, {start: "Can you swim? Yes, I", end: ".", isCan: true},
+        {start: "Can they play? Yes, they", end: ".", isCan: true}, {start: "Can she sing? Yes, she", end: ".", isCan: true},
+        {start: "Can he fly? No, he", end: ".", isCan: false}, {start: "Can we stay up late? No, we", end: ".", isCan: false},
+        {start: "Can your brother drive? No, he", end: ".", isCan: false}, {start: "Can a human breathe in space? No, he", end: ".", isCan: false},
+        {start: "Can you lift that box? No, I", end: ".", isCan: false}, {start: "Can the villain escape? No, he", end: ".", isCan: false},
+        {start: "Can I touch the painting? No, you", end: ".", isCan: false}, {start: "Can the fish survive on land? No, it", end: ".", isCan: false}
+    ];
+
+    const dbLevel3 = [
+        {start: "The light is green, so you", end: "drive now.", isCan: true}, {start: "I have money, so I", end: "buy the new game.", isCan: true},
+        {start: "She studied hard, so she", end: "pass the test.", isCan: true}, {start: "He has a bike, so he", end: "cycle to school.", isCan: true},
+        {start: "The door is open, so you", end: "walk inside.", isCan: true}, {start: "The battery is at 100%, so we", end: "use the drone.", isCan: true},
+        {start: "The box is too heavy, so I", end: "lift it.", isCan: false}, {start: "It is raining hard, so we", end: "play outside.", isCan: false},
+        {start: "I am sick, so I", end: "go to school.", isCan: false}, {start: "I don't know the code, so I", end: "open the safe.", isCan: false},
+        {start: "My leg is broken, so I", end: "run.", isCan: false}, {start: "The internet is down, so we", end: "watch Netflix.", isCan: false},
+        {start: "My phone is dead, so I", end: "call you.", isCan: false}, {start: "He is only 12, so he", end: "drive a car.", isCan: false}
+    ];
+
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentQ = null;
+    let isWaiting = false;
+
+    function startGame(level) {
+        let sourceDB = level === 1 ? dbLevel1 : (level === 2 ? dbLevel2 : dbLevel3);
+        activeQuestions = sourceDB.sort(() => Math.random() - 0.5).slice(0, 10);
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('score').innerText = score;
+        document.getElementById('score-board').style.display = 'block';
+        
+        document.getElementById('start-screen').classList.remove('active-screen');
+        document.getElementById('game-screen').classList.add('active-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isWaiting = false;
+        currentQ = activeQuestions[currentQuestionIndex];
+        document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+        document.getElementById('card-active').className = 'data-card'; // Reset klassen
+        
+        let blankHTML = `<span id="fill-blank" class="blank">______</span>`;
+        document.getElementById('sentence').innerHTML = currentQ.start === "" 
+            ? blankHTML + " " + currentQ.end 
+            : currentQ.start + " " + blankHTML + " " + currentQ.end;
+    }
+
+    function handleSwipe(answer) {
+        if (isWaiting) return;
+        isWaiting = true;
+
+        const isCorrect = (answer === 'can' && currentQ.isCan) || (answer === 'cant' && !currentQ.isCan);
+        const cardActive = document.getElementById('card-active');
+
+        if (isCorrect) {
+            score++;
+            document.getElementById('score').innerText = score;
+            
+            // Vul antwoord in
+            let correctWord = currentQ.isCan ? "can" : "can't";
+            if (currentQ.start === "") correctWord = currentQ.isCan ? "Can" : "Can't";
+            
+            const blankEl = document.getElementById('fill-blank');
+            if(blankEl) {
+                blankEl.innerText = correctWord;
+                blankEl.style.color = "var(--success-green)";
+                blankEl.style.borderBottom = "none";
+                blankEl.style.letterSpacing = "0px";
+            }
+            
+            // Swipe animatie
+            if (answer === 'can') cardActive.classList.add('swipe-right');
+            else cardActive.classList.add('swipe-left');
+
+            setTimeout(nextCard, 400); 
+        } else {
+            // Fout: schudden!
+            cardActive.classList.add('shake-error');
+            setTimeout(() => {
+                cardActive.classList.remove('shake-error');
+                isWaiting = false; 
+            }, 400);
+        }
+    }
+
+    function nextCard() {
+        currentQuestionIndex++;
+        const cardActive = document.getElementById('card-active');
+        
+        if (currentQuestionIndex < 10) {
+            // Animatie reset
+            cardActive.style.transition = 'none';
+            cardActive.style.opacity = '0';
+            loadQuestion();
+            
+            setTimeout(() => {
+                cardActive.style.transition = 'transform 0.4s ease, opacity 0.4s ease, border-color 0.2s';
+                cardActive.style.opacity = '1';
+            }, 30);
+        } else {
+            // Einde spel
+            document.getElementById('game-screen').classList.remove('active-screen');
+            document.getElementById('end-screen').classList.add('active-screen');
+            document.getElementById('score-board').style.display = 'none';
+            document.getElementById('final-score').innerText = score;
+        }
+    }
+</script>
+</body>
+</html>

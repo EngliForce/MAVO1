@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Gravity Blaster</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --danger-red: #ff1744;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white; margin: 0; height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+            user-select: none;
+        }
+        
+        header {
+            background: var(--hero-blue-main);
+            padding: 0.8rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow);
+            flex-shrink: 0; z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 1.8rem; letter-spacing: 2px; margin: 0; text-shadow: 2px 2px 0px var(--hero-blue-dark); }
+        
+        main { 
+            flex-grow: 1; display: flex; flex-direction: column; 
+            align-items: center; padding: 10px; width: 100%; max-width: 800px; margin: 0 auto;
+            position: relative;
+        }
+        
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 15px; padding: 20px;
+            text-align: center; width: 100%; margin-top: 10px;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        
+        .hud-bar {
+            display: flex; justify-content: space-between;
+            background: rgba(0,0,0,0.8);
+            padding: 8px 15px; border-radius: 15px;
+            margin-bottom: 10px; border: 2px solid var(--hero-orange);
+            font-family: 'Bangers'; font-size: 1.4rem; width: 100%;
+        }
+        
+        #game-area {
+            flex-grow: 1; width: 100%; position: relative;
+            background: rgba(255,255,255,0.03);
+            overflow: hidden; border-radius: 15px; border: 2px solid rgba(255,255,255,0.1);
+            border-bottom: 4px solid var(--danger-red);
+        }
+        
+        .meteor {
+            position: absolute; 
+            width: 85%; max-width: 320px; 
+            background: radial-gradient(circle at 30% 30%, #4a4e69, #2c3e50 60%, #1a1a2e);
+            border-radius: 15px; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.3rem; color: #fff; line-height: 1.4;
+            text-align: center; padding: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            border: 2px solid #5c6bc0; z-index: 10;
+        }
+
+        .meteor-blank {
+            color: var(--hero-yellow);
+            border-bottom: 3px solid var(--hero-yellow);
+            display: inline-block;
+            min-width: 40px;
+            margin: 0 5px;
+        }
+        
+        .laser-beam {
+            position: absolute; bottom: 0; width: 12px; background: #fff;
+            box-shadow: 0 0 15px var(--hero-cyan), 0 0 30px #fff;
+            z-index: 5; display: none; pointer-events: none; border-radius: 10px 10px 0 0;
+        }
+        
+        .controls-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+            width: 100%; margin-top: 15px; padding-bottom: 10px;
+        }
+        
+        .btn-laser {
+            color: white; border: none;
+            padding: 20px 10px; border-radius: 15px; font-family: 'Bangers', cursive;
+            font-size: 2rem; cursor: pointer; transition: 0.1s; letter-spacing: 2px;
+            box-shadow: 0 6px 0px rgba(0,0,0,0.5);
+        }
+        .btn-laser:active { transform: translateY(4px); box-shadow: 0 2px 0px rgba(0,0,0,0.5); }
+        
+        #btn-can { background: var(--success-green); border-bottom: 5px solid #008b46; color: #000; text-shadow: 1px 1px 0px rgba(255,255,255,0.5);}
+        #btn-cant { background: var(--danger-red); border-bottom: 5px solid #b71c1c; text-shadow: 1px 1px 0px rgba(0,0,0,0.5);}
+
+        /* MENU STYLES */
+        .level-select-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid #243b53;
+            padding: 15px; border-radius: 15px; font-family: 'Bangers', cursive;
+            font-size: 1.4rem; cursor: pointer; transition: all 0.3s; letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; }
+        .btn-level.l1 { border-color: var(--hero-cyan); color: var(--hero-cyan); }
+        .btn-level.l2 { border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-level.l3 { border-color: var(--hero-orange); color: var(--hero-orange); }
+
+        .hidden { display: none !important; }
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        
+        @media (max-width: 600px) {
+            .meteor { font-size: 1.1rem; padding: 12px; }
+            .btn-laser { font-size: 1.8rem; padding: 15px 10px; }
+            .btn-level { padding: 10px; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p style="margin:0; font-size:0.8rem; font-weight:bold; color: var(--hero-yellow);">GRAVITY BLASTER: CAN & CAN'T</p>
+</header>
+
+<main>
+    <div id="start-screen" class="briefing-box">
+        <h2 style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin-top:0;">🚨 MISSION START</h2>
+        <p style="font-size: 1.1rem; line-height: 1.4;">The sentences are falling! Read the text and fire the correct laser before they hit the ground.</p>
+        
+        <div class="level-select-grid">
+            <button class="btn-level l1" onclick="startGame(1)">
+                Lvl 1: Target Basics<br><span>Facts, heroes, and animals</span>
+            </button>
+            <button class="btn-level l2" onclick="startGame(2)">
+                Lvl 2: Q&A Protocol<br><span>Questions and short answers</span>
+            </button>
+            <button class="btn-level l3" onclick="startGame(3)">
+                Lvl 3: Logic Blaster<br><span>Look out for 'but' and 'so'</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden" style="display: flex; flex-direction: column; width:100%; height:100%;">
+        <div class="hud-bar">
+            <div>SCORE: <span id="score-display">0</span></div>
+            <div id="lives-display">❤️❤️❤️</div>
+        </div>
+        
+        <div id="game-area">
+            <div class="laser-beam" id="laser"></div>
+        </div>
+        
+        <div class="controls-grid">
+            <button class="btn-laser" id="btn-can" onclick="fireLaser('can')">CAN</button>
+            <button class="btn-laser" id="btn-cant" onclick="fireLaser('cant')">CAN'T</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="briefing-box hidden">
+        <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--danger-red); margin-top:0;">MISSION FAILED!</h2>
+        <div style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin-bottom: 20px;">SCORE: <span id="final-score">0</span></div>
+        <button class="btn-laser" style="width:100%; background: var(--hero-blue-main); border-bottom: 4px solid var(--hero-blue-dark);" onclick="location.reload()">RESTART MISSION</button>
+    </div>
+</main>
+
+<script>
+    // --- DATABASE (150 VRAGEN) ---
+    
+    // Level 1: Facts, Animals, Heroes
+    const dbLevel1 = [
+        {q: "A bird ___ fly in the sky.", c: "can"}, {q: "A fish ___ breathe underwater.", c: "can"},
+        {q: "A cheetah ___ run very fast.", c: "can"}, {q: "A frog ___ jump high.", c: "can"},
+        {q: "A doctor ___ help sick people.", c: "can"}, {q: "A pilot ___ fly a plane.", c: "can"},
+        {q: "A baker ___ bake fresh bread.", c: "can"}, {q: "A chameleon ___ change colors.", c: "can"},
+        {q: "Superman ___ lift a car.", c: "can"}, {q: "Spider-Man ___ climb walls.", c: "can"},
+        {q: "A submarine ___ go underwater.", c: "can"}, {q: "A kangaroo ___ jump far.", c: "can"},
+        {q: "A monkey ___ climb trees.", c: "can"}, {q: "An owl ___ see in the dark.", c: "can"},
+        {q: "A mechanic ___ fix an engine.", c: "can"}, {q: "A dolphin ___ swim fast.", c: "can"},
+        {q: "A superhero ___ save the city.", c: "can"}, {q: "The Flash ___ run at lightspeed.", c: "can"},
+        {q: "A polar bear ___ survive cold.", c: "can"}, {q: "A parrot ___ learn to speak.", c: "can"},
+        {q: "A bat ___ fly at night.", c: "can"}, {q: "A teacher ___ explain the lesson.", c: "can"},
+        {q: "A spider ___ make a web.", c: "can"}, {q: "A penguin ___ swim beautifully.", c: "can"},
+        {q: "A turtle ___ hide in its shell.", c: "can"},
+        
+        {q: "A pig ___ fly.", c: "cant"}, {q: "A normal human ___ breathe underwater.", c: "cant"},
+        {q: "A baby ___ drive a car.", c: "cant"}, {q: "A dog ___ speak English.", c: "cant"},
+        {q: "A normal car ___ fly to the moon.", c: "cant"}, {q: "A fish ___ walk on the street.", c: "cant"},
+        {q: "A rock ___ move by itself.", c: "cant"}, {q: "A tree ___ run away.", c: "cant"},
+        {q: "A cat ___ read a book.", c: "cant"}, {q: "An elephant ___ jump.", c: "cant"},
+        {q: "A snake ___ walk on legs.", c: "cant"}, {q: "A penguin ___ fly in the sky.", c: "cant"},
+        {q: "A robot ___ feel real pain.", c: "cant"}, {q: "A fire ___ burn underwater.", c: "cant"},
+        {q: "A bicycle ___ drive without a person.", c: "cant"}, {q: "A horse ___ climb a tree.", c: "cant"},
+        {q: "A human ___ survive on Mars without a suit.", c: "cant"}, {q: "A television ___ cook dinner.", c: "cant"},
+        {q: "A computer ___ drink water.", c: "cant"}, {q: "A lion ___ speak French.", c: "cant"},
+        {q: "A shark ___ walk on the beach.", c: "cant"}, {q: "A chicken ___ swim like a fish.", c: "cant"},
+        {q: "A blind man ___ see the colors.", c: "cant"}, {q: "A deaf person ___ hear the music.", c: "cant"},
+        {q: "A baby ___ solve a math problem.", c: "cant"}
+    ];
+
+    // Level 2: Q&A
+    const dbLevel2 = [
+        {q: "___ you help me with this?", c: "can"}, {q: "___ she speak Spanish?", c: "can"},
+        {q: "___ we go home now?", c: "can"}, {q: "___ I go to the toilet?", c: "can"},
+        {q: "___ they hear us talking?", c: "can"}, {q: "___ the dog catch the ball?", c: "can"},
+        {q: "___ the teacher explain this?", c: "can"}, {q: "___ you see the board?", c: "can"},
+        {q: "___ your dad drive us?", c: "can"}, {q: "___ the robot understand me?", c: "can"},
+        {q: "___ we play outside today?", c: "can"}, {q: "___ I borrow your pen?", c: "can"},
+        {q: "___ he swim across the river?", c: "can"}, {q: "___ she run faster than you?", c: "can"},
+        {q: "___ we order a pizza?", c: "can"}, {q: "___ the superhero save them?", c: "can"},
+        {q: "Can you swim? Yes, I ___.", c: "can"}, {q: "Can they play? Yes, they ___.", c: "can"},
+        {q: "Can she sing well? Yes, she ___.", c: "can"}, {q: "Can you see the stars? Yes, I ___.", c: "can"},
+        {q: "Can the police catch him? Yes, they ___.", c: "can"}, {q: "Can I eat this apple? Yes, you ___.", c: "can"},
+        {q: "Can we win this game? Yes, we ___!", c: "can"}, {q: "Can they speak English? Yes, they ___.", c: "can"},
+        {q: "Can the dog find the bone? Yes, he ___.", c: "can"},
+        
+        {q: "Can he fly? No, he ___.", c: "cant"}, {q: "Can the cat open the door? No, it ___.", c: "cant"},
+        {q: "Can we stay up late? No, we ___.", c: "cant"}, {q: "Can the robot jump? No, it ___.", c: "cant"},
+        {q: "Can your brother drive? No, he ___.", c: "cant"}, {q: "Can a human breathe in space? No, he ___.", c: "cant"},
+        {q: "Can you hear the music? No, I ___.", c: "cant"}, {q: "Can the baby walk? No, she ___.", c: "cant"},
+        {q: "Can you lift that box? No, I ___.", c: "cant"}, {q: "Can she run 10 kilometers? No, she ___.", c: "cant"},
+        {q: "Can the villain escape? No, he ___.", c: "cant"}, {q: "Can they buy the house? No, they ___.", c: "cant"},
+        {q: "Can I touch the painting? No, you ___.", c: "cant"}, {q: "Can the fish survive on land? No, it ___.", c: "cant"},
+        {q: "Can you see the invisible jet? No, I ___.", c: "cant"}, {q: "Can he lift the building? No, he ___.", c: "cant"},
+        {q: "Can she pause time? No, she ___.", c: "cant"}, {q: "Can a dog solve puzzles? No, it ___.", c: "cant"},
+        {q: "Can we fly without a plane? No, we ___.", c: "cant"}, {q: "Can you jump over the moon? No, I ___.", c: "cant"},
+        {q: "Can the rock talk? No, it ___.", c: "cant"}, {q: "Can they stop the clock? No, they ___.", c: "cant"},
+        {q: "Can she breathe fire? No, she ___.", c: "cant"}, {q: "Can a baby cook dinner? No, it ___.", c: "cant"},
+        {q: "Can we live without water? No, we ___.", c: "cant"}
+    ];
+
+    // Level 3: Logic (so, but)
+    const dbLevel3 = [
+        {q: "The light is green, so you ___ drive.", c: "can"}, {q: "I have money, so I ___ buy it.", c: "can"},
+        {q: "She studied hard, so she ___ pass.", c: "can"}, {q: "He has a bike, so he ___ cycle.", c: "can"},
+        {q: "The weather is nice, so we ___ go.", c: "can"}, {q: "It is my birthday, so I ___ eat cake.", c: "can"},
+        {q: "The door is open, so you ___ walk in.", c: "can"}, {q: "I am tall, so I ___ reach the top.", c: "can"},
+        {q: "The battery is at 100%, so we ___ fly.", c: "can"}, {q: "I have the password, so I ___ log in.", c: "can"},
+        {q: "We have a map, so we ___ find it.", c: "can"}, {q: "He is strong, so he ___ open the jar.", c: "can"},
+        {q: "She has a microphone, so she ___ sing.", c: "can"}, {q: "The water is warm, so we ___ swim.", c: "can"},
+        {q: "I practiced, so I ___ play the song.", c: "can"}, {q: "They have tickets, so they ___ enter.", c: "can"},
+        {q: "The bridge is fixed, so we ___ cross.", c: "can"}, {q: "He is a chef, so he ___ cook.", c: "can"},
+        {q: "My phone is charged, so I ___ call you.", c: "can"}, {q: "The hero is here, so he ___ save us.", c: "can"},
+        {q: "I bought ingredients, so I ___ bake.", c: "can"}, {q: "We have time, so we ___ watch a movie.", c: "can"},
+        {q: "The rules say yes, so you ___ do it.", c: "can"}, {q: "The shop is open, so we ___ buy food.", c: "can"},
+        {q: "I have my glasses, so I ___ read.", c: "can"},
+
+        {q: "The box is too heavy, so I ___ lift it.", c: "cant"}, {q: "It is raining hard, so we ___ play outside.", c: "cant"},
+        {q: "I am sick, so I ___ go to school.", c: "cant"}, {q: "The rules say no, so you ___ do that.", c: "cant"},
+        {q: "I don't know the code, so I ___ open it.", c: "cant"}, {q: "My leg is broken, so I ___ run.", c: "cant"},
+        {q: "She is allergic, so she ___ eat this cake.", c: "cant"}, {q: "The car has no wheels, so it ___ drive.", c: "cant"},
+        {q: "The internet is down, so we ___ watch Netflix.", c: "cant"}, {q: "He is blind, so he ___ see the painting.", c: "cant"},
+        {q: "She has no money, so she ___ buy it.", c: "cant"}, {q: "The bridge is broken, so we ___ cross.", c: "cant"},
+        {q: "My phone is dead, so I ___ call you.", c: "cant"}, {q: "The door is locked, so we ___ enter.", c: "cant"},
+        {q: "He is only 12, so he ___ drive a car.", c: "cant"}, {q: "I don't speak French, so I ___ understand.", c: "cant"},
+        {q: "The shop is closed, so we ___ buy bread.", c: "cant"}, {q: "It is freezing, so we ___ swim.", c: "cant"},
+        {q: "She forgot her glasses, so she ___ read.", c: "cant"}, {q: "The battery is empty, so the laser ___ shoot.", c: "cant"},
+        {q: "I lost my keys, so I ___ start the car.", c: "cant"}, {q: "He is invisible, so cameras ___ record him.", c: "cant"},
+        {q: "They are lost, so they ___ find the way.", c: "cant"}, {q: "The password is wrong, so you ___ hack it.", c: "cant"},
+        {q: "I am too short, so I ___ reach the top.", c: "cant"}
+    ];
+
+    let gameState = { 
+        score: 0, 
+        lives: 3, 
+        speed: 1.2, // Base falling speed
+        currentMeteor: null, 
+        loop: null, 
+        active: false,
+        activeDB: []
+    };
+
+    function startGame(level) {
+        // Load the right database
+        gameState.activeDB = level === 1 ? dbLevel1 : (level === 2 ? dbLevel2 : dbLevel3);
+        
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        
+        gameState.active = true;
+        gameState.score = 0;
+        gameState.lives = 3;
+        gameState.speed = 1.2;
+        
+        document.getElementById('score-display').innerText = gameState.score;
+        updateLivesHud();
+        
+        spawnMeteor();
+        requestAnimationFrame(gameLoop);
+    }
+
+    function gameLoop() {
+        if (!gameState.active) return;
+        const area = document.getElementById('game-area');
+        const areaHeight = area.offsetHeight;
+
+        if (gameState.currentMeteor) {
+            let m = gameState.currentMeteor;
+            m.y += gameState.speed;
+            m.el.style.transform = `translateY(${m.y}px)`;
+            
+            // Hit the bottom
+            if (m.y + m.height >= areaHeight) {
+                handleMiss();
+            }
+        }
+        gameState.loop = requestAnimationFrame(gameLoop);
+    }
+
+    function spawnMeteor() {
+        if (!gameState.active) return;
+        const area = document.getElementById('game-area');
+        
+        // Pick a random question from the selected level
+        const data = gameState.activeDB[Math.floor(Math.random() * gameState.activeDB.length)];
+        
+        const meteorEl = document.createElement('div');
+        meteorEl.className = 'meteor';
+        meteorEl.innerHTML = data.q.replace("___", "<span class='meteor-blank'></span>");
+        
+        area.appendChild(meteorEl);
+
+        const mWidth = meteorEl.offsetWidth;
+        const mHeight = meteorEl.offsetHeight;
+        const maxLeft = area.offsetWidth - mWidth - 10;
+        const xPos = Math.max(10, Math.random() * maxLeft);
+        
+        meteorEl.style.left = xPos + 'px';
+        const startY = -mHeight - 10;
+        
+        gameState.currentMeteor = { 
+            el: meteorEl, 
+            prep: data.c, 
+            y: startY, 
+            x: xPos, 
+            width: mWidth, 
+            height: mHeight 
+        };
+    }
+
+    function fireLaser(prep) {
+        if (!gameState.active || !gameState.currentMeteor) return;
+        
+        const targetMeteor = gameState.currentMeteor;
+        const laserEl = document.getElementById('laser');
+        const area = document.getElementById('game-area');
+        
+        const meteorRect = targetMeteor.el.getBoundingClientRect();
+        const areaRect = area.getBoundingClientRect();
+
+        const relativeLeft = meteorRect.left - areaRect.left + (meteorRect.width / 2) - 6;
+        const laserHeight = areaRect.bottom - meteorRect.bottom + (meteorRect.height / 2);
+
+        laserEl.style.left = relativeLeft + 'px';
+        laserEl.style.height = laserHeight + 'px';
+        laserEl.style.background = prep === 'can' ? 'var(--success-green)' : 'var(--danger-red)';
+        laserEl.style.boxShadow = `0 0 15px ${prep === 'can' ? 'var(--success-green)' : 'var(--danger-red)'}`;
+        laserEl.style.display = 'block';
+
+        setTimeout(() => laserEl.style.display = 'none', 100);
+
+        if (prep === targetMeteor.prep) {
+            handleHit(meteorRect.left + meteorRect.width/2, meteorRect.top + meteorRect.height/2);
+        } else {
+            handleWrongShot();
+        }
+    }
+
+    function handleHit(x, y) {
+        gameState.score += 10;
+        document.getElementById('score-display').innerText = gameState.score;
+        
+        // Speed up slightly
+        if (gameState.speed < 4.0) gameState.speed += 0.05; 
+
+        gameState.currentMeteor.el.remove();
+        gameState.currentMeteor = null;
+
+        // Confetti explosion
+        confetti({ 
+            particleCount: 25, 
+            spread: 60, 
+            colors: ['#00e676', '#ffb703', '#ffffff'],
+            origin: { x: x / window.innerWidth, y: y / window.innerHeight } 
+        });
+
+        setTimeout(spawnMeteor, 400); 
+    }
+
+    function handleMiss() {
+        gameState.lives--;
+        updateLivesHud();
+        document.body.classList.add('shake');
+        
+        if(gameState.currentMeteor) gameState.currentMeteor.el.remove();
+        gameState.currentMeteor = null;
+        
+        setTimeout(() => document.body.classList.remove('shake'), 300);
+        
+        if (gameState.lives <= 0) {
+            endGame();
+        } else {
+            setTimeout(spawnMeteor, 600); 
+        }
+    }
+
+    function handleWrongShot() {
+        document.getElementById('game-screen').classList.add('shake');
+        setTimeout(() => document.getElementById('game-screen').classList.remove('shake'), 300);
+    }
+
+    function updateLivesHud() {
+        let hearts = "❤️".repeat(Math.max(0, gameState.lives)) + "🖤".repeat(3 - Math.max(0, gameState.lives));
+        document.getElementById('lives-display').innerText = hearts;
+    }
+
+    function endGame() {
+        gameState.active = false;
+        cancelAnimationFrame(gameState.loop);
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = gameState.score;
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (!gameState.active) return;
+        if (e.key === 'ArrowLeft' || e.key === '1') fireLaser('can');
+        if (e.key === 'ArrowRight' || e.key === '2') fireLaser('cant');
+    });
+</script>
+</body>
+</html>
