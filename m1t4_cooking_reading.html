@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Kids in the Kitchen!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #ff9800;
+            --success: #4caf50;
+            --error: #f44336;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background: var(--hero-blue-main);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 5px solid var(--hero-yellow);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 2.8rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); letter-spacing: 2px;}
+        header p { margin: 5px 0 0 0; font-weight: bold; letter-spacing: 1px; color: var(--hero-yellow); }
+
+        .level-selector {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .level-btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .btn-a1 { border-color: var(--success); color: var(--success); }
+        .btn-a1.active, .btn-a1:hover { background: var(--success); color: white; box-shadow: 0 0 15px var(--success); }
+
+        .btn-a2 { border-color: var(--hero-orange); color: var(--hero-orange); }
+        .btn-a2.active, .btn-a2:hover { background: var(--hero-orange); color: white; box-shadow: 0 0 15px var(--hero-orange); }
+
+        .btn-b1 { border-color: var(--error); color: var(--error); }
+        .btn-b1.active, .btn-b1:hover { background: var(--error); color: white; box-shadow: 0 0 15px var(--error); }
+
+        .app-container { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Left Side: Full Text */
+        .text-panel {
+            flex: 1.2;
+            overflow-y: auto;
+            padding: 40px;
+            border-right: 3px solid var(--hero-blue-main);
+            background: rgba(16, 42, 67, 0.4);
+            line-height: 1.8;
+        }
+
+        .intro-text {
+            font-size: 1.25rem;
+            color: var(--hero-cyan);
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .text-panel h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2rem; margin-top: 40px; border-bottom: 2px solid var(--hero-blue-main); padding-bottom: 10px; }
+        
+        /* Right Side: Questions */
+        .question-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            background: rgba(11, 26, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid var(--hero-yellow);
+            transition: 0.3s;
+        }
+
+        .question-card h3 { font-family: 'Bangers', cursive; color: var(--hero-yellow); margin: 0 0 10px 0; letter-spacing: 1px; }
+        
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: 1px solid var(--hero-cyan);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Lexend', sans-serif;
+            resize: vertical;
+            margin-top: 10px;
+            box-sizing: border-box;
+            min-height: 80px;
+        }
+
+        .check-btn {
+            background: #0288d1;
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 1.4rem;
+            font-family: 'Bangers', cursive;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 40px;
+            transition: 0.3s;
+            letter-spacing: 2px;
+            border: 2px solid var(--hero-cyan);
+        }
+
+        .check-btn:hover { background: var(--hero-cyan); color: var(--dark-bg); transform: scale(1.02); }
+
+        .feedback-box {
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid #444;
+        }
+
+        .model-ans { color: var(--hero-cyan); font-weight: bold; display: block; margin-bottom: 15px; }
+        
+        .self-correct-btns { display: flex; gap: 10px; }
+        .btn-correct { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; flex: 1; font-weight: bold; }
+        .btn-wrong { background: var(--error); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; flex: 1; font-weight: bold; }
+        .btn-correct.selected { outline: 3px solid white; box-shadow: 0 0 15px var(--success); }
+        .btn-wrong.selected { outline: 3px solid white; box-shadow: 0 0 15px var(--error); }
+
+        .score-banner {
+            position: sticky;
+            top: 0;
+            background: var(--hero-yellow);
+            color: var(--dark-bg);
+            padding: 15px;
+            text-align: center;
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            z-index: 5;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .vocab { color: var(--hero-yellow); font-weight: 700; border-bottom: 2px dashed #ff5722; cursor: help; position: relative; }
+        .vocab:hover::after {
+            content: attr(data-nl);
+            position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+            background: #ff5722; color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.9rem; white-space: nowrap; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        .highlight-quote { background: rgba(255, 183, 3, 0.1); border-left: 5px solid var(--hero-yellow); padding: 20px; margin: 30px 0; border-radius: 0 15px 15px 0; font-style: italic; }
+        footer { text-align: center; padding: 40px 0 20px 0; opacity: 0.5; font-size: 0.9rem;}
+
+        @media (max-width: 1000px) {
+            .app-container { flex-direction: column; overflow-y: auto; }
+            .text-panel { border-right: none; border-bottom: 5px solid var(--hero-blue-main); overflow: visible; }
+            .question-panel { overflow: visible; }
+            body { overflow: auto; height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>KIDS IN THE KITCHEN!</p>
+</header>
+
+<div class="level-selector">
+    <button class="level-btn btn-a1 active" onclick="setLevel('A1', this)">Level A1 (Beginner)</button>
+    <button class="level-btn btn-a2" onclick="setLevel('A2', this)">Level A2 (Average)</button>
+    <button class="level-btn btn-b1" onclick="setLevel('B1', this)">Level B1 (Advanced)</button>
+</div>
+
+<div class="app-container">
+    <div class="text-panel" id="textPanel">
+        </div>
+
+    <div class="question-panel" id="questionPanel">
+        </div>
+</div>
+
+<script>
+    // Data Object holding all texts and questions for each level
+    const levelData = {
+        A1: {
+            text: `
+                <article>
+                    <p class="intro-text">Cooking is fun! Many kids like to cook at home. In this magazine, we talk to some children. They tell us about their favorite <span class="vocab" data-nl="gerecht">dish</span> to cook. Maybe you get a good idea too!</p>
+                    
+                    <h2>Emma (12) – “I love pasta!”</h2>
+                    <p>Hi! My name is Emma and I am 12 years old. I like cooking with my mother. We cook in the kitchen every week.</p>
+                    <p>My favorite dish is pasta with tomato sauce. It is easy and very tasty. First, I take a big <span class="vocab" data-nl="pan">pot</span>. I put water in the pot. Then I put the pot on the <span class="vocab" data-nl="fornuis">stove</span>. I wait for the water to get hot. When the water boils, I add the pasta.</p>
+                    <p>I cook the pasta for about ten minutes. Then I make the sauce. I use tomatoes, onion, and garlic. My mother helps me cut the vegetables. We cook the vegetables in a pan. I add salt and pepper. The sauce smells very good!</p>
+                    <p>When the pasta is ready, I mix it with the sauce. I like to add cheese on top. I feel happy when I cook this dish. My family loves it too!</p>
+                    
+                    <h2>Lucas (11) – “Pancakes are the best!”</h2>
+                    <p>Hello! My name is Lucas. I am 11 years old. I cook with my grandma. She teaches me many things.</p>
+                    <p>My favorite dish is pancakes. First, I take a <span class="vocab" data-nl="kom">bowl</span>. I put flour, milk, and eggs in the bowl. Then I mix everything. The <span class="vocab" data-nl="beslag">batter</span> must be smooth.</p>
+                    <p>Next, I take a pan. I put butter in the pan. I wait until the butter melts. Then I pour the batter into the pan. I cook the pancake for two minutes. Then I flip it. Flipping is fun, but sometimes it is difficult!</p>
+                    <p>I like pancakes with sugar or fruit. My favorite is pancakes with strawberries. I make pancakes on Sunday. My family eats together. It is very nice.</p>
+
+                    <h2>Aisha (12) – “My salad is fresh and healthy!”</h2>
+                    <p>Hi! My name is Aisha. I am 12 years old. I like <span class="vocab" data-nl="gezond">healthy</span> food. My favorite dish is salad.</p>
+                    <p>Salad is very easy to make. First, I wash the vegetables. I use lettuce, tomatoes, and cucumber. Then I cut the vegetables into small pieces. I put everything in a big bowl.</p>
+                    <p>Next, I make a dressing. I use olive oil, lemon juice, and a little salt. I mix the dressing and put it on the salad. Sometimes I add chicken or cheese.</p>
+                    <p>I like salad because it is fresh. It is good for my body. I feel strong and happy!</p>
+
+                    <h2>Tom (12) – “I make great sandwiches!”</h2>
+                    <p>Hello! My name is Tom. I am 12 years old. I like fast and easy food. My favorite dish is a sandwich.</p>
+                    <p>First, I take two slices of bread. Then I put cheese and ham on the bread. I also like tomato and lettuce. It makes the sandwich fresh. Then I close the sandwich.</p>
+                    <p>Sometimes I put it in a toaster. The bread becomes warm and <span class="vocab" data-nl="knapperig">crispy</span>. I like sandwiches because I can take them to school. I can make many different sandwiches. Cooking is fun when you try new things!</p>
+
+                    <h2>Sofia (11) – “I love chocolate cake!”</h2>
+                    <p>Hi! My name is Sofia. I am 11 years old. I love sweet food. My favorite dish is chocolate cake.</p>
+                    <p>First, I take a big bowl. I put flour, sugar, eggs, and butter in the bowl. Then I mix everything. I also add chocolate powder. Next, I put the mixture in a cake pan.</p>
+                    <div class="highlight-quote">
+                        "My father helps me with the <span class="vocab" data-nl="oven">oven</span>. We bake the cake for 30 minutes. The house smells very nice!"
+                    </div>
+                    <p>After that, I wait for the cake to cool. Then I add chocolate cream on top. I like to <span class="vocab" data-nl="delen">share</span> my cake with my family. They say it is delicious!</p>
+
+                    <h2>Noah (12) – “Rice gives me energy!”</h2>
+                    <p>Hello! My name is Noah. I am 12 years old. I like cooking dinner. My favorite dish is rice with vegetables.</p>
+                    <p>First, I wash the rice. Then I cook it in water. It takes about 15 minutes. While the rice cooks, I prepare the vegetables. I use carrots, peas, and corn. I cut the carrots into small pieces.</p>
+                    <p>Then I cook the vegetables in a pan. I add oil and salt. When everything is ready, I mix the rice and vegetables. It is simple but very tasty. I eat it after school. It gives me <span class="vocab" data-nl="energie">energy</span>!</p>
+
+                    <h2>Mia (12) – “Eggs for breakfast!”</h2>
+                    <p>Hi! My name is Mia. I am 12 years old. I like cooking breakfast. My favorite dish is scrambled eggs.</p>
+                    <p>First, I break two eggs into a bowl. Then I mix them with a <span class="vocab" data-nl="vork">fork</span>. I add a little salt. Next, I take a pan and add butter. I pour the eggs into the pan. I cook them slowly and mix them.</p>
+                    <p>The eggs become soft and yellow. I eat eggs with bread. It is a good breakfast. I feel ready for the day!</p>
+
+                    <h2>Try it yourself! 👩‍🍳👨‍🍳</h2>
+                    <p>These kids all like cooking. They make simple and tasty food. Cooking is fun and easy. You can cook with your family or friends. What is your favorite dish? Maybe you can go to the kitchen today and try! Have fun cooking!</p>
+                    
+                    <footer><p>&copy; 2026 EngliForce: Make English Your Superpower!</p></footer>
+                </article>
+            `,
+            questions: [
+                { q: "Who does Emma cook with?", a: "Her mother." },
+                { q: "What does Emma put in her pasta sauce?", a: "Tomatoes, onion, and garlic." },
+                { q: "How long does Lucas cook his pancake before flipping it?", a: "Two minutes." },
+                { q: "What does Aisha put in her salad dressing?", a: "Olive oil, lemon juice, and a little salt." },
+                { q: "Why does Tom like sandwiches?", a: "Because he can take them to school." },
+                { q: "How long does Sofia bake her chocolate cake?", a: "30 minutes." },
+                { q: "Who helps Sofia with the oven?", a: "Her father." },
+                { q: "What vegetables does Noah use with his rice?", a: "Carrots, peas, and corn." },
+                { q: "What does Mia eat her eggs with?", a: "Bread." },
+                { q: "According to the text, who can you cook with?", a: "Family or friends." }
+            ]
+        },
+        A2: {
+            text: `
+                <article>
+                    <p class="intro-text">Cooking is an exciting activity! Many children enjoy cooking at home with their families. In this magazine, we speak to some kids about their favorite <span class="vocab" data-nl="gerechten">dishes</span> to cook. Maybe they will give you a great idea!</p>
+                    
+                    <h2>Emma (12) – “I love pasta!”</h2>
+                    <p>Hi! My name is Emma and I am 12 years old. I really enjoy cooking with my mother every week. My favorite dish is pasta with tomato sauce because it is easy and very tasty.</p>
+                    <p>First, I boil water in a large <span class="vocab" data-nl="pan">pot</span>. When the water is hot, I add the pasta and let it cook for about ten minutes. Meanwhile, I <span class="vocab" data-nl="voorbereiden">prepare</span> the sauce using tomatoes, onion, and garlic. My mother helps me cut the vegetables, which we then cook in a pan with some salt and pepper. The smell is amazing!</p>
+                    <p>When the pasta is ready, I mix it with the hot sauce and add some cheese on top. My family absolutely loves it.</p>
+                    
+                    <h2>Lucas (11) – “Pancakes are the best!”</h2>
+                    <p>Hello! I'm Lucas, and I usually cook with my grandma. She teaches me a lot of useful things in the kitchen. My favorite dish to make is pancakes.</p>
+                    <p>First, I mix flour, milk, and eggs in a <span class="vocab" data-nl="kom">bowl</span> until the <span class="vocab" data-nl="beslag">batter</span> is completely smooth. Next, I melt some butter in a pan and pour the batter in. I cook the pancake for two minutes and then I flip it. Flipping is a lot of fun, although it can be difficult sometimes!</p>
+                    <p>I love eating pancakes with strawberries on Sunday mornings when my whole family eats together.</p>
+
+                    <h2>Aisha (12) – “My salad is fresh and healthy!”</h2>
+                    <p>Hi! My name is Aisha. Because I like <span class="vocab" data-nl="gezond">healthy</span> food, my favorite dish is a fresh salad. It is very easy to prepare.</p>
+                    <p>First, I wash the vegetables carefully. I usually use lettuce, tomatoes, and cucumber, and I cut them into small pieces. Next, I make a simple dressing using olive oil, lemon juice, and a little salt.</p>
+                    <p>I mix the dressing with the vegetables in a big bowl. Sometimes I add chicken or cheese to make it even better. Salad makes me feel strong and happy because it is good for my body.</p>
+
+                    <h2>Tom (12) – “I make great sandwiches!”</h2>
+                    <p>Hello! My name is Tom. I like fast and easy food, so my favorite dish to make is a sandwich. First, I take two slices of bread and add cheese and ham. I also include tomato and lettuce to make it fresh.</p>
+                    <p>Sometimes, I put my sandwich in a toaster. This makes the bread warm and <span class="vocab" data-nl="knapperig">crispy</span>. I enjoy making sandwiches because they are quick, and I can easily take them to school for lunch.</p>
+
+                    <h2>Sofia (11) – “I love chocolate cake!”</h2>
+                    <p>Hi! My name is Sofia. I have a sweet tooth, so my favorite thing to make is chocolate cake. First, I put flour, sugar, eggs, butter, and chocolate powder in a large bowl and mix everything together.</p>
+                    <div class="highlight-quote">
+                        "Because the oven is hot, my father helps me put the cake inside. We bake it for 30 minutes, and the whole house smells wonderful!"
+                    </div>
+                    <p>After baking, I wait for the cake to cool down before adding chocolate cream on top. Sharing the cake with my family makes me very happy.</p>
+
+                    <h2>Noah (12) – “Rice gives me energy!”</h2>
+                    <p>Hello! I'm Noah. I like cooking dinner, and my favorite meal is rice with vegetables. First, I wash the rice and cook it in water for about 15 minutes.</p>
+                    <p>While the rice is cooking, I prepare carrots, peas, and corn. I cut the carrots into smaller pieces and cook all the vegetables in a pan with some oil and salt. Finally, I mix the rice and the vegetables together. It is a simple dish, but it gives me a lot of <span class="vocab" data-nl="energie">energy</span> after a long day at school.</p>
+
+                    <h2>Mia (12) – “Eggs for breakfast!”</h2>
+                    <p>Hi! My name is Mia. I love cooking breakfast, especially scrambled eggs. I break two eggs into a bowl, add a little salt, and mix them with a <span class="vocab" data-nl="vork">fork</span>.</p>
+                    <p>Next, I melt some butter in a pan and pour the eggs in. I cook them slowly while mixing them, so they become soft and yellow. Eating eggs with bread is the perfect way to start my day!</p>
+
+                    <h2>Try it yourself! 👩‍🍳👨‍🍳</h2>
+                    <p>Cooking is a fun, creative, and easy way to make tasty food. You can try cooking with your family or friends. Go to the kitchen today and make your favorite dish!</p>
+                    
+                    <footer><p>&copy; 2026 EngliForce: Make English Your Superpower!</p></footer>
+                </article>
+            `,
+            questions: [
+                { q: "Why does Emma wait before adding the pasta to the pot?", a: "She waits for the water to boil / get hot." },
+                { q: "What must the pancake batter look like before Lucas cooks it?", a: "It must be completely smooth." },
+                { q: "How does Aisha feel after eating her fresh salad?", a: "She feels strong and happy." },
+                { q: "What happens to the bread when Tom puts his sandwich in a toaster?", a: "The bread becomes warm and crispy." },
+                { q: "What is the last thing Sofia adds to her cake after it cools down?", a: "Chocolate cream on top." },
+                { q: "How long does it take Noah to cook the rice in water?", a: "About 15 minutes." },
+                { q: "How does Mia cook her eggs so they become soft and yellow?", a: "She cooks them slowly and mixes them in a pan with butter." },
+                { q: "Why is making sandwiches a good choice for Tom?", a: "Because it is fast, easy, and he can take them to school." },
+                { q: "What makes Aisha's salad a healthy choice?", a: "She uses fresh vegetables like lettuce, tomatoes, and cucumber, which is good for her body." },
+                { q: "Why do the kids in the magazine like cooking?", a: "Because it is fun, easy, and they can make simple and tasty food." }
+            ]
+        },
+        B1: {
+            text: `
+                <article>
+                    <p class="intro-text">Cooking is an incredibly rewarding <span class="vocab" data-nl="activiteit">activity</span>! A growing number of young people have discovered a passion for preparing meals at home. In this issue, we interview several children who share their favorite <span class="vocab" data-nl="recepten">recipes</span> and kitchen experiences.</p>
+                    
+                    <h2>Emma (12) – “I have a passion for pasta!”</h2>
+                    <p>Hello! I'm Emma, a 12-year-old who loves spending quality time in the kitchen with my mother. My absolute favorite meal to prepare is pasta with a homemade tomato sauce. It is not only straightforward but also incredibly flavorful.</p>
+                    <p>The process begins by bringing a large pot of salted water to a boil, then cooking the pasta for about ten minutes. While the pasta is boiling, I chop up fresh tomatoes, onions, and garlic to create a rich sauce. After simmering the vegetables in a frying pan with seasoning, I combine the sauce with the cooked pasta and sprinkle grated cheese on top. It is always a huge success with my family!</p>
+                    
+                    <h2>Lucas (11) – “Mastering the perfect pancake!”</h2>
+                    <p>Hi, I'm Lucas! My grandmother has taught me many culinary skills, but my specialty is making pancakes. The secret is to whisk the flour, milk, and eggs together until the <span class="vocab" data-nl="beslag">batter</span> is perfectly smooth, without any lumps.</p>
+                    <p>After melting a small amount of butter in a hot pan, I pour in the batter. The most thrilling part is flipping the pancake after two minutes, which requires a bit of <span class="vocab" data-nl="techniek">technique</span>! We usually enjoy these on Sunday mornings, topped with fresh strawberries, making it a wonderful family tradition.</p>
+
+                    <h2>Aisha (12) – “Freshness in a bowl”</h2>
+                    <p>Hi! My name is Aisha. I am very conscious about eating <span class="vocab" data-nl="voedzaam">nutritious</span> food, which is why my favorite dish is a fresh, vibrant salad. It is highly <span class="vocab" data-nl="aanpasbaar">customizable</span> and quick to make.</p>
+                    <p>I begin by thoroughly washing and dicing lettuce, tomatoes, and cucumbers. Then, I whisk together a light dressing consisting of olive oil, freshly squeezed lemon juice, and a pinch of salt. Sometimes, to add more protein, I include grilled chicken or cheese. This meal always leaves me feeling energized and healthy.</p>
+
+                    <h2>Tom (12) – “The ultimate convenience meal”</h2>
+                    <p>Hello! I'm Tom. Because I am always busy, I prefer meals that are efficient to prepare. My go-to dish is a layered sandwich. I start with two slices of bread, adding generous portions of ham, cheese, crisp lettuce, and fresh tomatoes.</p>
+                    <p>When I have extra time, I place the sandwich in a toaster. This transforms the texture, making the bread wonderfully warm and <span class="vocab" data-nl="knapperig">crispy</span>. Sandwiches are ideal because they are portable, making them the perfect school lunch.</p>
+
+                    <h2>Sofia (11) – “Baking brings joy!”</h2>
+                    <p>Hi! My name is Sofia, and I have a serious sweet tooth. Baking a chocolate cake is my favorite kitchen activity. I combine flour, sugar, eggs, butter, and premium cocoa powder into a large mixing bowl.</p>
+                    <div class="highlight-quote">
+                        "Since operating the oven requires careful <span class="vocab" data-nl="toezicht">supervision</span>, my father assists me with the baking process. We leave it in the oven for exactly 30 minutes, filling the house with an irresistible aroma."
+                    </div>
+                    <p>Once the cake has completely cooled, I spread a thick layer of chocolate cream over the top. Seeing my family's reaction when we share the cake is the best part of the process.</p>
+
+                    <h2>Noah (12) – “Fueling up with rice”</h2>
+                    <p>Hello! I'm Noah. I take responsibility for cooking dinner occasionally, and my signature dish is vegetable fried rice. First, I boil the rice for approximately 15 minutes.</p>
+                    <p>Simultaneously, I prep my vegetables—carrots, peas, and sweet corn. I sauté the chopped vegetables in a pan with a splash of oil and seasoning before folding in the cooked rice. It’s a highly satisfying meal that perfectly <span class="vocab" data-nl="aanvullen">replenishes</span> my energy levels after a long day of school.</p>
+
+                    <h2>Mia (12) – “The perfect start to the day”</h2>
+                    <p>Hi! My name is Mia. I strongly believe that breakfast is the most important meal of the day. I specialize in making fluffy scrambled eggs. I crack the eggs into a bowl, season them lightly with salt, and beat them vigorously with a <span class="vocab" data-nl="vork">fork</span>.</p>
+                    <p>The trick to perfect scrambled eggs is cooking them gently over low heat in a buttered pan while stirring constantly. Served alongside toasted bread, it provides me with the perfect foundation for a productive day.</p>
+
+                    <h2>Try it yourself! 👩‍🍳👨‍🍳</h2>
+                    <p>As these stories demonstrate, cooking is an accessible and highly creative skill. Whether you are preparing a quick snack or a full family meal, the kitchen is a great place to experiment. Grab an apron, invite a friend or family member, and start cooking today!</p>
+                    
+                    <footer><p>&copy; 2026 EngliForce: Make English Your Superpower!</p></footer>
+                </article>
+            `,
+            questions: [
+                { q: "Describe the steps Emma takes to prepare her tomato sauce.", a: "She cuts tomatoes, onion, and garlic with her mother, simmers them in a pan, and adds seasoning." },
+                { q: "Explain why flipping pancakes might be both enjoyable and challenging for Lucas.", a: "Flipping is thrilling and fun to do, but it requires technique, making it difficult sometimes." },
+                { q: "How does Aisha prepare her ingredients before assembling the salad?", a: "She washes the lettuce, tomatoes, and cucumbers thoroughly, then dices (cuts) them into small pieces." },
+                { q: "What are the two different ways Tom enjoys his sandwiches?", a: "He eats them cold with fresh vegetables, or he puts them in a toaster to make the bread warm and crispy." },
+                { q: "Why is teamwork mentioned when Sofia bakes her chocolate cake?", a: "Because operating the oven requires adult supervision, so her father assists her with baking." },
+                { q: "Detail the multi-tasking Noah does while cooking his dinner.", a: "While the rice boils, he simultaneously preps and sautés the carrots, peas, and sweet corn in a pan." },
+                { q: "What specific technique does Mia use to make her scrambled eggs?", a: "She beats eggs with a fork, then cooks them gently over low heat in a buttered pan while stirring constantly." },
+                { q: "Compare the reasons why Aisha and Noah choose their favorite meals.", a: "Aisha likes salad because it is nutritious for her body, while Noah likes rice because it replenishes his energy after school." },
+                { q: "What role does sharing play in the cooking experiences of Emma, Lucas, and Sofia?", a: "Emma's family loves her pasta, Lucas enjoys a family tradition on Sundays, and Sofia shares her cake with her family." },
+                { q: "Based on the conclusion, what is the main message the magazine wants to share with its readers?", a: "That cooking is an accessible, creative skill, and everyone should try experimenting in the kitchen." }
+            ]
+        }
+    };
+
+    let currentLevel = 'A1';
+    let userScores = Array(10).fill(null);
+
+    function setLevel(level, btn) {
+        currentLevel = level;
+        userScores = Array(10).fill(null);
+        
+        // Update Buttons
+        document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update Text Panel
+        document.getElementById('textPanel').innerHTML = levelData[level].text;
+
+        // Update Questions Panel
+        renderQuestions();
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questionPanel');
+        let html = `<div id="scoreBanner" class="score-banner">Score: 0 / 10</div>`;
+        html += `<h2>Assignment: Level ${currentLevel} (10 Questions)</h2>`;
+        
+        levelData[currentLevel].questions.forEach((item, index) => {
+            html += `
+                <div class="question-card">
+                    <h3>Question ${index + 1}</h3>
+                    <p>${item.q}</p>
+                    <textarea id="ans-${index}" placeholder="Type your answer here..."></textarea>
+                    <div id="fb-box-${index}" class="feedback-box" style="display:none;">
+                        <span class="model-ans">Model Answer: <br><span style="color: white; font-weight: normal;">${item.a}</span></span>
+                        <div class="self-correct-btns">
+                            <button id="btn-c-${index}" class="btn-correct" onclick="markAnswer(${index}, true)">Correct ✅</button>
+                            <button id="btn-w-${index}" class="btn-wrong" onclick="markAnswer(${index}, false)">Wrong ❌</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `<button class="check-btn" onclick="revealFeedback()">CHECK ALL ANSWERS</button>`;
+        container.innerHTML = html;
+        container.scrollTop = 0;
+    }
+
+    function revealFeedback() {
+        levelData[currentLevel].questions.forEach((_, index) => {
+            document.getElementById(`fb-box-${index}`).style.display = 'block';
+        });
+        document.getElementById('scoreBanner').style.display = 'block';
+        document.getElementById('scoreBanner').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function markAnswer(index, isCorrect) {
+        userScores[index] = isCorrect;
+        
+        document.getElementById(`btn-c-${index}`).classList.toggle('selected', isCorrect);
+        document.getElementById(`btn-w-${index}`).classList.toggle('selected', !isCorrect);
+
+        const score = userScores.filter(x => x === true).length;
+        document.getElementById('scoreBanner').innerText = `Score: ${score} / 10`;
+    }
+
+    // Initialize the app with A1 on page load
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('textPanel').innerHTML = levelData['A1'].text;
+        renderQuestions();
+    });
+</script>
+
+</body>
+</html>
