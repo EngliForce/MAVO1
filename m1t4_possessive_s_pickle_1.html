@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Apostrophe Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --danger-red: #ff1744;
+            --card-bg: #102a43;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white; margin: 0; min-height: 100vh; overflow-x: hidden;
+            display: flex; flex-direction: column; user-select: none;
+        }
+        
+        header {
+            background: var(--hero-blue-main); padding: 1.2rem 1rem; text-align: center;
+            border-bottom: 5px solid var(--hero-yellow); box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10; flex-shrink: 0;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; letter-spacing: 2px; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        .subtitle { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.3rem; margin-top: 5px; }
+        
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto; }
+        
+        .quiz-container {
+            background: rgba(16, 42, 67, 0.9); border: 3px solid var(--hero-cyan);
+            border-radius: 20px; padding: 25px 15px; text-align: center; width: 100%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column;
+            flex-grow: 1; min-height: 70vh;
+        }
+        
+        .score-board {
+            position: absolute; top: -15px; right: 20px; background: var(--hero-cyan); color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 5px 15px; border-radius: 10px;
+            border: 3px solid var(--hero-blue-dark); transform: rotate(3deg); display: none; z-index: 5;
+        }
+
+        .level-select-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid #243b53; padding: 15px; border-radius: 15px;
+            font-family: 'Bangers', cursive; font-size: 1.4rem; cursor: pointer; transition: all 0.3s; letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; }
+        .btn-level.l1 { border-color: var(--hero-cyan); color: var(--hero-cyan); }
+        .btn-level.l2 { border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-level.l3 { border-color: var(--hero-orange); color: var(--hero-orange); }
+        
+        .screen { display: none; animation: fadeIn 0.4s ease-out; flex-grow: 1; flex-direction: column; justify-content: center;}
+        .active-screen { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* IN-GAME ELEMENTS */
+        .lab-screen {
+            background: #020a14; border: 4px solid var(--hero-yellow); border-radius: 15px;
+            padding: 40px 20px; margin: 20px 0; box-shadow: inset 0 0 20px rgba(255, 183, 3, 0.2), 0 10px 20px rgba(0,0,0,0.5);
+            position: relative; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;
+        }
+
+        .sentence { font-size: clamp(1.3rem, 4vw, 2rem); line-height: 1.6; color: white; font-weight: bold; text-align: center; }
+        .hint-text { color: var(--hero-yellow); font-family: 'Share Tech Mono', monospace; font-size: 1.1rem; margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; width: 100%; }
+        
+        /* De lelijke streep is weg en vervangen door een subtiel vakje */
+        .blank { 
+            display: inline-block; color: var(--hero-cyan); font-weight: 900; 
+            padding: 2px 15px; margin: 0 5px; min-width: 80px; text-align: center;
+            background: rgba(129, 212, 250, 0.1); border-radius: 8px;
+        }
+
+        /* 2 OPTIONS SIDE-BY-SIDE GRID */
+        .options-container { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: auto; 
+            width: 100%; max-width: 600px; align-self: center; 
+        }
+
+        .btn-option {
+            background: var(--hero-blue-dark); color: white; border: 3px solid var(--hero-cyan);
+            padding: 25px 10px; border-radius: 15px; font-family: 'Lexend', sans-serif;
+            font-size: 1.6rem; font-weight: bold; cursor: pointer; transition: all 0.1s;
+            box-shadow: 0 6px 0px rgba(0,0,0,0.5); letter-spacing: 1px;
+        }
+        .btn-option:active { transform: translateY(4px); box-shadow: 0 2px 0px rgba(0,0,0,0.5); }
+        .btn-option:hover { background: var(--hero-blue-main); }
+        
+        .btn-restart { background: var(--hero-orange); border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; color: white; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #d84315; }
+
+        .hud-text { font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px; font-size: 1.3rem; margin-top: 0; position: absolute; top: 15px; left: 15px; }
+
+        /* EFFECTS */
+        .shake-error { animation: boxShake 0.4s ease-in-out; border-color: var(--danger-red) !important; background: rgba(255, 23, 68, 0.1) !important; }
+        .flash-success { border-color: var(--success-green) !important; background: rgba(0, 230, 118, 0.1) !important; }
+        @keyframes boxShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+        @media (max-width: 500px) {
+            .btn-option { font-size: 1.3rem; padding: 20px 5px; }
+            .lab-screen { padding: 30px 10px; min-height: 180px;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">THE APOSTROPHE LAB</div>
+</header>
+
+<main>
+    <div class="quiz-container" id="quiz-box">
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span>/10</div>
+        
+        <div id="start-screen" class="screen active-screen" style="justify-content: flex-start;">
+            <h2 style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-orange); margin-top: 0;">APOSTROPHE LAB</h2>
+            <p style="font-size: 1.1rem; line-height: 1.5;">Kies de juiste vorm om bezit aan te tonen. Kijk goed naar de hint: gaat het om <strong>één</strong> of <strong>meerdere</strong> eigenaren?</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level l1" onclick="startGame(1)">Lvl 1: Regular Nouns<br><span>Kies tussen 's (1) en s' (meerdere)</span></button>
+                <button class="btn-level l2" onclick="startGame(2)">Lvl 2: Exceptions<br><span>Onregelmatig (children's) & Namen (James's)</span></button>
+                <button class="btn-level l3" onclick="startGame(3)">Lvl 3: Master Mix<br><span>Alle regels en valkuilen door elkaar!</span></button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="hud-text">TEST <span id="current-q">1</span>/10</div>
+            
+            <div class="lab-screen" id="lab-screen">
+                <div class="sentence" id="sentence"></div>
+                <div class="hint-text" id="hint"></div>
+            </div>
+
+            <div class="options-container" id="options-container">
+                <button class="btn-option" id="btn-left" onclick="checkAnswer('left')"></button>
+                <button class="btn-option" id="btn-right" onclick="checkAnswer('right')"></button>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen" style="align-items: center;">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--success-green); margin-top: 0;">LAB CLEARED!</h2>
+            <p style="font-size: 1.2rem;">Score: <strong id="final-score"></strong> out of 10.</p>
+            <button class="btn-restart" onclick="location.reload()">REBOOT LAB</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DYNAMISCHE DATABASE ---
+    
+    // Basiswoorden voor Level 1 (50 levende wezens)
+    const regularNouns = [
+        ["dog", "Look at the", "tail.", "tails."],
+        ["cat", "I fed the", "food.", "food."],
+        ["bird", "The", "feather is blue.", "feathers are blue."],
+        ["teacher", "The", "desk is neat.", "desks are neat."],
+        ["student", "The", "book is open.", "books are open."],
+        ["doctor", "The", "office is closed.", "offices are closed."],
+        ["nurse", "I need the", "help.", "help."],
+        ["ninja", "The", "sword is sharp.", "swords are sharp."],
+        ["boy", "The", "bike is fast.", "bikes are fast."],
+        ["girl", "The", "phone is new.", "phones are new."],
+        ["brother", "My", "room is messy.", "rooms are messy."],
+        ["sister", "My", "laptop is fast.", "laptops are fast."],
+        ["friend", "My", "party is tonight.", "parties are tonight."],
+        ["spider", "The", "web is sticky.", "webs are sticky."],
+        ["tiger", "The", "roar is loud.", "roars are loud."],
+        ["lion", "The", "teeth are sharp.", "teeth are sharp."],
+        ["monkey", "The", "banana is gone.", "bananas are gone."],
+        ["bear", "The", "cave is dark.", "caves are dark."],
+        ["elephant", "The", "trunk is long.", "trunks are long."],
+        ["horse", "The", "saddle is brown.", "saddles are brown."],
+        ["cow", "The", "milk is fresh.", "milk is fresh."],
+        ["pig", "The", "pen is dirty.", "pens are dirty."],
+        ["farmer", "The", "tractor is old.", "tractors are old."],
+        ["baker", "The", "bread is fresh.", "bread is fresh."],
+        ["hero", "The", "cape is red.", "capes are red."],
+        // 25 NIEUWE WOORDEN:
+        ["frog", "The", "jump is high.", "jumps are high."],
+        ["duck", "The", "pond is clean.", "ponds are clean."],
+        ["goat", "The", "horn is sharp.", "horns are sharp."],
+        ["shark", "The", "teeth are sharp.", "teeth are sharp."],
+        ["dolphin", "The", "jump is amazing.", "jumps are amazing."],
+        ["whale", "The", "tail is huge.", "tails are huge."],
+        ["rabbit", "The", "ears are long.", "ears are long."],
+        ["snake", "The", "bite is dangerous.", "bites are dangerous."],
+        ["parrot", "The", "voice is loud.", "voices are loud."],
+        ["penguin", "The", "walk is funny.", "walks are funny."],
+        ["turtle", "The", "shell is hard.", "shells are hard."],
+        ["dancer", "The", "shoes are new.", "shoes are new."],
+        ["singer", "The", "mic is on.", "mics are on."],
+        ["actor", "The", "costume is ready.", "costumes are ready."],
+        ["writer", "The", "book is done.", "books are done."],
+        ["painter", "The", "art is beautiful.", "art is beautiful."],
+        ["player", "The", "score is high.", "scores are high."],
+        ["runner", "The", "shoes are fast.", "shoes are fast."],
+        ["worker", "The", "lunch is ready.", "lunches are ready."],
+        ["builder", "The", "tools are heavy.", "tools are heavy."],
+        ["chef", "The", "soup is hot.", "soups are hot."],
+        ["king", "The", "crown is gold.", "crowns are gold."],
+        ["queen", "The", "dress is beautiful.", "dresses are beautiful."],
+        ["pilot", "The", "uniform is white.", "uniforms are white."],
+        ["driver", "The", "seat is soft.", "seats are soft."]
+    ];
+
+    let dbLevel1 = [];
+    regularNouns.forEach(item => {
+        // Enkelvoud: 1 eigenaar
+        dbLevel1.push([item[1], item[2], `(1 ${item[0]})`, `${item[0]}'s`, `${item[0]}s'`]);
+        // Meervoud: meerdere eigenaren
+        dbLevel1.push([item[1], item[3], `(many ${item[0]}s)`, `${item[0]}s'`, `${item[0]}'s`]);
+    });
+
+    // Level 2 (Onregelmatig en Namen - alleen mensen/dieren)
+    const irregularNouns = [
+        ["children", "The", "toys are here.", "children's", "childrens'"],
+        ["men", "Where is the", "bathroom?", "men's", "mens'"],
+        ["women", "The", "team won.", "women's", "womens'"],
+        ["people", "It is the", "decision.", "people's", "peoples'"],
+        ["mice", "The", "cheese is gone.", "mice's", "mices'"],
+        ["geese", "The", "feathers are white.", "geese's", "geeses'"]
+    ];
+
+    const namesEndingInS = [
+        "James", "Charles", "Thomas", "Lucas", "Marcus", "Chris", "Jess", "Tess", "Miles", "Silas", "Elias", "Luis", "Dennis", "Travis", "Davis", "Boris", "Iris", "Carlos"
+    ];
+
+    let dbLevel2 = [];
+    irregularNouns.forEach(item => {
+        dbLevel2.push([item[1], item[2], `(plural: ${item[0]})`, item[3], item[4]]);
+        dbLevel2.push(["Look at the", "shoes.", `(plural: ${item[0]})`, item[3], item[4]]);
+    });
+
+    namesEndingInS.forEach(name => {
+        let wrongName = name.slice(0, -1) + "'s"; 
+        dbLevel2.push(["This is", "laptop.", `(name: ${name})`, `${name}'s`, wrongName]);
+        dbLevel2.push(["We went to", "house.", `(name: ${name})`, `${name}'s`, wrongName]);
+    });
+
+    // Level 3 = De master mix van alles! (148 vragen totaal)
+    const dbLevel3 = [...dbLevel1, ...dbLevel2];
+
+
+    // --- GAME LOGICA ---
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentQ = null;
+    let isWaiting = false;
+    let correctAnswerText = "";
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function startGame(level) {
+        let sourceDB = level === 1 ? dbLevel1 : (level === 2 ? dbLevel2 : dbLevel3);
+        activeQuestions = shuffle([...sourceDB]).slice(0, 10);
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('score').innerText = score;
+        document.getElementById('score-board').style.display = 'block';
+        
+        document.getElementById('start-screen').classList.remove('active-screen');
+        document.getElementById('game-screen').classList.add('active-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isWaiting = false;
+        currentQ = activeQuestions[currentQuestionIndex];
+        
+        document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+        document.getElementById('lab-screen').className = 'lab-screen'; 
+        
+        // De streep is vervangen door drie puntjes in een onzichtbaar vakje
+        const blankHTML = `<span id="fill-blank" class="blank">...</span>`;
+        document.getElementById('sentence').innerHTML = currentQ[0] + " " + blankHTML + " " + currentQ[1];
+        document.getElementById('hint').innerText = "HINT: " + currentQ[2];
+
+        correctAnswerText = currentQ[3];
+
+        let buttonOptions = shuffle([currentQ[3], currentQ[4]]);
+        
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+        
+        btnLeft.innerText = buttonOptions[0];
+        btnRight.innerText = buttonOptions[1];
+
+        btnLeft.style.pointerEvents = 'auto';
+        btnRight.style.pointerEvents = 'auto';
+    }
+
+    function checkAnswer(btnSide) {
+        if (isWaiting) return;
+        isWaiting = true;
+
+        const clickedBtn = document.getElementById(btnSide === 'left' ? 'btn-left' : 'btn-right');
+        const isCorrect = (clickedBtn.innerText === correctAnswerText);
+        
+        const labScreen = document.getElementById('lab-screen');
+        const blankEl = document.getElementById('fill-blank');
+
+        // Vul woord in en haal achtergrondkleur van vakje weg
+        blankEl.innerText = clickedBtn.innerText;
+        blankEl.style.background = "none";
+
+        document.getElementById('btn-left').style.pointerEvents = 'none';
+        document.getElementById('btn-right').style.pointerEvents = 'none';
+
+        if (isCorrect) {
+            score++;
+            document.getElementById('score').innerText = score;
+            blankEl.style.color = "var(--success-green)";
+            labScreen.classList.add('flash-success');
+            setTimeout(nextQuestion, 1000); 
+        } else {
+            blankEl.style.color = "var(--danger-red)";
+            labScreen.classList.add('shake-error');
+            setTimeout(nextQuestion, 1200); 
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < 10) {
+            loadQuestion();
+        } else {
+            document.getElementById('game-screen').classList.remove('active-screen');
+            document.getElementById('end-screen').classList.add('active-screen');
+            document.getElementById('score-board').style.display = 'none';
+            document.getElementById('final-score').innerText = score;
+        }
+    }
+</script>
+</body>
+</html>

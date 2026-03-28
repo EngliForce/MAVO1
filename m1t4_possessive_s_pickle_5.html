@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Mainframe Hack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1; --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703; --hero-cyan: #81d4fa; --hero-orange: #ff5722;
+            --success-green: #00e676; --danger-red: #ff1744; 
+            --hack-green: #0f0; --hack-dark: #051005; --hack-bg: #000;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: 'Lexend', sans-serif; background: var(--hack-bg);
+            color: var(--hack-green); margin: 0; min-height: 100vh; display: flex; flex-direction: column; user-select: none; overflow-x: hidden;
+        }
+        
+        header { 
+            background: var(--hero-blue-dark); padding: 1rem; text-align: center; 
+            border-bottom: 4px solid var(--hero-yellow); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8); z-index: 10; flex-shrink: 0;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; letter-spacing: 2px; margin: 0; color: white; text-shadow: 2px 2px 0px black; }
+        .subtitle { font-family: 'Share Tech Mono', monospace; color: var(--hack-green); font-size: 1.1rem; margin-top: 5px; }
+
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; width: 100%; max-width: 800px; margin: 0 auto; }
+        
+        .screen { display: none; animation: fadeIn 0.3s ease-out; flex-grow: 1; flex-direction: column; width: 100%; justify-content: flex-start; padding-top: 10px;}
+        .active-screen { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* THE TERMINAL */
+        .terminal-container {
+            background: var(--hack-dark); border: 2px solid #004400; border-radius: 10px;
+            padding: 20px; width: 100%; display: flex; flex-direction: column;
+            box-shadow: inset 0 0 20px rgba(0,255,0,0.1), 0 0 15px rgba(0,255,0,0.2);
+            position: relative; overflow: hidden; flex-grow: 1; justify-content: space-between;
+        }
+        
+        .terminal-container::after {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2; background-size: 100% 4px, 3px 100%; pointer-events: none;
+        }
+
+        /* HUD */
+        .hud { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--hack-green); padding-bottom: 10px; margin-bottom: 15px; font-family: 'Share Tech Mono', monospace; z-index: 3;}
+        .hud-item { font-size: 1.1rem; }
+        .alert-status { color: var(--danger-red); font-weight: bold; text-shadow: 0 0 5px red;}
+
+        /* TERMINAL TEXT */
+        .terminal-text-area { font-family: 'Share Tech Mono', monospace; font-size: 1.3rem; line-height: 1.6; z-index: 3; flex-grow: 1;}
+        .system-msg { color: #aaa; font-size: 1rem; margin-bottom: 15px; display: block;}
+        .target-hint { color: var(--hero-yellow); margin-bottom: 10px; display: block; font-weight: bold;}
+        .corrupted-sentence { margin-bottom: 25px; color: #fff;}
+        .blank { display: inline-block; border-bottom: 2px solid var(--danger-red); color: var(--danger-red); padding: 0 10px; margin: 0 5px; min-width: 60px; text-align: center; }
+
+        /* INPUT AREA */
+        .command-line { display: flex; align-items: center; width: 100%; background: #001100; border: 1px solid var(--hack-green); padding: 5px; z-index: 3; border-radius: 5px;}
+        .prompt { font-family: 'Share Tech Mono', monospace; font-size: 1.5rem; margin-right: 10px; margin-left: 10px; color: var(--hack-green);}
+        .type-input {
+            background: transparent; border: none; color: #fff; font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5rem; flex-grow: 1; outline: none; font-weight: bold; padding: 10px 0;
+        }
+        .type-input::placeholder { color: #005500; font-weight: normal; }
+
+        .btn-hack {
+            background: var(--hack-green); color: black; border: none; padding: 12px 25px; border-radius: 5px;
+            font-family: 'Share Tech Mono', monospace; font-size: 1.3rem; font-weight: bold; cursor: pointer; transition: all 0.1s; margin-top: 15px; width: 100%; z-index: 3;
+        }
+        .btn-hack:active { background: #00cc00; transform: scale(0.98); }
+
+        /* MENUS */
+        .menu-box { text-align: center; padding: 30px; background: #051005; border-radius: 10px; border: 2px solid var(--hack-green); z-index: 3; position: relative;}
+        .level-select-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .btn-level {
+            background: #000; color: var(--hack-green); border: 1px solid var(--hack-green); padding: 15px; border-radius: 5px;
+            font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; text-align: left;
+        }
+        .btn-level span { font-size: 0.9rem; color: #aaa; display: block; margin-top: 5px;}
+        .btn-level:hover { background: #002200; border-color: #fff; color: #fff; }
+
+        /* EFFECTS */
+        .glitch { animation: glitch-anim 0.3s ease-in-out; }
+        @keyframes glitch-anim {
+            0% { transform: translate(0) skew(0deg); filter: hue-rotate(0deg); }
+            20% { transform: translate(-10px, 5px) skew(-20deg); filter: hue-rotate(90deg); }
+            40% { transform: translate(10px, -5px) skew(20deg); filter: invert(1); }
+            60% { transform: translate(-5px, 10px) skew(0deg); filter: hue-rotate(180deg); }
+            80% { transform: translate(5px, -10px) skew(-10deg); filter: hue-rotate(270deg); }
+            100% { transform: translate(0) skew(0deg); filter: hue-rotate(0deg); }
+        }
+
+        .flash-red { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.4); opacity: 0; pointer-events: none; z-index: 999; transition: opacity 0.1s;}
+        .flash-green { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 255, 0, 0.2); opacity: 0; pointer-events: none; z-index: 999; transition: opacity 0.1s;}
+
+        .correction-log { color: var(--danger-red); font-weight: bold; margin-top: 15px; display: none; background: rgba(255,0,0,0.1); padding: 10px; border-left: 3px solid red;}
+
+        @media (max-width: 500px) {
+            .terminal-text-area { font-size: 1.1rem; }
+            .type-input { font-size: 1.2rem; }
+            .prompt { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-red" id="flash-red"></div>
+<div class="flash-green" id="flash-green"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">SYSTEM OVERRIDE // MAINFRAME HACK</div>
+</header>
+
+<main>
+    <div id="start-screen" class="screen active-screen">
+        <div class="menu-box">
+            <h2 style="font-family: 'Share Tech Mono'; font-size: 2.5rem; color: #fff; margin: 0;">> INITIATE HACK</h2>
+            <p style="font-size: 1rem; line-height: 1.5; color: #aaa; font-family: 'Share Tech Mono';">Breek in door de missende code te typen. <br><br><strong>Let op hoofdletters!</strong> Namen schrijf je met een hoofdletter, gewone woorden niet. Je hebt 3 stealth levens.</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level" onclick="startGame(1)">[1] EXECUTE REGULAR_NOUNS.EXE<br><span>Kraak het enkelvoud en meervoud</span></button>
+                <button class="btn-level" onclick="startGame(2)">[2] EXECUTE EXCEPTIONS.EXE<br><span>Kraak de onregelmatige woorden & namen</span></button>
+                <button class="btn-level" onclick="startGame(3)" style="border-color: var(--danger-red); color: var(--danger-red);">[3] EXECUTE MASTER_OVERRIDE.BAT<br><span>Extreme mix van alle systemen</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="terminal-container" id="terminal">
+            
+            <div class="hud">
+                <div class="hud-item">NODES: <span id="nodes-hacked" style="color:#fff;">0</span>/10</div>
+                <div class="hud-item">STEALTH: <span id="stealth-lives" class="alert-status">███</span></div>
+            </div>
+
+            <div class="terminal-text-area">
+                <span class="system-msg">> INTERCEPTING DATA PACKET...</span>
+                <span class="target-hint" id="hint">TARGET: ...</span>
+                <div class="corrupted-sentence" id="sentence">...</div>
+                
+                <div class="correction-log" id="correction">
+                    </div>
+            </div>
+
+            <div style="z-index: 3;">
+                <div class="command-line">
+                    <span class="prompt">C:\></span>
+                    <input type="text" id="type-input" class="type-input" placeholder="Enter decryption key..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+                </div>
+                <button class="btn-hack" onclick="verifyHack()">> EXECUTE OVERRIDE</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="win-screen" class="screen">
+        <div class="menu-box" style="border-color: var(--hack-green);">
+            <h2 style="font-family: 'Share Tech Mono'; font-size: 3rem; color: var(--hack-green); margin: 0;">> MAINFRAME COMPROMISED</h2>
+            <p style="font-size: 1.1rem; color: #aaa; font-family: 'Share Tech Mono';">Je hebt de grammar-files succesvol gedownload.</p>
+            <button class="btn-hack" onclick="location.reload()">> DISCONNECT</button>
+        </div>
+    </div>
+    
+    <div id="lose-screen" class="screen">
+        <div class="menu-box" style="border-color: var(--danger-red); background: #200;">
+            <h2 style="font-family: 'Share Tech Mono'; font-size: 3.5rem; color: var(--danger-red); margin: 0;">> BUSTED!</h2>
+            <p style="font-size: 1.1rem; color: #fff; font-family: 'Share Tech Mono';">Security alert getriggerd. Verbinding verbroken door de server.</p>
+            <button class="btn-hack" style="background: var(--danger-red); color: white;" onclick="location.reload()">> REBOOT SYSTEM</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DATABASE ---
+    const regularNounsSource = [
+        ["dog", "hond", "honden", "Look at the", "tail.", "tails."], ["cat", "kat", "katten", "I fed the", "food.", "food."],
+        ["bird", "vogel", "vogels", "The", "feather is blue.", "feathers are blue."], ["teacher", "docent", "docenten", "The", "desk is neat.", "desks are neat."],
+        ["student", "student", "studenten", "The", "book is open.", "books are open."], ["doctor", "dokter", "dokters", "The", "office is closed.", "offices are closed."],
+        ["nurse", "verpleegkundige", "verpleegkundigen", "I need the", "help.", "help."], ["ninja", "ninja", "ninja's", "The", "sword is sharp.", "swords are sharp."],
+        ["boy", "jongen", "jongens", "The", "bike is fast.", "bikes are fast."], ["girl", "meisje", "meisjes", "The", "phone is new.", "phones are new."],
+        ["brother", "broer", "broers", "My", "room is messy.", "rooms are messy."], ["sister", "zus", "zussen", "My", "laptop is fast.", "laptops are fast."],
+        ["friend", "vriend", "vrienden", "My", "party is tonight.", "parties are tonight."], ["spider", "spin", "spinnen", "The", "web is sticky.", "webs are sticky."],
+        ["tiger", "tijger", "tijgers", "The", "roar is loud.", "roars are loud."], ["lion", "leeuw", "leeuwen", "The", "teeth are sharp.", "teeth are sharp."],
+        ["monkey", "aap", "apen", "The", "banana is gone.", "bananas are gone."], ["bear", "beer", "beren", "The", "cave is dark.", "caves are dark."],
+        ["elephant", "olifant", "olifanten", "The", "trunk is long.", "trunks are long."], ["horse", "paard", "paarden", "The", "saddle is brown.", "saddles are brown."],
+        ["cow", "koe", "koeien", "The", "milk is fresh.", "milk is fresh."], ["pig", "varken", "varkens", "The", "pen is dirty.", "pens are dirty."],
+        ["farmer", "boer", "boeren", "The", "tractor is old.", "tractors are old."], ["baker", "bakker", "bakkers", "The", "bread is fresh.", "bread is fresh."],
+        ["hero", "held", "helden", "The", "cape is red.", "capes are red."], ["frog", "kikker", "kikkers", "The", "jump is high.", "jumps are high."], 
+        ["duck", "eend", "eenden", "The", "pond is clean.", "ponds are clean."], ["goat", "geit", "geiten", "The", "horn is sharp.", "horns are sharp."], 
+        ["shark", "haai", "haaien", "The", "teeth are sharp.", "teeth are sharp."], ["dolphin", "dolfijn", "dolfijnen", "The", "jump is amazing.", "jumps are amazing."], 
+        ["whale", "walvis", "walvissen", "The", "tail is huge.", "tails are huge."], ["rabbit", "konijn", "konijnen", "The", "ears are long.", "ears are long."], 
+        ["snake", "slang", "slangen", "The", "bite is dangerous.", "bites are dangerous."], ["parrot", "papegaai", "papegaaien", "The", "voice is loud.", "voices are loud."], 
+        ["penguin", "pinguïn", "pinguïns", "The", "walk is funny.", "walks are funny."], ["turtle", "schildpad", "schildpadden", "The", "shell is hard.", "shells are hard."], 
+        ["dancer", "danser", "dansers", "The", "shoes are new.", "shoes are new."], ["singer", "zanger", "zangers", "The", "mic is on.", "mics are on."], 
+        ["actor", "acteur", "acteurs", "The", "costume is ready.", "costumes are ready."], ["writer", "schrijver", "schrijvers", "The", "book is done.", "books are done."], 
+        ["painter", "schilder", "schilders", "The", "art is beautiful.", "art is beautiful."], ["player", "speler", "spelers", "The", "score is high.", "scores are high."], 
+        ["runner", "renner", "renners", "The", "shoes are fast.", "shoes are fast."], ["worker", "arbeider", "arbeiders", "The", "lunch is ready.", "lunches are ready."], 
+        ["builder", "bouwer", "bouwers", "The", "tools are heavy.", "tools are heavy."], ["chef", "kok", "koks", "The", "soup is hot.", "soups are hot."], 
+        ["king", "koning", "koningen", "The", "crown is gold.", "crowns are gold."], ["queen", "koningin", "koninginnen", "The", "dress is beautiful.", "dresses are beautiful."], 
+        ["pilot", "piloot", "piloten", "The", "uniform is white.", "uniforms are white."], ["driver", "chauffeur", "chauffeurs", "The", "seat is soft.", "seats are soft."]
+    ];
+
+    let dbLevel1 = [];
+    regularNounsSource.forEach(item => {
+        dbLevel1.push([item[3], item[4], `TARGET: (1 ${item[1]})`, [`${item[0]}'s`]]);
+        dbLevel1.push([item[3], item[5], `TARGET: (meerdere ${item[2]})`, [`${item[0]}s'`]]);
+    });
+
+    const irregularNounsSource = [
+        ["children", "kinderen", "The", "toys are here.", "children's"], ["men", "mannen", "Where is the", "bathroom?", "men's"],
+        ["women", "vrouwen", "The", "team won.", "women's"], ["people", "mensen", "It is the", "decision.", "people's"],
+        ["mice", "muizen", "The", "cheese is gone.", "mice's"], ["geese", "ganzen", "The", "feathers are white.", "geese's"]
+    ];
+
+    let dbLevel2 = [];
+    irregularNounsSource.forEach(item => {
+        dbLevel2.push([item[2], item[3], `TARGET: (meervoud: ${item[1]})`, [item[4]]]);
+        dbLevel2.push(["Look at the", "shoes.", `TARGET: (meervoud: ${item[1]})`, [item[4]]]);
+    });
+
+    const namesSource = ["James", "Charles", "Thomas", "Lucas", "Marcus", "Chris", "Jess", "Tess", "Miles", "Silas", "Elias", "Luis", "Dennis", "Travis", "Davis", "Boris", "Iris", "Carlos"];
+    namesSource.forEach(name => {
+        let correctOptions = [`${name}'s`, `${name}'`]; 
+        dbLevel2.push(["This is", "laptop.", `TARGET: (naam: ${name})`, correctOptions]);
+        dbLevel2.push(["We went to", "house.", `TARGET: (naam: ${name})`, correctOptions]);
+    });
+
+    const dbLevel3 = [...dbLevel1, ...dbLevel2];
+
+    // --- GAME ENGINE ---
+    let activeQuestions = [];
+    let currentQIndex = 0;
+    let nodesHacked = 0;
+    let stealthLives = 3;
+    let isWaiting = false;
+
+    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+    // CASE-SENSITIVE NORMALIZER (Verwijdert toLowerCase zodat we hoofdletters kunnen checken)
+    function normalizeStringStrict(str) {
+        return str.trim().replace(/[’‘´`]/g, "'");
+    }
+
+    function startGame(level) {
+        let sourceDB = level === 1 ? dbLevel1 : (level === 2 ? dbLevel2 : dbLevel3);
+        activeQuestions = shuffle([...sourceDB]).slice(0, 10);
+        
+        nodesHacked = 0;
+        stealthLives = 3;
+        currentQIndex = 0;
+        
+        document.getElementById('start-screen').classList.remove('active-screen');
+        document.getElementById('game-screen').classList.add('active-screen');
+        
+        const inputField = document.getElementById("type-input");
+        const newField = inputField.cloneNode(true);
+        inputField.parentNode.replaceChild(newField, inputField);
+        
+        newField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") { event.preventDefault(); verifyHack(); }
+        });
+
+        updateHUD();
+        loadQuestion();
+    }
+
+    function updateHUD() {
+        document.getElementById('nodes-hacked').innerText = nodesHacked;
+        let stealthStr = "";
+        for(let i=0; i<3; i++) { stealthStr += (i < stealthLives) ? "█" : "_"; }
+        document.getElementById('stealth-lives').innerText = stealthStr;
+    }
+
+    function loadQuestion() {
+        isWaiting = false;
+        let q = activeQuestions[currentQIndex];
+        
+        document.getElementById('terminal').classList.remove('glitch');
+        document.getElementById('correction').style.display = 'none';
+        
+        const blankHTML = `<span id="fill-blank" class="blank">?</span>`;
+        document.getElementById('sentence').innerHTML = `FILE: ${q[0]} ${blankHTML} ${q[1]}`;
+        document.getElementById('hint').innerText = `> ${q[2]}`;
+
+        const inputField = document.getElementById('type-input');
+        inputField.value = "";
+        inputField.disabled = false;
+        setTimeout(() => inputField.focus(), 100);
+    }
+
+    function verifyHack() {
+        if (isWaiting) return;
+        const inputField = document.getElementById('type-input');
+        const typedValue = inputField.value;
+
+        if (typedValue.trim() === "") return;
+
+        isWaiting = true;
+        inputField.disabled = true;
+
+        let q = activeQuestions[currentQIndex];
+        
+        // Haal de input door de strikte (hoofdlettergevoelige) normalizer
+        const normalizedInputStrict = normalizeStringStrict(typedValue);
+        const normalizedInputLower = normalizedInputStrict.toLowerCase();
+        
+        let isCorrect = false;
+        let isCaseError = false;
+
+        // Check elk mogelijk goed antwoord
+        for (let ans of q[3]) {
+            let normAnsStrict = normalizeStringStrict(ans);
+            let normAnsLower = normAnsStrict.toLowerCase();
+            
+            if (normalizedInputStrict === normAnsStrict) {
+                isCorrect = true;
+                break;
+            } else if (normalizedInputLower === normAnsLower) {
+                isCaseError = true; // Wel de goede letters, maar verkeerde hoofdletter/kleine letter
+            }
+        }
+
+        const blankEl = document.getElementById('fill-blank');
+        blankEl.innerText = typedValue;
+
+        if (isCorrect) {
+            blankEl.style.color = "var(--hack-green)";
+            blankEl.style.borderBottomColor = "var(--hack-green)";
+            
+            flashScreen('green');
+            nodesHacked++;
+            updateHUD();
+
+            if (nodesHacked >= 10) {
+                setTimeout(() => gameOver(true), 600);
+            } else {
+                currentQIndex++;
+                setTimeout(loadQuestion, 600);
+            }
+        } else {
+            blankEl.style.color = "var(--danger-red)";
+            
+            stealthLives--;
+            updateHUD();
+            
+            flashScreen('red');
+            document.getElementById('terminal').classList.add('glitch');
+            
+            const correctionEl = document.getElementById('correction');
+            
+            // DIDACTISCHE FEEDBACK OP MAAT
+            if (isCaseError) {
+                let firstLetterOfCorrect = normalizeStringStrict(q[3][0])[0];
+                let shouldBeCapital = firstLetterOfCorrect === firstLetterOfCorrect.toUpperCase();
+                
+                if (shouldBeCapital) {
+                    correctionEl.innerHTML = "SYSTEM ALERT: Namen moeten met een Hoofdletter!";
+                } else {
+                    correctionEl.innerHTML = "SYSTEM ALERT: Gewone woorden krijgen hier geen hoofdletter!";
+                }
+            } else {
+                correctionEl.innerHTML = "ACCESS DENIED. REQUIRED KEY: " + q[3].join(" OR ");
+            }
+            
+            correctionEl.style.display = 'block';
+
+            if (stealthLives <= 0) {
+                setTimeout(() => gameOver(false), 2000);
+            } else {
+                currentQIndex++;
+                setTimeout(loadQuestion, 2500); 
+            }
+        }
+    }
+
+    function flashScreen(color) {
+        let flash = document.getElementById(`flash-${color}`);
+        flash.style.opacity = '1';
+        setTimeout(() => flash.style.opacity = '0', 150);
+    }
+
+    function gameOver(isWin) {
+        document.getElementById('game-screen').classList.remove('active-screen');
+        if(isWin) {
+            document.getElementById('win-screen').classList.add('active-screen');
+        } else {
+            document.getElementById('lose-screen').classList.add('active-screen');
+        }
+    }
+</script>
+</body>
+</html>

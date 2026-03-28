@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Meltdown Sequence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1; --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703; --hero-cyan: #81d4fa; --hero-orange: #ff5722;
+            --success-green: #00e676; --danger-red: #ff1744; --dark-bg: #050a0f;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #101a24 0%, var(--dark-bg) 100%);
+            color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; user-select: none; overflow: hidden;
+            position: relative; /* Nodig voor absolute positionering van penalty */
+        }
+        
+        header { 
+            background: var(--hero-blue-dark); padding: 1rem; text-align: center; 
+            border-bottom: 4px solid var(--hero-yellow); 
+            box-shadow: 0 4px 20px rgba(255, 183, 3, 0.4); z-index: 10; 
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2rem; letter-spacing: 2px; margin: 0; color: white; text-shadow: 2px 2px 0px black; }
+        
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; width: 100%; max-width: 800px; margin: 0 auto; position: relative; }
+        
+        .screen { display: none; animation: fadeIn 0.3s ease-out; flex-grow: 1; flex-direction: column; justify-content: center; width: 100%;}
+        .active-screen { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* TIMER DISPLAY */
+        .timer-container { text-align: center; margin-bottom: 20px; }
+        .timer-text {
+            font-family: 'Share Tech Mono', monospace; font-size: 5rem; color: var(--danger-red);
+            text-shadow: 0 0 20px var(--danger-red); line-height: 1; margin: 0;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+        .timer-label { font-family: 'Bangers'; color: #888; font-size: 1.2rem; letter-spacing: 2px; }
+
+        /* PROGRESS BAR */
+        .progress-container { width: 100%; background: #222; height: 15px; border-radius: 10px; overflow: hidden; border: 2px solid #444; margin-bottom: 20px; }
+        .progress-fill { height: 100%; background: var(--hero-cyan); width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px var(--hero-cyan);}
+
+        /* QUESTION BOMB MODULE */
+        .bomb-module {
+            background: rgba(0,0,0,0.8); border: 3px solid #444; border-radius: 15px;
+            padding: 30px 20px; width: 100%; text-align: center; position: relative;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 10px 20px rgba(0,0,0,0.5);
+            flex-grow: 1; display: flex; flex-direction: column; justify-content: center;
+        }
+
+        .sentence { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: bold; margin-bottom: 15px; color: #eee;}
+        .hint-text { color: var(--hero-yellow); font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #444;}
+        
+        .blank { 
+            display: inline-block; color: var(--hero-cyan); font-weight: 900; 
+            padding: 2px 15px; margin: 0 5px; min-width: 80px; text-align: center;
+            background: rgba(255, 255, 255, 0.05); border-radius: 5px; border: 1px solid #555;
+        }
+
+        /* WIRE CONTROLS */
+        .wire-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px; }
+        
+        .btn-wire {
+            background: #111; color: white; border: 4px solid #333;
+            padding: 25px 10px; border-radius: 10px; font-family: 'Share Tech Mono', monospace;
+            font-size: 2rem; font-weight: bold; cursor: pointer; transition: all 0.1s;
+            position: relative; overflow: hidden;
+        }
+        .btn-wire::before { content: ''; position: absolute; top: 0; left: 0; width: 15px; height: 100%; background: repeating-linear-gradient(45deg, #333, #333 10px, #555 10px, #555 20px); }
+        .btn-wire#btn-left::before { background: repeating-linear-gradient(45deg, var(--hero-cyan), var(--hero-cyan) 10px, #0056b3 10px, #0056b3 20px); }
+        .btn-wire#btn-right::before { background: repeating-linear-gradient(45deg, var(--hero-yellow), var(--hero-yellow) 10px, #b38000 10px, #b38000 20px); }
+        .btn-wire:active { transform: scale(0.95); }
+
+        /* MENUS */
+        .menu-box { text-align: center; padding: 30px; background: rgba(0,0,0,0.8); border-radius: 20px; border: 4px solid var(--hero-cyan); max-width: 500px; margin: 0 auto; box-shadow: 0 0 30px rgba(0,0,0,0.8);}
+        .level-select-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid #243b53; padding: 15px; border-radius: 15px;
+            font-family: 'Bangers', cursive; font-size: 1.4rem; cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; color: white;}
+        .btn-level:hover { border-color: var(--hero-yellow); transform: scale(1.02); }
+
+        .btn-restart { background: var(--success-green); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #008b46; }
+
+        /* EFFECTS */
+        .flash-red { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.6); opacity: 0; pointer-events: none; z-index: 999; transition: opacity 0.2s;}
+        .flash-green { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 255, 100, 0.3); opacity: 0; pointer-events: none; z-index: 999; transition: opacity 0.2s;}
+        
+        .shake { animation: s-shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes s-shake { 10%, 90% { transform: translate3d(-5px, 0, 0); } 20%, 80% { transform: translate3d(5px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-10px, 0, 0); } 40%, 60% { transform: translate3d(10px, 0, 0); } }
+
+        /* FIX: Straf midden in beeld zetten */
+        .time-penalty { 
+            position: absolute; 
+            color: var(--danger-red); 
+            font-family: 'Bangers'; 
+            font-size: 5rem; /* Iets groter voor impact */
+            text-shadow: 0 0 15px black, 0 0 10px rgba(255,0,0,0.8); 
+            pointer-events: none; 
+            opacity: 0; 
+            z-index: 100; 
+            /* Techniek om exact te centreren op het scherm */
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%) scale(1); 
+        }
+        .pop-penalty { animation: popCenter 1s ease-out forwards; }
+        /* Aangepaste animatie vanuit het midden */
+        @keyframes popCenter { 
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); } 
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } /* "Punch" effect */
+            100% { opacity: 0; transform: translate(-50%, -120px) scale(1.5); } /* Trekt omhoog weg */
+        }
+
+        /* EXPLOSIE EFFECTEN */
+        .epic-shake { animation: epic-shake 0.4s infinite; }
+        @keyframes epic-shake {
+            0% { transform: translate(15px, 10px) rotate(2deg); }
+            20% { transform: translate(-15px, -15px) rotate(-3deg); }
+            40% { transform: translate(10px, 15px) rotate(2deg); }
+            60% { transform: translate(-15px, -10px) rotate(-2deg); }
+            80% { transform: translate(15px, -15px) rotate(3deg); }
+            100% { transform: translate(-15px, 10px) rotate(-2deg); }
+        }
+
+        .explosion-overlay {
+            position: fixed; top: 50%; left: 50%; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, #fff 0%, #ffb703 30%, #ff1744 60%, #000 100%);
+            z-index: 9998; opacity: 0; pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+        }
+        
+        .explode-anim { animation: blast 2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+        @keyframes blast {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0); filter: brightness(3); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(2); filter: brightness(1.5); }
+            50% { opacity: 1; background: radial-gradient(circle, #ff1744 0%, #000 70%); }
+            100% { opacity: 1; background: rgba(0,0,0,0.9); transform: translate(-50%, -50%) scale(2); }
+        }
+        
+        #lose-screen { z-index: 9999; position: relative; }
+
+        @media (max-width: 500px) {
+            .btn-wire { font-size: 1.5rem; padding: 20px 5px; }
+            .bomb-module { padding: 20px 10px; }
+            .timer-text { font-size: 4rem; }
+            .time-penalty { font-size: 3.5rem; } /* Iets kleiner op mobiel */
+        }
+    </style>
+</head>
+<body>
+
+<div class="explosion-overlay" id="explosion"></div>
+<div class="flash-red" id="flash-red"></div>
+<div class="flash-green" id="flash-green"></div>
+<div class="time-penalty" id="penalty-text">-5 SEC</div>
+
+<header>
+    <h1>ENGLIFORCE: MELTDOWN SEQUENCE</h1>
+</header>
+
+<main>
+    <div id="start-screen" class="screen active-screen">
+        <div class="menu-box">
+            <h2 style="font-family: 'Bangers'; font-size: 2.8rem; color: var(--hero-orange); margin: 0;">REACTOR MELTDOWN</h2>
+            <p style="font-size: 1.1rem; line-height: 1.5; color: #ddd;">Ontmantel de modules door de juiste grammaticale draad door te knippen. <br><br><strong>WAARSCHUWING:</strong> Een foute draad kost je 5 seconden tijd!</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level" style="border-color: var(--hero-cyan);" onclick="startGame(1)">TUTORIAL (60 Sec)<br><span>Level 1: Enkelvoud & Meervoud</span></button>
+                <button class="btn-level" style="border-color: var(--hero-yellow);" onclick="startGame(2)">HARDCODE (60 Sec)<br><span>Level 2: Uitzonderingen & Namen</span></button>
+                <button class="btn-level" style="border-color: var(--danger-red);" onclick="startGame(3)">NIGHTMARE (45 Sec)<br><span>Level 3: Master Mix - Extreem</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="timer-container">
+            <div class="timer-label">TIME REMAINING</div>
+            <div class="timer-text" id="timer">00:00</div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <div class="bomb-module" id="bomb-module">
+            <div class="sentence" id="sentence">...</div>
+            <div class="hint-text" id="hint">...</div>
+        </div>
+
+        <div class="wire-controls">
+            <button class="btn-wire" id="btn-left" onclick="cutWire('left')"></button>
+            <button class="btn-wire" id="btn-right" onclick="cutWire('right')"></button>
+        </div>
+    </div>
+
+    <div id="win-screen" class="screen">
+        <div class="menu-box" style="border-color: var(--success-green);">
+            <h2 style="font-family: 'Bangers'; font-size: 3.5rem; color: var(--success-green); margin: 0;">DEFUSED!</h2>
+            <p style="font-size: 1.2rem;">Je hebt de reactor succesvol gered. Tijd over: <strong id="time-left-display"></strong> sec.</p>
+            <button class="btn-restart" onclick="location.reload()">NEXT MISSION</button>
+        </div>
+    </div>
+    
+    <div id="lose-screen" class="screen">
+        <div class="menu-box" style="border-color: var(--danger-red);">
+            <h2 style="font-family: 'Bangers'; font-size: 4rem; color: var(--danger-red); margin: 0;">BOOM!</h2>
+            <p style="font-size: 1.2rem;">Tijd is om! De reactor is gesmolten.</p>
+            <button class="btn-restart" style="background: var(--hero-orange);" onclick="location.reload()">TRY AGAIN</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DATABASE (De volledige 148 vragen met NL hints) ---
+    const regularNounsSource = [
+        ["dog", "hond", "honden", "Look at the", "tail.", "tails."], ["cat", "kat", "katten", "I fed the", "food.", "food."],
+        ["bird", "vogel", "vogels", "The", "feather is blue.", "feathers are blue."], ["teacher", "docent", "docenten", "The", "desk is neat.", "desks are neat."],
+        ["student", "student", "studenten", "The", "book is open.", "books are open."], ["doctor", "dokter", "dokters", "The", "office is closed.", "offices are closed."],
+        ["nurse", "verpleegkundige", "verpleegkundigen", "I need the", "help.", "help."], ["ninja", "ninja", "ninja's", "The", "sword is sharp.", "swords are sharp."],
+        ["boy", "jongen", "jongens", "The", "bike is fast.", "bikes are fast."], ["girl", "meisje", "meisjes", "The", "phone is new.", "phones are new."],
+        ["brother", "broer", "broers", "My", "room is messy.", "rooms are messy."], ["sister", "zus", "zussen", "My", "laptop is fast.", "laptops are fast."],
+        ["friend", "vriend", "vrienden", "My", "party is tonight.", "parties are tonight."], ["spider", "spin", "spinnen", "The", "web is sticky.", "webs are sticky."],
+        ["tiger", "tijger", "tijgers", "The", "roar is loud.", "roars are loud."], ["lion", "leeuw", "leeuwen", "The", "teeth are sharp.", "teeth are sharp."],
+        ["monkey", "aap", "apen", "The", "banana is gone.", "bananas are gone."], ["bear", "beer", "beren", "The", "cave is dark.", "caves are dark."],
+        ["elephant", "olifant", "olifanten", "The", "trunk is long.", "trunks are long."], ["horse", "paard", "paarden", "The", "saddle is brown.", "saddles are brown."],
+        ["cow", "koe", "koeien", "The", "milk is fresh.", "milk is fresh."], ["pig", "varken", "varkens", "The", "pen is dirty.", "pens are dirty."],
+        ["farmer", "boer", "boeren", "The", "tractor is old.", "tractors are old."], ["baker", "bakker", "bakkers", "The", "bread is fresh.", "bread is fresh."],
+        ["hero", "held", "helden", "The", "cape is red.", "capes are red."], ["frog", "kikker", "kikkers", "The", "jump is high.", "jumps are high."], 
+        ["duck", "eend", "eenden", "The", "pond is clean.", "ponds are clean."], ["goat", "geit", "geiten", "The", "horn is sharp.", "horns are sharp."], 
+        ["shark", "haai", "haaien", "The", "teeth are sharp.", "teeth are sharp."], ["dolphin", "dolfijn", "dolfijnen", "The", "jump is amazing.", "jumps are amazing."], 
+        ["whale", "walvis", "walvissen", "The", "tail is huge.", "tails are huge."], ["rabbit", "konijn", "konijnen", "The", "ears are long.", "ears are long."], 
+        ["snake", "slang", "slangen", "The", "bite is dangerous.", "bites are dangerous."], ["parrot", "papegaai", "papegaaien", "The", "voice is loud.", "voices are loud."], 
+        ["penguin", "pinguïn", "pinguïns", "The", "walk is funny.", "walks are funny."], ["turtle", "schildpad", "schildpadden", "The", "shell is hard.", "shells are hard."], 
+        ["dancer", "danser", "dansers", "The", "shoes are new.", "shoes are new."], ["singer", "zanger", "zangers", "The", "mic is on.", "mics are on."], 
+        ["actor", "acteur", "acteurs", "The", "costume is ready.", "costumes are ready."], ["writer", "schrijver", "schrijvers", "The", "book is done.", "books are done."], 
+        ["painter", "schilder", "schilders", "The", "art is beautiful.", "art is beautiful."], ["player", "speler", "spelers", "The", "score is high.", "scores are high."], 
+        ["runner", "renner", "renners", "The", "shoes are fast.", "shoes are fast."], ["worker", "arbeider", "arbeiders", "The", "lunch is ready.", "lunches are ready."], 
+        ["builder", "bouwer", "bouwers", "The", "tools are heavy.", "tools are heavy."], ["chef", "kok", "koks", "The", "soup is hot.", "soups are hot."], 
+        ["king", "koning", "koningen", "The", "crown is gold.", "crowns are gold."], ["queen", "koningin", "koninginnen", "The", "dress is beautiful.", "dresses are beautiful."], 
+        ["pilot", "piloot", "piloten", "The", "uniform is white.", "uniforms are white."], ["driver", "chauffeur", "chauffeurs", "The", "seat is soft.", "seats are soft."]
+    ];
+
+    let dbLevel1 = [];
+    regularNounsSource.forEach(item => {
+        dbLevel1.push([item[3], item[4], `TARGET: (1 ${item[1]})`, [`${item[0]}'s`], [`${item[0]}s'`]]);
+        dbLevel1.push([item[3], item[5], `TARGET: (meerdere ${item[2]})`, [`${item[0]}s'`], [`${item[0]}'s`]]);
+    });
+
+    const irregularNounsSource = [
+        ["children", "kinderen", "The", "toys are here.", "children's"], ["men", "mannen", "Where is the", "bathroom?", "men's"],
+        ["women", "vrouwen", "The", "team won.", "women's"], ["people", "mensen", "It is the", "decision.", "people's"],
+        ["mice", "muizen", "The", "cheese is gone.", "mice's"], ["geese", "ganzen", "The", "feathers are white.", "geese's"]
+    ];
+
+    let dbLevel2 = [];
+    irregularNounsSource.forEach(item => {
+        let wrong = item[4].replace("'s", "s'"); 
+        dbLevel2.push([item[2], item[3], `TARGET: (meervoud: ${item[1]})`, [item[4]], [wrong]]);
+        dbLevel2.push(["Look at the", "shoes.", `TARGET: (meervoud: ${item[1]})`, [item[4]], [wrong]]);
+    });
+
+    const namesSource = ["James", "Charles", "Thomas", "Lucas", "Marcus", "Chris", "Jess", "Tess", "Miles", "Silas", "Elias", "Luis", "Dennis", "Travis", "Davis", "Boris", "Iris", "Carlos"];
+    namesSource.forEach(name => {
+        let correctOptions = [`${name}'s`, `${name}'`]; 
+        let wrongDistractor = [name.slice(0, -1) + "'s"]; 
+        dbLevel2.push(["This is", "laptop.", `TARGET: (naam: ${name})`, correctOptions, wrongDistractor]);
+        dbLevel2.push(["We went to", "house.", `TARGET: (naam: ${name})`, correctOptions, wrongDistractor]);
+    });
+
+    const dbLevel3 = [...dbLevel1, ...dbLevel2];
+
+    // --- GAME ENGINE ---
+    let activeQuestions = [];
+    let currentQIndex = 0;
+    let totalModules = 10;
+    
+    // Timer Variables
+    let timeRemaining = 60;
+    let timerInterval;
+    let isWaiting = false;
+
+    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+    function formatTime(seconds) {
+        if(seconds < 0) seconds = 0;
+        let s = seconds.toFixed(1);
+        if(seconds < 10 && seconds >= 0) s = "0" + s;
+        return s;
+    }
+
+    function startGame(level) {
+        let sourceDB = level === 1 ? dbLevel1 : (level === 2 ? dbLevel2 : dbLevel3);
+        activeQuestions = shuffle([...sourceDB]).slice(0, totalModules);
+        
+        timeRemaining = level === 3 ? 45 : 60; 
+        currentQIndex = 0;
+        
+        document.getElementById('start-screen').classList.remove('active-screen');
+        document.getElementById('game-screen').classList.add('active-screen');
+        
+        updateTimerDisplay();
+        updateProgressBar();
+        loadQuestion();
+
+        timerInterval = setInterval(() => {
+            timeRemaining -= 0.1;
+            updateTimerDisplay();
+            
+            if(timeRemaining < 10) {
+                document.getElementById('timer').style.color = "var(--danger-red)";
+                if(Math.floor(timeRemaining * 10) % 5 === 0) {
+                    document.getElementById('timer').style.textShadow = "0 0 30px red";
+                } else {
+                    document.getElementById('timer').style.textShadow = "none";
+                }
+            }
+
+            if(timeRemaining <= 0) {
+                gameOver(false);
+            }
+        }, 100);
+    }
+
+    function updateTimerDisplay() {
+        document.getElementById('timer').innerText = formatTime(timeRemaining);
+    }
+
+    function updateProgressBar() {
+        let percentage = (currentQIndex / totalModules) * 100;
+        document.getElementById('progress-bar').style.width = percentage + "%";
+    }
+
+    function loadQuestion() {
+        isWaiting = false;
+        let q = activeQuestions[currentQIndex];
+        
+        const blankHTML = `<span id="fill-blank" class="blank">...</span>`;
+        document.getElementById('sentence').innerHTML = q[0] + ' ' + blankHTML + ' ' + q[1];
+        document.getElementById('hint').innerText = q[2];
+
+        let btnLeft = document.getElementById('btn-left');
+        let btnRight = document.getElementById('btn-right');
+        
+        let correctAns = shuffle([...q[3]])[0];
+        let wrongAns = q[4][0];
+
+        if(Math.random() > 0.5) {
+            btnLeft.innerText = correctAns; btnLeft.dataset.correct = "true";
+            btnRight.innerText = wrongAns; btnRight.dataset.correct = "false";
+        } else {
+            btnLeft.innerText = wrongAns; btnLeft.dataset.correct = "false";
+            btnRight.innerText = correctAns; btnRight.dataset.correct = "true";
+        }
+
+        document.getElementById('fill-blank').style.color = "var(--hero-cyan)";
+    }
+
+    function cutWire(side) {
+        if (isWaiting) return;
+        isWaiting = true;
+
+        let clickedBtn = document.getElementById('btn-' + side);
+        let isCorrect = clickedBtn.dataset.correct === "true";
+        
+        let blankEl = document.getElementById('fill-blank');
+        blankEl.innerText = clickedBtn.innerText;
+
+        if (isCorrect) {
+            blankEl.style.color = "var(--success-green)";
+            flashScreen('green');
+            currentQIndex++;
+            updateProgressBar();
+
+            if (currentQIndex >= totalModules) {
+                gameOver(true);
+            } else {
+                setTimeout(loadQuestion, 300); 
+            }
+        } else {
+            blankEl.style.color = "var(--danger-red)";
+            timeRemaining -= 5; 
+            if(timeRemaining < 0) timeRemaining = 0;
+            updateTimerDisplay();
+
+            flashScreen('red');
+            document.getElementById('bomb-module').classList.add('shake');
+            
+            let penaltyText = document.getElementById('penalty-text');
+            penaltyText.classList.remove('pop-penalty');
+            void penaltyText.offsetWidth; 
+            penaltyText.classList.add('pop-penalty');
+
+            setTimeout(() => {
+                document.getElementById('bomb-module').classList.remove('shake');
+                blankEl.innerText = "...";
+                blankEl.style.color = "var(--hero-cyan)";
+                isWaiting = false;
+            }, 600);
+        }
+    }
+
+    function flashScreen(color) {
+        let flash = document.getElementById(`flash-${color}`);
+        flash.style.opacity = '1';
+        setTimeout(() => flash.style.opacity = '0', 200);
+    }
+
+    function gameOver(isWin) {
+        clearInterval(timerInterval);
+        document.getElementById('game-screen').classList.remove('active-screen');
+        
+        if(isWin) {
+            document.getElementById('time-left-display').innerText = formatTime(timeRemaining);
+            document.getElementById('win-screen').classList.add('active-screen');
+        } else {
+            document.body.classList.add('epic-shake');
+            document.getElementById('explosion').classList.add('explode-anim');
+            
+            setTimeout(() => {
+                document.body.classList.remove('epic-shake');
+                document.getElementById('lose-screen').classList.add('active-screen');
+            }, 1200);
+        }
+    }
+</script>
+</body>
+</html>

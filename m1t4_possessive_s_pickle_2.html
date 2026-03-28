@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Manual Override</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1;
+            --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81d4fa;
+            --hero-orange: #ff5722;
+            --success-green: #00e676;
+            --danger-red: #ff1744;
+            --card-bg: #102a43;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white; margin: 0; min-height: 100vh; overflow-x: hidden;
+            display: flex; flex-direction: column; user-select: none;
+        }
+        
+        header {
+            background: var(--hero-blue-main); padding: 1.2rem 1rem; text-align: center;
+            border-bottom: 5px solid var(--hero-yellow); box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10; flex-shrink: 0;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; letter-spacing: 2px; margin: 0; text-shadow: 3px 3px 0px var(--hero-blue-dark); }
+        .subtitle { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 1.3rem; margin-top: 5px; }
+        
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto; }
+        
+        .quiz-container {
+            background: rgba(16, 42, 67, 0.9); border: 3px solid var(--hero-cyan);
+            border-radius: 20px; padding: 25px 15px; text-align: center; width: 100%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column;
+            flex-grow: 1; min-height: 70vh;
+        }
+        
+        .score-board {
+            position: absolute; top: -15px; right: 20px; background: var(--hero-cyan); color: var(--hero-blue-dark);
+            font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 5px 15px; border-radius: 10px;
+            border: 3px solid var(--hero-blue-dark); transform: rotate(3deg); display: none; z-index: 5;
+        }
+
+        .level-select-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .btn-level {
+            background: #102a43; color: white; border: 3px solid #243b53; padding: 15px; border-radius: 15px;
+            font-family: 'Bangers', cursive; font-size: 1.4rem; cursor: pointer; transition: all 0.3s; letter-spacing: 1px;
+        }
+        .btn-level span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; }
+        .btn-level.l1 { border-color: var(--hero-cyan); color: var(--hero-cyan); }
+        .btn-level.l2 { border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-level.l3 { border-color: var(--hero-orange); color: var(--hero-orange); }
+        
+        .screen { display: none; animation: fadeIn 0.4s ease-out; flex-grow: 1; flex-direction: column; justify-content: center;}
+        .active-screen { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* IN-GAME ELEMENTS */
+        .lab-screen {
+            background: #020a14; border: 4px solid var(--hero-yellow); border-radius: 15px;
+            padding: 40px 20px; margin: 20px 0; box-shadow: inset 0 0 20px rgba(255, 183, 3, 0.2), 0 10px 20px rgba(0,0,0,0.5);
+            position: relative; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;
+        }
+
+        .sentence { font-size: clamp(1.2rem, 4vw, 1.8rem); line-height: 1.6; color: white; font-weight: bold; text-align: center; }
+        .hint-text { color: var(--hero-yellow); font-family: 'Share Tech Mono', monospace; font-size: 1.1rem; margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; width: 100%; }
+        
+        .blank { 
+            display: inline-block; color: var(--hero-cyan); font-weight: 900; 
+            padding: 2px 15px; margin: 0 5px; min-width: 80px; text-align: center;
+            background: rgba(129, 212, 250, 0.1); border-radius: 8px;
+        }
+
+        /* TYPING CONTROLS */
+        .input-container {
+            display: flex; flex-direction: column; gap: 15px; margin-top: auto; 
+            width: 100%; max-width: 400px; align-self: center; align-items: center;
+        }
+
+        .type-input {
+            width: 100%; background: #05101a; border: 3px solid var(--hero-cyan);
+            color: var(--hero-cyan); font-family: 'Share Tech Mono', monospace; font-size: 1.8rem;
+            padding: 15px; border-radius: 10px; text-align: center; font-weight: bold;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8); transition: border-color 0.2s;
+            outline: none;
+        }
+        .type-input:focus { border-color: var(--hero-yellow); background: #0a1929; }
+        .type-input::placeholder { color: rgba(129, 212, 250, 0.3); font-size: 1.2rem;}
+
+        .btn-submit {
+            background: var(--hero-orange); color: white; border: none;
+            padding: 18px 40px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.6rem; cursor: pointer; transition: all 0.1s;
+            box-shadow: 0 6px 0px #d84315; letter-spacing: 2px; width: 100%;
+        }
+        .btn-submit:active { transform: translateY(4px); box-shadow: 0 2px 0px #d84315; }
+        
+        .btn-restart { background: var(--success-green); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #008b46; }
+
+        .hud-text { font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px; font-size: 1.3rem; margin-top: 0; position: absolute; top: 15px; left: 15px; }
+
+        /* EFFECTS */
+        .shake-error { animation: boxShake 0.4s ease-in-out; border-color: var(--danger-red) !important; background: rgba(255, 23, 68, 0.1) !important; }
+        .flash-success { border-color: var(--success-green) !important; background: rgba(0, 230, 118, 0.1) !important; }
+        @keyframes boxShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+        /* Fout feedback tekst */
+        .correction-text { color: var(--hero-orange); font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; margin-top: 10px; display: none; font-weight: bold;}
+
+        @media (max-width: 500px) {
+            .type-input { font-size: 1.5rem; padding: 12px; }
+            .btn-submit { font-size: 1.4rem; padding: 15px; }
+            .lab-screen { padding: 30px 10px; min-height: 180px;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">MANUAL OVERRIDE: TYPING</div>
+</header>
+
+<main>
+    <div class="quiz-container" id="quiz-box">
+        <div class="score-board" id="score-board">SCORE: <span id="score">0</span>/10</div>
+        
+        <div id="start-screen" class="screen active-screen" style="justify-content: flex-start;">
+            <h2 style="font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-orange); margin-top: 0;">TERMINAL UPLINK</h2>
+            <p style="font-size: 1.1rem; line-height: 1.5;">Je moet de code nu zelf typen. Kijk naar de hint in het Nederlands en typ het Engelse woord met de juiste apostrof in het invoerveld.</p>
+            
+            <div class="level-select-grid">
+                <button class="btn-level l1" onclick="startGame(1)">Lvl 1: Regular Nouns<br><span>Typ het enkelvoud of meervoud</span></button>
+                <button class="btn-level l2" onclick="startGame(2)">Lvl 2: Exceptions<br><span>Onregelmatig (children) & Namen (James)</span></button>
+                <button class="btn-level l3" onclick="startGame(3)">Lvl 3: Master Mix<br><span>Alle regels! Test je kennis.</span></button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="hud-text">UPLINK <span id="current-q">1</span>/10</div>
+            
+            <div class="lab-screen" id="lab-screen">
+                <div class="sentence" id="sentence"></div>
+                <div class="hint-text" id="hint"></div>
+                <div class="correction-text" id="correction"></div>
+            </div>
+
+            <div class="input-container" id="input-container">
+                <input type="text" id="type-input" class="type-input" placeholder="Type answer..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <button class="btn-submit" id="btn-submit" onclick="verifyInput()">VERIFY OVERRIDE</button>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen" style="align-items: center;">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--success-green); margin-top: 0;">OVERRIDE COMPLETE!</h2>
+            <p style="font-size: 1.2rem;">Score: <strong id="final-score"></strong> out of 10.</p>
+            <button class="btn-restart" onclick="location.reload()">REBOOT TERMINAL</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DATABASE MET NEDERLANDSE TARGETS ---
+    // [Engels, NL Enkelvoud, NL Meervoud, Startzin, Eindzin(1), Eindzin(meer)]
+    const regularNouns = [
+        ["dog", "hond", "honden", "Look at the", "tail.", "tails."],
+        ["cat", "kat", "katten", "I fed the", "food.", "food."],
+        ["bird", "vogel", "vogels", "The", "feather is blue.", "feathers are blue."],
+        ["teacher", "docent", "docenten", "The", "desk is neat.", "desks are neat."],
+        ["student", "student", "studenten", "The", "book is open.", "books are open."],
+        ["doctor", "dokter", "dokters", "The", "office is closed.", "offices are closed."],
+        ["nurse", "verpleegkundige", "verpleegkundigen", "I need the", "help.", "help."],
+        ["ninja", "ninja", "ninja's", "The", "sword is sharp.", "swords are sharp."],
+        ["boy", "jongen", "jongens", "The", "bike is fast.", "bikes are fast."],
+        ["girl", "meisje", "meisjes", "The", "phone is new.", "phones are new."],
+        ["brother", "broer", "broers", "My", "room is messy.", "rooms are messy."],
+        ["sister", "zus", "zussen", "My", "laptop is fast.", "laptops are fast."],
+        ["friend", "vriend", "vrienden", "My", "party is tonight.", "parties are tonight."],
+        ["spider", "spin", "spinnen", "The", "web is sticky.", "webs are sticky."],
+        ["tiger", "tijger", "tijgers", "The", "roar is loud.", "roars are loud."],
+        ["lion", "leeuw", "leeuwen", "The", "teeth are sharp.", "teeth are sharp."],
+        ["monkey", "aap", "apen", "The", "banana is gone.", "bananas are gone."],
+        ["bear", "beer", "beren", "The", "cave is dark.", "caves are dark."],
+        ["elephant", "olifant", "olifanten", "The", "trunk is long.", "trunks are long."],
+        ["horse", "paard", "paarden", "The", "saddle is brown.", "saddles are brown."],
+        ["cow", "koe", "koeien", "The", "milk is fresh.", "milk is fresh."],
+        ["pig", "varken", "varkens", "The", "pen is dirty.", "pens are dirty."],
+        ["farmer", "boer", "boeren", "The", "tractor is old.", "tractors are old."],
+        ["baker", "bakker", "bakkers", "The", "bread is fresh.", "bread is fresh."],
+        ["hero", "held", "helden", "The", "cape is red.", "capes are red."],
+        ["frog", "kikker", "kikkers", "The", "jump is high.", "jumps are high."],
+        ["duck", "eend", "eenden", "The", "pond is clean.", "ponds are clean."],
+        ["goat", "geit", "geiten", "The", "horn is sharp.", "horns are sharp."],
+        ["shark", "haai", "haaien", "The", "teeth are sharp.", "teeth are sharp."],
+        ["dolphin", "dolfijn", "dolfijnen", "The", "jump is amazing.", "jumps are amazing."],
+        ["whale", "walvis", "walvissen", "The", "tail is huge.", "tails are huge."],
+        ["rabbit", "konijn", "konijnen", "The", "ears are long.", "ears are long."],
+        ["snake", "slang", "slangen", "The", "bite is dangerous.", "bites are dangerous."],
+        ["parrot", "papegaai", "papegaaien", "The", "voice is loud.", "voices are loud."],
+        ["penguin", "pinguïn", "pinguïns", "The", "walk is funny.", "walks are funny."],
+        ["turtle", "schildpad", "schildpadden", "The", "shell is hard.", "shells are hard."],
+        ["dancer", "danser", "dansers", "The", "shoes are new.", "shoes are new."],
+        ["singer", "zanger", "zangers", "The", "mic is on.", "mics are on."],
+        ["actor", "acteur", "acteurs", "The", "costume is ready.", "costumes are ready."],
+        ["writer", "schrijver", "schrijvers", "The", "book is done.", "books are done."],
+        ["painter", "schilder", "schilders", "The", "art is beautiful.", "art is beautiful."],
+        ["player", "speler", "spelers", "The", "score is high.", "scores are high."],
+        ["runner", "renner", "renners", "The", "shoes are fast.", "shoes are fast."],
+        ["worker", "arbeider", "arbeiders", "The", "lunch is ready.", "lunches are ready."],
+        ["builder", "bouwer", "bouwers", "The", "tools are heavy.", "tools are heavy."],
+        ["chef", "kok", "koks", "The", "soup is hot.", "soups are hot."],
+        ["king", "koning", "koningen", "The", "crown is gold.", "crowns are gold."],
+        ["queen", "koningin", "koninginnen", "The", "dress is beautiful.", "dresses are beautiful."],
+        ["pilot", "piloot", "piloten", "The", "uniform is white.", "uniforms are white."],
+        ["driver", "chauffeur", "chauffeurs", "The", "seat is soft.", "seats are soft."]
+    ];
+
+    let dbLevel1 = [];
+    regularNouns.forEach(item => {
+        // Enkelvoud: Array met 1 goed antwoord
+        dbLevel1.push([item[3], item[4], `(1 ${item[1]})`, [`${item[0]}'s`]]);
+        // Meervoud: Array met 1 goed antwoord
+        dbLevel1.push([item[3], item[5], `(meerdere ${item[2]})`, [`${item[0]}s'`]]);
+    });
+
+    const irregularNouns = [
+        ["children", "kinderen", "The", "toys are here.", "children's"],
+        ["men", "mannen", "Where is the", "bathroom?", "men's"],
+        ["women", "vrouwen", "The", "team won.", "women's"],
+        ["people", "mensen", "It is the", "decision.", "people's"],
+        ["mice", "muizen", "The", "cheese is gone.", "mice's"],
+        ["geese", "ganzen", "The", "feathers are white.", "geese's"]
+    ];
+
+    let dbLevel2 = [];
+    irregularNouns.forEach(item => {
+        dbLevel2.push([item[2], item[3], `(meervoud: ${item[1]})`, [item[4]]]);
+        dbLevel2.push(["Look at the", "shoes.", `(meervoud: ${item[1]})`, [item[4]]]);
+    });
+
+    const namesEndingInS = [
+        "James", "Charles", "Thomas", "Lucas", "Marcus", "Chris", "Jess", "Tess", "Miles", "Silas", "Elias", "Luis", "Dennis", "Travis", "Davis", "Boris", "Iris", "Carlos"
+    ];
+
+    namesEndingInS.forEach(name => {
+        // VOOR NAMEN OP -S ACCEPTEREN WE NU BEIDE OPTIES!
+        let options = [`${name}'s`, `${name}'`]; 
+        dbLevel2.push(["This is", "laptop.", `(naam: ${name})`, options]);
+        dbLevel2.push(["We went to", "house.", `(naam: ${name})`, options]);
+    });
+
+    const dbLevel3 = [...dbLevel1, ...dbLevel2];
+
+    // --- GAME LOGICA ---
+    let activeQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentQ = null;
+    let isWaiting = false;
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    // --- DE MAGISCHE NORMALIZER VOOR IPADS ---
+    function normalizeString(str) {
+        return str
+            .toLowerCase()
+            .trim()
+            .replace(/[’‘´`]/g, "'"); // Verandert alle gekrulde quotes en accenten in een standaard apostrof
+    }
+
+    function startGame(level) {
+        let sourceDB = level === 1 ? dbLevel1 : (level === 2 ? dbLevel2 : dbLevel3);
+        activeQuestions = shuffle([...sourceDB]).slice(0, 10);
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('score').innerText = score;
+        document.getElementById('score-board').style.display = 'block';
+        
+        document.getElementById('start-screen').classList.remove('active-screen');
+        document.getElementById('game-screen').classList.add('active-screen');
+        
+        document.getElementById("type-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                verifyInput();
+            }
+        });
+
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isWaiting = false;
+        currentQ = activeQuestions[currentQuestionIndex];
+        
+        document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+        document.getElementById('lab-screen').className = 'lab-screen'; 
+        document.getElementById('correction').style.display = 'none';
+        
+        const blankHTML = `<span id="fill-blank" class="blank">...</span>`;
+        document.getElementById('sentence').innerHTML = currentQ[0] + " " + blankHTML + " " + currentQ[1];
+        document.getElementById('hint').innerText = "TARGET: " + currentQ[2];
+
+        const inputField = document.getElementById('type-input');
+        inputField.value = "";
+        inputField.disabled = false;
+        
+        setTimeout(() => inputField.focus(), 100);
+    }
+
+    function verifyInput() {
+        if (isWaiting) return;
+        
+        const inputField = document.getElementById('type-input');
+        const typedValue = inputField.value;
+
+        if (typedValue.trim() === "") return;
+
+        isWaiting = true;
+        inputField.disabled = true;
+
+        const normalizedInput = normalizeString(typedValue);
+        
+        // currentQ[3] is nu een array met toegestane antwoorden.
+        // We kijken of de input overeenkomt met EEN van de antwoorden in de array.
+        const isCorrect = currentQ[3].some(ans => normalizeString(ans) === normalizedInput);
+        
+        const labScreen = document.getElementById('lab-screen');
+        const blankEl = document.getElementById('fill-blank');
+        const correctionEl = document.getElementById('correction');
+
+        blankEl.innerText = typedValue;
+        blankEl.style.background = "none";
+
+        if (isCorrect) {
+            score++;
+            document.getElementById('score').innerText = score;
+            blankEl.style.color = "var(--success-green)";
+            labScreen.classList.add('flash-success');
+            
+            setTimeout(nextQuestion, 1000); 
+        } else {
+            blankEl.style.color = "var(--danger-red)";
+            labScreen.classList.add('shake-error');
+            
+            // Toon de juiste antwoorden gescheiden door " of "
+            const correctDisplay = currentQ[3].join(" of ");
+            correctionEl.innerText = `CORRECT SYSTEM OVERRIDE: ${correctDisplay}`;
+            correctionEl.style.display = 'block';
+            
+            setTimeout(nextQuestion, 2000); 
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < 10) {
+            loadQuestion();
+        } else {
+            document.getElementById('game-screen').classList.remove('active-screen');
+            document.getElementById('end-screen').classList.add('active-screen');
+            document.getElementById('score-board').style.display = 'none';
+            document.getElementById('final-score').innerText = score;
+        }
+    }
+</script>
+</body>
+</html>

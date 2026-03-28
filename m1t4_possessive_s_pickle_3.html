@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EngliForce Academy: Syntax Snatcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-blue-main: #0288d1; --hero-blue-dark: #01579b;
+            --hero-yellow: #ffb703; --hero-cyan: #81d4fa; --hero-orange: #ff5722;
+            --success-green: #00e676; --danger-red: #ff1744; --dark-bg: #05101a;
+        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: 'Lexend', sans-serif; background: var(--dark-bg);
+            color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; user-select: none; overflow: hidden;
+        }
+        
+        header { 
+            background: var(--hero-blue-dark); padding: 1rem; text-align: center; 
+            /* FIX: Rode streep is nu GEEL */
+            border-bottom: 4px solid var(--hero-yellow); 
+            box-shadow: 0 4px 20px rgba(255, 183, 3, 0.4); z-index: 10; 
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2rem; letter-spacing: 2px; margin: 0; color: white; text-shadow: 2px 2px 0px black; }
+        
+        main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; width: 100%; max-width: 800px; margin: 0 auto; position: relative; }
+        
+        .screen { display: none; animation: fadeIn 0.4s ease-out; flex-grow: 1; flex-direction: column; justify-content: center; width: 100%;}
+        .active-screen { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* BATTLE ARENA */
+        .arena {
+            background: linear-gradient(to bottom, #102a43 0%, #05101a 100%);
+            border: 4px solid var(--hero-cyan); border-radius: 15px; padding: 20px;
+            width: 100%; display: flex; flex-direction: column; align-items: center; position: relative;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8); flex-grow: 1; justify-content: space-between;
+        }
+
+        /* HUD: HEALTH BARS */
+        .hud { display: flex; justify-content: space-between; width: 100%; align-items: flex-start; margin-bottom: 20px;}
+        
+        .player-stats { display: flex; flex-direction: column; gap: 5px; }
+        .player-name { font-family: 'Bangers'; color: var(--hero-cyan); font-size: 1.5rem; letter-spacing: 1px;}
+        .hearts { font-size: 1.8rem; letter-spacing: 2px; }
+        
+        .boss-stats { display: flex; flex-direction: column; align-items: flex-end; width: 50%; }
+        .boss-name { font-family: 'Bangers'; color: var(--danger-red); font-size: 1.5rem; letter-spacing: 1px;}
+        .boss-hp-bar-bg { width: 100%; height: 20px; background: #333; border: 2px solid white; border-radius: 10px; overflow: hidden; margin-top: 5px;}
+        .boss-hp-bar-fill { height: 100%; background: var(--danger-red); width: 100%; transition: width 0.3s ease-out; }
+
+        /* SPRITES */
+        .battle-stage { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 20px; position: relative; flex-grow: 1;}
+        .sprite { font-size: 5rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); transition: all 0.2s; z-index: 2; }
+        .player-sprite { transform: scaleX(1); }
+        .boss-sprite { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* LASER EFFECTS */
+        .laser { position: absolute; height: 6px; background: var(--success-green); top: 50%; left: 80px; width: 0; box-shadow: 0 0 10px var(--success-green); opacity: 0; z-index: 1;}
+        .enemy-laser { position: absolute; height: 10px; border-radius: 5px; background: var(--danger-red); top: 50%; right: 80px; width: 0; box-shadow: 0 0 15px var(--danger-red); opacity: 0; z-index: 1;}
+
+        /* ANIMATIONS */
+        .attack-player { animation: p-attack 0.4s ease-out; }
+        @keyframes p-attack { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(30px); } }
+        .attack-boss { animation: b-attack 0.4s ease-out; }
+        @keyframes b-attack { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-30px) scale(1.1); } }
+        .take-damage-boss { animation: b-damage 0.4s infinite; filter: brightness(2) drop-shadow(0 0 20px red); }
+        @keyframes b-damage { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .screen-shake { animation: s-shake 0.4s; }
+        @keyframes s-shake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-10px, 10px); } 40% { transform: translate(10px, -10px); } 60% { transform: translate(-10px, -5px); } 80% { transform: translate(10px, 5px); } }
+        .damage-number { position: absolute; color: white; font-family: 'Bangers'; font-size: 3rem; text-shadow: 0 0 10px red; opacity: 0; pointer-events: none;}
+        .dmg-pop { animation: popDmg 1s ease-out forwards; }
+        @keyframes popDmg { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
+
+        /* QUESTION BOX */
+        .question-box {
+            background: rgba(0,0,0,0.8); border: 2px solid var(--hero-yellow); border-radius: 10px;
+            padding: 15px 10px; width: 100%; text-align: center; margin-top: 10px; z-index: 5;
+        }
+        .sentence { font-size: clamp(1rem, 3.5vw, 1.4rem); font-weight: bold; margin-bottom: 8px;}
+        .hint { color: var(--hero-cyan); font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; }
+        .blank { 
+            color: var(--hero-cyan); font-weight: 900; 
+            padding: 2px 10px; margin: 0 5px; min-width: 60px; text-align: center;
+            background: rgba(129, 212, 250, 0.1); border-radius: 6px; display: inline-block;
+        }
+
+        /* CONTROLS AREA */
+        .controls-area { width: 100%; max-width: 600px; margin-top: 15px; align-self: center; min-height: 80px;}
+        
+        /* MODE 1: MULTIPLE CHOICE */
+        .choice-container { display: none; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        
+        /* MODE 2: TYPING */
+        .type-container { display: none; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
+        .type-input {
+            width: 100%; background: #05101a; border: 3px solid var(--hero-cyan);
+            color: var(--hero-cyan); font-family: 'Share Tech Mono', monospace; font-size: 1.5rem;
+            padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; outline: none;
+        }
+        .type-input:focus { border-color: var(--hero-yellow); background: #0a1929; }
+        .btn-submit {
+            background: var(--hero-orange); color: white; border: none; padding: 12px 30px; border-radius: 50px;
+            font-family: 'Bangers'; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 0 #d84315; width: 100%;
+        }
+        .btn-submit:active { transform: translateY(2px); box-shadow: none; }
+
+        /* BUTTON STYLE FIX (Altijd witte/gele tekst, nooit zwart) */
+        .btn-action {
+            background: #102a43; color: white; /* FIX: Altijd wit */
+            border: 3px solid #243b53; padding: 20px 10px; border-radius: 10px;
+            font-family: 'Lexend', sans-serif; font-size: 1.4rem; font-weight: bold; cursor: pointer; transition: all 0.1s;
+        }
+        .btn-action:active { transform: translateY(4px); }
+        .btn-action:hover { border-color: var(--hero-cyan); background: var(--hero-blue-dark); color: var(--hero-cyan); /* FIX: Geen zwarte tekst */ }
+
+        /* MENUS */
+        .menu-box { text-align: center; padding: 30px; background: rgba(0,0,0,0.7); border-radius: 20px; border: 4px solid var(--hero-cyan); max-width: 500px; margin: 0 auto;}
+        .mode-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        
+        .btn-mode {
+            background: var(--dark-bg); color: white; border: 3px solid var(--hero-cyan); padding: 20px; border-radius: 15px;
+            font-family: 'Bangers'; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
+        }
+        .btn-mode:hover { background: var(--hero-blue-dark); transform: scale(1.05); border-color: var(--hero-yellow); color: var(--hero-yellow);}
+        .btn-mode span { font-size: 0.9rem; font-family: 'Lexend'; font-weight: normal; display: block; margin-top: 5px; opacity: 0.8; color: white;}
+
+        .btn-restart { background: var(--success-green); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; cursor: pointer; margin-top: 20px; border-bottom: 5px solid #008b46; }
+
+        .hud-text { font-family: 'Bangers'; color: var(--hero-cyan); letter-spacing: 1px; font-size: 1.3rem; margin-top: 0; position: absolute; top: 15px; left: 15px; }
+        .flash-red { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.4); opacity: 0; pointer-events: none; z-index: 999;}
+
+        @media (max-width: 500px) {
+            .sprite { font-size: 3.5rem; }
+            .laser, .enemy-laser { left: 60px; right: 60px; width: 0; }
+            .btn-action { font-size: 1.1rem; padding: 15px 5px; }
+            .menu-box { padding: 20px; }
+            .mode-select-grid { grid-template-columns: 1fr; }
+            .type-input { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-red" id="flash-red"></div>
+
+<header>
+    <h1>ENGLIFORCE: SYNTAX SNATCHER</h1>
+</header>
+
+<main>
+    <div id="start-screen" class="screen active-screen">
+        <div class="menu-box">
+            <h2 style="font-family: 'Bangers'; font-size: 3rem; color: var(--danger-red); margin: 0; text-shadow: 0 0 15px red;">SYNTAX SNATCHER</h2>
+            <p style="font-size: 1.1rem; line-height: 1.5; color: #ccc;">Een AI-virus valt aan! Versla hem door de juiste apostrof-regel toe te passen.<br><br>Kies je gevechtsmodus:</p>
+            
+            <div class="mode-select-grid">
+                <button class="btn-mode" onclick="startGame('choice')">MODE: MEERKEUZE<br><span>Kies uit 2 opties</span></button>
+                <button class="btn-mode" onclick="startGame('type')">MODE: TYPEN<br><span>Typ zelf het antwoord</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="hud-text">UPLINK <span id="current-q">1</span>/15</div>
+        <div class="arena" id="arena">
+            
+            <div class="hud">
+                <div class="player-stats">
+                    <div class="player-name">CADET</div>
+                    <div class="hearts" id="hearts">❤️❤️❤️</div>
+                </div>
+                <div class="boss-stats">
+                    <div class="boss-name">SYNTAX SNATCHER</div>
+                    <div class="boss-hp-bar-bg"><div class="boss-hp-bar-fill" id="boss-hp"></div></div>
+                </div>
+            </div>
+
+            <div class="battle-stage">
+                <div class="sprite player-sprite" id="player">🚀</div>
+                <div class="laser" id="laser"></div>
+                <div class="enemy-laser" id="enemy-laser"></div>
+                <div class="damage-number" id="dmg-text">-10% HP</div>
+                <div class="sprite boss-sprite" id="boss">👾</div>
+            </div>
+
+            <div class="question-box">
+                <div class="sentence" id="sentence">...</div>
+                <div class="hint" id="hint">...</div>
+            </div>
+            
+        </div>
+
+        <div class="controls-area">
+            <div class="choice-container" id="choice-controls">
+                <button class="btn-action" id="btn-left" onclick="checkChoice('left')"></button>
+                <button class="btn-action" id="btn-right" onclick="checkChoice('right')"></button>
+            </div>
+            
+            <div class="type-container" id="type-controls">
+                <input type="text" id="type-input" class="type-input" placeholder="Type antwoord..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <button class="btn-submit" onclick="checkType()">VERIFY OVERRIDE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="win-screen" class="screen">
+        <div class="menu-box" style="border-color: var(--success-green);">
+            <h2 style="font-family: 'Bangers'; font-size: 3.5rem; color: var(--success-green); margin: 0;">THREAT ELIMINATED!</h2>
+            <p style="font-size: 1.2rem;">Geweldig! Je hebt de Engelse grammatica succesvol verdedigd.</p>
+            <button class="btn-start" style="background: var(--success-green); box-shadow: 0 6px 0px #008b46; color: black;" onclick="location.reload()">PLAY AGAIN</button>
+        </div>
+    </div>
+    
+    <div id="lose-screen" class="screen">
+        <div class="menu-box" style="border-color: var(--danger-red);">
+            <h2 style="font-family: 'Bangers'; font-size: 3.5rem; color: var(--danger-red); margin: 0;">SYSTEM FAILURE</h2>
+            <p style="font-size: 1.1rem;">Je shields zijn offline gegaan. De Syntax Snatcher is ontsnapt!</p>
+            <button class="btn-start" style="background: var(--hero-blue-main); box-shadow: 0 6px 0px var(--hero-blue-dark); color:white;" onclick="location.reload()">RETRY MISSION</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    // --- DATABASE (De volledige 148 vragen, combat-ready gemaakt) ---
+    // Structure: [Start, End, NL Hint, [Correct Options], [Incorrect Options Distractors]]
+    
+    const regularNounsSource = [
+        ["dog", "hond", "honden", "Look at the", "tail.", "tails."], ["cat", "kat", "katten", "I fed the", "food.", "food."],
+        ["bird", "vogel", "vogels", "The", "feather is blue.", "feathers are blue."], ["teacher", "docent", "docenten", "The", "desk is neat.", "desks are neat."],
+        ["student", "student", "studenten", "The", "book is open.", "books are open."], ["doctor", "dokter", "dokters", "The", "office is closed.", "offices are closed."],
+        ["nurse", "verpleegkundige", "verpleegkundigen", "I need the", "help.", "help."], ["ninja", "ninja", "ninja's", "The", "sword is sharp.", "swords are sharp."],
+        ["boy", "jongen", "jongens", "The", "bike is fast.", "bikes are fast."], ["girl", "meisje", "meisjes", "The", "phone is new.", "phones are new."],
+        ["brother", "broer", "broers", "My", "room is messy.", "rooms are messy."], ["sister", "zus", "zussen", "My", "laptop is fast.", "laptops are fast."],
+        ["friend", "vriend", "vrienden", "My", "party is tonight.", "parties are tonight."], ["spider", "spin", "spinnen", "The", "web is sticky.", "webs are sticky."],
+        ["tiger", "tijger", "tijgers", "The", "roar is loud.", "roars are loud."], ["lion", "leeuw", "leeuwen", "The", "teeth are sharp.", "teeth are sharp."],
+        ["monkey", "aap", "apen", "The", "banana is gone.", "bananas are gone."], ["bear", "beer", "beren", "The", "cave is dark.", "caves are dark."],
+        ["elephant", "olifant", "olifanten", "The", "trunk is long.", "trunks are long."], ["horse", "paard", "paarden", "The", "saddle is brown.", "saddles are brown."],
+        ["cow", "koe", "koeien", "The", "milk is fresh.", "milk is fresh."], ["pig", "varken", "varkens", "The", "pen is dirty.", "pens are dirty."],
+        ["farmer", "boer", "boeren", "The", "tractor is old.", "tractors are old."], ["baker", "bakker", "bakkers", "The", "bread is fresh.", "bread is fresh."],
+        ["hero", "held", "helden", "The", "cape is red.", "capes are red."],
+        ["frog", "kikker", "kikkers", "The", "jump is high.", "jumps are high."], ["duck", "eend", "eenden", "The", "pond is clean.", "ponds are clean."],
+        ["goat", "geit", "geiten", "The", "horn is sharp.", "horns are sharp."], ["shark", "haai", "haaien", "The", "teeth are sharp.", "teeth are sharp."],
+        ["dolphin", "dolfijn", "dolfijnen", "The", "jump is amazing.", "jumps are amazing."], ["whale", "walvis", "walvissen", "The", "tail is huge.", "tails are huge."],
+        ["rabbit", "konijn", "konijnen", "The", "ears are long.", "ears are long."], ["snake", "slang", "slangen", "The", "bite is dangerous.", "bites are dangerous."],
+        ["parrot", "papegaai", "papegaaien", "The", "voice is loud.", "voices are loud."], ["penguin", "pinguïn", "pinguïns", "The", "walk is funny.", "walks are funny."],
+        ["turtle", "schildpad", "schildpadden", "The", "shell is hard.", "shells are hard."], ["dancer", "danser", "dansers", "The", "shoes are new.", "shoes are new."],
+        ["singer", "zanger", "zangers", "The", "mic is on.", "mics are on."], ["actor", "acteur", "acteurs", "The", "costume is ready.", "costumes are ready."],
+        ["writer", "schrijver", "schrijvers", "The", "book is done.", "books are done."], ["painter", "schilder", "schilders", "The", "art is beautiful.", "art is beautiful."],
+        ["player", "speler", "spelers", "The", "score is high.", "scores are high."], ["runner", "renner", "renners", "The", "shoes are fast.", "shoes are fast."],
+        ["worker", "arbeider", "arbeiders", "The", "lunch is ready.", "lunches are ready."], ["builder", "bouwer", "bouwers", "The", "tools are heavy.", "tools are heavy."],
+        ["chef", "kok", "koks", "The", "soup is hot.", "soups are hot."], ["king", "koning", "koningen", "The", "crown is gold.", "crowns are gold."],
+        ["queen", "koningin", "koninginnen", "The", "dress is beautiful.", "dresses are beautiful."], ["pilot", "piloot", "piloten", "The", "uniform is white.", "uniforms are white."],
+        ["driver", "chauffeur", "chauffeurs", "The", "seat is soft.", "seats are soft."]
+    ];
+
+    let dbRegular = [];
+    regularNounsSource.forEach(item => {
+        // Enkelvoud
+        dbRegular.push([item[3], item[4], `(1 ${item[1]})`, [`${item[0]}'s`], [`${item[0]}s'`]]);
+        // Meervoud
+        dbRegular.push([item[3], item[5], `(meerdere ${item[2]})`, [`${item[0]}s'`], [`${item[0]}'s`]]);
+    });
+
+    // [Engels, NL meervoud, Startzin, Eindzin, Goed Array, Fout Distractor Array]
+    const irregularNounsSource = [
+        ["children", "kinderen", "The", "toys are here.", "children's"],
+        ["men", "mannen", "Where is the", "bathroom?", "men's"],
+        ["women", "vrouwen", "The", "team won.", "women's"],
+        ["people", "mensen", "It is the", "decision.", "people's"],
+        ["mice", "muizen", "The", "cheese is gone.", "mice's"],
+        ["geese", "ganzen", "The", "feathers are white.", "geese's"]
+    ];
+
+    let dbIrregular = [];
+    irregularNounsSource.forEach(item => {
+        // Didactische afleider maken (bijv children's vs childrens')
+        let wrong = item[4].replace("'s", "s'"); 
+        dbIrregular.push([item[2], item[3], `(meervoud: ${item[1]})`, [item[4]], [wrong]]);
+        dbIrregular.push(["Look at the", "shoes.", `(meervoud: ${item[1]})`, [item[4]], [wrong]]);
+    });
+
+    const namesSource = ["James", "Charles", "Thomas", "Lucas", "Marcus", "Chris", "Jess", "Tess", "Miles", "Silas", "Elias", "Luis", "Dennis", "Travis", "Davis", "Boris", "Iris", "Carlos"];
+    let dbNames = [];
+    namesSource.forEach(name => {
+        // VOOR NAMEN OP -S ACCEPTEREN WE NU BEIDE OPTIES!
+        let correctOptions = [`${name}'s`, `${name}'`]; 
+        // Didactische afleider: apostrof vóór de s
+        let wrongDistractor = [name.slice(0, -1) + "'s"]; 
+        dbNames.push(["This is", "laptop.", `(naam: ${name})`, correctOptions, wrongDistractor]);
+        dbNames.push(["We went to", "house.", `(naam: ${name})`, correctOptions, wrongDistractor]);
+    });
+
+    // De complete bak van 148 vragen
+    const fullDatabase = [...dbRegular, ...dbIrregular, ...dbNames];
+
+    // GAME STATE
+    let activeQuestions = [];
+    let currentQIndex = 0;
+    let gameMode = ""; // "choice" of "type"
+    let playerHearts = 3;
+    let bossHp = 100; // 100%
+    let isWaiting = false;
+
+    // DOM Elements
+    const elhearts = document.getElementById('hearts');
+    const elBossHp = document.getElementById('boss-hp');
+    const elPlayer = document.getElementById('player');
+    const elBoss = document.getElementById('boss');
+    const elLaser = document.getElementById('laser');
+    const elEnemyLaser = document.getElementById('enemy-laser');
+    const elArena = document.getElementById('arena');
+    const elCurrentQ = document.getElementById('current-q');
+
+    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+    // --- DE NORMALIZER (iPad safe typen) ---
+    function normalizeString(str) {
+        return str.toLowerCase().trim().replace(/[’‘´`]/g, "'");
+    }
+
+    function startGame(mode) {
+        gameMode = mode;
+        // Trek 15 willekeurige vragen uit de bak van 148
+        activeQuestions = shuffle([...fullDatabase]).slice(0, 15);
+        
+        // Setup UI voor modus
+        if (gameMode === 'choice') {
+            document.getElementById('choice-controls').style.display = 'grid';
+            document.getElementById('type-controls').style.display = 'none';
+        } else {
+            document.getElementById('choice-controls').style.display = 'none';
+            document.getElementById('type-controls').style.display = 'flex';
+            // Enter key support voor typen
+            document.getElementById("type-input").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") { event.preventDefault(); checkType(); }
+            });
+        }
+
+        document.getElementById('start-screen').classList.remove('active-screen');
+        document.getElementById('game-screen').classList.add('active-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isWaiting = false;
+        elPlayer.style.filter = "none"; // Reset damage filter
+        
+        let q = activeQuestions[currentQIndex];
+        elCurrentQ.innerText = (currentQIndex + 1);
+
+        // [Start, End, NL Hint, [Correct], [Incorrect]]
+        const blankHTML = `<span class="blank">...</span>`;
+        document.getElementById('sentence').innerHTML = q[0] + ' ' + blankHTML + ' ' + q[1];
+        document.getElementById('hint').innerText = "TARGET: " + q[2];
+
+        if (gameMode === 'choice') {
+            setupMultipleChoice(q);
+        } else {
+            setupTyping();
+        }
+    }
+
+    // MODE 1: MEERKEUZE SETUP
+    function setupMultipleChoice(q) {
+        let btnLeft = document.getElementById('btn-left');
+        let btnRight = document.getElementById('btn-right');
+        
+        // Pak een willekeurige correcte optie (voor namen)
+        let correctAns = shuffle([...q[3]])[0];
+        // Pak de afleider
+        let wrongAns = q[4][0];
+
+        // Husselen van knoppositie
+        if(Math.random() > 0.5) {
+            btnLeft.innerText = correctAns; btnLeft.dataset.correct = "true";
+            btnRight.innerText = wrongAns; btnRight.dataset.correct = "false";
+        } else {
+            btnLeft.innerText = wrongAns; btnLeft.dataset.correct = "false";
+            btnRight.innerText = correctAns; btnRight.dataset.correct = "true";
+        }
+        
+        // Reset knop styles (Altijd witte tekst)
+        [btnLeft, btnRight].forEach(btn => {
+            btn.style.background = "#102a43"; btn.style.color = "white"; btn.style.borderColor = "#243b53";
+        });
+    }
+
+    // MODE 2: TYPING SETUP
+    function setupTyping() {
+        const inputField = document.getElementById('type-input');
+        inputField.value = "";
+        inputField.disabled = false;
+        setTimeout(() => inputField.focus(), 100);
+    }
+
+    // --- VERWERKING MEERKEUZE ---
+    function checkChoice(side) {
+        if (isWaiting) return;
+        isWaiting = true;
+        let clickedBtn = document.getElementById('btn-' + side);
+        let isCorrect = clickedBtn.dataset.correct === "true";
+
+        if (isCorrect) {
+            clickedBtn.style.background = "var(--success-green)";
+            clickedBtn.style.color = "white"; // FIX: Wit blijven
+            playerAttacks();
+        } else {
+            clickedBtn.style.background = "var(--danger-red)";
+            clickedBtn.style.color = "white"; // FIX: Wit blijven
+            bossAttacks();
+        }
+    }
+
+    // --- VERWERKING TYPEN ---
+    function checkType() {
+        if (isWaiting) return;
+        const inputField = document.getElementById('type-input');
+        const typedValue = inputField.value;
+        if (typedValue.trim() === "") return;
+
+        isWaiting = true;
+        inputField.disabled = true;
+
+        let q = activeQuestions[currentQIndex];
+        const normalizedInput = normalizeString(typedValue);
+        
+        // Check of input overeenkomt met EEN van de correcte opties in de array
+        const isCorrect = q[3].some(ans => normalizeString(ans) === normalizedInput);
+
+        // Visuele feedback in de zin
+        const blankEl = document.querySelector('.blank');
+        blankEl.innerText = typedValue;
+        blankEl.style.background = "none";
+
+        if (isCorrect) {
+            blankEl.style.color = "var(--success-green)";
+            playerAttacks();
+        } else {
+            blankEl.style.color = "var(--danger-red)";
+            // Laat héél kort het goede antwoord zien
+            setTimeout(() => blankEl.innerText = q[3][0], 800);
+            bossAttacks();
+        }
+    }
+
+    // --- BATTLE ANIMATIONS (Onveranderd) ---
+    function playerAttacks() {
+        elPlayer.classList.add('attack-player');
+        setTimeout(() => {
+            elLaser.style.opacity = '1'; elLaser.style.width = 'calc(100% - 160px)';
+            setTimeout(() => {
+                elLaser.style.opacity = '0'; elLaser.style.width = '0';
+                bossTakesDamage();
+            }, 100);
+        }, 200);
+        setTimeout(() => elPlayer.classList.remove('attack-player'), 400);
+    }
+
+    function bossTakesDamage() {
+        bossHp -= 10; // 10 hits om te winnen
+        elBossHp.style.width = bossHp + '%';
+        elBoss.classList.add('take-damage-boss');
+        
+        let dmgText = document.getElementById('dmg-text');
+        dmgText.classList.remove('dmg-pop');
+        void dmgText.offsetWidth; // trigger reflow
+        dmgText.classList.add('dmg-pop');
+
+        setTimeout(() => {
+            elBoss.classList.remove('take-damage-boss');
+            checkWinState();
+        }, 600);
+    }
+
+    function bossAttacks() {
+        elBoss.classList.add('attack-boss');
+        setTimeout(() => {
+            elEnemyLaser.style.opacity = '1'; elEnemyLaser.style.width = 'calc(100% - 160px)';
+            setTimeout(() => {
+                elEnemyLaser.style.opacity = '0'; elEnemyLaser.style.width = '0';
+                playerTakesDamage();
+            }, 100);
+        }, 200);
+        setTimeout(() => elBoss.classList.remove('attack-boss'), 400);
+    }
+
+    function playerTakesDamage() {
+        playerHearts--;
+        
+        // Update Hearts
+        let heartStr = "";
+        for(let i=0; i<3; i++) { heartStr += (i < playerHearts) ? "❤️" : "🖤"; }
+        elHearts.innerText = heartStr;
+
+        // Screen Shake, Red Flash, Player tint red
+        elArena.classList.add('screen-shake');
+        document.getElementById('flash-red').style.opacity = '1';
+        elPlayer.style.filter = "drop-shadow(0 0 10px red) sepia(1) hue-rotate(-50deg) saturate(5)";
+
+        setTimeout(() => {
+            elArena.classList.remove('screen-shake');
+            document.getElementById('flash-red').style.opacity = '0';
+            checkWinState();
+        }, 400);
+    }
+
+    function checkWinState() {
+        if (bossHp <= 0) {
+            setTimeout(() => {
+                document.getElementById('game-screen').classList.remove('active-screen');
+                document.getElementById('win-screen').classList.add('active-screen');
+            }, 500);
+        } else if (playerHearts <= 0 || currentQIndex >= activeQuestions.length - 1) {
+            setTimeout(() => {
+                document.getElementById('game-screen').classList.remove('active-screen');
+                document.getElementById('lose-screen').classList.add('active-screen');
+            }, 500);
+        } else {
+            currentQIndex++;
+            loadQuestion();
+        }
+    }
+</script>
+</body>
+</html>
