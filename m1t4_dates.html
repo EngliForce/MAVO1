@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngliForce Academy: Date & Time Masterclass</title>
+    <title>EngliForce Academy: Date Masterclass</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,8 +13,9 @@
             --hero-cyan: #81d4fa;
             --dark-bg: #0b1a2a;
             --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-green-dark: #2e7d32;
         }
-
         body {
             font-family: 'Lexend', sans-serif;
             background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
@@ -23,7 +24,6 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         header {
             background: var(--hero-blue-main);
             padding: 2.5rem 1rem;
@@ -31,13 +31,10 @@
             clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
             border-bottom: 5px solid var(--hero-yellow);
         }
-
         h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
         h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
         h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
-
         main { max-width: 1200px; margin: 20px auto; padding: 20px; }
-
         .section-divider {
             height: 4px;
             background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
@@ -46,7 +43,6 @@
             border-radius: 2px;
             box-shadow: 0 0 15px var(--hero-cyan);
         }
-
         .briefing-box {
             background: rgba(16, 42, 67, 0.9);
             border: 2px solid var(--hero-cyan);
@@ -55,7 +51,6 @@
             margin-bottom: 30px;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-
         .video-container {
             background: #000;
             border: 4px solid var(--hero-blue-main);
@@ -66,54 +61,44 @@
             margin-bottom: 40px;
             box-shadow: 0 0 40px rgba(2, 136, 209, 0.4);
         }
-
         .video-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
-
         .explanation-text {
             font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
             border-left: 4px solid var(--hero-orange); padding-left: 20px;
             background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
         }
-
         .formula-container {
             display: flex; justify-content: center; gap: 15px; margin: 30px 0;
             flex-wrap: wrap;
         }
-
         .formula-part {
             background: var(--hero-blue-dark); border: 2px solid var(--hero-cyan);
             padding: 20px; border-radius: 15px; font-weight: bold; text-align: center;
             flex: 1; min-width: 250px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             font-size: 1.2rem;
         }
-
         .toggle-container {
             display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
         }
-
         .btn-toggle {
             background: var(--hero-blue-main); color: white; border: none;
             padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
             font-size: 1.3rem; cursor: pointer; transition: 0.2s;
             border-bottom: 5px solid var(--hero-blue-dark);
         }
-
         .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
-
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #102a43; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
         td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1.1rem; }
         tr:hover { background: rgba(129, 212, 250, 0.05); }
-
         .highlight { color: var(--hero-yellow); font-weight: bold; }
         .comma-alert { color: var(--hero-orange); font-weight: bold; text-decoration: underline; font-size: 1.4rem; }
-
+        
         .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
         .boom-text {
             position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
@@ -123,22 +108,49 @@
         @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
         .shake { animation: shake 0.2s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
-
+        
+        /* PICKLE GRID & CARDS */
         .pickle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top: 20px; }
-        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
         .card .title { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); margin: 10px 0; }
+
+        /* LIKE BUTTON STYLING */
+        .btn-like {
+            background: transparent;
+            border: 2px solid var(--hero-cyan);
+            color: var(--hero-cyan);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            width: 100%;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-like:hover { background: rgba(129, 212, 250, 0.2); border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-like.liked { 
+            background: var(--hero-green); 
+            color: white; 
+            border-color: var(--hero-green-dark); 
+            border-bottom: 4px solid var(--hero-green-dark);
+            transform: translateY(2px);
+        }
+        .card.liked { border-color: var(--hero-green); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
     </style>
 </head>
 <body>
-
 <div class="flash-effect" id="flash"></div>
-
 <header>
     <h1>ENGLIFORCE ACADEMY</h1>
-    <p>DATE & TIME COMMAND CENTER</p>
+    <p>DATE COMMAND CENTER</p>
 </header>
-
 <main>
     <section class="briefing-box">
         <h2>🚨 MISSION: DATUM UITSPRAAK</h2>
@@ -148,7 +160,6 @@
             <strong>Gouden Regel 2:</strong> Zeg je een datum hardop? Gebruik dan altijd de woorden <strong>first, second, third</strong> enzovoort.<br>
             <strong>Gouden Regel 3:</strong> In het Amerikaans zet je altijd een <span class="comma-alert">,</span> (komma) na de dag van de week.
         </div>
-
         <div class="formula-container">
             <div class="formula-part">BRITS<br><small>Dag + <span class="highlight">the</span> + Cijfer + <span class="highlight">of</span> + Maand</small></div>
             <div class="formula-part">AMERIKAANS<br><small>Dag<span class="comma-alert">,</span> Maand + Cijfer</small></div>
@@ -206,71 +217,6 @@
         </div>
     </div>
 
-    <div id="ordinals" class="content-section">
-        <h3>De Cijfers (Rangtelwoorden)</h3>
-        <div class="explanation-text">Dit is hoe je de cijfers uitschrijft en uitspreekt. Let goed op de speciale spelling van <strong>fifth</strong>, <strong>eighth</strong>, <strong>ninth</strong> en <strong>twelfth</strong>!</div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>Cijfer</th><th>In het Engels...</th><th>Cijfer</th><th>In het Engels...</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>1</td><td>first</td><td>17</td><td>seventeenth</td></tr>
-                    <tr><td>2</td><td>second</td><td>18</td><td>eighteenth</td></tr>
-                    <tr><td>3</td><td>third</td><td>19</td><td>nineteenth</td></tr>
-                    <tr><td>4</td><td>fourth</td><td>20</td><td>twentieth</td></tr>
-                    <tr><td>5</td><td><span class="highlight">fifth</span></td><td>21</td><td>twenty-first</td></tr>
-                    <tr><td>6</td><td>sixth</td><td>22</td><td>twenty-second</td></tr>
-                    <tr><td>7</td><td>seventh</td><td>23</td><td>twenty-third</td></tr>
-                    <tr><td>8</td><td><span class="highlight">eighth</span></td><td>24</td><td>twenty-fourth</td></tr>
-                    <tr><td>9</td><td><span class="highlight">ninth</span></td><td>25</td><td>twenty-fifth</td></tr>
-                    <tr><td>10</td><td>tenth</td><td>26</td><td>twenty-sixth</td></tr>
-                    <tr><td>11</td><td>eleventh</td><td>27</td><td>twenty-seventh</td></tr>
-                    <tr><td>12</td><td><span class="highlight">twelfth</span></td><td>28</td><td>twenty-eighth</td></tr>
-                    <tr><td>13</td><td>thirteenth</td><td>29</td><td>twenty-ninth</td></tr>
-                    <tr><td>14</td><td>fourteenth</td><td>30</td><td>thirtieth</td></tr>
-                    <tr><td>15</td><td>fifteenth</td><td>31</td><td>thirty-first</td></tr>
-                    <tr><td>16</td><td>sixteenth</td><td></td><td></td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="days" class="content-section">
-        <h3>De Zeven Dagen</h3>
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Nederlands (kleine letter)</th><th>Engels (HOOFDLETTER)</th></tr></thead>
-                <tbody>
-                    <tr><td>maandag</td><td><span class="highlight">M</span>onday</td></tr>
-                    <tr><td>dinsdag</td><td><span class="highlight">T</span>uesday</td></tr>
-                    <tr><td>woensdag</td><td><span class="highlight">W</span>ednesday</td></tr>
-                    <tr><td>donderdag</td><td><span class="highlight">T</span>hursday</td></tr>
-                    <tr><td>vrijdag</td><td><span class="highlight">F</span>riday</td></tr>
-                    <tr><td>zaterdag</td><td><span class="highlight">S</span>aturday</td></tr>
-                    <tr><td>zondag</td><td><span class="highlight">S</span>unday</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="months" class="content-section">
-        <h3>De Twaalf Maanden</h3>
-        <div class="table-container">
-            <table>
-                <thead><tr><th>Nederlands (klein)</th><th>Engels (HOOFDLETTER)</th><th>Nederlands (klein)</th><th>Engels (HOOFDLETTER)</th></tr></thead>
-                <tbody>
-                    <tr><td>januari</td><td><span class="highlight">J</span>anuary</td><td>juli</td><td><span class="highlight">J</span>uly</td></tr>
-                    <tr><td>februari</td><td><span class="highlight">F</span>ebruary</td><td>augustus</td><td><span class="highlight">A</span>ugust</td></tr>
-                    <tr><td>maart</td><td><span class="highlight">M</span>arch</td><td>september</td><td><span class="highlight">S</span>eptember</td></tr>
-                    <tr><td>april</td><td><span class="highlight">A</span>pril</td><td>oktober</td><td><span class="highlight">O</span>ctober</td></tr>
-                    <tr><td>mei</td><td><span class="highlight">M</span>ay</td><td>november</td><td><span class="highlight">N</span>ovember</td></tr>
-                    <tr><td>juni</td><td><span class="highlight">J</span>une</td><td>december</td><td><span class="highlight">D</span>ecember</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
     <div id="video" class="content-section">
         <h3>🎬 MISSION BRIEFING VIDEO</h3>
         <div class="video-container">
@@ -282,30 +228,35 @@
 
     <h2>⚔️ PICKLE MISSIONS</h2>
     <div class="pickle-grid">
-        <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t4_dates_pickle_1.html')">
+        <div class="card" id="card-d1" onclick="openMission(event, 'CRUNCH!', 'm1t4_dates_pickle_1.html')">
             <span style="font-size: 3rem;">📅</span>
             <div class="title">Pickle 1</div>
             <p>Write the date</p>
+            <button id="btn-d1" class="btn-like" onclick="toggleLike(event, 'd1')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'SQUASH!', 'm1t4_dates_pickle_2.html')">
+        <div class="card" id="card-d2" onclick="openMission(event, 'SQUASH!', 'm1t4_dates_pickle_2.html')">
             <span style="font-size: 3rem;">🔡</span>
             <div class="title">Pickle 2</div>
             <p>Dates tower builder</p>
+            <button id="btn-d2" class="btn-like" onclick="toggleLike(event, 'd2')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'BAM!', 'm1t4_dates_pickle_3.html')">
+        <div class="card" id="card-d3" onclick="openMission(event, 'BAM!', 'm1t4_dates_pickle_3.html')">
             <span style="font-size: 3rem;">🔢</span>
             <div class="title">Pickle 3</div>
             <p>Dates Slotmachine</p>
+            <button id="btn-d3" class="btn-like" onclick="toggleLike(event, 'd3')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'WHAM!', 'm1t4_dates_pickle_4.html')">
+        <div class="card" id="card-d4" onclick="openMission(event, 'WHAM!', 'm1t4_dates_pickle_4.html')">
             <span style="font-size: 3rem;">⏰</span>
             <div class="title">Pickle 4</div>
             <p>High Stakes Decoder</p>
+            <button id="btn-d4" class="btn-like" onclick="toggleLike(event, 'd4')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'KABOOM!', 'm1t4_dates_pickle_5.html')">
+        <div class="card" id="card-d5" onclick="openMission(event, 'KABOOM!', 'm1t4_dates_pickle_5.html')">
             <span style="font-size: 3rem;">🏆</span>
             <div class="title">Pickle 5</div>
             <p>Defusal Mission</p>
+            <button id="btn-d5" class="btn-like" onclick="toggleLike(event, 'd5')">👍 Like</button>
         </div>
     </div>
 </main>
@@ -323,13 +274,40 @@
         createExplosion(e, boomMessage);
     }
 
+    function toggleLike(e, id) {
+        e.stopPropagation(); 
+        const btn = document.getElementById('btn-' + id);
+        const card = document.getElementById('card-' + id);
+        const isLiked = btn.classList.toggle('liked');
+        card.classList.toggle('liked');
+        
+        if(isLiked) {
+            localStorage.setItem('date_pickle_' + id + '_liked', 'true');
+            createExplosion(e, 'LIKE!');
+        } else {
+            localStorage.setItem('date_pickle_' + id + '_liked', 'false');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        ['d1', 'd2', 'd3', 'd4', 'd5'].forEach(id => {
+            if(localStorage.getItem('date_pickle_' + id + '_liked') === 'true') {
+                const btn = document.getElementById('btn-' + id);
+                const card = document.getElementById('card-' + id);
+                if(btn && card) {
+                    btn.classList.add('liked');
+                    card.classList.add('liked');
+                }
+            }
+        });
+    });
+
     function createExplosion(e, message) {
         const x = e.clientX; const y = e.clientY;
         const flash = document.getElementById('flash');
         flash.style.opacity = '0.3';
         document.body.classList.add('shake');
         setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
-
         const txt = document.createElement('div');
         txt.className = 'boom-text';
         txt.innerText = message;
@@ -339,15 +317,5 @@
         setTimeout(() => txt.remove(), 600);
     }
 </script>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
