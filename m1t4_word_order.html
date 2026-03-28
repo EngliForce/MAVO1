@@ -13,6 +13,10 @@
             --hero-cyan: #81d4fa;
             --dark-bg: #0b1a2a;
             --hero-orange: #ff5722;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+            --hero-green: #4caf50;
+            --hero-green-dark: #2e7d32;
         }
         body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; overflow-x: hidden; }
         header { background: var(--hero-blue-main); padding: 2.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--hero-yellow); }
@@ -31,6 +35,10 @@
         .btn-toggle { background: var(--hero-blue-main); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer; transition: 0.2s; border-bottom: 5px solid var(--hero-blue-dark); }
         .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
         
+        /* Rode Video Knop */
+        .btn-red { background: var(--hero-red) !important; border-bottom-color: var(--hero-red-dark) !important; }
+        .btn-red:hover { background: #ff1744 !important; }
+
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -43,7 +51,7 @@
         .video-box { background: #102a43; border: 3px solid var(--hero-blue-main); border-radius: 20px; padding: 20px; text-align: center; margin: 0 auto; max-width: 800px; box-shadow: 0 0 25px rgba(2, 136, 209, 0.3); }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; margin-bottom: 10px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-
+        
         .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
         .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
         @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
@@ -51,9 +59,37 @@
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
         
         .pickle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top: 20px; }
-        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
-        
+        .card .title { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); margin: 10px 0; }
+
+        /* Like Knop Styling */
+        .btn-like {
+            background: transparent;
+            border: 2px solid var(--hero-cyan);
+            color: var(--hero-cyan);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-like:hover { background: rgba(129, 212, 250, 0.2); border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-like.liked { 
+            background: var(--hero-green); 
+            color: white; 
+            border-color: var(--hero-green-dark); 
+            border-bottom: 4px solid var(--hero-green-dark);
+            transform: translateY(2px);
+        }
+        .card.liked { border-color: var(--hero-green); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
         .adj-highlight { color: var(--hero-yellow); font-weight: bold; }
     </style>
 </head>
@@ -68,9 +104,7 @@
         <h2>🚨 THE RULES OF ENGAGEMENT</h2>
         <div class="explanation-text">
             Luister goed, rekruut! In het Engels is de <strong>S-V-O-P-T</strong> volgorde een wet. <br><br>
-            De belangrijkste regel? <strong>Plaats (Place) en Tijd (Time) staan ALTIJD aan het einde van de zin.</strong> 
-            En vergeet niet: de Plaats komt altijd vóór de Tijd.
-        </div>
+            De belangrijkste regel? <strong>Plaats (Place) en Tijd (Time) staan ALTIJD aan het einde van de zin.</strong>             En vergeet niet: de Plaats komt altijd vóór de Tijd.        </div>
         <div class="formula-container">
             <div class="formula-part">S<br><small>Onderwerp</small></div>
             <div class="formula-part">V<br><small>Werkwoord</small></div>
@@ -86,7 +120,7 @@
         <button class="btn-toggle" onclick="showSection(event, 'basic', 'KA-POW!')">S-V-O (De Kern)</button>
         <button class="btn-toggle" onclick="showSection(event, 'advanced', 'ZAP!')">P-T (De Finale)</button>
         <button class="btn-toggle" onclick="showSection(event, 'adjectives', 'BOOST!')">Adjective Power</button>
-        <button class="btn-toggle" style="background: var(--hero-orange);" onclick="showSection(event, 'video-brief', 'WATCH OUT!')">🎥 Video Briefing</button>
+        <button class="btn-toggle btn-red" onclick="showSection(event, 'video-brief', 'WATCH OUT!')">Video uitleg</button>
     </div>
 
     <div id="basic" class="content-section" style="display: block;">
@@ -139,7 +173,7 @@
 
     <div id="video-brief" class="content-section">
         <div class="video-box">
-            <h3>🎥 TACTICAL INSTRUCTIONS</h3>
+            <h3>TACTICAL INSTRUCTIONS</h3>
             <div class="video-wrapper">
                 <iframe src="https://www.youtube.com/embed/U_Hr99BF108" title="Word Order Training" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
@@ -151,15 +185,17 @@
 
     <h2>⚔️ PICKLE MISSIONS</h2>
     <div class="pickle-grid">
-        <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t4_word_order_pickle_1')">
+        <div class="card" id="card-w1" onclick="openMission(event, 'CRUNCH!', 'm1t4_word_order_pickle_1')">
             <span style="font-size: 3rem;">🧩</span>
             <div class="title">Pickle 1</div>
             <p>Word's App</p>
+            <button id="btn-w1" class="btn-like" onclick="toggleLike(event, 'w1')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'BOOM!', 'm1t4_word_order_pickle_2')">
+        <div class="card" id="card-w2" onclick="openMission(event, 'BOOM!', 'm1t4_word_order_pickle_2')">
             <span style="font-size: 3rem;">⚔️</span>
             <div class="title">Pickle 2</div>
-            <p>Word Order Warrior</p>        
+            <p>Word Order Warrior</p>
+            <button id="btn-w2" class="btn-like" onclick="toggleLike(event, 'w2')">👍 Like</button>
         </div>
     </div>
 </main>
@@ -176,14 +212,41 @@
         createExplosion(e, boomMessage);
     }
 
+    function toggleLike(e, id) {
+        e.stopPropagation(); 
+        const btn = document.getElementById('btn-' + id);
+        const card = document.getElementById('card-' + id);
+        const isLiked = btn.classList.toggle('liked');
+        card.classList.toggle('liked');
+        
+        if(isLiked) {
+            localStorage.setItem('wordorder_pickle_' + id + '_liked', 'true');
+            createExplosion(e, 'LIKE!');
+        } else {
+            localStorage.setItem('wordorder_pickle_' + id + '_liked', 'false');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        ['w1', 'w2'].forEach(id => {
+            if(localStorage.getItem('wordorder_pickle_' + id + '_liked') === 'true') {
+                const btn = document.getElementById('btn-' + id);
+                const card = document.getElementById('card-' + id);
+                if(btn && card) {
+                    btn.classList.add('liked');
+                    card.classList.add('liked');
+                }
+            }
+        });
+    });
+
     function createExplosion(e, message) {
-        const x = e.clientX;
-        const y = e.clientY;
+        const x = e.clientX || window.innerWidth / 2;
+        const y = e.clientY || window.innerHeight / 2;
         const flash = document.getElementById('flash');
         flash.style.opacity = '0.3';
         document.body.classList.add('shake');
         setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
-
         const txt = document.createElement('div');
         txt.className = 'boom-text';
         txt.innerText = message;
