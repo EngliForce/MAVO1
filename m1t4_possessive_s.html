@@ -14,9 +14,10 @@
             --dark-bg: #0b1a2a;
             --hero-orange: #ff5722;
             --hero-green: #4caf50;
+            --hero-green-dark: #2e7d32;
             --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
         }
-
         body {
             font-family: 'Lexend', sans-serif;
             background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
@@ -27,7 +28,6 @@
             flex-direction: column;
             overflow-x: hidden;
         }
-
         header {
             background: var(--hero-blue-main);
             padding: 2.5rem 1rem;
@@ -35,13 +35,10 @@
             clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
             border-bottom: 5px solid var(--hero-yellow);
         }
-
         h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
         h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
         h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
-
         main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
-
         .section-divider {
             height: 4px;
             background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
@@ -50,7 +47,6 @@
             border-radius: 2px;
             box-shadow: 0 0 15px var(--hero-cyan);
         }
-
         .briefing-box {
             background: rgba(16, 42, 67, 0.9);
             border: 2px solid var(--hero-cyan);
@@ -59,48 +55,66 @@
             margin-bottom: 30px;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
-
         .explanation-text {
             font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
             border-left: 4px solid var(--hero-orange); padding-left: 20px;
             background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
         }
-
         .formula-container {
             display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap;
         }
-
         .formula-part {
             background: var(--hero-blue-dark); border: 2px solid var(--hero-cyan);
             padding: 20px; border-radius: 15px; font-weight: bold; text-align: center;
             flex: 1; min-width: 250px; max-width: 350px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-
         .toggle-container {
             display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
         }
-
         .btn-toggle {
             background: var(--hero-blue-main); color: white; border: none;
             padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
             font-size: 1.3rem; cursor: pointer; transition: 0.2s;
             border-bottom: 5px solid var(--hero-blue-dark);
         }
-
         .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-blue-dark); }
+        
+        /* Rode Video Knop */
+        .btn-red {
+            background: var(--hero-red) !important;
+            border-bottom-color: var(--hero-red-dark) !important;
+        }
+        .btn-red:hover { background: #ff1744 !important; }
 
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Video Container */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            border: 3px solid var(--hero-cyan);
+            box-shadow: 0 0 20px rgba(129, 212, 250, 0.3);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
         .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #102a43; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--hero-blue-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
         td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
         tr:hover { background: rgba(129, 212, 250, 0.05); }
-
         .highlight { color: var(--hero-yellow); font-weight: bold; }
         .rule-special { color: var(--hero-orange); font-weight: bold; }
-
+        
         .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
         .boom-text {
             position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
@@ -110,7 +124,7 @@
         @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
         .shake { animation: shake 0.2s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
-
+        
         .pickle-grid { 
             display: grid; 
             grid-template-columns: repeat(5, 1fr); 
@@ -119,15 +133,43 @@
         }
         @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 600px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } }
-
-        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        
+        .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
         .card .title { font-family: 'Bangers'; font-size: 1.3rem; color: var(--hero-yellow); margin: 10px 0; }
-        
+
+        /* Like Knop Styling */
+        .btn-like {
+            background: transparent;
+            border: 2px solid var(--hero-cyan);
+            color: var(--hero-cyan);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-like:hover { background: rgba(129, 212, 250, 0.2); border-color: var(--hero-yellow); color: var(--hero-yellow); }
+        .btn-like.liked { 
+            background: var(--hero-green); 
+            color: white; 
+            border-color: var(--hero-green-dark); 
+            border-bottom: 4px solid var(--hero-green-dark);
+            transform: translateY(2px);
+        }
+        .card.liked { border-color: var(--hero-green); box-shadow: 0 0 20px rgba(76, 175, 80, 0.3); }
+
         .type-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
         .tag-singular { background: var(--hero-green); color: white; }
         .tag-plural { background: var(--hero-red); color: white; }
-
+        
         footer {
             background: #05101a;
             color: rgba(255,255,255,0.8);
@@ -141,14 +183,11 @@
     </style>
 </head>
 <body>
-
 <div class="flash-effect" id="flash"></div>
-
 <header>
     <h1>ENGLIFORCE ACADEMY</h1>
     <p>POSSESSIVE POSSESSIONS CONTROL</p>
 </header>
-
 <main>
     <section class="briefing-box">
         <h2>🛰️ MISSION: THE APOSTROPHE</h2>
@@ -158,7 +197,6 @@
             <strong>Gouden Regel 2:</strong> Bij meer personen die eindigen op een -s (meervoud) zet je alleen de apostrof <span class="highlight">'</span> erachter.<br>
             <strong>Gouden Regel 3:</strong> Onregelmatig meervoud (zoals <i>children</i>) krijgt gewoon <span class="highlight">'s</span>.
         </div>
-
         <div class="formula-container">
             <div class="formula-part">Naam / Enkelvoud + <span class="highlight">'s</span><br><small>The boy's bike</small><br><div class="type-tag tag-singular">Singular</div></div>
             <div class="formula-part">Meervoud op -s + <span class="highlight">'</span><br><small>The boys' bikes</small><br><div class="type-tag tag-plural">Plural</div></div>
@@ -170,6 +208,17 @@
     <div class="toggle-container">
         <button class="btn-toggle" onclick="showSection(event, 'rules', 'TARGET ACQUIRED!')">Wanneer Welke?</button>
         <button class="btn-toggle" onclick="showSection(event, 'examples', 'SCANNING...')">Checklist</button>
+        <button class="btn-toggle btn-red" onclick="showSection(event, 'video-section', 'ACTION!')">Video Uitleg</button>
+    </div>
+
+    <div id="video-section" class="content-section">
+        <h3>Intelligence Update: Video Briefing</h3>
+        <div class="briefing-box">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/JjfmGYnwvxI?rel=0" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <p style="margin-top: 20px; text-align: center;">Bekijk de briefing voor de volledige missie-uitleg over de <strong>Apostrof</strong>.</p>
+        </div>
     </div>
 
     <div id="rules" class="content-section" style="display: block;">
@@ -211,46 +260,48 @@
 
     <h2>⚔️ PICKLE MISSIONS: APOSTROPHE ATTACK</h2>
     <div class="pickle-grid">
-        <div class="card" onclick="openMission(event, 'POINT!', 'm1t4_possessive_s_pickle_1.html')">
+        <div class="card" id="card-pos1" onclick="openMission(event, 'POINT!', 'm1t4_possessive_s_pickle_1.html')">
             <span style="font-size: 2.5rem;">🧪</span>
             <div class="title">Pickle 1</div>
             <p style="font-size: 0.9rem;">Find the Owner</p>
+            <button id="btn-pos1" class="btn-like" onclick="toggleLike(event, 'pos1')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'SPLIT!', 'm1t4_possessive_s_pickle_2.html')">
+        <div class="card" id="card-pos2" onclick="openMission(event, 'SPLIT!', 'm1t4_possessive_s_pickle_2.html')">
             <span style="font-size: 2.5rem;">✂️</span>
             <div class="title">Pickle 2</div>
             <p style="font-size: 0.9rem;">Singular vs Plural</p>
+            <button id="btn-pos2" class="btn-like" onclick="toggleLike(event, 'pos2')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'FIX IT!', 'm1t4_possessive_s_pickle_3.html')">
+        <div class="card" id="card-pos3" onclick="openMission(event, 'FIX IT!', 'm1t4_possessive_s_pickle_3.html')">
             <span style="font-size: 2.5rem;">🔧</span>
             <div class="title">Pickle 3</div>
             <p style="font-size: 0.9rem;">The Broken Apostrophe</p>
+            <button id="btn-pos3" class="btn-like" onclick="toggleLike(event, 'pos3')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'SEARCH!', 'm1t4_possessive_s_pickle_4.html')">
+        <div class="card" id="card-pos4" onclick="openMission(event, 'SEARCH!', 'm1t4_possessive_s_pickle_4.html')">
             <span style="font-size: 2.5rem;">🔍</span>
             <div class="title">Pickle 4</div>
             <p style="font-size: 0.9rem;">Special Plurals</p>
+            <button id="btn-pos4" class="btn-like" onclick="toggleLike(event, 'pos4')">👍 Like</button>
         </div>
-        <div class="card" onclick="openMission(event, 'MASTER!', 'm1t4_possessive_s_pickle_5.html')">
+        <div class="card" id="card-pos5" onclick="openMission(event, 'MASTER!', 'm1t4_possessive_s_pickle_5.html')">
             <span style="font-size: 2.5rem;">🎖️</span>
             <div class="title">Pickle 5</div>
             <p style="font-size: 0.9rem;">Apostrophe Legend</p>
+            <button id="btn-pos5" class="btn-like" onclick="toggleLike(event, 'pos5')">👍 Like</button>
         </div>
     </div>
 </main>
-
 <footer>
     <div class="footer-text">
         &copy; EngliForce: <span class="footer-highlight">Make English Your Superpower!</span>
     </div>
 </footer>
-
 <script>
     function openMission(e, message, url) {
         createExplosion(e, message);
         setTimeout(() => { if(url !== '#') window.location.href = url; }, 400);
     }
-
     function showSection(e, id, boomMessage) {
         const sections = document.querySelectorAll('.content-section');
         sections.forEach(s => s.style.display = 'none');
@@ -258,13 +309,41 @@
         createExplosion(e, boomMessage);
     }
 
+    function toggleLike(e, id) {
+        e.stopPropagation(); 
+        const btn = document.getElementById('btn-' + id);
+        const card = document.getElementById('card-' + id);
+        const isLiked = btn.classList.toggle('liked');
+        card.classList.toggle('liked');
+        
+        if(isLiked) {
+            localStorage.setItem('possessive_pickle_' + id + '_liked', 'true');
+            createExplosion(e, 'LIKE!');
+        } else {
+            localStorage.setItem('possessive_pickle_' + id + '_liked', 'false');
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        ['pos1', 'pos2', 'pos3', 'pos4', 'pos5'].forEach(id => {
+            if(localStorage.getItem('possessive_pickle_' + id + '_liked') === 'true') {
+                const btn = document.getElementById('btn-' + id);
+                const card = document.getElementById('card-' + id);
+                if(btn && card) {
+                    btn.classList.add('liked');
+                    card.classList.add('liked');
+                }
+            }
+        });
+    });
+
     function createExplosion(e, message) {
-        const x = e.clientX; const y = e.clientY;
+        const x = e.clientX || window.innerWidth / 2;
+        const y = e.clientY || window.innerHeight / 2;
         const flash = document.getElementById('flash');
         flash.style.opacity = '0.3';
         document.body.classList.add('shake');
         setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
-
         const txt = document.createElement('div');
         txt.className = 'boom-text';
         txt.innerText = message;
@@ -274,6 +353,5 @@
         setTimeout(() => txt.remove(), 600);
     }
 </script>
-
 </body>
 </html>
