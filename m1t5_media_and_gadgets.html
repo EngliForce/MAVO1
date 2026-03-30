@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --hero-purple-main: #7b2cbf; /* De nieuwe paarse hoofdkleur */
+            --hero-purple-main: #7b2cbf;
             --hero-purple-dark: #3c096c;
             --hero-yellow: #ffb703;
             --hero-cyan: #00f5d4;
@@ -88,8 +88,8 @@
             font-family: 'Bangers', cursive;
             font-size: 1.2rem;
             letter-spacing: 1px;
+            width: 100%;
             transition: 0.3s;
-            z-index: 5;
         }
 
         .card.done { border-color: var(--hero-yellow); background: #05051a; box-shadow: 0 0 20px rgba(255, 183, 3, 0.2); }
@@ -134,36 +134,50 @@
         { id: 'g3', name: 'A and An', desc: 'Article mastery.', icon: '🔤', url: 'm1t5_a_an.html' },
         { id: 'g4', name: 'Prepositions of place', desc: 'In, on and at.', icon: '📍', url: 'm1t5_prepositions.html' },
         { id: 'g5', name: 'Gerund', desc: 'The -ing form.', icon: '🏃', url: 'm1t5_gerund.html' },
-        { id: 'g6', name: 'Should-shouldn't', desc: 'Giving advice.', icon: '💡', url: 'm1t5_should.html' },
+        { id: 'g6', name: 'Should / shouldn\'t', desc: 'Giving advice.', icon: '💡', url: 'm1t5_should.html' },
         { id: 'g7', name: 'Past Simple', desc: 'Regular verbs.', icon: '⏳', url: 'm1t5_past_simple.html' },
         { id: 'g8', name: 'Some and Any', desc: 'Quantity check.', icon: '⚖️', url: 'm1t5_some_any.html' }
     ];
 
     function createCard(item, gridId) {
         const grid = document.getElementById(gridId);
-        const card = document.createElement('a');
+        const card = document.createElement('div'); // Veranderd van 'a' naar 'div' voor betere HTML structuur
         card.className = 'card';
         card.id = item.id;
-        card.href = item.url;
+        
+        // De kaart zelf navigeert naar de URL, behalve als je op de knop klikt
+        card.onclick = (e) => {
+            window.location.href = item.url;
+        };
         
         card.innerHTML = `
             <div class="card-header"><div class="power-icon">${item.icon}</div></div>
             <div class="name">${item.name}</div>
             <div class="desc">${item.desc}</div>
-            <button class="btn" onclick="completeTask(event, '${item.id}')">MISSION COMPLETED</button>
+            <button class="btn" id="btn-${item.id}">MISSION COMPLETED</button>
         `;
+        
         grid.appendChild(card);
+
+        // Event listener specifiek voor de knop
+        const btn = card.querySelector('.btn');
+        btn.onclick = (event) => {
+            event.stopPropagation(); // Voorkomt dat de kaart-link wordt geactiveerd
+            completeTask(event, item.id);
+        };
     }
 
     vocabData.forEach(i => createCard(i, 'vocab-grid'));
     grammarData.forEach(i => createCard(i, 'grammar-grid'));
 
     function completeTask(event, id) {
-        event.preventDefault(); 
-        event.stopPropagation();
-        
         const card = document.getElementById(id);
+        const btn = document.getElementById(`btn-${id}`);
         const isDone = card.classList.toggle('done');
+        
+        // Update button tekst
+        btn.innerText = isDone ? "MISSION ACCOMPLISHED!" : "MISSION COMPLETED";
+
         const saved = JSON.parse(localStorage.getItem('hero_progress_t5') || '{}');
         saved[id] = isDone;
         localStorage.setItem('hero_progress_t5', JSON.stringify(saved));
@@ -181,11 +195,16 @@
         }
     }
 
+    // Herstel status bij laden
     document.addEventListener('DOMContentLoaded', () => {
         const saved = JSON.parse(localStorage.getItem('hero_progress_t5') || '{}');
         Object.keys(saved).forEach(id => { 
             const el = document.getElementById(id);
-            if(el && saved[id]) el.classList.add('done'); 
+            const btn = document.getElementById(`btn-${id}`);
+            if(el && saved[id]) {
+                el.classList.add('done');
+                if(btn) btn.innerText = "MISSION ACCOMPLISHED!";
+            }
         });
     });
 </script>
