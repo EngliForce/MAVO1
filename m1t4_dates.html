@@ -26,8 +26,7 @@
         }
         header {
             background: var(--hero-blue-main);
-            padding: 2.5rem 1rem;
-            text-align: center;
+            padding: 2.5rem 1rem;            text-align: center;
             clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
             border-bottom: 5px solid var(--hero-yellow);
         }
@@ -98,7 +97,6 @@
         tr:hover { background: rgba(129, 212, 250, 0.05); }
         .highlight { color: var(--hero-yellow); font-weight: bold; }
         .comma-alert { color: var(--hero-orange); font-weight: bold; text-decoration: underline; font-size: 1.4rem; }
-        
         .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
         .boom-text {
             position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
@@ -108,14 +106,10 @@
         @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
         .shake { animation: shake 0.2s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
-        
-        /* PICKLE GRID & CARDS */
         .pickle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; margin-top: 20px; }
         .card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
         .card .title { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); margin: 10px 0; }
-
-        /* LIKE BUTTON STYLING */
         .btn-like {
             background: transparent;
             border: 2px solid var(--hero-cyan);
@@ -156,7 +150,7 @@
         <h2>🚨 MISSION: DATUM UITSPRAAK</h2>
         <div class="explanation-text">
             Engelse datums spreken we heel anders uit dan in het Nederlands. Maar geen paniek, het is makkelijker dan je denkt!<br><br>
-            <strong>Gouden Regel 1:</strong> In het Engels en Amerikaans krijgen dagen en maanden  <span class="comma-alert">altijd een hoofdletter.</span><br>
+            <strong>Gouden Regel 1:</strong> In het Engels en Amerikaans krijgen dagen en maanden <span class="comma-alert">altijd een hoofdletter.</span><br>
             <strong>Gouden Regel 2:</strong> Zeg je een datum hardop? Gebruik dan altijd de woorden <strong>first, second, third</strong> enzovoort.<br>
             <strong>Gouden Regel 3:</strong> In het Amerikaans zet je altijd een <span class="comma-alert">,</span> (komma) na de dag van de week.
         </div>
@@ -167,7 +161,6 @@
     </section>
 
     <div class="section-divider"></div>
-
     <div class="toggle-container">
         <button class="btn-toggle" onclick="showSection(event, 'british', 'ZAP!')">Brits (UK)</button>
         <button class="btn-toggle" onclick="showSection(event, 'american', 'KA-POW!')">Amerikaans (US)</button>
@@ -217,6 +210,80 @@
         </div>
     </div>
 
+    <div id="ordinals" class="content-section">
+        <h3>🔢 Rangtelwoorden (Ordinals)</h3>
+        <div class="explanation-text">
+            In het Engels gebruik je voor datums altijd <strong>rangtelwoorden</strong> (1e, 2e, 3e). Let vooral op de eerste drie, die zijn anders!
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Cijfer</th><th>Engels</th><th>Afkorting</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>First</td><td>1st</td></tr>
+                    <tr><td>2</td><td>Second</td><td>2nd</td></tr>
+                    <tr><td>3</td><td>Third</td><td>3rd</td></tr>
+                    <tr><td>4</td><td>Fourth</td><td>4th</td></tr>
+                    <tr><td>11</td><td>Eleventh</td><td>11th</td></tr>
+                    <tr><td>21</td><td>Twenty-first</td><td>21st</td></tr>
+                    <tr><td>22</td><td>Twenty-second</td><td>22nd</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="days" class="content-section">
+        <h3>📅 Dagen van de week</h3>
+        <div class="explanation-text">
+            In het Nederlands schrijven we dagen met een kleine letter, maar in het Engels <strong>MOET</strong> er altijd een hoofdletter staan.
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Nederlands</th><th>Engels</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>maandag</td><td>Monday</td></tr>
+                    <tr><td>dinsdag</td><td>Tuesday</td></tr>
+                    <tr><td>woensdag</td><td>Wednesday</td></tr>
+                    <tr><td>donderdag</td><td>Thursday</td></tr>
+                    <tr><td>vrijdag</td><td>Friday</td></tr>
+                    <tr><td>zaterdag</td><td>Saturday</td></tr>
+                    <tr><td>zondag</td><td>Sunday</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="months" class="content-section">
+        <h3>🗓️ Maanden van het jaar</h3>
+        <div class="explanation-text">
+            Ook voor de maanden geldt: in het Nederlands klein, in het Engels altijd met een <strong>hoofdletter</strong>!
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Nederlands</th><th>Engels</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>januari</td><td>January</td></tr>
+                    <tr><td>februari</td><td>February</td></tr>
+                    <tr><td>maart</td><td>March</td></tr>
+                    <tr><td>april</td><td>April</td></tr>
+                    <tr><td>mei</td><td>May</td></tr>
+                    <tr><td>juni</td><td>June</td></tr>
+                    <tr><td>juli</td><td>July</td></tr>
+                    <tr><td>augustus</td><td>August</td></tr>
+                    <tr><td>september</td><td>September</td></tr>
+                    <tr><td>oktober</td><td>October</td></tr>
+                    <tr><td>november</td><td>November</td></tr>
+                    <tr><td>december</td><td>December</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div id="video" class="content-section">
         <h3>🎬 MISSION BRIEFING VIDEO</h3>
         <div class="video-container">
@@ -225,7 +292,6 @@
     </div>
 
     <div class="section-divider"></div>
-
     <h2>⚔️ PICKLE MISSIONS</h2>
     <div class="pickle-grid">
         <div class="card" id="card-d1" onclick="openMission(event, 'CRUNCH!', 'm1t4_dates_pickle_1.html')">
