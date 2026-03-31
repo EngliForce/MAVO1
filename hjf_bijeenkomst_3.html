@@ -31,7 +31,7 @@
             align-items: center;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Geen scrollbalken */
+            overflow: hidden;
             line-height: 1.3;
         }
 
@@ -49,21 +49,6 @@
             overflow: hidden;
         }
 
-        .page-badge {
-            position: absolute;
-            top: 2vh;
-            right: 2vw;
-            background-color: var(--page-badge-bg);
-            color: var(--primary-color);
-            padding: 1vh 2vw;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: clamp(1rem, 2.2vh, 1.5rem);
-            border: 2px solid var(--accent-color);
-            z-index: 10;
-        }
-
-        /* Navigatie en Progressie */
         .progress-bar { height: 1.5vh; background-color: var(--accent-color); border-radius: 6px; margin-bottom: 1vh; overflow: hidden; flex-shrink: 0; }
         .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
         
@@ -95,7 +80,6 @@
         button.nav-btn:hover:not(:disabled) { background-color: var(--primary-color); color: white; }
         button.nav-btn:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
 
-        /* Typografie: Extra groot voor leesbaarheid achterin de klas */
         h1 { color: var(--primary-color); font-size: clamp(2.5rem, 5vh, 4rem); margin: 0 0 1vh 0; text-align: center; }
         h2 { color: var(--primary-color); font-size: clamp(2rem, 4vh, 3.2rem); margin: 0 0 1.5vh 0; text-align: center; }
         p, li, div { font-size: clamp(1.2rem, 2.5vh, 1.8rem); margin: 0; }
@@ -109,7 +93,6 @@
             animation: fadeIn 0.4s ease-in-out;
             height: 100%;
             width: 100%;
-            min-height: 0;
         }
         .step.active { display: flex; }
 
@@ -127,7 +110,6 @@
             justify-content: center;
             gap: 1.5vh;
             flex-grow: 1;
-            min-height: 0;
         }
 
         /* Gevoelsmeter */
@@ -147,7 +129,7 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vw; width: 100%; }
         .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1vw; width: 100%; }
         
-        .info-panel { background: var(--page-badge-bg); padding: 2vh 2vw; border-radius: 20px; border-left: 8px solid var(--primary-color); text-align: left; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+        .info-panel { background: var(--page-badge-bg); padding: 2vh 2vw; border-radius: 20px; border-left: 8px solid var(--primary-color); text-align: left; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; transition: all 0.5s ease; }
         .info-panel h3 { margin-bottom: 0.5vh; color: var(--primary-color); font-size: clamp(1.4rem, 3vh, 2.2rem); font-weight: bold; }
 
         .highlight-box { background: #FFF9E6; border: 4px solid #FFD966; border-radius: 20px; padding: 2.5vh 3vw; width: 100%; font-weight: bold; }
@@ -172,9 +154,12 @@
         .music-btn.playing {
             background-color: var(--fixed-color);
             transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(224, 122, 95, 0.4);
             animation: pulse-music 1.5s infinite;
         }
+
+        /* TIMER BALK STYLING */
+        .timer-bar { width: 100%; height: 10px; background: #eee; border-radius: 5px; margin-top: 15px; overflow: hidden; }
+        .timer-fill { width: 0%; height: 100%; background: var(--primary-color); }
 
         @keyframes pulse-music {
             0% { box-shadow: 0 0 0 0 rgba(224, 122, 95, 0.7); }
@@ -228,23 +213,23 @@
             <div class="grid-5" style="gap: 1vw;">
                 <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--primary-color);">
                     <h3 style="margin-bottom: 1vh;">1. Schrijf</h3>
-                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Schrijf alles wat je stress geeft op je vel papier. Alles mag!</p>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Schrijf alles wat je stress geeft op je vel papier.</p>
                 </div>
                 <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--primary-color);">
                     <h3 style="margin-bottom: 1vh;">2. Kijk</h3>
-                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Kijk ernaar. Heb je er controle over, of neemt het alleen ruimte in?</p>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Kijk ernaar. Heb je er controle over?</p>
                 </div>
                 <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--primary-color);">
                     <h3 style="margin-bottom: 1vh;">3. Prop</h3>
-                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Maak een grote prop. Je zorgen zitten erin, je hoeft ze niet vast te houden.</p>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Maak een grote prop. Laat het gewicht los.</p>
                 </div>
                 <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--fixed-color);">
                     <h3 style="color: var(--fixed-color); margin-bottom: 1vh;">4. Gooi!</h3>
-                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Sta op en gooi je prop zo hard als je kunt weg. Laat het los!</p>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Gooi je prop zo hard als je kunt weg!</p>
                 </div>
                 <div class="info-panel" style="padding: 1.5vh 1vw; text-align: center; border: 2px solid var(--accent-color); border-top: 8px solid var(--growth-color);">
                     <h3 style="color: var(--growth-color); margin-bottom: 1vh;">5. Voel</h3>
-                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Hoe voelt dat? Heeft het geholpen om even stil te staan bij je stress?</p>
+                    <p style="font-size: clamp(1rem, 2vh, 1.4rem);">Hoe voelt dat? Ben je wat lichter?</p>
                 </div>
             </div>
         </div>
@@ -252,7 +237,6 @@
 
     <div class="step" id="step-3">
         <h2>Faalangst & Je Brein</h2>
-        <p style="text-align: center; margin-bottom: 2vh; font-weight: bold;">Kijk mee wat er precies in je lichaam gebeurt als je het spannend vindt.</p>
         <div class="video-wrapper">
             <div class="video-container">
                 <iframe src="https://www.youtube.com/embed/W4sxvapYpec" allowfullscreen></iframe>
@@ -263,219 +247,79 @@
     <div class="step" id="step-4">
         <h2>Wat doet faalangst met je lichaam?</h2>
         <div class="content-box">
-            <p style="text-align: center; margin-bottom: 1.5vh;">Je lichaam reageert razendsnel om je te beschermen.</p>
             <div class="grid-3">
                 <div class="info-panel" style="border-color: var(--fixed-color);">
                     <h3 style="color: var(--fixed-color);">🚨 1. Alarm</h3>
-                    <p>Je voelt angst. Je hersenen sturen een "help!" signaal naar je lichaam.</p>
+                    <p>Hersenen sturen een "help!" signaal naar je lichaam.</p>
                 </div>
                 <div class="info-panel" style="border-color: #D97706;">
                     <h3 style="color: #D97706;">⚡ 2. Hormonen</h3>
-                    <p>Je maakt adrenaline aan. Dit maakt je klaar om te vechten of te vluchten.</p>
+                    <p>Adrenaline maakt je klaar om te vechten of vluchten.</p>
                 </div>
                 <div class="info-panel" style="border-color: var(--primary-color);">
                     <h3>🫀 3. Lichaam</h3>
-                    <p>Hart klopt sneller, knoop in je maag, zweten of sneller ademen.</p>
+                    <p>Hart klopt sneller, knoop in je maag, zweten of trillen.</p>
                 </div>
-            </div>
-            <div class="highlight-box" style="margin-top: 2vh; text-align: center;">
-                Na de spanning keert de rust langzaam weer terug. Maar soms blokkeer je!
             </div>
         </div>
     </div>
 
-    <div class="step" id="step-5">
-        <h2>Waarom is angst belangrijk?</h2>
+    <div class="step" id="step-5"><h2>Waarom is angst belangrijk?</h2><p>Het maakt je alert en geeft energie wanneer nodig.</p></div>
+    <div class="step" id="step-6"><h2>Werkboek</h2><p>Vul de vragen in op bladzijde 18.</p></div>
+    <div class="step" id="step-7"><h2>Ademhaling</h2><p>Buikademhaling is de beste manier om te kalmeren.</p></div>
+    <div class="step" id="step-8"><h2>Neusgatenademhaling</h2><p>Focus op je adem via één neusgat tegelijk.</p></div>
+    <div class="step" id="step-9"><h2>Spierspanning</h2><p>Lichaam spant aan bij stress. Laat het bewust los.</p></div>
+    <div class="step" id="step-10"><h2>De Bodyscan</h2><p>Voel je lichaam van top tot teen.</p></div>
+
+    <div class="step" id="step-11">
+        <h2>De 5-Tellen Oefening</h2>
         <div class="content-box">
-            <div class="grid-2">
-                <div class="info-panel" style="background: #eef7f2; border-color: var(--actief-color);">
-                    <h3 style="color: var(--actief-color);">✅ Het nut van angst</h3>
-                    <ul style="padding-left: 2vw; margin-top: 1vh; line-height: 1.4;">
-                        <li style="margin-bottom: 1vh;">Maakt je alert.</li>
-                        <li style="margin-bottom: 1vh;">Geeft je een energie-boost bij gevaar.</li>
-                        <li>Een beetje spanning helpt je concentreren bij een toets.</li>
-                    </ul>
+            <p style="text-align: center; margin-bottom: 2vh;">Span aan voor 5 seconden en laat dan volledig los.</p>
+            
+            <div class="grid-2" id="exercise-grid" style="gap: 20px; width: 90%; max-width: 1000px;">
+                <div class="info-panel exercise-box" id="box-1" style="border: 4px solid #eee;">
+                    <h3 style="text-align: center; font-size: 2.5rem;">✊ Vuisten</h3>
+                    <p style="text-align: center;">Knijp zo hard als je kunt!</p>
+                    <div class="timer-bar"><div class="timer-fill"></div></div>
                 </div>
-                <div class="info-panel" style="background: #fdf2ef; border-color: var(--passief-color);">
-                    <h3 style="color: var(--passief-color);">❌ Wanneer het een probleem wordt</h3>
-                    <ul style="padding-left: 2vw; margin-top: 1vh; line-height: 1.4;">
-                        <li style="margin-bottom: 1vh;">Als je té bang bent, schakelt je bewuste denken uit.</li>
-                        <li style="margin-bottom: 1vh;">Het put je lichaam uit (kost veel energie).</li>
-                        <li>Zorgt voor hoofdpijn, buikpijn of moeheid.</li>
-                    </ul>
+                <div class="info-panel exercise-box" id="box-2" style="border: 4px solid #eee;">
+                    <h3 style="text-align: center; font-size: 2.5rem;">🤷 Schouders</h3>
+                    <p style="text-align: center;">Trek ze helemaal op!</p>
+                    <div class="timer-bar"><div class="timer-fill"></div></div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="step" id="step-6">
-        <h2>Wat voel jij in je lichaam?</h2>
-        <div class="content-box">
-            <p style="text-align: center; margin-bottom: 3vh; font-size: clamp(1.8rem, 4vh, 2.8rem);">
-                Vul de vragen in op <strong>bladzijde 18</strong> van je werkboek.
-            </p>
-            <div style="background: #FFF9E6; border: 6px dashed #FFD966; border-radius: 20px; padding: 5vh 5vw; width: 80%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                <p style="color: var(--passief-color); font-weight: bold; font-size: clamp(2rem, 5vh, 3.5rem); margin: 0; line-height: 1.4;">
-                    Hoe meer kruisjes je hebt gezet, hoe belangrijker het is om je te leren ontspannen!
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="step" id="step-7">
-        <h2>3 Soorten Ademhaling</h2>
-        <div class="content-box">
-            <p style="text-align: center; margin-bottom: 2vh;">Ademen stuurt je brein. Rustig ademen = 'Ik ben veilig'. Snel ademen = 'Gevaar!'.</p>
-            <div class="grid-3">
-                <div class="info-panel" style="border-color: var(--passief-color);">
-                    <h3 style="color: var(--passief-color);">1. Borstademhaling</h3>
-                    <p><strong>Hoog en kort.</strong> Je buik blijft stil. Gebeurt automatisch bij stress. Niet ideaal om te ontspannen.</p>
+                <div class="info-panel exercise-box" id="box-3" style="border: 4px solid #eee;">
+                    <h3 style="text-align: center; font-size: 2.5rem;">🦵 Benen</h3>
+                    <p style="text-align: center;">Druk je voeten in de grond.</p>
+                    <div class="timer-bar"><div class="timer-fill"></div></div>
                 </div>
-                <div class="info-panel" style="border-color: #D97706;">
-                    <h3 style="color: #D97706;">2. Flankademhaling</h3>
-                    <p><strong>Zijkant.</strong> Ribben zetten uit. Goed voor lichte inspanning of wandelen. Voelt al rustiger.</p>
-                </div>
-                <div class="info-panel" style="border-color: var(--actief-color);">
-                    <h3 style="color: var(--actief-color);">3. Buikademhaling</h3>
-                    <p><strong>Diep.</strong> Buik wordt een ballon. De beste en meest ontspannen manier om jezelf te kalmeren!</p>
+                <div class="info-panel exercise-box" id="box-4" style="border: 4px solid #eee;">
+                    <h3 style="text-align: center; font-size: 2.5rem;">😑 Gezicht</h3>
+                    <p style="text-align: center;">Knijp je ogen en kaken dicht.</p>
+                    <div class="timer-bar"><div class="timer-fill"></div></div>
                 </div>
             </div>
+
+            <button class="music-btn" id="start-exercise" onclick="runExercise()" style="margin-top: 3vh; background: #F5A623; font-size: 2rem; padding: 2vh 4vw; border-radius: 50px; border: 4px solid #fff;">
+                ▶ START OEFENING
+            </button>
+
+            <p id="exercise-feedback" style="font-size: 2rem; font-weight: bold; margin-top: 2vh; opacity: 0; color: var(--primary-color);">LAAT NU LOS... EN VOEL DE RUST...</p>
         </div>
     </div>
-
-    <div class="step" id="step-8">
-        <h2>De Neusgatenademhaling</h2>
-        <div class="content-box">
-            <p style="text-align: center; margin-bottom: 2vh;">Deze oefening maakt je rustig en je hoofd helder.</p>
-            <div class="highlight-box" style="display: flex; flex-direction: column; gap: 1.5vh; font-weight: normal; text-align: left;">
-                <div>👃 <strong>Stap 1 & 2:</strong> Hou je rechter neusgat dicht met je duim en adem rustig in door links.</div>
-                <div>⏸️ <strong>Stap 3 & 4:</strong> Houd adem even vast, adem dan langzaam uit door links.</div>
-                <div>🔄 <strong>Stap 5 & 6:</strong> Wissel! Hou je linker neusgat dicht met je ringvinger en adem in door rechts.</div>
-                <div>⏸️ <strong>Stap 7 & 8:</strong> Houd adem vast, adem langzaam uit door rechts.</div>
-                <div>🔁 <strong>Stap 9:</strong> Herhaal dit een paar keer rustig en kalm. Dit kan zelfs onopvallend in de klas!</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="step" id="step-9">
-        <h2>Spierspanning & Stress</h2>
-        <div class="content-box">
-            <div class="grid-2">
-                <div class="info-panel" style="border-color: var(--fixed-color);">
-                    <h3 style="color: var(--fixed-color);">Wat gebeurt er?</h3>
-                    <p>Bij angst spannen je spieren automatisch aan (nek, kaak, buik, vuisten) door adrenaline. Je lichaam bereidt zich voor op actie.</p>
-                    <p style="margin-top: 1vh; font-size: 0.9em; font-weight: bold;">Gevolg: Pijn in je nek, spanningshoofdpijn en extreme vermoeidheid.</p>
-                </div>
-                <div class="info-panel" style="border-color: var(--growth-color);">
-                    <h3 style="color: var(--growth-color);">Wat kun je doen?</h3>
-                    <ul style="padding-left: 2vw; margin-top: 1vh; line-height: 1.4;">
-                        <li style="margin-bottom: 1vh;"><strong>Ademhalen:</strong> Kalmeert direct je zenuwstelsel.</li>
-                        <li style="margin-bottom: 1vh;"><strong>Spierontspanning:</strong> Spieren kort hard aanspannen en dan loslaten.</li>
-                        <li><strong>Beweging:</strong> Sport, wandel of rek je uit om spanning af te voeren.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="step" id="step-10">
-        <h2>De Bodyscan</h2>
-        <div class="content-box">
-            <p style="text-align: center; margin-bottom: 2vh;">Richt je aandacht op het 'hier en nu' en voel waar spanning zit.</p>
-            <div class="info-panel" style="background: #eef; border-left-color: #4A90E2; width: 85%; padding: 4vh 4vw;">
-                <h3 style="color: #4A90E2; font-size: clamp(2rem, 4vh, 3rem); text-align: center; margin-bottom: 3vh;">🧘 Hoe werkt het?</h3>
-                <ul style="padding-left: 2vw; line-height: 1.6;">
-                    <li style="margin-bottom: 1vh;">Kies een comfortabele plek en sluit je ogen.</li>
-                    <li style="margin-bottom: 1vh;">Scan je lichaam stap voor stap: begin bij je voeten en ga langzaam omhoog naar je hoofd.</li>
-                    <li style="margin-bottom: 1vh;">Neem voor elk deel even de tijd. Je hoeft niets te veranderen, alleen te vóélen.</li>
-                    <li>Dwalen je gedachten af? Breng ze dan rustig weer terug naar je lichaam.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-   <div class="step" id="step-11">
-    <h2>De 5-Tellen Oefening</h2>
-    <div class="content-box">
-        <p style="text-align: center; margin-bottom: 2vh;">Span aan voor 5 seconden en laat dan volledig los.</p>
-        
-        <div class="grid-2" id="exercise-grid" style="gap: 20px; width: 90%; max-width: 1000px;">
-            <div class="info-panel exercise-box" id="box-1" style="border: 4px solid #eee; transition: 0.5s;">
-                <h3 style="text-align: center; font-size: 2.5rem;">✊ Vuisten</h3>
-                <p style="text-align: center;">Knijp zo hard als je kunt!</p>
-                <div class="timer-bar"><div class="timer-fill"></div></div>
-            </div>
-            <div class="info-panel exercise-box" id="box-2" style="border: 4px solid #eee; transition: 0.5s;">
-                <h3 style="text-align: center; font-size: 2.5rem;">🤷 Schouders</h3>
-                <p style="text-align: center;">Trek ze helemaal op naar je oren.</p>
-                <div class="timer-bar"><div class="timer-fill"></div></div>
-            </div>
-            <div class="info-panel exercise-box" id="box-3" style="border: 4px solid #eee; transition: 0.5s;">
-                <h3 style="text-align: center; font-size: 2.5rem;">🦵 Benen</h3>
-                <p style="text-align: center;">Druk je voeten in de grond en span aan.</p>
-                <div class="timer-bar"><div class="timer-fill"></div></div>
-            </div>
-            <div class="info-panel exercise-box" id="box-4" style="border: 4px solid #eee; transition: 0.5s;">
-                <h3 style="text-align: center; font-size: 2.5rem;">😑 Gezicht</h3>
-                <p style="text-align: center;">Knijp je ogen dicht en span je kaken.</p>
-                <div class="timer-bar"><div class="timer-fill"></div></div>
-            </div>
-        </div>
-
-        <button class="music-btn" id="start-exercise" onclick="runExercise()" style="margin-top: 3vh; background: #F5A623; border: 4px solid #fff; border-radius: 50px; font-size: 2.5rem; padding: 2vh 4vw; cursor: pointer;">
-            ▶ START OEFENING
-        </button>
-
-        <p id="exercise-feedback" style="font-size: 2rem; font-weight: bold; margin-top: 2vh; opacity: 0; color: var(--primary-color);">LAAT NU LOS... EN VOEL DE RUST...</p>
-    </div>
-</div>
 
     <div class="step" id="step-12">
-        <h2>Muziek als Medicijn</h2>
-        <div class="content-box">
-            <p style="text-align: center; margin-bottom: 2vh;">Muziek heeft direct invloed op hoe je je voelt. Welke muziek helpt jou?</p>
-            <div class="grid-2">
-                <div class="info-panel" style="justify-content: flex-start;">
-                    <ul style="list-style: none; padding: 0; line-height: 1.4;">
-                        <li style="margin-bottom: 1.5vh;">🎧 <strong>Rustig worden:</strong> Klassiek of natuurgeluiden verlagen je hartslag.</li>
-                        <li style="margin-bottom: 1.5vh;">🎧 <strong>Afleiding:</strong> Muziek zonder tekst is perfect om te focussen of te studeren.</li>
-                        <li>🎧 <strong>Energie:</strong> Vrolijke, uptempo muziek geeft je een boost als je moe bent.</li>
-                    </ul>
-                    
-                    <div style="display: flex; flex-wrap: wrap; gap: 1vw; margin-top: 3vh;">
-                        <button class="music-btn" onclick="playAudio('audio-klassiek', this)">🎵 Klassiek</button>
-                        <button class="music-btn" onclick="playAudio('audio-natuur', this)">🌧️ Natuur</button>
-                        <button class="music-btn" onclick="playAudio('audio-focus', this)">🎧 Focus</button>
-                        <button class="music-btn" onclick="playAudio('audio-energie', this)">⚡ Energie</button>
-                    </div>
-
-                   <audio id="audio-klassiek" src="klassiek.mp3" loop></audio>
-<audio id="audio-natuur" src="natuur.mp3" loop></audio>
-<audio id="audio-focus" src="focus.mp3" loop></audio>
-<audio id="audio-energie" src="energie.mp3" loop></audio>
-
-                </div>
-                <div class="highlight-box" style="display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 2vh;">
-                    <h3 style="margin-top: 0; color: #D97706; font-size: clamp(2rem, 4vh, 3rem);">Tip: Maak een Playlist!</h3>
-                    <p style="font-weight: normal;">Zet liedjes bij elkaar die je fijn vindt en speel die af zodra je gespannen bent in je hoofd of lichaam.</p>
-                </div>
-            </div>
+        <h2>Muziek & Afsluiting</h2>
+        <div style="display: flex; gap: 10px;">
+            <button class="music-btn" onclick="playAudio('audio-klassiek', this)">🎵 Klassiek</button>
+            <button class="music-btn" onclick="playAudio('audio-natuur', this)">🌧️ Natuur</button>
+            <audio id="audio-klassiek" src="klassiek.mp3" loop></audio>
+            <audio id="audio-natuur" src="natuur.mp3" loop></audio>
         </div>
     </div>
 
     <div class="step" id="step-13">
-        <h2>Afsluiting</h2>
-        <div class="content-box" style="text-align: center;">
-            <p style="font-weight: bold; font-size: clamp(2rem, 4.5vh, 3.5rem); color: var(--actief-color); margin-bottom: 3vh;">
-                Top gedaan vandaag! 🎉
-            </p>
-            <p style="font-weight: bold; font-size: clamp(1.8rem, 3.5vh, 2.5rem); max-width: 900px; margin-bottom: 4vh; line-height: 1.5;">
-                Je weet nu precies hoe snel jouw lichaam reageert op stress, én wat je kunt doen om de controle weer terug te pakken met je ademhaling en spieren.
-            </p>
-            <h3 style="color: var(--primary-color); margin-top: 2vh; font-size: clamp(2.5rem, 5vh, 4rem);">
-                Oefen deze week en wees de baas over je angst! 💪
-            </h3>
-        </div>
+        <h1>Top gedaan! 🎉</h1>
+        <p>Je bent nu de baas over je eigen spanning. 💪</p>
     </div>
 
     <div class="btn-container">
@@ -492,15 +336,10 @@
     function registerMood(type) {
         moodCounts[type]++;
         document.getElementById(`count-${type}`).innerText = moodCounts[type];
-        
-        const el = document.getElementById(`count-${type}`).parentElement;
-        el.style.transform = "scale(1.2)";
-        setTimeout(() => el.style.transform = "scale(1.15)", 150);
     }
 
     function changeStep(n) {
-        stopAudio(); // Stop de muziek altijd als we van dia wisselen
-
+        stopAudio();
         steps[currentStep].classList.remove('active');
         currentStep += n;
         steps[currentStep].classList.add('active');
@@ -512,52 +351,63 @@
         document.getElementById('progress-fill').style.width = percentage + '%';
 
         if (currentStep === steps.length - 1) {
-            confetti({ 
-                particleCount: 200, 
-                spread: 90, 
-                origin: { y: 0.6 }, 
-                colors: ['#6B9080', '#A4C3B2', '#E07A5F', '#FFD700', '#4A90E2'] 
-            });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }
     }
 
-    /* --- Audio Functies met Foutafhandeling --- */
-    function playAudio(id, btnElement) {
-        const allAudios = document.querySelectorAll('audio');
-        const allBtns = document.querySelectorAll('.music-btn');
-        
-        const targetAudio = document.getElementById(id);
-        const isPlaying = !targetAudio.paused;
+    async function runExercise() {
+        const btn = document.getElementById('start-exercise');
+        const feedback = document.getElementById('exercise-feedback');
+        const boxes = [
+            { id: 'box-1', color: '#E07A5F' },
+            { id: 'box-2', color: '#3D5A80' },
+            { id: 'box-3', color: '#81B29A' },
+            { id: 'box-4', color: '#F2CC8F' }
+        ];
 
-        // Stop alles eerst
-        allAudios.forEach(a => { a.pause(); a.currentTime = 0; });
-        allBtns.forEach(b => b.classList.remove('playing'));
+        btn.disabled = true;
+        btn.innerText = "SPAN AAN...";
+        feedback.style.opacity = "0";
 
-        // Als hij nog NIET speelde, start hem dan nu
-        if (!isPlaying) {
-            let playPromise = targetAudio.play();
+        for (let box of boxes) {
+            const el = document.getElementById(box.id);
+            const fill = el.querySelector('.timer-fill');
+
+            el.style.borderColor = box.color;
+            el.style.backgroundColor = box.color + "22";
+            el.style.transform = "scale(1.05)";
             
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    // Audio speelt succesvol af
-                    btnElement.classList.add('playing');
-                }).catch(error => {
-                    // Browser blokkeert de audio (bijv. auto-play policy van Apple/Safari)
-                    alert("Je browser blokkeert het geluid. Zorg dat je apparaat niet op 'Stil' staat of klik eerst in het scherm!");
-                    console.log("Audio fout:", error);
-                });
-            }
+            fill.style.transition = "none";
+            fill.style.width = "0%";
+            fill.offsetHeight; // Reflow
+            fill.style.transition = "width 5s linear";
+            fill.style.backgroundColor = box.color;
+            fill.style.width = "100%";
+
+            await new Promise(r => setTimeout(r, 5000));
+
+            el.style.borderColor = "#eee";
+            el.style.backgroundColor = "transparent";
+            el.style.transform = "scale(1)";
+            fill.style.width = "0%";
         }
+
+        feedback.style.opacity = "1";
+        btn.disabled = false;
+        btn.innerText = "▶ OPNIEUW STARTEN";
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.8 } });
+    }
+
+    function playAudio(id, btn) {
+        stopAudio();
+        const audio = document.getElementById(id);
+        audio.play();
+        btn.classList.add('playing');
     }
 
     function stopAudio() {
-        document.querySelectorAll('audio').forEach(a => {
-            a.pause();
-            a.currentTime = 0;
-        });
-        document.querySelectorAll('.music-btn').forEach(b => {
-            b.classList.remove('playing');
-        });
+        document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+        document.querySelectorAll('.music-btn').forEach(b => b.classList.remove('playing'));
     }
 </script>
 </body>
