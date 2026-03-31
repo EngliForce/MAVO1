@@ -394,21 +394,41 @@
         </div>
     </div>
 
-    <div class="step" id="step-11">
-        <h2>De 5-Tellen Oefening</h2>
-        <div class="content-box">
-            <p style="text-align: center; margin-bottom: 2vh;">Laat spierspanning los door de spieren eerst hard aan te spannen.</p>
-            <div class="info-panel" style="background: #fff4e6; border-left-color: #F5A623; width: 85%; padding: 4vh 4vw;">
-                <h3 style="color: #F5A623; font-size: clamp(2rem, 4vh, 3rem); text-align: center; margin-bottom: 3vh;">✊ Hoe werkt het?</h3>
-                <ul style="padding-left: 2vw; line-height: 1.6;">
-                    <li style="margin-bottom: 1vh;">Maak vuisten en knijp zo hard als je kunt. Houd dit <strong>5 seconden</strong> vast.</li>
-                    <li style="margin-bottom: 1vh;">Laat langzaam los en voel hoe je handen zich ontspannen.</li>
-                    <li style="margin-bottom: 1vh;">Doe hetzelfde met andere delen: trek je schouders op, span je benen aan, knijp je ogen dicht.</li>
-                    <li>Houd elk lichaamsdeel steeds 5 seconden aangespannen, en... LOS!</li>
-                </ul>
+   <div class="step" id="step-11">
+    <h2>De 5-Tellen Oefening</h2>
+    <div class="content-box">
+        <p style="text-align: center; margin-bottom: 2vh;">Span aan voor 5 seconden en laat dan volledig los.</p>
+        
+        <div class="grid-2" id="exercise-grid" style="gap: 20px; width: 90%; max-width: 1000px;">
+            <div class="info-panel exercise-box" id="box-1" style="border: 4px solid #eee; transition: 0.5s;">
+                <h3 style="text-align: center; font-size: 2.5rem;">✊ Vuisten</h3>
+                <p style="text-align: center;">Knijp zo hard als je kunt!</p>
+                <div class="timer-bar"><div class="timer-fill"></div></div>
+            </div>
+            <div class="info-panel exercise-box" id="box-2" style="border: 4px solid #eee; transition: 0.5s;">
+                <h3 style="text-align: center; font-size: 2.5rem;">🤷 Schouders</h3>
+                <p style="text-align: center;">Trek ze helemaal op naar je oren.</p>
+                <div class="timer-bar"><div class="timer-fill"></div></div>
+            </div>
+            <div class="info-panel exercise-box" id="box-3" style="border: 4px solid #eee; transition: 0.5s;">
+                <h3 style="text-align: center; font-size: 2.5rem;">🦵 Benen</h3>
+                <p style="text-align: center;">Druk je voeten in de grond en span aan.</p>
+                <div class="timer-bar"><div class="timer-fill"></div></div>
+            </div>
+            <div class="info-panel exercise-box" id="box-4" style="border: 4px solid #eee; transition: 0.5s;">
+                <h3 style="text-align: center; font-size: 2.5rem;">😑 Gezicht</h3>
+                <p style="text-align: center;">Knijp je ogen dicht en span je kaken.</p>
+                <div class="timer-bar"><div class="timer-fill"></div></div>
             </div>
         </div>
+
+        <button class="music-btn" id="start-exercise" onclick="runExercise()" style="margin-top: 3vh; background: #F5A623; border: 4px solid #fff; border-radius: 50px; font-size: 2.5rem; padding: 2vh 4vw; cursor: pointer;">
+            ▶ START OEFENING
+        </button>
+
+        <p id="exercise-feedback" style="font-size: 2rem; font-weight: bold; margin-top: 2vh; opacity: 0; color: var(--primary-color);">LAAT NU LOS... EN VOEL DE RUST...</p>
     </div>
+</div>
 
     <div class="step" id="step-12">
         <h2>Muziek als Medicijn</h2>
