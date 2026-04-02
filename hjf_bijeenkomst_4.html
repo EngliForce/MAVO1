@@ -32,7 +32,7 @@
             align-items: center;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Absolute blokkade voor scrollen */
+            overflow: hidden;
             line-height: 1.3;
         }
 
@@ -64,7 +64,6 @@
             z-index: 10;
         }
 
-        /* Navigatie en Progressie */
         .progress-bar { height: 1.5vh; background-color: var(--accent-color); border-radius: 6px; margin-bottom: 1vh; overflow: hidden; flex-shrink: 0; }
         .progress-fill { height: 100%; background-color: var(--primary-color); width: 0%; transition: 0.4s ease; }
         
@@ -96,7 +95,6 @@
         button.nav-btn:hover:not(:disabled) { background-color: var(--primary-color); color: white; }
         button.nav-btn:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; }
 
-        /* Typografie: Extra groot voor leesbaarheid achterin de klas */
         h1 { color: var(--primary-color); font-size: clamp(2.5rem, 5vh, 4rem); margin: 0 0 1vh 0; text-align: center; }
         h2 { color: var(--primary-color); font-size: clamp(2.2rem, 4.5vh, 3.5rem); margin: 0 0 1vh 0; text-align: center; }
         p, li, div { font-size: clamp(1.3rem, 2.6vh, 1.8rem); margin: 0; } 
@@ -131,19 +129,16 @@
             min-height: 0;
         }
 
-        /* Gevoelsmeter */
         .mood-container { display: flex; justify-content: space-around; align-items: center; width: 100%; flex-grow: 1; }
         .mood-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.2s; padding: 2vh; border-radius: 20px; background: var(--bg-color); min-width: 12vw; }
         .mood-item:hover { transform: scale(1.15); background: var(--accent-color); }
         .mood-emoji { font-size: clamp(4.5rem, 11vh, 8rem); margin-bottom: 1vh; }
         .mood-counter { font-size: clamp(2rem, 4vh, 3rem); font-weight: bold; color: var(--primary-color); background: white; padding: 0.5vh 2vw; border-radius: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* Video */
         .video-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; flex-grow: 1; max-height: 55vh; margin-top: 1vh; }
         .video-container { height: 50vh; aspect-ratio: 16 / 9; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15); background: #000; }
         .video-container iframe { width: 100%; height: 100%; border: none; }
 
-        /* Grids & Panels */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vw; width: 100%; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5vw; width: 100%; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vw; width: 100%; }
@@ -165,17 +160,57 @@
 
         .highlight-box { background: #FFF9E6; border: 4px solid #FFD966; border-radius: 15px; padding: 1.5vh 2vw; width: 100%; font-weight: bold; text-align: center; }
 
-        /* Interactieve Kaart (Omdenken) */
+        /* --- NIEUWE FLIP KAART STIJL --- */
         .card-drawer { text-align: center; padding: 2vh; background-color: var(--page-badge-bg); border-radius: 20px; width: 100%; max-width: 900px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 5px dashed var(--primary-color); }
-        .card-visual {
-            width: 80%; min-height: 20vh; background: white; border-radius: 15px; border: 6px solid var(--fixed-color);
-            display: flex; justify-content: center; align-items: center; margin: 1.5vh auto; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            font-size: clamp(1.8rem, 3.5vh, 2.6rem); font-weight: bold; color: var(--fixed-color); text-align: center; padding: 2vh 3vw;
-            transition: 0.5s; transform: scale(0.9); opacity: 0;
+        
+        .flip-card {
+            background-color: transparent;
+            width: 85%;
+            height: 25vh;
+            perspective: 1000px; /* Bepaalt de 3D-diepte */
+            margin: 1.5vh auto;
+            cursor: pointer;
         }
-        .card-visual.show { transform: scale(1) translateY(-5px); opacity: 1; }
 
-        /* Vingers Oefening */
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3vh 3vw;
+            box-sizing: border-box;
+            border-radius: 15px;
+            border: 6px solid var(--fixed-color);
+            background: white;
+        }
+
+        .flip-card-back {
+            background: white;
+            color: var(--actief-color);
+            transform: rotateY(180deg);
+            border-color: var(--actief-color);
+        }
+
         .finger-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: white; border: 4px solid var(--accent-color); padding: 1.5vh 1vw; border-radius: 20px; font-weight: bold; transition: 0.3s; }
         .finger-icon { font-size: clamp(2.5rem, 5vh, 4rem); background: var(--accent-color); width: 8vh; height: 8vh; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 1vh; transition: 0.3s; }
         .active-finger { background-color: var(--primary-color); color: white; border-color: var(--primary-color); transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
@@ -186,6 +221,15 @@
         
         .whatsapp-bubble { background-color: var(--whatsapp-green); padding: 2vh 3vw; border-radius: 20px; border-top-left-radius: 0; font-size: clamp(1.3rem, 2.6vh, 1.8rem); box-shadow: 2px 5px 10px rgba(0,0,0,0.1); width: 80%; max-width: 900px; position: relative; margin-top: 1vh; }
         .whatsapp-bubble::before { content: ""; position: absolute; top: 0; left: -15px; border-width: 15px 15px 0 0; border-style: solid; border-color: var(--whatsapp-green) transparent transparent transparent; }
+
+        /* 5G animatie klassen */
+        .g-box { transition: all 0.5s ease; }
+        .g-box.active {
+            background-color: var(--accent-color) !important;
+            transform: scale(1.1);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+            border-left-width: 12px;
+        }
     </style>
 </head>
 <body>
@@ -197,7 +241,7 @@
 
     <div class="step active" id="step-0">
         <h1>Bijeenkomst 4: Faalangst en je gedachten</h1>
-        <h2>Hoe kom je vandaag binnen?</h2>
+        <h2>Hoe voel je je vandaag?</h2>
         <div class="mood-container">
             <div class="mood-item" onclick="registerMood('bliksem')"><span class="mood-emoji">⚡</span><span class="mood-counter" id="count-bliksem">0</span></div>
             <div class="mood-item" onclick="registerMood('regen')"><span class="mood-emoji">🌧️</span><span class="mood-counter" id="count-regen">0</span></div>
@@ -253,8 +297,18 @@
                 "Elk probleem heeft ook een kans in zich."
             </div>
             <div class="card-drawer">
-                <p style="font-weight: bold; margin-bottom: 1vh;">Trek een kaartje en bedenk met de groep: Welke kans zit hierin verborgen?</p>
-                <div id="omdenk-card" class="card-visual">Klik op de knop voor een probleem!</div>
+                <p style="font-weight: bold; margin-bottom: 1vh;">Trek een kaartje, bedenk zelf de kans, en klik daarna op de kaart om het antwoord te zien!</p>
+                
+                <div class="flip-card" id="omdenk-container" onclick="draaiKaartOm()">
+                    <div class="flip-card-inner" id="omdenk-inner">
+                        <div class="flip-card-front" id="omdenk-front">
+                            <span style="color: var(--fixed-color); font-weight: bold; font-size: clamp(1.5rem, 3vh, 2.2rem);">Klik op de knop hieronder voor een probleem!</span>
+                        </div>
+                        <div class="flip-card-back" id="omdenk-back">
+                            </div>
+                    </div>
+                </div>
+
                 <button onclick="trekOmdenkKaart()" class="action-btn">Trek een probleem! 🃏</button>
             </div>
         </div>
@@ -287,30 +341,34 @@
         <div class="page-badge">Blz. 20</div>
         <h2>Het 5G-Schema</h2>
         <div class="content-box">
-            <p style="text-align: center; margin-bottom: 1.5vh; font-weight: bold;">Helpt om stap voor stap te begrijpen wat er in je hoofd gebeurt.</p>
+            <p style="text-align: center; margin-bottom: 2vh; font-weight: bold; font-size: clamp(1.8rem, 3.5vh, 2.5rem);">Helpt om stap voor stap te begrijpen wat er in je hoofd gebeurt.</p>
+            
             <div class="grid-5">
-                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
-                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">1</h3>
-                    <p style="font-weight: bold; color: var(--primary-color);">Gebeurtenis</p>
+                <div class="info-panel g-box" id="g-box-0" style="text-align: center; padding: 2vh 1vw;">
+                    <h3 style="font-size: clamp(2.5rem, 5vh, 4rem);">1</h3>
+                    <p style="font-weight: bold; color: var(--primary-color); font-size: clamp(1.6rem, 3vh, 2.2rem);">Gebeurtenis</p>
                 </div>
-                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
-                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">2</h3>
-                    <p style="font-weight: bold; color: var(--primary-color);">Gedachte</p>
+                <div class="info-panel g-box" id="g-box-1" style="text-align: center; padding: 2vh 1vw;">
+                    <h3 style="font-size: clamp(2.5rem, 5vh, 4rem);">2</h3>
+                    <p style="font-weight: bold; color: var(--primary-color); font-size: clamp(1.6rem, 3vh, 2.2rem);">Gedachte</p>
                 </div>
-                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
-                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">3</h3>
-                    <p style="font-weight: bold; color: var(--primary-color);">Gevoel</p>
+                <div class="info-panel g-box" id="g-box-2" style="text-align: center; padding: 2vh 1vw;">
+                    <h3 style="font-size: clamp(2.5rem, 5vh, 4rem);">3</h3>
+                    <p style="font-weight: bold; color: var(--primary-color); font-size: clamp(1.6rem, 3vh, 2.2rem);">Gevoel</p>
                 </div>
-                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
-                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">4</h3>
-                    <p style="font-weight: bold; color: var(--primary-color);">Gedrag</p>
+                <div class="info-panel g-box" id="g-box-3" style="text-align: center; padding: 2vh 1vw;">
+                    <h3 style="font-size: clamp(2.5rem, 5vh, 4rem);">4</h3>
+                    <p style="font-weight: bold; color: var(--primary-color); font-size: clamp(1.6rem, 3vh, 2.2rem);">Gedrag</p>
                 </div>
-                <div class="info-panel" style="text-align: center; padding: 1.5vh 1vw;">
-                    <h3 style="font-size: clamp(2rem, 4vh, 3.5rem);">5</h3>
-                    <p style="font-weight: bold; color: var(--primary-color);">Gevolg</p>
+                <div class="info-panel g-box" id="g-box-4" style="text-align: center; padding: 2vh 1vw;">
+                    <h3 style="font-size: clamp(2.5rem, 5vh, 4rem);">5</h3>
+                    <p style="font-weight: bold; color: var(--primary-color); font-size: clamp(1.6rem, 3vh, 2.2rem);">Gevolg</p>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 1.5vh; font-style: italic;">Als je je gedachten (2) leert kennen, kun je je gevoel en gedrag veranderen. Dit geeft je meer controle!</p>
+            
+            <p style="text-align: center; margin-top: 2.5vh; font-style: italic; font-size: clamp(1.5rem, 3vh, 2.2rem); max-width: 1000px;">
+                Als je je gedachten (2) leert kennen, kun je je gevoel en gedrag veranderen. Dit geeft je meer controle!
+            </p>
         </div>
     </div>
 
@@ -571,45 +629,67 @@
     const steps = document.querySelectorAll('.step');
     const moodCounts = { bliksem: 0, regen: 0, wolken: 0, 'zon-wolken': 0, zon: 0 };
 
-    /* --- Omdenken 25 Kaartjes --- */
+    /* --- Omdenken Kaartjes met Kansen --- */
     const omdenkKaartjes = [
-        "Mijn fiets is vanochtend gestolen.", 
-        "Ik heb een dikke onvoldoende gehaald.", 
-        "Het regent gigantisch en ik moet ver fietsen.",
-        "Mijn beste vriend(in) heeft afgezegd.", 
-        "Ik ben mijn telefoon kwijtgeraakt.", 
-        "Ik moet 2 uur nablijven.",
-        "De wifi ligt er thuis al uren uit.", 
-        "Ik ben veel te laat gekomen op school.", 
-        "Ik heb flinke ruzie met mijn ouders.",
-        "Mijn lievelingstrui is gekrompen in de was.", 
-        "Ik heb het verkeerde huiswerk geleerd.",
-        "Iemand maakte een gemene opmerking tegen me.", 
-        "Ik ben niet in het basisteam gekozen.",
-        "Mijn laptop is opeens gecrasht.", 
-        "Ik moet straks een spreekbeurt houden.",
-        "Mijn broodje is helemaal geplet in mijn tas.", 
-        "Ik heb geen geld meer voor de schoolkantine.",
-        "De bus reed net voor mijn neus weg.", 
-        "Ik begreep werkelijk niets van de wiskundeles.",
-        "Ik heb per ongeluk een blamage begaan in de klas.", 
-        "Mijn wekker is vanochtend niet afgegaan.",
-        "Ik moet vandaag de hele woonkamer schoonmaken.", 
-        "Mijn broertje/zusje is super irritant vandaag.",
-        "Het waait ontzettend hard tegen op de fiets.", 
-        "Ik ben mijn boeken voor het belangrijkste vak vergeten."
+        { probleem: "Mijn fiets is vanochtend gestolen.", kans: "Je loopt nu, wat gezond is, of je krijgt de kans om een betere fiets uit te zoeken." },
+        { probleem: "Ik heb een dikke onvoldoende gehaald.", kans: "Je weet nu precies welk onderdeel je nog niet snapt en beter moet oefenen." },
+        { probleem: "Het regent gigantisch en ik moet ver fietsen.", kans: "Je traint je doorzettingsvermogen (en warme chocomel straks is extra lekker)." },
+        { probleem: "Mijn beste vriend(in) heeft afgezegd.", kans: "Je hebt onverwachts extra me-time om te gamen of te chillen." },
+        { probleem: "Ik ben mijn telefoon kwijtgeraakt.", kans: "Een onverwachte digitale detox die je rust in je hoofd geeft." },
+        { probleem: "Ik moet 2 uur nablijven.", kans: "Je hebt 2 uur de tijd om al je huiswerk zonder afleiding op school af te maken." },
+        { probleem: "De wifi ligt er thuis al uren uit.", kans: "Je hebt eindelijk tijd om dat boek te lezen of gewoon even lekker te slapen." },
+        { probleem: "Ik ben veel te laat gekomen op school.", kans: "Je hebt vanochtend je stressbestendigheid en oplossingsgerichtheid getraind." },
+        { probleem: "Ik heb flinke ruzie met mijn ouders.", kans: "Een kans om te oefenen met uitspreken wat je voelt en ruzies goedmaken." },
+        { probleem: "Mijn lievelingstrui is gekrompen in de was.", kans: "Je hebt nu een fantastisch cadeautje voor een kleiner broertje, zusje of nichtje." },
+        { probleem: "Ik heb het verkeerde huiswerk geleerd.", kans: "Je hebt nu al een voorsprong op de lesstof van volgende week!" },
+        { probleem: "Iemand maakte een gemene opmerking tegen me.", kans: "Je leert dat de mening van een ander niets zegt over jouw waarde." },
+        { probleem: "Ik ben niet in het basisteam gekozen.", kans: "Extra motivatie en tijd om je zwakke punten te trainen en nóg beter te worden." },
+        { probleem: "Mijn laptop is opeens gecrasht.", kans: "Je leert voor altijd de waarde van goede back-ups en mag even offline zijn." },
+        { probleem: "Ik moet straks een spreekbeurt houden.", kans: "De perfecte kans om iedereen te laten zien hoeveel jij van dit onderwerp weet." },
+        { probleem: "Mijn broodje is helemaal geplet in mijn tas.", kans: "Het past nu veel makkelijker in je mond en smaakt er niet minder om." },
+        { probleem: "Ik heb geen geld meer voor de schoolkantine.", kans: "Veel gezonder voor je portemonnee én waarschijnlijk ook voor je lichaam." },
+        { probleem: "De bus reed net voor mijn neus weg.", kans: "Je hebt extra tijd om rustig naar je favoriete muziek te luisteren." },
+        { probleem: "Ik begreep werkelijk niets van de wiskundeles.", kans: "Een mooie kans om samen te werken door een klasgenoot om uitleg te vragen." },
+        { probleem: "Ik heb per ongeluk een blamage begaan in de klas.", kans: "Je hebt mensen aan het lachen gemaakt en morgen is iedereen het weer vergeten." },
+        { probleem: "Mijn wekker is vanochtend niet afgegaan.", kans: "Je lichaam had die extra slaap blijkbaar hard nodig." },
+        { probleem: "Ik moet vandaag de hele woonkamer schoonmaken.", kans: "Je kan ondertussen een leuke podcast luisteren en ziet direct resultaat." },
+        { probleem: "Mijn broertje/zusje is super irritant vandaag.", kans: "Een perfecte training voor jouw geduld en zelfbeheersing." },
+        { probleem: "Het waait ontzettend hard tegen op de fiets.", kans: "Gratis beenspiertraining, je hoeft vandaag niet meer naar de sportschool!" },
+        { probleem: "Ik ben mijn boeken voor het belangrijkste vak vergeten.", kans: "Je traint je improvisatievermogen en leert sociaal samenwerken met je buurman/vrouw." }
     ];
 
     function trekOmdenkKaart() {
-        const cardDisplay = document.getElementById('omdenk-card');
+        const flipContainer = document.getElementById('omdenk-container');
+        const frontDisplay = document.getElementById('omdenk-front');
+        const backDisplay = document.getElementById('omdenk-back');
+        
         const randomIndex = Math.floor(Math.random() * omdenkKaartjes.length);
+        const kaart = omdenkKaartjes[randomIndex];
         
-        cardDisplay.classList.remove('show');
+        // Zorg dat de kaart eerst terugdraait als hij toevallig open ligt
+        flipContainer.classList.remove('flipped');
         
+        // Wacht kort tot de animatie klaar is, laad dan de nieuwe kaart in
         setTimeout(() => {
-            cardDisplay.innerText = omdenkKaartjes[randomIndex];
-            cardDisplay.classList.add('show');
+            frontDisplay.innerHTML = `
+                <span style="color: var(--passief-color); font-size: 0.8em; text-transform: uppercase; margin-bottom: 1vh;">❌ Het Probleem:</span>
+                <span style="font-weight: bold; font-size: clamp(1.5rem, 3.5vh, 2.4rem); color: #333;">"${kaart.probleem}"</span>
+                <span style="color: #aaa; font-size: 0.7em; margin-top: 3vh; font-style: italic;">👉 Klik op de kaart om te draaien 👈</span>
+            `;
+            
+            backDisplay.innerHTML = `
+                <span style="color: var(--actief-color); font-size: 0.8em; text-transform: uppercase; margin-bottom: 1vh;">✅ De Kans:</span>
+                <span style="font-weight: bold; font-size: clamp(1.5rem, 3.5vh, 2.4rem); color: var(--actief-color);">${kaart.kans}</span>
+            `;
         }, 300);
+    }
+
+    function draaiKaartOm() {
+        const flipContainer = document.getElementById('omdenk-container');
+        // Controleer of er al echt een kaart getrokken is voordat we mogen draaien
+        if (document.getElementById('omdenk-front').innerHTML.includes('Het Probleem')) {
+            flipContainer.classList.toggle('flipped');
+        }
     }
 
     /* --- Vingerfocus Variabelen --- */
@@ -623,6 +703,9 @@
         { id: 'focus-ring', text: 'Adem uit: "Ik ben ontspannen"' },
         { id: 'focus-pink', text: 'Adem uit: "Ik ben relaxt"' }
     ];
+
+    /* --- 5G Animatie Variabelen --- */
+    let gInterval;
 
     function registerMood(type) {
         moodCounts[type]++;
@@ -646,6 +729,13 @@
         const percentage = (currentStep / (steps.length - 1)) * 100;
         document.getElementById('progress-fill').style.width = percentage + '%';
 
+        // 5G animatie triggeren op stap 5
+        if (steps[currentStep].id === 'step-5') {
+            startGAnimation();
+        } else {
+            stopGAnimation();
+        }
+
         // Confetti bij de laatste dia
         if (currentStep === steps.length - 1) {
             confetti({ 
@@ -655,6 +745,27 @@
                 colors: ['#6B9080', '#A4C3B2', '#E07A5F', '#FFD700', '#4A90E2'] 
             });
         }
+    }
+
+    /* --- Interactieve 5G Functies --- */
+    function startGAnimation() {
+        const boxes = document.querySelectorAll('.g-box');
+        let currentGIndex = 0;
+
+        boxes.forEach(b => b.classList.remove('active'));
+        if(boxes[currentGIndex]) boxes[currentGIndex].classList.add('active');
+
+        gInterval = setInterval(() => {
+            boxes.forEach(b => b.classList.remove('active'));
+            currentGIndex = (currentGIndex + 1) % boxes.length;
+            boxes[currentGIndex].classList.add('active');
+        }, 5000); 
+    }
+
+    function stopGAnimation() {
+        if (gInterval) clearInterval(gInterval);
+        const boxes = document.querySelectorAll('.g-box');
+        boxes.forEach(b => b.classList.remove('active'));
     }
 
     /* --- Interactieve Vingerfocus Functies --- */
@@ -669,7 +780,6 @@
         focusInterval = setInterval(() => {
             focusIndex += direction;
             
-            // Controleer richting omdraaien
             if (focusIndex >= focusFingers.length) {
                 direction = -1;
                 focusIndex = focusFingers.length - 2; 
