@@ -160,14 +160,13 @@
 
         .highlight-box { background: #FFF9E6; border: 4px solid #FFD966; border-radius: 15px; padding: 1.5vh 2vw; width: 100%; font-weight: bold; text-align: center; }
 
-        /* --- NIEUWE FLIP KAART STIJL --- */
         .card-drawer { text-align: center; padding: 2vh; background-color: var(--page-badge-bg); border-radius: 20px; width: 100%; max-width: 900px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 5px dashed var(--primary-color); }
         
         .flip-card {
             background-color: transparent;
             width: 85%;
             height: 25vh;
-            perspective: 1000px; /* Bepaalt de 3D-diepte */
+            perspective: 1000px;
             margin: 1.5vh auto;
             cursor: pointer;
         }
@@ -583,7 +582,7 @@
         <div class="page-badge">Blz. 28</div>
         <h2>Oefen mee: De Vingerwandeling</h2>
         <div class="content-box" style="text-align: center;">
-            <p style="font-weight: bold; margin-bottom: 2vh;">Tik de oplichtende vinger aan met je duim en zeg de zin in je hoofd.</p>
+            <p style="font-weight: bold; margin-bottom: 2vh;">Volg de instructies op het scherm.</p>
             
             <div class="grid-4" style="max-width: 1100px;">
                 <div class="finger-card" id="focus-wijs"><div class="finger-icon">☝️</div> <span>Wijsvinger<br><br>"Ik ben rustig"</span></div>
@@ -596,7 +595,7 @@
             
             <div id="focusContainer" style="display: none; background: var(--page-badge-bg); padding: 2vh 4vw; border-radius: 20px; border: 4px solid var(--primary-color); margin-top: 2vh; width: 80%; max-width: 900px;">
                 <p id="focusInstructie" style="font-size: clamp(2.5rem, 5vh, 4rem); font-weight: bold; color: var(--primary-color); margin: 0;">
-                    Adem In...
+                    Adem in... 🌬️
                 </p>
             </div>
         </div>
@@ -666,10 +665,8 @@
         const randomIndex = Math.floor(Math.random() * omdenkKaartjes.length);
         const kaart = omdenkKaartjes[randomIndex];
         
-        // Zorg dat de kaart eerst terugdraait als hij toevallig open ligt
         flipContainer.classList.remove('flipped');
         
-        // Wacht kort tot de animatie klaar is, laad dan de nieuwe kaart in
         setTimeout(() => {
             frontDisplay.innerHTML = `
                 <span style="color: var(--passief-color); font-size: 0.8em; text-transform: uppercase; margin-bottom: 1vh;">❌ Het Probleem:</span>
@@ -686,7 +683,6 @@
 
     function draaiKaartOm() {
         const flipContainer = document.getElementById('omdenk-container');
-        // Controleer of er al echt een kaart getrokken is voordat we mogen draaien
         if (document.getElementById('omdenk-front').innerHTML.includes('Het Probleem')) {
             flipContainer.classList.toggle('flipped');
         }
@@ -694,6 +690,7 @@
 
     /* --- Vingerfocus Variabelen --- */
     let focusInterval;
+    let focusTimeout; // Nieuwe timer voor ademhaling
     let focusIndex = 0;
     let direction = 1; 
     let cycles = 0;
@@ -717,7 +714,7 @@
     }
 
     function changeStep(n) {
-        stopFocusExercise(); // Stop timer bij weggaan
+        stopFocusExercise();
 
         steps[currentStep].classList.remove('active');
         currentStep += n;
@@ -729,14 +726,12 @@
         const percentage = (currentStep / (steps.length - 1)) * 100;
         document.getElementById('progress-fill').style.width = percentage + '%';
 
-        // 5G animatie triggeren op stap 5
         if (steps[currentStep].id === 'step-5') {
             startGAnimation();
         } else {
             stopGAnimation();
         }
 
-        // Confetti bij de laatste dia
         if (currentStep === steps.length - 1) {
             confetti({ 
                 particleCount: 200, 
@@ -777,6 +772,7 @@
         cycles = 0;
         updateFocusUI();
         
+        // Ritme vertraagd naar 5 seconden voor een rustigere ademhalingscyclus
         focusInterval = setInterval(() => {
             focusIndex += direction;
             
@@ -794,29 +790,42 @@
             } else {
                 updateFocusUI();
             }
-        }, 4000); 
+        }, 5000); 
     }
 
     function updateFocusUI() {
+        if (focusTimeout) clearTimeout(focusTimeout); // Reset de timer als we naar de volgende vinger gaan
+
         focusFingers.forEach(f => document.getElementById(f.id).classList.remove('active-finger'));
         
         const currentData = focusFingers[focusIndex];
         document.getElementById(currentData.id).classList.add('active-finger');
-        document.getElementById('focusInstructie').innerText = currentData.text;
+        
+        // Fase 1: Adem In (2 seconden)
+        document.getElementById('focusInstructie').innerText = "Adem in... 🌬️";
+        
+        // Fase 2: Adem Uit en zeg de zin (na 2 seconden, duurt de resterende 3 seconden)
+        focusTimeout = setTimeout(() => {
+            document.getElementById('focusInstructie').innerText = currentData.text;
+        }, 2000);
     }
 
     function finishFocusExercise() {
         clearInterval(focusInterval);
+        if (focusTimeout) clearTimeout(focusTimeout);
         focusFingers.forEach(f => document.getElementById(f.id).classList.remove('active-finger'));
         document.getElementById('focusContainer').innerHTML = `<p style="font-size: clamp(2rem, 4vh, 3.2rem); font-weight: bold; color: var(--actief-color); margin: 0;">🎉 Oefening Voltooid!</p>`;
     }
 
     function stopFocusExercise() {
         clearInterval(focusInterval);
+        if (focusTimeout) clearTimeout(focusTimeout);
         focusFingers.forEach(f => document.getElementById(f.id).classList.remove('active-finger'));
         document.getElementById('startFocusBtn').style.display = 'inline-block';
         document.getElementById('focusContainer').style.display = 'none';
-        document.getElementById('focusContainer').innerHTML = `<p id="focusInstructie" style="font-size: clamp(2rem, 4vh, 3.2rem); font-weight: bold; color: var(--primary-color); margin: 0;">Adem In...</p>`;
+        
+        // Reset tekst voor een eventuele volgende keer
+        document.getElementById('focusContainer').innerHTML = `<p id="focusInstructie" style="font-size: clamp(2.5rem, 5vh, 4rem); font-weight: bold; color: var(--primary-color); margin: 0;">Adem in... 🌬️</p>`;
     }
 </script>
 </body>
