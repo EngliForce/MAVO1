@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: The Master Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --wa-bg: #0b141a;
+            --wa-bubble-in: #202c33;
+            --wa-bubble-out: #005c4b;
+        }
+
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+        
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            flex-shrink: 0;
+        }
+
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+
+        main { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.2);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 550px;
+            position: relative;
+        }
+
+        .top-bar { display: flex; justify-content: space-between; color: var(--hero-yellow); font-family: 'Bangers'; font-size: 1.5rem; border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px; }
+
+        #chat-window {
+            flex: 1;
+            background: var(--wa-bg);
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+            background-blend-mode: overlay;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+
+        .bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            line-height: 1.4;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .bubble-in { background: var(--wa-bubble-in); align-self: flex-start; border-bottom-left-radius: 2px; color: #e9edef; }
+        .bubble-out { background: var(--wa-bubble-out); align-self: flex-end; border-bottom-right-radius: 2px; color: #fff; }
+        
+        .sender { color: var(--hero-cyan); font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 4px; font-family: 'Share Tech Mono', monospace; }
+        .hint { color: var(--hero-yellow); font-size: 0.85rem; display: block; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; font-style: italic; }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            background: #202c33;
+            padding: 10px;
+            border-radius: 30px;
+            align-items: center;
+        }
+
+        .wa-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            padding: 5px 10px;
+        }
+
+        .btn-send {
+            background: #00a884;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: 0.2s;
+        }
+
+        .btn-send:hover { background: #008f6f; transform: scale(1.05); }
+
+        #next-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: none;
+        }
+
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            transition: 0.2s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .btn-action:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+
+        footer { background: #05101a; color: rgba(255,255,255,0.6); text-align: center; padding: 20px; border-top: 2px solid var(--hero-purple-dark); flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+</header>
+
+<main>
+    <section class="briefing-box" id="main-box">
+        <div id="screen-intro" style="text-align: center;">
+            <h2 style="color: var(--hero-yellow);">🚨 WHATSAPP INTERCEPTOR</h2>
+            <p style="font-size: 1.2rem;">Agent, decode the messages by answering the Commander.</p>
+            <p style="color: var(--hero-cyan);">Rules: Use <strong>to be going to</strong> and start with a <strong>Capital Letter</strong>!</p>
+            <button class="btn-action" onclick="startGame()">START MISSION</button>
+        </div>
+
+        <div id="screen-game" style="display: none; flex: 1; flex-direction: column;">
+            <div class="top-bar">
+                <span id="ui-q">SIGNAL: 1 / 10</span>
+                <span id="ui-score">DECODED: 0</span>
+            </div>
+
+            <div id="chat-window"></div>
+
+            <div id="next-container">
+                <button class="btn-action" onclick="nextQuestion()">NEXT MESSAGE ➡️</button>
+            </div>
+
+            <div class="input-area" id="input-area">
+                <input type="text" id="user-input" class="wa-input" placeholder="Type your answer here..." autocomplete="off">
+                <button id="send-btn" class="btn-send" onclick="checkAnswer()">➤</button>
+            </div>
+        </div>
+
+        <div id="screen-end" style="display: none; text-align: center;">
+            <h2 style="color: var(--hero-green);">MISSION COMPLETE!</h2>
+            <p style="font-size: 2rem;">Signals Decoded: <span id="final-score" style="color: var(--hero-yellow);">0</span> / 10</p>
+            <button class="btn-action" onclick="location.reload()">RESTART SYSTEM</button>
+        </div>
+    </section>
+</main>
+
+<footer>
+    &copy; 2026, EngliForce: <span style="color: var(--hero-yellow);">Make English Your Superpower!</span>
+</footer>
+
+<script>
+    // --- DATABASE: 150 QUESTIONS ---
+    const questionBank = [
+        { q: "What is Mister Sebel going to do today?", h: "correct the test", a: ["Mister Sebel is going to correct the test", "He is going to correct the test"] },
+        { q: "What is Agent Smith going to do tonight?", h: "watch the base", a: ["Agent Smith is going to watch the base", "He is going to watch the base"] },
+        { q: "What are the villains going to do now?", h: "steal the diamond", a: ["The villains are going to steal the diamond", "They are going to steal the diamond"] },
+        { q: "What is Miss Lane going to do at 5 o'clock?", h: "call the boss", a: ["Miss Lane is going to call the boss", "She is going to call the boss"] },
+        { q: "What are we going to do on Monday?", h: "build a secret lab", a: ["We are going to build a secret lab"] },
+        { q: "What is the robot going to do?", h: "carry the suitcase", a: ["The robot is going to carry the suitcase", "It is going to carry the suitcase"] },
+        { q: "What are you and Toby going to do?", h: "hack the computer", a: ["Toby and I are going to hack the computer", "We are going to hack the computer"] },
+        { q: "What is the spy going to do in Paris?", h: "buy a new mask", a: ["The spy is going to buy a new mask", "He is going to buy a new mask", "She is going to buy a new mask"] },
+        { q: "What are the guards going to do?", h: "close the door", a: ["The guards are going to close the door", "They are going to close the door"] },
+        { q: "What is Iker going to do tomorrow?", h: "play football", a: ["Iker is going to play football", "He is going to play football"] },
+        { q: "What is Agent Miller going to do with the files?", h: "burn the evidence", a: ["Agent Miller is going to burn the evidence", "He is going to burn the evidence"] },
+        { q: "What are the students going to do after school?", h: "visit the museum", a: ["The students are going to visit the museum", "They are going to visit the museum"] },
+        { q: "What is the boss going to do at noon?", h: "eat lunch", a: ["The boss is going to eat lunch", "He is going to eat lunch"] },
+        { q: "What are you going to do this weekend?", h: "play video games", a: ["I am going to play video games"] },
+        { q: "What is your father going to do tomorrow?", h: "wash the car", a: ["My father is going to wash the car", "He is going to wash the car"] },
+        { q: "What is Miss Parker going to do now?", h: "open the safe", a: ["Miss Parker is going to open the safe", "She is going to open the safe"] },
+        { q: "What are those men going to do?", h: "climb the wall", a: ["Those men are going to climb the wall", "They are going to climb the wall"] },
+        { q: "What is the pilot going to do?", h: "fly the helicopter", a: ["The pilot is going to fly the helicopter", "He is going to fly the helicopter"] },
+        { q: "What are we going to do in the forest?", h: "hide the money", a: ["We are going to hide the money"] },
+        { q: "What is the tech expert going to do?", h: "fix the laser", a: ["The tech expert is going to fix the laser", "He is going to fix the laser"] },
+        { q: "What is the dog going to do in the garden?", h: "dig a hole", a: ["The dog is going to dig a hole", "It is going to dig a hole"] },
+        { q: "What is the Queen going to do next week?", h: "visit the park", a: ["The Queen is going to visit the park", "She is going to visit the park"] },
+        { q: "What are the hackers going to do with our data?", h: "sell it", a: ["The hackers are going to sell it", "They are going to sell it"] },
+        { q: "What is the general going to do at dawn?", h: "start the attack", a: ["The general is going to start the attack", "He is going to start the attack"] },
+        { q: "What are you going to do with that camera?", h: "take a photo", a: ["I am going to take a photo"] },
+        { q: "What is the driver going to do at the red light?", h: "stop the car", a: ["The driver is going to stop the car", "He is going to stop the car"] },
+        { q: "What is your brother going to do on Friday?", h: "buy a gift", a: ["My brother is going to buy a gift", "He is going to buy a gift"] },
+        { q: "What are the birds going to do in winter?", h: "fly south", a: ["The birds are going to fly south", "They are going to fly south"] },
+        { q: "What is the scientist going to do in the lab?", h: "make a potion", a: ["The scientist is going to make a potion", "He is going to make a potion"] },
+        { q: "What are we going to do tonight?", h: "order a pizza", a: ["We are going to order a pizza"] },
+        { q: "What is the spy going to do in the dark?", h: "hide", a: ["The spy is going to hide", "He is going to hide", "She is going to hide"] },
+        { q: "What is the hacker going to do with the password?", h: "change it", a: ["The hacker is going to change it", "He is going to change it", "She is going to change it"] },
+        { q: "What is the enemy going to do with the bridge?", h: "destroy it", a: ["The enemy is going to destroy it", "They are going to destroy it"] },
+        { q: "What is the programmer going to do?", h: "write code", a: ["The programmer is going to write code", "He is going to write code", "She is going to write code"] },
+        { q: "What is the chef going to do?", h: "cook dinner", a: ["The chef is going to cook dinner", "He is going to cook dinner", "She is going to cook dinner"] },
+        { q: "What is the thief going to do with the bag?", h: "drop it", a: ["The thief is going to drop it", "He is going to drop it", "She is going to drop it"] },
+        { q: "What is the hero going to do?", h: "save the day", a: ["The hero is going to save the day", "He is going to save the day", "She is going to save the day"] },
+        { q: "What is the baby going to do?", h: "cry", a: ["The baby is going to cry", "He is going to cry", "She is going to cry"] },
+        { q: "What is the mechanic going to do?", h: "repair the van", a: ["The mechanic is going to repair the van", "He is going to repair the van"] },
+        { q: "What is the artist going to do?", h: "paint a picture", a: ["The artist is going to paint a picture", "He is going to paint a picture", "She is going to paint a picture"] },
+        { q: "What is the actor going to do?", h: "learn the lines", a: ["The actor is going to learn the lines", "He is going to learn the lines"] },
+        { q: "What is the cat going to do with the milk?", h: "drink it", a: ["The cat is going to drink it", "It is going to drink it"] },
+        { q: "What is the mouse going to do?", h: "run away", a: ["The mouse is going to run away", "It is going to run away"] },
+        { q: "What is the snake going to do?", h: "bite", a: ["The snake is going to bite", "It is going to bite"] },
+        { q: "What is the sun going to do?", h: "shine", a: ["The sun is going to shine", "It is going to shine"] },
+        { q: "What is the moon going to do?", h: "appear", a: ["The moon is going to appear", "It is going to appear"] },
+        { q: "What is the wind going to do?", h: "blow", a: ["The wind is going to blow", "It is going to blow"] },
+        { q: "What is the snow going to do?", h: "melt", a: ["The snow is going to melt", "It is going to melt"] },
+        { q: "What is the tree going to do?", h: "fall", a: ["The tree is going to fall", "It is going to fall"] },
+        { q: "What is the flower going to do?", h: "grow", a: ["The flower is going to grow", "It is going to grow"] },
+        { q: "What is the team going to do?", h: "win the match", a: ["The team is going to win the match", "They are going to win the match"] },
+        { q: "What is the audience going to do?", h: "clap", a: ["The audience is going to clap", "They are going to clap"] },
+        { q: "What is the band going to do?", h: "play music", a: ["The band is going to play music", "They are going to play music"] },
+        { q: "What is the singer going to do?", h: "sing a song", a: ["The singer is going to sing a song", "He is going to sing a song", "She is going to sing a song"] },
+        { q: "What is the dancer going to do?", h: "dance", a: ["The dancer is going to dance", "He is going to dance", "She is going to dance"] },
+        { q: "What is the writer going to do?", h: "finish the book", a: ["The writer is going to finish the book", "He is going to finish the book", "She is going to finish the book"] },
+        { q: "What is the student going to do?", h: "pass the exam", a: ["The student is going to pass the exam", "He is going to pass the exam", "She is going to pass the exam"] },
+        { q: "What is the teacher going to do?", h: "explain the rule", a: ["The teacher is going to explain the rule", "He is going to explain the rule", "She is going to explain the rule"] },
+        { q: "What is the doctor going to do?", h: "help the patient", a: ["The doctor is going to help the patient", "He is going to help the patient", "She is going to help the patient"] },
+        { q: "What is the nurse going to do?", h: "give the medicine", a: ["The nurse is going to give the medicine", "He is going to give the medicine", "She is going to give the medicine"] },
+        { q: "What is the police officer going to do?", h: "arrest the thief", a: ["The police officer is going to arrest the thief", "They are going to arrest the thief"] },
+        { q: "What is the firefighter going to do?", h: "stop the fire", a: ["The firefighter is going to stop the fire", "He is going to stop the fire", "She is going to stop the fire"] },
+        { q: "What is the pilot going to do?", h: "land the plane", a: ["The pilot is going to land the plane", "He is going to land the plane", "She is going to land the plane"] },
+        { q: "What is the sailor going to do?", h: "cross the sea", a: ["The sailor is going to cross the sea", "He is going to cross the sea", "She is going to cross the sea"] },
+        { q: "What is the driver going to do?", h: "turn left", a: ["The driver is going to turn left", "He is going to turn left", "She is going to turn left"] },
+        { q: "What is the passenger going to do?", h: "wait", a: ["The passenger is going to wait", "He is going to wait", "She is going to wait"] },
+        { q: "What is the customer going to do?", h: "pay", a: ["The customer is going to pay", "He is going to pay", "She is going to pay"] },
+        { q: "What is the shop assistant going to do?", h: "help", a: ["The shop assistant is going to help", "He is going to help", "She is going to help"] },
+        { q: "What is the waiter going to do?", h: "bring the food", a: ["The waiter is going to bring the food", "He is going to bring the food", "She is going to bring the food"] },
+        { q: "What is the guest going to do?", h: "arrive", a: ["The guest is going to arrive", "He is going to arrive", "She is going to arrive"] },
+        { q: "What is the host going to do?", h: "say hello", a: ["The host is going to say hello", "He is going to say hello", "She is going to say hello"] },
+        { q: "What is the player going to do?", h: "score a goal", a: ["The player is going to score a goal", "He is going to score a goal", "She is going to score a goal"] },
+        { q: "What is the coach going to do?", h: "shout", a: ["The coach is going to shout", "He is going to shout", "She is going to shout"] },
+        { q: "What is the referee going to do?", h: "blow the whistle", a: ["The referee is going to blow the whistle", "He is going to blow the whistle", "She is going to blow the whistle"] },
+        { q: "What is the runner going to do?", h: "finish the race", a: ["The runner is going to finish the race", "He is going to finish the race", "She is going to finish the race"] },
+        { q: "What is the swimmer going to do?", h: "dive", a: ["The swimmer is going to dive", "He is going to dive", "She is going to dive"] },
+        { q: "What is the climber going to do?", h: "reach the top", a: ["The climber is going to reach the top", "He is going to reach the top", "She is going to reach the top"] },
+        { q: "What is the hiker going to do?", h: "walk", a: ["The hiker is going to walk", "He is going to walk", "She is going to walk"] },
+        { q: "What is the tourist going to do?", h: "take a map", a: ["The tourist is going to take a map", "They are going to take a map"] },
+        { q: "What is the guide going to do?", h: "show the way", a: ["The guide is going to show the way", "He is going to show the way", "She is going to show the way"] },
+        { q: "What is the photographer going to do?", h: "click", a: ["The photographer is going to click", "He is going to click", "She is going to click"] },
+        { q: "What is the builder going to do?", h: "mix the cement", a: ["The builder is going to mix the cement", "He is going to mix the cement"] },
+        { q: "What is the gardener going to do?", h: "plant the seeds", a: ["The gardener is going to plant the seeds", "He is going to plant the seeds", "She is going to plant the seeds"] },
+        { q: "What is the farmer going to do?", h: "feed the cows", a: ["The farmer is going to feed the cows", "He is going to feed the cows", "She is going to feed the cows"] },
+        { q: "What is the fisherman going to do?", h: "catch a fish", a: ["The fisherman is going to catch a fish", "He is going to catch a fish"] },
+        { q: "What is the hunter going to do?", h: "watch", a: ["The hunter is going to watch", "He is going to watch"] },
+        { q: "What is the soldier going to do?", h: "march", a: ["The soldier is going to march", "He is going to march", "She is going to march"] },
+        { q: "What is the king going to do?", h: "wear the crown", a: ["The king is going to wear the crown", "He is going to wear the crown"] },
+        { q: "What is the princess going to do?", h: "read a story", a: ["The princess is going to read a story", "She is going to read a story"] },
+        { q: "What is the knight going to do?", h: "ride the horse", a: ["The knight is going to ride the horse", "He is going to ride the horse"] },
+        { q: "What is the dragon going to do?", h: "fly", a: ["The dragon is going to fly", "It is going to fly"] },
+        { q: "What is the wizard going to do?", h: "use a spell", a: ["The wizard is going to use a spell", "He is going to use a spell"] },
+        { q: "What is the witch going to do?", h: "make a potion", a: ["The witch is going to make a potion", "She is going to make a potion"] },
+        { q: "What is the ghost going to do?", h: "scare us", a: ["The ghost is going to scare us", "It is going to scare us"] },
+        { q: "What is the monster going to do?", h: "roar", a: ["The monster is going to roar", "It is going to roar"] },
+        { q: "What is the rocket going to do?", h: "launch", a: ["The rocket is going to launch", "It is going to launch"] },
+        { q: "What is the star going to do?", h: "fall", a: ["The star is going to fall", "It is going to fall"] },
+        { q: "What is the rain going to do?", h: "stop", a: ["The rain is going to stop", "It is going to stop"] },
+        { q: "What is the storm going to do?", h: "pass", a: ["The storm is going to pass", "It is going to pass"] },
+        { q: "What is the fire going to do?", h: "burn out", a: ["The fire is going to burn out", "It is going to burn out"] },
+        { q: "What is the water going to do?", h: "boil", a: ["The water is going to boil", "It is going to boil"] },
+        { q: "What is the ice going to do?", h: "crack", a: ["The ice is going to crack", "It is going to crack"] },
+        { q: "What is the bell going to do?", h: "ring", a: ["The bell is going to ring", "It is going to ring"] },
+        { q: "What is the clock going to do?", h: "strike twelve", a: ["The clock is going to strike twelve", "It is going to strike twelve"] },
+        { q: "What is the door going to do?", h: "open", a: ["The door is going to open", "It is going to open"] },
+        { q: "What is the window going to do?", h: "break", a: ["The window is going to break", "It is going to break"] },
+        { q: "What is the light going to do?", h: "turn off", a: ["The light is going to turn off", "It is going to turn off"] },
+        { q: "What is the car going to do?", h: "crash", a: ["The car is going to crash", "It is going to crash"] },
+        { q: "What is the bike going to do?", h: "skid", a: ["The bike is going to skid", "It is going to skid"] },
+        { q: "What is the boat going to do?", h: "sink", a: ["The boat is going to sink", "It is going to sink"] },
+        { q: "What is the train going to do?", h: "leave", a: ["The train is going to leave", "It is going to leave"] },
+        { q: "What is the bus going to do?", h: "arrive", a: ["The bus is going to arrive", "It is going to arrive"] },
+        { q: "What is the phone going to do?", h: "beep", a: ["The phone is going to beep", "It is going to beep"] },
+        { q: "What is the computer going to do?", h: "restart", a: ["The computer is going to restart", "It is going to restart"] },
+        { q: "What is the bomb going to do?", h: "explode", a: ["The bomb is going to explode", "It is going to explode"] },
+        { q: "What is the laser going to do?", h: "cut the metal", a: ["The laser is going to cut the metal", "It is going to cut the metal"] },
+        { q: "What is the plane going to do?", h: "take off", a: ["The plane is going to take off", "It is going to take off"] },
+        { q: "What are you going to do?", h: "try", a: ["I am going to try"] },
+        { q: "What are you going to do now?", h: "sleep", a: ["I am going to sleep"] },
+        { q: "What is she going to do?", h: "smile", a: ["She is going to smile"] },
+        { q: "What is he going to do?", h: "laugh", a: ["He is going to laugh"] },
+        { q: "What are they going to do?", h: "talk", a: ["They are going to talk"] },
+        { q: "What are we going to do?", h: "listen", a: ["We are going to listen"] },
+        { q: "What is it going to do?", h: "move", a: ["It is going to move"] },
+        { q: "What are the people going to do?", h: "wait", a: ["The people are going to wait", "They are going to wait"] },
+        { q: "What are the kids going to do?", h: "shout", a: ["The kids are going to shout", "They are going to shout"] },
+        { q: "What is the friend going to do?", h: "help", a: ["The friend is going to help", "He is going to help", "She is going to help"] },
+        { q: "What is the sister going to do?", h: "read", a: ["The sister is going to read", "She is going to read"] },
+        { q: "What is the brother going to do?", h: "run", a: ["The brother is going to run", "He is going to run"] },
+        { q: "What is the mother going to do?", h: "cook", a: ["The mother is going to cook", "She is going to cook"] },
+        { q: "What is the father going to do?", h: "work", a: ["The father is going to work", "He is going to work"] },
+        { q: "What is the girl going to do?", h: "jump", a: ["The girl is going to jump", "She is going to jump"] },
+        { q: "What is the boy going to do?", h: "kick the ball", a: ["The boy is going to kick the ball", "He is going to kick the ball"] },
+        { q: "What is the man going to do?", h: "sit down", a: ["The man is going to sit down", "He is going to sit down"] },
+        { q: "What is the woman going to do?", h: "stand up", a: ["The woman is going to stand up", "She is going to stand up"] },
+        { q: "What is the agent going to do?", h: "follow us", a: ["The agent is going to follow us", "He is going to follow us", "She is going to follow us"] },
+        { q: "What is the villain going to do?", h: "hide the key", a: ["The villain is going to hide the key", "He is going to hide the key", "They are going to hide the key"] },
+        { q: "What is the hacker going to do?", h: "steal the file", a: ["The hacker is going to steal the file", "He is going to steal the file", "She is going to steal the file"] },
+        { q: "What is the spy going to do?", h: "wear a wig", a: ["The spy is going to wear a wig", "He is going to wear a wig", "She is going to wear a wig"] }
+    ];
+
+    let currentQuestions = [];
+    let qIndex = 0;
+    let score = 0;
+
+    function startGame() {
+        document.getElementById('screen-intro').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'flex';
+        currentQuestions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, 10);
+        showQuestion();
+    }
+
+    function addBubble(text, type, sender = "", hint = "") {
+        const chatWindow = document.getElementById('chat-window');
+        const bubble = document.createElement('div');
+        bubble.className = `bubble ${type === 'in' ? 'bubble-in' : 'bubble-out'}`;
+        
+        let html = "";
+        if (sender) html += `<span class="sender">${sender}</span>`;
+        html += `<span>${text}</span>`;
+        if (hint) html += `<span class="hint">Use: (${hint})</span>`;
+        
+        bubble.innerHTML = html;
+        chatWindow.appendChild(bubble);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function showQuestion() {
+        const q = currentQuestions[qIndex];
+        document.getElementById('ui-q').innerText = `SIGNAL: ${qIndex + 1} / 10`;
+        document.getElementById('next-container').style.display = 'none';
+        document.getElementById('input-area').style.opacity = '1';
+        document.getElementById('user-input').disabled = false;
+        document.getElementById('send-btn').style.display = 'flex';
+        
+        // --- HIER WORDT HET VELD LEEGGEGOOID ---
+        document.getElementById('chat-window').innerHTML = '';
+        
+        addBubble(q.q, 'in', 'COMMANDER', q.h);
+        document.getElementById('user-input').value = "";
+        document.getElementById('user-input').focus();
+    }
+
+    function checkAnswer() {
+        const input = document.getElementById('user-input');
+        let val = input.value.trim();
+        if (!val) return;
+
+        if (val[0] !== val[0].toUpperCase()) {
+            addBubble("❌ SYSTEM ERROR: Please start your sentence with a CAPITAL LETTER!", "in", "SYSTEM");
+            document.body.classList.add('shake');
+            setTimeout(() => document.body.classList.remove('shake'), 200);
+            return;
+        }
+
+        addBubble(val, 'out');
+        input.disabled = true;
+        document.getElementById('send-btn').style.display = 'none';
+        document.getElementById('input-area').style.opacity = '0.5';
+
+        const processedInput = val.toLowerCase().replace(/[.!?]$/, "").trim();
+        const correctAnswers = currentQuestions[qIndex].a;
+        const isCorrect = correctAnswers.some(ans => processedInput === ans.toLowerCase().trim());
+
+        setTimeout(() => {
+            if (isCorrect) {
+                score++;
+                addBubble("✅ ACCESS GRANTED! Signal decoded.", "in", "COMMANDER");
+                document.getElementById('flash').style.opacity = '0.2';
+                setTimeout(() => document.getElementById('flash').style.opacity = '0', 150);
+            } else {
+                addBubble(`❌ ACCESS DENIED! Correct signal: "${correctAnswers[0]}."`, "in", "COMMANDER");
+                document.body.classList.add('shake');
+                setTimeout(() => document.body.classList.remove('shake'), 200);
+            }
+            document.getElementById('ui-score').innerText = `DECODED: ${score}`;
+            document.getElementById('next-container').style.display = 'block';
+        }, 700);
+    }
+
+    function nextQuestion() {
+        qIndex++;
+        if (qIndex < 10) {
+            showQuestion();
+        } else {
+            document.getElementById('screen-game').style.display = 'none';
+            document.getElementById('screen-end').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+        }
+    }
+
+    document.getElementById('user-input').addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !document.getElementById('user-input').disabled) checkAnswer();
+    });
+</script>
+</body>
+</html>
