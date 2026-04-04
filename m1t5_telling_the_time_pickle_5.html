@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: The Interceptor Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            color: var(--hero-yellow);
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 30px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.2);
+            text-align: center;
+        }
+
+        .instruction-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-left: 4px solid var(--hero-yellow);
+            text-align: left;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            color: var(--hero-yellow);
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* TERMINAL DISPLAY STYLES */
+        .terminal-display {
+            background: #000;
+            border: 4px solid var(--hero-green);
+            color: var(--hero-green);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px 40px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: inset 0 0 20px rgba(76, 175, 80, 0.2), 0 0 20px rgba(76, 175, 80, 0.4);
+            margin: 20px 0;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            text-align: left;
+        }
+
+        .terminal-header {
+            font-size: 1.2rem;
+            color: var(--hero-green);
+            opacity: 0.7;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed var(--hero-green);
+            padding-bottom: 5px;
+        }
+
+        .terminal-message {
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px var(--hero-green);
+            line-height: 1.4;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 15px;
+            height: 30px;
+            background-color: var(--hero-green);
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* TEXT INPUT STYLES */
+        .type-input {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255,255,255,0.1);
+            border: 3px solid var(--hero-purple-main);
+            color: white;
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.5rem;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .type-input:focus {
+            border-color: var(--hero-yellow);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
+        }
+
+        .type-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* BUTTONS & FEEDBACK */
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            border-bottom-color: #00b39b;
+        }
+
+        .btn-video {
+            background: var(--hero-red);
+            border-bottom: 5px solid var(--hero-red-dark);
+        }
+
+        .btn-video:hover {
+            background: #ff5252;
+            color: white;
+            border-bottom-color: var(--hero-red-dark);
+        }
+
+        #feedback-msg {
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 40px;
+            margin-bottom: 10px;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        .correct-answer-display {
+            font-size: 1.2rem;
+            color: white;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* EFFECTS */
+        .flash-effect {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 1999;
+        }
+
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+
+        @keyframes boomAnim {
+            0% { transform: scale(0) rotate(-20deg); opacity: 1; }
+            100% { transform: scale(2) rotate(10deg); opacity: 0; }
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+        }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--hero-purple-dark);
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .footer-highlight { color: var(--hero-yellow); }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .terminal-message { font-size: 1.5rem; }
+            .type-input { font-size: 1.2rem; }
+            .top-bar { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>THE INTERCEPTOR PRO</p>
+</header>
+
+<main>
+    <section class="briefing-box" id="screen-game">
+        
+        <div class="instruction-text">
+            <strong>Agent, we intercepted a Dutch transmission!</strong><br>
+            Translate the Dutch time into English to crack the code.<br>
+            <em>Warning: Beware of the "half past" trap! (Half 5 = half past 4). And don't forget your hyphens (koppeltekens) for numbers like twenty-five!</em>
+        </div>
+
+        <div class="top-bar">
+            <span id="ui-question">Signal: 1 / 10</span>
+            <span id="ui-score">Decoded: 0</span>
+        </div>
+
+        <div class="terminal-display">
+            <div class="terminal-header">INCOMING TRANSMISSION // ENCRYPTED</div>
+            <div class="terminal-message" id="target-time">
+                LADEN...<span class="cursor-blink"></span>
+            </div>
+        </div>
+
+        <div>
+            <input type="text" id="type-answer" class="type-input" placeholder="Type the English translation..." autocomplete="off" spellcheck="false">
+        </div>
+
+        <div id="feedback-msg"></div>
+        <div id="correct-answer" class="correct-answer-display"></div>
+
+        <button class="btn-action" onclick="checkAnswer(event)" id="btn-check">⚡ DECODE SIGNAL!</button>
+        <button class="btn-action btn-video" onclick="nextQuestion(event)" id="btn-next" style="display: none;">NEXT SIGNAL ➡️</button>
+    </section>
+
+    <section class="briefing-box" id="screen-end" style="display: none;">
+        <h2 id="end-title" style="font-size: 3rem;">Mission Complete!</h2>
+        <div class="section-divider"></div>
+        <p style="font-size: 1.5rem;">Total Signals Decoded:</p>
+        <p id="end-score" style="font-size: 4rem; color: var(--hero-yellow); font-family: 'Bangers'; margin: 0; text-shadow: 3px 3px 0 #000;"></p>
+        <div class="section-divider"></div>
+        <button class="btn-action" onclick="startGame(event)">🔄 PLAY AGAIN</button>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    // --- ENGELSE WOORDEN GENERATOR ---
+    function numberToWordEN(num) {
+        const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
+                       "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", 
+                       "eighteen", "nineteen", "twenty"];
+        if (num <= 20) return words[num];
+        if (num < 30) return "twenty-" + words[num - 20]; // Koppelteken regel!
+        return num.toString();
+    }
+
+    // --- NEDERLANDSE WOORDEN GENERATOR ---
+    function numberToWordNL(num) {
+        const words = ["nul", "één", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen", "tien", 
+                       "elf", "twaalf", "dertien", "veertien"];
+        return words[num];
+    }
+
+    function getDutchHour(h) {
+        const words = ["twaalf", "een", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen", "tien", "elf", "twaalf"];
+        return words[h];
+    }
+
+    // --- NORMALISEREN VAN TEKST (Strenge koppelteken controle) ---
+    function normalizeString(str) {
+        return str.toLowerCase()
+                  .replace(/[.,]/g, '')        // Verwijder punten en komma's
+                  .replace(/\s*-\s*/g, '-')   // Trek spaties rondom koppeltekens strak
+                  .replace(/\s+/g, ' ')       // Maak dubbele spaties enkel
+                  .trim();
+    }
+
+    // --- TIJD GENERATOR EN ANTWOORDEN ---
+    function generateTranslationChallenge() {
+        let actualH = Math.floor(Math.random() * 12) + 1; // 1-12
+        let actualM = Math.floor(Math.random() * 60); // 0-59
+        
+        let displayH = actualH % 12 || 12;
+        let nextH = (displayH % 12) + 1;
+        
+        // ---- NEDERLANDSE ZIN MAKEN ----
+        let hWordNL = getDutchHour(displayH);
+        let nextHWordNL = getDutchHour(nextH);
+        let phraseNL = "";
+        let isExact = (actualM % 5 !== 0); // Is het een exacte minuut in plaats van stappen van 5?
+
+        if (actualM === 0) {
+            phraseNL = `${hWordNL} uur`;
+        } else if (actualM === 15) {
+            phraseNL = `kwart over ${hWordNL}`;
+        } else if (actualM === 30) {
+            phraseNL = `half ${nextHWordNL}`;
+        } else if (actualM === 45) {
+            phraseNL = `kwart voor ${nextHWordNL}`;
+        } else if (actualM < 15) {
+            let val = actualM;
+            let valWord = numberToWordNL(val);
+            let suffix = (isExact && val === 1) ? " minuut" : (isExact ? " minuten" : "");
+            phraseNL = `${valWord}${suffix} over ${hWordNL}`;
+        } else if (actualM < 30) {
+            let val = 30 - actualM;
+            let valWord = numberToWordNL(val);
+            let suffix = (isExact && val === 1) ? " minuut" : (isExact ? " minuten" : "");
+            phraseNL = `${valWord}${suffix} voor half ${nextHWordNL}`;
+        } else if (actualM < 45) {
+            let val = actualM - 30;
+            let valWord = numberToWordNL(val);
+            let suffix = (isExact && val === 1) ? " minuut" : (isExact ? " minuten" : "");
+            phraseNL = `${valWord}${suffix} over half ${nextHWordNL}`;
+        } else {
+            let val = 60 - actualM;
+            let valWord = numberToWordNL(val);
+            let suffix = (isExact && val === 1) ? " minuut" : (isExact ? " minuten" : "");
+            phraseNL = `${valWord}${suffix} voor ${nextHWordNL}`;
+        }
+
+        // ---- ENGELSE ZIN MAKEN ----
+        let hWordEN = numberToWordEN(displayH);
+        let nextHWordEN = numberToWordEN(nextH);
+        let validAnswers = [];
+        let primaryAnswer = "";
+
+        if (actualM === 0) {
+            validAnswers.push(`${hWordEN} o'clock`, `${hWordEN} o clock`);
+            primaryAnswer = `${hWordEN} o'clock`;
+        } else if (actualM <= 30) {
+            let mWord = numberToWordEN(actualM);
+            if (actualM === 15) {
+                validAnswers.push(`a quarter past ${hWordEN}`, `quarter past ${hWordEN}`);
+                primaryAnswer = `a quarter past ${hWordEN}`;
+            } else if (actualM === 30) {
+                validAnswers.push(`half past ${hWordEN}`);
+                primaryAnswer = `half past ${hWordEN}`;
+            } else {
+                validAnswers.push(`${mWord} past ${hWordEN}`);
+                validAnswers.push(`${mWord} minutes past ${hWordEN}`);
+                primaryAnswer = `${mWord} past ${hWordEN}`;
+            }
+        } else {
+            let mTo = 60 - actualM;
+            let mWord = numberToWordEN(mTo);
+            
+            if (actualM === 45) {
+                validAnswers.push(`a quarter to ${nextHWordEN}`, `quarter to ${nextHWordEN}`);
+                primaryAnswer = `a quarter to ${nextHWordEN}`;
+            } else {
+                validAnswers.push(`${mWord} to ${nextHWordEN}`);
+                validAnswers.push(`${mWord} minutes to ${nextHWordEN}`);
+                primaryAnswer = `${mWord} to ${nextHWordEN}`;
+            }
+        }
+
+        let normalizedAnswers = validAnswers.map(ans => normalizeString(ans));
+        
+        return { 
+            dutchPhrase: phraseNL, 
+            primaryAnswer: primaryAnswer,
+            validNormalizedAnswers: normalizedAnswers
+        };
+    }
+
+    // --- GAME LOGICA ---
+    let currentQ = 0;
+    let score = 0;
+    const totalQ = 10;
+    let currentTarget = null;
+
+    function startGame(e) {
+        if(e) createExplosion(e, "START!");
+        currentQ = 0;
+        score = 0;
+        
+        document.getElementById('screen-end').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'block';
+        
+        nextQuestion(null);
+    }
+
+    function nextQuestion(e) {
+        if(e && e.target.id === 'btn-next') createExplosion(e, "ZWOOSH!");
+        
+        if (currentQ >= totalQ) {
+            endGame();
+            return;
+        }
+
+        currentQ++;
+        currentTarget = generateTranslationChallenge();
+        
+        document.getElementById('ui-question').innerText = `Signal: ${currentQ} / ${totalQ}`;
+        document.getElementById('ui-score').innerText = `Decoded: ${score}`;
+        
+        // Zet de Nederlandse tekst in de terminal
+        document.getElementById('target-time').innerHTML = `${currentTarget.dutchPhrase} <span class="cursor-blink"></span>`;
+        
+        const inputField = document.getElementById('type-answer');
+        inputField.value = '';
+        inputField.disabled = false;
+        inputField.focus();
+
+        document.getElementById('feedback-msg').innerText = '';
+        document.getElementById('correct-answer').style.display = 'none';
+        
+        document.getElementById('btn-check').style.display = 'inline-block';
+        document.getElementById('btn-next').style.display = 'none';
+    }
+
+    function checkAnswer(e) {
+        let userInput = document.getElementById('type-answer').value;
+
+        if (userInput.trim() === '') {
+            alert('Please type an answer, Agent!');
+            return;
+        }
+
+        let normalizedInput = normalizeString(userInput);
+        let feedback = document.getElementById('feedback-msg');
+        let correctDisplay = document.getElementById('correct-answer');
+
+        if (currentTarget.validNormalizedAnswers.includes(normalizedInput)) {
+            createExplosion(e, "HACKED!");
+            score++;
+            feedback.innerText = "Code cracked! Excellent translation!";
+            feedback.style.color = "var(--hero-green)";
+        } else {
+            createExplosion(e, "ERROR!");
+            
+            // Specifieke feedback voor de Half-valkuil
+            if (currentTarget.dutchPhrase.includes("half") && !userInput.includes("past")) {
+                feedback.innerText = "Don't fall into the trap! Dutch 'half 5' is English 'half PAST 4'.";
+            } 
+            // Specifieke feedback voor koppelteken
+            else if (userInput.includes('twenty ') && currentTarget.primaryAnswer.includes('twenty-')) {
+                feedback.innerText = "Don't forget the hyphen (koppelteken) in numbers like twenty-five!";
+            } else {
+                feedback.innerText = "Wrong translation or typo detected!";
+            }
+            
+            feedback.style.color = "var(--hero-red)";
+            correctDisplay.innerHTML = `Correct English code: <strong>${currentTarget.primaryAnswer}</strong>`;
+            correctDisplay.style.display = 'block';
+        }
+
+        document.getElementById('ui-score').innerText = `Decoded: ${score}`;
+        
+        document.getElementById('type-answer').disabled = true;
+
+        document.getElementById('btn-check').style.display = 'none';
+        const btnNext = document.getElementById('btn-next');
+        btnNext.style.display = 'inline-block';
+        
+        if (currentQ === totalQ) {
+            btnNext.innerText = "SEE RESULTS 🏆";
+        } else {
+            btnNext.innerText = "NEXT SIGNAL ➡️";
+        }
+    }
+
+    function endGame() {
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-end').style.display = 'block';
+        document.getElementById('end-score').innerText = `${score} / ${totalQ}`;
+        
+        let title = document.getElementById('end-title');
+        if (score === totalQ) {
+            title.innerText = "MASTER DECODER! 👑";
+            title.style.color = "var(--hero-green)";
+        } else if (score >= 7) {
+            title.innerText = "GREAT JOB, AGENT! 🕵️‍♂️";
+            title.style.color = "var(--hero-cyan)";
+        } else {
+            title.innerText = "WATCH OUT FOR THOSE TRAPS! 💪";
+            title.style.color = "var(--hero-orange)";
+        }
+    }
+
+    // --- VISUELE EFFECTEN ---
+    function createExplosion(e, message) {
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        
+        if (e && e.clientX) {
+            x = e.clientX;
+            y = e.clientY;
+        }
+
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        
+        setTimeout(() => { 
+            flash.style.opacity = '0'; 
+            document.body.classList.remove('shake'); 
+        }, 200);
+        
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 100) + 'px'; 
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    document.getElementById('type-answer').addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const checkBtn = document.getElementById('btn-check');
+            const nextBtn = document.getElementById('btn-next');
+            if (checkBtn.style.display !== 'none') {
+                checkAnswer();
+            } else if (nextBtn.style.display !== 'none') {
+                nextQuestion();
+            }
+        }
+    });
+
+    window.onload = function() {
+        nextQuestion(null);
+    };
+</script> 
+</body>
+</html>
