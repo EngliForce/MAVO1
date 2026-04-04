@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Time Bomb Defuser Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            color: var(--hero-yellow);
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-red);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 40px rgba(211, 47, 47, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .instruction-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-left: 4px solid var(--hero-red);
+            text-align: left;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            color: var(--hero-yellow);
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* LEVEL MENU BUTTONS */
+        .level-btn {
+            background: var(--hero-purple-main);
+            color: white;
+            border: 2px solid var(--hero-cyan);
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 250px;
+            margin: 10px auto;
+        }
+
+        .level-btn:hover {
+            transform: scale(1.05);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+        }
+
+        .level-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        /* TIMER STYLES */
+        .timer-display {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 6rem;
+            color: #ff3333;
+            text-shadow: 0 0 20px #ff3333, 0 0 40px #aa0000;
+            background: #110000;
+            border: 4px solid #550000;
+            display: inline-block;
+            padding: 10px 40px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            transition: all 0.2s;
+        }
+
+        .timer-warning {
+            color: #ff0000;
+            text-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000;
+            animation: pulse 0.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        #time-phrase {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 2px 2px 0px var(--hero-purple-dark);
+            margin: 20px 0 30px 0;
+            letter-spacing: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--hero-cyan);
+        }
+
+        /* WIRES / BUTTONS */
+        .wire-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .wire-btn {
+            background: #222;
+            color: white;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 2.5rem;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-left: 20px solid;
+            transition: 0.2s;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px;
+        }
+
+        .wire-red { border-left-color: #ff3333; box-shadow: inset 0 0 10px rgba(255, 51, 51, 0.2); }
+        .wire-blue { border-left-color: #3388ff; box-shadow: inset 0 0 10px rgba(51, 136, 255, 0.2); }
+        .wire-green { border-left-color: #33ff55; box-shadow: inset 0 0 10px rgba(51, 255, 85, 0.2); }
+
+        .wire-btn:hover {
+            transform: scale(1.02) translateX(10px);
+            background: #333;
+        }
+        
+        .wire-btn:active {
+            transform: scale(0.98);
+        }
+
+        .mini-analog-clock {
+            width: 60px;
+            height: 60px;
+            pointer-events: none;
+        }
+
+        /* EXPLOSION SCREEN */
+        #screen-boom {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ff0000;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .boom-giant-text {
+            font-family: 'Bangers', cursive;
+            font-size: 15vw;
+            color: var(--hero-yellow);
+            text-shadow: 10px 10px 0 #000;
+            margin: 0;
+            animation: shake 0.5s infinite;
+        }
+
+        /* BUTTONS & FEEDBACK */
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            margin-top: 20px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            border-bottom-color: #00b39b;
+        }
+
+        /* EFFECTS */
+        .flash-effect {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 1999;
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-10px, 10px); }
+            50% { transform: translate(10px, -10px); }
+            75% { transform: translate(-10px, -10px); }
+        }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--hero-purple-dark);
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .timer-display { font-size: 4rem; padding: 10px 20px; }
+            #time-phrase { font-size: 1.8rem; }
+            .wire-btn { font-size: 2rem; min-height: 70px; }
+            .mini-analog-clock { width: 50px; height: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<div id="screen-boom">
+    <h1 class="boom-giant-text">KABOOM!</h1>
+    <p style="font-size: 2rem; color: white; font-family: 'Lexend'; background: #000; padding: 10px 20px; border-radius: 10px;">The bomb exploded!</p>
+    <button class="btn-action" style="font-size: 2rem;" onclick="location.reload()">🔄 TRY AGAIN</button>
+</div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>TIME BOMB DEFUSER PRO</p>
+</header>
+
+<main>
+    <section class="briefing-box" id="screen-intro">
+        <h2 style="font-size: 3rem; color: var(--hero-red);">🚨 TICK TOCK 🚨</h2>
+        <p style="font-size: 1.2rem;">Agent, bombs have been planted. Read the English time and cut the CORRECT wire before the timer hits zero.</p>
+        
+        <div class="level-container">
+            <button class="level-btn" onclick="startGame('digital', event)">
+                <span style="font-size: 2.5rem;">🔢</span>
+                LEVEL 1<br>Digital Wires
+            </button>
+            <button class="level-btn" onclick="startGame('analog', event)">
+                <span style="font-size: 2.5rem;">🕰️</span>
+                LEVEL 2<br>Analog Wires
+            </button>
+            <button class="level-btn" onclick="startGame('mixed', event)">
+                <span style="font-size: 2.5rem;">🔥</span>
+                LEVEL 3<br>Mixed Chaos
+            </button>
+        </div>
+    </section>
+
+    <section class="briefing-box" id="screen-game" style="display: none;">
+        
+        <div class="top-bar">
+            <span id="ui-question">Bomb: 1 / 10</span>
+            <span id="ui-score">Defused: 0</span>
+        </div>
+
+        <div class="timer-display" id="timer">00:20</div>
+
+        <h3 id="time-phrase">...</h3>
+
+        <div class="wire-container" id="wires-container">
+            </div>
+
+    </section>
+
+    <section class="briefing-box" id="screen-end" style="display: none;">
+        <h2 id="end-title" style="font-size: 3rem; color: var(--hero-green);">MISSION PASSED!</h2>
+        <div class="section-divider"></div>
+        <p style="font-size: 1.5rem;">Bombs Defused:</p>
+        <p id="end-score" style="font-size: 5rem; color: var(--hero-cyan); font-family: 'Bangers'; margin: 0; text-shadow: 3px 3px 0 #000;"></p>
+        <div class="section-divider"></div>
+        <button class="btn-action" onclick="location.reload()">🔄 PLAY AGAIN</button>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span style="color: var(--hero-yellow);">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    // --- KLOK SVG GENERATOR VOOR OP DE KNOPPEN ---
+    function getAnalogClockSVG(h, m) {
+        let minDeg = m * 6;
+        let hourDeg = (h % 12) * 30 + (m * 0.5);
+        return `
+            <svg class="mini-analog-clock" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#00f5d4" stroke-width="4"/>
+                <line x1="50" y1="5" x2="50" y2="15" stroke="#330066" stroke-width="3"/>
+                <line x1="95" y1="50" x2="85" y2="50" stroke="#330066" stroke-width="3"/>
+                <line x1="50" y1="95" x2="50" y2="85" stroke="#330066" stroke-width="3"/>
+                <line x1="5" y1="50" x2="15" y2="50" stroke="#330066" stroke-width="3"/>
+                <line x1="50" y1="50" x2="${50 + 22 * Math.sin(hourDeg * Math.PI / 180)}" y2="${50 - 22 * Math.cos(hourDeg * Math.PI / 180)}" stroke="#3c096c" stroke-width="5" stroke-linecap="round"/>
+                <line x1="50" y1="50" x2="${50 + 33 * Math.sin(minDeg * Math.PI / 180)}" y2="${50 - 33 * Math.cos(minDeg * Math.PI / 180)}" stroke="#d32f2f" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="4" fill="#000000"/>
+            </svg>
+        `;
+    }
+
+    // --- WOORDEN GENERATOR ---
+    function numberToWord(num) {
+        const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
+                       "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", 
+                       "eighteen", "nineteen", "twenty"];
+        if (num <= 20) return words[num];
+        if (num < 30) return "twenty-" + words[num - 20];
+        return num.toString();
+    }
+
+    function formatDigitalTime(h, m) {
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+    }
+
+    // --- TIJD GENERATOR ---
+    function generateRandomTime() {
+        let actualH = Math.floor(Math.random() * 12) + 1; // 1-12 format voor leesbaarheid
+        let actualM = Math.floor(Math.random() * 60); 
+        
+        let displayH = actualH.toString().padStart(2, '0');
+        let displayM = actualM.toString().padStart(2, '0');
+        let clockString = `${displayH}:${displayM}`;
+
+        let nextH = (actualH % 12) + 1;
+        
+        let hWord = numberToWord(actualH);
+        let nextHWord = numberToWord(nextH);
+        let phrase = "";
+
+        if (actualM === 0) {
+            phrase = `${hWord} o'clock`;
+        } else if (actualM <= 30) {
+            let mWord = numberToWord(actualM);
+            if (actualM === 15) phrase = `a quarter past ${hWord}`;
+            else if (actualM === 30) phrase = `half past ${hWord}`;
+            else phrase = `${mWord} past ${hWord}`;
+        } else {
+            let mTo = 60 - actualM;
+            let mWord = numberToWord(mTo);
+            if (actualM === 45) phrase = `a quarter to ${nextHWord}`;
+            else phrase = `${mWord} to ${nextHWord}`;
+        }
+
+        return { h: actualH, m: actualM, str: clockString, phrase: phrase };
+    }
+
+    // Genereer foute (maar logische) antwoorden
+    function generateDistractors(correctTime) {
+        let distractors = [];
+        let usedStrings = new Set([correctTime.str]);
+        
+        while(distractors.length < 2) {
+            let type = Math.floor(Math.random() * 3);
+            let wrongH = correctTime.h;
+            let wrongM = correctTime.m;
+
+            if (type === 0) { wrongH = (correctTime.h % 12) + 1; } // Verkeerde uur (+1)
+            else if (type === 1) { wrongH = correctTime.h === 1 ? 12 : correctTime.h - 1; } // Verkeerde uur (-1)
+            else { wrongM = (60 - correctTime.m) === 60 ? 0 : 60 - correctTime.m; } // Past/To verwisseld
+            
+            let wrongStr = formatDigitalTime(wrongH, wrongM);
+            
+            if (!usedStrings.has(wrongStr)) {
+                usedStrings.add(wrongStr);
+                distractors.push({ h: wrongH, m: wrongM, str: wrongStr });
+            }
+        }
+        return distractors;
+    }
+
+    // --- GAME LOGICA ---
+    let gameMode = 'digital';
+    let currentQ = 0;
+    let score = 0;
+    const totalQ = 10;
+    let currentTarget = null;
+    
+    // Timer variabelen
+    let timeLeft = 20;
+    let timerInterval = null;
+
+    function createExplosion(e, message) {
+        let x = window.innerWidth / 2; let y = window.innerHeight / 2;
+        if (e && e.clientX) { x = e.clientX; y = e.clientY; }
+
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+    }
+
+    function startGame(mode, e) {
+        if(e) createExplosion(e, "GO!");
+        gameMode = mode;
+        document.getElementById('screen-intro').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'block';
+        nextBomb();
+    }
+
+    function nextBomb() {
+        if (currentQ >= totalQ) {
+            endGame();
+            return;
+        }
+
+        currentQ++;
+        currentTarget = generateRandomTime();
+        
+        document.getElementById('ui-question').innerText = `Bomb: ${currentQ} / ${totalQ}`;
+        document.getElementById('ui-score').innerText = `Defused: ${score}`;
+        document.getElementById('time-phrase').innerText = currentTarget.phrase.toUpperCase();
+
+        // Objecten bouwen om aan de knoppen te hangen
+        let options = generateDistractors(currentTarget);
+        options.push({ h: currentTarget.h, m: currentTarget.m, str: currentTarget.str, isCorrect: true });
+        
+        // Opties husselen
+        options.sort(() => Math.random() - 0.5);
+
+        const container = document.getElementById('wires-container');
+        container.innerHTML = '';
+        
+        const wireColors = ['wire-red', 'wire-blue', 'wire-green'];
+
+        options.forEach((opt, index) => {
+            let btn = document.createElement('button');
+            btn.className = `wire-btn ${wireColors[index]}`;
+            
+            // Bepaal per draad hoe hij eruit ziet (Digitaal, Analoog, of Mix)
+            let wireType = gameMode;
+            if (wireType === 'mixed') {
+                wireType = Math.random() > 0.5 ? 'digital' : 'analog';
+            }
+
+            if (wireType === 'digital') {
+                btn.innerHTML = `<span>${opt.str}</span>`;
+            } else {
+                btn.innerHTML = getAnalogClockSVG(opt.h, opt.m);
+            }
+
+            btn.onclick = () => cutWire(opt.isCorrect, btn);
+            container.appendChild(btn);
+        });
+
+        // Timer starten (20 seconden)
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timeLeft = 20; 
+        updateTimerDisplay();
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                triggerExplosion();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const display = document.getElementById('timer');
+        display.innerText = `00:${timeLeft.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 5) {
+            display.classList.add('timer-warning');
+        } else {
+            display.classList.remove('timer-warning');
+        }
+    }
+
+    function cutWire(isCorrect, btnElement) {
+        clearInterval(timerInterval); // Stop de tijd!
+
+        if (isCorrect) {
+            // Goed! Bom ontmanteld
+            score++;
+            btnElement.style.background = 'var(--hero-green)';
+            btnElement.style.borderColor = 'var(--hero-green)';
+            
+            const flash = document.getElementById('flash');
+            flash.style.background = 'var(--hero-green)';
+            flash.style.opacity = '0.4';
+            setTimeout(() => { flash.style.opacity = '0'; flash.style.background = 'white'; }, 200);
+
+            setTimeout(() => { nextBomb(); }, 800);
+        } else {
+            // Fout! BOOM!
+            btnElement.style.background = 'var(--hero-red)';
+            triggerExplosion();
+        }
+    }
+
+    function triggerExplosion() {
+        clearInterval(timerInterval);
+        document.getElementById('screen-game').style.display = 'none';
+        
+        const boomScreen = document.getElementById('screen-boom');
+        boomScreen.style.display = 'flex';
+        
+        document.body.classList.add('shake');
+    }
+
+    function endGame() {
+        clearInterval(timerInterval);
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-end').style.display = 'block';
+        document.getElementById('end-score').innerText = `${score} / ${totalQ}`;
+    }
+</script> 
+</body>
+</html>
