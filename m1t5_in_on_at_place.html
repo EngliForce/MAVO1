@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Place Prepositions (In, On, At)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            color: var(--hero-yellow);
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: var(--hero-cyan);
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            margin-top: 0;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .video-container {
+            background: #000;
+            border: 4px solid var(--hero-red);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            padding-top: 56.25%;
+            margin-bottom: 40px;
+            box-shadow: 0 0 40px rgba(211, 47, 47, 0.4);
+        }
+
+        .video-container iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+        }
+
+        .explanation-text {
+            font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px;
+            border-left: 4px solid var(--hero-cyan); padding-left: 20px;
+            background: rgba(0, 245, 212, 0.05); padding-top: 15px; padding-bottom: 15px; padding-right: 20px;
+        }
+
+        .split-box-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .split-box {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 2px dashed;
+        }
+
+        .split-box.in { border-color: var(--hero-orange); }
+        .split-box.on { border-color: var(--hero-cyan); }
+        .split-box.at { border-color: var(--hero-yellow); }
+
+        .split-box-title {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .split-box.in .split-box-title { color: var(--hero-orange); }
+        .split-box.on .split-box-title { color: var(--hero-cyan); }
+        .split-box.at .split-box-title { color: var(--hero-yellow); }
+
+        .example-box {
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .toggle-container {
+            display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
+        }
+
+        .btn-toggle {
+            background: var(--hero-purple-main); color: white; border: none;
+            padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.3rem; cursor: pointer; transition: 0.2s;
+            border-bottom: 5px solid var(--hero-purple-dark);
+        }
+
+        .btn-toggle:hover {
+            transform: translateY(-3px);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+        }
+
+        .btn-video {
+            background: var(--hero-red);
+            border-bottom: 5px solid var(--hero-red-dark);
+        }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* GRID FIX: De pickles staan nu weer naast elkaar */
+        .pickle-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+        
+        .card {
+            background: #1a102a;
+            border: 3px solid #3c096c;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--hero-yellow);
+            transform: scale(1.05);
+        }
+
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        
+        @keyframes boomAnim {
+            0% { transform: scale(0) rotate(-20deg); opacity: 1; }
+            100% { transform: scale(2) rotate(10deg); opacity: 0; }
+        }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--hero-purple-dark);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 900px) {
+            .split-box-container { flex-direction: column; }
+            .pickle-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>PLACE PREPOSITION COMMAND CENTER</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: PREPOSITIONS OF PLACE</h2>
+        <div class="explanation-text" id="mission-text">
+            <p>Waar is iets? In het Engels gebruik je 
+                <strong style="color: var(--hero-orange);">'in'</strong>,
+                <strong style="color: var(--hero-cyan);">'on'</strong> of
+                <strong style="color: var(--hero-yellow);">'at'</strong>.
+                
+                Denk aan een piramide: van heel specifiek naar heel algemeen!
+            </p>
+            
+            <div class="split-box-container">
+                <div class="split-box in">
+                    <div class="split-box-title">IN</div>
+                    <strong style="color: var(--hero-orange);">Besloten ruimtes</strong>.<br><br>
+                    Binnenin een container, kamer, stad of land.
+                    <div class="example-box">
+                        • In <u>the box</u><br>
+                        • In <u>London</u><br>
+                        • In <u>a car</u>
+                    </div>
+                </div>
+
+                <div class="split-box on">
+                    <div class="split-box-title">ON</div>
+                    <strong style="color: var(--hero-cyan);">Oppervlaktes</strong>.<br><br>
+                    Iets dat ergens bovenop ligt of tegenaan zit.
+                    <div class="example-box">
+                        • On <u>the table</u><br>
+                        • On <u>the wall</u><br>
+                        • On <u>the floor</u>
+                    </div>
+                </div>
+
+                <div class="split-box at">
+                    <div class="split-box-title">AT</div>
+                    <strong style="color: var(--hero-yellow);">Specifieke punten</strong>.<br><br>
+                    Gebruik dit voor een exacte plek of een adres.
+                    <div class="example-box">
+                        • At <u>the door</u><br>
+                        • At <u>the bus stop</u><br>
+                        • At <u>home</u>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-box" style="border-left: 4px solid var(--hero-yellow); background: rgba(255, 183, 3, 0.1);">
+            <strong style="color: var(--hero-yellow); font-family: 'Bangers'; font-size: 1.3rem;">🚀 PRO-TIP: DE PIRAMIDE-REGEL</strong><br>
+            Hoe groter de plek, hoe vaker je <strong>IN</strong> gebruikt:
+            <ul style="margin-top: 10px; list-style-type: '⚡ '; padding-left: 20px;">
+                <li><strong style="color: var(--hero-orange);">IN:</strong> Een gebied of 3D-ruimte (In Oxford Street).</li>
+                <li><strong style="color: var(--hero-cyan);">ON:</strong> Een lijn of oppervlakte (On the floor).</li>
+                <li><strong style="color: var(--hero-yellow);">AT:</strong> Een stip op de kaart (At the supermarket).</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'rules', 'ZAP!')">Checklist</button>
+        <button class="btn-toggle" onclick="showSection(event, 'examples', 'KA-POW!')">Voorbeelden</button>
+        <button class="btn-toggle btn-video" onclick="showSection(event, 'video-mission', 'ACTION!')">🎬 Mission Video</button>
+    </div>
+
+    <div id="rules" class="content-section" style="display: block;">
+        <h3>Quick Scan Checklist</h3>
+        <div class="explanation-text">
+            <p>✅ <strong>IN:</strong> Gebruik voor vloeistoffen (in the water) en grote gebieden.</p>
+            <p>✅ <strong>ON:</strong> Gebruik voor media (on TV, on the internet, on the radio).</p>
+            <p>✅ <strong>AT:</strong> Gebruik voor evenementen (at a party) en specifieke plekken.</p>
+        </div>
+    </div>
+
+    <div id="examples" class="content-section">
+        <h3>Preposition Lab</h3>
+        <div class="table-container" style="background: #1a102a; border-radius: 15px; overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="background: var(--hero-purple-main);">
+                    <tr><th style="padding: 15px; text-align: left;">Locatie Type</th><th style="padding: 15px; text-align: left;">Preposition</th></tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding: 15px;">Mijn slaapkamer</td><td style="padding: 15px;"><strong style="color: var(--hero-orange);">IN</strong> my bedroom</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding: 15px;">Het plafond</td><td style="padding: 15px;"><strong style="color: var(--hero-cyan);">ON</strong> the ceiling</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);"><td style="padding: 15px;">De bushalte</td><td style="padding: 15px;"><strong style="color: var(--hero-yellow);">AT</strong> the bus stop</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="video-mission" class="content-section">
+        <h3>🎬 MISSION BRIEFING VIDEO</h3>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/ZxK6dGf1mu4?rel=0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" onclick="createExplosion(event, 'BOOM!')">
+            <span style="font-size: 2.5rem;">📦</span>
+            <div class="title" style="font-family: 'Bangers'; color: var(--hero-orange);">Pickle 1</div>
+            <p>Space Invader (In)</p>
+        </div>
+        <div class="card" onclick="createExplosion(event, 'ZAP!')">
+            <span style="font-size: 2.5rem;">🛸</span>
+            <div class="title" style="font-family: 'Bangers'; color: var(--hero-cyan);">Pickle 2</div>
+            <p>Surface Master (On)</p>
+        </div>
+        <div class="card" onclick="createExplosion(event, 'CRUNCH!')">
+            <span style="font-size: 2.5rem;">🥒</span>
+            <div class="title" style="font-family: 'Bangers'; color: var(--hero-yellow);">Pickle 3</div>
+            <p>Point Sniper (At)</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span style="color: var(--hero-yellow);">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    function showSection(e, id, boomMessage) {
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, boomMessage);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX, y = e.clientY;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        setTimeout(() => flash.style.opacity = '0', 200);
+        
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px'; txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+</script>
+</body>
+</html>
