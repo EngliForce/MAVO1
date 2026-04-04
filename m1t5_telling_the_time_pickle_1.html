@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Clock Hacker Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            color: var(--hero-yellow);
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 30px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .instruction-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-left: 4px solid var(--hero-yellow);
+            text-align: left;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            color: var(--hero-yellow);
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        #time-phrase {
+            font-size: 2.8rem;
+            color: white;
+            text-shadow: 2px 2px 0px var(--hero-purple-dark);
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        /* DIGITAL CLOCK STYLES */
+        .digital-clock-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        .digital-input {
+            background: #000;
+            border: 4px solid var(--hero-cyan);
+            color: var(--hero-yellow);
+            font-family: 'Bangers', cursive;
+            font-size: 4rem;
+            width: 120px;
+            height: 100px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.4);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .digital-input:focus {
+            border-color: var(--hero-yellow);
+            box-shadow: 0 0 30px rgba(255, 183, 3, 0.6);
+            transform: scale(1.05);
+        }
+
+        .digital-input::-webkit-outer-spin-button,
+        .digital-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .digital-input[type=number] { -moz-appearance: textfield; }
+
+        .colon {
+            font-size: 5rem;
+            font-family: 'Bangers', cursive;
+            color: var(--hero-cyan);
+            animation: blink 1.5s infinite;
+            margin-top: -10px;
+        }
+
+        /* ANALOG CLOCK & SLIDERS */
+        .clock-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .svg-clock {
+            width: 250px;
+            height: 250px;
+            filter: drop-shadow(0 0 20px rgba(0, 245, 212, 0.4));
+            margin-bottom: 30px;
+        }
+
+        #hour-hand, #minute-hand {
+            transform-origin: 50px 50px;
+            transition: transform 0.2s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+        }
+
+        .controls-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--hero-purple-dark);
+        }
+
+        .slider-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .slider-group:last-child { margin-bottom: 0; }
+
+        .slider-label {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            color: var(--hero-cyan);
+            width: 80px;
+            text-align: right;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: var(--hero-yellow);
+            cursor: pointer;
+            height: 8px;
+        }
+
+        /* BUTTONS & FEEDBACK */
+        .level-btn {
+            background: var(--hero-purple-main);
+            color: white;
+            border: 2px solid var(--hero-cyan);
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 250px;
+            margin: 10px auto;
+        }
+
+        .level-btn:hover {
+            transform: scale(1.05);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+        }
+
+        .level-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            margin-top: 20px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            border-bottom-color: #00b39b;
+        }
+
+        .btn-video {
+            background: var(--hero-red);
+            border-bottom: 5px solid var(--hero-red-dark);
+        }
+
+        .btn-video:hover {
+            background: #ff5252;
+            color: white;
+            border-bottom-color: var(--hero-red-dark);
+        }
+
+        #feedback-msg {
+            font-size: 1.5rem;
+            font-weight: bold;
+            height: 30px;
+            margin-top: 20px;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        /* EFFECTS */
+        .flash-effect {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 1999;
+        }
+
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+
+        @keyframes boomAnim {
+            0% { transform: scale(0) rotate(-20deg); opacity: 1; }
+            100% { transform: scale(2) rotate(10deg); opacity: 0; }
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+        }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--hero-purple-dark);
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .footer-highlight { color: var(--hero-yellow); }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            #time-phrase { font-size: 2rem; }
+            .digital-input { width: 90px; height: 80px; font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>TIME HACKER PRO</p>
+</header>
+
+<main>
+    <section class="briefing-box" id="screen-intro">
+        <h2>CHOOSE YOUR MISSION</h2>
+        <p style="font-size: 1.2rem;">Select a difficulty level to start hacking!</p>
+        
+        <div class="level-container">
+            <button class="level-btn" onclick="startGame('digital', event)">
+                <span style="font-size: 2.5rem;">🔢</span>
+                LEVEL 1<br>Digital Clock
+            </button>
+            <button class="level-btn" onclick="startGame('analog', event)">
+                <span style="font-size: 2.5rem;">🕰️</span>
+                LEVEL 2<br>Analog Clock
+            </button>
+            <button class="level-btn" onclick="startGame('mixed', event)">
+                <span style="font-size: 2.5rem;">🔥</span>
+                LEVEL 3<br>Mixed Modes
+            </button>
+        </div>
+    </section>
+
+    <section class="briefing-box" id="screen-game" style="display: none;">
+        
+        <div class="instruction-text" id="game-instructions">
+            </div>
+
+        <div class="top-bar">
+            <span id="ui-question">Mission: 1 / 10</span>
+            <span id="ui-score">Score: 0</span>
+        </div>
+
+        <h3 id="time-phrase">...</h3>
+
+        <div class="digital-clock-container" id="ui-digital" style="display: none;">
+            <input type="number" id="input-h" class="digital-input" placeholder="00" min="0" max="23" autocomplete="off">
+            <span class="colon">:</span>
+            <input type="number" id="input-m" class="digital-input" placeholder="00" min="0" max="59" autocomplete="off">
+        </div>
+
+        <div class="clock-wrapper" id="ui-analog" style="display: none;">
+            <svg class="svg-clock" viewBox="0 0 100 100" id="clock-face">
+                <circle cx="50" cy="50" r="48" fill="#e0e0e0" stroke="var(--hero-cyan)" stroke-width="3"/>
+                <circle cx="50" cy="50" r="45" fill="#ffffff"/>
+                <g id="clock-numbers"></g>
+                <line id="hour-hand" x1="50" y1="50" x2="50" y2="28" stroke="var(--hero-purple-dark)" stroke-width="4" stroke-linecap="round"/>
+                <line id="minute-hand" x1="50" y1="50" x2="50" y2="12" stroke="var(--hero-red)" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="3" fill="#000"/>
+            </svg>
+
+            <div class="controls-container">
+                <div class="slider-group">
+                    <span class="slider-label">HOURS</span>
+                    <input type="range" id="slider-h" min="1" max="12" value="12" step="1">
+                </div>
+                <div class="slider-group">
+                    <span class="slider-label">MINS</span>
+                    <input type="range" id="slider-m" min="0" max="59" value="0" step="1">
+                </div>
+            </div>
+        </div>
+
+        <div id="feedback-msg"></div>
+
+        <button class="btn-action" onclick="checkAnswer(event)" id="btn-check">⚡ HACK THE CLOCK!</button>
+        <button class="btn-action btn-video" onclick="nextQuestion(event)" id="btn-next" style="display: none;">NEXT ➡️</button>
+    </section>
+
+    <section class="briefing-box" id="screen-end" style="display: none;">
+        <h2 id="end-title" style="font-size: 3rem;">Mission Complete!</h2>
+        <div class="section-divider"></div>
+        <p style="font-size: 1.5rem;">Final Score:</p>
+        <p id="end-score" style="font-size: 4rem; color: var(--hero-yellow); font-family: 'Bangers'; margin: 0; text-shadow: 3px 3px 0 #000;"></p>
+        <div class="section-divider"></div>
+        <button class="btn-action" onclick="showIntro(event)">🔄 BACK TO MENU</button>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    // --- KLOK VISUALS GENEREREN ---
+    function drawClockNumbers() {
+        const group = document.getElementById('clock-numbers');
+        for (let i = 1; i <= 12; i++) {
+            let angle = (i * 30 - 90) * (Math.PI / 180);
+            let x = 50 + 36 * Math.cos(angle);
+            let y = 50 + 36 * Math.sin(angle);
+            
+            let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", x);
+            text.setAttribute("y", y + 3.5);
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("font-family", "'Bangers', cursive");
+            text.setAttribute("font-size", "10");
+            text.setAttribute("fill", "#05101a");
+            text.textContent = i;
+            group.appendChild(text);
+        }
+    }
+
+    const sliderH = document.getElementById('slider-h');
+    const sliderM = document.getElementById('slider-m');
+    const handH = document.getElementById('hour-hand');
+    const handM = document.getElementById('minute-hand');
+
+    function updateClockHands() {
+        let h = parseInt(sliderH.value);
+        let m = parseInt(sliderM.value);
+
+        let minDeg = m * 6;
+        let hourDeg = (h % 12) * 30 + (m * 0.5);
+
+        handM.style.transform = `rotate(${minDeg}deg)`;
+        handH.style.transform = `rotate(${hourDeg}deg)`;
+    }
+
+    sliderH.addEventListener('input', updateClockHands);
+    sliderM.addEventListener('input', updateClockHands);
+
+    // --- WOORDEN & TIJD GENERATOR ---
+    function numberToWord(num) {
+        const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
+                       "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", 
+                       "eighteen", "nineteen", "twenty"];
+        if (num <= 20) return words[num];
+        if (num < 30) return "twenty-" + words[num - 20];
+        return num.toString();
+    }
+
+    function getAmPm(h24) {
+        return h24 >= 12 ? "p.m." : "a.m.";
+    }
+
+    function generateRandomTime() {
+        let actualH = Math.floor(Math.random() * 24);
+        let actualM = Math.floor(Math.random() * 60);
+        let timeString = "";
+        let amPmStr = "";
+        let displayH = actualH % 12 || 12;
+
+        if (actualM === 0) {
+            timeString = `${numberToWord(displayH)} o'clock`;
+            amPmStr = getAmPm(actualH);
+        } else if (actualM <= 30) {
+            let suffix = (actualM % 5 === 0) ? "" : (actualM === 1 ? " minute" : " minutes");
+            if (actualM === 15) timeString = `a quarter past ${numberToWord(displayH)}`;
+            else if (actualM === 30) timeString = `half past ${numberToWord(displayH)}`;
+            else timeString = `${numberToWord(actualM)}${suffix} past ${numberToWord(displayH)}`;
+            amPmStr = getAmPm(actualH);
+        } else {
+            let nextH24 = (actualH + 1) % 24;
+            let nextDisplayH = nextH24 % 12 || 12;
+            let mTo = 60 - actualM;
+            let suffix = (mTo % 5 === 0) ? "" : (mTo === 1 ? " minute" : " minutes");
+            
+            if (actualM === 45) timeString = `a quarter to ${numberToWord(nextDisplayH)}`;
+            else timeString = `${numberToWord(mTo)}${suffix} to ${numberToWord(nextDisplayH)}`;
+            amPmStr = getAmPm(nextH24); 
+        }
+        
+        return { actualH: actualH, actualM: actualM, displayH: displayH, phrase: `${timeString} ${amPmStr}` };
+    }
+
+    // --- GAME LOGICA ---
+    let gameMode = 'digital'; 
+    let currentQuestionType = 'digital';
+    let currentQ = 0;
+    let score = 0;
+    const totalQ = 10;
+    let currentTarget = null;
+
+    function showIntro(e) {
+        if(e) createExplosion(e, "ZWOOSH!");
+        document.getElementById('screen-end').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-intro').style.display = 'block';
+    }
+
+    function startGame(mode, e) {
+        if(e) createExplosion(e, "START!");
+        gameMode = mode;
+        currentQ = 0;
+        score = 0;
+        
+        document.getElementById('screen-intro').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'block';
+        
+        nextQuestion(null);
+    }
+
+    function nextQuestion(e) {
+        if(e && e.target.id === 'btn-next') createExplosion(e, "ZWOOSH!");
+        
+        if (currentQ >= totalQ) {
+            endGame();
+            return;
+        }
+
+        currentQ++;
+        currentTarget = generateRandomTime();
+
+        // Bepaal de UI voor deze specifieke vraag
+        if (gameMode === 'mixed') {
+            currentQuestionType = Math.random() > 0.5 ? 'digital' : 'analog';
+        } else {
+            currentQuestionType = gameMode;
+        }
+
+        // UI Updaten
+        document.getElementById('ui-question').innerText = `Mission: ${currentQ} / ${totalQ}`;
+        document.getElementById('ui-score').innerText = `Score: ${score}`;
+        document.getElementById('time-phrase').innerText = currentTarget.phrase.toUpperCase();
+        
+        setupInterface();
+
+        document.getElementById('feedback-msg').innerText = '';
+        document.getElementById('btn-check').style.display = 'inline-block';
+        document.getElementById('btn-next').style.display = 'none';
+    }
+
+    function setupInterface() {
+        const uiDigital = document.getElementById('ui-digital');
+        const uiAnalog = document.getElementById('ui-analog');
+        const instructions = document.getElementById('game-instructions');
+
+        if (currentQuestionType === 'digital') {
+            uiDigital.style.display = 'flex';
+            uiAnalog.style.display = 'none';
+            instructions.innerHTML = `<strong>Digital Hack:</strong> Use the 24-hour clock for p.m. times! <em>(Example: 3:00 p.m. = 15:00)</em>`;
+            
+            const inputH = document.getElementById('input-h');
+            const inputM = document.getElementById('input-m');
+            inputH.value = ''; inputM.value = '';
+            inputH.disabled = false; inputM.disabled = false;
+            inputH.focus();
+        } else {
+            uiDigital.style.display = 'none';
+            uiAnalog.style.display = 'flex';
+            instructions.innerHTML = `<strong>Analog Hack:</strong> Look closely at the hands and move the sliders to the correct time!`;
+            
+            sliderH.value = 12; sliderM.value = 0;
+            sliderH.disabled = false; sliderM.disabled = false;
+            updateClockHands();
+        }
+    }
+
+    function checkAnswer(e) {
+        let isCorrect = false;
+        let tH_actual = currentTarget.actualH;
+        let tH_display = currentTarget.displayH;
+        let tM = currentTarget.actualM;
+
+        let feedback = document.getElementById('feedback-msg');
+
+        if (currentQuestionType === 'digital') {
+            let uH = document.getElementById('input-h').value;
+            let uM = document.getElementById('input-m').value;
+
+            if (uH === '' || uM === '') { alert('Please fill in both numbers!'); return; }
+            uH = parseInt(uH); uM = parseInt(uM);
+
+            if (uH === tH_actual && uM === tM) {
+                isCorrect = true;
+            } else {
+                let correctHStr = tH_actual.toString().padStart(2, '0');
+                let correctMStr = tM.toString().padStart(2, '0');
+                feedback.innerText = `Wrong! The correct code was ${correctHStr}:${correctMStr}`;
+            }
+
+            document.getElementById('input-h').disabled = true;
+            document.getElementById('input-m').disabled = true;
+
+        } else {
+            // Analog Check
+            let uH = parseInt(sliderH.value);
+            let uM = parseInt(sliderM.value);
+
+            if (uH === tH_display && uM === tM) {
+                isCorrect = true;
+            } else {
+                feedback.innerText = `Wrong! Look at the correct hands!`;
+                sliderH.value = tH_display;
+                sliderM.value = tM;
+                updateClockHands();
+            }
+
+            sliderH.disabled = true;
+            sliderM.disabled = true;
+        }
+
+        if (isCorrect) {
+            createExplosion(e, "HACKED!");
+            score++;
+            feedback.innerText = "System Hacked! Perfect!";
+            feedback.style.color = "var(--hero-green)";
+        } else {
+            createExplosion(e, "ERROR!");
+            feedback.style.color = "var(--hero-red)";
+        }
+
+        document.getElementById('ui-score').innerText = `Score: ${score}`;
+        document.getElementById('btn-check').style.display = 'none';
+        
+        const btnNext = document.getElementById('btn-next');
+        btnNext.style.display = 'inline-block';
+        btnNext.innerText = (currentQ === totalQ) ? "SEE RESULTS 🏆" : "NEXT ➡️";
+    }
+
+    function endGame() {
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-end').style.display = 'block';
+        document.getElementById('end-score').innerText = `${score} / ${totalQ}`;
+        
+        let title = document.getElementById('end-title');
+        if (score === totalQ) {
+            title.innerText = "PERFECT! YOU ARE A TIME MASTER! 👑";
+            title.style.color = "var(--hero-green)";
+        } else if (score >= 7) {
+            title.innerText = "WELL DONE, AGENT! 🕵️‍♂️";
+            title.style.color = "var(--hero-cyan)";
+        } else {
+            title.innerText = "KEEP PRACTICING! 💪";
+            title.style.color = "var(--hero-orange)";
+        }
+    }
+
+    // --- VISUELE EFFECTEN ---
+    function createExplosion(e, message) {
+        let x = window.innerWidth / 2; let y = window.innerHeight / 2;
+        if (e && e.clientX) { x = e.clientX; y = e.clientY; }
+
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+        
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 100) + 'px'; txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    document.getElementById('input-h').addEventListener('blur', function() { if(this.value && this.value.length === 1) this.value = '0' + this.value; });
+    document.getElementById('input-m').addEventListener('blur', function() { if(this.value && this.value.length === 1) this.value = '0' + this.value; });
+    
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            const checkBtn = document.getElementById('btn-check');
+            const nextBtn = document.getElementById('btn-next');
+            if (checkBtn.style.display !== 'none' && document.getElementById('screen-game').style.display === 'block') {
+                checkAnswer();
+            } else if (nextBtn.style.display !== 'none') {
+                nextQuestion();
+            }
+        }
+    });
+
+    window.onload = function() {
+        drawClockNumbers();
+    };
+</script> 
+</body>
+</html>
