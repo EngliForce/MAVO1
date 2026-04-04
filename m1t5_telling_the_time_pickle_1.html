@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EngliForce Academy: Clock Hacker Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --hero-purple-main: #7b2cbf;
@@ -133,8 +133,8 @@
             background: #000;
             border: 4px solid var(--hero-cyan);
             color: var(--hero-yellow);
-            font-family: 'Bangers', cursive;
-            font-size: 4rem;
+            font-family: 'Share Tech Mono', monospace; /* Strak hacker font */
+            font-size: 4.5rem;
             width: 120px;
             height: 100px;
             text-align: center;
@@ -156,7 +156,7 @@
 
         .colon {
             font-size: 5rem;
-            font-family: 'Bangers', cursive;
+            font-family: 'Share Tech Mono', monospace;
             color: var(--hero-cyan);
             animation: blink 1.5s infinite;
             margin-top: -10px;
@@ -385,8 +385,7 @@
             <svg class="svg-clock" viewBox="0 0 100 100" id="clock-face">
                 <circle cx="50" cy="50" r="48" fill="#e0e0e0" stroke="var(--hero-cyan)" stroke-width="3"/>
                 <circle cx="50" cy="50" r="45" fill="#ffffff"/>
-                <g id="clock-numbers"></g>
-                <line id="hour-hand" x1="50" y1="50" x2="50" y2="28" stroke="var(--hero-purple-dark)" stroke-width="4" stroke-linecap="round"/>
+                <g id="clock-ticks"></g> <g id="clock-numbers"></g> <line id="hour-hand" x1="50" y1="50" x2="50" y2="28" stroke="var(--hero-purple-dark)" stroke-width="4" stroke-linecap="round"/>
                 <line id="minute-hand" x1="50" y1="50" x2="50" y2="12" stroke="var(--hero-red)" stroke-width="2" stroke-linecap="round"/>
                 <circle cx="50" cy="50" r="3" fill="#000"/>
             </svg>
@@ -424,23 +423,50 @@
 </footer>
 
 <script>
-    // --- KLOK VISUALS GENEREREN ---
-    function drawClockNumbers() {
-        const group = document.getElementById('clock-numbers');
+    // --- KLOK VISUALS GENEREREN (Inclusief minutenstreepjes) ---
+    function drawClockFaces() {
+        const numbersGroup = document.getElementById('clock-numbers');
+        const ticksGroup = document.getElementById('clock-ticks');
+        
+        // Teken de minuten streepjes
+        for (let i = 0; i < 60; i++) {
+            let angle = (i * 6 - 90) * (Math.PI / 180);
+            let isHour = (i % 5 === 0);
+            
+            let rOut = 44; // Buitenste rand van het streepje
+            let rIn = isHour ? 39 : 42; // Uren streepjes zijn wat langer en dikker
+            
+            let x1 = 50 + rIn * Math.cos(angle);
+            let y1 = 50 + rIn * Math.sin(angle);
+            let x2 = 50 + rOut * Math.cos(angle);
+            let y2 = 50 + rOut * Math.sin(angle);
+            
+            let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", isHour ? "var(--hero-purple-dark)" : "#a0a0a0");
+            line.setAttribute("stroke-width", isHour ? "1.5" : "0.5");
+            
+            ticksGroup.appendChild(line);
+        }
+
+        // Teken de cijfers iets verder naar binnen
         for (let i = 1; i <= 12; i++) {
             let angle = (i * 30 - 90) * (Math.PI / 180);
-            let x = 50 + 36 * Math.cos(angle);
-            let y = 50 + 36 * Math.sin(angle);
+            let x = 50 + 32 * Math.cos(angle); // Naar binnen geschoven (van 36 naar 32)
+            let y = 50 + 32 * Math.sin(angle);
             
             let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
             text.setAttribute("x", x);
             text.setAttribute("y", y + 3.5);
             text.setAttribute("text-anchor", "middle");
             text.setAttribute("font-family", "'Bangers', cursive");
-            text.setAttribute("font-size", "10");
+            text.setAttribute("font-size", "9");
             text.setAttribute("fill", "#05101a");
             text.textContent = i;
-            group.appendChild(text);
+            numbersGroup.appendChild(text);
         }
     }
 
@@ -705,7 +731,8 @@
     });
 
     window.onload = function() {
-        drawClockNumbers();
+        // Functie-aanroep vervangen door de nieuwe die ook de streepjes tekent
+        drawClockFaces();
     };
 </script> 
 </body>
