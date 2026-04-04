@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Vault Hacker Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            color: var(--hero-yellow);
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.2);
+            text-align: center;
+        }
+
+        .instruction-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-left: 4px solid var(--hero-cyan);
+            text-align: left;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            color: var(--hero-yellow);
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* LEVEL MENU BUTTONS */
+        .level-btn {
+            background: var(--hero-purple-main);
+            color: white;
+            border: 2px solid var(--hero-cyan);
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 250px;
+            margin: 10px auto;
+        }
+
+        .level-btn:hover {
+            transform: scale(1.05);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+        }
+
+        .level-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        /* MEMORY GRID */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            perspective: 1000px; /* Nodig voor het 3D flip effect */
+        }
+
+        .card {
+            background: transparent;
+            height: 130px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* De gesloten kluisdeur */
+        .card-back {
+            background: linear-gradient(135deg, var(--hero-purple-dark), var(--hero-purple-main));
+            border: 3px solid var(--hero-cyan);
+            font-size: 3rem;
+            color: var(--hero-cyan);
+        }
+
+        .card-back::after {
+            content: '🔒';
+        }
+
+        .card:hover .card-back {
+            box-shadow: 0 0 15px var(--hero-cyan);
+            border-color: var(--hero-yellow);
+        }
+
+        /* De open kluisdeur (het antwoord) */
+        .card-front {
+            background: #111;
+            border: 3px solid var(--hero-yellow);
+            transform: rotateY(180deg);
+            text-align: center;
+        }
+
+        .card.matched .card-front {
+            border-color: var(--hero-green);
+            background: rgba(76, 175, 80, 0.2);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+
+        .card-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .card-digital {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 2.2rem;
+            color: var(--hero-cyan);
+            letter-spacing: 2px;
+        }
+
+        .mini-analog-clock {
+            width: 90px;
+            height: 90px;
+        }
+
+        /* BUTTONS & FEEDBACK */
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            margin-top: 20px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            border-bottom-color: #00b39b;
+        }
+
+        /* EFFECTS */
+        .flash-effect {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 1999;
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+        }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--hero-purple-dark);
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 700px) {
+            .memory-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .card { height: 110px; }
+            .card-digital { font-size: 1.6rem; }
+            .card-text { font-size: 0.9rem; }
+            .mini-analog-clock { width: 70px; height: 70px; }
+        }
+
+        @media (max-width: 450px) {
+            .memory-grid { grid-template-columns: repeat(2, 1fr); }
+            .card { height: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>VAULT HACKER PRO (MEMORY MATCH)</p>
+</header>
+
+<main>
+    <section class="briefing-box" id="screen-intro">
+        <h2>CHOOSE YOUR MISSION</h2>
+        <p style="font-size: 1.2rem;">Agent, hack the vaults by matching the English time to the correct clock!</p>
+        
+        <div class="level-container">
+            <button class="level-btn" onclick="startGame('digital', event)">
+                <span style="font-size: 2.5rem;">🔢</span>
+                LEVEL 1<br>Digital Vaults
+            </button>
+            <button class="level-btn" onclick="startGame('analog', event)">
+                <span style="font-size: 2.5rem;">🕰️</span>
+                LEVEL 2<br>Analog Vaults
+            </button>
+            <button class="level-btn" onclick="startGame('mixed', event)">
+                <span style="font-size: 2.5rem;">🔥</span>
+                LEVEL 3<br>Mixed Vaults
+            </button>
+        </div>
+    </section>
+
+    <section class="briefing-box" id="screen-game" style="display: none;">
+        
+        <div class="top-bar">
+            <span id="ui-moves">Moves: 0</span>
+            <span id="ui-matches">Matches: 0 / 6</span>
+        </div>
+
+        <div class="memory-grid" id="memory-board">
+            </div>
+
+    </section>
+
+    <section class="briefing-box" id="screen-end" style="display: none;">
+        <h2 id="end-title" style="font-size: 3rem; color: var(--hero-green);">ALL VAULTS OPENED!</h2>
+        <div class="section-divider"></div>
+        <p style="font-size: 1.5rem;">Total Moves used:</p>
+        <p id="end-score" style="font-size: 5rem; color: var(--hero-yellow); font-family: 'Bangers'; margin: 0; text-shadow: 3px 3px 0 #000;"></p>
+        <div class="section-divider"></div>
+        <button class="btn-action" onclick="location.reload()">🔄 BACK TO MENU</button>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span style="color: var(--hero-yellow);">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    // --- KLOK SVG GENERATOR ---
+    function getAnalogClockSVG(h, m) {
+        let minDeg = m * 6;
+        let hourDeg = (h % 12) * 30 + (m * 0.5);
+        
+        // Simpele ticks voor analoge klok op kleine kaartjes
+        let ticks = "";
+        for(let i=0; i<12; i++) {
+            let angle = (i * 30 - 90) * (Math.PI / 180);
+            let x1 = 50 + 38 * Math.cos(angle);
+            let y1 = 50 + 38 * Math.sin(angle);
+            let x2 = 50 + 44 * Math.cos(angle);
+            let y2 = 50 + 44 * Math.sin(angle);
+            ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#3c096c" stroke-width="2"/>`;
+        }
+
+        return `
+            <svg class="mini-analog-clock" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#00f5d4" stroke-width="4"/>
+                ${ticks}
+                <line x1="50" y1="50" x2="${50 + 22 * Math.sin(hourDeg * Math.PI / 180)}" y2="${50 - 22 * Math.cos(hourDeg * Math.PI / 180)}" stroke="#3c096c" stroke-width="5" stroke-linecap="round"/>
+                <line x1="50" y1="50" x2="${50 + 33 * Math.sin(minDeg * Math.PI / 180)}" y2="${50 - 33 * Math.cos(minDeg * Math.PI / 180)}" stroke="#d32f2f" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="4" fill="#000000"/>
+            </svg>
+        `;
+    }
+
+    // --- WOORDEN GENERATOR ---
+    function numberToWord(num) {
+        const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
+                       "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", 
+                       "eighteen", "nineteen", "twenty"];
+        if (num <= 20) return words[num];
+        if (num < 30) return "twenty-" + words[num - 20];
+        return num.toString();
+    }
+
+    function formatDigitalTime(h, m) {
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+    }
+
+    // --- TIJD GENERATOR ---
+    function generateUniqueTimes(amount) {
+        let times = [];
+        let usedStrings = new Set();
+        
+        while(times.length < amount) {
+            let actualH = Math.floor(Math.random() * 12) + 1;
+            
+            // Beperk de minuten tot makkelijk herkenbare stappen (elke 5 minuten) 
+            // zodat geheugen en visuele herkenning soepel verloopt
+            let actualM = Math.floor(Math.random() * 12) * 5; 
+            
+            let clockString = formatDigitalTime(actualH, actualM);
+
+            if (!usedStrings.has(clockString)) {
+                usedStrings.add(clockString);
+                
+                let nextH = (actualH % 12) + 1;
+                let hWord = numberToWord(actualH);
+                let nextHWord = numberToWord(nextH);
+                let phrase = "";
+
+                if (actualM === 0) {
+                    phrase = `${hWord} o'clock`;
+                } else if (actualM <= 30) {
+                    let mWord = numberToWord(actualM);
+                    if (actualM === 15) phrase = `a quarter past ${hWord}`;
+                    else if (actualM === 30) phrase = `half past ${hWord}`;
+                    else phrase = `${mWord} past ${hWord}`;
+                } else {
+                    let mTo = 60 - actualM;
+                    let mWord = numberToWord(mTo);
+                    if (actualM === 45) phrase = `a quarter to ${nextHWord}`;
+                    else phrase = `${mWord} to ${nextHWord}`;
+                }
+
+                times.push({ id: times.length, h: actualH, m: actualM, str: clockString, phrase: phrase });
+            }
+        }
+        return times;
+    }
+
+    // --- GAME LOGICA ---
+    let gameMode = 'digital';
+    let moves = 0;
+    let matchesFound = 0;
+    const totalPairs = 6;
+    
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+
+    function startGame(mode, e) {
+        let x = window.innerWidth / 2; let y = window.innerHeight / 2;
+        if (e && e.clientX) { x = e.clientX; y = e.clientY; }
+
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        setTimeout(() => flash.style.opacity = '0', 200);
+
+        gameMode = mode;
+        document.getElementById('screen-intro').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'block';
+        
+        setupBoard();
+    }
+
+    function setupBoard() {
+        const board = document.getElementById('memory-board');
+        board.innerHTML = '';
+        moves = 0;
+        matchesFound = 0;
+        updateUI();
+
+        // 1. Genereer 6 unieke tijden
+        let targetTimes = generateUniqueTimes(totalPairs);
+        let cardsData = [];
+
+        // 2. Maak paren aan (1 text kaart + 1 klok kaart)
+        targetTimes.forEach(time => {
+            // Tekst Kaart
+            cardsData.push({
+                timeId: time.id,
+                html: `<div class="card-text">${time.phrase.toUpperCase()}</div>`
+            });
+
+            // Klok Kaart
+            let clockType = gameMode;
+            if (clockType === 'mixed') {
+                clockType = Math.random() > 0.5 ? 'digital' : 'analog';
+            }
+
+            let clockHtml = "";
+            if (clockType === 'digital') {
+                clockHtml = `<div class="card-digital">${time.str}</div>`;
+            } else {
+                clockHtml = getAnalogClockSVG(time.h, time.m);
+            }
+
+            cardsData.push({
+                timeId: time.id,
+                html: clockHtml
+            });
+        });
+
+        // 3. Hussel de kaarten
+        cardsData.sort(() => Math.random() - 0.5);
+
+        // 4. Zet ze op het bord
+        cardsData.forEach(data => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card');
+            cardElement.dataset.timeId = data.timeId;
+            
+            cardElement.innerHTML = `
+                <div class="card-face card-back"></div>
+                <div class="card-face card-front">${data.html}</div>
+            `;
+            
+            cardElement.addEventListener('click', flipCard);
+            board.appendChild(cardElement);
+        });
+    }
+
+    function flipCard() {
+        if (lockBoard) return;
+        if (this === firstCard) return; // Voorkom dubbelklik op dezelfde kaart
+
+        this.classList.add('flipped');
+
+        if (!firstCard) {
+            firstCard = this;
+            return;
+        }
+
+        secondCard = this;
+        moves++;
+        updateUI();
+        checkForMatch();
+    }
+
+    function checkForMatch() {
+        let isMatch = firstCard.dataset.timeId === secondCard.dataset.timeId;
+
+        if (isMatch) {
+            disableCards();
+            matchesFound++;
+            updateUI();
+            
+            if (matchesFound === totalPairs) {
+                setTimeout(endGame, 1000);
+            }
+        } else {
+            unflipCards();
+        }
+    }
+
+    function disableCards() {
+        // Zorg dat ze groen oplichten
+        firstCard.classList.add('matched');
+        secondCard.classList.add('matched');
+
+        firstCard.removeEventListener('click', flipCard);
+        secondCard.removeEventListener('click', flipCard);
+        resetBoard();
+    }
+
+    function unflipCards() {
+        lockBoard = true;
+        
+        document.body.classList.add('shake');
+        setTimeout(() => document.body.classList.remove('shake'), 200);
+
+        setTimeout(() => {
+            firstCard.classList.remove('flipped');
+            secondCard.classList.remove('flipped');
+            resetBoard();
+        }, 1200);
+    }
+
+    function resetBoard() {
+        [firstCard, secondCard, lockBoard] = [null, null, false];
+    }
+
+    function updateUI() {
+        document.getElementById('ui-moves').innerText = `Moves: ${moves}`;
+        document.getElementById('ui-matches').innerText = `Matches: ${matchesFound} / ${totalPairs}`;
+    }
+
+    function endGame() {
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-end').style.display = 'block';
+        document.getElementById('end-score').innerText = moves;
+
+        const flash = document.getElementById('flash');
+        flash.style.background = 'var(--hero-green)';
+        flash.style.opacity = '0.4';
+        setTimeout(() => { flash.style.opacity = '0'; flash.style.background = 'white'; }, 400);
+    }
+</script> 
+</body>
+</html>
