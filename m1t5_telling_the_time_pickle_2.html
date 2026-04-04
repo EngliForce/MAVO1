@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Time Typer Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            color: var(--hero-yellow);
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 30px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .instruction-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-left: 4px solid var(--hero-yellow);
+            text-align: left;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            color: var(--hero-yellow);
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* LEVEL MENU BUTTONS */
+        .level-btn {
+            background: var(--hero-purple-main);
+            color: white;
+            border: 2px solid var(--hero-cyan);
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 250px;
+            margin: 10px auto;
+        }
+
+        .level-btn:hover {
+            transform: scale(1.05);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+        }
+
+        .level-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        /* DIGITAL TARGET DISPLAY */
+        .target-display {
+            background: #000;
+            border: 4px solid var(--hero-cyan);
+            color: var(--hero-cyan);
+            font-family: 'Share Tech Mono', monospace; 
+            font-size: 5rem;
+            padding: 20px 40px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.3);
+            letter-spacing: 5px;
+            margin: 20px 0;
+            text-shadow: 0 0 10px var(--hero-cyan);
+        }
+
+        /* ANALOG CLOCK DISPLAY */
+        .clock-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .svg-clock {
+            width: 200px;
+            height: 200px;
+            filter: drop-shadow(0 0 20px rgba(0, 245, 212, 0.4));
+        }
+
+        #hour-hand, #minute-hand {
+            transform-origin: 50px 50px;
+            transition: transform 0.4s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+        }
+
+        /* TEXT INPUT STYLES */
+        .type-input {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255,255,255,0.1);
+            border: 3px solid var(--hero-purple-main);
+            color: white;
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.5rem;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+
+        .type-input:focus {
+            border-color: var(--hero-yellow);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
+        }
+
+        .type-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* BUTTONS & FEEDBACK */
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            border-bottom-color: #00b39b;
+        }
+
+        .btn-video {
+            background: var(--hero-red);
+            border-bottom: 5px solid var(--hero-red-dark);
+        }
+
+        .btn-video:hover {
+            background: #ff5252;
+            color: white;
+            border-bottom-color: var(--hero-red-dark);
+        }
+
+        #feedback-msg {
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 40px;
+            margin-bottom: 10px;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        .correct-answer-display {
+            font-size: 1.2rem;
+            color: white;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* EFFECTS */
+        .flash-effect {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 1999;
+        }
+
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+
+        @keyframes boomAnim {
+            0% { transform: scale(0) rotate(-20deg); opacity: 1; }
+            100% { transform: scale(2) rotate(10deg); opacity: 0; }
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+        }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--hero-purple-dark);
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .footer-highlight { color: var(--hero-yellow); }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .target-display { font-size: 3.5rem; padding: 15px 30px; }
+            .type-input { font-size: 1.2rem; }
+            .top-bar { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>TIME TYPER PRO</p>
+</header>
+
+<main>
+    <section class="briefing-box" id="screen-intro">
+        <h2>CHOOSE YOUR MISSION</h2>
+        <p style="font-size: 1.2rem;">Select a difficulty level to start typing!</p>
+        
+        <div class="level-container">
+            <button class="level-btn" onclick="startGame('digital', event)">
+                <span style="font-size: 2.5rem;">🔢</span>
+                LEVEL 1<br>Digital Mode
+            </button>
+            <button class="level-btn" onclick="startGame('analog', event)">
+                <span style="font-size: 2.5rem;">🕰️</span>
+                LEVEL 2<br>Analog Mode
+            </button>
+            <button class="level-btn" onclick="startGame('mixed', event)">
+                <span style="font-size: 2.5rem;">🔥</span>
+                LEVEL 3<br>Mixed Mode
+            </button>
+        </div>
+    </section>
+
+    <section class="briefing-box" id="screen-game" style="display: none;">
+        
+        <div class="instruction-text" id="game-instructions">
+            <strong>Agent, translate the time to English!</strong><br>
+            Look at the clock and type the full phrase (e.g. <em>a quarter past three</em>).<br>
+            <em>Note: Don't forget your hyphens (koppeltekens) for numbers like twenty-five!</em>
+        </div>
+
+        <div class="top-bar">
+            <span id="ui-question">Mission: 1 / 10</span>
+            <span id="ui-score">Score: 0</span>
+        </div>
+
+        <div id="ui-digital" style="display: none;">
+            <div class="target-display" id="target-time">00:00</div>
+        </div>
+
+        <div class="clock-wrapper" id="ui-analog" style="display: none;">
+            <svg class="svg-clock" viewBox="0 0 100 100" id="clock-face">
+                <circle cx="50" cy="50" r="48" fill="#e0e0e0" stroke="var(--hero-cyan)" stroke-width="3"/>
+                <circle cx="50" cy="50" r="45" fill="#ffffff"/>
+                <g id="clock-ticks"></g> <g id="clock-numbers"></g> <line id="hour-hand" x1="50" y1="50" x2="50" y2="28" stroke="var(--hero-purple-dark)" stroke-width="4" stroke-linecap="round"/>
+                <line id="minute-hand" x1="50" y1="50" x2="50" y2="12" stroke="var(--hero-red)" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="3" fill="#000"/>
+            </svg>
+        </div>
+
+        <div>
+            <input type="text" id="type-answer" class="type-input" placeholder="Type the time here..." autocomplete="off" spellcheck="false">
+        </div>
+
+        <div id="feedback-msg"></div>
+        <div id="correct-answer" class="correct-answer-display"></div>
+
+        <button class="btn-action" onclick="checkAnswer(event)" id="btn-check">⚡ SUBMIT CODE!</button>
+        <button class="btn-action btn-video" onclick="nextQuestion(event)" id="btn-next" style="display: none;">NEXT ➡️</button>
+    </section>
+
+    <section class="briefing-box" id="screen-end" style="display: none;">
+        <h2 id="end-title" style="font-size: 3rem;">Mission Complete!</h2>
+        <div class="section-divider"></div>
+        <p style="font-size: 1.5rem;">Final Score:</p>
+        <p id="end-score" style="font-size: 4rem; color: var(--hero-yellow); font-family: 'Bangers'; margin: 0; text-shadow: 3px 3px 0 #000;"></p>
+        <div class="section-divider"></div>
+        <button class="btn-action" onclick="showIntro(event)">🔄 BACK TO MENU</button>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    // --- ANALOG CLOCK VISUALS (Inclusief minutenstreepjes) ---
+    function drawClockFaces() {
+        const numbersGroup = document.getElementById('clock-numbers');
+        const ticksGroup = document.getElementById('clock-ticks');
+        
+        // Teken de minuten streepjes
+        for (let i = 0; i < 60; i++) {
+            let angle = (i * 6 - 90) * (Math.PI / 180);
+            let isHour = (i % 5 === 0);
+            
+            let rOut = 44; // Buitenste rand van het streepje
+            let rIn = isHour ? 39 : 42; // Uren streepjes zijn wat langer
+            
+            let x1 = 50 + rIn * Math.cos(angle);
+            let y1 = 50 + rIn * Math.sin(angle);
+            let x2 = 50 + rOut * Math.cos(angle);
+            let y2 = 50 + rOut * Math.sin(angle);
+            
+            let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", isHour ? "var(--hero-purple-dark)" : "#a0a0a0");
+            line.setAttribute("stroke-width", isHour ? "1.5" : "0.5");
+            
+            ticksGroup.appendChild(line);
+        }
+
+        // Teken de getallen iets verder naar binnen
+        for (let i = 1; i <= 12; i++) {
+            let angle = (i * 30 - 90) * (Math.PI / 180);
+            let x = 50 + 32 * Math.cos(angle); // Iets naar binnen gehaald om ruimte te maken voor streepjes
+            let y = 50 + 32 * Math.sin(angle);
+            
+            let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", x);
+            text.setAttribute("y", y + 3.5);
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("font-family", "'Bangers', cursive");
+            text.setAttribute("font-size", "9");
+            text.setAttribute("fill", "#05101a");
+            text.textContent = i;
+            numbersGroup.appendChild(text);
+        }
+    }
+
+    function setAnalogClock(h, m) {
+        const handH = document.getElementById('hour-hand');
+        const handM = document.getElementById('minute-hand');
+        
+        let minDeg = m * 6;
+        let hourDeg = (h % 12) * 30 + (m * 0.5);
+
+        handM.style.transform = `rotate(${minDeg}deg)`;
+        handH.style.transform = `rotate(${hourDeg}deg)`;
+    }
+
+    // --- WOORDEN GENERATOR ---
+    function numberToWord(num) {
+        const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", 
+                       "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", 
+                       "eighteen", "nineteen", "twenty"];
+        if (num <= 20) return words[num];
+        
+        // Koppelteken wordt hierin verwerkt
+        if (num < 30) return "twenty-" + words[num - 20];
+        return num.toString();
+    }
+
+    // --- NORMALISEREN VAN TEKST (Strenge koppelteken controle) ---
+    function normalizeString(str) {
+        return str.toLowerCase()
+                  .replace(/[.,]/g, '')        // Verwijder punten en komma's
+                  .replace(/\s*-\s*/g, '-')   // Trek spaties rondom koppeltekens strak
+                  .replace(/\s+/g, ' ')       // Maak dubbele spaties enkel
+                  .trim();
+    }
+
+    // --- TIJD GENERATOR EN ANTWOORDEN ---
+    function generateRandomTime() {
+        let actualH = Math.floor(Math.random() * 24); // 0-23
+        let actualM = Math.floor(Math.random() * 60); // 0-59
+        
+        let displayH = actualH.toString().padStart(2, '0');
+        let displayM = actualM.toString().padStart(2, '0');
+        let clockString = `${displayH}:${displayM}`;
+
+        let h12 = actualH % 12 || 12;
+        let nextH12 = (h12 % 12) + 1;
+        
+        let hWord = numberToWord(h12);
+        let nextHWord = numberToWord(nextH12);
+
+        let validAnswers = [];
+        let primaryAnswer = "";
+
+        if (actualM === 0) {
+            validAnswers.push(`${hWord} o'clock`, `${hWord} o clock`);
+            primaryAnswer = `${hWord} o'clock`;
+        } else if (actualM <= 30) {
+            let mWord = numberToWord(actualM);
+            if (actualM === 15) {
+                validAnswers.push(`a quarter past ${hWord}`, `quarter past ${hWord}`);
+                primaryAnswer = `a quarter past ${hWord}`;
+            } else if (actualM === 30) {
+                validAnswers.push(`half past ${hWord}`);
+                primaryAnswer = `half past ${hWord}`;
+            } else {
+                validAnswers.push(`${mWord} past ${hWord}`);
+                validAnswers.push(`${mWord} minutes past ${hWord}`);
+                primaryAnswer = `${mWord} past ${hWord}`;
+            }
+        } else {
+            let mTo = 60 - actualM;
+            let mWord = numberToWord(mTo);
+            
+            if (actualM === 45) {
+                validAnswers.push(`a quarter to ${nextHWord}`, `quarter to ${nextHWord}`);
+                primaryAnswer = `a quarter to ${nextHWord}`;
+            } else {
+                validAnswers.push(`${mWord} to ${nextHWord}`);
+                validAnswers.push(`${mWord} minutes to ${nextHWord}`);
+                primaryAnswer = `${mWord} to ${nextHWord}`;
+            }
+        }
+
+        let normalizedAnswers = validAnswers.map(ans => normalizeString(ans));
+        
+        return { 
+            actualH: actualH,
+            actualM: actualM,
+            clockString: clockString, 
+            primaryAnswer: primaryAnswer,
+            validNormalizedAnswers: normalizedAnswers
+        };
+    }
+
+    // --- GAME LOGICA ---
+    let gameMode = 'digital'; 
+    let currentQuestionType = 'digital';
+    let currentQ = 0;
+    let score = 0;
+    const totalQ = 10;
+    let currentTarget = null;
+
+    function showIntro(e) {
+        if(e) createExplosion(e, "ZWOOSH!");
+        document.getElementById('screen-end').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-intro').style.display = 'block';
+    }
+
+    function startGame(mode, e) {
+        if(e) createExplosion(e, "START!");
+        gameMode = mode;
+        currentQ = 0;
+        score = 0;
+        
+        document.getElementById('screen-intro').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'block';
+        
+        nextQuestion(null);
+    }
+
+    function nextQuestion(e) {
+        if(e && e.target.id === 'btn-next') createExplosion(e, "ZWOOSH!");
+        
+        if (currentQ >= totalQ) {
+            endGame();
+            return;
+        }
+
+        currentQ++;
+        currentTarget = generateRandomTime();
+        
+        // Bepaal de UI voor deze specifieke vraag
+        if (gameMode === 'mixed') {
+            currentQuestionType = Math.random() > 0.5 ? 'digital' : 'analog';
+        } else {
+            currentQuestionType = gameMode;
+        }
+
+        document.getElementById('ui-question').innerText = `Mission: ${currentQ} / ${totalQ}`;
+        document.getElementById('ui-score').innerText = `Score: ${score}`;
+        
+        setupInterface();
+
+        const inputField = document.getElementById('type-answer');
+        inputField.value = '';
+        inputField.disabled = false;
+        inputField.focus();
+
+        document.getElementById('feedback-msg').innerText = '';
+        document.getElementById('correct-answer').style.display = 'none';
+        
+        document.getElementById('btn-check').style.display = 'inline-block';
+        document.getElementById('btn-next').style.display = 'none';
+    }
+
+    function setupInterface() {
+        const uiDigital = document.getElementById('ui-digital');
+        const uiAnalog = document.getElementById('ui-analog');
+
+        if (currentQuestionType === 'digital') {
+            uiDigital.style.display = 'block';
+            uiAnalog.style.display = 'none';
+            document.getElementById('target-time').innerText = currentTarget.clockString;
+        } else {
+            uiDigital.style.display = 'none';
+            uiAnalog.style.display = 'flex';
+            setAnalogClock(currentTarget.actualH, currentTarget.actualM);
+        }
+    }
+
+    function checkAnswer(e) {
+        let userInput = document.getElementById('type-answer').value;
+
+        if (userInput.trim() === '') {
+            alert('Please type an answer, Agent!');
+            return;
+        }
+
+        let normalizedInput = normalizeString(userInput);
+        let feedback = document.getElementById('feedback-msg');
+        let correctDisplay = document.getElementById('correct-answer');
+
+        if (currentTarget.validNormalizedAnswers.includes(normalizedInput)) {
+            createExplosion(e, "CORRECT!");
+            score++;
+            feedback.innerText = "Excellent spelling, Agent!";
+            feedback.style.color = "var(--hero-green)";
+        } else {
+            createExplosion(e, "ERROR!");
+            
+            if (userInput.includes('twenty ') && currentTarget.primaryAnswer.includes('twenty-')) {
+                feedback.innerText = "Don't forget the hyphen (koppelteken) in twenty-something!";
+            } else {
+                feedback.innerText = "Typo detected or wrong time!";
+            }
+            
+            feedback.style.color = "var(--hero-red)";
+            correctDisplay.innerHTML = `Correct phrase: <strong>${currentTarget.primaryAnswer}</strong>`;
+            correctDisplay.style.display = 'block';
+        }
+
+        document.getElementById('ui-score').innerText = `Score: ${score}`;
+        
+        document.getElementById('type-answer').disabled = true;
+
+        document.getElementById('btn-check').style.display = 'none';
+        const btnNext = document.getElementById('btn-next');
+        btnNext.style.display = 'inline-block';
+        
+        if (currentQ === totalQ) {
+            btnNext.innerText = "SEE RESULTS 🏆";
+        } else {
+            btnNext.innerText = "NEXT ➡️";
+        }
+    }
+
+    function endGame() {
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-end').style.display = 'block';
+        document.getElementById('end-score').innerText = `${score} / ${totalQ}`;
+        
+        let title = document.getElementById('end-title');
+        if (score === totalQ) {
+            title.innerText = "FLAWLESS TYPING! 👑";
+            title.style.color = "var(--hero-green)";
+        } else if (score >= 7) {
+            title.innerText = "GREAT JOB, AGENT! 🕵️‍♂️";
+            title.style.color = "var(--hero-cyan)";
+        } else {
+            title.innerText = "KEEP PRACTICING YOUR SPELLING! 💪";
+            title.style.color = "var(--hero-orange)";
+        }
+    }
+
+    // --- VISUELE EFFECTEN ---
+    function createExplosion(e, message) {
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        
+        if (e && e.clientX) {
+            x = e.clientX;
+            y = e.clientY;
+        }
+
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        
+        setTimeout(() => { 
+            flash.style.opacity = '0'; 
+            document.body.classList.remove('shake'); 
+        }, 200);
+        
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 100) + 'px'; 
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    document.getElementById('type-answer').addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const checkBtn = document.getElementById('btn-check');
+            const nextBtn = document.getElementById('btn-next');
+            if (checkBtn.style.display !== 'none') {
+                checkAnswer();
+            } else if (nextBtn.style.display !== 'none') {
+                nextQuestion();
+            }
+        }
+    });
+
+    window.onload = function() {
+        drawClockFaces();
+    };
+</script> 
+</body>
+</html>
