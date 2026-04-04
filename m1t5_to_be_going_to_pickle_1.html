@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Prediction Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: #05101a;
+            background: radial-gradient(circle at center, #1a102a 0%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            color: var(--hero-yellow);
+            font-size: 2.2rem;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 30px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.2);
+            text-align: center;
+        }
+
+        .instruction-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            border-left: 4px solid var(--hero-yellow);
+            text-align: left;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            color: var(--hero-yellow);
+            font-family: 'Bangers';
+            font-size: 1.8rem;
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* TERMINAL DISPLAY STYLES */
+        .terminal-display {
+            background: #000;
+            border: 4px solid var(--hero-cyan);
+            color: var(--hero-cyan);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 245, 212, 0.1), 0 0 20px rgba(0, 245, 212, 0.3);
+            margin: 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+            position: relative;
+        }
+
+        .terminal-header {
+            font-size: 1.1rem;
+            color: var(--hero-red);
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--hero-red);
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .rec-indicator {
+            color: red;
+            animation: blink 1s infinite;
+        }
+
+        .terminal-message {
+            font-size: 1.6rem;
+            line-height: 1.8;
+            color: white;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .verb-hint {
+            color: var(--hero-yellow);
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* INLINE INPUT */
+        .inline-input {
+            background: rgba(0, 245, 212, 0.1);
+            border: none;
+            border-bottom: 3px solid var(--hero-cyan);
+            color: var(--hero-cyan);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.6rem;
+            padding: 5px 10px;
+            text-align: center;
+            outline: none;
+            width: 250px;
+            transition: 0.3s;
+            text-transform: lowercase;
+        }
+
+        .inline-input:focus {
+            background: rgba(0, 245, 212, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 245, 212, 0.4);
+            border-color: var(--hero-yellow);
+            color: var(--hero-yellow);
+        }
+
+        .inline-input::placeholder {
+            color: rgba(0, 245, 212, 0.3);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* BUTTONS & FEEDBACK */
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            border-bottom-color: #00b39b;
+        }
+
+        #feedback-msg {
+            font-size: 1.4rem;
+            font-weight: bold;
+            min-height: 40px;
+            margin-bottom: 10px;
+            font-family: 'Lexend', sans-serif;
+            background: rgba(0,0,0,0.4);
+            padding: 10px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .correct-answer-display {
+            font-size: 1.2rem;
+            color: white;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* EFFECTS */
+        .flash-effect {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 1999;
+        }
+
+        .boom-text {
+            position: fixed; pointer-events: none; font-family: 'Bangers', cursive;
+            color: var(--hero-yellow); font-size: 5rem; z-index: 2001;
+            text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards;
+        }
+
+        @keyframes boomAnim {
+            0% { transform: scale(0) rotate(-20deg); opacity: 1; }
+            100% { transform: scale(2) rotate(10deg); opacity: 0; }
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+        }
+
+        footer {
+            background: #05101a;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--hero-purple-dark);
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .footer-highlight { color: var(--hero-yellow); }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .terminal-message { font-size: 1.2rem; }
+            .inline-input { font-size: 1.2rem; width: 180px; }
+            .top-bar { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>THE SURVEILLANCE CENTER</p>
+</header>
+
+<main>
+    <section class="briefing-box" id="screen-intro">
+        <h2 style="font-size: 3rem; color: var(--hero-cyan);">🕵️‍♂️ SURVEILLANCE PRO</h2>
+        <p style="font-size: 1.2rem;">Agent, we are tapping into the villains' cameras and microphones.</p>
+        <p style="font-size: 1.2rem; color: var(--hero-yellow);">Fill in the missing words using <strong>to be going to + the verb</strong> to predict what happens next!</p>
+        
+        <button class="btn-action" style="font-size: 2rem; padding: 20px 60px;" onclick="startGame(event)">
+            START HACKING
+        </button>
+    </section>
+
+    <section class="briefing-box" id="screen-game" style="display: none;">
+        
+        <div class="instruction-text">
+            <strong>Formula Check:</strong> Remember to use <em>am / is / are</em> + <em>going to</em> + <em>the verb</em>!
+        </div>
+
+        <div class="top-bar">
+            <span id="ui-question">Feed: 1 / 10</span>
+            <span id="ui-score">Score: 0</span>
+        </div>
+
+        <div class="terminal-display">
+            <div class="terminal-header">
+                <span id="feed-source">INTERCEPTED AUDIO // CHANNEL 4</span>
+                <span class="rec-indicator">● REC</span>
+            </div>
+            <div class="terminal-message">
+                <span id="q-prefix">The villains have the key. They </span>
+                <input type="text" id="type-answer" class="inline-input" placeholder="type here..." autocomplete="off" spellcheck="false">
+                <span id="q-suffix"> the diamond!</span>
+                <br><span class="verb-hint" id="q-verb">(verb: steal)</span>
+            </div>
+        </div>
+
+        <div id="feedback-msg"></div>
+        <div id="correct-answer" class="correct-answer-display"></div>
+
+        <button class="btn-action" onclick="checkAnswer(event)" id="btn-check">⚡ SUBMIT PREDICTION!</button>
+        <button class="btn-action btn-video" onclick="nextQuestion(event)" id="btn-next" style="display: none;">NEXT FEED ➡️</button>
+    </section>
+
+    <section class="briefing-box" id="screen-end" style="display: none;">
+        <h2 id="end-title" style="font-size: 3rem;">Mission Complete!</h2>
+        <div class="section-divider"></div>
+        <p style="font-size: 1.5rem;">Total Predictions Correct:</p>
+        <p id="end-score" style="font-size: 4rem; color: var(--hero-yellow); font-family: 'Bangers'; margin: 0; text-shadow: 3px 3px 0 #000;"></p>
+        <div class="section-divider"></div>
+        <button class="btn-action" onclick="location.reload()">🔄 PLAY AGAIN</button>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    // --- MASSIVE QUESTION BANK (150 QUESTIONS) ---
+    const allQuestions = [
+        // Group 1: I (15)
+        { source: "HACKED CHAT // USER 1", prefix: "I have the access codes. I ", verb: "hack", suffix: " the mainframe.", correct: "am going to hack" },
+        { source: "VILLAIN LOG // ENTRY 4", prefix: "The police are here. I ", verb: "escape", suffix: " through the roof.", correct: "am going to escape" },
+        { source: "AUDIO FEED // VAULT", prefix: "I found the safe. I ", verb: "steal", suffix: " the files.", correct: "am going to steal" },
+        { source: "PHONE TAP // BOSS", prefix: "The trap is set. I ", verb: "catch", suffix: " the spy.", correct: "am going to catch" },
+        { source: "DRONE AUDIO // BASE", prefix: "I need to hurry. I ", verb: "run", suffix: " to the helicopter.", correct: "am going to run" },
+        { source: "INTERCEPTED EMAIL", prefix: "I bought the ticket. I ", verb: "fly", suffix: " to London tonight.", correct: "am going to fly" },
+        { source: "TEXT MESSAGE // SPY", prefix: "I have the disguise. I ", verb: "infiltrate", suffix: " the party.", correct: "am going to infiltrate" },
+        { source: "VOICE MEMO // LAB", prefix: "The laser is ready. I ", verb: "test", suffix: " it now.", correct: "am going to test" },
+        { source: "RADIO CH 2", prefix: "I am out of ammo. I ", verb: "hide", suffix: " in the shadows.", correct: "am going to hide" },
+        { source: "HACKED CHAT // USER 9", prefix: "I have the explosives. I ", verb: "destroy", suffix: " the bridge.", correct: "am going to destroy" },
+        { source: "VILLAIN LOG // ENTRY 8", prefix: "The plan is flawless. I ", verb: "win", suffix: " this time.", correct: "am going to win" },
+        { source: "AUDIO FEED // GARAGE", prefix: "I found the sports car. I ", verb: "drive", suffix: " away fast.", correct: "am going to drive" },
+        { source: "PHONE TAP // AGENT", prefix: "I see the target. I ", verb: "follow", suffix: " him.", correct: "am going to follow" },
+        { source: "DRONE AUDIO // ROOF", prefix: "I am trapped! I ", verb: "jump", suffix: " into the water.", correct: "am going to jump" },
+        { source: "INTERCEPTED SMS", prefix: "I lost my keycard. I ", verb: "break", suffix: " the window.", correct: "am going to break" },
+
+        // Group 2: You (15)
+        { source: "BOSS COMMS", prefix: "You have the map. You ", verb: "lead", suffix: " the team.", correct: "are going to lead" },
+        { source: "RADIO CH 1", prefix: "The timer is at 10 seconds! You ", verb: "fail", suffix: " the mission!", correct: "are going to fail" },
+        { source: "HACKED AUDIO", prefix: "You stepped on a laser! You ", verb: "trigger", suffix: " the alarm!", correct: "are going to trigger" },
+        { source: "TEXT MESSAGE", prefix: "You have the money. You ", verb: "buy", suffix: " the gadgets.", correct: "are going to buy" },
+        { source: "VILLAIN CHAT", prefix: "You are surrounded. You ", verb: "lose", suffix: " the game.", correct: "are going to lose" },
+        { source: "INTERCOM", prefix: "You found the secret door. You ", verb: "open", suffix: " it slowly.", correct: "are going to open" },
+        { source: "PHONE TAP", prefix: "You have a parachute. You ", verb: "survive", suffix: " the fall.", correct: "are going to survive" },
+        { source: "DRONE FEED", prefix: "You are driving too fast! You ", verb: "crash", suffix: " the car!", correct: "are going to crash" },
+        { source: "AUDIO LOG", prefix: "You hold the detonator. You ", verb: "push", suffix: " the button.", correct: "are going to push" },
+        { source: "BOSS COMMS", prefix: "You disappointed me. You ", verb: "regret", suffix: " this mistake.", correct: "are going to regret" },
+        { source: "RADIO CH 3", prefix: "You are wearing a guard uniform. You ", verb: "walk", suffix: " right past them.", correct: "are going to walk" },
+        { source: "HACKED AUDIO", prefix: "You dropped the glass! You ", verb: "wake", suffix: " the dogs!", correct: "are going to wake" },
+        { source: "TEXT MESSAGE", prefix: "You are the best hacker. You ", verb: "bypass", suffix: " the firewall.", correct: "are going to bypass" },
+        { source: "VILLAIN CHAT", prefix: "You know the truth. You ", verb: "tell", suffix: " everyone.", correct: "are going to tell" },
+        { source: "INTERCOM", prefix: "You are standing on a trapdoor! You ", verb: "fall", suffix: " down!", correct: "are going to fall" },
+
+        // Group 3: He (15)
+        { source: "SURVEILLANCE CAM 1", prefix: "He is holding a lockpick. He ", verb: "open", suffix: " the door.", correct: "is going to open" },
+        { source: "DRONE FOOTAGE", prefix: "He is running towards the edge. He ", verb: "jump", suffix: " off the roof.", correct: "is going to jump" },
+        { source: "AUDIO BUG", prefix: "He has the blueprints. He ", verb: "build", suffix: " a secret base.", correct: "is going to build" },
+        { source: "PHONE INTERCEPT", prefix: "He is very angry. He ", verb: "yell", suffix: " at his guards.", correct: "is going to yell" },
+        { source: "SECURITY CAM", prefix: "He is looking at the camera. He ", verb: "shoot", suffix: " it.", correct: "is going to shoot" },
+        { source: "HACKED CCTV", prefix: "He forgot his password. He ", verb: "hack", suffix: " his own computer.", correct: "is going to hack" },
+        { source: "THERMAL CAM", prefix: "He is taking out a match. He ", verb: "burn", suffix: " the evidence.", correct: "is going to burn" },
+        { source: "SATELLITE FEED", prefix: "He is entering the jet. He ", verb: "fly", suffix: " to his island.", correct: "is going to fly" },
+        { source: "AUDIO FEED", prefix: "He slipped on the wet floor! He ", verb: "drop", suffix: " the diamond!", correct: "is going to drop" },
+        { source: "SPY REPORT", prefix: "He bought a new suit. He ", verb: "attend", suffix: " the gala tonight.", correct: "is going to attend" },
+        { source: "DRONE FOOTAGE", prefix: "He is aiming the laser. He ", verb: "melt", suffix: " the safe.", correct: "is going to melt" },
+        { source: "SECURITY CAM", prefix: "He just saw the police. He ", verb: "panic", suffix: " right now.", correct: "is going to panic" },
+        { source: "HACKED CCTV", prefix: "He is tying a knot. He ", verb: "trap", suffix: " the hero.", correct: "is going to trap" },
+        { source: "AUDIO BUG", prefix: "He packed his bags. He ", verb: "leave", suffix: " the country.", correct: "is going to leave" },
+        { source: "THERMAL CAM", prefix: "He is carrying a heavy box. He ", verb: "hide", suffix: " the gold.", correct: "is going to hide" },
+
+        // Group 4: She (15)
+        { source: "CAM 4 // HALLWAY", prefix: "She is wearing a disguise. She ", verb: "fool", suffix: " the guards.", correct: "is going to fool" },
+        { source: "INTERCEPTED CALL", prefix: "She has the secret code. She ", verb: "unlock", suffix: " the vault.", correct: "is going to unlock" },
+        { source: "DRONE CAM", prefix: "She is climbing the wall. She ", verb: "enter", suffix: " through the window.", correct: "is going to enter" },
+        { source: "SATELLITE // TRACKER", prefix: "She is driving a speedboat. She ", verb: "escape", suffix: " across the ocean.", correct: "is going to escape" },
+        { source: "AUDIO FEED", prefix: "She found the tracking device. She ", verb: "smash", suffix: " it.", correct: "is going to smash" },
+        { source: "HACKED WEBCAM", prefix: "She is reading the files. She ", verb: "discover", suffix: " our plan.", correct: "is going to discover" },
+        { source: "SECURITY LOG", prefix: "She just pressed the red button. She ", verb: "activate", suffix: " the trap.", correct: "is going to activate" },
+        { source: "SPY GADGET", prefix: "She has a fake passport. She ", verb: "cross", suffix: " the border.", correct: "is going to cross" },
+        { source: "CAM 2 // LOBBY", prefix: "She is walking towards the exit. She ", verb: "leave", suffix: " the building.", correct: "is going to leave" },
+        { source: "INTERCEPTED CALL", prefix: "She heard the siren. She ", verb: "run", suffix: " away.", correct: "is going to run" },
+        { source: "DRONE CAM", prefix: "She is pointing a gadget at the camera. She ", verb: "blind", suffix: " us.", correct: "is going to blind" },
+        { source: "SATELLITE // TRACKER", prefix: "She is looking at the map. She ", verb: "find", suffix: " the treasure.", correct: "is going to find" },
+        { source: "AUDIO FEED", prefix: "She is laughing evilly. She ", verb: "reveal", suffix: " her master plan.", correct: "is going to reveal" },
+        { source: "HACKED WEBCAM", prefix: "She is cutting the blue wire. She ", verb: "stop", suffix: " the timer.", correct: "is going to stop" },
+        { source: "SECURITY LOG", prefix: "She is putting on night-vision goggles. She ", verb: "attack", suffix: " in the dark.", correct: "is going to attack" },
+
+        // Group 5: It (15)
+        { source: "WEATHER RADAR", prefix: "Look at those black clouds! It ", verb: "rain", suffix: " heavily.", correct: "is going to rain" },
+        { source: "BOMB SQUAD CAM", prefix: "The timer is at zero! It ", verb: "explode", suffix: "!", correct: "is going to explode" },
+        { source: "SYSTEM DIAGNOSTICS", prefix: "The server is overheating. It ", verb: "crash", suffix: " soon.", correct: "is going to crash" },
+        { source: "SENSOR LOG", prefix: "The ice bridge is cracking. It ", verb: "break", suffix: " under his weight.", correct: "is going to break" },
+        { source: "ROBOTICS LAB", prefix: "The robot has a virus. It ", verb: "malfunction", suffix: " completely.", correct: "is going to malfunction" },
+        { source: "VAULT SENSORS", prefix: "The alarm is flashing red. It ", verb: "ring", suffix: " loudly.", correct: "is going to ring" },
+        { source: "LASER CONTROL", prefix: "The laser beam is too strong! It ", verb: "melt", suffix: " the wall.", correct: "is going to melt" },
+        { source: "SUBMARINE CAM", prefix: "There is a hole in the hull. It ", verb: "sink", suffix: " to the bottom.", correct: "is going to sink" },
+        { source: "DRONE FEED", prefix: "The helicopter engine is smoking. It ", verb: "fall", suffix: " out of the sky.", correct: "is going to fall" },
+        { source: "THERMAL CAM", prefix: "The fire is spreading fast. It ", verb: "destroy", suffix: " the base.", correct: "is going to destroy" },
+        { source: "WEATHER RADAR", prefix: "The temperature is dropping fast. It ", verb: "snow", suffix: " tonight.", correct: "is going to snow" },
+        { source: "BOMB SQUAD CAM", prefix: "The green light is on. It ", verb: "deactivate", suffix: " safely.", correct: "is going to deactivate" },
+        { source: "SYSTEM DIAGNOSTICS", prefix: "The upload is at 99%. It ", verb: "finish", suffix: " in a second.", correct: "is going to finish" },
+        { source: "SENSOR LOG", prefix: "The secret door is sliding. It ", verb: "close", suffix: " permanently.", correct: "is going to close" },
+        { source: "ROBOTICS LAB", prefix: "The battery is empty. It ", verb: "stop", suffix: " moving.", correct: "is going to stop" },
+
+        // Group 6: We (15)
+        { source: "TEAM CHAT // SECURE", prefix: "We have the coordinates. We ", verb: "attack", suffix: " at dawn.", correct: "are going to attack" },
+        { source: "AUDIO FEED // HEROES", prefix: "We found the bomb. We ", verb: "defuse", suffix: " it together.", correct: "are going to defuse" },
+        { source: "RADIO CH 5", prefix: "We are surrounded by guards! We ", verb: "fight", suffix: " our way out.", correct: "are going to fight" },
+        { source: "INTERCEPTED SMS", prefix: "We bought the tools. We ", verb: "hack", suffix: " the security system.", correct: "are going to hack" },
+        { source: "MISSION BRIEFING", prefix: "We know their weakness. We ", verb: "win", suffix: " this battle.", correct: "are going to win" },
+        { source: "TEAM CHAT // SECURE", prefix: "We lost the signal. We ", verb: "fail", suffix: " the mission.", correct: "are going to fail" },
+        { source: "AUDIO FEED // HEROES", prefix: "We see the villain's car. We ", verb: "chase", suffix: " him down.", correct: "are going to chase" },
+        { source: "RADIO CH 5", prefix: "We are wearing black suits. We ", verb: "blend", suffix: " into the night.", correct: "are going to blend" },
+        { source: "INTERCEPTED SMS", prefix: "We have the USB drive. We ", verb: "download", suffix: " the data.", correct: "are going to download" },
+        { source: "MISSION BRIEFING", prefix: "We planted the tracking bug. We ", verb: "follow", suffix: " their every move.", correct: "are going to follow" },
+        { source: "TEAM CHAT // SECURE", prefix: "We found the hidden tunnel. We ", verb: "explore", suffix: " the underground.", correct: "are going to explore" },
+        { source: "AUDIO FEED // HEROES", prefix: "We are out of time! We ", verb: "run", suffix: " as fast as we can.", correct: "are going to run" },
+        { source: "RADIO CH 5", prefix: "We have the hostage. We ", verb: "rescue", suffix: " him safely.", correct: "are going to rescue" },
+        { source: "INTERCEPTED SMS", prefix: "We hear footsteps. We ", verb: "hide", suffix: " behind the boxes.", correct: "are going to hide" },
+        { source: "MISSION BRIEFING", prefix: "We cracked the password. We ", verb: "log", suffix: " into the server.", correct: "are going to log" },
+
+        // Group 7: They (15)
+        { source: "CAM 3 // PERIMETER", prefix: "The villains have weapons. They ", verb: "shoot", suffix: " at us.", correct: "are going to shoot" },
+        { source: "DRONE FEED // ROOF", prefix: "They are getting into the chopper. They ", verb: "fly", suffix: " away.", correct: "are going to fly" },
+        { source: "AUDIO BUG // MEETING", prefix: "They agreed on the plan. They ", verb: "rob", suffix: " the bank tomorrow.", correct: "are going to rob" },
+        { source: "SATELLITE SCAN", prefix: "They are driving towards the cliff! They ", verb: "crash", suffix: " the truck.", correct: "are going to crash" },
+        { source: "HACKED WEBCAM", prefix: "They found our microphone. They ", verb: "smash", suffix: " it to pieces.", correct: "are going to smash" },
+        { source: "CAM 3 // PERIMETER", prefix: "They are cutting the wire fence. They ", verb: "break", suffix: " into the base.", correct: "are going to break" },
+        { source: "DRONE FEED // ROOF", prefix: "They look very confused. They ", verb: "make", suffix: " a mistake.", correct: "are going to make" },
+        { source: "AUDIO BUG // MEETING", prefix: "They are packing their bags. They ", verb: "leave", suffix: " the hideout.", correct: "are going to leave" },
+        { source: "SATELLITE SCAN", prefix: "They are setting up the laser. They ", verb: "destroy", suffix: " the satellite.", correct: "are going to destroy" },
+        { source: "HACKED WEBCAM", prefix: "They see the police cars. They ", verb: "surrender", suffix: " to the cops.", correct: "are going to surrender" },
+        { source: "CAM 3 // PERIMETER", prefix: "They are wearing diving gear. They ", verb: "swim", suffix: " to the submarine.", correct: "are going to swim" },
+        { source: "DRONE FEED // ROOF", prefix: "They are unlocking the cages. They ", verb: "release", suffix: " the guard dogs.", correct: "are going to release" },
+        { source: "AUDIO BUG // MEETING", prefix: "They are typing the launch code. They ", verb: "launch", suffix: " the missile.", correct: "are going to launch" },
+        { source: "SATELLITE SCAN", prefix: "They are digging a hole. They ", verb: "bury", suffix: " the stolen gold.", correct: "are going to bury" },
+        { source: "HACKED WEBCAM", prefix: "They are putting on masks. They ", verb: "hide", suffix: " their faces.", correct: "are going to hide" },
+
+        // Group 8: Specific Singular Nouns (15)
+        { source: "AUDIO LOG", prefix: "The boss is furious. He ", verb: "fire", suffix: " everyone.", correct: "is going to fire" },
+        { source: "CAM 1", prefix: "The guard is looking this way. He ", verb: "see", suffix: " us!", correct: "is going to see" },
+        { source: "THERMAL CAM", prefix: "The spy has a rope. She ", verb: "climb", suffix: " the wall.", correct: "is going to climb" },
+        { source: "DRONE FEED", prefix: "The sniper is aiming. He ", verb: "take", suffix: " the shot.", correct: "is going to take" },
+        { source: "HACKED CHAT", prefix: "The hacker is online. She ", verb: "steal", suffix: " the passwords.", correct: "is going to steal" },
+        { source: "AUDIO LOG", prefix: "The boss has the detonator. He ", verb: "blow", suffix: " up the building.", correct: "is going to blow" },
+        { source: "CAM 1", prefix: "The guard is taking out his radio. He ", verb: "call", suffix: " for backup.", correct: "is going to call" },
+        { source: "THERMAL CAM", prefix: "The spy is cornered. She ", verb: "fight", suffix: " the henchmen.", correct: "is going to fight" },
+        { source: "DRONE FEED", prefix: "The pilot is starting the engine. He ", verb: "take", suffix: " off.", correct: "is going to take" },
+        { source: "HACKED CHAT", prefix: "The hacker typed the final line. She ", verb: "press", suffix: " enter.", correct: "is going to press" },
+        { source: "AUDIO LOG", prefix: "The boss is smiling. He ", verb: "reveal", suffix: " his trap.", correct: "is going to reveal" },
+        { source: "CAM 1", prefix: "The guard dropped his keys. He ", verb: "bend", suffix: " down to get them.", correct: "is going to bend" },
+        { source: "THERMAL CAM", prefix: "The spy planted the bug. She ", verb: "listen", suffix: " to their meeting.", correct: "is going to listen" },
+        { source: "DRONE FEED", prefix: "The driver is hitting the gas. He ", verb: "escape", suffix: " the police.", correct: "is going to escape" },
+        { source: "HACKED CHAT", prefix: "The agent is compromised. He ", verb: "abort", suffix: " the mission.", correct: "is going to abort" },
+
+        // Group 9: Specific Plural Nouns (15)
+        { source: "CAM 2", prefix: "The guards are running. They ", verb: "catch", suffix: " the intruder.", correct: "are going to catch" },
+        { source: "AUDIO BUG", prefix: "The villains have a map. They ", verb: "find", suffix: " the secret cave.", correct: "are going to find" },
+        { source: "DRONE FEED", prefix: "The dogs are barking loudly. They ", verb: "bite", suffix: " someone.", correct: "are going to bite" },
+        { source: "SATELLITE", prefix: "The agents are jumping from the plane. They ", verb: "parachute", suffix: " down.", correct: "are going to parachute" },
+        { source: "SECURITY LOG", prefix: "The hackers bypassed the firewall. They ", verb: "download", suffix: " everything.", correct: "are going to download" },
+        { source: "CAM 2", prefix: "The guards drew their weapons. They ", verb: "shoot", suffix: " the locks.", correct: "are going to shoot" },
+        { source: "AUDIO BUG", prefix: "The villains are cheering. They ", verb: "celebrate", suffix: " their victory.", correct: "are going to celebrate" },
+        { source: "DRONE FEED", prefix: "The lasers are moving fast. They ", verb: "slice", suffix: " the metal door.", correct: "are going to slice" },
+        { source: "SATELLITE", prefix: "The agents are swimming ashore. They ", verb: "infiltrate", suffix: " the island.", correct: "are going to infiltrate" },
+        { source: "SECURITY LOG", prefix: "The alarms are disabled. They ", verb: "sneak", suffix: " into the vault.", correct: "are going to sneak" },
+        { source: "CAM 2", prefix: "The guards are blocking the exit. They ", verb: "stop", suffix: " us from leaving.", correct: "are going to stop" },
+        { source: "AUDIO BUG", prefix: "The villains are loading the truck. They ", verb: "transport", suffix: " the gold.", correct: "are going to transport" },
+        { source: "DRONE FEED", prefix: "The drones are locking on target. They ", verb: "fire", suffix: " the missiles.", correct: "are going to fire" },
+        { source: "SATELLITE", prefix: "The police cars are surrounding them. They ", verb: "arrest", suffix: " the boss.", correct: "are going to arrest" },
+        { source: "SECURITY LOG", prefix: "The scientists mixed the wrong chemicals! They ", verb: "cause", suffix: " an explosion.", correct: "are going to cause" },
+
+        // Group 10: Environmental & Objects (It) (15)
+        { source: "SYSTEM ALERT", prefix: "The bridge is shaking violently! It ", verb: "collapse", suffix: " into the river.", correct: "is going to collapse" },
+        { source: "BOMB SQUAD", prefix: "The red wire is cut! The bomb ", verb: "explode", suffix: " now!", correct: "is going to explode" },
+        { source: "WEATHER SAT", prefix: "The hurricane is turning. It ", verb: "hit", suffix: " the secret base.", correct: "is going to hit" },
+        { source: "SERVER LOG", prefix: "The virus is spreading. It ", verb: "corrupt", suffix: " all the files.", correct: "is going to corrupt" },
+        { source: "THERMAL SENSOR", prefix: "The ice wall is melting. It ", verb: "flood", suffix: " the tunnel.", correct: "is going to flood" },
+        { source: "SYSTEM ALERT", prefix: "The elevator cable snapped! It ", verb: "fall", suffix: " down the shaft.", correct: "is going to fall" },
+        { source: "BOMB SQUAD", prefix: "The countdown stopped at 0:01. It ", verb: "be", suffix: " safe now.", correct: "is going to be" },
+        { source: "WEATHER SAT", prefix: "The lightning is very close. It ", verb: "strike", suffix: " the antenna.", correct: "is going to strike" },
+        { source: "SERVER LOG", prefix: "The mainframe power is at 0%. It ", verb: "shut", suffix: " down completely.", correct: "is going to shut" },
+        { source: "THERMAL SENSOR", prefix: "The volcano is rumbling. It ", verb: "erupt", suffix: " today.", correct: "is going to erupt" },
+        { source: "SYSTEM ALERT", prefix: "The vault door is jammed. It ", verb: "stay", suffix: " closed forever.", correct: "is going to stay" },
+        { source: "BOMB SQUAD", prefix: "The alarm is getting louder. It ", verb: "alert", suffix: " everyone in the building.", correct: "is going to alert" },
+        { source: "WEATHER SAT", prefix: "The fog is getting very thick. It ", verb: "blind", suffix: " the cameras.", correct: "is going to blind" },
+        { source: "SERVER LOG", prefix: "The hacking script is finished. It ", verb: "unlock", suffix: " the security gates.", correct: "is going to unlock" },
+        { source: "THERMAL SENSOR", prefix: "The toxic gas is leaking. It ", verb: "poison", suffix: " the air.", correct: "is going to poison" }
+    ];
+
+    // --- GAME LOGICA ---
+    let currentQ = 0;
+    let score = 0;
+    const totalQ = 10;
+    let currentTarget = null;
+    let shuffledQuestions = [];
+
+    function startGame(e) {
+        if(e) createExplosion(e, "LINK START!");
+        
+        // Kies 10 willekeurige vragen uit de enorme lijst
+        shuffledQuestions = [...allQuestions].sort(() => Math.random() - 0.5).slice(0, totalQ);
+        
+        currentQ = 0;
+        score = 0;
+        
+        document.getElementById('screen-intro').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'block';
+        
+        nextQuestion(null);
+    }
+
+    function nextQuestion(e) {
+        if(e && e.target.id === 'btn-next') createExplosion(e, "ZWOOSH!");
+        
+        if (currentQ >= totalQ) {
+            endGame();
+            return;
+        }
+
+        currentTarget = shuffledQuestions[currentQ];
+        currentQ++;
+        
+        document.getElementById('ui-question').innerText = `Feed: ${currentQ} / ${totalQ}`;
+        document.getElementById('ui-score').innerText = `Score: ${score}`;
+        
+        // Vul de terminal met de nieuwe data
+        document.getElementById('feed-source').innerText = currentTarget.source;
+        document.getElementById('q-prefix').innerText = currentTarget.prefix;
+        document.getElementById('q-suffix').innerText = currentTarget.suffix;
+        document.getElementById('q-verb').innerText = `(verb: ${currentTarget.verb})`;
+        
+        const inputField = document.getElementById('type-answer');
+        inputField.value = '';
+        inputField.disabled = false;
+        inputField.focus();
+
+        document.getElementById('feedback-msg').style.display = 'none';
+        document.getElementById('correct-answer').style.display = 'none';
+        
+        document.getElementById('btn-check').style.display = 'inline-block';
+        document.getElementById('btn-next').style.display = 'none';
+    }
+
+    function normalizeString(str) {
+        return str.toLowerCase().replace(/\s+/g, ' ').trim();
+    }
+
+    function checkAnswer(e) {
+        let userInputRaw = document.getElementById('type-answer').value;
+        let userInput = normalizeString(userInputRaw);
+        let correctAnswer = normalizeString(currentTarget.correct);
+
+        if (userInput === '') {
+            alert('Please type your prediction, Agent!');
+            return;
+        }
+
+        let feedback = document.getElementById('feedback-msg');
+        let correctDisplay = document.getElementById('correct-answer');
+        feedback.style.display = 'block';
+
+        if (userInput === correctAnswer) {
+            createExplosion(e, "PREDICTED!");
+            score++;
+            feedback.innerText = "Target Locked! Excellent grammar!";
+            feedback.style.color = "var(--hero-green)";
+            feedback.style.borderLeft = "5px solid var(--hero-green)";
+        } else {
+            createExplosion(e, "ERROR!");
+            
+            // Hacker feedback voor specifieke fouten
+            if (!userInput.includes("am ") && !userInput.includes("is ") && !userInput.includes("are ") && !userInput.includes("'m ") && !userInput.includes("'re ") && !userInput.includes("'s ")) {
+                feedback.innerText = "System Error: You forgot the 'to be' verb (am/is/are)!";
+            } else if (!userInput.includes("going to")) {
+                feedback.innerText = "System Error: You forgot the 'going to' part!";
+            } else if (!userInput.includes(currentTarget.verb)) {
+                feedback.innerText = `System Error: You forgot the main verb (${currentTarget.verb})!`;
+            } else {
+                feedback.innerText = "Grammar error detected!";
+            }
+            
+            feedback.style.color = "var(--hero-red)";
+            feedback.style.borderLeft = "5px solid var(--hero-red)";
+            
+            correctDisplay.innerHTML = `Correct prediction: <br><strong style="color: var(--hero-yellow); font-family: 'Share Tech Mono'; font-size: 1.5rem;">${currentTarget.correct}</strong>`;
+            correctDisplay.style.display = 'block';
+        }
+
+        document.getElementById('ui-score').innerText = `Score: ${score}`;
+        document.getElementById('type-answer').disabled = true;
+
+        document.getElementById('btn-check').style.display = 'none';
+        const btnNext = document.getElementById('btn-next');
+        btnNext.style.display = 'inline-block';
+        
+        if (currentQ === totalQ) {
+            btnNext.innerText = "VIEW MISSION REPORT 🏆";
+        } else {
+            btnNext.innerText = "NEXT FEED ➡️";
+        }
+    }
+
+    function endGame() {
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-end').style.display = 'block';
+        document.getElementById('end-score').innerText = `${score} / ${totalQ}`;
+        
+        let title = document.getElementById('end-title');
+        if (score === totalQ) {
+            title.innerText = "MASTER PREDICTOR! 👑";
+            title.style.color = "var(--hero-green)";
+        } else if (score >= 7) {
+            title.innerText = "GREAT HACKING, AGENT! 🕵️‍♂️";
+            title.style.color = "var(--hero-cyan)";
+        } else {
+            title.innerText = "REVIEW THE GRAMMAR FORMULA! 💪";
+            title.style.color = "var(--hero-orange)";
+        }
+    }
+
+    // --- VISUELE EFFECTEN ---
+    function createExplosion(e, message) {
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        
+        if (e && e.clientX) {
+            x = e.clientX;
+            y = e.clientY;
+        }
+
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        
+        setTimeout(() => { 
+            flash.style.opacity = '0'; 
+            document.body.classList.remove('shake'); 
+        }, 200);
+        
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 100) + 'px'; 
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    // Zorg dat 'Enter' werkt voor snelheid
+    document.getElementById('type-answer').addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const checkBtn = document.getElementById('btn-check');
+            const nextBtn = document.getElementById('btn-next');
+            if (checkBtn.style.display !== 'none') {
+                checkAnswer();
+            } else if (nextBtn.style.display !== 'none') {
+                nextQuestion();
+            }
+        }
+    });
+
+</script> 
+</body>
+</html>
