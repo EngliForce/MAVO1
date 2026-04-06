@@ -19,10 +19,8 @@
         }
 
         html, body { margin: 0; padding: 0; width: 100%; }
-        
         body {
             font-family: 'Lexend', sans-serif;
-            background: #05101a;
             background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
             color: white;
             min-height: 100vh;
@@ -39,248 +37,86 @@
             border-bottom: 5px solid var(--hero-yellow);
         }
 
-        h1 {
-            font-family: 'Bangers', cursive;
-            font-size: 3.5rem;
-            letter-spacing: 3px;
-            margin: 0;
-            text-shadow: 4px 4px 0px var(--hero-purple-dark);
-        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0; }
 
-        h2 {
-            font-family: 'Bangers', cursive;
-            color: var(--hero-yellow);
-            font-size: 2.2rem;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-            display: inline-block;
-            padding-bottom: 5px;
-        }
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
 
-        h3 {
-            color: var(--hero-cyan);
-            font-family: 'Bangers';
-            font-size: 1.8rem;
-            margin-top: 0;
-        }
+        .briefing-box { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-cyan); border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .explanation-text { font-size: 1.1rem; line-height: 1.6; border-left: 4px solid var(--hero-cyan); padding: 15px 20px; background: rgba(0, 245, 212, 0.05); }
 
-        main {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            flex: 1;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .section-divider {
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
-            margin: 50px 0;
-            opacity: 0.8;
-            border-radius: 2px;
-            box-shadow: 0 0 15px var(--hero-cyan);
-        }
-
-        .briefing-box {
-            background: rgba(26, 16, 42, 0.9);
-            border: 2px solid var(--hero-cyan);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        }
-
-        .video-container {
-            background: #000;
-            border: 4px solid var(--hero-red);
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            padding-top: 56.25%; 
-            margin-bottom: 40px;
-            box-shadow: 0 0 40px rgba(211, 47, 47, 0.4);
-        }
-
-        .video-container iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
-        }
-
-        .explanation-text {
-            font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px;
-            border-left: 4px solid var(--hero-cyan); padding-left: 20px;
-            background: rgba(0, 245, 212, 0.05); padding-top: 15px; padding-bottom: 15px; padding-right: 20px;
-        }
-
-        .split-box-container {
-            display: flex; gap: 20px; margin: 20px 0;
-        }
-
-        .split-box {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            border: 2px dashed;
-        }
-
+        .split-box-container { display: flex; gap: 20px; margin: 20px 0; }
+        .split-box { flex: 1; background: rgba(0, 0, 0, 0.4); border-radius: 15px; padding: 20px; text-align: center; border: 2px dashed; }
         .split-box.past { border-color: var(--hero-yellow); }
         .split-box.to { border-color: var(--hero-cyan); }
-
-        .split-box-title {
-            font-family: 'Bangers', cursive;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
+        .split-box-title { font-family: 'Bangers', cursive; font-size: 1.5rem; margin-bottom: 10px; }
         .split-box.past .split-box-title { color: var(--hero-yellow); }
         .split-box.to .split-box-title { color: var(--hero-cyan); }
+        
+        .example-box { background: rgba(255,255,255,0.08); padding: 15px; border-radius: 10px; margin-top: 15px; }
 
-        .example-box {
-            background: rgba(255,255,255,0.08);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            font-size: 1rem;
+        .toggle-container { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle { 
+            background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; 
+            border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer; 
+            transition: 0.2s; border-bottom: 5px solid var(--hero-purple-dark); 
         }
+        .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        .btn-video { background: var(--hero-red); border-bottom: 5px solid var(--hero-red-dark); }
 
-        @media (max-width: 600px) {
-            .split-box-container { flex-direction: column; }
+        /* Pickle Grid Styles */
+        .pickle-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            margin-top: 20px; 
+            max-width: 1000px; 
+            margin-left: auto; 
+            margin-right: auto; 
         }
-
-        .btn-read {
-            background: var(--hero-purple-main);
-            color: white;
-            border: 2px solid var(--hero-cyan);
-            padding: 8px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-family: 'Bangers', cursive;
-            font-size: 1rem;
-            margin-top: 5px;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-read:hover {
-            background: var(--hero-cyan);
-            color: var(--hero-purple-dark);
-            transform: scale(1.05);
-        }
-
-        .toggle-container {
-            display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap;
-        }
-
-        .btn-toggle {
-            background: var(--hero-purple-main); color: white; border: none;
-            padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive;
-            font-size: 1.3rem; cursor: pointer; transition: 0.2s;
-            border-bottom: 5px solid var(--hero-purple-dark);
-        }
-
-        .btn-toggle:hover {
-            transform: translateY(-3px);
-            background: var(--hero-cyan);
-            color: var(--hero-purple-dark);
-        }
-
-        .btn-video {
-            background: var(--hero-red);
-            border-bottom: 5px solid var(--hero-red-dark);
-        }
-
-        .btn-video:hover {
-            background: #ff5252;
-            color: white;
-        }
-
-        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .pickle-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-top: 20px; }
-        @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 600px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } }
-
         .card {
             background: #1a102a;
-            border: 3px solid #3c096c;
+            border: 3px solid var(--hero-purple-dark);
             border-radius: 20px;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
             position: relative;
         }
-
         .card:hover {
             border-color: var(--hero-yellow);
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 183, 3, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(255, 183, 3, 0.3);
         }
-
-        .card .title { font-family: 'Bangers'; font-size: 1.3rem; color: var(--hero-yellow); margin: 10px 0; }
+        .card .title { font-family: 'Bangers'; font-size: 1.6rem; color: var(--hero-yellow); margin: 10px 0; }
+        .card p { color: rgba(255,255,255,0.8); }
 
         .btn-like {
-            background: #3c096c; color: white; border: 2px solid var(--hero-cyan);
-            padding: 5px 15px; border-radius: 10px; cursor: pointer; font-size: 0.8rem;
-            margin-top: 10px; transition: 0.2s;
+            background: var(--hero-purple-dark); color: white; border: 2px solid var(--hero-cyan);
+            padding: 8px 20px; border-radius: 12px; cursor: pointer; font-family: 'Bangers';
+            margin-top: 15px; transition: 0.2s;
         }
-
         .btn-like.liked { background: var(--hero-yellow); color: #000; border-color: #000; }
 
-        .table-container {
-            width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            margin-top: 20px; background: #1a102a; overflow: hidden;
-        }
-
+        /* Table & Utils */
+        .table-container { width: 100%; border-radius: 15px; margin-top: 20px; background: #1a102a; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
         table { width: 100%; border-collapse: collapse; }
-        th { background: var(--hero-purple-main); color: white; padding: 18px; text-align: left; font-family: 'Bangers'; font-size: 1.2rem; }
-        td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
-
-        .type-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
-        .tag-past { background: var(--hero-green); color: white; }
-        .tag-to { background: var(--hero-orange); color: white; }
-        .tag-exact { background: var(--hero-purple-main); color: white; }
-
-        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
-        .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        th { background: var(--hero-purple-main); padding: 18px; text-align: left; font-family: 'Bangers'; }
+        td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         
-        @keyframes boomAnim {
-            0% { transform: scale(0) rotate(-20deg); opacity: 1; }
-            100% { transform: scale(2) rotate(10deg); opacity: 0; }
-        }
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; transition: opacity 0.2s; }
+        .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 4rem; z-index: 2001; text-shadow: 4px 4px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        @keyframes boomAnim { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
         .shake { animation: shake 0.2s ease-in-out; }
-        
-        @keyframes shake {
-            0%, 100% { transform: translate(0,0); }
-            25% { transform: translate(-5px, 5px); }
-            50% { transform: translate(5px, -5px); }
-        }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-4px, 4px); } 50% { transform: translate(4px, -4px); } }
 
-        footer {
-            display: block;
-            background: #05101a;
-            color: rgba(255,255,255,0.8);
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 2px solid var(--hero-purple-dark);
-            margin-top: 50px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .footer-highlight { color: var(--hero-yellow); }
+        @media (max-width: 800px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } .split-box-container { flex-direction: column; } }
+        footer { background: #05101a; text-align: center; padding: 40px; border-top: 2px solid var(--hero-purple-dark); margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -296,31 +132,21 @@
     <section class="briefing-box">
         <h2>🚨 MISSION: PREDICTING THE FUTURE</h2>
         <div class="explanation-text" id="mission-text">
-            <p>Hoe praat je over de toekomst in het Engels? Een hele belangrijke manier is het gebruik van <strong style="color: var(--hero-yellow);">to be going to</strong>. Je gebruikt dit voor twee specifieke missies:</p>
-            
+            <p>Hoe praat je over de toekomst in het Engels? Gebruik <strong style="color: var(--hero-yellow);">to be going to</strong> voor deze twee missies:</p>
             <div class="split-box-container">
                 <div class="split-box past">
                     <div class="split-box-title">1. VASTE PLANNEN</div>
-                    Je hebt de beslissing al genomen. Het plan staat vast en je bent van plan het te gaan doen.<br><br>
-                    <div class="example-box">
-                        <em>"I <strong style="color: var(--hero-yellow);">am going to</strong> visit London."</em><br>
-                        <small style="opacity: 0.7;">(Ik ben van plan / Ik ga Londen bezoeken.)</small>
-                    </div>
+                    Het plan staat al vast.
+                    <div class="example-box"><em>"I <strong style="color: var(--hero-yellow);">am going to</strong> visit London."</em></div>
                 </div>
-                
                 <div class="split-box to">
-                    <div class="split-box-title">2. BEWIJS IN HET HEDEN</div>
-                    Je doet een voorspelling omdat je nu bewijs ziet of hoort. Je weet daardoor 100% zeker wat er gaat gebeuren.<br><br>
-                    <div class="example-box">
-                        <em>"Look at those dark clouds. It <strong style="color: var(--hero-yellow);">is going to</strong> rain soon."</em><br>
-                        <small style="opacity: 0.7;">(Kijk naar die donkere wolken. Het gaat zo regenen.)</small>
-                    </div>
+                    <div class="split-box-title">2. BEWIJS</div>
+                    Je ziet nu dat er iets gaat gebeuren.
+                    <div class="example-box"><em>"Look at the clouds. It <strong style="color: var(--hero-yellow);">is going to</strong> rain."</em></div>
                 </div>
             </div>
-
-            <p><strong>Let op:</strong> Vergeet niet het werkwoord 'to be' (am, is, of are) aan te passen aan de persoon over wie het gaat!</p>
         </div>
-        <button class="btn-read" onclick="readAloud()">🔊 Lees Voor</button>
+        <button class="btn-toggle" style="font-size: 1rem; padding: 10px 20px;" onclick="readAloud()">🔊 Lees Voor</button>
     </section>
 
     <div class="toggle-container">
@@ -330,15 +156,14 @@
     </div>
 
     <div id="rules" class="content-section" style="display: block;">
-        <h3>Tactisch Overzicht (Hoe maak je het?)</h3>
-        <p>De formule is simpel: <strong>Persoon + vorm van 'to be' + <span style="color: var(--hero-yellow);">going to</span> + hele werkwoord</strong>.</p>
+        <h3>Tactisch Overzicht</h3>
         <div class="table-container">
             <table>
                 <thead><tr><th>Persoon</th><th>To be</th><th>Going to + Werkwoord</th></tr></thead>
                 <tbody>
-                    <tr><td>I</td><td><span style="color:var(--hero-yellow)">am</span></td><td><strong>going to</strong> hack</td></tr>
-                    <tr><td>He / She / It</td><td><span style="color:var(--hero-cyan)">is</span></td><td><strong>going to</strong> run</td></tr>
-                    <tr><td>We / You / They</td><td><span style="color:var(--hero-red)">are</span></td><td><strong>going to</strong> escape</td></tr>
+                    <tr><td>I</td><td>am</td><td>going to hack</td></tr>
+                    <tr><td>He / She / It</td><td>is</td><td>going to run</td></tr>
+                    <tr><td>We / You / They</td><td>are</td><td>going to escape</td></tr>
                 </tbody>
             </table>
         </div>
@@ -348,146 +173,53 @@
         <h3>Future Lab Examples</h3>
         <div class="table-container">
             <table>
-                <thead><tr><th>Situatie</th><th>Type</th><th>Engelse Vertaling</th></tr></thead>
+                <thead><tr><th>Situatie</th><th>Type</th><th>Vertaling</th></tr></thead>
                 <tbody>
-                    <tr><td>Je hebt tickets gekocht voor een film.</td><td><span class="type-tag tag-past">Plan</span></td><td>We <strong style="color: var(--hero-yellow);">are going to</strong> watch a movie.</td></tr>
-                    <tr><td>Je ziet donkere, zwarte wolken.</td><td><span class="type-tag tag-to">Bewijs</span></td><td>Look at those clouds. It <strong style="color: var(--hero-yellow);">is going to</strong> rain soon.</td></tr>
-                    <tr><td>Een auto rijdt veel te hard op een muur af.</td><td><span class="type-tag tag-to">Bewijs</span></td><td>Watch out! That car <strong style="color: var(--hero-yellow);">is going to</strong> crash!</td></tr>
-                    <tr><td>Je vertelt over je weekendplannen.</td><td><span class="type-tag tag-past">Plan</span></td><td>I <strong style="color: var(--hero-yellow);">am going to</strong> play games all weekend.</td></tr>
-                    <tr><td>De vijand heeft de code ingevoerd.</td><td><span class="type-tag tag-to">Bewijs</span></td><td>Oh no, the bomb <strong style="color: var(--hero-yellow);">is going to</strong> explode!</td></tr>
+                    <tr><td>Tickets gekocht.</td><td>Plan</td><td>We <strong>are going to</strong> watch a movie.</td></tr>
+                    <tr><td>Zwarte wolken.</td><td>Bewijs</td><td>It <strong>is going to</strong> rain soon.</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <div id="video-mission" class="content-section">
-        <h3>🎬 MISSION BRIEFING VIDEO</h3>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/lCNR_vyCVI8" allowfullscreen></iframe>
+        <div style="position:relative; padding-top:56.25%; border: 4px solid var(--hero-red); border-radius: 20px; overflow:hidden;">
+            <iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" src="https://www.youtube.com/embed/lCNR_vyCVI8" allowfullscreen></iframe>
         </div>
     </div>
 
-    <div class="section-divider"></div>
-    
+    <div style="height: 4px; background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent); margin: 50px 0; box-shadow: 0 0 15px var(--hero-cyan);"></div>
+
     <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t5_to_be_going_to_pickle_1.html')">
+            <span style="font-size: 3rem;">🕵🏼</span>
+            <div class="title">Pickle 1</div>
+            <p>The Surveillance Center</p>
+            <button id="btn-p1" class="btn-like" onclick="toggleLike(event, 'p1')">👍 Like</button>
+        </div>
 
-<style>
-    .pickle-grid {
-        display: grid;
-        /* Creates 3 columns of equal width */
-        grid-template-columns: repeat(3, 1fr); 
-        gap: 20px; /* Space between cards */
-        width: 100%;
-        max-width: 1000px; /* Adjust based on your page width */
-        margin: 0 auto;
-    }
+        <div class="card" onclick="openMission(event, 'TICK TOCK!', 'm1t5_to_be_going_to_pickle_2.html')">
+            <span style="font-size: 3rem;">📱</span>
+            <div class="title">Pickle 2</div>
+            <p>Whatsapp Interceptor</p>
+            <button id="btn-p2" class="btn-like" onclick="toggleLike(event, 'p2')">👍 Like</button>
+        </div>
 
-    .card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
-        text-align: center;
-        transition: transform 0.2s;
-        cursor: pointer;
-        background-color: #f9f9f9;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .title {
-        font-weight: bold;
-        font-size: 1.2rem;
-        margin: 10px 0;
-    }
-
-    .btn-like {
-        margin-top: 10px;
-        cursor: pointer;
-    }
-</style>
-
-<div class="pickle-grid">
-    <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'm1t5_to_be_going_to_pickle_1.html')">
-        <span style="font-size: 2.5rem;">🕵🏼</span>
-        <div class="title">Pickle 1</div>
-        <p style="font-size: 0.9rem;">The Surveillance Center</p>
-        <button id="btn-p1" class="btn-like" onclick="toggleLike(event, 'p1')">👍 Like</button>
+        <div class="card" onclick="openMission(event, 'VROOM!', 'm1t5_to_be_going_to_pickle_3.html')">
+            <span style="font-size: 3rem;">💣</span>
+            <div class="title">Pickle 3</div>
+            <p>Plan Defuser Pro</p>
+            <button id="btn-p3" class="btn-like" onclick="toggleLike(event, 'p3')">👍 Like</button>
+        </div>
     </div>
-
-    <div class="card" id="card-p2" onclick="openMission(event, 'TICK TOCK!', 'm1t5_to_be_going_to_pickle_2.html')">
-        <span style="font-size: 2.5rem;">📱</span>
-        <div class="title">Pickle 2</div>
-        <p style="font-size: 0.9rem;">Whatsapp Interceptor</p>
-        <button id="btn-p2" class="btn-like" onclick="toggleLike(event, 'p2')">👍 Like</button>
-    </div>
-
-    <div class="card" id="card-p3" onclick="openMission(event, 'VROOM!', 'm1t5_to_be_going_to_pickle_3.html')">
-        <span style="font-size: 2.5rem;">💣</span>
-        <div class="title">Pickle 3</div>
-        <p style="font-size: 0.9rem;">Plan Defuser Pro</p>
-        <button id="btn-p3" class="btn-like" onclick="toggleLike(event, 'p3')">👍 Like</button>
-    </div>
-</div>
 </main>
 
 <footer>
-    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+    &copy; 2026, EngliForce: <span style="color: var(--hero-yellow);">Make English Your Superpower!</span>
 </footer>
 
 <script>
-    window.speechSynthesis.getVoices();
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = window.speechSynthesis.getVoices;
-    }
-
-    function readAloud() {
-        console.log("Knop is ingedrukt! Spraak checken...");
-        if (!('speechSynthesis' in window)) {
-            alert("Sorry, je browser ondersteunt geen spraak.");
-            return;
-        }
-        if (window.speechSynthesis.speaking) {
-            console.log("Hij is al aan het praten, we wachten even.");
-            return;
-        }
-        const textBox = document.getElementById('mission-text');
-        const textToRead = textBox.innerText;
-        const utterance = new SpeechSynthesisUtterance(textToRead);
-        
-        const voices = window.speechSynthesis.getVoices();
-        const dutchVoice = voices.find(v => v.lang.includes('nl') || v.lang.includes('NL'));
-        if (dutchVoice) {
-            utterance.voice = dutchVoice;
-        }
-        
-        utterance.lang = 'nl-NL';
-        utterance.rate = 0.9; 
-        
-        utterance.onerror = (event) => {
-            console.error("❌ Fout tijdens voorlezen:", event.error);
-            alert("Chrome blokkeert de spraak nog steeds. Zorg dat het geluid op 'Toestaan' staat in de site-instellingen!");
-        };
-        
-        window.speechSynthesis.speak(utterance);
-    }
-
-    function openMission(e, message, url) {
-        if (e.target.tagName === 'BUTTON') return;
-        createExplosion(e, message);
-        setTimeout(() => { if(url !== '#') window.location.href = url; }, 400);
-    }
-
-    function toggleLike(e, id) {
-        e.stopPropagation();
-        const btn = document.getElementById('btn-' + id);
-        btn.classList.toggle('liked');
-        btn.innerText = btn.classList.contains('liked') ? '❤️ Liked' : '👍 Like';
-        if(btn.classList.contains('liked')) createExplosion(e, 'LOVED!');
-    }
-
     function showSection(e, id, boomMessage) {
         document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
         document.getElementById(id).style.display = 'block';
@@ -495,7 +227,8 @@
     }
 
     function createExplosion(e, message) {
-        const x = e.clientX, y = e.clientY;
+        const x = e.clientX || window.innerWidth/2;
+        const y = e.clientY || window.innerHeight/2;
         const flash = document.getElementById('flash');
         flash.style.opacity = '0.3';
         document.body.classList.add('shake');
@@ -504,16 +237,37 @@
             flash.style.opacity = '0'; 
             document.body.classList.remove('shake'); 
         }, 200);
-        
+
         const txt = document.createElement('div');
         txt.className = 'boom-text';
         txt.innerText = message;
-        txt.style.left = (x - 50) + 'px'; 
-        txt.style.top = (y - 50) + 'px';
+        txt.style.left = (x - 60) + 'px';
+        txt.style.top = (y - 40) + 'px';
         document.body.appendChild(txt);
-        
         setTimeout(() => txt.remove(), 600);
     }
-</script> 
+
+    function openMission(e, message, url) {
+        if (e.target.tagName === 'BUTTON') return;
+        createExplosion(e, message);
+        setTimeout(() => { window.location.href = url; }, 400);
+    }
+
+    function toggleLike(e, id) {
+        e.stopPropagation();
+        const btn = document.getElementById('btn-' + id);
+        btn.classList.toggle('liked');
+        btn.innerText = btn.classList.contains('liked') ? '❤️ Liked' : '👍 Like';
+        if(btn.classList.contains('liked')) createExplosion(e, 'BOOM!');
+    }
+
+    function readAloud() {
+        const text = document.getElementById('mission-text').innerText;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'nl-NL';
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
+
 </body>
 </html>
