@@ -370,38 +370,67 @@
     <div class="section-divider"></div>
     
     <h2>⚔️ PICKLE MISSIONS</h2>
-    <div class="pickle-grid">
-        <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'm1t5_to_be_going_to_pickle_1.html')">
-            <span style="font-size: 2.5rem;">🕵🏼</span>
-            <div class="title">Pickle 1</div>
-            <p style="font-size: 0.9rem;">The Surveillance Center</p>
-            <button id="btn-p1" class="btn-like" onclick="toggleLike(event, 'p1')">👍 Like</button>
-        </div>
-        <div class="card" id="card-p2" onclick="openMission(event, 'TICK TOCK!', 'm1t5_to_be_going_to_pickle_2.html')">
-            <span style="font-size: 2.5rem;">📱</span>
-            <div class="title">Pickle 2</div>
-            <p style="font-size: 0.9rem;">Whatsapp Interceptor</p>
-            <button id="btn-p2" class="btn-like" onclick="toggleLike(event, 'p2')">👍 Like</button>
-        </div>
-        <div class="card" id="card-p3" onclick="openMission(event, 'VROOM!', 'm1t5_to_be_going_to_pickle_3.html')">
-            <span style="font-size: 2.5rem;">💣</span>
-            <div class="title">Pickle 3</div>
-            <p style="font-size: 0.9rem;">Plan Defuser Pro</p>
-            <button id="btn-p3" class="btn-like" onclick="toggleLike(event, 'p3')">👍 Like</button>
-        </div>
-        <div class="card" id="card-p4" onclick="openMission(event, 'ZAP!', 'm1t5_to_be_going_to_pickle_4.html')">
-            <span style="font-size: 2.5rem;">🔒</span>
-            <div class="title">Pickle 4</div>
-            <p style="font-size: 0.9rem;">Future Hacker Pro</p>
-            <button id="btn-p4" class="btn-like" onclick="toggleLike(event, 'p4')">👍 Like</button>
-        </div>
-        <div class="card" id="card-p5" onclick="openMission(event, 'KABOOM!', 'm1t5_to_be_going_to_pickle_5.html')">
-            <span style="font-size: 2.5rem;">💻</span>
-            <div class="title">Pickle 5</div>
-            <p style="font-size: 0.9rem;">The Forecaster Pro</p>
-            <button id="btn-p5" class="btn-like" onclick="toggleLike(event, 'p5')">👍 Like</button>
-        </div>
+
+<style>
+    .pickle-grid {
+        display: grid;
+        /* Creates 3 columns of equal width */
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 20px; /* Space between cards */
+        width: 100%;
+        max-width: 1000px; /* Adjust based on your page width */
+        margin: 0 auto;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.2s;
+        cursor: pointer;
+        background-color: #f9f9f9;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin: 10px 0;
+    }
+
+    .btn-like {
+        margin-top: 10px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="pickle-grid">
+    <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'm1t5_to_be_going_to_pickle_1.html')">
+        <span style="font-size: 2.5rem;">🕵🏼</span>
+        <div class="title">Pickle 1</div>
+        <p style="font-size: 0.9rem;">The Surveillance Center</p>
+        <button id="btn-p1" class="btn-like" onclick="toggleLike(event, 'p1')">👍 Like</button>
     </div>
+
+    <div class="card" id="card-p2" onclick="openMission(event, 'TICK TOCK!', 'm1t5_to_be_going_to_pickle_2.html')">
+        <span style="font-size: 2.5rem;">📱</span>
+        <div class="title">Pickle 2</div>
+        <p style="font-size: 0.9rem;">Whatsapp Interceptor</p>
+        <button id="btn-p2" class="btn-like" onclick="toggleLike(event, 'p2')">👍 Like</button>
+    </div>
+
+    <div class="card" id="card-p3" onclick="openMission(event, 'VROOM!', 'm1t5_to_be_going_to_pickle_3.html')">
+        <span style="font-size: 2.5rem;">💣</span>
+        <div class="title">Pickle 3</div>
+        <p style="font-size: 0.9rem;">Plan Defuser Pro</p>
+        <button id="btn-p3" class="btn-like" onclick="toggleLike(event, 'p3')">👍 Like</button>
+    </div>
+</div>
 </main>
 
 <footer>
