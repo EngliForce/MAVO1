@@ -1,277 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>    
-    <meta charset="UTF-8">    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <title>EngliForce Academy: Theme 5 - Media & Gadgets</title>    
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>    
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">    
-    <style>        
-        :root {            
-            --hero-purple-main: #7b2cbf;            
-            --hero-purple-dark: #3c096c;            
-            --hero-yellow: #ffb703;            
-            --hero-cyan: #00f5d4;            
-            --dark-bg: #0b1a2a;        
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Theme 5 - Media & Gadgets</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #0b1a2a;
         }
 
-        body {            
-            font-family: 'Lexend', sans-serif;            
-            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);            
-            color: white;            
-            margin: 0;            
-            min-height: 100vh;        
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
         }
 
-        header {            
-            background: var(--hero-purple-main);            
-            padding: 2.5rem 1rem;            
-            text-align: center;            
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);            
-            border-bottom: 5px solid var(--hero-yellow);            
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);        
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        h1 { 
-            font-family: 'Bangers', cursive; 
-            font-size: 3.5rem; 
-            letter-spacing: 3px; 
-            margin: 0; 
-            text-shadow: 4px 4px 0px var(--hero-purple-dark); 
-        }                
-        
-        main { 
-            max-width: 1000px; 
-            margin: 20px auto; 
-            padding: 20px; 
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
         }
 
-        .divider {            
-            height: 4px;            
-            background: linear-gradient(90deg, transparent, var(--hero-purple-main), transparent);            
-            margin: 60px 0 20px 0;            
-            border-radius: 2px;            
-            box-shadow: 0 0 15px var(--hero-purple-main);        
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
         }
 
-        .section-title {             
-            font-family: 'Bangers', cursive;             
-            font-size: 2.8rem;             
-            color: var(--hero-yellow);             
-            margin: 0;             
-            text-transform: uppercase;             
-            letter-spacing: 2px;            
-            text-align: center;        
+        .divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-purple-main), transparent);
+            margin: 60px 0 20px 0;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-purple-main);
         }
 
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); 
-            gap: 25px; 
-            margin-top: 30px; 
+        .section-title {
+            font-family: 'Bangers', cursive;
+            font-size: 2.8rem;
+            color: var(--hero-yellow);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
-        .card {            
-            background: #1a102a;            
-            border: 3px solid #3c096c;            
-            border-radius: 20px;            
-            padding: 20px;            
-            display: flex;            
-            flex-direction: column;            
-            transition: all 0.3s ease;            
-            text-decoration: none;            
-            color: white;            
-            position: relative;            
-            cursor: pointer;        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
 
-        .card:hover { 
-            border-color: var(--hero-yellow); 
-            transform: translateY(-8px); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+        .card {
+            background: #1a102a;
+            border: 3px solid #3c096c;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .card-header { 
-            display: flex; 
-            justify-content: center; 
-            margin-bottom: 15px; 
-        }        
-        
-        .power-icon { 
-            font-size: 2.5rem; 
-            background: rgba(255,255,255,0.05); 
-            width: 65px; 
-            height: 65px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 15px; 
-            border: 1px solid rgba(255,255,255,0.1); 
+        .card:hover {
+            border-color: var(--hero-cyan);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        .name { 
-            font-weight: bold; 
-            font-size: 1.3rem; 
-            margin-bottom: 8px; 
-            color: #f8fafc; 
-            text-align: center; 
-        }        
-        
-        .desc { 
-            font-size: 0.9rem; 
-            color: #94a3b8; 
-            flex-grow: 1; 
-            text-align: center; 
-            margin-bottom: 15px; 
+        /* Navigatie gedeelte van de kaart */
+        .card-link {
+            cursor: pointer;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .btn {            
-            background: #3c096c;            
-            border: none;            
-            color: white;            
-            padding: 14px;            
-            border-radius: 12px;            
-            cursor: pointer;            
-            font-family: 'Bangers', cursive;            
-            font-size: 1.2rem;            
-            letter-spacing: 1px;            
-            width: 100%;            
-            transition: 0.3s;        
+        .power-icon {
+            font-size: 2.5rem;
+            background: rgba(255,255,255,0.05);
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 15px;
         }
 
-        .card.done { 
-            border-color: var(--hero-yellow); 
-            background: #05101a; 
-            box-shadow: 0 0 20px rgba(255, 183, 3, 0.2); 
-        }        
-        
-        .card.done .btn { 
-            background: var(--hero-yellow); 
-            color: var(--hero-purple-dark); 
+        .name {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: #f8fafc;
+            text-align: center;
         }
 
-        .star { 
-            position: fixed; 
-            pointer-events: none; 
-            font-size: 3rem; 
-            z-index: 1000; 
-            animation: starFly 0.8s forwards; 
-        }        
-        
-        @keyframes starFly { 
-            0% { transform: scale(0); opacity: 1; } 
-            100% { transform: scale(2) translateY(-150px); opacity: 0; } 
-        }    
+        .desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #3c096c;
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            width: 100%;
+            transition: 0.3s;
+            margin-top: auto;
+        }
+
+        .btn:hover {
+            filter: brightness(1.2);
+        }
+
+        .card.done {
+            border-color: var(--hero-yellow);
+            background: #05101a;
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.2);
+        }
+
+        .card.done .btn {
+            background: var(--hero-yellow);
+            color: var(--hero-purple-dark);
+        }
+
+        .star {
+            position: fixed;
+            pointer-events: none;
+            font-size: 3rem;
+            z-index: 1000;
+            animation: starFly 0.8s forwards;
+        }
+
+        @keyframes starFly {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2) translateY(-150px); opacity: 0; }
+        }
+
+        footer {
+            text-align: center;
+            opacity: 0.5;
+            padding: 60px 0;
+        }
     </style>
 </head>
 <body>
 
-<header>    
-    <h1>ENGLIFORCE ACADEMY</h1>    
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
     <p>THEME 5: MEDIA & GADGETS</p>
 </header>
 
-<main>    
-    <h2 class="section-title">📡 VOCAB TRAINING</h2>    
+<main>
+    <h2 class="section-title">📡 VOCAB TRAINING</h2>
     <div class="grid" id="vocab-grid"></div>
 
-    <div class="divider"></div>     
-    
-    <h2 class="section-title">⚔️ GRAMMAR BRIEFING</h2>    
+    <div class="divider"></div>
+
+    <h2 class="section-title">⚔️ GRAMMAR BRIEFING</h2>
     <div class="grid" id="grammar-grid"></div>
 </main>
 
-<footer>    
-    <p style="text-align: center; opacity: 0.5; padding: 60px 0;">&copy; 2026 EngliForce – Make English Your Superpower!</p>
+<footer>
+    <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
 </footer>
 
-<script>    
-    const vocabData = [        
-        { id: 'v1', name: 'Smartphone Society', desc: 'Mobile intel.', icon: '📱', url: 'm1t5_vocab_5_1.html' },        
-        { id: 'v2', name: 'World of Gaming', desc: 'Gaming data.', icon: '🎮', url: 'm1t5_vocab_5_2.html' },        
-        { id: 'v3', name: 'Social Media', desc: 'Influencer intel.', icon: '📸', url: 'm1t5_vocab_5_3.html' },        
-        { id: 'v4', name: 'Fake News', desc: 'Online safety.', icon: '🛡️', url: 'm1t5_vocab_5_4.html' },        
-        { id: 'v5', name: 'All vocab', desc: 'Vocab tester.', icon: '🧪', url: 'm1t5_vocab_tester.html' }    
+<script>
+    const vocabData = [
+        { id: 'v1', name: 'Smartphone Society', desc: 'Mobile intel.', icon: '📱', url: 'm1t5_vocab_5_1.html' },
+        { id: 'v2', name: 'World of Gaming', desc: 'Gaming data.', icon: '🎮', url: 'm1t5_vocab_5_2.html' },
+        { id: 'v3', name: 'Social Media', desc: 'Influencer intel.', icon: '📸', url: 'm1t5_vocab_5_3.html' },
+        { id: 'v4', name: 'Fake News', desc: 'Online safety.', icon: '🛡️', url: 'm1t5_vocab_5_4.html' },
+        { id: 'v5', name: 'All vocab', desc: 'Vocab tester.', icon: '🧪', url: 'm1t5_vocab_tester.html' }
     ];
 
-    const grammarData = [        
-        { id: 'g1', name: 'Telling The Time', desc: 'Clock precision.', icon: '🕒', url: 'm1t5_telling_the_time.html' },        
-        { id: 'g2', name: 'To be going to', desc: 'Future plans.', icon: '📅', url: 'm1t5_to_be_going_to.html' },        
-        { id: 'g3', name: 'A, An and The', desc: 'Article mastery.', icon: '🔤', url: 'm1t5_a_an_the.html' },        
-        { id: 'g4', name: 'Prepositions of place', desc: 'In, on and at.', icon: '📍', url: 'm1t5_in_on_at_place.html' },        
-        { id: 'g5', name: 'Some - any', desc: 'The -ing form.', icon: '⚖️', url: 'm1t5_some_any.html' },        
-        { id: 'g6', name: 'Should - shouldn't', desc: 'Giving advice.', icon: '💡', url: 'm1t5_should_shouldnt.html' },        
-        { id: 'g7', name: 'Past Simple', desc: 'Regular verbs.', icon: '⏳', url: 'm1t5_past_simple.html' },        
-        { id: 'g8', name: 'Comparisons', desc: 'Comparison check.', icon: '⚖️', url: 'm1t5_comparisons_basic_rules.html' }    
+    const grammarData = [
+        { id: 'g1', name: 'Telling The Time', desc: 'Clock precision.', icon: '🕒', url: 'm1t5_telling_the_time.html' },
+        { id: 'g2', name: 'To be going to', desc: 'Future plans.', icon: '📅', url: 'm1t5_to_be_going_to.html' },
+        { id: 'g3', name: 'A, An and The', desc: 'Article mastery.', icon: '🔤', url: 'm1t5_a_an_the.html' },
+        { id: 'g4', name: 'Prepositions of place', desc: 'In, on and at.', icon: '📍', url: 'm1t5_in_on_at_place.html' },
+        { id: 'g5', name: 'Some - any', desc: 'Quantity control.', icon: '⚖️', url: 'm1t5_some_any.html' },
+        { id: 'g6', name: 'Should - shouldn't', desc: 'Giving advice.', icon: '💡', url: 'm1t5_should_shouldnt.html' },
+        { id: 'g7', name: 'Past Simple', desc: 'Regular verbs.', icon: '⏳', url: 'm1t5_past_simple.html' },
+        { id: 'g8', name: 'Comparisons', desc: 'Comparison check.', icon: '⚖️', url: 'm1t5_comparisons_basic_rules.html' }
     ];
 
-    function createCard(item, gridId) {        
-        const grid = document.getElementById(gridId);        
-        const card = document.createElement('div'); // Veranderd van 'a' naar 'div' voor betere HTML structuur        
-        card.className = 'card';        
-        card.id = item.id;                
-        
-        // De kaart zelf navigeert naar de URL, behalve als je op de knop klikt        
-        card.onclick = (e) => {            
-            window.location.href = item.url;        
-        };                
-        
-        card.innerHTML = `            
-            <div class="card-header"><div class="power-icon">${item.icon}</div></div>            
-            <div class="name">${item.name}</div>            
-            <div class="desc">${item.desc}</div>            
-            <button class="btn" id="btn-${item.id}">MISSION COMPLETED</button>        
-        `;                
-        
+    function createCard(item, gridId) {
+        const grid = document.getElementById(gridId);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = item.id;
+
+        // De card-link div zorgt voor de navigatie
+        card.innerHTML = `
+            <div class="card-link" onclick="window.location.href='${item.url}'">
+                <div class="power-icon">${item.icon}</div>
+                <div class="name">${item.name}</div>
+                <div class="desc">${item.desc}</div>
+            </div>
+            <button class="btn" id="btn-${item.id}">MISSION COMPLETED</button>
+        `;
+
         grid.appendChild(card);
 
-        // Event listener specifiek voor de knop        
-        const btn = card.querySelector('.btn');        
-        btn.onclick = (event) => {            
-            event.stopPropagation(); // Voorkomt dat de kaart-link wordt geactiveerd            
-            completeTask(event, item.id);        
-        };    
+        // Event listener specifiek voor de knop om de navigatie te stoppen
+        const btn = card.querySelector('.btn');
+        btn.onclick = (event) => {
+            event.stopPropagation(); // Voorkomt dat de card-link klik wordt geactiveerd
+            completeTask(event, item.id);
+        };
     }
 
-    vocabData.forEach(i => createCard(i, 'vocab-grid'));    
+    vocabData.forEach(i => createCard(i, 'vocab-grid'));
     grammarData.forEach(i => createCard(i, 'grammar-grid'));
 
-    function completeTask(event, id) {        
-        const card = document.getElementById(id);        
-        const btn = document.getElementById(`btn-${id}`);        
-        const isDone = card.classList.toggle('done');                
-        
-        // Update button tekst        
+    function completeTask(event, id) {
+        const card = document.getElementById(id);
+        const btn = document.getElementById(`btn-${id}`);
+        const isDone = card.classList.toggle('done');
+
         btn.innerText = isDone ? "MISSION ACCOMPLISHED!" : "MISSION COMPLETED";
 
-        const saved = JSON.parse(localStorage.getItem('hero_progress_t5') || '{}');        
-        saved[id] = isDone;        
-        localStorage.setItem('hero_progress_t5', JSON.stringify(saved));                
-        
-        if(isDone) {            
-            confetti({                 
-                particleCount: 100,                 
-                spread: 70,                 
-                origin: { y: 0.6 },                 
-                colors: ['#7b2cbf', '#ffb703', '#00f5d4']             
-            });            
-            const s = document.createElement('div'); s.className = 'star'; s.innerHTML = '⚡';            
-            s.style.left = event.clientX + 'px'; s.style.top = event.clientY + 'px';            
-            document.body.appendChild(s); setTimeout(() => s.remove(), 800);        
-        }    
+        const saved = JSON.parse(localStorage.getItem('hero_progress_t5') || '{}');
+        saved[id] = isDone;
+        localStorage.setItem('hero_progress_t5', JSON.stringify(saved));
+
+        if(isDone) {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#7b2cbf', '#ffb703', '#00f5d4']
+            });
+            const s = document.createElement('div'); 
+            s.className = 'star'; 
+            s.innerHTML = '⚡';
+            s.style.left = event.clientX + 'px'; 
+            s.style.top = event.clientY + 'px';
+            document.body.appendChild(s); 
+            setTimeout(() => s.remove(), 800);
+        }
     }
 
-    // Herstel status bij laden    
-    document.addEventListener('DOMContentLoaded', () => {        
-        const saved = JSON.parse(localStorage.getItem('hero_progress_t5') || '{}');        
-        Object.keys(saved).forEach(id => {             
-            const el = document.getElementById(id);            
-            const btn = document.getElementById(`btn-${id}`);            
-            if(el && saved[id]) {                
-                el.classList.add('done');                
-                if(btn) btn.innerText = "MISSION ACCOMPLISHED!";            
-            }        
-        });    
+    // Herstel status bij laden
+    document.addEventListener('DOMContentLoaded', () => {
+        const saved = JSON.parse(localStorage.getItem('hero_progress_t5') || '{}');
+        Object.keys(saved).forEach(id => {
+            const el = document.getElementById(id);
+            const btn = document.getElementById(`btn-${id}`);
+            if(el && saved[id]) {
+                el.classList.add('done');
+                if(btn) btn.innerText = "MISSION ACCOMPLISHED!";
+            }
+        });
     });
 </script>
 </body>
