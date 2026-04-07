@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: The Prediction Matrix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --panel-bg: rgba(26, 16, 42, 0.9);
+        }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        header {
+            background: var(--hero-purple-main);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            flex-shrink: 0;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        main { max-width: 850px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+        .matrix-box {
+            background: var(--panel-bg);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.2);
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        .top-info {
+            display: flex;
+            justify-content: space-between;
+            color: var(--hero-yellow);
+            font-family: 'Bangers';
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        .data-feed {
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-left: 4px solid var(--hero-cyan);
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .verb-hint {
+            color: var(--hero-yellow);
+            font-weight: bold;
+            font-family: 'Share Tech Mono', monospace;
+            background: rgba(255, 183, 3, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .input-section { margin-top: auto; }
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid var(--hero-cyan);
+            color: white;
+            font-size: 1.5rem;
+            font-family: 'Lexend', sans-serif;
+            padding: 10px 0;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-bottom-color: var(--hero-yellow); }
+        .feedback { margin-top: 15px; font-weight: bold; min-height: 24px; }
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-bottom: 4px solid var(--hero-purple-dark);
+            transition: 0.2s;
+            margin-top: 20px;
+        }
+        .btn-action:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        footer { background: #05101a; color: rgba(255,255,255,0.6); text-align: center; padding: 20px; border-top: 2px solid var(--hero-purple-dark); flex-shrink: 0; }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+    </style>
+</head>
+<body>
+
+<header><h1>ENGLIFORCE ACADEMY</h1></header>
+
+<main>
+    <section class="matrix-box" id="main-container">
+        <div id="screen-start" style="text-align: center;">
+            <h2 style="color: var(--hero-yellow); font-family: 'Bangers'; font-size: 2.5rem;">THE PREDICTION MATRIX</h2>
+            <p>Analyseer de data en voorspel de toekomst met <strong>to be going to</strong>.</p>
+            <button class="btn-action" onclick="initGame()">INITIALIZE MATRIX</button>
+        </div>
+
+        <div id="screen-game" style="display: none; flex-direction: column; flex: 1;">
+            <div class="top-info">
+                <span id="ui-count">DATA: 1/10</span>
+                <span id="ui-score">SYNC: 0%</span>
+            </div>
+            <div class="data-feed">
+                <span style="color: var(--hero-cyan); font-family: 'Share Tech Mono'; display: block; font-size: 0.8rem; margin-bottom: 10px;">> INCOMING DATA...</span>
+                <span id="scenario-text">Loading...</span>
+                <div style="margin-top: 15px; font-size: 1rem;">Use the verb: <span class="verb-hint" id="verb-text">VERB</span></div>
+            </div>
+            <div class="input-section">
+                <input type="text" id="user-input" placeholder="Type prediction..." autocomplete="off">
+                <div class="feedback" id="feedback-msg"></div>
+                <button class="btn-action" id="submit-btn" onclick="checkAnswer()">PROCESS PREDICTION</button>
+                <button class="btn-action" id="next-btn" style="display: none;" onclick="nextStep()">NEXT DATA FEED ➡️</button>
+            </div>
+        </div>
+
+        <div id="screen-end" style="display: none; text-align: center;">
+            <h2 style="color: var(--hero-cyan); font-family: 'Bangers'; font-size: 3rem;">SYNC COMPLETE</h2>
+            <p style="font-size: 1.5rem;">Accuracy: <span id="final-score" style="color: var(--hero-yellow);">0</span>%</p>
+            <button class="btn-action" onclick="location.reload()">RESTART SYSTEM</button>
+        </div>
+    </section>
+</main>
+
+<footer>&copy; 2026, EngliForce: <span style="color: var(--hero-yellow);">Master the Future!</span></footer>
+
+<script>
+    const database = [
+        { s: "Look at those dark clouds!", v: "rain", a: ["It is going to rain", "It's going to rain"] },
+        { s: "The runner is just 2 meters from the finish line!", v: "win", a: ["He is going to win", "The runner is going to win", "She is going to win"] },
+        { s: "The cat is crouched and staring at the bird.", v: "jump", a: ["It is going to jump", "The cat is going to jump"] },
+        { s: "That glass is right on the edge of the table!", v: "fall", a: ["It is going to fall", "The glass is going to fall"] },
+        { s: "The bomb timer is at 00:01 second...", v: "explode", a: ["It is going to explode", "The bomb is going to explode"] },
+        { s: "I haven't studied for this big exam at all.", v: "fail", a: ["I am going to fail", "I'm going to fail"] },
+        { s: "They are driving 150km/h towards a sharp turn!", v: "crash", a: ["They are going to crash", "They're going to crash"] },
+        { s: "She has flour, sugar and eggs on the table.", v: "bake", a: ["She is going to bake", "She is going to bake a cake", "She's going to bake"] },
+        { s: "The man is standing on the 10-meter diving board.", v: "dive", a: ["He is going to dive", "The man is going to dive", "He's going to dive"] },
+        { s: "The sun is setting and the lights are turning on.", v: "be night", a: ["It is going to be night", "It's going to be night"] },
+        { s: "The boat has a huge hole in the bottom!", v: "sink", a: ["It is going to sink", "The boat is going to sink"] },
+        { s: "He is holding a needle near the balloon.", v: "pop", a: ["He is going to pop the balloon", "It is going to pop"] },
+        { s: "The students are opening their books at page 10.", v: "read", a: ["They are going to read", "They're going to read"] },
+        { s: "I feel very dizzy and my vision is blurry.", v: "faint", a: ["I am going to faint", "I'm going to faint"] },
+        { s: "The movie starts in 2 minutes and we are still at home.", v: "be late", a: ["We are going to be late", "We're going to be late"] },
+        { s: "Look at that dog! It is showing its teeth.", v: "bite", a: ["It is going to bite", "The dog is going to bite"] },
+        { s: "She is putting on her pajamas and brushing her teeth.", v: "sleep", a: ["She is going to sleep", "She's going to sleep"] },
+        { s: "The score is 5-0 and there is only 1 minute left.", v: "lose", a: ["They are going to lose", "The team is going to lose"] },
+        { s: "I see a man with a ladder near the window.", v: "climb", a: ["He is going to climb", "The man is going to climb"] },
+        { s: "The milk smells very sour and looks lumpy.", v: "be sick", a: ["You are going to be sick", "I am going to be sick"] },
+        { s: "The player is ready to take a penalty kick.", v: "score", a: ["He is going to score", "She is going to score"] },
+        { s: "We are at the airport with our suitcases.", v: "travel", a: ["We are going to travel", "We're going to travel"] },
+        { s: "The girl is holding a wrapped present and a card.", v: "give", a: ["She is going to give a gift", "She is going to give a present"] },
+        { s: "He is putting a worm on his fishing hook.", v: "fish", a: ["He is going to fish", "He's going to fish"] },
+        { s: "The waiter is carrying 10 plates and he is wobbling!", v: "drop", a: ["He is going to drop the plates", "He is going to drop them"] },
+        { s: "The phone is ringing and I am walking towards it.", v: "answer", a: ["I am going to answer it", "I'm going to answer the phone"] },
+        { s: "It's 8:55 and the lesson starts at 9:00. He is still in bed.", v: "miss", a: ["He is going to miss the class", "He is going to miss school"] },
+        { s: "The sky is clear and the sun is very bright.", v: "be hot", a: ["It is going to be hot", "It's going to be hot"] },
+        { s: "The astronaut is climbing into the rocket.", v: "fly", a: ["He is going to fly", "The astronaut is going to fly"] },
+        { s: "I am holding a camera and pointing it at you.", v: "take", a: ["I am going to take a photo", "I am going to take a picture"] },
+        { s: "The leaves are turning brown and falling off.", v: "be autumn", a: ["It is going to be autumn", "It's going to be autumn"] },
+        { s: "She is looking at the menu in the restaurant.", v: "order", a: ["She is going to order", "She's going to order food"] },
+        { s: "The ice is very thin and the man is walking on it.", v: "break", a: ["The ice is going to break", "It is going to break"] },
+        { s: "My battery is at 1%.", v: "die", a: ["The phone is going to die", "My phone is going to die", "It is going to die"] },
+        { s: "He is putting on his running shoes and a tracksuit.", v: "run", a: ["He is going to run", "He's going to run"] },
+        { s: "There is a long queue in front of the cinema.", v: "wait", a: ["They are going to wait", "The people are going to wait"] },
+        { s: "The scientist is mixing two dangerous chemicals.", v: "experiment", a: ["He is going to experiment", "The scientist is going to experiment"] },
+        { s: "The volcano is smoking and shaking.", v: "erupt", a: ["It is going to erupt", "The volcano is going to erupt"] },
+        { s: "We are at the garage with our broken car.", v: "fix", a: ["The mechanic is going to fix it", "They are going to fix the car"] },
+        { s: "The thief is running and the police are behind him.", v: "catch", a: ["The police are going to catch him"] },
+        { s: "I have a lot of homework to do this afternoon.", v: "work", a: ["I am going to work", "I'm going to work"] },
+        { s: "The woman is looking at the price tag and her wallet.", v: "buy", a: ["She is going to buy it", "She's going to buy something"] },
+        { s: "It is -10 degrees outside today.", v: "freeze", a: ["It is going to freeze", "The water is going to freeze"] },
+        { s: "The baby is rubbing its eyes and yawning.", v: "cry", a: ["The baby is going to cry", "It is going to cry", "The baby is going to sleep"] },
+        { s: "They are standing at the altar in a white dress and suit.", v: "marry", a: ["They are going to marry", "They're going to get married"] },
+        { s: "The plane is on the runway and the engines are loud.", v: "take off", a: ["The plane is going to take off", "It is going to take off"] },
+        { s: "I'm holding a wet towel and walking to the bathroom.", v: "shower", a: ["I am going to shower", "I'm going to take a shower"] },
+        { s: "The man has a guitar and is sitting on the stage.", v: "play", a: ["He is going to play", "He is going to play music"] },
+        { s: "The clouds are white and fluffy, but it's getting cold.", v: "snow", a: ["It is going to snow", "It's going to snow"] },
+        { s: "She is holding an umbrella and looking at the sky.", v: "rain", a: ["It is going to rain", "It's going to rain"] },
+        { s: "The boy is looking at the high tree with a ball in it.", v: "climb", a: ["He is going to climb the tree", "He is going to climb"] },
+        { s: "I am 18 tomorrow!", v: "have a party", a: ["I am going to have a party", "I'm going to have a party"] },
+        { s: "The computer is making a strange clicking noise.", v: "crash", a: ["The computer is going to crash", "It is going to crash"] },
+        { s: "We are buying tickets at the train station.", v: "leave", a: ["The train is going to leave", "We are going to leave"] },
+        { s: "The chef is putting the pizza in the oven.", v: "cook", a: ["He is going to cook the pizza", "The chef is going to cook"] },
+        { s: "The alarm clock is set for 6:00 AM.", v: "ring", a: ["It is going to ring", "The alarm is going to ring"] },
+        { s: "She is holding a pen and a piece of paper.", v: "write", a: ["She is going to write", "She's going to write a letter"] },
+        { s: "The spider is making a web in the corner.", v: "catch", a: ["It is going to catch a fly", "The spider is going to catch a fly"] },
+        { s: "The car is out of petrol in the middle of the road.", v: "stop", a: ["It is going to stop", "The car is going to stop"] },
+        { s: "I see a lot of people with surfboards at the beach.", v: "surf", a: ["They are going to surf", "The people are going to surf"] },
+        { s: "He is opening a can of dog food.", v: "feed", a: ["He is going to feed the dog", "He's going to feed the dog"] },
+        { s: "The magician is pointing his wand at the hat.", v: "do", a: ["He is going to do a trick", "The magician is going to do a trick"] },
+        { s: "They are putting on their coats and hats.", v: "go out", a: ["They are going to go out", "They're going to go out"] },
+        { s: "The sink is full of water and the tap is still on!", v: "overflow", a: ["It is going to overflow", "The sink is going to overflow"] },
+        { s: "She is looking at a map and looking confused.", v: "get lost", a: ["She is going to get lost", "She's going to get lost"] },
+        { s: "The lion is slowly moving towards the zebra.", v: "hunt", a: ["It is going to hunt", "The lion is going to hunt"] },
+        { s: "The students are sitting quietly with their pens ready.", v: "start", a: ["The lesson is going to start", "They are going to start"] },
+        { s: "I am feeling very hungry.", v: "eat", a: ["I am going to eat", "I'm going to eat"] },
+        { s: "The builder is carrying a lot of bricks.", v: "build", a: ["He is going to build a wall", "The builder is going to build"] },
+        { s: "The sun is going down behind the mountains.", v: "be dark", a: ["It is going to be dark", "It's going to be dark"] },
+        { s: "The lady is at the supermarket with a big trolley.", v: "shop", a: ["She is going to shop", "She is going to do some shopping"] },
+        { s: "He is holding a bucket of soapy water near the car.", v: "wash", a: ["He is going to wash the car", "He's going to wash the car"] },
+        { s: "The gardener is holding some flower seeds.", v: "plant", a: ["He is going to plant them", "She is going to plant flowers"] },
+        { s: "The boy is standing near the light switch.", v: "turn off", a: ["He is going to turn off the light"] },
+        { s: "I am looking at my watch and running fast.", v: "be late", a: ["I am going to be late", "I'm going to be late"] },
+        { s: "The hammer is falling towards his thumb!", v: "hit", a: ["It is going to hit him", "The hammer is going to hit him"] },
+        { s: "They are looking at the house with a 'For Sale' sign.", v: "buy", a: ["They are going to buy the house", "They're going to buy it"] },
+        { s: "The singer is walking onto the stage.", v: "sing", a: ["She is going to sing", "The singer is going to sing"] },
+        { s: "The girl is blowing into a balloon very hard.", v: "burst", a: ["It is going to burst", "The balloon is going to burst"] },
+        { s: "I am standing in front of the TV with the remote.", v: "watch", a: ["I am going to watch TV", "I'm going to watch a show"] },
+        { s: "The dog is wagging its tail near the ball.", v: "play", a: ["It is going to play", "The dog is going to play"] },
+        { s: "He is holding a towel and walking to the pool.", v: "swim", a: ["He is going to swim", "He's going to swim"] },
+        { s: "The teacher is picking up a red pen.", v: "correct", a: ["She is going to correct the tests", "The teacher is going to correct"] },
+        { s: "We are at the zoo in front of the monkey cage.", v: "see", a: ["We are going to see the monkeys", "We're going to see monkeys"] },
+        { s: "The woman is looking at the clock and the oven.", v: "check", a: ["She is going to check the food", "She's going to check the dinner"] },
+        { s: "He is taking his phone out of his pocket.", v: "call", a: ["He is going to call someone", "He's going to call"] },
+        { s: "The cat is looking at the fish bowl.", v: "catch", a: ["It is going to catch a fish", "The cat is going to catch the fish"] },
+        { s: "It's 11:59 PM on December 31st.", v: "be", a: ["It is going to be the New Year", "It's going to be a new year"] },
+        { s: "The bird is standing on the edge of the nest.", v: "fly", a: ["It is going to fly", "The bird is going to fly"] },
+        { s: "The man is drinking 5 large glasses of water.", v: "be full", a: ["He is going to be full", "He's going to be full"] },
+        { s: "We are at the museum in front of the paintings.", v: "look", a: ["We are going to look at art", "We're going to look"] },
+        { s: "She is putting a stamp on an envelope.", v: "send", a: ["She is going to send a letter", "She's going to send it"] },
+        { s: "The mouse is running towards the cheese trap.", v: "get", a: ["It is going to get caught", "The mouse is going to get the cheese"] },
+        { s: "The boy is holding a big snowball.", v: "throw", a: ["He is going to throw it", "He's going to throw a snowball"] },
+        { s: "The girl is sitting at the piano.", v: "play", a: ["She is going to play the piano", "She's going to play"] },
+        { s: "The candle is very short and almost finished.", v: "go out", a: ["It is going to go out", "The candle is going to go out"] },
+        { s: "I am putting on my sunglasses.", v: "be sunny", a: ["It is going to be sunny", "It's going to be sunny"] },
+        { s: "The player is lying on the ground holding his leg.", v: "need", a: ["He is going to need a doctor", "He's going to need help"] },
+        { s: "The bus is arriving at the stop.", v: "stop", a: ["It is going to stop", "The bus is going to stop"] },
+        { s: "I am opening the door for you.", v: "enter", a: ["You are going to enter", "You're going to enter the room"] }
+    ];
+
+    let currentQuestions = [];
+    let qIdx = 0;
+    let score = 0;
+
+    function initGame() {
+        // Shuffle and pick 10
+        currentQuestions = [...database].sort(() => 0.5 - Math.random()).slice(0, 10);
+        qIdx = 0;
+        score = 0;
+        document.getElementById('screen-start').style.display = 'none';
+        document.getElementById('screen-game').style.display = 'flex';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = currentQuestions[qIdx];
+        document.getElementById('ui-count').innerText = `DATA: ${qIdx + 1}/10`;
+        document.getElementById('scenario-text').innerText = q.s;
+        document.getElementById('verb-text').innerText = q.v.toUpperCase();
+        document.getElementById('user-input').value = "";
+        document.getElementById('user-input').disabled = false;
+        document.getElementById('feedback-msg').innerText = "";
+        document.getElementById('submit-btn').style.display = 'block';
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('user-input').focus();
+    }
+
+    function checkAnswer() {
+        const input = document.getElementById('user-input').value.trim();
+        const feedback = document.getElementById('feedback-msg');
+        if(!input) return;
+
+        if (input[0] !== input[0].toUpperCase()) {
+            feedback.style.color = "orange";
+            feedback.innerText = "⚠️ ERROR: Start with a capital letter!";
+            document.getElementById('main-container').classList.add('shake');
+            setTimeout(()=> document.getElementById('main-container').classList.remove('shake'), 200);
+            return;
+        }
+
+        const cleanInput = input.toLowerCase().replace(/[.!?]$/, "");
+        const isCorrect = currentQuestions[qIdx].a.some(ans => cleanInput === ans.toLowerCase());
+
+        document.getElementById('user-input').disabled = true;
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+
+        if(isCorrect) {
+            score++;
+            feedback.style.color = "var(--hero-cyan)";
+            feedback.innerText = "✅ SYNC SUCCESSFUL: Future path confirmed.";
+        } else {
+            feedback.style.color = "#ff4d4d";
+            feedback.innerText = "❌ SYNC FAILED: Correct was: " + currentQuestions[qIdx].a[0];
+            document.getElementById('main-container').classList.add('shake');
+            setTimeout(()=> document.getElementById('main-container').classList.remove('shake'), 200);
+        }
+        document.getElementById('ui-score').innerText = `SYNC: ${(score/(qIdx+1)*100).toFixed(0)}%`;
+    }
+
+    function nextStep() {
+        qIdx++;
+        if(qIdx < currentQuestions.length) {
+            loadQuestion();
+        } else {
+            document.getElementById('screen-game').style.display = 'none';
+            document.getElementById('screen-end').style.display = 'block';
+            document.getElementById('final-score').innerText = (score/currentQuestions.length)*100;
+        }
+    }
+
+    document.getElementById('user-input').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter' && !document.getElementById('user-input').disabled) checkAnswer();
+    });
+</script>
+</body>
+</html>
