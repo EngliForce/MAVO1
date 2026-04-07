@@ -53,27 +53,26 @@
         .split-box-title { font-family: 'Bangers', cursive; font-size: 1.5rem; margin-bottom: 10px; }
         .split-box.past .split-box-title { color: var(--hero-yellow); }
         .split-box.to .split-box-title { color: var(--hero-cyan); }
-        
         .example-box { background: rgba(255,255,255,0.08); padding: 15px; border-radius: 10px; margin-top: 15px; }
 
         .toggle-container { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-        .btn-toggle { 
-            background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; 
-            border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer; 
-            transition: 0.2s; border-bottom: 5px solid var(--hero-purple-dark); 
+        .btn-toggle {
+            background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px;
+            border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer;
+            transition: 0.2s; border-bottom: 5px solid var(--hero-purple-dark);
         }
         .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-purple-dark); }
         .btn-video { background: var(--hero-red); border-bottom: 5px solid var(--hero-red-dark); }
 
         /* Pickle Grid Styles */
-        .pickle-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            margin-top: 20px; 
-            max-width: 1000px; 
-            margin-left: auto; 
-            margin-right: auto; 
+        .pickle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .card {
             background: #1a102a;
@@ -105,7 +104,7 @@
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--hero-purple-main); padding: 18px; text-align: left; font-family: 'Bangers'; }
         td { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        
+
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -120,14 +119,11 @@
     </style>
 </head>
 <body>
-
 <div class="flash-effect" id="flash"></div>
-
 <header>
     <h1>ENGLIFORCE ACADEMY</h1>
     <p>FUTURE MISSIONS COMMAND CENTER</p>
 </header>
-
 <main>
     <section class="briefing-box">
         <h2>🚨 MISSION: PREDICTING THE FUTURE</h2>
@@ -146,7 +142,6 @@
                 </div>
             </div>
         </div>
-        <button class="btn-toggle" style="font-size: 1rem; padding: 10px 20px;" onclick="readAloud()">🔊 Lees Voor</button>
     </section>
 
     <div class="toggle-container">
@@ -260,14 +255,6 @@
         btn.innerText = btn.classList.contains('liked') ? '❤️ Liked' : '👍 Like';
         if(btn.classList.contains('liked')) createExplosion(e, 'BOOM!');
     }
-
-    function readAloud() {
-        const text = document.getElementById('mission-text').innerText;
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'nl-NL';
-        window.speechSynthesis.speak(utterance);
-    }
 </script>
-
 </body>
 </html>
