@@ -6,7 +6,7 @@
     <style>
         :root {
             --hero-purple: #bc13fe; --hero-purple-dark: #4a148c;
-            --hero-yellow: #ffb703; --alert-red: #ff0033; --dark-bg: #020205;
+            --hero-yellow: #ffb703; --alert-red: #cc0000; --dark-bg: #020205;
         }
 
         body {
@@ -49,7 +49,13 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: inset 0 10px 40px rgba(0,0,0,1); overflow: hidden;
         }
-        .choice-box span { font-family: 'Bangers'; font-size: 3.2rem; color: var(--hero-yellow); z-index: 50; pointer-events: none; }
+        .choice-box span.label { font-family: 'Bangers'; font-size: 3.2rem; color: var(--hero-yellow); z-index: 50; pointer-events: none; }
+
+        .symbol {
+            position: absolute; font-size: 5rem; z-index: 55; opacity: 0; pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+        }
+        .choice-box.active-symbol .symbol { opacity: 1; transform: scale(1.2); }
 
         .confetti {
             position: absolute; width: 8px; height: 8px; z-index: 60;
@@ -70,7 +76,7 @@
         .choice-box.ooze-alert .slime-flow { height: 100%; opacity: 1; }
 
         #win-screen { text-align: center; z-index: 200; }
-        #win-screen h2 { font-family: 'Bangers'; font-size: 3.5rem; color: var(--hero-yellow); margin-bottom: 5px; }
+        #win-screen h2 { font-family: 'Bangers'; font-size: 3.5rem; color: var(--hero-yellow); }
 
         footer { padding: 1rem; font-size: 0.75rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); color: #666; }
         .hidden { display: none !important; }
@@ -80,7 +86,7 @@
 
 <header>
     <h1>ENGLIFORCE ACADEMY</h1>
-    <p>SOME OR ANY: SPEED ATTACK</p>
+    <p>SOME OR ANY: 150-QUEST SKULL & DIAMOND</p>
     <div id="score-board">SCORE: <span id="current-score">0</span></div>
 </header>
 
@@ -89,19 +95,21 @@
         <div id="sentence-box">Initializing Mission...</div>
         <div class="box-grid">
             <div class="choice-box" id="box-some" onclick="choose('some')">
-                <span>SOME</span>
+                <span class="label">SOME</span>
                 <div class="slime-flow"></div>
+                <div class="symbol" id="symbol-some"></div>
             </div>
             <div class="choice-box" id="box-any" onclick="choose('any')">
-                <span>ANY</span>
+                <span class="label">ANY</span>
                 <div class="slime-flow"></div>
+                <div class="symbol" id="symbol-any"></div>
             </div>
         </div>
         <div id="feedback" style="margin-top: 25px; height: 30px; font-weight: bold; font-size: 1.3rem;"></div>
     </div>
 
     <div id="win-screen" class="hidden">
-        <div style="font-size: 6rem;">💎</div>
+        <div style="font-size: 6rem;">👑</div>
         <h2>MISSION SUCCESS</h2>
         <p style="font-size: 1.5rem; font-weight: bold;">TOTAL SCORE: <span id="final-score">0</span></p>
         <button onclick="location.reload()" style="background:var(--hero-yellow); border:none; padding:12px 40px; border-radius:30px; font-weight:900; cursor:pointer; font-family:'Lexend'; margin-top:20px;">NEW MISSION</button>
@@ -112,46 +120,45 @@
 
 <script>
     const db = [
-        // SOME (Positive sentences - 50 total)
-        {q: "I have ___ apples for you.", c: "some"}, {q: "There is ___ milk in the fridge.", c: "some"}, {q: "She bought ___ new clothes.", c: "some"}, {q: "He found ___ money.", c: "some"}, {q: "I need ___ help with this.", c: "some"},
-        {q: "We saw ___ beautiful birds.", c: "some"}, {q: "There are ___ clouds today.", c: "some"}, {q: "They want ___ soup.", c: "some"}, {q: "I bought ___ pens.", c: "some"}, {q: "She has ___ friends in London.", c: "some"},
-        {q: "I have ___ cool ideas.", c: "some"}, {q: "There's ___ water in the vase.", c: "some"}, {q: "He bought ___ flowers.", c: "some"}, {q: "We made ___ mistakes.", c: "some"}, {q: "I have ___ good news.", c: "some"},
-        {q: "Give me ___ bread, please.", c: "some"}, {q: "There are ___ books on the desk.", c: "some"}, {q: "She told me ___ stories.", c: "some"}, {q: "I saw ___ people in the park.", c: "some"}, {q: "He has ___ energy.", c: "some"},
-        {q: "We need ___ eggs for the cake.", c: "some"}, {q: "I found ___ old photos.", c: "some"}, {q: "There's ___ ice in my drink.", c: "some"}, {q: "She has ___ homework to do.", c: "some"}, {q: "They saw ___ stars.", c: "some"},
-        {q: "I want ___ juice, please.", c: "some"}, {q: "He bought ___ cheese.", c: "some"}, {q: "There are ___ chairs here.", c: "some"}, {q: "We need ___ music.", c: "some"}, {q: "I have ___ questions.", c: "some"},
-        {q: "She saw ___ elephants.", c: "some"}, {q: "There is ___ sand in my shoes.", c: "some"}, {q: "I need ___ advice.", c: "some"}, {q: "He has ___ great ideas.", c: "some"}, {q: "We found ___ sea shells.", c: "some"},
-        {q: "I want ___ cake.", c: "some"}, {q: "There are ___ cookies left.", c: "some"}, {q: "She bought ___ oranges.", c: "some"}, {q: "I have ___ work to do.", c: "some"}, {q: "Give him ___ water.", c: "some"},
-        {q: "We saw ___ movies.", c: "some"}, {q: "There is ___ snow outside.", c: "some"}, {q: "I bought ___ pens.", c: "some"}, {q: "She needs ___ sleep.", c: "some"}, {q: "They have ___ cool cars.", c: "some"},
-        {q: "There are ___ trees in the garden.", c: "some"}, {q: "I want ___ soup.", c: "some"}, {q: "We found ___ keys.", c: "some"}, {q: "She has ___ pencils.", c: "some"}, {q: "He bought ___ milk.", c: "some"},
+        // 50 x SOME
+        {q: "I have ___ apples for you.", c: "some"}, {q: "There is ___ milk.", c: "some"}, {q: "She bought ___ flowers.", c: "some"}, {q: "He found ___ money.", c: "some"}, {q: "I need ___ help.", c: "some"},
+        {q: "We saw ___ birds.", c: "some"}, {q: "There are ___ trees.", c: "some"}, {q: "They want ___ soup.", c: "some"}, {q: "I bought ___ pens.", c: "some"}, {q: "She has ___ friends.", c: "some"},
+        {q: "He saw ___ cool cars.", c: "some"}, {q: "There is ___ snow.", c: "some"}, {q: "I need ___ time.", c: "some"}, {q: "She found ___ gold.", c: "some"}, {q: "We have ___ news.", c: "some"},
+        {q: "I want ___ juice.", c: "some"}, {q: "Give me ___ bread.", c: "some"}, {q: "There are ___ clouds.", c: "some"}, {q: "She has ___ secrets.", c: "some"}, {q: "He bought ___ cheese.", c: "some"},
+        {q: "We need ___ eggs.", c: "some"}, {q: "I saw ___ elephants.", c: "some"}, {q: "There is ___ sand.", c: "some"}, {q: "He has ___ energy.", c: "some"}, {q: "She needs ___ sleep.", c: "some"},
+        {q: "I found ___ old coins.", c: "some"}, {q: "There are ___ stars.", c: "some"}, {q: "We bought ___ oranges.", c: "some"}, {q: "She has ___ homework.", c: "some"}, {q: "He saw ___ movies.", c: "some"},
+        {q: "I need ___ advice.", c: "some"}, {q: "There is ___ ice.", c: "some"}, {q: "He bought ___ milk.", c: "some"}, {q: "We found ___ keys.", c: "some"}, {q: "She has ___ pencils.", c: "some"},
+        {q: "I want ___ cake.", c: "some"}, {q: "There are ___ cookies.", c: "some"}, {q: "She bought ___ pens.", c: "some"}, {q: "I have ___ work.", c: "some"}, {q: "Give him ___ water.", c: "some"},
+        {q: "We saw ___ people.", c: "some"}, {q: "There is ___ soup.", c: "some"}, {q: "He has ___ toys.", c: "some"}, {q: "She told ___ stories.", c: "some"}, {q: "I need ___ eggs.", c: "some"},
+        {q: "There are ___ chairs.", c: "some"}, {q: "I found ___ shells.", c: "some"}, {q: "He has ___ ideas.", c: "some"}, {q: "She bought ___ sugar.", c: "some"}, {q: "We need ___ music.", c: "some"},
 
-        // ANY (Negative sentences - 50 total)
-        {q: "I don't have ___ apples.", c: "any"}, {q: "There isn't ___ milk left.", c: "any"}, {q: "She didn't buy ___ clothes.", c: "any"}, {q: "He hasn't got ___ money.", c: "any"}, {q: "I don't need ___ help.", c: "any"},
-        {q: "They haven't got ___ toys.", c: "any"}, {q: "There aren't ___ clouds.", c: "any"}, {q: "We didn't see ___ birds.", c: "any"}, {q: "I don't want ___ chocolate.", c: "any"}, {q: "She hasn't got ___ secrets.", c: "any"},
-        {q: "I don't need ___ time.", c: "any"}, {q: "There isn't ___ water here.", c: "any"}, {q: "He didn't buy ___ flowers.", c: "any"}, {q: "We didn't make ___ mistakes.", c: "any"}, {q: "I haven't got ___ news.", c: "any"},
-        {q: "Don't give me ___ bread.", c: "any"}, {q: "There aren't ___ books here.", c: "any"}, {q: "She didn't tell me ___ stories.", c: "any"}, {q: "I didn't see ___ people.", c: "any"}, {q: "He hasn't got ___ friends.", c: "any"},
-        {q: "We don't need ___ eggs.", c: "any"}, {q: "I didn't find ___ photos.", c: "any"}, {q: "There isn't ___ ice.", c: "any"}, {q: "She hasn't got ___ homework.", c: "any"}, {q: "They didn't see ___ stars.", c: "any"},
-        {q: "I don't want ___ juice.", c: "any"}, {q: "He didn't buy ___ cheese.", c: "any"}, {q: "There aren't ___ chairs.", c: "any"}, {q: "We don't need ___ music.", c: "any"}, {q: "I haven't got ___ questions.", c: "any"},
-        {q: "She didn't see ___ elephants.", c: "any"}, {q: "There isn't ___ sand.", c: "any"}, {q: "I don't need ___ advice.", c: "any"}, {q: "He hasn't got ___ ideas.", c: "any"}, {q: "We didn't find ___ shells.", c: "any"},
-        {q: "I don't want ___ cake.", c: "any"}, {q: "There aren't ___ cookies.", c: "any"}, {q: "She didn't buy ___ oranges.", c: "any"}, {q: "I haven't got ___ work.", c: "any"}, {q: "Don't give him ___ water.", c: "any"},
-        {q: "We didn't see ___ movies.", c: "any"}, {q: "There isn't ___ snow.", c: "any"}, {q: "I didn't buy ___ pens.", c: "any"}, {q: "She doesn't need ___ sleep.", c: "any"}, {q: "He hasn't got ___ energy.", c: "any"},
-        {q: "There aren't ___ trees.", c: "any"}, {q: "I don't want ___ soup.", c: "any"}, {q: "We didn't find ___ keys.", c: "any"}, {q: "She hasn't got ___ pencils.", c: "any"}, {q: "He didn't buy ___ milk.", c: "any"},
+        // 50 x ANY (Negative)
+        {q: "I don't have ___ apples.", c: "any"}, {q: "There isn't ___ milk.", c: "any"}, {q: "She didn't buy ___ flowers.", c: "any"}, {q: "He hasn't got ___ money.", c: "any"}, {q: "I don't need ___ help.", c: "any"},
+        {q: "We didn't see ___ birds.", c: "any"}, {q: "There aren't ___ trees.", c: "any"}, {q: "They don't want ___ soup.", c: "any"}, {q: "I didn't buy ___ pens.", c: "any"}, {q: "She hasn't got ___ friends.", c: "any"},
+        {q: "He didn't see ___ cars.", c: "any"}, {q: "There isn't ___ snow.", c: "any"}, {q: "I don't need ___ time.", c: "any"}, {q: "She didn't find ___ gold.", c: "any"}, {q: "We haven't got ___ news.", c: "any"},
+        {q: "I don't want ___ juice.", c: "any"}, {q: "Don't give me ___ bread.", c: "any"}, {q: "There aren't ___ clouds.", c: "any"}, {q: "She hasn't got ___ secrets.", c: "any"}, {q: "He didn't buy ___ cheese.", c: "any"},
+        {q: "We don't need ___ eggs.", c: "any"}, {q: "I didn't see ___ elephants.", c: "any"}, {q: "There isn't ___ sand.", c: "any"}, {q: "He hasn't got ___ energy.", c: "any"}, {q: "She doesn't need ___ sleep.", c: "any"},
+        {q: "I didn't find ___ coins.", c: "any"}, {q: "There aren't ___ stars.", c: "any"}, {q: "We didn't buy ___ oranges.", c: "any"}, {q: "She hasn't got ___ homework.", c: "any"}, {q: "He didn't see ___ movies.", c: "any"},
+        {q: "I don't need ___ advice.", c: "any"}, {q: "There isn't ___ ice.", c: "any"}, {q: "He didn't buy ___ milk.", c: "any"}, {q: "We didn't find ___ keys.", c: "any"}, {q: "She hasn't got ___ pencils.", c: "any"},
+        {q: "I don't want ___ cake.", c: "any"}, {q: "There aren't ___ cookies.", c: "any"}, {q: "She didn't buy ___ pens.", c: "any"}, {q: "I haven't got ___ work.", c: "any"}, {q: "Don't give him ___ water.", c: "any"},
+        {q: "We didn't see ___ people.", c: "any"}, {q: "There isn't ___ soup.", c: "any"}, {q: "He hasn't got ___ toys.", c: "any"}, {q: "She didn't tell ___ stories.", c: "any"}, {q: "I don't need ___ eggs.", c: "any"},
+        {q: "There aren't ___ chairs.", c: "any"}, {q: "I didn't find ___ shells.", c: "any"}, {q: "He hasn't got ___ ideas.", c: "any"}, {q: "She didn't buy ___ sugar.", c: "any"}, {q: "We don't need ___ music.", c: "any"},
 
-        // ANY (Questions - 50 total)
-        {q: "Do you have ___ apples?", c: "any"}, {q: "Is there ___ milk left?", c: "any"}, {q: "Did she buy ___ clothes?", c: "any"}, {q: "Has he got ___ money?", c: "any"}, {q: "Do you need ___ help?", c: "any"},
-        {q: "Have they got ___ toys?", c: "any"}, {q: "Are there ___ clouds today?", c: "any"}, {q: "Did you see ___ birds?", c: "any"}, {q: "Do you want ___ chocolate?", c: "any"}, {q: "Has she got ___ secrets?", c: "any"},
-        {q: "Do you need ___ time?", c: "any"}, {q: "Is there ___ water here?", c: "any"}, {q: "Did he buy ___ flowers?", c: "any"}, {q: "Did we make ___ mistakes?", c: "any"}, {q: "Have you got ___ news?", c: "any"},
-        {q: "Can you give me ___ bread?", c: "any"}, {q: "Are there ___ books here?", c: "any"}, {q: "Did she tell you ___ stories?", c: "any"}, {q: "Did you see ___ people?", c: "any"}, {q: "Has he got ___ friends?", c: "any"},
-        {q: "Do we need ___ eggs?", c: "any"}, {q: "Did you find ___ photos?", c: "any"}, {q: "Is there ___ ice?", c: "any"}, {q: "Has she got ___ homework?", c: "any"}, {q: "Did they see ___ stars?", c: "any"},
-        {q: "Do you want ___ juice?", c: "any"}, {q: "Did he buy ___ cheese?", c: "any"}, {q: "Are there ___ chairs?", c: "any"}, {q: "Do we need ___ music?", c: "any"}, {q: "Have you got ___ questions?", c: "any"},
-        {q: "Did she see ___ elephants?", c: "any"}, {q: "Is there ___ sand?", c: "any"}, {q: "Do you need ___ advice?", c: "any"}, {q: "Has he got ___ ideas?", c: "any"}, {q: "Did you find ___ shells?", c: "any"},
-        {q: "Do you want ___ cake?", c: "any"}, {q: "Are there ___ cookies left?", c: "any"}, {q: "Did she buy ___ oranges?", c: "any"}, {q: "Have you got ___ work?", c: "any"}, {q: "Can you give him ___ water?", c: "any"},
-        {q: "Did you see ___ movies?", c: "any"}, {q: "Is there ___ snow?", c: "any"}, {q: "Did you buy ___ pens?", c: "any"}, {q: "Does she need ___ sleep?", c: "any"}, {q: "Has he got ___ energy?", c: "any"},
-        {q: "Are there ___ trees?", c: "any"}, {q: "Do you want ___ soup?", c: "any"}, {q: "Did we find ___ keys?", c: "any"}, {q: "Has she got ___ pencils?", c: "any"}, {q: "Did he buy ___ milk?", c: "any"}
+        // 50 x ANY (Questions)
+        {q: "Do you have ___ apples?", c: "any"}, {q: "Is there ___ milk?", c: "any"}, {q: "Did she buy ___ flowers?", c: "any"}, {q: "Has he got ___ money?", c: "any"}, {q: "Do you need ___ help?", c: "any"},
+        {q: "Did we see ___ birds?", c: "any"}, {q: "Are there ___ trees?", c: "any"}, {q: "Do they want ___ soup?", c: "any"}, {q: "Did you buy ___ pens?", c: "any"}, {q: "Has she got ___ friends?", c: "any"},
+        {q: "Did he see ___ cars?", c: "any"}, {q: "Is there ___ snow?", c: "any"}, {q: "Do you need ___ time?", c: "any"}, {q: "Did she find ___ gold?", c: "any"}, {q: "Have you got ___ news?", c: "any"},
+        {q: "Do you want ___ juice?", c: "any"}, {q: "Can you give me ___ bread?", c: "any"}, {q: "Are there ___ clouds?", c: "any"}, {q: "Has she got ___ secrets?", c: "any"}, {q: "Did he buy ___ cheese?", c: "any"},
+        {q: "Do we need ___ eggs?", c: "any"}, {q: "Did you see ___ elephants?", c: "any"}, {q: "Is there ___ sand?", c: "any"}, {q: "Has he got ___ energy?", c: "any"}, {q: "Does she need ___ sleep?", c: "any"},
+        {q: "Did you find ___ coins?", c: "any"}, {q: "Are there ___ stars?", c: "any"}, {q: "Did we buy ___ oranges?", c: "any"}, {q: "Has she got ___ homework?", c: "any"}, {q: "Did he see ___ movies?", c: "any"},
+        {q: "Do you need ___ advice?", c: "any"}, {q: "Is there ___ ice?", c: "any"}, {q: "Did he buy ___ milk?", c: "any"}, {q: "Did we find ___ keys?", c: "any"}, {q: "Has she got ___ pencils?", c: "any"},
+        {q: "Do you want ___ cake?", c: "any"}, {q: "Are there ___ cookies?", c: "any"}, {q: "Did she buy ___ pens?", c: "any"}, {q: "Have you got ___ work?", c: "any"}, {q: "Can you give him ___ water?", c: "any"},
+        {q: "Did you see ___ people?", c: "any"}, {q: "Is there ___ soup?", c: "any"}, {q: "Has he got ___ toys?", c: "any"}, {q: "Did she tell ___ stories?", c: "any"}, {q: "Do you need ___ eggs?", c: "any"},
+        {q: "Are there ___ chairs?", c: "any"}, {q: "Did you find ___ shells?", c: "any"}, {q: "Has he got ___ ideas?", c: "any"}, {q: "Did she buy ___ sugar?", c: "any"}, {q: "Do you need ___ music?", c: "any"}
     ];
 
     let score = 0;
     let currentIdx = 0;
-    // Select 10 random questions from the 150
     let activeQuestions = db.sort(() => 0.5 - Math.random()).slice(0, 10);
 
     function loadQ() {
@@ -163,26 +170,32 @@
         }
         document.getElementById('sentence-box').innerText = activeQuestions[currentIdx].q;
         document.getElementById('feedback').innerText = "";
-        document.querySelectorAll('.choice-box').forEach(b => b.classList.remove('ooze-alert'));
+        document.querySelectorAll('.choice-box').forEach(b => {
+            b.classList.remove('ooze-alert', 'active-symbol');
+            b.querySelector('.symbol').innerText = "";
+        });
     }
 
     function choose(ans) {
         const correct = activeQuestions[currentIdx].c;
         const box = document.getElementById('box-' + ans);
+        const symbolEl = document.getElementById('symbol-' + ans);
         const fb = document.getElementById('feedback');
 
         if (ans === correct) {
             score += 100;
             fb.innerText = "⭐ +100 POINTS ⭐"; fb.style.color = "var(--hero-yellow)";
+            symbolEl.innerText = "💎";
+            box.classList.add('active-symbol');
             createExplosiveConfetti(box);
             currentIdx++;
             updateScoreDisplay();
             setTimeout(loadQ, 1000); 
         } else {
             score = Math.max(0, score - 50);
-            fb.innerText = "☣️ -50 POINTS ☣️"; fb.style.color = "var(--alert-red)";
-            // The box now takes a crimson alert red Ooze shower
-            box.classList.add('ooze-alert');
+            fb.innerText = "💀 -50 POINTS 💀"; fb.style.color = "var(--alert-red)";
+            symbolEl.innerText = "💀";
+            box.classList.add('ooze-alert', 'active-symbol');
             currentIdx++;
             updateScoreDisplay();
             setTimeout(loadQ, 1000); 
