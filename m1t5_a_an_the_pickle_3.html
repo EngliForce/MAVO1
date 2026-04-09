@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="nl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Alchemy | EngliForce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --alchemy-purple: #bc13fe; --alchemy-glow: #e0aaff;
+            --toxic-green: #39ff14; --gold: #ffb703;
+        }
+
+        body {
+            background: #050008; color: #fff; font-family: 'Lexend', sans-serif;
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #1a0533, #050008);
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a148c, #1a012a);
+            padding: 0.8rem; text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 3px solid var(--gold); flex-shrink: 0;
+        }
+        header h1 { font-family: 'Bangers'; font-size: 2rem; margin: 0; color: #fff; text-shadow: 0 0 10px var(--alchemy-purple); }
+        header p { margin: 0; font-size: 0.8rem; letter-spacing: 1px; color: var(--gold); }
+
+        #game-container {
+            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 10px 20px; width: 100%; box-sizing: border-box;
+        }
+
+        #alchemy-board {
+            background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 30px;
+            border: 1px solid rgba(188, 19, 254, 0.3); backdrop-filter: blur(10px);
+            max-width: 600px; width: 100%; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .flask-wrapper { position: relative; margin-bottom: 15px; }
+        .flask-container {
+            width: 80px; height: 110px; position: relative;
+            border: 4px solid #fff; border-radius: 15% 15% 45% 45%;
+            overflow: hidden; background: rgba(255,255,255,0.03);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+        }
+        #elixir-fill {
+            position: absolute; bottom: 0; width: 100%; height: 0%;
+            background: linear-gradient(0deg, var(--alchemy-purple), var(--alchemy-glow));
+            transition: height 0.6s ease;
+        }
+
+        #sentence-box {
+            font-size: 1.2rem; font-weight: bold; min-height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 15px; text-align: center; padding: 0 10px;
+        }
+
+        .cauldron-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
+        .cauldron {
+            background: radial-gradient(circle at 50% 30%, #34495e, #1a1a1a);
+            border: 3px solid var(--alchemy-purple); border-radius: 40% 40% 25% 25%;
+            padding: 20px 5px; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .cauldron:hover { transform: scale(1.05); border-color: var(--gold); }
+        .cauldron span { 
+            font-family: 'Bangers'; font-size: 2.2rem; color: var(--gold); 
+            line-height: 1; margin-top: 5px;
+        }
+        .cauldron small { font-size: 0.6rem; color: #fff; opacity: 0.7; letter-spacing: 1px; }
+
+        .feedback { height: 25px; margin-top: 15px; font-weight: bold; font-size: 1rem; }
+
+        footer {
+            padding: 0.8rem; font-size: 0.75rem; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
+        }
+
+        #win-screen h2 { font-family: 'Bangers'; font-size: 2rem; color: var(--gold); }
+        #win-screen button {
+            background: var(--alchemy-purple); border: none; color: white;
+            padding: 10px 25px; border-radius: 20px; cursor: pointer; font-weight: bold;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ARTICLE ALCHEMY</h1>
+    <p>MASTER THE MAGICAL ELIXIR</p>
+</header>
+
+<div id="game-container">
+    <div id="alchemy-board">
+        <div class="flask-wrapper">
+            <div class="flask-container"><div id="elixir-fill"></div></div>
+        </div>
+
+        <div id="sentence-box">Laden...</div>
+
+        <div class="cauldron-grid">
+            <div class="cauldron" onclick="mix('a')">
+                <small>ESSENCE</small>
+                <span>A</span>
+            </div>
+            <div class="cauldron" onclick="mix('an')">
+                <small>ESSENCE</small>
+                <span>AN</span>
+            </div>
+            <div class="cauldron" onclick="mix('the')">
+                <small>ESSENCE</small>
+                <span>THE</span>
+            </div>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div id="win-screen" class="hidden">
+        <h2>ELIXIR READY! 🏆</h2>
+        <button onclick="location.reload()">BREW AGAIN</button>
+    </div>
+</div>
+
+<footer>
+    © 2026, EngliForce Academy: Make English Your Superpower!
+</footer>
+
+<script>
+    const db = [
+        {q: "I have ___ dog.", c: "a"}, {q: "She is ___ nurse.", c: "a"}, {q: "He bought ___ car.", c: "a"}, {q: "I ate ___ orange.", c: "an"}, {q: "___ sun is hot.", c: "the"},
+        {q: "Look at ___ moon.", c: "the"}, {q: "I need ___ umbrella.", c: "an"}, {q: "It is ___ long story.", c: "a"}, {q: "He is ___ actor.", c: "an"}, {q: "Close ___ door.", c: "the"},
+        {q: "I saw ___ elephant.", c: "an"}, {q: "He is ___ doctor.", c: "a"}, {q: "She has ___ cat.", c: "a"}, {q: "This is ___ egg.", c: "an"}, {q: "___ sky is blue.", c: "the"},
+        {q: "Give me ___ apple.", c: "an"}, {q: "He is ___ honest man.", c: "an"}, {q: "Wait ___ hour.", c: "an"}, {q: "___ Nile is long.", c: "the"}, {q: "I want ___ bike.", c: "a"},
+        {q: "She found ___ coin.", c: "a"}, {q: "It was ___ mistake.", c: "a"}, {q: "He is ___ engineer.", c: "an"}, {q: "I love ___ sea.", c: "the"}, {q: "___ world is big.", c: "the"},
+        {q: "Open ___ window.", c: "the"}, {q: "I saw ___ star.", c: "a"}, {q: "He is ___ hero.", c: "a"}, {q: "It is ___ honor.", c: "an"}, {q: "She is ___ artist.", c: "an"},
+        {q: "I need ___ pen.", c: "a"}, {q: "Where is ___ bank?", c: "the"}, {q: "I had ___ idea.", c: "an"}, {q: "___ weather is nice.", c: "the"}, {q: "He plays ___ piano.", c: "the"},
+        {q: "It is ___ university.", c: "a"}, {q: "___ end is near.", c: "the"}, {q: "I want ___ sandwich.", c: "a"}, {q: "She bought ___ old book.", c: "an"}, {q: "He is ___ officer.", c: "an"},
+        {q: "___ car is fast.", c: "the"}, {q: "I see ___ mountain.", c: "a"}, {q: "It was ___ accident.", c: "an"}, {q: "Give me ___ minute.", c: "a"}, {q: "___ earth is round.", c: "the"},
+        {q: "He has ___ sister.", c: "a"}, {q: "She found ___ key.", c: "a"}, {q: "It is ___ ice cream.", c: "an"}, {q: "I saw ___ ant.", c: "an"}, {q: "___ teacher is here.", c: "the"},
+        {q: "Look at ___ clock.", c: "the"}, {q: "I need ___ eraser.", c: "an"}, {q: "He is ___ amazing cook.", c: "an"}, {q: "It's ___ sunny day.", c: "a"}, {q: "___ flowers are pretty.", c: "the"},
+        {q: "She sent ___ email.", c: "an"}, {q: "I want ___ pizza.", c: "a"}, {q: "___ cake is tasty.", c: "the"}, {q: "He wears ___ uniform.", c: "a"}, {q: "It is ___ ugly sofa.", c: "an"},
+        {q: "I saw ___ owl.", c: "an"}, {q: "He is ___ pilot.", c: "a"}, {q: "Where is ___ station?", c: "the"}, {q: "I have ___ question.", c: "a"}, {q: "___ bus is late.", c: "the"},
+        {q: "She has ___ aunt.", c: "an"}, {q: "It's ___ honor.", c: "an"}, {q: "___ ocean is deep.", c: "the"}, {q: "I need ___ box.", c: "a"}, {q: "He is ___ old friend.", c: "an"},
+        {q: "___ first page.", c: "the"}, {q: "She is ___ dancer.", c: "a"}, {q: "I ate ___ apricot.", c: "an"}, {q: "It was ___ easy test.", c: "an"}, {q: "___ park is lovely.", c: "the"},
+        {q: "I want ___ orange.", c: "an"}, {q: "She bought ___ dress.", c: "a"}, {q: "___ kids are playing.", c: "the"}, {q: "He is ___ introvert.", c: "an"}, {q: "I saw ___ eagle.", c: "an"},
+        {q: "It is ___ long way.", c: "a"}, {q: "___ dinner was great.", c: "the"}, {q: "He found ___ map.", c: "a"}, {q: "She is ___ officer.", c: "an"}, {q: "I need ___ aspirin.", c: "an"},
+        {q: "___ king is here.", c: "the"}, {q: "I saw ___ movie.", c: "a"}, {q: "He is ___ expert.", c: "an"}, {q: "___ Alps are high.", c: "the"}, {q: "She has ___ idea.", c: "an"},
+        {q: "It is ___ blue bag.", c: "a"}, {q: "___ stars are bright.", c: "the"}, {q: "He told ___ joke.", c: "a"}, {q: "I saw ___ ant.", c: "an"}, {q: "___ road is long.", c: "the"},
+        {q: "She is ___ pilot.", c: "a"}, {q: "I need ___ onion.", c: "an"}, {q: "___ water is cold.", c: "the"}, {q: "It is ___ old house.", c: "an"}, {q: "He is ___ good boy.", c: "a"},
+        {q: "___ cat is black.", c: "the"}, {q: "She bought ___ hat.", c: "a"}, {q: "I want ___ ice cube.", c: "an"}, {q: "It is ___ useful tool.", c: "a"}, {q: "___ coffee is hot.", c: "the"},
+        {q: "I saw ___ UFO.", c: "a"}, {q: "He is ___ author.", c: "an"}, {q: "___ morning was cold.", c: "the"}, {q: "She has ___ guitar.", c: "a"}, {q: "I need ___ egg.", c: "an"},
+        {q: "___ dog is barking.", c: "the"}, {q: "He is ___ athlete.", c: "an"}, {q: "It is ___ secret.", c: "a"}, {q: "___ light is out.", c: "the"}, {q: "She has ___ umbrella.", c: "an"},
+        {q: "I saw ___ tiger.", c: "a"}, {q: "He is ___ uncle.", c: "an"}, {q: "___ moon is white.", c: "the"}, {q: "She found ___ ring.", c: "a"}, {q: "It is ___ honor.", c: "an"},
+        {q: "___ phone is ringing.", c: "the"}, {q: "I need ___ spoon.", c: "a"}, {q: "He is ___ honest man.", c: "an"}, {q: "___ door is open.", c: "the"}, {q: "She has ___ job.", c: "a"},
+        {q: "I saw ___ ostrich.", c: "an"}, {q: "He is ___ dentist.", c: "a"}, {q: "___ bread is fresh.", c: "the"}, {q: "She bought ___ oven.", c: "an"}, {q: "It is ___ orange car.", c: "an"},
+        {q: "___ book is old.", c: "the"}, {q: "I want ___ banana.", c: "a"}, {q: "He is ___ only child.", c: "an"}, {q: "___ movie was fun.", c: "the"}, {q: "She is ___ singer.", c: "a"},
+        {q: "I saw ___ igloo.", c: "an"}, {q: "He has ___ son.", c: "a"}, {q: "___ internet is slow.", c: "the"}, {q: "It is ___ unusual day.", c: "an"}, {q: "She is ___ lady.", c: "a"},
+        {q: "I need ___ axe.", c: "an"}, {q: "He is ___ player.", c: "a"}, {q: "___ fish is gold.", c: "the"}, {q: "She has ___ aunt.", c: "an"}, {q: "It is ___ easy way.", c: "an"},
+        {q: "___ city is big.", c: "the"}, {q: "I saw ___ bat.", c: "a"}, {q: "He is ___ explorer.", c: "an"}, {q: "___ salt is white.", c: "the"}, {q: "She has ___ idea.", c: "an"}
+    ];
+
+    let currentIdx = 0;
+    let progress = 0;
+    let activeQuestions = db.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    function loadQ() {
+        if (currentIdx >= activeQuestions.length) { showWin(); return; }
+        document.getElementById('sentence-box').innerText = activeQuestions[currentIdx].q;
+        document.getElementById('feedback').innerText = "";
+        document.getElementById('elixir-fill').style.background = "linear-gradient(0deg, var(--alchemy-purple), var(--alchemy-glow))";
+    }
+
+    function mix(ans) {
+        const correct = activeQuestions[currentIdx].c;
+        const fb = document.getElementById('feedback');
+        const fill = document.getElementById('elixir-fill');
+
+        if (ans === correct) {
+            fb.innerText = "SUCCESS! +10%"; fb.style.color = "var(--toxic-green)";
+            progress += 10; fill.style.height = progress + "%";
+        } else {
+            fb.innerText = `IMPURE! It was ${correct.toUpperCase()}`;
+            fb.style.color = "#ff003c";
+            fill.style.background = "#ff003c";
+        }
+        currentIdx++; setTimeout(loadQ, 1000);
+    }
+
+    function showWin() {
+        document.getElementById('alchemy-board').classList.add('hidden');
+        document.getElementById('win-screen').classList.remove('hidden');
+    }
+    loadQ();
+</script>
+
+</body></html>

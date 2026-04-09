@@ -1,0 +1,176 @@
+<!DOCTYPE html><html lang="nl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardian of Grammar | Paarse Editie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --p-light: #bc13fe; --p-main: #6a1b9a; --p-dark: #4a148c;
+            --danger: #ff003c; --success: #39ff14; --gold: #ffb703;
+            --btn-a: #ff8f00; --btn-an: #2979ff; --btn-the: #00e676; 
+        }
+        body {
+            background: #05010a; color: #fff; font-family: 'Lexend', sans-serif;
+            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a0533, #05010a);
+        }
+        header {
+            background: var(--p-main); width: 100%; padding: 1rem; text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); border-bottom: 4px solid var(--gold);
+        }
+        h1 { font-family: 'Bangers'; font-size: 2.5rem; margin: 0; letter-spacing: 2px; }
+
+        #game-container {
+            width: 90vw; max-width: 600px; margin-top: 20px; text-align: center;
+            background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px;
+            border: 1px solid var(--p-light); box-shadow: 0 0 20px rgba(188, 19, 254, 0.2);
+            flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        .boss-area { margin-bottom: 30px; position: relative; }
+        .boss-sprite { font-size: 5rem; animation: float 3s infinite ease-in-out; display: inline-block; text-shadow: 0 0 20px var(--p-light); }
+        .hp-bar-container { width: 100%; height: 20px; background: #222; border-radius: 10px; margin-top: 10px; border: 2px solid #444; overflow: hidden; }
+        #boss-hp { width: 100%; height: 100%; background: linear-gradient(to right, var(--p-light), #a020f0); transition: 0.3s; }
+
+        #sentence { font-size: 1.4rem; min-height: 60px; margin: 20px 0; font-weight: bold; }
+        .btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        
+        .btn-opt { background: transparent; padding: 15px; border-radius: 10px; font-weight: 900; cursor: pointer; font-size: 1.2rem; transition: 0.2s; color: #fff; }
+        #btn-a { border: 2px solid var(--btn-a); color: var(--btn-a); }
+        #btn-a:hover { background: var(--btn-a); color: #000; }
+        #btn-an { border: 2px solid var(--btn-an); color: var(--btn-an); }
+        #btn-an:hover { background: var(--btn-an); color: #fff; }
+        #btn-the { border: 2px solid var(--btn-the); color: var(--btn-the); }
+        #btn-the:hover { background: var(--btn-the); color: #000; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes hit { 0% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } 100% { transform: translateX(0); } }
+        .shake { animation: hit 0.2s 3; }
+        .hidden { display: none !important; }
+
+        footer { width: 100%; text-align: center; padding: 1.5rem; margin-top: 30px; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid rgba(255,255,255,0.1); letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ARTICLE GUARDIAN</h1>
+    <p>DEFEAT THE DROID</p>
+</header>
+
+<div id="game-container">
+    <div id="battle-view">
+        <div class="boss-area" id="boss-box">
+            <div class="boss-sprite">👾</div>
+            <div style="font-size: 0.8rem; letter-spacing: 2px; color: var(--p-light);" id="hp-label">BOSS INTEGRITY: 100%</div>
+            <div class="hp-bar-container"><div id="boss-hp"></div></div>
+        </div>
+
+        <div id="sentence">Laden...</div>
+
+        <div class="btn-grid" id="options">
+            <button class="btn-opt" id="btn-a" onclick="check('a')">A</button>
+            <button class="btn-opt" id="btn-an" onclick="check('an')">AN</button>
+            <button class="btn-opt" id="btn-the" onclick="check('the')">THE</button>
+        </div>
+        
+        <p id="feedback" style="margin-top: 20px; font-weight: bold; min-height: 24px;"></p>
+    </div>
+
+    <div id="win-screen" class="hidden">
+        <h2 style="color: var(--success); font-size: 2rem;">GUARDIAN DEFEATED!</h2>
+        <p>Gefeliciteerd! Je hebt de droid uitgeschakeld.</p>
+        <button class="btn-opt" style="border: 2px solid var(--p-light); color: var(--p-light); background: transparent; margin-top: 20px;" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+</div>
+
+<footer>
+    © 2026, Engliforce: Make English Your Superpower!
+</footer>
+
+<script>
+    const db = [
+        // A (50)
+        {q: "I have ___ dog.", c: "a"}, {q: "She is ___ teacher.", c: "a"}, {q: "He bought ___ new car.", c: "a"}, {q: "This is ___ big house.", c: "a"}, {q: "I need ___ pen.", c: "a"},
+        {q: "There is ___ bird outside.", c: "a"}, {q: "He is ___ boy.", c: "a"}, {q: "She has ___ cat.", c: "a"}, {q: "I see ___ mountain.", c: "a"}, {q: "That is ___ laptop.", c: "a"},
+        {q: "It is ___ long way.", c: "a"}, {q: "Give me ___ minute.", c: "a"}, {q: "He is ___ doctor.", c: "a"}, {q: "She wants ___ phone.", c: "a"}, {q: "I ate ___ sandwich.", c: "a"},
+        {q: "There is ___ fly in here.", c: "a"}, {q: "He wears ___ uniform.", c: "a"}, {q: "This is ___ university.", c: "a"}, {q: "It was ___ European trip.", c: "a"}, {q: "She is ___ nurse.", c: "a"},
+        {q: "I have ___ headache.", c: "a"}, {q: "He has ___ sister.", c: "a"}, {q: "This is ___ gift for you.", c: "a"}, {q: "She found ___ coin.", c: "a"}, {q: "I need ___ map.", c: "a"},
+        {q: "He told ___ joke.", c: "a"}, {q: "It is ___ sunny day.", c: "a"}, {q: "She is ___ pilot.", c: "a"}, {q: "I saw ___ lion.", c: "a"}, {q: "That is ___ table.", c: "a"},
+        {q: "He is ___ hero.", c: "a"}, {q: "She has ___ guitar.", c: "a"}, {q: "I need ___ favor.", c: "a"}, {q: "It was ___ mistake.", c: "a"}, {q: "This is ___ secret.", c: "a"},
+        {q: "He has ___ bicycle.", c: "a"}, {q: "I want ___ pizza.", c: "a"}, {q: "She has ___ job.", c: "a"}, {q: "I saw ___ movie.", c: "a"}, {q: "He is ___ quiet child.", c: "a"},
+        {q: "Give me ___ second.", c: "a"}, {q: "It is ___ beautiful park.", c: "a"}, {q: "She is ___ dancer.", c: "a"}, {q: "I need ___ box.", c: "a"}, {q: "He found ___ key.", c: "a"},
+        {q: "That is ___ tree.", c: "a"}, {q: "I have ___ brother.", c: "a"}, {q: "She bought ___ dress.", c: "a"}, {q: "He is ___ baker.", c: "a"}, {q: "It is ___ cold day.", c: "a"},
+        // AN (50)
+        {q: "I ate ___ apple.", c: "an"}, {q: "She has ___ umbrella.", c: "an"}, {q: "He is ___ actor.", c: "an"}, {q: "It is ___ egg.", c: "an"}, {q: "I saw ___ elephant.", c: "an"},
+        {q: "Give me ___ orange.", c: "an"}, {q: "He is ___ honest man.", c: "an"}, {q: "Wait for ___ hour.", c: "an"}, {q: "She is ___ artist.", c: "an"}, {q: "It was ___ easy test.", c: "an"},
+        {q: "I have ___ idea.", c: "an"}, {q: "He is ___ engineer.", c: "an"}, {q: "She bought ___ old book.", c: "an"}, {q: "It is ___ interesting story.", c: "an"}, {q: "I saw ___ owl.", c: "an"},
+        {q: "He is ___ octopus in the game.", c: "an"}, {q: "She needs ___ eraser.", c: "an"}, {q: "It was ___ accident.", c: "an"}, {q: "I found ___ insect.", c: "an"}, {q: "He is ___ officer.", c: "an"},
+        {q: "I ate ___ ice cream.", c: "an"}, {q: "She sent ___ email.", c: "an"}, {q: "It is ___ honor to meet you.", c: "an"}, {q: "He is ___ amazing singer.", c: "an"}, {q: "I saw ___ alien movie.", c: "an"},
+        {q: "She has ___ uncle in London.", c: "an"}, {q: "It is ___ unusual name.", c: "an"}, {q: "I need ___ onion.", c: "an"}, {q: "He is ___ athlete.", c: "an"}, {q: "She has ___ appointment.", c: "an"},
+        {q: "It was ___ ugly sofa.", c: "an"}, {q: "I saw ___ eagle.", c: "an"}, {q: "He is ___ intelligent boy.", c: "an"}, {q: "She found ___ old photo.", c: "an"}, {q: "I want ___ apricot.", c: "an"},
+        {q: "It is ___ open door.", c: "an"}, {q: "He is ___ early bird.", c: "an"}, {q: "She has ___ aunt.", c: "an"}, {q: "I saw ___ ant.", c: "an"}, {q: "It is ___ expensive car.", c: "an"},
+        {q: "He is ___ expert.", c: "an"}, {q: "I need ___ aspirin.", c: "an"}, {q: "She wore ___ apron.", c: "an"}, {q: "It was ___ awful movie.", c: "an"}, {q: "I saw ___ igloo.", c: "an"},
+        {q: "He is ___ introvert.", c: "an"}, {q: "She has ___ orange bag.", c: "an"}, {q: "It is ___ enormous room.", c: "an"}, {q: "I want ___ avocado.", c: "an"}, {q: "He is ___ optimistic person.", c: "an"},
+        // THE (50)
+        {q: "___ sun is shining.", c: "the"}, {q: "___ moon is full.", c: "the"}, {q: "Open ___ door, please.", c: "the"}, {q: "Where is ___ bathroom?", c: "the"}, {q: "___ sky is blue.", c: "the"},
+        {q: "He is ___ best student.", c: "the"}, {q: "I live in ___ red house.", c: "the"}, {q: "Look at ___ stars.", c: "the"}, {q: "___ earth is round.", c: "the"}, {q: "She is ___ tallest girl.", c: "the"},
+        {q: "___ capital of France is Paris.", c: "the"}, {q: "Please turn off ___ light.", c: "the"}, {q: "___ water is cold.", c: "the"}, {q: "I am going to ___ bank.", c: "the"}, {q: "___ dinner was great.", c: "the"},
+        {q: "Who is ___ president?", c: "the"}, {q: "___ weather is nice.", c: "the"}, {q: "Close ___ window.", c: "the"}, {q: "___ end of the book was sad.", c: "the"}, {q: "I'll meet you at ___ park.", c: "the"},
+        {q: "___ floor is dirty.", c: "the"}, {q: "He plays ___ piano.", c: "the"}, {q: "___ Nile is a river.", c: "the"}, {q: "I saw ___ movie you mentioned.", c: "the"}, {q: "___ kids are playing.", c: "the"},
+        {q: "He is on ___ phone.", c: "the"}, {q: "___ Eiffel Tower is in Paris.", c: "the"}, {q: "I lost ___ keys.", c: "the"}, {q: "___ car is fast.", c: "the"}, {q: "She is in ___ kitchen.", c: "the"},
+        {q: "___ internet is slow.", c: "the"}, {q: "Read ___ first page.", c: "the"}, {q: "___ sea is calm.", c: "the"}, {q: "He is ___ owner of this shop.", c: "the"}, {q: "___ postman is here.", c: "the"},
+        {q: "I love ___ smell of flowers.", c: "the"}, {q: "___ station is far.", c: "the"}, {q: "He is at ___ airport.", c: "the"}, {q: "___ lunch was yummy.", c: "the"}, {q: "Where is ___ cat?", c: "the"},
+        {q: "___ world is big.", c: "the"}, {q: "Pass me ___ sugar.", c: "the"}, {q: "___ teacher is talking.", c: "the"}, {q: "I'll see you in ___ morning.", c: "the"}, {q: "___ bus is late.", c: "the"},
+        {q: "Watch ___ video.", c: "the"}, {q: "___ mountains are high.", c: "the"}, {q: "She lives on ___ top floor.", c: "the"}, {q: "___ cake is delicious.", c: "the"}, {q: "I read ___ newspaper.", c: "the"}
+    ];
+
+    let currentIdx = 0;
+    let bossHealth = 100;
+    // Pak 10 willekeurige vragen uit de lijst
+    let activeQuestions = db.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    function loadQ() {
+        if (currentIdx >= activeQuestions.length || bossHealth <= 0) {
+            showWin();
+            return;
+        }
+        document.getElementById('sentence').innerText = activeQuestions[currentIdx].q;
+        document.getElementById('feedback').innerText = "";
+    }
+
+    function check(ans) {
+        const correct = activeQuestions[currentIdx].c;
+        const fb = document.getElementById('feedback');
+        const bossBox = document.getElementById('boss-box');
+
+        if (ans === correct) {
+            fb.innerText = "DIRECT HIT! -10 HP";
+            fb.style.color = "var(--success)";
+            bossHealth -= 10;
+            updateHP();
+            bossBox.classList.add('shake');
+            setTimeout(() => bossBox.classList.remove('shake'), 400);
+        } else {
+            fb.innerText = `SHIELD BLOCKED! Correct was: ${correct.toUpperCase()}`;
+            fb.style.color = "var(--danger)";
+        }
+
+        currentIdx++;
+        setTimeout(loadQ, 1000);
+    }
+
+    function updateHP() {
+        document.getElementById('boss-hp').style.width = bossHealth + "%";
+        document.getElementById('hp-label').innerText = `BOSS INTEGRITY: ${bossHealth}%`;
+    }
+
+    function showWin() {
+        document.getElementById('battle-view').classList.add('hidden');
+        document.getElementById('win-screen').classList.remove('hidden');
+    }
+
+    loadQ();
+</script>
+
+</body></html>
