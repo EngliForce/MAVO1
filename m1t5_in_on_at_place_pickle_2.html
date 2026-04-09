@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="nl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Sea Treasure | EngliForce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sea-purple: #bc13fe; --sea-glow: #e0aaff;
+            --gold: #ffb703; --water-top: #1a0533; --water-bottom: #050008;
+            --bubble-color: rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            background: var(--water-bottom); color: #fff; font-family: 'Lexend', sans-serif;
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            background-image: linear-gradient(180deg, var(--water-top) 0%, var(--water-bottom) 100%);
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a148c, #1a012a);
+            padding: 0.8rem; text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 3px solid var(--gold); flex-shrink: 0; z-index: 10;
+        }
+        header h1 { font-family: 'Bangers'; font-size: 2rem; margin: 0; color: #fff; text-shadow: 0 0 10px var(--sea-purple); }
+        header p { margin: 0; font-size: 0.8rem; letter-spacing: 1px; color: var(--gold); }
+
+        #game-container {
+            flex-grow: 1; display: flex; align-items: stretch; justify-content: center;
+            padding: 10px 20px; box-sizing: border-box; overflow: hidden;
+        }
+
+        /* --- De Duik-Zone --- */
+        #descent-zone {
+            width: 80px; position: relative; margin-right: 20px;
+            border-right: 1px dashed rgba(188, 19, 254, 0.3);
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+        }
+        .diver-track { width: 100%; height: 100%; position: relative; }
+        #diver-sprite {
+            font-size: 2.5rem; position: absolute; left: 50%; transform: translateX(-50%);
+            top: 0%; transition: top 1s ease-in-out; z-index: 5;
+            animation: swimAngle 2s infinite ease-in-out;
+        }
+        @keyframes swimAngle { 0%, 100% { transform: translateX(-50%) rotate(5deg); } 50% { transform: translateX(-50%) rotate(-5deg); } }
+
+        .bubble {
+            position: absolute; border-radius: 50%; background: var(--bubble-color);
+            animation: bubbleUp 1.5s forwards ease-out; opacity: 0;
+        }
+        @keyframes bubbleUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
+
+        #treasure-chest { font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--gold)); position: relative; z-index: 4; }
+
+        /* --- Het Quiz-bord --- */
+        #hunt-board {
+            background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 30px;
+            border: 2px solid var(--sea-purple); backdrop-filter: blur(10px);
+            max-width: 500px; width: 100%; text-align: center;
+            box-shadow: 0 0 30px rgba(188, 19, 254, 0.2);
+            align-self: center;
+        }
+
+        #sentence-box {
+            font-size: 1.2rem; font-weight: bold; min-height: 90px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 25px; padding: 0 15px; line-height: 1.5;
+        }
+
+        .btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
+        .btn-opt {
+            background: #1a1a1a; border: 3px solid var(--sea-purple); border-radius: 20px;
+            padding: 18px 5px; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .btn-opt:hover { background: var(--sea-purple); border-color: var(--gold); transform: scale(1.05); }
+        .btn-opt span { font-family: 'Bangers'; font-size: 1.8rem; color: var(--gold); line-height: 1; }
+        .btn-opt small { font-size: 0.6rem; color: #fff; opacity: 0.8; letter-spacing: 1px; margin-bottom: 3px; }
+
+        .feedback { height: 30px; margin-top: 15px; font-weight: bold; font-size: 1.1rem; }
+
+        footer {
+            padding: 0.8rem; font-size: 0.75rem; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; color: #aaa;
+        }
+
+        #win-screen h2 { font-family: 'Bangers'; font-size: 2.5rem; color: var(--gold); margin: 0; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>DEEP SEA TREASURE</h1>
+    <p>MASTER IN, ON, AT (A1/A2)</p>
+</header>
+
+<div id="game-container">
+    <div id="descent-zone">
+        <div class="diver-track">
+            <div id="diver-sprite">🤿</div>
+        </div>
+        <div id="treasure-chest">💰</div>
+    </div>
+
+    <div id="hunt-board">
+        <div id="sentence-box">Laden...</div>
+        <div class="btn-grid">
+            <div class="btn-opt" onclick="check('in')"><small>LOCATION</small><span>IN</span></div>
+            <div class="btn-opt" onclick="check('on')"><small>LOCATION</small><span>ON</span></div>
+            <div class="btn-opt" onclick="check('at')"><small>LOCATION</small><span>AT</span></div>
+        </div>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div id="win-screen" class="hidden" style="text-align: center; align-self: center;">
+        <div style="font-size: 5rem; margin-bottom: 10px;">🏆</div>
+        <h2>TREASURE FOUND!</h2>
+        <p>You completed your mission!</p>
+        <button onclick="location.reload()" style="background:var(--sea-purple); border:none; color:white; padding:12px 30px; border-radius:20px; cursor:pointer; font-weight:bold; margin-top:15px; font-family:'Lexend';">DIVE AGAIN</button>
+    </div>
+</div>
+
+<footer>
+    © 2026, EngliForce: Make English Your Superpower!
+</footer>
+
+<script>
+    const db = [
+        // IN (50)
+        {q: "The fish is ___ the water.", c: "in"}, {q: "I am ___ the kitchen.", c: "in"}, {q: "The keys are ___ my bag.", c: "in"}, {q: "He lives ___ London.", c: "in"}, {q: "She is ___ the car.", c: "in"},
+        {q: "The cat is ___ the box.", c: "in"}, {q: "I see a bird ___ the sky.", c: "in"}, {q: "We are ___ the park.", c: "in"}, {q: "Paris is ___ France.", c: "in"}, {q: "He is ___ the garden.", c: "in"},
+        {q: "The milk is ___ the fridge.", c: "in"}, {q: "She is ___ the pool.", c: "in"}, {q: "Put the letter ___ the envelope.", c: "in"}, {q: "The pen is ___ my pocket.", c: "in"}, {q: "We are ___ the elevator.", c: "in"},
+        {q: "He is ___ the bedroom.", c: "in"}, {q: "I am ___ the classroom.", c: "in"}, {q: "The gift is ___ the drawer.", c: "in"}, {q: "She is ___ the taxi.", c: "in"}, {q: "He is ___ the hospital.", c: "in"},
+        {q: "It is ___ the basket.", c: "in"}, {q: "They are ___ the woods.", c: "in"}, {q: "The money is ___ the bank.", c: "in"}, {q: "I saw it ___ the news.", c: "in"}, {q: "She is ___ the photo.", c: "in"},
+        {q: "He is ___ the shower.", c: "in"}, {q: "I live ___ a village.", c: "in"}, {q: "The fly is ___ my soup.", c: "in"}, {q: "It is ___ the jar.", c: "in"}, {q: "She is ___ the library.", c: "in"},
+        {q: "The students are ___ the hall.", c: "in"}, {q: "I am ___ the mountains.", c: "in"}, {q: "They are ___ the boat.", c: "in"}, {q: "The doll is ___ the box.", c: "in"}, {q: "He is ___ the attic.", c: "in"},
+        {q: "She is ___ the shop.", c: "in"}, {q: "I am ___ the basement.", c: "in"}, {q: "The spider is ___ the cup.", c: "in"}, {q: "He lives ___ Japan.", c: "in"}, {q: "The ball is ___ the net.", c: "in"},
+        {q: "She is ___ the hallway.", c: "in"}, {q: "I am ___ the rain.", c: "in"}, {q: "The juice is ___ the glass.", c: "in"}, {q: "He is ___ a meeting.", c: "in"}, {q: "She is ___ the supermarket.", c: "in"},
+        {q: "I am ___ the cinema.", c: "in"}, {q: "It is ___ the book.", c: "in"}, {q: "He is ___ the bed.", c: "in"}, {q: "She is ___ the sea.", c: "in"}, {q: "We are ___ the room.", c: "in"},
+
+        // ON (50)
+        {q: "The book is ___ the table.", c: "on"}, {q: "The poster is ___ the wall.", c: "on"}, {q: "I am ___ the bus.", c: "on"}, {q: "He sat ___ the chair.", c: "on"}, {q: "The cat is ___ the roof.", c: "on"},
+        {q: "I am ___ the train.", c: "on"}, {q: "The fly is ___ the ceiling.", c: "on"}, {q: "Write ___ the paper.", c: "on"}, {q: "He is ___ his bike.", c: "on"}, {q: "I live ___ the first floor.", c: "on"},
+        {q: "The plate is ___ the shelf.", c: "on"}, {q: "She is ___ the plane.", c: "on"}, {q: "The glass is ___ the floor.", c: "on"}, {q: "He is ___ a horse.", c: "on"}, {q: "Look ___ the map.", c: "on"},
+        {q: "The keys are ___ the desk.", c: "on"}, {q: "I am ___ the beach.", c: "on"}, {q: "The boat is ___ the lake.", c: "on"}, {q: "He lives ___ an island.", c: "on"}, {q: "The food is ___ the menu.", c: "on"},
+        {q: "The clock is ___ the wall.", c: "on"}, {q: "She is ___ her computer.", c: "on"}, {q: "The stamp is ___ the envelope.", c: "on"}, {q: "He is ___ the stairs.", c: "on"}, {q: "The hat is ___ his head.", c: "on"},
+        {q: "I am ___ my way.", c: "on"}, {q: "The shop is ___ the left.", c: "on"}, {q: "He is ___ the grass.", c: "on"}, {q: "The ring is ___ her finger.", c: "on"}, {q: "It is ___ the radio.", c: "on"},
+        {q: "The shoes are ___ the rug.", c: "on"}, {q: "He is ___ the deck.", c: "on"}, {q: "She is ___ the balcony.", c: "on"}, {q: "I am ___ the guest list.", c: "on"}, {q: "The stain is ___ the shirt.", c: "on"},
+        {q: "The house is ___ the river.", c: "on"}, {q: "He is ___ the bridge.", c: "on"}, {q: "She is ___ the stage.", c: "on"}, {q: "The cup is ___ the saucer.", c: "on"}, {q: "I live ___ Main Street.", c: "on"},
+        {q: "He is ___ the tractor.", c: "on"}, {q: "The labels are ___ the cans.", c: "on"}, {q: "She is ___ the phone.", c: "on"}, {q: "I am ___ the team.", c: "on"}, {q: "It is ___ the news.", c: "on"},
+        {q: "He has a cut ___ his leg.", c: "on"}, {q: "The snow is ___ the ground.", c: "on"}, {q: "The laptop is ___ your lap.", c: "on"}, {q: "The picture is ___ the screen.", c: "on"}, {q: "He is ___ the platform.", c: "on"},
+
+        // AT (50)
+        {q: "Meet me ___ the bus stop.", c: "at"}, {q: "He is ___ home.", c: "at"}, {q: "She is ___ school.", c: "at"}, {q: "I am ___ work.", c: "at"}, {q: "I'll see you ___ the station.", c: "at"},
+        {q: "Turn left ___ the light.", c: "at"}, {q: "He is ___ the door.", c: "at"}, {q: "She is ___ the window.", c: "at"}, {q: "Meet me ___ the corner.", c: "at"}, {q: "I am ___ the entrance.", c: "at"},
+        {q: "He is ___ the doctor's.", c: "at"}, {q: "She is ___ university.", c: "at"}, {q: "I am ___ a party.", c: "at"}, {q: "He is sitting ___ the desk.", c: "at"}, {q: "Look ___ the top of the page.", c: "at"},
+        {q: "She is ___ the bottom of the stairs.", c: "at"}, {q: "I am ___ the airport.", c: "at"}, {q: "He is ___ the cinema.", c: "at"}, {q: "She works ___ the office.", c: "at"}, {q: "I am ___ the restaurant.", c: "at"},
+        {q: "He is ___ the library.", c: "at"}, {q: "Meet me ___ the front.", c: "at"}, {q: "She is ___ the zoo.", c: "at"}, {q: "I am ___ the mall.", c: "at"}, {q: "He is ___ the supermarket.", c: "at"},
+        {q: "She is ___ the end of the road.", c: "at"}, {q: "I am ___ the park gate.", c: "at"}, {q: "He is ___ the office.", c: "at"}, {q: "She is ___ the bank.", c: "at"}, {q: "I am ___ the hotel.", c: "at"},
+        {q: "He is ___ the bar.", c: "at"}, {q: "She is ___ the theater.", c: "at"}, {q: "I am ___ the museum.", c: "at"}, {q: "He is ___ the castle.", c: "at"}, {q: "She is ___ the gym.", c: "at"},
+        {q: "I am ___ the beach cafe.", c: "at"}, {q: "He is ___ the stadium.", c: "at"}, {q: "She is ___ the bus station.", c: "at"}, {q: "I am ___ the dinner table.", c: "at"}, {q: "He is ___ the reception.", c: "at"},
+        {q: "She is ___ the post office.", c: "at"}, {q: "I am ___ the church.", c: "at"}, {q: "He is ___ the crossroads.", c: "at"}, {q: "She is ___ the bakery.", c: "at"}, {q: "I am ___ the pub.", c: "at"},
+        {q: "He is ___ the gate.", c: "at"}, {q: "She is ___ the counter.", c: "at"}, {q: "I am ___ the bridge.", c: "at"}, {q: "He is ___ the match.", c: "at"}, {q: "She is ___ the concert.", c: "at"}
+    ];
+
+    // Automatische aanvulling voor demonstratie (vul dit aan met jouw 150 zinnen)
+    while(db.length < 150) {
+        db.push({q: "The diver found a secret ___ the sand.", c: "in"});
+    }
+
+    let currentIdx = 0;
+    let progress = 0;
+    let activeQuestions = db.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    function loadQ() {
+        if (currentIdx >= 10) { showWin(); return; }
+        document.getElementById('sentence-box').innerText = activeQuestions[currentIdx].q;
+        document.getElementById('feedback').innerText = "";
+    }
+
+    function check(ans) {
+        const correct = activeQuestions[currentIdx].c;
+        const fb = document.getElementById('feedback');
+        const diver = document.getElementById('diver-sprite');
+
+        if (ans === correct) {
+            fb.innerText = "SPLASH! CORRECT! 🌊"; fb.style.color = "var(--sea-glow)";
+            progress += 10;
+            diver.style.top = (progress * 0.85) + "%"; 
+            createBubbles();
+        } else {
+            fb.innerText = `BUBBLES! Correct was: ${correct.toUpperCase()}`;
+            fb.style.color = "#ff003c";
+        }
+        currentIdx++; 
+        setTimeout(loadQ, 1300);
+    }
+
+    function createBubbles() {
+        const track = document.querySelector('.diver-track');
+        for (let i = 0; i < 6; i++) {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            b.style.width = (Math.random() * 8 + 4) + "px";
+            b.style.height = b.style.width;
+            b.style.left = (40 + Math.random() * 20) + "%";
+            b.style.top = document.getElementById('diver-sprite').style.top;
+            track.appendChild(b);
+            setTimeout(() => b.remove(), 1500);
+        }
+    }
+
+    function showWin() {
+        document.getElementById('descent-zone').classList.add('hidden');
+        document.getElementById('hunt-board').classList.add('hidden');
+        document.getElementById('win-screen').classList.remove('hidden');
+    }
+    
+    loadQ();
+</script>
+</body></html>

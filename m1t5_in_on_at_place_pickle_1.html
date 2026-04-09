@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="nl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Explorer: Place | EngliForce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --space-purple: #bc13fe; --space-glow: #e0aaff;
+            --radar-green: #39ff14; --gold: #ffb703;
+            --deep-space: #050008;
+        }
+
+        body {
+            background: var(--deep-space); color: #fff; font-family: 'Lexend', sans-serif;
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #1a0533, #050008);
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a148c, #1a012a);
+            padding: 0.8rem; text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 3px solid var(--gold); flex-shrink: 0; z-index: 10;
+        }
+        header h1 { font-family: 'Bangers'; font-size: 2rem; margin: 0; color: #fff; text-shadow: 0 0 10px var(--space-purple); }
+        header p { margin: 0; font-size: 0.8rem; letter-spacing: 1px; color: var(--gold); }
+
+        #game-container {
+            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 10px 20px; width: 100%; box-sizing: border-box;
+        }
+
+        #radar-screen {
+            background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 50%;
+            border: 2px solid var(--space-purple); box-shadow: 0 0 30px rgba(188, 19, 254, 0.3);
+            width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;
+            margin-bottom: 15px; position: relative; overflow: hidden;
+        }
+        /* Radar sweep effect */
+        #radar-screen::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background: conic-gradient(from 0deg, transparent, rgba(188, 19, 254, 0.4));
+            animation: sweep 3s linear infinite; border-radius: 50%;
+        }
+        @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .ship-icon { font-size: 3rem; z-index: 2; position: relative; filter: drop-shadow(0 0 10px var(--space-glow)); }
+
+        #sentence-box {
+            font-size: 1.2rem; font-weight: bold; min-height: 70px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; text-align: center; max-width: 500px;
+            background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 15px;
+        }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 500px; }
+        .nav-btn {
+            background: #1a1a1a; border: 2px solid var(--space-purple); border-radius: 12px;
+            padding: 15px 5px; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .nav-btn:hover { background: var(--space-purple); border-color: var(--gold); transform: translateY(-3px); }
+        .nav-btn span { font-family: 'Bangers'; font-size: 1.8rem; color: var(--gold); line-height: 1; }
+        .nav-btn small { font-size: 0.6rem; color: #fff; opacity: 0.8; letter-spacing: 1px; margin-bottom: 4px; }
+
+        .feedback { height: 30px; margin-top: 15px; font-weight: bold; font-size: 1rem; }
+
+        footer {
+            padding: 0.8rem; font-size: 0.75rem; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; color: #aaa;
+        }
+
+        #win-screen h2 { font-family: 'Bangers'; font-size: 2.2rem; color: var(--gold); margin-bottom: 10px; }
+        #win-screen button {
+            background: var(--space-purple); border: 2px solid var(--gold); color: white;
+            padding: 12px 30px; border-radius: 25px; cursor: pointer; font-weight: bold; font-family: 'Lexend';
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>SPACE EXPLORER: PLACE</h1>
+    <p>NAVIGATE THE GALAXY MAP</p>
+</header>
+
+<div id="game-container">
+    <div id="explorer-view" style="display: flex; flex-direction: column; align-items: center;">
+        <div id="radar-screen">
+            <div class="ship-icon">🚀</div>
+        </div>
+
+        <div id="sentence-box">Initializing Navigation...</div>
+
+        <div class="nav-grid">
+            <div class="nav-btn" onclick="navigate('in')">
+                <small>COORDINATE</small>
+                <span>IN</span>
+            </div>
+            <div class="nav-btn" onclick="navigate('on')">
+                <small>COORDINATE</small>
+                <span>ON</span>
+            </div>
+            <div class="nav-btn" onclick="navigate('at')">
+                <small>COORDINATE</small>
+                <span>AT</span>
+            </div>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div id="win-screen" class="hidden" style="text-align: center;">
+        <h2>MAP COMPLETE! 🛸</h2>
+        <p>Je hebt de planeet succesvol verkend.</p>
+        <button onclick="location.reload()">NEW MISSION</button>
+    </div>
+</div>
+
+<footer>
+    © 2026, EngliForce: Make English Your Superpower!
+</footer>
+
+<script>
+    const db = [
+        // IN (50) - Containers, spaces, cities, countries
+        {q: "The alien is hiding ___ the cave.", c: "in"}, {q: "My keys are ___ my pocket.", c: "in"}, {q: "He lives ___ London.", c: "in"}, {q: "The water is ___ the bottle.", c: "in"}, {q: "She is ___ the kitchen.", c: "in"},
+        {q: "I am ___ the car.", c: "in"}, {q: "The stars are ___ the sky.", c: "in"}, {q: "They are ___ the garden.", c: "in"}, {q: "Paris is ___ France.", c: "in"}, {q: "The robot is ___ the box.", c: "in"},
+        {q: "I found a coin ___ the sand.", c: "in"}, {q: "The fish swim ___ the sea.", c: "in"}, {q: "He is ___ the living room.", c: "in"}, {q: "She works ___ an office.", c: "in"}, {q: "The book is ___ my bag.", c: "in"},
+        {q: "We are ___ the elevator.", c: "in"}, {q: "I am ___ the classroom.", c: "in"}, {q: "There is a fly ___ the soup.", c: "in"}, {q: "He is ___ the hospital.", c: "in"}, {q: "The gift is ___ the drawer.", c: "in"},
+        {q: "She is ___ the pool.", c: "in"}, {q: "The money is ___ the bank.", c: "in"}, {q: "He is ___ the shower.", c: "in"}, {q: "I left it ___ the taxi.", c: "in"}, {q: "The bird is ___ the cage.", c: "in"},
+        {q: "We live ___ a small town.", c: "in"}, {q: "He is ___ the woods.", c: "in"}, {q: "She is ___ the photo.", c: "in"}, {q: "I saw it ___ the newspaper.", c: "in"}, {q: "The cat is ___ the basket.", c: "in"},
+        {q: "He is ___ a meeting.", c: "in"}, {q: "They are ___ the park.", c: "in"}, {q: "The treasure is ___ the chest.", c: "in"}, {q: "She is ___ the library.", c: "in"}, {q: "He works ___ the city center.", c: "in"},
+        {q: "I am ___ the basement.", c: "in"}, {q: "The spider is ___ the jar.", c: "in"}, {q: "The milk is ___ the fridge.", c: "in"}, {q: "He is ___ the bedroom.", c: "in"}, {q: "She is ___ the hallway.", c: "in"},
+        {q: "I am ___ the mountains.", c: "in"}, {q: "The ship is ___ the harbor.", c: "in"}, {q: "He is ___ the rain.", c: "in"}, {q: "The pen is ___ the cup.", c: "in"}, {q: "They live ___ the USA.", c: "in"},
+        {q: "He is ___ the attic.", c: "in"}, {q: "She is ___ the supermarket.", c: "in"}, {q: "The plane is ___ the clouds.", c: "in"}, {q: "The ball is ___ the net.", c: "in"}, {q: "I am ___ the shop.", c: "in"},
+
+        // ON (50) - Surfaces, lines, islands, transport
+        {q: "The book is ___ the table.", c: "on"}, {q: "There is a spider ___ the ceiling.", c: "on"}, {q: "I am ___ the bus.", c: "on"}, {q: "He sat ___ the chair.", c: "on"}, {q: "The poster is ___ the wall.", c: "on"},
+        {q: "She is ___ the plane.", c: "on"}, {q: "The glass is ___ the floor.", c: "on"}, {q: "He is ___ the train.", c: "on"}, {q: "The cat is ___ the roof.", c: "on"}, {q: "Look ___ the map.", c: "on"},
+        {q: "I live ___ the third floor.", c: "on"}, {q: "The keys are ___ the counter.", c: "on"}, {q: "He is ___ his bike.", c: "on"}, {q: "She is ___ a horse.", c: "on"}, {q: "The boat is ___ the river.", c: "on"},
+        {q: "He lives ___ an island.", c: "on"}, {q: "I am ___ the beach.", c: "on"}, {q: "The plate is ___ the shelf.", c: "on"}, {q: "Write ___ the paper.", c: "on"}, {q: "He is ___ the telephone.", c: "on"},
+        {q: "The shop is ___ the left.", c: "on"}, {q: "I saw it ___ TV.", c: "on"}, {q: "He is ___ the grass.", c: "on"}, {q: "The ring is ___ her finger.", c: "on"}, {q: "The cup is ___ the saucer.", c: "on"},
+        {q: "I live ___ Main Street.", c: "on"}, {q: "The labels are ___ the bottles.", c: "on"}, {q: "He is ___ the deck.", c: "on"}, {q: "She is ___ the balcony.", c: "on"}, {q: "The shoes are ___ the rug.", c: "on"},
+        {q: "He is ___ the platform.", c: "on"}, {q: "The ship is ___ the ocean.", c: "on"}, {q: "I am ___ my way.", c: "on"}, {q: "The food is ___ the menu.", c: "on"}, {q: "He has a cut ___ his leg.", c: "on"},
+        {q: "The house is ___ the lake.", c: "on"}, {q: "The clock is ___ the wall.", c: "on"}, {q: "She is ___ the computer.", c: "on"}, {q: "The stamp is ___ the envelope.", c: "on"}, {q: "He is ___ the tractor.", c: "on"},
+        {q: "I am ___ the stairs.", c: "on"}, {q: "The snow is ___ the ground.", c: "on"}, {q: "The laptop is ___ the desk.", c: "on"}, {q: "He is ___ the bridge.", c: "on"}, {q: "She is ___ the stage.", c: "on"},
+        {q: "The fly is ___ the window.", c: "on"}, {q: "I am ___ the guest list.", c: "on"}, {q: "He is ___ the team.", c: "on"}, {q: "The stain is ___ the shirt.", c: "on"}, {q: "The hat is ___ his head.", c: "on"},
+
+        // AT (50) - Specific points, events, workplaces
+        {q: "I will meet you ___ the station.", c: "at"}, {q: "He is waiting ___ the bus stop.", c: "at"}, {q: "She is ___ school.", c: "at"}, {q: "He is ___ home.", c: "at"}, {q: "I am ___ work.", c: "at"},
+        {q: "Turn left ___ the traffic light.", c: "at"}, {q: "He is ___ the top of the hill.", c: "at"}, {q: "She is ___ the bottom of the page.", c: "at"}, {q: "I am ___ the entrance.", c: "at"}, {q: "He is ___ the doctor's.", c: "at"},
+        {q: "We are ___ a party.", c: "at"}, {q: "She is ___ the end of the hall.", c: "at"}, {q: "He is sitting ___ the desk.", c: "at"}, {q: "I'll see you ___ the airport.", c: "at"}, {q: "He is ___ the front door.", c: "at"},
+        {q: "She is ___ the window.", c: "at"}, {q: "He is ___ the cinema.", c: "at"}, {q: "I am ___ the hairdresser's.", c: "at"}, {q: "Meet me ___ the corner.", c: "at"}, {q: "She is ___ university.", c: "at"},
+        {q: "He is ___ the supermarket checkout.", c: "at"}, {q: "We are ___ the concert.", c: "at"}, {q: "He is ___ the bakery.", c: "at"}, {q: "She is ___ the library entrance.", c: "at"}, {q: "I am ___ the bar.", c: "at"},
+        {q: "He is ___ the shore.", c: "at"}, {q: "She is ___ the dinner table.", c: "at"}, {q: "He is ___ the reception desk.", c: "at"}, {q: "I am ___ the mall.", c: "at"}, {q: "He is ___ the game.", c: "at"},
+        {q: "She is ___ the bus station.", c: "at"}, {q: "He is ___ the gate.", c: "at"}, {q: "I am ___ the hotel.", c: "at"}, {q: "She is ___ the restaurant.", c: "at"}, {q: "He is ___ the gym.", c: "at"},
+        {q: "I am ___ the office.", c: "at"}, {q: "She is ___ the zoo.", c: "at"}, {q: "He is ___ the beach cafe.", c: "at"}, {q: "I am ___ the crossroads.", c: "at"}, {q: "He is ___ the stadium.", c: "at"},
+        {q: "She is ___ the museum.", c: "at"}, {q: "He is ___ the castle.", c: "at"}, {q: "I am ___ the hospital door.", c: "at"}, {q: "She is ___ the counter.", c: "at"}, {q: "He is ___ the post office.", c: "at"},
+        {q: "I am ___ the church.", c: "at"}, {q: "She is ___ the theater.", c: "at"}, {q: "He is ___ the bus terminal.", c: "at"}, {q: "I am ___ the pub.", c: "at"}, {q: "He is ___ the bridge's end.", c: "at"}
+    ];
+
+    let currentIdx = 0;
+    let activeQuestions = db.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    function loadQ() {
+        if (currentIdx >= activeQuestions.length) { showWin(); return; }
+        document.getElementById('sentence-box').innerText = activeQuestions[currentIdx].q;
+        document.getElementById('feedback').innerText = "";
+    }
+
+    function navigate(ans) {
+        const correct = activeQuestions[currentIdx].c;
+        const fb = document.getElementById('feedback');
+        const radar = document.getElementById('radar-screen');
+
+        if (ans === correct) {
+            fb.innerText = "COORDINATES MATCHED! 🌌"; fb.style.color = "var(--radar-green)";
+            radar.style.borderColor = "var(--radar-green)";
+            setTimeout(() => radar.style.borderColor = "var(--space-purple)", 500);
+        } else {
+            fb.innerText = `ERROR! Should be: ${correct.toUpperCase()}`;
+            fb.style.color = "#ff003c";
+            radar.style.borderColor = "#ff003c";
+            setTimeout(() => radar.style.borderColor = "var(--space-purple)", 500);
+        }
+        currentIdx++; setTimeout(loadQ, 1200);
+    }
+
+    function showWin() {
+        document.getElementById('explorer-view').classList.add('hidden');
+        document.getElementById('win-screen').classList.remove('hidden');
+    }
+    loadQ();
+</script>
+
+</body></html>
