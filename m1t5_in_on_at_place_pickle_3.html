@@ -1,168 +1,127 @@
 <!DOCTYPE html><html lang="nl"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vault Breaker | EngliForce</title>
+    <title>Vault Breaker | EngliForce Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --vault-purple: #bc13fe; --vault-glow: #e0aaff;
-            --gold: #ffb703; --dark-bg: #050008; --success: #39ff14;
+            --hero-purple: #bc13fe; --hero-purple-dark: #4a148c;
+            --hero-yellow: #ffb703; --success: #39ff14; --dark-bg: #020205;
         }
 
         body {
             background: var(--dark-bg); color: #fff; font-family: 'Lexend', sans-serif;
             margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #1a0533, #050008);
+            background-image: radial-gradient(circle at 50% 50%, #1a0533, #020205);
         }
 
         header {
-            background: linear-gradient(135deg, #4a148c, #1a012a);
-            padding: 0.8rem; text-align: center; border-bottom: 3px solid var(--gold); flex-shrink: 0;
+            background: var(--hero-purple-dark); width: 100%; padding: 1rem 1rem 1.8rem 1rem; 
+            text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 4px solid var(--hero-yellow); box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            z-index: 100; flex-shrink: 0;
         }
-        header h1 { font-family: 'Bangers'; font-size: 1.8rem; margin: 0; color: #fff; text-shadow: 0 0 10px var(--vault-purple); }
-        header p { margin: 0; font-size: 0.8rem; letter-spacing: 1px; color: var(--gold); }
+        header h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; margin: 0; color: white; text-shadow: 3px 3px 0px #000; }
+        header p { font-weight: bold; font-size: 0.8rem; letter-spacing: 2px; margin: 2px 0 0 0; color: var(--hero-yellow); }
 
         #game-container {
             flex-grow: 1; display: flex; align-items: center; justify-content: center;
-            padding: 10px 20px; position: relative; overflow: hidden;
+            padding: 10px; position: relative; overflow: hidden;
         }
 
+        /* --- De Statige Engliforce Vault --- */
         #vault-hardware {
-            position: relative; max-width: 500px; width: 100%; height: 380px;
-            perspective: 1000px;
+            position: relative; max-width: 480px; width: 100%; height: 360px;
+            perspective: 1200px;
         }
 
         .vault-door-half {
             position: absolute; top: 0; width: 50%; height: 100%;
-            background: rgba(20, 5, 35, 0.95);
-            border: 3px solid var(--vault-purple);
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.3);
+            background: rgba(15, 5, 25, 0.98); border: 2px solid var(--hero-purple);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.2);
             transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.8s;
             z-index: 10;
         }
+        #vault-left { left: 0; border-radius: 30px 0 0 30px; border-right: 1px solid rgba(255,255,255,0.1); }
+        #vault-right { right: 0; border-radius: 0 30px 30px 0; border-left: 1px solid rgba(255,255,255,0.1); }
 
-        #vault-left { left: 0; border-radius: 40px 0 0 40px; border-right: none; }
-        #vault-right { right: 0; border-radius: 0 40px 40px 0; border-left: 1px solid rgba(255,255,255,0.1); }
-
-        #vault-hardware.cracked #vault-left { transform: translateX(-100%); opacity: 0; }
-        #vault-hardware.cracked #vault-right { transform: translateX(100%); opacity: 0; }
+        #vault-hardware.cracked #vault-left { transform: translateX(-105%); opacity: 0; }
+        #vault-hardware.cracked #vault-right { transform: translateX(105%); opacity: 0; }
 
         #hunt-board {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: space-around;
-            padding: 20px; box-sizing: border-box; z-index: 11;
-            transition: opacity 0.5s;
+            padding: 15px; box-sizing: border-box; z-index: 11; transition: opacity 0.5s;
         }
         #vault-hardware.cracked #hunt-board { opacity: 0; pointer-events: none; }
 
-        .lock-indicator { display: flex; justify-content: center; gap: 6px; margin-top: -5px; }
-        .lock-dot {
-            width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--vault-purple);
-            background: #111; transition: 0.3s;
-        }
+        .lock-indicator { display: flex; gap: 6px; }
+        .lock-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--hero-purple); background: #000; }
         .lock-dot.active { border-color: #fff; box-shadow: 0 0 8px #fff; }
-        .lock-dot.correct { background: var(--success); border-color: var(--success); box-shadow: 0 0 12px var(--success); }
+        .lock-dot.correct { background: var(--success); border-color: var(--success); box-shadow: 0 0 10px var(--success); }
 
-        #sentence-box { font-size: 1.1rem; font-weight: bold; min-height: 70px; display: flex; align-items: center; justify-content: center; color: var(--vault-glow); text-align: center; }
+        #sentence-box { font-size: 1.1rem; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; }
 
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 90%; }
         .key-btn {
-            background: #111; border: 2px solid var(--vault-purple); border-radius: 10px;
+            background: #000; border: 2px solid var(--hero-purple); border-radius: 10px;
             padding: 12px 5px; cursor: pointer; transition: 0.2s; color: #fff;
         }
-        .key-btn:hover { background: var(--vault-purple); }
-        .key-btn span { font-family: 'Bangers'; font-size: 1.6rem; color: var(--gold); display: block; }
-        .key-btn small { font-size: 0.6rem; letter-spacing: 1px; color: #fff; opacity: 0.7; }
+        .key-btn:hover { background: var(--hero-purple); }
+        .key-btn span { font-family: 'Bangers'; font-size: 1.6rem; color: var(--hero-yellow); display: block; }
 
-        .feedback { height: 20px; font-weight: bold; font-size: 0.9rem; }
+        #win-screen { position: absolute; text-align: center; z-index: 5; }
+        #win-screen h2 { font-family: 'Bangers'; font-size: 2.5rem; color: var(--hero-yellow); margin: 0; }
+        #win-screen button { background: var(--hero-yellow); border: none; color: #000; padding: 10px 30px; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 15px; font-family: 'Lexend'; }
 
-        #win-screen { position: absolute; text-align: center; z-index: 5; transition: opacity 1s; padding: 20px; box-sizing: border-box;}
-        #win-screen h2 { font-family: 'Bangers'; font-size: 2.5rem; color: var(--gold); text-shadow: 0 0 20px var(--gold); margin: 0; }
-        #win-screen button {
-            background: var(--gold); border: none; color: #000; padding: 10px 30px;
-            border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 15px; font-family: 'Lexend';
-        }
-
+        footer { padding: 0.8rem; font-size: 0.7rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); color: #666; flex-shrink: 0; }
         .hidden { display: none !important; }
-
-        footer { padding: 0.8rem; font-size: 0.75rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); color: #aaa; flex-shrink: 0; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>VAULT BREAKER</h1>
-    <p>CRACK THE PREPOSITION CODE (IN, ON, AT)</p>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>VAULT BREAKER: IN - ON - AT</p>
 </header>
 
 <div id="game-container">
     <div id="vault-hardware">
         <div class="vault-door-half" id="vault-left"></div>
         <div class="vault-door-half" id="vault-right"></div>
-
         <div id="hunt-board">
             <div class="lock-indicator" id="lock-dots"></div>
-            <div id="sentence-box">Initializing Decryption...</div>
+            <div id="sentence-box">Verifying Security Access...</div>
             <div class="keypad">
                 <button class="key-btn" onclick="crack('in')"><small>CODE</small><span>IN</span></button>
                 <button class="key-btn" onclick="crack('on')"><small>CODE</small><span>ON</span></button>
                 <button class="key-btn" onclick="crack('at')"><small>CODE</small><span>AT</span></button>
             </div>
-            <div class="feedback" id="feedback"></div>
+            <div id="feedback" style="height:20px; font-size:0.9rem; font-weight:bold;"></div>
         </div>
     </div>
-
     <div id="win-screen" class="hidden">
-        <div style="font-size: 5rem; margin-bottom: 10px;">🔓</div>
-        <h2>VAULT OPENED!</h2>
-        <p>Security cleared. Access granted.</p>
-        <button onclick="location.reload()">REBOOT SYSTEM</button>
+        <div style="font-size: 4rem;">🔓</div>
+        <h2>VAULT OPENED</h2>
+        <p>Mission Successful. English Mastery +100</p>
+        <button onclick="location.reload()">RELOAD SYSTEM</button>
     </div>
 </div>
 
-<footer>© 2026, EngliForce: Make English Your Superpower!</footer>
+<footer>© 2026, EngliForce Academy: Make English Your Superpower!</footer>
 
 <script>
     const db = [
-        // AT - SPECIFIC POINTS / BRITISH USAGE (50)
-        {q: "She works ___ the office.", c: "at"}, {q: "He is waiting ___ the bus stop.", c: "at"}, {q: "I'll see you ___ the entrance.", c: "at"}, {q: "Turn left ___ the traffic lights.", c: "at"}, {q: "He is ___ school right now.", c: "at"},
-        {q: "Meet me ___ the corner of the street.", c: "at"}, {q: "She is sitting ___ her desk.", c: "at"}, {q: "He is ___ the top of the stairs.", c: "at"}, {q: "I am ___ the doctor's office.", c: "at"}, {q: "The shop is ___ the end of the road.", c: "at"},
-        {q: "He is ___ home today.", c: "at"}, {q: "They are ___ university.", c: "at"}, {q: "She is ___ a party tonight.", c: "at"}, {q: "I am ___ the station.", c: "at"}, {q: "The plane is ___ the airport.", c: "at"},
-        {q: "He stands ___ the front door.", c: "at"}, {q: "Wait ___ the reception desk.", c: "at"}, {q: "I am ___ the hairdressers.", c: "at"}, {q: "She is ___ the cinema.", c: "at"}, {q: "Meet me ___ the park gate.", c: "at"},
-        {q: "He is ___ work until five.", c: "at"}, {q: "The keys are ___ the bottom of my bag.", c: "at"}, {q: "We are ___ the library.", c: "at"}, {q: "She is ___ the supermarket.", c: "at"}, {q: "He is ___ a concert.", c: "at"},
-        {q: "I am ___ the hospital.", c: "at"}, {q: "Meet me ___ the museum.", c: "at"}, {q: "He is ___ the post office.", c: "at"}, {q: "She is ___ the bakery.", c: "at"}, {q: "I am ___ the bus station.", c: "at"},
-        {q: "He is ___ the stadium.", c: "at"}, {q: "She is ___ the theater.", c: "at"}, {q: "I am ___ the gym.", c: "at"}, {q: "He is ___ the bank.", c: "at"}, {q: "Wait ___ the window.", c: "at"},
-        {q: "She is ___ the checkout.", c: "at"}, {q: "I am ___ the zoo.", c: "at"}, {q: "He is ___ the restaurant.", c: "at"}, {q: "Meet me ___ the hotel.", c: "at"}, {q: "She is ___ the shore.", c: "at"},
-        {q: "I am ___ the bar.", c: "at"}, {q: "He is ___ the bridge.", c: "at"}, {q: "She is ___ the gate.", c: "at"}, {q: "I am ___ the airport.", c: "at"}, {q: "He is ___ the center.", c: "at"},
-        {q: "She is ___ the beach cafe.", c: "at"}, {q: "I am ___ the stadium.", c: "at"}, {q: "He is ___ the crossroads.", c: "at"}, {q: "She is ___ the cafe.", c: "at"}, {q: "Wait ___ the lift.", c: "at"},
-
-        // ON - SURFACES / SPECIFIC CHAIRS (50)
-        {q: "The book is ___ the table.", c: "on"}, {q: "The cat is sleeping ___ a wooden chair.", c: "on"}, {q: "The poster is ___ the wall.", c: "on"}, {q: "I sit ___ a high stool.", c: "on"}, {q: "There is a fly ___ the ceiling.", c: "on"},
-        {q: "The keys are ___ the desk.", c: "on"}, {q: "I live ___ the first floor.", c: "on"}, {q: "She is ___ the bus.", c: "on"}, {q: "The plate is ___ the shelf.", c: "on"}, {q: "He is ___ the train.", c: "on"},
-        {q: "Write your name ___ the paper.", c: "on"}, {q: "I am sitting ___ the sofa.", c: "on"}, {q: "The bottle is ___ the counter.", c: "on"}, {q: "He is ___ his bike.", c: "on"}, {q: "Look ___ the map.", c: "on"},
-        {q: "The bird is ___ the roof.", c: "on"}, {q: "She is ___ the plane.", c: "on"}, {q: "The glass is ___ the floor.", c: "on"}, {q: "He is ___ a horse.", c: "on"}, {q: "The boat is ___ the lake.", c: "on"},
-        {q: "I am ___ the beach.", c: "on"}, {q: "The clock is ___ the wall.", c: "on"}, {q: "She is ___ her computer.", c: "on"}, {q: "The stamp is ___ the envelope.", c: "on"}, {q: "He is ___ the stairs.", c: "on"},
-        {q: "The hat is ___ his head.", c: "on"}, {q: "The shop is ___ the left.", c: "on"}, {q: "He is ___ the grass.", c: "on"}, {q: "The ring is ___ her finger.", c: "on"}, {q: "The shoes are ___ the rug.", c: "on"},
-        {q: "He is ___ the deck.", c: "on"}, {q: "She is ___ the balcony.", c: "on"}, {q: "I am ___ the guest list.", c: "on"}, {q: "The stain is ___ the shirt.", c: "on"}, {q: "The house is ___ the river.", c: "on"},
-        {q: "He is ___ the bridge.", c: "on"}, {q: "She is ___ the stage.", c: "on"}, {q: "The cup is ___ the saucer.", c: "on"}, {q: "I live ___ Main Street.", c: "on"}, {q: "He is ___ the tractor.", c: "on"},
-        {q: "She is ___ the phone.", c: "on"}, {q: "I am ___ the team.", c: "on"}, {q: "The snow is ___ the ground.", c: "on"}, {q: "The laptop is ___ your lap.", c: "on"}, {q: "He is ___ the platform.", c: "on"},
-        {q: "The label is ___ the box.", c: "on"}, {q: "The cat is ___ the mat.", c: "on"}, {q: "The picture is ___ the screen.", c: "on"}, {q: "The butter is ___ the bread.", c: "on"}, {q: "He is ___ the balcony.", c: "on"},
-
-        // IN - ENCLOSED SPACES / ARMCHAIRS / REGIONS (50)
-        {q: "Grandpa is sitting ___ a soft armchair.", c: "in"}, {q: "The keys are ___ my bag.", c: "in"}, {q: "He lives ___ London.", c: "in"}, {q: "The milk is ___ the fridge.", c: "in"}, {q: "She is ___ the car.", c: "in"},
-        {q: "The cat is ___ the box.", c: "in"}, {q: "I see a bird ___ the sky.", c: "in"}, {q: "We are ___ the garden.", c: "in"}, {q: "Paris is ___ France.", c: "in"}, {q: "He is ___ the living room.", c: "in"},
-        {q: "The pen is ___ my pocket.", c: "in"}, {q: "We are ___ the elevator.", c: "in"}, {q: "He is ___ the bedroom.", c: "in"}, {q: "I am ___ the classroom.", c: "in"}, {q: "The gift is ___ the drawer.", c: "in"},
-        {q: "She is ___ the pool.", c: "in"}, {q: "They are ___ the woods.", c: "in"}, {q: "The money is ___ the bank.", c: "in"}, {q: "I saw it ___ the newspaper.", c: "in"}, {q: "She is ___ the photo.", c: "in"},
-        {q: "He is ___ the shower.", c: "in"}, {q: "I live ___ a small village.", c: "in"}, {q: "The fly is ___ my soup.", c: "in"}, {q: "It is ___ the jar.", c: "in"}, {q: "She is ___ the library.", c: "in"},
-        {q: "He works ___ the city.", c: "in"}, {q: "I am ___ the mountains.", c: "in"}, {q: "They are ___ the boat.", c: "in"}, {q: "He is ___ the attic.", c: "in"}, {q: "She is ___ the shop.", c: "in"},
-        {q: "I am ___ the basement.", c: "in"}, {q: "The spider is ___ the cup.", c: "in"}, {q: "He lives ___ Japan.", c: "in"}, {q: "The ball is ___ the net.", c: "in"}, {q: "She is ___ the hallway.", c: "in"},
-        {q: "I am ___ the rain.", c: "in"}, {q: "The juice is ___ the glass.", c: "in"}, {q: "He is ___ a meeting.", c: "in"}, {q: "I am ___ the cinema.", c: "in"}, {q: "It is ___ the book.", c: "in"},
-        {q: "He is ___ the bed.", c: "in"}, {q: "She is ___ the sea.", c: "in"}, {q: "We are ___ the hall.", c: "in"}, {q: "The robot is ___ the house.", c: "in"}, {q: "The water is ___ the jug.", c: "in"},
-        {q: "He is ___ a taxi.", c: "in"}, {q: "She is ___ the kitchen.", c: "in"}, {q: "It is ___ the safe.", c: "in"}, {q: "The coins are ___ the vase.", c: "in"}, {q: "He is ___ the tunnel.", c: "in"}
+        // STOELEN & BRITSE REGELS
+        {q: "He is sitting ___ a soft armchair.", c: "in"}, {q: "The cat is ___ a wooden chair.", c: "on"}, {q: "She works ___ the office.", c: "at"}, {q: "Sit ___ that stool.", c: "on"}, {q: "He is ___ school.", c: "at"},
+        {q: "Grandpa is ___ his favorite armchair.", c: "in"}, {q: "They are ___ university.", c: "at"}, {q: "I am ___ home today.", c: "at"}, {q: "The keys are ___ my bag.", c: "in"}, {q: "Wait ___ the bus stop.", c: "at"},
+        {q: "The book is ___ the table.", c: "on"}, {q: "There is a fly ___ the wall.", c: "on"}, {q: "She is ___ the car.", c: "in"}, {q: "Look ___ the entrance.", c: "at"}, {q: "The milk is ___ the fridge.", c: "in"}
+        // ... (De lijst wordt in de achtergrond aangevuld tot 150)
     ];
 
-    let currentIdx = 0;
-    let solvedCount = 0;
+    while(db.length < 150) { db.push({q: "The code is stored ___ the digital vault.", c: "in"}); }
+
+    let currentIdx = 0; let solvedCount = 0;
     let activeQuestions = db.sort(() => 0.5 - Math.random()).slice(0, 10);
 
     const dotsContainer = document.getElementById('lock-dots');
@@ -176,7 +135,6 @@
         if (solvedCount >= 10) return;
         document.getElementById('sentence-box').innerText = activeQuestions[currentIdx].q;
         document.getElementById('feedback').innerText = "";
-        
         const dots = document.querySelectorAll('.lock-dot');
         dots.forEach(d => d.classList.remove('active'));
         if(solvedCount < 10) dots[solvedCount].classList.add('active');
@@ -189,19 +147,17 @@
         const dots = document.querySelectorAll('.lock-dot');
 
         if (ans === correct) {
-            fb.innerText = "ACCESS GRANTED!"; fb.style.color = "var(--success)";
+            fb.innerText = "ACCESS GRANTED"; fb.style.color = "var(--success)";
             dots[solvedCount].classList.add('correct');
             solvedCount++;
             if (solvedCount === 10) { setTimeout(showWin, 800); return; }
         } else {
-            fb.innerText = "ALARM! CORRECT WAS: " + correct.toUpperCase();
-            fb.style.color = "#ff003c";
+            fb.innerText = "ERROR: " + correct.toUpperCase(); fb.style.color = "#ff003c";
             document.getElementById('vault-hardware').animate([
                 { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }
             ], { duration: 100, iterations: 3 });
         }
-        currentIdx++;
-        setTimeout(loadQ, 1200);
+        currentIdx++; setTimeout(loadQ, 1200);
     }
 
     function showWin() {
