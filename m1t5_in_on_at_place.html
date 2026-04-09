@@ -329,24 +329,39 @@
 
     <div class="section-divider"></div>
 
-    <h2>⚔️ PICKLE MISSIONS</h2>
-    <div class="pickle-grid">
-        <div class="card" onclick="createExplosion(event, 'BOOM!')">
-            <span style="font-size: 2.5rem;">📦</span>
-            <div class="title" style="font-family: 'Bangers'; color: var(--hero-orange);">Pickle 1</div>
-            <p>Space Invader (In)</p>
-        </div>
-        <div class="card" onclick="createExplosion(event, 'ZAP!')">
-            <span style="font-size: 2.5rem;">🛸</span>
-            <div class="title" style="font-family: 'Bangers'; color: var(--hero-cyan);">Pickle 2</div>
-            <p>Surface Master (On)</p>
-        </div>
-        <div class="card" onclick="createExplosion(event, 'CRUNCH!')">
-            <span style="font-size: 2.5rem;">🥒</span>
-            <div class="title" style="font-family: 'Bangers'; color: var(--hero-yellow);">Pickle 3</div>
-            <p>Point Sniper (At)</p>
-        </div>
+   <h2>⚔️ PICKLE MISSIONS</h2>
+<div class="pickle-grid">
+    <div class="card" onclick="runPickle(event, 'BOOM!', 'm1t5_in_on_at_place_pickle_1.html')">
+        <span style="font-size: 2.5rem;">📦</span>
+        <div class="title" style="font-family: 'Bangers'; color: var(--hero-orange);">Pickle 1</div>
+        <p>Space Invader (In)</p>
     </div>
+
+    <div class="card" onclick="runPickle(event, 'ZAP!', 'm1t5_in_on_at_place_pickle_2.html')">
+        <span style="font-size: 2.5rem;">🛸</span>
+        <div class="title" style="font-family: 'Bangers'; color: var(--hero-cyan);">Pickle 2</div>
+        <p>Surface Master (On)</p>
+    </div>
+
+    <div class="card" onclick="runPickle(event, 'CRUNCH!', 'm1t5_in_on_at_place_pickle_3.html')">
+        <span style="font-size: 2.5rem;">🥒</span>
+        <div class="title" style="font-family: 'Bangers'; color: var(--hero-yellow);">Pickle 3</div>
+        <p>Point Sniper (At)</p>
+    </div>
+</div>
+
+<script>
+    // Functie die de explosie toont en daarna de link opent
+    function runPickle(event, text, url) {
+        // Voer de bestaande explosie functie uit
+        createExplosion(event, text);
+        
+        // Wacht 400 milliseconden zodat de leerling de animatie ziet, en ga dan naar de pagina
+        setTimeout(() => {
+            window.location.href = url;
+        }, 400);
+    }
+</script>
 </main>
 
 <footer>
