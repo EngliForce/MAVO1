@@ -312,24 +312,41 @@
 
     <div class="section-divider"></div>
 
-    <h2>⚔️ PICKLE MISSIONS</h2>
-    <div class="pickle-grid">
-        <div class="card" onclick="createExplosion(event, 'CRUNCH!')">
-            <span style="font-size: 2.5rem;">🥪</span>
-            <div class="title" style="font-family: 'Bangers'; color: var(--hero-cyan);">Pickle 1</div>
-            <p>Positive Power (Some)</p>
-        </div>
-        <div class="card" onclick="createExplosion(event, 'ZAP!')">
-            <span style="font-size: 2.5rem;">🚫</span>
-            <div class="title" style="font-family: 'Bangers'; color: var(--hero-orange);">Pickle 2</div>
-            <p>Negative Ninja (Any)</p>
-        </div>
-        <div class="card" onclick="createExplosion(event, 'BOOM!')">
-            <span style="font-size: 2.5rem;">❓</span>
-            <div class="title" style="font-family: 'Bangers'; color: var(--hero-yellow);">Pickle 3</div>
-            <p>Request Master (Offer)</p>
-        </div>
+<h2>⚔️ PICKLE MISSIONS</h2>
+<div class="pickle-grid">
+    <div class="card" onclick="runPickle(event, 'CRUNCH!', 'm1t5_some_any_pickle_1.html')">
+        <span style="font-size: 2.5rem;">💀</span>
+        <div class="title" style="font-family: 'Bangers'; color: var(--hero-cyan);">Pickle 1</div>
+        <p>Positive Power (Some)</p>
     </div>
+
+    <div class="card" onclick="runPickle(event, 'ZAP!', 'm1t5_some_any_pickle_2.html')">
+        <span style="font-size: 2.5rem;">🚫</span>
+        <div class="title" style="font-family: 'Bangers'; color: var(--hero-orange);">Pickle 2</div>
+        <p>Negative Ninja (Any)</p>
+    </div>
+
+    <div class="card" onclick="runPickle(event, 'BOOM!', 'm1t5_some_any_pickle_3.html')">
+        <span style="font-size: 2.5rem;">❓</span>
+        <div class="title" style="font-family: 'Bangers'; color: var(--hero-yellow);">Pickle 3</div>
+        <p>Diamond & skull</p>
+    </div>
+</div>
+
+<script>
+    // Deze functie zorgt voor de explosie EN de navigatie
+    function runPickle(event, text, url) {
+        // Voer de explosie-animatie uit (zorg dat createExplosion in je script staat)
+        if (typeof createExplosion === "function") {
+            createExplosion(event, text);
+        }
+        
+        // Korte vertraging voor het visuele effect, dan naar de nieuwe pagina
+        setTimeout(() => {
+            window.location.href = url;
+        }, 400);
+    }
+</script>
 </main>
 
 <footer>
