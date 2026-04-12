@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Pickle: Technology Detective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #6a1b9a;
+            --hero-purple-dark: #4a148c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #b39ddb;
+            --dark-bg: #0b101a;
+            --hero-orange: #ff5722;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05051a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background: var(--hero-purple-main);
+            padding: 2rem 0;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            margin-bottom: 20px;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); color: white; }
+        .container { max-width: 700px; width: 90%; margin: 20px auto; }
+        .section {
+            background: rgba(26, 16, 42, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .instructions { font-size: 0.9rem; color: var(--hero-cyan); line-height: 1.5; margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-top: 1rem; font-family: 'Bangers'; color: var(--hero-yellow); font-size: 1.2rem; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 2px solid var(--hero-purple-main);
+            background: #0b101a;
+            color: white;
+            box-sizing: border-box;
+            font-family: 'Lexend', sans-serif;
+        }
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+            margin: 10px 5px 0 0;
+            width: 100%;
+        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn-purple { background: var(--hero-purple-main); border-bottom-color: var(--hero-purple-dark); }
+        .turn { font-family: 'Bangers'; font-size: 2.2rem; color: var(--hero-yellow); text-align: center; margin-bottom: 10px; }
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--hero-purple-main);
+        }
+        .word-card {
+            background: #1a102a;
+            border: 3px solid var(--hero-purple-main);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        .hint-text {
+            font-size: 1.2rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .answer-reveal {
+            font-family: 'Bangers';
+            font-size: 2rem;
+            color: var(--hero-yellow);
+            display: none;
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px dashed var(--hero-yellow);
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            width: 100%;
+        }
+        .flex-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>PICKLE 3: DETECTIVE</h1>
+</header>
+
+<div class="container">
+    <div class="section" id="setup">
+        <div class="instructions">
+            🔎 <strong>Mission:</strong> Guess the tech-word using as few hints as possible.<br>
+            🌟 <strong>Bonus:</strong> Use <strong>English</strong> hints for +1 extra point!
+        </div>
+        <label>Number of Agents:</label>
+        <select id="playerCount" onchange="togglePlayer2()">
+            <option value="1">1 Agent</option>
+            <option value="2" selected>2 Agents</option>
+        </select>
+        <label>Agent 1:</label>
+        <input type="text" id="player1" placeholder="Name of Agent 1" />
+        <div id="player2Section">
+            <label>Agent 2:</label>
+            <input type="text" id="player2" placeholder="Name of Agent 2" />
+        </div>
+        <button class="btn" style="margin-top: 30px;" onclick="startGame()">Start Mission 🚀</button>
+    </div>
+
+    <div id="game" style="display: none;">
+        <div class="turn" id="turnIndicator">Turn: ...</div>
+        <div class="scoreboard">
+            <div><span id="name1"></span>: <span id="score1" style="color:var(--hero-yellow)">0</span></div>
+            <div id="p2ScoreDisplay"><span id="name2"></span>: <span id="score2" style="color:var(--hero-yellow)">0</span></div>
+        </div>
+        <div class="word-card">
+            <div class="answer-reveal" id="word-reveal">Answer: ...</div>
+            <label>Hint Language:</label>
+            <select id="hintLanguage" onchange="resetClue()">
+                <option value="nl">Dutch</option>
+                <option value="en">English (Bonus +1)</option>
+            </select>
+            <div class="hint-text" id="hintBox">Click 'Next Hint' to start</div>
+            <div class="flex-buttons">
+                <button class="btn btn-purple" onclick="nextHint()">Next Hint 💡</button>
+                <button class="btn btn-purple" onclick="showWord()">Show Answer 👁️</button>
+                <button class="btn" style="background:#4caf50; border-color:#2e7d32;" onclick="correctGuess()">Correct ✅</button>
+                <button class="btn" style="background:var(--hero-orange); border-color:#bf360c;" onclick="wrongGuess()">Wrong ❌</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 EngliForce: Make English Your Superpower!
+</footer>
+
+<script>
+const words = [
+    { en: "device", hints: { nl: ["Een ander woord voor een apparaat.", "Bijvoorbeeld een iPad of laptop.", "Het begint met de letter D."], en: ["Another word for a tool or machine.", "An iPad or laptop is an example.", "It starts with the letter D."] }},
+    { en: "network", hints: { nl: ["Een systeem waar alles verbonden is.", "Het internet is een wereldwijd...", "Zonder dit heb je geen verbinding."], en: ["A system where everything is connected.", "The internet is a worldwide...", "Without this, you have no connection."] }},
+    { en: "engineer", hints: { nl: ["Iemand die slimme machines ontwerpt.", "Een technisch beroep.", "In het Nederlands: ingenieur."], en: ["Someone who designs smart machines.", "A technical profession.", "They build or design complex systems."] }},
+    { en: "prototype", hints: { nl: ["Het allereerste testmodel.", "Nog niet te koop in de winkel.", "Om te zien of een ontwerp werkt."], en: ["The very first test model.", "Not for sale in stores yet.", "Used to see if a design works."] }},
+    { en: "charge", hints: { nl: ["Je batterij is bijna leeg, je moet...", "Dit doe je met een kabel in het stopcontact.", "Energie toevoegen."], en: ["Your battery is almost empty, you need to...", "You do this with a cable in the wall.", "Adding power to a device."] }},
+    { en: "touchscreen", hints: { nl: ["Je bedient het met je vingers.", "Geen muis of toetsenbord nodig.", "De voorkant van je smartphone."], en: ["You control it with your fingers.", "No mouse or keyboard needed.", "The front of your smartphone."] }},
+    { en: "brick", hints: { nl: ["Vroeger een zware telefoon, nu een...", "Gemaakt van steen.", "Een rechthoekig blok om mee te bouwen."], en: ["An old heavy phone, or a building block.", "Made of hard clay or stone.", "A rectangular object used for walls."] }},
+    { en: "feature", hints: { nl: ["Een speciale functie van een app.", "Een kenmerk van een product.", "Bijvoorbeeld: Face-ID is een..."], en: ["A special function of an app.", "A characteristic of a product.", "For example: Face-ID is a new..."] }},
+    { en: "develop", hints: { nl: ["Iets nieuws ontwerpen en maken.", "Groeien of verbeteren.", "Software-makers doen dit."], en: ["Designing and making something new.", "To grow or make better.", "Software creators do this."] }},
+    { en: "data", hints: { nl: ["Digitale informatie.", "Het zit in een database.", "Je verbruikt dit als je op 4G/5G zit."], en: ["Digital information.", "Stored in a database.", "You use this when you are on 4G/5G."] }}
+];
+
+let p1 = '', p2 = '', playerCount = 2;
+let score = [0, 0];
+let currentIndex = 0;
+let currentHint = 0;
+let currentPlayer = 0;
+
+function togglePlayer2() {
+    const val = document.getElementById("playerCount").value;
+    document.getElementById("player2Section").style.display = (val === "1") ? "none" : "block";
+}
+
+function startGame() {
+    playerCount = parseInt(document.getElementById("playerCount").value);
+    p1 = document.getElementById("player1").value || "Agent 1";
+    p2 = document.getElementById("player2").value || "Agent 2";
+
+    words.sort(() => 0.5 - Math.random());
+    score = [0, 0];
+    currentIndex = 0;
+    currentPlayer = 0;
+
+    document.getElementById("name1").textContent = p1;
+    document.getElementById("name2").textContent = (playerCount === 2) ? p2 : "";
+    document.getElementById("p2ScoreDisplay").style.visibility = (playerCount === 2) ? "visible" : "hidden";
+
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    updateScore();
+    showTurn();
+    resetWordCard();
+}
+
+function showTurn() {
+    const name = currentPlayer === 0 ? p1 : p2;
+    document.getElementById("turnIndicator").textContent = (playerCount === 1) ? `Agent: ${p1}` : `Turn: ${name}`;
+}
+
+function resetWordCard() {
+    currentHint = 0;
+    document.getElementById("hintBox").textContent = "Click 'Next Hint' to start";
+    document.getElementById("word-reveal").style.display = "none";
+}
+
+function nextHint() {
+    if (currentHint >= 3) return;
+    const lang = document.getElementById("hintLanguage").value;
+    const hint = words[currentIndex].hints[lang][currentHint];
+    document.getElementById("hintBox").textContent = `Hint ${currentHint + 1}: ${hint}`;
+    currentHint++;
+}
+
+function showWord() {
+    document.getElementById("word-reveal").textContent = `Answer: ${words[currentIndex].en}`;
+    document.getElementById("word-reveal").style.display = "block";
+}
+
+function correctGuess() {
+    const lang = document.getElementById("hintLanguage").value;
+    let points = Math.max(1, 4 - currentHint);
+    if (lang === "en") points += 1;
+    score[currentPlayer] += points;
+    nextWord();
+}
+
+function wrongGuess() {
+    nextWord();
+}
+
+function nextWord() {
+    currentIndex++;
+    if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+    updateScore();
+    if (currentIndex >= words.length) {
+        document.getElementById("turnIndicator").textContent = "Mission Accomplished!";
+        document.getElementById("hintBox").textContent = "All words discovered!";
+        document.getElementById("word-reveal").style.display = "none";
+    } else {
+        showTurn();
+        resetWordCard();
+    }
+}
+
+function updateScore() {
+    document.getElementById("score1").textContent = score[0] + " pt";
+    document.getElementById("score2").textContent = score[1] + " pt";
+}
+
+function resetClue() {
+    if (currentHint > 0) {
+        const lang = document.getElementById("hintLanguage").value;
+        const hint = words[currentIndex].hints[lang][currentHint - 1];
+        document.getElementById("hintBox").textContent = `Hint ${currentHint}: ${hint}`;
+    }
+}
+</script>
+</body>
+</html>
