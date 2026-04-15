@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: Plan jouw droomreis naar London!</title>
+    <style>
+        :root {
+            --london-blue: #001155;
+            --london-red: #ce1124;
+            --light-grey: #f4f4f9;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: var(--light-grey);
+            color: #333;
+        }
+
+        header {
+            background-color: var(--london-blue);
+            color: var(--white);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 5px solid var(--london-red);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #fff;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            z-index: 1000;
+        }
+
+        nav a {
+            margin: 5px 15px;
+            text-decoration: none;
+            color: var(--london-blue);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: var(--london-red);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--london-blue);
+            border-bottom: 2px solid var(--london-red);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--london-red);
+        }
+
+        .highlight {
+            background: #eef2ff;
+            padding: 15px;
+            border-left: 5px solid var(--london-blue);
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--london-blue);
+            color: white;
+        }
+
+        .btn-print {
+            background-color: var(--london-red);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* PRINT INSTELLINGEN */
+        @media print {
+            /* Verberg alles behalve de checklist sectie */
+            header, nav, section, .btn-print {
+                display: none !important;
+            }
+            
+            /* Forceer de checklist sectie om zichtbaar te zijn tijdens printen */
+            #checklist {
+                display: block !important;
+            }
+
+            .container {
+                box-shadow: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background-color: white;
+            }
+
+            h2 {
+                border-bottom: 2px solid black;
+                color: black;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Project: Plan jouw droomreis naar London!</h1>
+</header>
+
+<nav>
+    <a onclick="showSection('situatie')">De Situatie</a>
+    <a onclick="showSection('budget')">Budget</a>
+    <a onclick="showSection('opdracht')">De Opdracht</a>
+    <a onclick="showSection('product')">Eindproduct</a>
+    <a onclick="showSection('checklist')">Afvinklijst</a>
+</nav>
+
+<div class="container">
+    <section id="situatie" class="active">
+        <h2>🧳 De situatie</h2>
+        <p>Je gaat een weekendtrip naar London organiseren… helemaal zelf! Van vervoer tot eten, van hotel tot activiteiten — jij regelt alles binnen een realistisch budget.</p>
+        <p>Je gaat op reis met een vriend(in) naar London:</p>
+        <ul>
+            <li>📅 aankomst: vrijdag avond</li>
+            <li>📅 Terugkomst: maandag ochtend</li>
+            <li>⏳ Duur: 3 nachten</li>
+            <li>❗ Je bent dus 2 hele dagen in Londen</li>
+        </ul>
+    </section>
+
+    <section id="budget">
+        <h2>💸 Budget</h2>
+        <p>Je krijgt een totaalbudget van <strong>€500 per persoon</strong>. Dit budget moet ALLES dekken:</p>
+        <ul>
+            <li>✈️ Vervoer (heen & terug)</li>
+            <li>🏨 Accommodatie (3 nachten)</li>
+            <li>🎟️ Activiteiten</li>
+            <li>🍔 Eten & drinken</li>
+            <li>💰 + Zakgeld</li>
+        </ul>
+        <div class="highlight">
+            👉 <strong>€35 per dag voor eten en drinken</strong> (= €175 totaal)
+        </div>
+    </section>
+
+    <section id="opdracht">
+        <h2>📝 Opdracht – Wat moet je regelen?</h2>
+        
+        <h3>1. ✈️ Vervoer</h3>
+        <ul>
+            <li>Hoe reis je naar London? (vliegtuig, trein, bus)</li>
+            <li>Vertrektijden en prijzen</li>
+            <li>Waarom kies je dit?</li>
+        </ul>
+
+        <h3>2. 🏨 Accommodatie</h3>
+        <ul>
+            <li>Waar verblijf je?</li>
+            <li>Prijs per nacht</li>
+            <li>Beschrijving + review (achteraf in je verslag)</li>
+        </ul>
+
+        <h3>3. 📅 Dagplanning (voor 2 hele dagen)</h3>
+        <p>Voor elke dag minimaal 3 activiteiten (ochtend, middag en avond). Denk aan: bezienswaardigheden, musea, winkelen, parken of shows.</p>
+
+        <h3>4. 🍽️ Eten & drinken</h3>
+        <p>Voor ELKE dag ontbijt, lunch en diner. Waar eet je? (hotel, restaurants, cafés, street food). Prijzen moeten realistisch zijn en binnen je dagbudget (€35) blijven.</p>
+
+        <h3>5. 💵 Budgetoverzicht</h3>
+        <p>Maak een duidelijk overzicht van de totale kosten (vervoer, accommodatie, activiteiten, eten). Blijf binnen de <strong>€750!</strong></p>
+    </section>
+
+    <section id="product">
+        <h2>📖 Eindproduct: Travel Diary (in het Engels!)</h2>
+        <p>Je maakt een reisverslag alsof je echt in London bent geweest. Je maakt dit in een creatieve lay-out (gebruik bijvoorbeeld <strong>PowerPoint, Canva of Word</strong>).</p>
+        
+        <h3>✍️ Wat moet erin?</h3>
+        <p>Voor elke dag vertel je: Waar verbleef je? Wat heb je gedaan? Waar heb je gegeten? Wat vond je ervan?</p>
+
+        <h3>⭐ Reviews (belangrijk!)</h3>
+        <p>Je schrijft reviews over de onderstaande onderdelen. <strong>Let op: elke review moet minimaal 10 zinnen lang zijn!</strong></p>
+        <ul>
+            <li>🏨 Accommodatie</li>
+            <li>🍽️ Restaurants</li>
+            <li>🎟️ Activiteiten</li>
+        </ul>
+        <p>Gebruik sterren ( ⭐ ) en geef je mening!</p>
+
+        <div class="highlight">
+            ❌ Je mag GEEN AI gebruiken om je reisverslag te schrijven.<br>
+            ✅ Je mag AI wel gebruiken voor inspiratie (ideeën voor activiteiten, restaurants).
+        </div>
+    </section>
+
+    <section id="checklist">
+        <h2>✅ Afvinklijst & Takenverdeling</h2>
+        <p>Vul hieronder in wie wat doet en vink af wat klaar is. Print dit overzicht uit om in te leveren.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Onderdeel</th>
+                    <th>Gedaan?</th>
+                    <th>Wie doet dit?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Vervoer uitgezocht (tijden & prijzen)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td>Accommodatie gekozen (prijs per nacht)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td>Dagplanning (3 activiteiten per dag)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td>Eten & drinken gepland (binnen €35 p.d.)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td>Budgetoverzicht (totaal onder €750)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td><strong>Review:</strong> Accommodatie (min. 10 zinnen + ⭐)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td><strong>Review:</strong> Restaurants (min. 10 zinnen + ⭐)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td><strong>Review:</strong> Activiteiten (min. 10 zinnen + ⭐)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td>Vormgeving (PowerPoint / Canva / Word)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+                <tr><td>Creativiteit (Foto's & Kaartje)</td><td><input type="checkbox"></td><td><input type="text" placeholder="Naam"></td></tr>
+            </tbody>
+        </table>
+        <button class="btn-print" onclick="window.print()">Download als PDF / Printen</button>
+    </section>
+</div>
+
+<script>
+    function showSection(id) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+</script>
+
+</body>
+</html>
