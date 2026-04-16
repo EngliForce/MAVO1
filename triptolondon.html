@@ -47,7 +47,7 @@
         .card textarea { height: 140px; resize: none; border-left: 5px solid var(--london-red); }
         
         .temp-export-text { 
-            display: none; padding: 10px; margin: 4px 0; font-size: 18px; color: #0033aa; font-weight: bold; min-height: 46px; line-height: 1.2; word-break: break-word; border-bottom: 1px solid #eee;
+            display: none; padding: 10px; margin: 4px 0; font-size: 16px; color: #333; min-height: 40px; line-height: 1.4; word-break: break-word; white-space: pre-wrap;
         }
 
         .author-box, .source-box { margin-top: 15px; padding: 10px; background: #f1f1f1; border-radius: 8px; border: 2px solid var(--london-blue); font-weight: bold; }
@@ -61,8 +61,6 @@
         
         .btn-download { background-color: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 50px; font-size: 1rem; }
         .converter-box { background: #f0f4ff; padding: 25px; border-radius: 8px; border: 2px solid var(--london-blue); margin: 20px 0; }
-        
-        .budget-status { font-weight: bold; padding: 5px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -131,7 +129,7 @@
 
     <section id="product">
         <h2>📖 Eindproduct</h2>
-        <p>Vul de kaarten hieronder in. Klik op de groene knop om een afbeelding van je planning op te slaan. Deze kun je in je PowerPoint of Word-document plakken.</p>
+        <p>Vul de kaarten hieronder in en download ze als afbeelding voor je verslag.</p>
         <hr>
 
         <div class="card" id="cap-transport">
@@ -142,7 +140,7 @@
                     <td><input type="text" placeholder="Method & Time"><div class="temp-export-text"></div></td>
                     <td><input type="text" placeholder="Method & Time"><div class="temp-export-text"></div></td>
                 </tr>
-                <tr><td colspan="2">Total Price p.p. (£): <input type="number" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td colspan="2">Total Price p.p. (£): <input type="number" placeholder="Value"><div class="temp-export-text"></div></td></tr>
             </table>
             <textarea placeholder="Explain your choice in English..."></textarea><div class="temp-export-text"></div>
             <div class="source-box">Source: <input type="text" placeholder="Website..."><div class="temp-export-text"></div></div>
@@ -189,7 +187,7 @@
             <input type="text" placeholder="Name of Hotel/Attraction/Restaurant"><div class="temp-export-text"></div>
             <input type="number" placeholder="Price per person (£)"><div class="temp-export-text"></div>
             <div class="rating"><input type="radio" name="r" id="r5"><label for="r5"></label><input type="radio" name="r" id="r4"><label for="r4"></label><input type="radio" name="r" id="r3"><label for="r3"></label><input type="radio" name="r" id="r2"><label for="r2"></label><input type="radio" name="r" id="r1"><label for="r1"></label></div>
-            <textarea placeholder="Write review in English (5-10 sentences)..."></textarea><div class="temp-export-text"></div>
+            <textarea placeholder="Write review in English..."></textarea><div class="temp-export-text"></div>
             <div class="source-box">Source: <input type="text" placeholder="Website..."><div class="temp-export-text"></div></div>
             <div class="author-box">Written by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
         </div>
@@ -242,18 +240,21 @@
                     <tr><td>Vervoer</td><td>Heenreis Vrijdag (tijd/prijs)</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Vervoer</td><td>Terugreis Maandag (tijd/prijs)</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Hotel</td><td>Hotel gekozen incl. ontbijt check</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    
                     <tr class="cat-header"><td colspan="4">Zaterdag Planning</td></tr>
                     <tr><td>Zat. Ochtend</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Lunch</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Middag</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Diner</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Avond</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    
                     <tr class="cat-header"><td colspan="4">Zondag Planning</td></tr>
                     <tr><td>Zon. Ochtend</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Lunch</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Middag</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Diner</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Avond</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    
                     <tr class="cat-header"><td colspan="4">Final Check</td></tr>
                     <tr><td>Totaal</td><td>Budgetoverzicht compleet</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 </tbody>
@@ -284,23 +285,18 @@
     }
     
     function calcTotal() {
-        // Trip Budget Calculation
         let tripInputs = document.querySelectorAll('.b-in');
         let tripSub = 0;
         tripInputs.forEach(i => { tripSub += Number(i.value) || 0; });
-        const bSubEl = document.getElementById('b-sub');
-        bSubEl.innerText = "£ " + tripSub;
-        bSubEl.style.color = tripSub > 425 ? "red" : "black";
+        document.getElementById('b-sub').innerText = "£ " + tripSub;
+        document.getElementById('b-sub').style.color = tripSub > 425 ? "red" : "black";
 
-        // Food Budget Calculation
         let foodInputs = document.querySelectorAll('.f-in');
         let foodSub = 0;
         foodInputs.forEach(i => { foodSub += Number(i.value) || 0; });
-        const fSubEl = document.getElementById('f-sub');
-        fSubEl.innerText = "£ " + foodSub;
-        fSubEl.style.color = foodSub > 60 ? "red" : "black";
+        document.getElementById('f-sub').innerText = "£ " + foodSub;
+        document.getElementById('f-sub').style.color = foodSub > 60 ? "red" : "black";
 
-        // Grand Total
         document.getElementById('b-total').innerText = "£ " + (tripSub + foodSub);
     }
     
@@ -310,13 +306,9 @@
         const fileInputs = el.querySelectorAll('input[type="file"]');
         
         inputs.forEach(input => {
-            const val = input.value;
             const tempDiv = input.parentElement.querySelector('.temp-export-text') || input.nextElementSibling;
             if (tempDiv && tempDiv.classList.contains('temp-export-text')) {
-                let displayVal = val;
-                if(input.placeholder && input.placeholder.includes('£') && val) displayVal = "£ " + val;
-                if(input.placeholder && input.placeholder.includes('Price per person') && val) displayVal = "Price p.p.: £ " + val;
-                tempDiv.innerText = displayVal || "---";
+                tempDiv.innerText = input.value || "---"; 
                 tempDiv.style.display = "block";
                 input.style.display = "none";
             }
