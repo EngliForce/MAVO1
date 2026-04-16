@@ -51,9 +51,7 @@
         }
 
         .author-box, .source-box { margin-top: 15px; padding: 10px; background: #f1f1f1; border-radius: 8px; border: 2px solid var(--london-blue); font-weight: bold; }
-        .source-box { border-color: #555; background: #fafafa; }
         .author-box input, .source-box input { width: auto !important; min-width: 350px; display: inline-block !important; margin-left: 10px !important; border: 2px solid var(--london-blue) !important; padding: 8px; }
-        .source-box input { border-color: #555 !important; }
         
         .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; margin-bottom: 10px; }
         .rating label { cursor: pointer; font-size: 35px; color: #ccc; }
@@ -70,9 +68,9 @@
 <header><h1>Project: Plan jouw droomreis naar London!</h1></header>
 
 <nav>
-    <a onclick="showSection('situatie')">De Situatie</a>
+    <a onclick="showSection('situatie')">Situatie</a>
     <a onclick="showSection('budget')">Budget</a>
-    <a onclick="showSection('opdracht')">De Opdracht</a>
+    <a onclick="showSection('opdracht')">Opdracht</a>
     <a onclick="showSection('product')">Eindproduct</a>
     <a onclick="showSection('checklist')">Afvinklijst</a>
 </nav>
@@ -124,15 +122,14 @@
             <li>Beschrijving + review (achteraf in je verslag)</li>
         </ul>
         <h3>3. 📅 Dagplanning (voor 2 hele dagen)</h3>
-        <p>Voor elke dag minimaal 3 activiteiten (ochtend, middag en avond).</p>
+        <p>Voor elke dag minimaal 3 activiteiten (ochtend, middag en avond). Denk aan: bezienswaardigheden, musea, winkelen, parken of shows.</p>
         <h3>4. 🍽️ Eten & drinken</h3>
-        <p>Voor ELKE dag lunch en diner. Waar eet je? Prijzen moeten realistisch zijn en binnen je budget blijven.</p>
+        <p>Voor ELKE dag lunch en diner. Waar eet je? Prijzen moeten realistisch zijn en binnen je weekendbudget van £60 blijven.</p>
     </section>
 
     <section id="product">
         <h2>📖 Eindproduct</h2>
-        <p>Vul de kaarten in en download de afbeeldingen. Vergeet niet je bronnen (websites) te vermelden!</p>
-        
+        <p>Zet alles in een PowerPoint of Word document en stuur dit naar je docent via Teams.</p>
         <hr>
 
         <div class="card" id="cap-transport">
@@ -145,26 +142,39 @@
                 </tr>
                 <tr><td colspan="2">Total Price p.p. (£): <input type="number" placeholder="£"><div class="temp-export-text"></div></td></tr>
             </table>
-            <p><strong>Why did you choose this transport?</strong></p>
-            <textarea placeholder="Explain in English..."></textarea><div class="temp-export-text"></div>
-            <div class="source-box">Source/Website: <input type="text" placeholder="e.g. www.eurostar.com"><div class="temp-export-text"></div></div>
+            <textarea placeholder="Explain your choice in English..."></textarea><div class="temp-export-text"></div>
+            <div class="source-box">Source: <input type="text" placeholder="Website..."><div class="temp-export-text"></div></div>
             <div class="author-box">Written by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
         </div>
         <button class="btn-download" onclick="download('cap-transport', 'transport')">Download Transport Card</button>
 
         <div class="card" id="cap-sat">
-            <h3 style="margin:0; color:var(--london-blue);">📅 Daily Schedule: Saturday/Sunday</h3>
+            <h3 style="margin:0; color:var(--london-blue);">📅 Daily Schedule: Saturday</h3>
             <table>
-                <tr><td>Day</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 <tr><td width="30%">Morning Activity</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 <tr><td>Lunch Location</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 <tr><td>Afternoon Activity</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 <tr><td>Dinner Location</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 <tr><td>Evening Activity</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
             </table>
+            <div class="source-box">Source: <input type="text" placeholder="Website..."><div class="temp-export-text"></div></div>
             <div class="author-box">Written by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
         </div>
-        <button class="btn-download" onclick="download('cap-sat', 'saturday')">Download Saturday/Sunday Card</button>
+        <button class="btn-download" onclick="download('cap-sat', 'saturday')">Download Saturday Card</button>
+
+        <div class="card" id="cap-sun">
+            <h3 style="margin:0; color:var(--london-blue);">📅 Daily Schedule: Sunday</h3>
+            <table>
+                <tr><td width="30%">Morning Activity</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Lunch Location</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Afternoon Activity</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Dinner Location</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Evening Activity</td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+            </table>
+            <div class="source-box">Source: <input type="text" placeholder="Website..."><div class="temp-export-text"></div></div>
+            <div class="author-box">Written by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
+        </div>
+        <button class="btn-download" onclick="download('cap-sun', 'sunday')">Download Sunday Card</button>
 
         <div class="card" id="cap-rev">
             <h3 style="margin:0; color:var(--london-blue); margin-bottom: 10px;">⭐ Review Card</h3>
@@ -178,7 +188,7 @@
             <input type="number" placeholder="Price per person (£)"><div class="temp-export-text"></div>
             <div class="rating"><input type="radio" name="r" id="r5"><label for="r5"></label><input type="radio" name="r" id="r4"><label for="r4"></label><input type="radio" name="r" id="r3"><label for="r3"></label><input type="radio" name="r" id="r2"><label for="r2"></label><input type="radio" name="r" id="r1"><label for="r1"></label></div>
             <textarea placeholder="Write review in English (5-10 sentences)..."></textarea><div class="temp-export-text"></div>
-            <div class="source-box">Source/Website: <input type="text" placeholder="e.g. Booking.com / TripAdvisor"><div class="temp-export-text"></div></div>
+            <div class="source-box">Source: <input type="text" placeholder="Website..."><div class="temp-export-text"></div></div>
             <div class="author-box">Written by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
         </div>
         <button class="btn-download" onclick="download('cap-rev', 'review')">Download Review Card</button>
@@ -187,10 +197,14 @@
             <h3 style="margin:0; color:var(--london-blue);">💰 Budget Overview (£)</h3>
             <table>
                 <tr><th colspan="2">Trip Budget (£425 limit)</th></tr>
-                <tr><td width="55%">Transport / Hotel / Activities</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
-                <tr><th colspan="2">Food Costs (£60 limit)</th></tr>
-                <tr><td>Total Food</td><td><input type="number" class="b-in" id="food-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
-                <tr style="background:#eee; font-weight:bold;"><td>GRAND TOTAL</td><td id="b-total">£ 0</td></tr>
+                <tr><td width="55%">Transport Cost</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Accommodation (3 nights)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Activities & Attractions</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Pocket Money</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr style="background:#f9f9f9;"><td><i>Subtotal Trip Budget</i></td><td id="b-sub">£ 0</td></tr>
+                <tr><th colspan="2">Food Costs (£60 weekend limit)</th></tr>
+                <tr><td>Total Food (Lunch & Diner)</td><td><input type="number" class="b-in" id="food-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr style="background:#eee; font-weight:bold;"><td>GRAND TOTAL PER PERSON</td><td id="b-total">£ 0</td></tr>
             </table>
             <div class="author-box">Written by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
         </div>
@@ -200,19 +214,33 @@
     <section id="checklist">
         <h2>✅ Afvinklijst & Takenverdeling</h2>
         <div class="card" id="cap-checklist">
-            <h3 style="margin:0; color:var(--london-blue); margin-bottom:15px;">📋 Master Checklist</h3>
+            <h3 style="margin:0; color:var(--london-blue); margin-bottom:15px;">📋 Master Checklist: Task Distribution</h3>
             <table>
-                <thead><tr><th width="20%">Onderdeel</th><th width="45%">Specifieke Taak</th><th width="5%">✔</th><th width="30%">Wie?</th></tr></thead>
+                <thead>
+                    <tr><th width="20%">Onderdeel</th><th width="45%">Specifieke Taak</th><th width="5%">✔</th><th width="30%">Wie doet dit?</th></tr>
+                </thead>
                 <tbody>
                     <tr class="cat-header"><td colspan="4">Vervoer & Hotel</td></tr>
                     <tr><td>Vervoer</td><td>Heenreis Vrijdag (tijd/prijs)</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Vervoer</td><td>Terugreis Maandag (tijd/prijs)</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Hotel</td><td>Hotel gekozen incl. ontbijt check</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
-                    <tr class="cat-header"><td colspan="4">Planning & Reviews</td></tr>
-                    <tr><td>Zaterdag</td><td>3 activiteiten + reviews geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
-                    <tr><td>Zondag</td><td>3 activiteiten + reviews geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr class="cat-header"><td colspan="4">Zaterdag Planning</td></tr>
+                    <tr><td>Zat. Ochtend</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zat. Lunch</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zat. Middag</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zat. Diner</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zat. Avond</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr class="cat-header"><td colspan="4">Zondag Planning</td></tr>
+                    <tr><td>Zon. Ochtend</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zon. Lunch</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zon. Middag</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zon. Diner</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Zon. Avond</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr class="cat-header"><td colspan="4">Final Check</td></tr>
+                    <tr><td>Totaal</td><td>Budgetoverzicht compleet</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 </tbody>
             </table>
-            <div class="author-box">Team: <input type="text"><div class="temp-export-text"></div></div>
+            <div class="author-box">Team: <input type="text" placeholder="Names..."><div class="temp-export-text"></div></div>
         </div>
         <button class="btn-download" onclick="download('cap-checklist', 'checklist')">Download Checklist as JPEG</button>
     </section>
@@ -235,9 +263,12 @@
         if (input.files[0]) reader.readAsDataURL(input.files[0]);
     }
     function calcTotal() {
-        let v1 = Number(document.querySelector('.b-in').value) || 0;
-        let v2 = Number(document.getElementById('food-in').value) || 0;
-        document.getElementById('b-total').innerText = "£ " + (v1 + v2);
+        let inputs = document.querySelectorAll('.b-in');
+        let sub = 0;
+        let food = Number(document.getElementById('food-in').value) || 0;
+        inputs.forEach((i, idx) => { if(idx < 4) sub += Number(i.value) || 0; });
+        document.getElementById('b-sub').innerText = "£ " + sub;
+        document.getElementById('b-total').innerText = "£ " + (sub + food);
     }
     function download(id, name) {
         const el = document.getElementById(id);
