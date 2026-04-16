@@ -61,6 +61,8 @@
         
         .btn-download { background-color: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 50px; font-size: 1rem; }
         .converter-box { background: #f0f4ff; padding: 25px; border-radius: 8px; border: 2px solid var(--london-blue); margin: 20px 0; }
+        
+        .budget-status { font-weight: bold; padding: 5px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -129,7 +131,7 @@
 
     <section id="product">
         <h2>📖 Eindproduct</h2>
-        <p>Zet alles in een PowerPoint of Word document en stuur dit naar je docent via Teams.</p>
+        <p>Vul de kaarten hieronder in. Klik op de groene knop om een afbeelding van je planning op te slaan. Deze kun je in je PowerPoint of Word-document plakken.</p>
         <hr>
 
         <div class="card" id="cap-transport">
@@ -196,15 +198,31 @@
         <div class="card" id="cap-bud">
             <h3 style="margin:0; color:var(--london-blue);">💰 Budget Overview (£)</h3>
             <table>
-                <tr><th colspan="2">Trip Budget (£425 limit)</th></tr>
-                <tr><td width="55%">Transport Cost</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
-                <tr><td>Accommodation (3 nights)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
-                <tr><td>Activities & Attractions</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
-                <tr><td>Pocket Money</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
-                <tr style="background:#f9f9f9;"><td><i>Subtotal Trip Budget</i></td><td id="b-sub">£ 0</td></tr>
-                <tr><th colspan="2">Food Costs (£60 weekend limit)</th></tr>
-                <tr><td>Total Food (Lunch & Diner)</td><td><input type="number" class="b-in" id="food-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
-                <tr style="background:#eee; font-weight:bold;"><td>GRAND TOTAL PER PERSON</td><td id="b-total">£ 0</td></tr>
+                <tr><th colspan="2">1. Trip Budget (Max £425)</th></tr>
+                <tr><td width="55%">Transport (Return Ticket)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Accommodation (3 Nights Total)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Activities Saturday (Total)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Activities Sunday (Total)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Pocket Money / Extra</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr style="background:#f0f4ff; font-weight:bold;">
+                    <td>Subtotal Trip Budget</td>
+                    <td id="b-sub">£ 0</td>
+                </tr>
+
+                <tr><th colspan="2">2. Food Budget (Max £60)</th></tr>
+                <tr><td>Saturday: Lunch</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Saturday: Dinner</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Sunday: Lunch</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr><td>Sunday: Dinner</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"><div class="temp-export-text"></div></td></tr>
+                <tr style="background:#f0f4ff; font-weight:bold;">
+                    <td>Subtotal Food Budget</td>
+                    <td id="f-sub">£ 0</td>
+                </tr>
+
+                <tr style="background:var(--london-blue); color:white; font-size: 1.1rem; font-weight:bold;">
+                    <td>GRAND TOTAL PER PERSON</td>
+                    <td id="b-total">£ 0</td>
+                </tr>
             </table>
             <div class="author-box">Written by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
         </div>
@@ -252,24 +270,40 @@
         document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
     }
+    
     function convertCurrency() {
         const euro = document.getElementById('euroInput').value;
         document.getElementById('poundResult').innerText = "£ " + (euro * 0.85).toFixed(2);
     }
+    
     function prev(input, pId) {
         const p = document.getElementById(pId);
         const reader = new FileReader();
         reader.onload = e => p.innerHTML = `<img src="${e.target.result}">`;
         if (input.files[0]) reader.readAsDataURL(input.files[0]);
     }
+    
     function calcTotal() {
-        let inputs = document.querySelectorAll('.b-in');
-        let sub = 0;
-        let food = Number(document.getElementById('food-in').value) || 0;
-        inputs.forEach((i, idx) => { if(idx < 4) sub += Number(i.value) || 0; });
-        document.getElementById('b-sub').innerText = "£ " + sub;
-        document.getElementById('b-total').innerText = "£ " + (sub + food);
+        // Trip Budget Calculation
+        let tripInputs = document.querySelectorAll('.b-in');
+        let tripSub = 0;
+        tripInputs.forEach(i => { tripSub += Number(i.value) || 0; });
+        const bSubEl = document.getElementById('b-sub');
+        bSubEl.innerText = "£ " + tripSub;
+        bSubEl.style.color = tripSub > 425 ? "red" : "black";
+
+        // Food Budget Calculation
+        let foodInputs = document.querySelectorAll('.f-in');
+        let foodSub = 0;
+        foodInputs.forEach(i => { foodSub += Number(i.value) || 0; });
+        const fSubEl = document.getElementById('f-sub');
+        fSubEl.innerText = "£ " + foodSub;
+        fSubEl.style.color = foodSub > 60 ? "red" : "black";
+
+        // Grand Total
+        document.getElementById('b-total').innerText = "£ " + (tripSub + foodSub);
     }
+    
     function download(id, name) {
         const el = document.getElementById(id);
         const inputs = el.querySelectorAll('input[type="text"], input[type="number"], textarea');
