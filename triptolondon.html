@@ -34,30 +34,42 @@
         th { background-color: var(--london-blue); color: white; }
         .cat-header { background-color: #f0f0f0; font-weight: bold; color: var(--london-blue); }
 
-        .card { border: 4px solid var(--london-blue); padding: 25px; border-radius: 12px; background: #fff; margin-bottom: 25px; width: 100%; max-width: 950px; overflow: hidden; position: relative; }
+        .card { border: 4px solid var(--london-blue); padding: 30px; border-radius: 12px; background: #fff; margin-bottom: 25px; width: 100%; max-width: 950px; overflow: hidden; position: relative; }
         
         .img-container { display: flex; gap: 10px; margin-bottom: 15px; width: 100%; }
-        .img-preview { flex: 1; height: 160px; background: #eee; border: 2px dashed #bbb; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; }
+        .img-preview { flex: 1; height: 180px; background: #eee; border: 2px dashed #bbb; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px; }
         .img-preview img { width: 100%; height: 100%; object-fit: cover; }
         
         .upload-row { display: flex; gap: 10px; margin-bottom: 15px; width: 100%; }
         .upload-row input { font-size: 10px; flex: 1; min-width: 0; }
 
-        .card input, .card textarea { width: 100%; padding: 8px; margin: 4px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; display: block; background: #fff; font-family: inherit; }
+        .card input, .card textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; display: block; background: #fff; font-family: inherit; }
         .card textarea { height: 140px; resize: none; border-left: 5px solid var(--london-red); }
         
-        .temp-export-text { display: none; padding: 8px; margin: 4px 0; font-size: 16px; color: #0033aa; font-weight: bold; min-height: 1.5em; }
+        /* EXPORT FIX: Deze tekst vervangt de input in de JPEG */
+        .temp-export-text { 
+            display: none; 
+            padding: 12px; 
+            margin: 8px 0; 
+            font-size: 18px; 
+            color: #0033aa; 
+            font-weight: bold; 
+            min-height: 46px; 
+            line-height: 1.2;
+            word-break: break-word;
+            border-bottom: 1px solid #eee;
+        }
 
-        .author-box { margin-top: 15px; padding: 10px; background: #f1f1f1; border-radius: 8px; border: 2px solid var(--london-blue); font-weight: bold; }
-        .author-box input { width: auto !important; min-width: 350px; display: inline-block !important; margin-left: 10px !important; border: 2px solid var(--london-blue) !important; padding: 4px; }
+        .author-box { margin-top: 20px; padding: 15px; background: #f1f1f1; border-radius: 8px; border: 2px solid var(--london-blue); font-weight: bold; }
+        .author-box input { width: auto !important; min-width: 350px; display: inline-block !important; margin-left: 10px !important; border: 2px solid var(--london-blue) !important; padding: 8px; }
         
-        .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; margin-bottom: 5px; }
-        .rating label { cursor: pointer; font-size: 30px; color: #ccc; }
+        .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; margin-bottom: 10px; }
+        .rating label { cursor: pointer; font-size: 35px; color: #ccc; }
         .rating label:before { content: '★'; }
         .rating input:checked ~ label { color: var(--gold); }
         .rating input { display: none; }
         
-        .btn-download { background-color: #28a745; color: white; padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 40px; }
+        .btn-download { background-color: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 50px; font-size: 1rem; }
         .converter-box { background: #f0f4ff; padding: 25px; border-radius: 8px; border: 2px solid var(--london-blue); margin: 20px 0; }
     </style>
 </head>
@@ -88,14 +100,23 @@
 
     <section id="budget">
         <h2>💸 Budget</h2>
-        <p>Je krijgt een budget van <strong>£425 per persoon</strong> voor de reis zelf (Vervoer, Hotel, Activiteiten).</p>
+        <p>Je krijgt een budget van <strong>£425 per persoon</strong>. Dit budget moet het volgende dekken:</p>
+        <ul>
+            <li>✈️ Vervoer (heen & terug op vrijdag en maandag)</li>
+            <li>🏨 Accommodatie (3 nachten)</li>
+            <li>🎟️ Activiteiten / Attracties</li>
+            <li>💰 + Zakgeld</li>
+        </ul>
         <div class="highlight">
-            👉 <strong>Eten & drinken:</strong> Hiervoor krijg je een <u>apart</u> budget van <strong>£60 per persoon</strong> voor het hele weekend.
+            👉 <strong>Eten & drinken:</strong> Hiervoor krijg je een <u>apart</u> budget van <strong>£60 per persoon</strong> voor het hele weekend. Het ontbijt zit al bij het hotel inbegrepen, dus dit gebruik je voor de lunch en het diner op zaterdag en zondag.
         </div>
+
         <div class="converter-box">
             <h3>💱 Euro naar Pond Omrekenen</h3>
+            <p>Veel websites tonen prijzen in Euro's. Reken ze hier om naar Ponden (£).</p>
             <input type="number" id="euroInput" oninput="convertCurrency()" placeholder="Bedrag in €">
             <p style="font-size: 1.2rem; font-weight: bold;">Resultaat: <span id="poundResult" style="color:var(--london-red)">£ 0.00</span></p>
+            <small>* Koers: €1.00 = £0.85</small>
         </div>
     </section>
 
@@ -111,17 +132,21 @@
         <ul>
             <li>Waar verblijf je? (Zorg dat ontbijt inclusief is!)</li>
             <li>Prijs per nacht</li>
-            <li>Beschrijving + review</li>
+            <li>Beschrijving + review (achteraf in je verslag)</li>
         </ul>
-        <h3>3. 📅 Dagplanning</h3>
+        <h3>3. 📅 Dagplanning (voor 2 hele dagen)</h3>
         <p>Voor elke dag minimaal 3 activiteiten (ochtend, middag en avond). Denk aan: bezienswaardigheden, musea, winkelen, parken of shows.</p>
         <h3>4. 🍽️ Eten & drinken</h3>
-        <p>Voor ELKE dag lunch en diner. Waar eet je? Prijzen moeten realistisch zijn en binnen je weekendbudget van £60 blijven.</p>
+        <p>Voor ELKE dag lunch en diner. Waar eet je? (restaurants, cafés, street food). Prijzen moeten realistisch zijn en binnen je weekendbudget van £60 blijven.</p>
+        <h3>5. 💵 Budgetoverzicht</h3>
+        <p>Maak een duidelijk overzicht van de totale kosten. Blijf binnen de gestelde budgetten!</p>
     </section>
 
     <section id="product">
         <h2>📖 Eindproduct</h2>
-        <p>Vul de kaarten in en download de afbeeldingen voor je PowerPoint of Word document.</p>
+        <p>Vul de kaarten in en download de afbeeldingen. <strong>Zet alles in een PowerPoint of Word document en stuur dit naar je docent via Teams.</strong></p>
+        <p><strong>Let op:</strong> Elke review moet minimaal 5 tot 10 zinnen lang zijn en in het Engels geschreven worden.</p>
+        
         <hr>
 
         <div class="card" id="cap-transport">
@@ -135,7 +160,7 @@
                 <tr><td colspan="2">Total Price p.p. (£): <input type="number" placeholder="£"><div class="temp-export-text"></div></td></tr>
             </table>
             <p><strong>Why did you choose this transport?</strong></p>
-            <textarea placeholder="Explain your choice in English..."></textarea><div class="temp-export-text"></div>
+            <textarea placeholder="Explain in English..."></textarea><div class="temp-export-text"></div>
             <div class="author-box">Written/made by: <input type="text" placeholder="Name"><div class="temp-export-text"></div></div>
         </div>
         <button class="btn-download" onclick="download('cap-transport', 'transport')">Download Transport Card</button>
@@ -217,22 +242,25 @@
                     <tr><td>Vervoer</td><td>Heenreis Vrijdag (tijd/prijs)</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Vervoer</td><td>Terugreis Maandag (tijd/prijs)</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Hotel</td><td>Hotel gekozen incl. ontbijt check</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    
                     <tr class="cat-header"><td colspan="4">Zaterdag Planning</td></tr>
                     <tr><td>Zat. Ochtend</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Lunch</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Middag</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Diner</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zat. Avond</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+
                     <tr class="cat-header"><td colspan="4">Zondag Planning</td></tr>
                     <tr><td>Zon. Ochtend</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Lunch</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Middag</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Diner</td><td>Locatie gekozen + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                     <tr><td>Zon. Avond</td><td>Activiteit + Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
-                    <tr class="cat-header"><td colspan="4">Final Reviews</td></tr>
-                    <tr><td>Review 1</td><td>Hotel Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
-                    <tr><td>Review 2</td><td>Attractie Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
-                    <tr><td>Review 3</td><td>Restaurant Review geschreven</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+
+                    <tr class="cat-header"><td colspan="4">Reviews (Engels)</td></tr>
+                    <tr><td>Hotel</td><td>Review geschreven + foto's</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Attractie</td><td>Review geschreven + foto's</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
+                    <tr><td>Restaurant</td><td>Review geschreven + foto's</td><td><input type="checkbox"></td><td><input type="text"><div class="temp-export-text"></div></td></tr>
                 </tbody>
             </table>
             <div class="author-box">Team: <input type="text" placeholder="Team names..."><div class="temp-export-text"></div></div>
@@ -265,6 +293,7 @@
         document.getElementById('b-sub').innerText = "£ " + sub;
         document.getElementById('b-total').innerText = "£ " + (sub + food);
     }
+
     function download(id, name) {
         const el = document.getElementById(id);
         const inputs = el.querySelectorAll('input[type="text"], input[type="number"], textarea');
@@ -275,20 +304,30 @@
             const tempDiv = input.parentElement.querySelector('.temp-export-text') || input.nextElementSibling;
             if (tempDiv && tempDiv.classList.contains('temp-export-text')) {
                 let displayVal = val;
+                // Voeg pond-teken toe bij export als het een prijsveld is
                 if(input.placeholder.includes('£') && val) displayVal = "£ " + val;
                 if(input.placeholder.includes('Price per person') && val) displayVal = "Price p.p.: £ " + val;
+                
                 tempDiv.innerText = displayVal || "---";
                 tempDiv.style.display = "block";
                 input.style.display = "none";
             }
         });
+        
         fileInputs.forEach(f => f.style.visibility = 'hidden');
 
-        html2canvas(el, { backgroundColor: "#ffffff", scale: 2 }).then(canvas => {
+        html2canvas(el, { 
+            backgroundColor: "#ffffff", 
+            scale: 2,
+            logging: false,
+            useCORS: true 
+        }).then(canvas => {
             const link = document.createElement('a');
             link.download = `London_${name}.jpg`;
             link.href = canvas.toDataURL("image/jpeg", 0.9);
             link.click();
+            
+            // Zet alles weer terug voor de gebruiker
             inputs.forEach(input => {
                 const tempDiv = input.parentElement.querySelector('.temp-export-text') || input.nextElementSibling;
                 if (tempDiv && tempDiv.classList.contains('temp-export-text')) {
