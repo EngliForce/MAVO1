@@ -119,7 +119,6 @@
             color: var(--london-blue);
         }
 
-        /* MENU KNOPPEN VOOR KAARTEN */
         .card-menu {
             display: flex;
             flex-wrap: wrap;
@@ -146,7 +145,6 @@
             background: var(--london-red);
         }
 
-        /* STANDAARD VERBERGEN VAN KAARTEN */
         .card {
             display: none;
             border: 4px solid var(--london-blue);
@@ -178,7 +176,6 @@
             border-radius: 8px;
         }
 
-        /* object-fit contain zorgt ervoor dat de hele foto zichtbaar is */
         .img-preview img {
             width: 100%;
             height: 100%;
@@ -230,7 +227,6 @@
             border-left: 5px solid var(--london-red);
         }
 
-        /* RIJEN VOOR NAAM/PRIJS & BRON/AUTEUR */
         .input-row {
             display: flex;
             gap: 10px;
@@ -296,7 +292,6 @@
             display: none;
         }
 
-        /* BUDGET WRAPPER (Side-by-side) */
         .budget-wrapper {
             display: flex;
             gap: 20px;
@@ -307,7 +302,6 @@
             flex: 1;
         }
 
-        /* FULLSCREEN MODUS - COMPACT GEMAAKT VOOR SCREENSHOTS */
         body.fullscreen-mode {
             background: var(--light-grey);
             overflow: auto;
@@ -347,7 +341,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* Tekst in fullscreen */
         body.fullscreen-mode .card h3 {
             margin: 0 0 10px 0 !important;
             font-size: 1.3rem;
@@ -376,7 +369,6 @@
             font-size: 15px;
         }
 
-        /* Specifiek de review textarea groter maken in fullscreen */
         body.fullscreen-mode #cap-rev textarea {
             height: 150px;
         }
@@ -385,7 +377,6 @@
             gap: 8px;
         }
 
-        /* Budget specifieke optimalisatie voor fullscreen */
         body.fullscreen-mode .budget-wrapper {
             gap: 15px;
             margin-top: 10px !important;
@@ -395,7 +386,6 @@
             margin-top: 0;
         }
 
-        /* Meta rijen in fullscreen */
         body.fullscreen-mode .meta-row {
             margin-top: 10px;
             gap: 8px;
@@ -412,7 +402,6 @@
             font-size: 14px;
         }
 
-        /* FOTOVAKKEN */
         body.fullscreen-mode .img-container {
             margin-bottom: 5px;
             gap: 8px;
@@ -438,7 +427,6 @@
             font-size: 11px;
         }
 
-        /* Rating */
         body.fullscreen-mode .rating {
             margin-bottom: 5px;
         }
@@ -448,7 +436,6 @@
             line-height: 1;
         }
 
-        /* Uitzondering voor de Master Checklist */
         body.fullscreen-mode #cap-checklist th,
         body.fullscreen-mode #cap-checklist td {
             padding: 4px 6px;
@@ -460,7 +447,6 @@
             padding: 4px;
         }
 
-        /* SLUIT KNOP */
         .btn-close-fs {
             display: none;
             position: fixed;
@@ -488,6 +474,19 @@
             border-radius: 8px;
             border: 2px solid var(--london-blue);
             margin: 20px 0;
+        }
+
+        .hand-in-list {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed var(--london-red);
+            margin-bottom: 30px;
+        }
+
+        .hand-in-list ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
         }
     </style>
 </head>
@@ -561,7 +560,19 @@
 
     <section id="product">
         <h2>📖 Cards</h2>
-        <p>Click on a button below to open a card. Fill in in and take a screenshot. <b>Tip: rotate your screen for a better screenshot.</b></b></p>
+        <div class="hand-in-list">
+            <h3 style="margin-top:0;">📤 What to hand in?</h3>
+            <p>Gather your screenshots and put them in a <strong>Word</strong> or <strong>PowerPoint</strong> document:</p>
+            <ul>
+                <li><strong>11x Review Card</strong> (1x hotel, 2x restaurants, 8x activities)</li>
+                <li><strong>1x Transport Card</strong></li>
+                <li><strong>1x Budget Card</strong></li>
+                <li><strong>1x Saturday Card</strong></li>
+                <li><strong>1x Sunday Card</strong></li>
+            </ul>
+        </div>
+
+        <p>Click on a button below to open a card. Fill it in and take a screenshot. <b>Tip: rotate your screen for a better screenshot.</b></p>
         
         <div class="card-menu">
             <button onclick="openCard('cap-transport')">✈️ Transport Card</button>
@@ -596,92 +607,49 @@
         <div class="card" id="cap-sat">
             <h3 style="margin:0; color:var(--london-blue);">📅 Daily Schedule: Saturday</h3>
             <table>
-                <tr>
-                    <td width="30%">Morning Activity</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Lunch Location</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Afternoon Activity</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Dinner Location</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Evening Activity</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
+                <tr><td width="30%">Morning Activity</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Lunch Location</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Afternoon Activity</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Dinner Location</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Evening Activity</td><td><input type="text" autocomplete="off"></td></tr>
             </table>
             <div class="meta-row">
-                <div class="source-box">Source: <input type="text" placeholder="Website..." autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
-                <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
+                <div class="source-box">Source: <input type="text" placeholder="Website..." autocomplete="off"></div>
+                <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off"></div>
             </div>
         </div>
 
         <div class="card" id="cap-sun">
             <h3 style="margin:0; color:var(--london-blue);">📅 Daily Schedule: Sunday</h3>
             <table>
-                <tr>
-                    <td width="30%">Morning Activity</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Lunch Location</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Afternoon Activity</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Dinner Location</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td>Evening Activity</td>
-                    <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
+                <tr><td width="30%">Morning Activity</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Lunch Location</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Afternoon Activity</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Dinner Location</td><td><input type="text" autocomplete="off"></td></tr>
+                <tr><td>Evening Activity</td><td><input type="text" autocomplete="off"></td></tr>
             </table>
             <div class="meta-row">
-                <div class="source-box">Source: <input type="text" placeholder="Website..." autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
-                <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
+                <div class="source-box">Source: <input type="text" placeholder="Website..." autocomplete="off"></div>
+                <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off"></div>
             </div>
         </div>
 
         <div class="card" id="cap-rev">
             <h3 style="margin:0; color:var(--london-blue); margin-bottom: 10px;">⭐ Review Card</h3>
-            
             <div class="img-container">
                 <div class="img-preview" id="p-rev-1"><span>Photo 1</span></div>
                 <div class="img-preview" id="p-rev-2"><span>Photo 2</span></div>
                 <div class="img-preview" id="p-rev-3"><span>Photo 3</span></div>
             </div>
-            
             <div class="upload-row">
-                <div class="upload-wrapper">
-                    <input type="file" id="f-rev-1" onchange="prev(this, 'p-rev-1')">
-                    <span class="rem-btn" onclick="clearImg('p-rev-1', 'f-rev-1')">🗑️ Remove</span>
-                </div>
-                <div class="upload-wrapper">
-                    <input type="file" id="f-rev-2" onchange="prev(this, 'p-rev-2')">
-                    <span class="rem-btn" onclick="clearImg('p-rev-2', 'f-rev-2')">🗑️ Remove</span>
-                </div>
-                <div class="upload-wrapper">
-                    <input type="file" id="f-rev-3" onchange="prev(this, 'p-rev-3')">
-                    <span class="rem-btn" onclick="clearImg('p-rev-3', 'f-rev-3')">🗑️ Remove</span>
-                </div>
+                <div class="upload-wrapper"><input type="file" id="f-rev-1" onchange="prev(this, 'p-rev-1')"><span class="rem-btn" onclick="clearImg('p-rev-1', 'f-rev-1')">🗑️ Remove</span></div>
+                <div class="upload-wrapper"><input type="file" id="f-rev-2" onchange="prev(this, 'p-rev-2')"><span class="rem-btn" onclick="clearImg('p-rev-2', 'f-rev-2')">🗑️ Remove</span></div>
+                <div class="upload-wrapper"><input type="file" id="f-rev-3" onchange="prev(this, 'p-rev-3')"><span class="rem-btn" onclick="clearImg('p-rev-3', 'f-rev-3')">🗑️ Remove</span></div>
             </div>
-            
             <div class="input-row">
-                <input type="text" placeholder="Name of Hotel/Attraction/Restaurant" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
-                <input type="number" placeholder="Price per person (£)" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off">
+                <input type="text" placeholder="Name of Hotel/Attraction/Restaurant">
+                <input type="number" placeholder="Price per person (£)">
             </div>
-            
             <div class="rating">
                 <input type="radio" name="r" id="r5"><label for="r5"></label>
                 <input type="radio" name="r" id="r4"><label for="r4"></label>
@@ -689,207 +657,74 @@
                 <input type="radio" name="r" id="r2"><label for="r2"></label>
                 <input type="radio" name="r" id="r1"><label for="r1"></label>
             </div>
-            
-            <textarea placeholder="Write review in English... (5-10 sentences)" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></textarea>
-            
+            <textarea placeholder="Write review in English... (5-10 sentences)"></textarea>
             <div class="meta-row">
-                <div class="source-box">Source: <input type="text" placeholder="Website..." autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
-                <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
+                <div class="source-box">Source: <input type="text" placeholder="Website..."></div>
+                <div class="author-box">Written by: <input type="text" placeholder="Name"></div>
             </div>
         </div>
 
         <div class="card" id="cap-bud">
             <h3 style="margin:0; color:var(--london-blue);">💰 Budget Overview (£)</h3>
-            
             <div class="budget-wrapper">
                 <div>
                     <table>
-                        <tr>
-                            <th colspan="2">1. Trip Budget (Max £425)</th>
-                        </tr>
-                        <tr>
-                            <td width="60%">Transport (Return Ticket)</td>
-                            <td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr>
-                            <td>Hotel (3 Nights Total)</td>
-                            <td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr>
-                            <td>Activities Saturday (Total)</td>
-                            <td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr>
-                            <td>Activities Sunday (Total)</td>
-                            <td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr>
-                            <td>Pocket Money / Extra</td>
-                            <td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr style="background:#f0f4ff; font-weight:bold;">
-                            <td>Subtotal Trip Budget</td>
-                            <td id="b-sub">£ 0</td>
-                        </tr>
+                        <tr><th colspan="2">1. Trip Budget (Max £425)</th></tr>
+                        <tr><td>Transport (Return)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr><td>Hotel (3 Nights)</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr><td>Activities Sat.</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr><td>Activities Sun.</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr><td>Pocket Money</td><td><input type="number" class="b-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr style="background:#f0f4ff; font-weight:bold;"><td>Subtotal</td><td id="b-sub">£ 0</td></tr>
                     </table>
                 </div>
                 <div>
                     <table>
-                        <tr>
-                            <th colspan="2">2. Food Budget (Max £60)</th>
-                        </tr>
-                        <tr>
-                            <td width="60%">Saturday: Lunch</td>
-                            <td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr>
-                            <td>Saturday: Dinner</td>
-                            <td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr>
-                            <td>Sunday: Lunch</td>
-                            <td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr>
-                            <td>Sunday: Dinner</td>
-                            <td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                        </tr>
-                        <tr style="background:#f0f4ff; font-weight:bold;">
-                            <td>Subtotal Food Budget</td>
-                            <td id="f-sub">£ 0</td>
-                        </tr>
+                        <tr><th colspan="2">2. Food Budget (Max £60)</th></tr>
+                        <tr><td>Sat: Lunch</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr><td>Sat: Dinner</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr><td>Sun: Lunch</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr><td>Sun: Dinner</td><td><input type="number" class="f-in" oninput="calcTotal()" placeholder="£"></td></tr>
+                        <tr style="background:#f0f4ff; font-weight:bold;"><td>Subtotal</td><td id="f-sub">£ 0</td></tr>
                     </table>
                 </div>
             </div>
-            
             <table style="margin-top: 15px;">
                 <tr style="background:var(--london-blue); color:white; font-size: 1.2rem; font-weight:bold;">
                     <td style="text-align: right; padding-right: 20px;">GRAND TOTAL PER PERSON:</td>
                     <td width="30%" id="b-total">£ 0</td>
                 </tr>
             </table>
-            
             <div class="meta-row">
-                <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
+                <div class="author-box">Written by: <input type="text" placeholder="Name"></div>
             </div>
         </div>
     </section>
 
     <section id="checklist">
         <h2>✅ Checklist & Tasks</h2>
-        <p>Click the button to open the checklist in fullscreen for your screenshot.</p>
-        
         <div class="card-menu">
             <button onclick="openCard('cap-checklist')">📋 Open Master Checklist</button>
         </div>
-
         <div class="card" id="cap-checklist">
             <h3 style="margin:0; color:var(--london-blue); margin-bottom:10px;">📋 Master Checklist: Task Distribution</h3>
             <table>
                 <thead>
-                    <tr>
-                        <th width="20%">Part</th>
-                        <th width="45%">Task</th>
-                        <th width="5%">✔</th>
-                        <th width="30%">Who does this?</th>
-                    </tr>
+                    <tr><th>Part</th><th>Task</th><th>✔</th><th>Who?</th></tr>
                 </thead>
                 <tbody>
                     <tr class="cat-header"><td colspan="4">Travel & Hotel</td></tr>
-                    <tr>
-                        <td>Travel</td>
-                        <td>Travel Friday (time/price)</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Travel</td>
-                        <td>Travel Monday (time/price)</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Hotel</td>
-                        <td>Hotel chosen (check breakfast)</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    
-                    <tr class="cat-header"><td colspan="4">Saturday Schedule</td></tr>
-                    <tr>
-                        <td>Sat. Morning</td>
-                        <td>Activity + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sat. Lunch</td>
-                        <td>Location chosen + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sat. Afternoon</td>
-                        <td>Activity + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sat. Dinner</td>
-                        <td>Location chosen + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sat. Evening</td>
-                        <td>Activity + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    
-                    <tr class="cat-header"><td colspan="4">Sunday Schedule</td></tr>
-                    <tr>
-                        <td>Sun. Morning</td>
-                        <td>Activity + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sun. Lunch</td>
-                        <td>Location chosen + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sun. Afternoon</td>
-                        <td>Activity + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sun. Dinner</td>
-                        <td>Location chosen + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    <tr>
-                        <td>Sun. Evening</td>
-                        <td>Activity + Review written</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
-                    
-                    <tr class="cat-header"><td colspan="4">Final Check</td></tr>
-                    <tr>
-                        <td>Total</td>
-                        <td>Budget overview complete</td>
-                        <td><input type="checkbox"></td>
-                        <td><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    </tr>
+                    <tr><td>Travel</td><td>Travel Friday</td><td><input type="checkbox"></td><td><input type="text"></td></tr>
+                    <tr><td>Travel</td><td>Travel Monday</td><td><input type="checkbox"></td><td><input type="text"></td></tr>
+                    <tr><td>Hotel</td><td>Hotel chosen</td><td><input type="checkbox"></td><td><input type="text"></td></tr>
+                    <tr class="cat-header"><td colspan="4">Schedule & Budget</td></tr>
+                    <tr><td>Sat.</td><td>Activities & Reviews</td><td><input type="checkbox"></td><td><input type="text"></td></tr>
+                    <tr><td>Sun.</td><td>Activities & Reviews</td><td><input type="checkbox"></td><td><input type="text"></td></tr>
+                    <tr><td>Total</td><td>Budget complete</td><td><input type="checkbox"></td><td><input type="text"></td></tr>
                 </tbody>
             </table>
             <div class="meta-row">
-                <div class="author-box">Team: <input type="text" placeholder="Names..." autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
+                <div class="author-box">Team: <input type="text" placeholder="Names..."></div>
             </div>
         </div>
     </section>
@@ -934,17 +769,13 @@
     }
 
     function calcTotal() {
-        let tripInputs = document.querySelectorAll('.b-in');
         let tripSub = 0;
-        tripInputs.forEach(i => { tripSub += Number(i.value) || 0; });
-        
+        document.querySelectorAll('.b-in').forEach(i => tripSub += Number(i.value) || 0);
         document.getElementById('b-sub').innerText = "£ " + tripSub;
         document.getElementById('b-sub').style.color = tripSub > 425 ? "red" : "black";
 
-        let foodInputs = document.querySelectorAll('.f-in');
         let foodSub = 0;
-        foodInputs.forEach(i => { foodSub += Number(i.value) || 0; });
-        
+        document.querySelectorAll('.f-in').forEach(i => foodSub += Number(i.value) || 0);
         document.getElementById('f-sub').innerText = "£ " + foodSub;
         document.getElementById('f-sub').style.color = foodSub > 60 ? "red" : "black";
 
@@ -953,11 +784,9 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const inputs = document.querySelectorAll('input:not([type="file"]), textarea');
-        
         inputs.forEach((input, index) => {
             const storageKey = 'london_travel_v2_' + index;
             const savedValue = localStorage.getItem(storageKey);
-            
             if (savedValue !== null) {
                 if (input.type === 'checkbox' || input.type === 'radio') {
                     input.checked = (savedValue === 'true');
@@ -965,16 +794,10 @@
                     input.value = savedValue;
                 }
             }
-            
             input.addEventListener('input', () => {
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    localStorage.setItem(storageKey, input.checked);
-                } else {
-                    localStorage.setItem(storageKey, input.value);
-                }
+                localStorage.setItem(storageKey, input.type === 'checkbox' ? input.checked : input.value);
             });
         });
-        
         calcTotal();
     });
 </script>
