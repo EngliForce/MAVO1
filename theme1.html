@@ -1,109 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Theme 1: All About Me</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #ff7043;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-    header img {
-      display: block;
-      margin: 0 auto 1rem auto;
-      width: 120px;
-      height: auto;
-    }
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-    section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #ff7043;
-    }
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .links a {
-      padding: 0.5rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .links a:hover {
-      background-color: #e65c30;
-    }
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Theme 1 - All About Me</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Oranje en Gele accenten voor Theme 1 */
+            --hero-orange-main: #ff7043;
+            --hero-orange-dark: #e65c30;
+            --hero-orange-glow: rgba(255, 112, 67, 0.4);
+            --hero-yellow: #ffb703;
+            
+            /* Donkere achtergrondkleuren exact uit het Theme 4 voorbeeld */
+            --dark-bg: #0b1a2a;
+            --card-bg: #102a43;
+            --card-border: #243b53;
+            --card-bg-done: #05101a;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--hero-orange-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow); /* Het gele accentje is terug! */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        header img {
+            display: block;
+            margin: 0 auto 1rem auto;
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 3.5rem; 
+            letter-spacing: 3px; 
+            margin: 0; 
+            text-shadow: 4px 4px 0px var(--hero-orange-dark); 
+        }
+
+        header p { 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            margin-top: 5px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+
+        main { max-width: 1000px; margin: 20px auto; padding: 20px; }        
+        
+        .learning-goals {
+            background: var(--card-bg);
+            border: 3px solid var(--hero-orange-main);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px var(--hero-orange-glow);
+        }
+
+        .learning-goals h2 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.2rem; 
+            color: var(--hero-orange-main); 
+            margin-top: 0; 
+            letter-spacing: 1px; 
+        }
+
+        .learning-goals p {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+        }
+
+        .divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-orange-main), transparent);
+            margin: 60px 0 20px 0;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-orange-main);
+        }
+
+        .section-title { 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.8rem; 
+            color: var(--hero-orange-main); 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 25px; margin-top: 30px; }
+
+        .card {
+            background: var(--card-bg);
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .card:hover { 
+            border-color: var(--hero-orange-main); 
+            transform: translateY(-8px); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+        }
+
+        .card-header { display: flex; justify-content: center; margin-bottom: 15px; }
+        
+        .power-icon { 
+            font-size: 2.5rem; 
+            background: rgba(255,255,255,0.05); 
+            width: 65px; height: 65px; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+
+        .name { font-weight: bold; font-size: 1.3rem; margin-bottom: 8px; color: #f8fafc; text-align: center; }        
+        .desc { font-size: 0.9rem; color: #94a3b8; flex-grow: 1; text-align: center; margin-bottom: 15px; }
+
+        .btn {
+            background: var(--card-border);
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            z-index: 5;
+        }
+
+        .card.done { 
+            border-color: var(--hero-orange-main); 
+            background: var(--card-bg-done); 
+            box-shadow: 0 0 20px var(--hero-orange-glow); 
+        }        
+        .card.done .btn { 
+            background: var(--hero-orange-main); 
+            color: white; 
+        }
+
+        .star { position: fixed; pointer-events: none; font-size: 3rem; z-index: 1000; animation: starFly 0.8s forwards; }        
+        @keyframes starFly { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2) translateY(-150px); opacity: 0; } }    
+    </style>
 </head>
 <body>
-  <header>
-    <img src="Logo.png" alt="EngliForce Logo">
-    <h1>Theme 1: All About Me</h1>
-  </header>
 
-  <main>
-    <section>
-      <h2>🎯 Learning Goals</h2>
-      <p>You will learn to introduce yourself, talk about your family, describe your hobbies, and use basic grammar.</p>
-    </section>
+<header>    
+    <h1>ENGLIFORCE ACADEMY</h1>    
+    <p>THEME 1: ALL ABOUT ME</p>
+</header>
 
-    <section>
-      <h2>🔤 Vocabulary</h2>
-      <div class="links">
-        <a href="m1t1_vocabulary_1_1" target="_blank">Vocab 1.1: Me myself and I</a>
-        <a href="m1t1_vocabulary_1_2" target="_blank">Vocab 1.2: Me and my family</a>
-        <a href="m1t1_vocabulary_1_3" target="_blank">Vocab 1.3: Me and my friends</a>
-        <a href="m1t1_vocabulary_1_4" target="_blank">Vocab 1.4: Me and my hobbbies/school</a>
-        <a href="m1t1_all_vocab" target="_blank">Theme 1 - All Vocab</a>
-      </div>
-    </section>
+<main>    
+    <div class="learning-goals">
+        <h2>🎯 Learning Goals</h2>
+        <p>You will learn to introduce yourself, talk about your family, describe your hobbies, and use basic grammar.</p>
+    </div>
 
-    <section>
-      <h2>🎓 Grammar</h2>
-      <div class="links">
-        <a href="m1t1_the_alphabet.html" target="_blank">the alphabet</a>
-        <a href="m1t1_capital_lowercase_letters.html" target="_blank">Capital and lowercase letters</a>
-        <a href="m1t1_counting_cardinals.html" target="_blank">counting</a>
-        <a href="m1t1_a_or_an.html" target="_blank">a / an</a>
-        <a href="m1t1_personal_pronouns.html" target="_blank">personal pronouns</a>
-        <a href="m1t1_to_be_present_simple.html" target="_blank">to be – present simple</a>
-        <a href="m1t1_have_got.html" target="_blank">have/has got- present simple</a>
-        <a href="m1t1_present_simple_bevestigend.html" target="_blank">present simple - bevestigend</a>
-        <a href="m1t1_wh_questions.html" target="_blank">question words</a>
-        <a href="m1t1_adjectives_basics.html" target="_blank">adjectives</a>
-      </div>
-    </section>
+    <h2 class="section-title">📡 VOCAB TRAINING</h2>    
+    <div class="grid" id="vocab-grid"></div>
 
-  <footer>
-    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-  </footer>
+    <div class="divider"></div> 
+    
+    <h2 class="section-title">⚔️ GRAMMAR BRIEFING</h2>    
+    <div class="grid" id="grammar-grid"></div>
+</main>
+
+<footer>    
+    <p style="text-align: center; opacity: 0.5; padding: 60px 0;">
+        &copy; 2026 EngliForce – Make English Your Superpower!
+    </p>
+</footer>
+
+<script>    
+    const vocabData = [        
+        { id: 't1v1', name: 'Me, myself and I', desc: 'Introduce yourself.', icon: '👤', url: 'm1t1_vocabulary_1_1' },        
+        { id: 't1v2', name: 'My family', desc: 'Family members.', icon: '👨‍👩‍👧‍👦', url: 'm1t1_vocabulary_1_2' },        
+        { id: 't1v3', name: 'My friends', desc: 'Talk about friends.', icon: '🤝', url: 'm1t1_vocabulary_1_3' },        
+        { id: 't1v4', name: 'Hobbies & school', desc: 'What do you like?', icon: '⚽', url: 'm1t1_vocabulary_1_4' },        
+        { id: 't1v5', name: 'All Vocab', desc: 'Test all words.', icon: '🧠', url: 'm1t1_all_vocab' }    
+    ];
+
+    const grammarData = [        
+        { id: 't1g1', name: 'The Alphabet', desc: 'Letters.', icon: '🔤', url: 'm1t1_the_alphabet.html' },        
+        { id: 't1g2', name: 'Counting', desc: 'Numbers.', icon: '🔢', url: 'm1t1_capital_lowercase_letters.html' },            
+        { id: 't1g4', name: 'A or An', desc: 'Articles.', icon: '🍎', url: 'm1t1_a_or_an.html' },        
+        { id: 't1g5', name: 'Personal Pronouns', desc: 'I, you, he, she...', icon: '👉', url: 'm1t1_personal_pronouns.html' },        
+        { id: 't1g6', name: 'To Be', desc: 'Am, is, are.', icon: '✨', url: 'm1t1_to_be_present_simple.html' },        
+        { id: 't1g7', name: 'Have / Has got', desc: 'What do you own?', icon: '🤲', url: 'm1t1_have_got.html' },        
+        { id: 't1g8', name: 'Present Simple', desc: 'Regular habits.', icon: '✅', url: 'm1t1_present_simple_bevestigend.html' },
+        { id: 't1g9', name: 'Question Words', desc: 'Who, what, where?', icon: '❓', url: 'm1t1_wh_questions.html' }   
+    ];
+
+    function createCard(item, gridId) {        
+        const grid = document.getElementById(gridId);                
+        const card = document.createElement('a');        
+        card.className = 'card';        
+        card.id = item.id;        
+        card.href = item.url;                
+        
+        card.innerHTML = `            
+            <div class="card-header"><div class="power-icon">${item.icon}</div></div>            
+            <div class="name">${item.name}</div>            
+            <div class="desc">${item.desc}</div>            
+            <button class="btn" onclick="completeTask(event, '${item.id}')">MISSION COMPLETED</button>        
+        `;        
+        grid.appendChild(card);    
+    }
+
+    vocabData.forEach(i => createCard(i, 'vocab-grid'));    
+    grammarData.forEach(i => createCard(i, 'grammar-grid'));
+
+    function completeTask(event, id) {        
+        event.preventDefault();         
+        event.stopPropagation();                
+        
+        const card = document.getElementById(id);        
+        const isDone = card.classList.toggle('done');        
+        const saved = JSON.parse(localStorage.getItem('hero_progress_t1') || '{}');        
+        saved[id] = isDone;        
+        localStorage.setItem('hero_progress_t1', JSON.stringify(saved));                
+        
+        if(isDone) {            
+            // Confetti heeft nu ook de gele accentkleur erin zitten
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ff7043', '#ffb703', '#ffffff'] });            
+            const s = document.createElement('div'); s.className = 'star'; s.innerHTML = '⚡';            
+            s.style.left = event.clientX + 'px'; s.style.top = event.clientY + 'px';            
+            document.body.appendChild(s); setTimeout(() => s.remove(), 800);        
+        }    
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {        
+        const saved = JSON.parse(localStorage.getItem('hero_progress_t1') || '{}');        
+        Object.keys(saved).forEach(id => {             
+            const el = document.getElementById(id);            
+            if(el && saved[id]) el.classList.add('done');         
+        });    
+    });
+</script>
 </body>
 </html>
