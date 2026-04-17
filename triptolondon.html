@@ -564,8 +564,8 @@
             <h3 style="margin-top:0;">📤 What to hand in?</h3>
             <p>Gather your screenshots and put them in a <strong>Word</strong> or <strong>PowerPoint</strong> document:</p>
             <ul>
-                <li><strong>14x Review Card</strong> (1x hotel, 4x restaurant, 9x activity)</li>
-                <li><strong>1x Transport Card</strong></li>
+                <li><strong>11x Review Card</strong> (1x hotel, 4x restaurant, 6x activity)</li>
+                <li><strong>2x Transport Card</strong></li>
                 <li><strong>1x Budget Card</strong></li>
                 <li><strong>1x Saturday Card</strong></li>
                 <li><strong>1x Sunday Card</strong></li>
@@ -582,27 +582,41 @@
             <button onclick="openCard('cap-bud')">💰 Budget Card</button>
         </div>
 
-        <div class="card" id="cap-transport">
-            <h3 style="margin:0; color:var(--london-blue);">✈️ Transport to London</h3>
-            <table>
-                <tr class="cat-header">
-                    <td width="50%">Departure: Friday</td>
-                    <td>Return: Monday</td>
-                </tr>
-                <tr>
-                    <td><input type="text" placeholder="Method & Time" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                    <td><input type="text" placeholder="Method & Time" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Total Price p.p. (£): <input type="number" placeholder="Value" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
-                </tr>
-            </table>
-            <textarea placeholder="Explain your choice in English..." autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></textarea>
-            <div class="meta-row">
-                <div class="source-box">Source: <input type="text" placeholder="Website..." autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
-                <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></div>
-            </div>
-        </div>
+<div class="card" id="cap-transport">
+    <h3 style="margin:0; color:var(--london-blue);">✈️ Transport Details</h3>
+    
+    <table>
+        <tr class="cat-header">
+            <td colspan="2">Type of Journey</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <label><input type="radio" name="journey-type" value="arrival"> Arrival</label>
+                <label style="margin-left: 15px;"><input type="radio" name="journey-type" value="departure"> Departure</label>
+            </td>
+        </tr>
+        <tr>
+            <td width="50%"><strong>Date:</strong></td>
+            <td><strong>Transport Method:</strong></td>
+        </tr>
+        <tr>
+            <td><input type="date" style="width: 90%;"></td>
+            <td><input type="text" placeholder="e.g. Eurostar, Plane" autocomplete="off"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                Price p.p. (£): <input type="number" placeholder="Value" style="width: 80px;" autocomplete="off">
+            </td>
+        </tr>
+    </table>
+
+    <textarea placeholder="Explain your choice for this transport method in English..." autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="off"></textarea>
+
+    <div class="meta-row">
+        <div class="source-box">Source: <input type="text" placeholder="Website..." autocomplete="off"></div>
+        <div class="author-box">Written by: <input type="text" placeholder="Name" autocomplete="off"></div>
+    </div>
+</div>
 
         <div class="card" id="cap-sat">
             <h3 style="margin:0; color:var(--london-blue);">📅 Daily Schedule: Saturday</h3>
