@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Time Master - Duo Edition</title>
+    <style>
+        :root {
+            --bg: #050a14;
+            --glass: rgba(255, 255, 255, 0.1);
+            --neon-cyan: #00ffff;
+            --neon-pink: #ff00ff;
+            --neon-yellow: #ffff00;
+            --neon-green: #39ff14;
+        }
+
+        body {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050a14 100%);
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; margin: 0; color: white; overflow: hidden;
+        }
+
+        .glass-card {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,255,255,0.1); border-radius: 40px;
+            padding: 2rem; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            text-align: center; width: 520px; z-index: 10;
+        }
+
+        h1 { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); margin: 0; font-size: 1.8rem; }
+        
+        #setup-screen, #game-screen, #result-screen { width: 100%; display: none; }
+        #setup-screen { display: block; }
+
+        .selector-group { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; justify-content: center; }
+        .btn-opt { 
+            padding: 8px 12px; font-size: 0.75rem; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 12px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-opt.active { 
+            background: var(--neon-cyan); color: black; border-color: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); 
+        }
+
+        #clock-wrapper { width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; margin: 15px auto; position: relative; }
+        #digital-display { font-size: 4rem; font-family: 'Courier New', monospace; color: var(--neon-cyan); text-shadow: 0 0 20px var(--neon-cyan); display: none; }
+        #target-display { font-size: 1.4rem; font-weight: bold; min-height: 70px; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+        .stat-box { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 15px; }
+
+        button.action-btn { width: 100%; padding: 15px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 1rem; margin-top: 10px; }
+        .primary { background: var(--neon-pink); color: white; box-shadow: 0 0 15px var(--neon-pink); }
+        .success { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
+
+        #feedback-box { margin: 15px 0; min-height: 90px; display: flex; flex-direction: column; justify-content: center; }
+        .stopped-info { background: rgba(255, 255, 0, 0.1); border: 1px solid var(--neon-yellow); color: var(--neon-yellow); padding: 10px; border-radius: 15px; font-size: 0.9rem; }
+        
+        label { font-size: 0.7rem; color: var(--neon-yellow); text-transform: uppercase; display: block; margin-top: 15px; }
+
+        .turn-indicator { padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+        .p1-turn { background: var(--neon-cyan); color: black; box-shadow: 0 0 10px var(--neon-cyan); }
+        .p2-turn { background: var(--neon-pink); color: white; box-shadow: 0 0 10px var(--neon-pink); }
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+    <div id="setup-screen">
+        <h1>Time Master Duo</h1>
+        <div style="margin: 20px 0;">
+            <label>Aantal Spelers</label>
+            <div class="selector-group">
+                <button class="btn-opt active" onclick="setPlayers(1, this)">1 Speler</button>
+                <button class="btn-opt" onclick="setPlayers(2, this)">2 Spelers</button>
+            </div>
+
+            <label>Mode</label>
+            <div class="selector-group">
+                <button class="btn-opt active" onclick="setClockMode('analog', this)">Analog</button>
+                <button class="btn-opt" onclick="setClockMode('digital', this)">Digital</button>
+                <button class="btn-opt" onclick="setClockMode('mixed', this)">Mixed</button>
+            </div>
+
+            <label>Aantal Ronden per speler</label>
+            <input type="number" id="rounds-input" value="3" min="1" style="width: 60px; padding: 8px; border-radius: 10px; border: 1px solid var(--neon-cyan); background: none; color: white; text-align: center; margin-top: 5px;">
+        </div>
+        <button class="action-btn primary" onclick="initGame()">Start Spel</button>
+    </div>
+
+    <div id="game-screen">
+        <div id="turn-display" class="turn-indicator p1-turn">Speler 1 is aan de beurt</div>
+        <div class="stat-box">
+            <div id="p1-stats">P1: <span id="p1-score">0</span></div>
+            <div id="round-display">Ronde: <span id="cur-round">1</span></div>
+            <div id="p2-stats" style="display:none;">P2: <span id="p2-score">0</span></div>
+        </div>
+        <div id="target-display"></div>
+        
+        <div id="clock-wrapper">
+            <canvas id="clock-canvas" width="280" height="280"></canvas>
+            <div id="digital-display">00:00</div>
+        </div>
+
+        <div id="speed-control-container">
+            <label>Snelheid:</label>
+            <div class="selector-group">
+                <button class="btn-opt" onclick="setSpeed(0.2, this)">Very Slow</button>
+                <button class="btn-opt" onclick="setSpeed(0.8, this)">Slow</button>
+                <button class="btn-opt active" onclick="setSpeed(1.5, this)">Average</button>
+                <button class="btn-opt" onclick="setSpeed(3, this)">Fast</button>
+                <button class="btn-opt" onclick="setSpeed(6, this)">Very Fast</button>
+            </div>
+        </div>
+
+        <div id="feedback-box"></div>
+        <button id="stop-btn" class="action-btn primary">STOP</button>
+        <button id="next-btn" class="action-btn success" style="display:none;">VOLGENDE</button>
+    </div>
+
+    <div id="result-screen">
+        <h1>Eindscore</h1>
+        <div id="final-stats" style="margin: 20px 0; line-height: 1.6;"></div>
+        <button class="action-btn primary" onclick="location.reload()">Opnieuw</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+    const canvas = document.getElementById('clock-canvas');
+    const ctx = canvas.getContext('2d');
+    const digital = document.getElementById('digital-display');
+    const radius = canvas.width / 2;
+    ctx.translate(radius, radius);
+
+    let config = { clockType: 'analog', speed: 1.5, rounds: 3, numPlayers: 1 };
+    let state = { 
+        currentPlayer: 1, 
+        currentRound: 1, 
+        p1Score: 0, 
+        p2Score: 0, 
+        currentMinExact: 0, 
+        targetMin: 0, 
+        isRunning: false, 
+        activeType: 'analog', 
+        cycleMax: 720 
+    };
+
+    function setPlayers(n, btn) { config.numPlayers = n; toggleActive(btn); }
+    function setClockMode(m, btn) { config.clockType = m; toggleActive(btn); }
+    function setSpeed(val, btn) { config.speed = val; toggleActive(btn); }
+    function toggleActive(btn) { Array.from(btn.parentElement.children).forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+
+    function getEnglishTimeText(totalMin) {
+        let total = Math.floor(totalMin);
+        let m = total % 60;
+        let h12 = (Math.floor(total / 60) % 12) || 12;
+        const words = ["twelve", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "quarter", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "twenty-one", "twenty-two", "twenty-three", "twenty-four", "twenty-five", "twenty-six", "twenty-seven", "twenty-eight", "twenty-nine", "half"];
+        if (m === 0) return `${words[h12]} o'clock`;
+        if (m <= 30) return `${words[m]} past ${words[h12]}`;
+        let nextH = (h12 % 12) + 1;
+        return `${words[60 - m]} to ${words[nextH]}`;
+    }
+
+    function draw() {
+        if (!state.isRunning) return;
+        let exactTime = state.currentMinExact % state.cycleMax;
+
+        if (state.activeType === 'analog') {
+            canvas.style.display = 'block'; digital.style.display = 'none';
+            ctx.clearRect(-radius, -radius, canvas.width, canvas.height);
+            ctx.beginPath(); ctx.arc(0, 0, radius * 0.9, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fill();
+            ctx.strokeStyle = state.currentPlayer === 1 ? '#00ffff' : '#ff00ff'; ctx.lineWidth = 4; ctx.stroke();
+            
+            ctx.font = "16px Arial"; ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            for (let i = 1; i <= 60; i++) {
+                let angle = i * Math.PI / 30;
+                ctx.rotate(angle);
+                if (i % 5 === 0) {
+                    ctx.strokeStyle = '#ffff00'; ctx.lineWidth = 3;
+                    ctx.moveTo(0, -radius * 0.8); ctx.lineTo(0, -radius * 0.88); ctx.stroke();
+                    ctx.save(); ctx.translate(0, -radius * 0.68); ctx.rotate(-angle); ctx.fillText(i/5, 0, 0); ctx.restore();
+                } else {
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1;
+                    ctx.moveTo(0, -radius * 0.84); ctx.lineTo(0, -radius * 0.88); ctx.stroke();
+                }
+                ctx.rotate(-angle);
+            }
+            const hPos = (exactTime / 60) * (Math.PI / 6); 
+            const mPos = (exactTime % 60) * (Math.PI / 30);
+            drawHand(hPos, radius * 0.45, 10, '#ff00ff');
+            drawHand(mPos, radius * 0.75, 6, '#00ffff');
+        } else {
+            canvas.style.display = 'none'; digital.style.display = 'block';
+            let h = Math.floor(exactTime / 60).toString().padStart(2, '0');
+            let m = Math.floor(exactTime % 60).toString().padStart(2, '0');
+            digital.textContent = `${h}:${m}`;
+        }
+        state.currentMinExact = (state.currentMinExact + (config.speed / 5)) % state.cycleMax;
+        requestAnimationFrame(draw);
+    }
+
+    function drawHand(angle, len, width, color) {
+        ctx.beginPath(); ctx.lineWidth = width; ctx.lineCap = "round";
+        ctx.strokeStyle = color; ctx.moveTo(0, 0); ctx.rotate(angle - Math.PI/2); ctx.lineTo(len, 0); ctx.stroke();
+        ctx.rotate(-(angle - Math.PI/2));
+    }
+
+    function initGame() {
+        config.rounds = parseInt(document.getElementById('rounds-input').value) || 3;
+        state.currentRound = 1; state.currentPlayer = 1; state.p1Score = 0; state.p2Score = 0;
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        if(config.numPlayers == 2) document.getElementById('p2-stats').style.display = 'block';
+        startRound();
+    }
+
+    function startRound() {
+        const td = document.getElementById('turn-display');
+        td.textContent = `Speler ${state.currentPlayer} is aan de beurt`;
+        td.className = `turn-indicator ${state.currentPlayer === 1 ? 'p1-turn' : 'p2-turn'}`;
+
+        state.activeType = config.clockType === 'mixed' ? (Math.random() > 0.5 ? 'analog' : 'digital') : config.clockType;
+        state.cycleMax = (state.activeType === 'analog') ? 720 : 1440;
+        
+        let randomHours = (state.activeType === 'analog') ? Math.floor(Math.random() * 12) : Math.floor(Math.random() * 24);
+        state.targetMin = randomHours * 60 + (Math.floor(Math.random() * 12) * 5);
+        
+        document.getElementById('target-display').innerHTML = `Stop de klok op:<br><span style="color:var(--neon-yellow); font-size: 1.6rem;">${getEnglishTimeText(state.targetMin)}</span>`;
+        state.currentMinExact = (state.targetMin + 400 + Math.random() * 300) % state.cycleMax;
+        
+        document.getElementById('feedback-box').innerHTML = "";
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('stop-btn').style.display = 'block';
+        document.getElementById('cur-round').textContent = state.currentRound;
+        state.isRunning = true;
+        draw();
+    }
+
+    document.getElementById('stop-btn').onclick = () => {
+        state.isRunning = false;
+        const finalMin = Math.floor(state.currentMinExact) % state.cycleMax;
+        const diff = Math.min(Math.abs(finalMin - state.targetMin), state.cycleMax - Math.abs(finalMin - state.targetMin));
+        
+        if(state.currentPlayer === 1) {
+            state.p1Score += diff;
+            document.getElementById('p1-score').textContent = state.p1Score;
+        } else {
+            state.p2Score += diff;
+            document.getElementById('p2-score').textContent = state.p2Score;
+        }
+
+        document.getElementById('stop-btn').style.display = 'none';
+        document.getElementById('feedback-box').innerHTML = `
+            <div style="font-size: 1.2rem; color: ${diff === 0 ? 'var(--neon-green)' : 'var(--neon-pink)'}">
+                ${diff === 0 ? 'PERFECT! 🏆' : 'Penalty: ' + diff + ' min'}
+            </div>
+            <div class="stopped-info">Je stopte op: <strong>${getEnglishTimeText(finalMin)}</strong></div>`;
+        if(diff === 0) confetti({ particleCount: 150, spread: 80 });
+        document.getElementById('next-btn').style.display = 'block';
+    };
+
+    document.getElementById('next-btn').onclick = () => {
+        if (config.numPlayers == 2) {
+            if (state.currentPlayer === 1) {
+                state.currentPlayer = 2;
+                startRound();
+            } else {
+                if (state.currentRound < config.rounds) {
+                    state.currentRound++;
+                    state.currentPlayer = 1;
+                    startRound();
+                } else {
+                    showResults();
+                }
+            }
+        } else {
+            if (state.currentRound < config.rounds) {
+                state.currentRound++;
+                startRound();
+            } else {
+                showResults();
+            }
+        }
+    };
+
+    function showResults() {
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        let res = `Speler 1: ${state.p1Score} strafpunten<br>`;
+        if(config.numPlayers == 2) {
+            res += `Speler 2: ${state.p2Score} strafpunten<br><br>`;
+            if(state.p1Score < state.p2Score) res += "<strong>🏆 SPELER 1 WINT!</strong>";
+            else if(state.p2Score < state.p1Score) res += "<strong>🏆 SPELER 2 WINT!</strong>";
+            else res += "<strong>GELIJKSPEL!</strong>";
+        } else {
+            res += `Totaal: ${state.p1Score} strafpunten`;
+        }
+        document.getElementById('final-stats').innerHTML = res;
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+    }
+</script>
+</body>
+</html>
