@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verb Vibes Pro - Irregular Verbs Master</title>
+    <style>
+        :root {
+            --bg: #0f172a; --card-bg: #1e293b; --accent: #8b5cf6; --accent-glow: #a78bfa;
+            --text: #f8fafc; --success: #22c55e; --error: #ef4444; --warning: #f59e0b;
+            --dark-gray: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg); color: var(--text); margin: 0;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 50px;
+            overflow-x: hidden;
+        }
+
+        header { padding: 2rem 1rem 1rem 1rem; text-align: center; position: relative; width: 100%; max-width: 850px; box-sizing: border-box; }
+        h1 {
+            font-size: 2.5rem; margin: 0 0 10px 0;
+            background: linear-gradient(to right, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; letter-spacing: 3px; filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.3));
+        }
+
+        .reset-btn {
+            background: none; border: 1px solid var(--error); color: var(--error); padding: 4px 10px;
+            border-radius: 5px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;
+        }
+        .reset-btn:hover { background: var(--error); color: white; }
+
+        nav { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .filter-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 1.5rem; max-width: 800px; padding: 0 10px; }
+
+        button {
+            padding: 0.7rem 1.4rem; border: 1px solid var(--accent); border-radius: 10px;
+            background: var(--card-bg); color: white; cursor: pointer; font-weight: bold; transition: all 0.2s ease;
+        }
+        button:hover { background: var(--accent); box-shadow: 0 0 15px var(--accent); transform: translateY(-2px); }
+        button.active { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+
+        .letter-btn { padding: 6px 12px; font-size: 0.85rem; min-width: 40px; border-color: rgba(139, 92, 246, 0.3); }
+        .letter-btn.selected { background: #3b82f6; border-color: #60a5fa; box-shadow: 0 0 10px #3b82f6; }
+
+        .container { width: 95%; max-width: 850px; background: var(--card-bg); padding: 2rem; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; box-sizing: border-box; }
+        .hidden { display: none !important; }
+
+        .stats-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--dark-gray); }
+        .streak-badge { font-size: 1.2rem; font-weight: bold; color: var(--warning); text-shadow: 0 0 8px rgba(245, 158, 11, 0.4); transition: transform 0.3s; }
+        .streak-bump { transform: scale(1.3); }
+        .counter-badge { font-size: 0.9rem; color: var(--accent-glow); background: rgba(139, 92, 246, 0.1); padding: 4px 12px; border-radius: 20px; }
+
+        /* Progress Bar */
+        .progress-container { width: 100%; height: 10px; background: var(--dark-gray); border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, #8b5cf6, #3b82f6); transition: width 0.5s ease-in-out; box-shadow: 0 0 10px var(--accent); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--dark-gray); }
+        th { color: var(--accent-glow); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .speak-cell { cursor: pointer; font-size: 1.2rem; opacity: 0.6; transition: 0.2s; }
+        .speak-cell:hover { opacity: 1; transform: scale(1.2); }
+
+        /* Flashcards */
+        .flashcard-container { perspective: 1000px; height: 300px; cursor: pointer; margin-bottom: 2rem; }
+        .flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #2d3748; border-radius: 20px; border: 2px solid var(--accent); font-size: 2rem; text-align: center; padding: 20px; box-sizing: border-box; }
+        .back { transform: rotateY(180deg); color: var(--accent-glow); background: #1e293b; }
+        .flash-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn-wrong { border-color: var(--error); color: var(--error); }
+        .btn-wrong:hover { background: var(--error); color: white; }
+        .btn-correct { border-color: var(--success); color: var(--success); }
+        .btn-correct:hover { background: var(--success); color: white; }
+
+        /* Quiz */
+        .quiz-box input { width: 100%; padding: 1.2rem; margin: 1.5rem 0; box-sizing: border-box; background: #0f172a; border: 2px solid var(--accent); color: white; border-radius: 12px; font-size: 1.4rem; outline: none; text-align: center; transition: border-color 0.3s; }
+        .quiz-box input:focus { border-color: var(--accent-glow); box-shadow: 0 0 15px rgba(167, 139, 250, 0.3); }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        
+        .feedback { margin-top: 15px; font-weight: bold; min-height: 30px; text-align: center; font-size: 1.2rem; transition: color 0.3s; }
+        .adaptive-tag { background: var(--warning); color: black; padding: 2px 10px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; vertical-align: middle; margin-left: 10px; }
+
+        /* Chunk Grid */
+        .chunk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 25px 0; }
+        .chunk-card { background: #2d3748; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid var(--accent); cursor: pointer; transition: 0.2s; }
+        .chunk-card:hover { transform: scale(1.05); box-shadow: 0 0 10px var(--accent-glow); }
+        .chunk-card .nl { font-size: 0.9rem; opacity: 0.7; margin-bottom: 8px; }
+        .chunk-card .en { font-weight: bold; font-size: 1.1rem; color: var(--accent-glow); }
+
+        /* Confetti */
+        .confetti { position: fixed; top: -10px; width: 10px; height: 10px; z-index: 9999; animation: fall linear forwards; border-radius: 2px; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+        @media (max-width: 600px) { h1 { font-size: 1.8rem; } .container { padding: 1rem; } .front, .back { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>VERB VIBES PRO</h1>
+    <button class="reset-btn" onclick="hardResetApp()">🔄 Reset Alle Voortgang</button>
+</header>
+
+<nav>
+    <button onclick="showSection('list')" id="nav-list" class="active">Lijst</button>
+    <button onclick="showSection('spaced')" id="nav-spaced">Gespreid Leren 🧠</button>
+    <button onclick="showSection('flashcards')" id="nav-flash">Flashcards</button>
+    <button onclick="showSection('quiz')" id="nav-quiz">Random Quiz</button>
+</nav>
+
+<div class="filter-container" id="letter-filters"></div>
+
+<div class="container">
+    <div class="stats-bar">
+        <div id="streak-display" class="streak-badge">🔥 Streak: 0</div>
+        <div id="counter-display" class="counter-badge">Woorden: --</div>
+    </div>
+
+    <div id="section-list" class="table-wrapper section-content">
+        <table>
+            <thead><tr><th>Infinitive</th><th>Past Simple</th><th>Past Participle</th><th>NL</th><th>📢</th></tr></thead>
+            <tbody id="verb-table-body"></tbody>
+        </table>
+    </div>
+
+    <div id="section-spaced" class="hidden section-content">
+        <div class="progress-container"><div class="progress-bar" id="sl-progress-bar"></div></div>
+        
+        <div id="spaced-learn-view">
+            <h2 style="text-align:center; color: var(--accent-glow);">Missie <span id="sl-mission-num">1</span>: Nieuwe Woorden</h2>
+            <p style="text-align:center; opacity:0.8;">Neem deze willekeurige woorden in je op. Klik erop voor uitspraak.</p>
+            <div class="chunk-grid" id="sl-chunk-grid"></div>
+            <button onclick="startSpacedTest('NEW')" style="width:100%; font-size:1.2rem; padding:15px; background: #3b82f6; border-color: #60a5fa;">Start de test! 🚀</button>
+        </div>
+        
+        <div id="spaced-quiz-view" class="hidden quiz-box">
+            <div style="text-align:center;"><span class="counter-badge" style="background:#3b82f6; color:white;" id="sl-phase-badge">Fase 1/2: Test</span></div>
+            <h3 id="sl-q-text" style="text-align: center; margin-top: 15px;">Vertaal...</h3>
+            <p style="text-align: center; opacity: 0.7;">Vorm: <strong id="sl-target-type" style="color: var(--accent-glow);"></strong></p>
+            <input type="text" id="sl-quiz-input" placeholder="Typ je antwoord..." autocomplete="off">
+            <button onclick="checkSpacedAnswer()" style="width: 100%; font-size: 1.1rem;">Check Antwoord</button>
+            <div id="sl-feedback" class="feedback"></div>
+        </div>
+
+        <div id="spaced-done-view" class="hidden" style="text-align:center; padding: 40px 0;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--success);">Alles Voltooid! 🏆</h2>
+            <p style="font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px;">Je hebt deze lijst 100% in je langetermijngeheugen zitten.</p>
+            <button onclick="hardResetApp()" style="font-size: 1.1rem;">Start Opnieuw</button>
+        </div>
+    </div>
+
+    <div id="section-flashcards" class="hidden section-content">
+        <div id="flash-area">
+            <div class="flashcard-container" onclick="toggleFlash()"><div class="flashcard" id="main-card">
+                <div class="front"><small style="font-size: 0.9rem; opacity: 0.5;">Betekenis:</small><div id="flash-nl">-</div></div>
+                <div class="back"><div id="flash-en">-</div><button onclick="event.stopPropagation(); speakCurrentFlash();" style="margin-top: 20px; font-size: 0.9rem; padding: 5px 15px;">🔊 Luister</button></div>
+            </div></div>
+            <div class="flash-controls">
+                <button class="btn-wrong" onclick="handleFlash(false)">❌ Nog niet</button>
+                <button class="btn-correct" onclick="handleFlash(true)">✅ Ken ik!</button>
+            </div>
+        </div>
+        <div id="flash-empty" class="hidden" style="text-align: center; padding: 40px 0;">
+            <h2>Alles geleerd! 🏆</h2><button onclick="resetFlashcards()">Reset lijst</button>
+        </div>
+    </div>
+
+    <div id="section-quiz" class="hidden section-content">
+        <div class="quiz-box">
+            <h3 id="quiz-q-text" style="text-align: center;">Vertaal...</h3>
+            <p style="text-align: center; opacity: 0.7;">Vorm: <strong id="quiz-target-type" style="color: var(--accent-glow);"></strong> <span id="repeat-tag" class="adaptive-tag hidden">HERHALING</span></p>
+            <input type="text" id="quiz-input" placeholder="Antwoord..." autocomplete="off">
+            <button onclick="checkQuiz()" style="width: 100%; font-size: 1.1rem;">Check Antwoord</button>
+            <div id="quiz-feedback" class="feedback"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const allVerbs = [
+        {inf: "be", ps: "was/were", pp: "been", nl: "zijn"}, {inf: "become", ps: "became", pp: "become", nl: "worden"},
+        {inf: "begin", ps: "began", pp: "begun", nl: "beginnen"}, {inf: "blow", ps: "blew", pp: "blown", nl: "blazen"},
+        {inf: "break", ps: "broke", pp: "broken", nl: "breken"}, {inf: "bring", ps: "brought", pp: "brought", nl: "brengen"},
+        {inf: "buy", ps: "bought", pp: "bought", nl: "kopen"}, {inf: "catch", ps: "caught", pp: "caught", nl: "vangen"},
+        {inf: "choose", ps: "chose", pp: "chosen", nl: "kiezen"}, {inf: "come", ps: "came", pp: "come", nl: "komen"},
+        {inf: "cost", ps: "cost", pp: "cost", nl: "kosten"}, {inf: "do", ps: "did", pp: "done", nl: "doen"},
+        {inf: "draw", ps: "drew", pp: "drawn", nl: "tekenen"}, {inf: "drive", ps: "drove", pp: "driven", nl: "rijden"},
+        {inf: "eat", ps: "ate", pp: "eaten", nl: "eten"}, {inf: "fall", ps: "fell", pp: "fallen", nl: "vallen"},
+        {inf: "feel", ps: "felt", pp: "felt", nl: "voelen"}, {inf: "find", ps: "found", pp: "found", nl: "vinden"},
+        {inf: "forget", ps: "forgot", pp: "forgotten", nl: "vergeten"}, {inf: "freeze", ps: "froze", pp: "frozen", nl: "bevriezen"},
+        {inf: "get", ps: "got", pp: "got", nl: "worden"}, {inf: "give", ps: "gave", pp: "given", nl: "geven"},
+        {inf: "go", ps: "went", pp: "gone", nl: "gaan"}, {inf: "hang", ps: "hung", pp: "hung", nl: "hangen"},
+        {inf: "have", ps: "had", pp: "had", nl: "hebben"}, {inf: "hear", ps: "heard", pp: "heard", nl: "horen"},
+        {inf: "hide", ps: "hid", pp: "hidden", nl: "verstoppen"}, {inf: "hit", ps: "hit", pp: "hit", nl: "slaan"},
+        {inf: "hurt", ps: "hurt", pp: "hurt", nl: "pijn doen"}, {inf: "keep", ps: "kept", pp: "kept", nl: "houden"},
+        {inf: "leave", ps: "left", pp: "left", nl: "verlaten"}, {inf: "lend", ps: "lent", pp: "lent", nl: "lenen"},
+        {inf: "lose", ps: "lost", pp: "lost", nl: "verliezen"}, {inf: "make", ps: "made", pp: "made", nl: "maken"},
+        {inf: "mean", ps: "meant", pp: "meant", nl: "bedoelen"}, {inf: "meet", ps: "met", pp: "met", nl: "ontmoeten"},
+        {inf: "put", ps: "put", pp: "put", nl: "zetten"}, {inf: "read", ps: "read", pp: "read", nl: "lezen"},
+        {inf: "ring", ps: "rang", pp: "rung", nl: "bellen"}, {inf: "run", ps: "ran", pp: "run", nl: "rennen"},
+        {inf: "say", ps: "said", pp: "said", nl: "zeggen"}, {inf: "see", ps: "saw", pp: "seen", nl: "zien"},
+        {inf: "send", ps: "sent", pp: "sent", nl: "sturen"}, {inf: "shut", ps: "shut", pp: "shut", nl: "sluiten"},
+        {inf: "sing", ps: "sang", pp: "sung", nl: "zingen"}, {inf: "sit", ps: "sat", pp: "sat", nl: "zitten"},
+        {inf: "sleep", ps: "slept", pp: "slept", nl: "slapen"}, {inf: "spend", ps: "spent", pp: "spent", nl: "uitgeven"},
+        {inf: "steal", ps: "stole", pp: "stolen", nl: "stelen"}, {inf: "stick", ps: "stuck", pp: "stuck", nl: "vastzitten"},
+        {inf: "swim", ps: "swam", pp: "swum", nl: "zwemmen"}, {inf: "take", ps: "took", pp: "taken", nl: "nemen"},
+        {inf: "tell", ps: "told", pp: "told", nl: "vertellen"}, {inf: "think", ps: "thought", pp: "thought", nl: "denken"},
+        {inf: "throw", ps: "threw", pp: "thrown", nl: "gooien"}
+    ];
+
+    let currentVerbs = [...allVerbs];
+    let streak = 0;
+
+    // --- LEVENSHTEIN (TYPO CHECK) ---
+    function levenshtein(a, b) {
+        if(a.length === 0) return b.length;
+        if(b.length === 0) return a.length;
+        const matrix = [];
+        for(let i=0; i<=b.length; i++) matrix[i] = [i];
+        for(let j=0; j<=a.length; j++) matrix[0][j] = j;
+        for(let i=1; i<=b.length; i++) {
+            for(let j=1; j<=a.length; j++) {
+                if(b.charAt(i-1) === a.charAt(j-1)) matrix[i][j] = matrix[i-1][j-1];
+                else matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    function checkAnswerTypo(input, correctAnswersString) {
+        const answers = correctAnswersString.split('/').map(a => a.trim());
+        if (answers.includes(input)) return 'CORRECT';
+        for (let a of answers) {
+            // Tolerantie van 1 letterfout, mits het woord langer dan 3 letters is
+            if (a.length > 3 && levenshtein(input, a) <= 1) return 'ALMOST';
+        }
+        return 'WRONG';
+    }
+
+    // --- CONFETTI ---
+    function shootConfetti() {
+        const colors = ['#8b5cf6', '#3b82f6', '#22c55e', '#ef4444', '#f59e0b', '#ec4899'];
+        for(let i=0; i<60; i++) {
+            const conf = document.createElement('div');
+            conf.className = 'confetti';
+            conf.style.left = Math.random() * 100 + 'vw';
+            conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            conf.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            conf.style.animationDelay = (Math.random() * 0.5) + 's';
+            document.body.appendChild(conf);
+            setTimeout(() => conf.remove(), 3500);
+        }
+    }
+
+    function updateStreak(isReset) {
+        if(isReset) streak = 0;
+        else {
+            streak++;
+            if([10, 25, 50, 100].includes(streak)) shootConfetti();
+            const badge = document.getElementById('streak-display');
+            badge.classList.add('streak-bump');
+            setTimeout(() => badge.classList.remove('streak-bump'), 300);
+        }
+        document.getElementById('streak-display').innerText = `🔥 Streak: ${streak}`;
+        saveData();
+    }
+
+    function speak(text) {
+        window.speechSynthesis.cancel();
+        text.split(/[\s/]+/).forEach((word) => {
+            const utterance = new SpeechSynthesisUtterance(word + ",");
+            utterance.lang = 'en-US'; utterance.rate = 0.75; window.speechSynthesis.speak(utterance);
+        });
+    }
+
+    // --- LOCAL STORAGE (OPSLAAN) ---
+    let sl_unseen = [], sl_mastered = [], sl_currentChunk = [], sl_testQueue = [], sl_state = '', sl_mission = 1;
+    let errorQueue = [], qCounter = 0;
+
+    function saveData() {
+        const data = {
+            streak, qCounter, errorQueue, sl_mission, sl_state,
+            sl_unseen, sl_mastered, sl_currentChunk, sl_testQueue
+        };
+        localStorage.setItem('verbVibesData', JSON.stringify(data));
+    }
+
+    function loadData() {
+        const saved = localStorage.getItem('verbVibesData');
+        if(saved) {
+            const d = JSON.parse(saved);
+            streak = d.streak || 0; qCounter = d.qCounter || 0; errorQueue = d.errorQueue || [];
+            sl_mission = d.sl_mission || 1; sl_state = d.sl_state || '';
+            sl_unseen = d.sl_unseen || []; sl_mastered = d.sl_mastered || [];
+            sl_currentChunk = d.sl_currentChunk || []; sl_testQueue = d.sl_testQueue || [];
+            updateStreak(false); // trigger UI
+            streak--; // offset the +1 from updateStreak
+            return true;
+        }
+        return false;
+    }
+
+    function hardResetApp() {
+        if(confirm("Weet je zeker dat je alle voortgang (streaks en onthouden woorden) wilt wissen?")) {
+            localStorage.removeItem('verbVibesData');
+            location.reload();
+        }
+    }
+
+    // --- INITIALISATIE ---
+    const filterContainer = document.getElementById('letter-filters');
+    const letters = ['ALLES', ...new Set(allVerbs.map(v => v.inf[0].toUpperCase()))].sort();
+    letters.forEach(l => {
+        const btn = document.createElement('button');
+        btn.innerText = l; btn.className = 'letter-btn';
+        if(l === 'ALLES') btn.classList.add('selected');
+        btn.onclick = () => {
+            document.querySelectorAll('.letter-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            currentVerbs = l === 'ALLES' ? [...allVerbs] : allVerbs.filter(v => v.inf.toUpperCase().startsWith(l));
+            document.getElementById('counter-display').innerText = `Woorden: ${currentVerbs.length}`;
+            updateTable(); resetFlashcards();
+            // Als we filteren, starten we een tijdelijke sessie, opslaan negeren we dan even deels
+            if(l !== 'ALLES') { sl_unseen = [...currentVerbs].sort(()=>0.5-Math.random()); sl_mastered=[]; sl_mission=1; sl_nextChunk(); }
+        };
+        filterContainer.appendChild(btn);
+    });
+
+    function initApp() {
+        document.getElementById('counter-display').innerText = `Woorden: ${currentVerbs.length}`;
+        updateTable(); resetFlashcards();
+        
+        if(!loadData() || sl_unseen.length + sl_mastered.length === 0) {
+            sl_unseen = [...currentVerbs].sort(() => 0.5 - Math.random());
+            sl_nextChunk();
+        } else {
+            // Restore UI state for Spaced Learning
+            updateSLProgressBar();
+            if(sl_state.startsWith('TEST')) {
+                document.getElementById('spaced-learn-view').classList.add('hidden');
+                document.getElementById('spaced-quiz-view').classList.remove('hidden');
+                nextSpacedQuestion();
+            } else if(sl_unseen.length === 0 && sl_currentChunk.length === 0) {
+                document.getElementById('spaced-learn-view').classList.add('hidden');
+                document.getElementById('spaced-quiz-view').classList.add('hidden');
+                document.getElementById('spaced-done-view').classList.remove('hidden');
+            } else {
+                renderChunkGrid();
+            }
+        }
+        startNewQuestion(); // For random quiz
+    }
+
+    function updateTable() {
+        document.getElementById('verb-table-body').innerHTML = currentVerbs.map(v => `
+            <tr><td>${v.inf}</td><td>${v.ps}</td><td>${v.pp}</td><td>${v.nl}</td>
+            <td class="speak-cell" onclick="speak('${v.inf} ${v.ps} ${v.pp}')">🔊</td></tr>`).join('');
+    }
+
+    function showSection(mode) {
+        document.querySelectorAll('.section-content').forEach(d => d.classList.add('hidden'));
+        document.getElementById('section-' + mode).classList.remove('hidden');
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById('nav-' + mode).classList.add('active');
+        if(mode === 'quiz') document.getElementById('quiz-input').focus();
+        if(mode === 'spaced' && sl_state.includes('TEST')) document.getElementById('sl-quiz-input').focus();
+    }
+
+    // --- GESPREID LEREN ---
+    function updateSLProgressBar() {
+        const total = currentVerbs.length;
+        const mastered = sl_mastered.length;
+        const percentage = total === 0 ? 0 : (mastered / total) * 100;
+        document.getElementById('sl-progress-bar').style.width = percentage + '%';
+    }
+
+    function sl_nextChunk() {
+        if(sl_unseen.length === 0 && sl_currentChunk.length === 0) {
+            document.getElementById('spaced-learn-view').classList.add('hidden');
+            document.getElementById('spaced-quiz-view').classList.add('hidden');
+            document.getElementById('spaced-done-view').classList.remove('hidden');
+            shootConfetti();
+            return;
+        }
+        if(sl_currentChunk.length === 0) sl_currentChunk = sl_unseen.splice(0, 5);
+        sl_state = 'LEARN';
+        saveData();
+        
+        document.getElementById('spaced-quiz-view').classList.add('hidden');
+        document.getElementById('spaced-learn-view').classList.remove('hidden');
+        document.getElementById('sl-mission-num').innerText = sl_mission;
+        renderChunkGrid();
+        updateSLProgressBar();
+    }
+
+    function renderChunkGrid() {
+        document.getElementById('sl-chunk-grid').innerHTML = sl_currentChunk.map(v => `
+            <div class="chunk-card" onclick="speak('${v.inf} ${v.ps} ${v.pp}')">
+                <div class="nl">${v.nl}</div>
+                <div class="en">${v.inf}<br>${v.ps}<br>${v.pp}</div>
+                <div style="font-size:0.8rem; margin-top:10px; opacity:0.6;">🔊 Luister</div>
+            </div>`).join('');
+    }
+
+    function startSpacedTest(type) {
+        if(type === 'NEW') sl_testQueue = sl_currentChunk.map(v => ({verb: v, type: ['inf','ps','pp'][Math.floor(Math.random()*3)]}));
+        sl_state = type === 'NEW' ? 'TEST_NEW' : 'TEST_MIX';
+        
+        if (type === 'MIX' && sl_mastered.length > 0) {
+            const numOld = Math.min(5, sl_mastered.length);
+            const shuffledOld = [...sl_mastered].sort(() => 0.5 - Math.random()).slice(0, numOld);
+            sl_testQueue = sl_testQueue.concat(shuffledOld.map(v => ({verb: v, type: ['inf','ps','pp'][Math.floor(Math.random()*3)]})));
+        }
+        sl_testQueue.sort(() => 0.5 - Math.random());
+        saveData();
+        
+        document.getElementById('spaced-learn-view').classList.add('hidden');
+        document.getElementById('spaced-quiz-view').classList.remove('hidden');
+        document.getElementById('sl-phase-badge').innerText = type === 'NEW' ? 'Fase 1/2: Test Nieuwe Woorden' : 'Fase 2/2: Mix met oude woorden';
+        nextSpacedQuestion();
+    }
+
+    let sl_currentQ = null;
+    function nextSpacedQuestion() {
+        if(sl_testQueue.length === 0) {
+            if (sl_state === 'TEST_NEW' && sl_mastered.length > 0) startSpacedTest('MIX');
+            else {
+                sl_mastered.push(...sl_currentChunk);
+                sl_currentChunk = []; sl_mission++; sl_nextChunk();
+            }
+            return;
+        }
+        sl_currentQ = sl_testQueue[0];
+        const labels = {inf: '1e rijtje (Infinitive)', ps: '2e rijtje (Past Simple)', pp: '3e rijtje (Past Participle)'};
+        document.getElementById('sl-q-text').innerText = `Vertaal: "${sl_currentQ.verb.nl}"`;
+        document.getElementById('sl-target-type').innerText = labels[sl_currentQ.type];
+        document.getElementById('sl-quiz-input').value = '';
+        document.getElementById('sl-feedback').innerText = '';
+        document.getElementById('sl-quiz-input').focus();
+    }
+
+    function checkSpacedAnswer() {
+        if (!sl_currentQ) return;
+        const input = document.getElementById('sl-quiz-input');
+        const fb = document.getElementById('sl-feedback');
+        const status = checkAnswerTypo(input.value.trim().toLowerCase(), sl_currentQ.verb[sl_currentQ.type].toLowerCase());
+
+        if (status === 'CORRECT') {
+            updateStreak(false);
+            fb.innerText = "Helemaal goed! ✅"; fb.style.color = "var(--success)";
+            speak(input.value);
+            sl_testQueue.shift(); saveData();
+            setTimeout(nextSpacedQuestion, 1000);
+        } else if (status === 'ALMOST') {
+            input.classList.add('shake'); setTimeout(() => input.classList.remove('shake'), 400);
+            fb.innerText = "Bijna! Let op een klein spelfoutje 🧐"; fb.style.color = "var(--warning)";
+        } else {
+            updateStreak(true);
+            fb.innerText = `Foutje! Het was: ${sl_currentQ.verb[sl_currentQ.type]}`; fb.style.color = "var(--error)";
+            sl_testQueue.push(sl_testQueue.shift()); saveData();
+            setTimeout(nextSpacedQuestion, 2500);
+        }
+    }
+    document.getElementById('sl-quiz-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') checkSpacedAnswer(); });
+
+
+    // --- FLASHCARDS ---
+    let flashQueue = [], currentFlashIdx = -1;
+    function resetFlashcards() { flashQueue = [...currentVerbs]; document.getElementById('flash-area').classList.remove('hidden'); document.getElementById('flash-empty').classList.add('hidden'); nextFlash(); }
+    function toggleFlash() { document.getElementById('main-card').classList.toggle('flipped'); }
+    function nextFlash() {
+        if(flashQueue.length===0){document.getElementById('flash-area').classList.add('hidden'); document.getElementById('flash-empty').classList.remove('hidden'); return;}
+        document.getElementById('main-card').classList.remove('flipped'); currentFlashIdx = Math.floor(Math.random() * flashQueue.length);
+        const v = flashQueue[currentFlashIdx];
+        document.getElementById('flash-nl').innerText = v.nl;
+        document.getElementById('flash-en').innerHTML = `<div style="font-weight:bold; color:white;">${v.inf}</div><div style="font-size:1.4rem; margin:10px 0;">${v.ps}</div><div style="font-size:1.4rem;">${v.pp}</div>`;
+    }
+    function handleFlash(isCorrect) { if(isCorrect){flashQueue.splice(currentFlashIdx, 1); updateStreak(false);} else updateStreak(true); nextFlash(); }
+    function speakCurrentFlash() { const v = flashQueue[currentFlashIdx]; speak(`${v.inf} ${v.ps} ${v.pp}`); }
+
+
+    // --- RANDOM QUIZ ---
+    let currentQVerb = {}, currentQType = '';
+    function startNewQuestion() {
+        if(currentVerbs.length===0) return;
+        qCounter++; saveData();
+        const readyIdx = errorQueue.findIndex(item => qCounter >= item.retryAt);
+        if (readyIdx !== -1) {
+            const item = errorQueue.splice(readyIdx, 1)[0];
+            currentQVerb = item.verb; currentQType = item.type; document.getElementById('repeat-tag').classList.remove('hidden');
+        } else {
+            currentQVerb = currentVerbs[Math.floor(Math.random() * currentVerbs.length)];
+            currentQType = ['inf', 'ps', 'pp'][Math.floor(Math.random() * 3)];
+            document.getElementById('repeat-tag').classList.add('hidden');
+        }
+        document.getElementById('quiz-q-text').innerText = `Vertaal: "${currentQVerb.nl}"`;
+        document.getElementById('quiz-target-type').innerText = {inf:'1e rijtje (Infinitive)', ps:'2e rijtje (Past Simple)', pp:'3e rijtje (Past Participle)'}[currentQType];
+        document.getElementById('quiz-input').value = ''; document.getElementById('quiz-feedback').innerText = '';
+    }
+
+    function checkQuiz() {
+        const input = document.getElementById('quiz-input');
+        const fb = document.getElementById('quiz-feedback');
+        const status = checkAnswerTypo(input.value.trim().toLowerCase(), currentQVerb[currentQType].toLowerCase());
+
+        if (status === 'CORRECT') {
+            updateStreak(false);
+            fb.innerText = "Helemaal goed! 🔥"; fb.style.color = "var(--success)";
+            speak(input.value); setTimeout(startNewQuestion, 1200);
+        } else if (status === 'ALMOST') {
+            input.classList.add('shake'); setTimeout(() => input.classList.remove('shake'), 400);
+            fb.innerText = "Bijna! Let op een spelfoutje 🧐"; fb.style.color = "var(--warning)";
+        } else {
+            updateStreak(true);
+            fb.innerText = `Helaas! Het was: ${currentQVerb[currentQType]}`; fb.style.color = "var(--error)";
+            errorQueue.push({ verb: currentQVerb, type: currentQType, retryAt: qCounter + 3 }); saveData();
+            setTimeout(startNewQuestion, 3000);
+        }
+        input.focus();
+    }
+    document.getElementById('quiz-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') checkQuiz(); });
+
+    // START DE APP
+    initApp();
+    showSection('spaced');
+
+</script>
+</body>
+</html>
