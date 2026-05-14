@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Pickle: Social Media Detective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #6a1b9a;
+            --hero-purple-dark: #4a148c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #b39ddb;
+            --dark-bg: #0b101a;
+            --hero-orange: #ff5722;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05051a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background: var(--hero-purple-main);
+            padding: 2rem 0;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            margin-bottom: 20px;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); color: white; }
+        .container { max-width: 700px; width: 90%; margin: 20px auto; }
+        .section {
+            background: rgba(26, 16, 42, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .instructions { font-size: 0.9rem; color: var(--hero-cyan); line-height: 1.5; margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-top: 1rem; font-family: 'Bangers'; color: var(--hero-yellow); font-size: 1.2rem; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 2px solid var(--hero-purple-main);
+            background: #0b101a;
+            color: white;
+            box-sizing: border-box;
+            font-family: 'Lexend', sans-serif;
+        }
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+            margin: 10px 5px 0 0;
+            width: 100%;
+        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn-purple { background: var(--hero-purple-main); border-bottom-color: var(--hero-purple-dark); }
+        .turn { font-family: 'Bangers'; font-size: 2.2rem; color: var(--hero-yellow); text-align: center; margin-bottom: 10px; }
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--hero-purple-main);
+        }
+        .word-card {
+            background: #1a102a;
+            border: 3px solid var(--hero-purple-main);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        .hint-text {
+            font-size: 1.2rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .answer-reveal {
+            font-family: 'Bangers';
+            font-size: 2rem;
+            color: var(--hero-yellow);
+            display: none;
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px dashed var(--hero-yellow);
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            width: 100%;
+        }
+        .flex-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+<header>    <h1>PICKLE 3: SOCIAL DETECTIVE</h1></header>
+
+<div class="container">
+    <div class="section" id="setup">
+        <div class="instructions">
+            🔎 <strong>Missie:</strong> Raad het Social Media woord met zo min mogelijk hints.<br>
+            🌟 <strong>Bonus:</strong> Gebruik <strong>Engelse</strong> hints voor +1 extra punt!
+        </div>
+        <label>Aantal Agents:</label>
+        <select id="playerCount" onchange="togglePlayer2()">
+            <option value="1">1 Agent</option>
+            <option value="2" selected>2 Agents</option>
+        </select>
+        <label>Agent 1:</label>
+        <input type="text" id="player1" placeholder="Naam van Agent 1" />
+        <div id="player2Section">
+            <label>Agent 2:</label>
+            <input type="text" id="player2" placeholder="Naam van Agent 2" />
+        </div>
+        <button class="btn" style="margin-top: 30px;" onclick="startGame()">Start Missie 🚀</button>
+    </div>
+
+    <div id="game" style="display: none;">
+        <div class="turn" id="turnIndicator">Beurt: ...</div>
+        <div class="scoreboard">
+            <div><span id="name1"></span>: <span id="score1" style="color:var(--hero-yellow)">0</span></div>
+            <div id="p2ScoreDisplay"><span id="name2"></span>: <span id="score2" style="color:var(--hero-yellow)">0</span></div>
+        </div>
+        <div class="word-card">
+            <div class="answer-reveal" id="word-reveal">Antwoord: ...</div>
+            <label>Hint Taal:</label>
+            <select id="hintLanguage" onchange="resetClue()">
+                <option value="nl">Nederlands</option>
+                <option value="en">English (Bonus +1)</option>
+            </select>
+            <div class="hint-text" id="hintBox">Klik op 'Volgende Hint' om te starten</div>
+            <div class="flex-buttons">
+                <button class="btn btn-purple" onclick="nextHint()">Volgende Hint 💡</button>
+                <button class="btn btn-purple" onclick="showWord()">Toon Antwoord 👁️</button>
+                <button class="btn" style="background:#4caf50; border-color:#2e7d32;" onclick="correctGuess()">Correct ✅</button>
+                <button class="btn" style="background:var(--hero-orange); border-color:#bf360c;" onclick="wrongGuess()">Fout ❌</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>    &copy; 2026 EngliForce: Make English Your Superpower!</footer>
+
+<script>
+const words = [
+    { en: "follower", hints: { nl: ["Iemand die jou volgt op Instagram.", "Je wilt er zoveel mogelijk van hebben.", "Het begint met een F."], en: ["Someone who follows you on Instagram.", "You want to have as many as possible.", "It starts with the letter F."] }},
+    { en: "subscriber", hints: { nl: ["Iemand die geabonneerd is op je YouTube kanaal.", "Zij krijgen meldingen van je nieuwe video's.", "In het Nederlands: abonnee."], en: ["Someone signed up to your YouTube channel.", "They get notifications for your new videos.", "In Dutch: abonnee."] }},
+    { en: "early", hints: { nl: ["Je post je update heel erg ... in de morgen.", "Het tegenovergestelde van laat.", "Vroeg."], en: ["You post your update very ... in the morning.", "The opposite of late.", "Vroeg."] }},
+    { en: "usually", nl: "meestal", hints: { nl: ["Iets wat meestal of gewoonlijk gebeurt.", "Vaak, maar niet altijd.", "Meestal."], en: ["Something that happens most of the time.", "Often, but not always.", "Meestal."] }},
+    { en: "content", hints: { nl: ["Alle foto's en video's die je deelt.", "Je bent een ... creator.", "In het Nederlands: inhoud."], en: ["All the photos and videos you share.", "You are a ... creator.", "In Dutch: inhoud."] }},
+    { en: "recognise", hints: { nl: ["Weten wie een influencer is als je ze ziet.", "In het Nederlands: herkennen.", "Iemand identificeren."], en: ["Knowing who an influencer is when you see them.", "In Dutch: herkennen.", "To identify someone."] }},
+    { en: "outside", hints: { nl: ["Een foto maken in het park, dus niet binnen.", "In de open lucht.", "Buiten."], en: ["Taking a photo in the park, not inside.", "In the open air.", "Buiten."] }},
+    { en: "picture", hints: { nl: ["Een ander woord voor een foto.", "Je post een ... op je feed.", "Gemaakt met een camera."], en: ["Another word for a photo.", "You post a ... on your feed.", "Made with a camera."] }},
+    { en: "negative", hints: { nl: ["Onaardige reacties zijn ...", "Het tegenovergestelde van positief.", "Negatief."], en: ["Unkind comments are ...", "The opposite of positive.", "Negatief."] }},
+    { en: "confident", hints: { nl: ["Trots zijn op je eigen posts.", "In jezelf geloven.", "In het Nederlands: zelfverzekerd."], en: ["Being proud of your own posts.", "Believing in yourself.", "In Dutch: zelfverzekerd."] }},
+    { en: "comment", hints: { nl: ["Een berichtje achterlaten onder een post.", "In het Nederlands: reactie.", "Soms is dit een compliment."], en: ["Leaving a short message under a post.", "In Dutch: reactie.", "Sometimes it's a compliment."] }},
+    { en: "beginning", hints: { nl: ["De start van je social media carrière.", "Het tegenovergestelde van het einde.", "Begin."], en: ["The start of your social media career.", "The opposite of the end.", "Begin."] }},
+    { en: "advice", hints: { nl: ["Tips krijgen van een expert over hoe je viraal gaat.", "Raad of suggesties.", "Advies."], en: ["Getting tips from an expert on how to go viral.", "Suggestions or guidance.", "Advies."] }},
+    { en: "comfortable", hints: { nl: ["Je op je gemak voelen voor de camera.", "Niet zenuwachtig zijn.", "Comfortabel."], en: ["Feeling at ease in front of the camera.", "Not being nervous.", "Comfortabel."] }},
+    { en: "inspire", hints: { nl: ["Anderen op ideeën brengen met jouw posts.", "Motiveren.", "Inspireren."], en: ["Giving others ideas with your posts.", "To motivate others.", "Inspireren."] }}
+];
+
+let p1 = '', p2 = '', playerCount = 2;
+let score = [0, 0];
+let currentIndex = 0;
+let currentHint = 0;
+let currentPlayer = 0;
+
+function togglePlayer2() {
+    const val = document.getElementById("playerCount").value;
+    document.getElementById("player2Section").style.display = (val === "1") ? "none" : "block";
+}
+
+function startGame() {
+    playerCount = parseInt(document.getElementById("playerCount").value);
+    p1 = document.getElementById("player1").value || "Agent 1";
+    p2 = document.getElementById("player2").value || "Agent 2";
+    words.sort(() => 0.5 - Math.random());
+    score = [0, 0];
+    currentIndex = 0;
+    currentPlayer = 0;
+    document.getElementById("name1").textContent = p1;
+    document.getElementById("name2").textContent = (playerCount === 2) ? p2 : "";
+    document.getElementById("p2ScoreDisplay").style.visibility = (playerCount === 2) ? "visible" : "hidden";
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    updateScore();
+    showTurn();
+    resetWordCard();
+}
+
+function showTurn() {
+    const name = currentPlayer === 0 ? p1 : p2;
+    document.getElementById("turnIndicator").textContent = (playerCount === 1) ? `Agent: ${p1}` : `Beurt: ${name}`;
+}
+
+function resetWordCard() {
+    currentHint = 0;
+    document.getElementById("hintBox").textContent = "Klik op 'Volgende Hint' om te starten";
+    document.getElementById("word-reveal").style.display = "none";
+}
+
+function nextHint() {
+    if (currentHint >= 3) return;
+    const lang = document.getElementById("hintLanguage").value;
+    const hint = words[currentIndex].hints[lang][currentHint];
+    document.getElementById("hintBox").textContent = `Hint ${currentHint + 1}: ${hint}`;
+    currentHint++;
+}
+
+function showWord() {
+    document.getElementById("word-reveal").textContent = `Antwoord: ${words[currentIndex].en}`;
+    document.getElementById("word-reveal").style.display = "block";
+}
+
+function correctGuess() {
+    const lang = document.getElementById("hintLanguage").value;
+    let points = Math.max(1, 4 - currentHint);
+    if (lang === "en") points += 1;
+    score[currentPlayer] += points;
+    nextWord();
+}
+
+function wrongGuess() {
+    nextWord();
+}
+
+function nextWord() {
+    currentIndex++;
+    if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+    updateScore();
+    if (currentIndex >= words.length) {
+        document.getElementById("turnIndicator").textContent = "Missie Voltooid!";
+        document.getElementById("hintBox").textContent = "Alle woorden ontdekt!";
+        document.getElementById("word-reveal").style.display = "none";
+    } else {
+        showTurn();
+        resetWordCard();
+    }
+}
+
+function updateScore() {
+    document.getElementById("score1").textContent = score[0] + " pt";
+    document.getElementById("score2").textContent = score[1] + " pt";
+}
+
+function resetClue() {
+    if (currentHint > 0) {
+        const lang = document.getElementById("hintLanguage").value;
+        const hint = words[currentIndex].hints[lang][currentHint - 1];
+        document.getElementById("hintBox").textContent = `Hint ${currentHint}: ${hint}`;
+    }
+}
+</script>
+</body>
+</html>
