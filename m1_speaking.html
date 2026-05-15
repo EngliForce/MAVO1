@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SpeakUp! | English Practice</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --primary-accent: #00f2fe;
+            --secondary-accent: #4facfe;
+            --text-color: #ffffff;
+            --question-yellow: #ffff00;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0; padding: 0; min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            display: flex; justify-content: center; align-items: center; color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%; max-width: 600px;
+            background: var(--glass-bg); backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            padding: 2rem; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center; min-height: 550px;
+            display: flex; flex-direction: column; justify-content: center;
+            margin: 10px;
+        }
+
+        .screen { display: none; width: 100%; animation: fadeIn 0.5s ease; }
+        .screen.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mode-selector {
+            display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.2);
+            padding: 6px; border-radius: 15px;
+        }
+
+        .mode-btn {
+            flex: 1; padding: 12px; border: none; border-radius: 12px;
+            background: transparent; color: white; cursor: pointer;
+            font-weight: bold; transition: 0.3s ease; display: flex;
+            align-items: center; justify-content: center; gap: 8px; font-size: 1rem;
+        }
+
+        .mode-btn.active { background: var(--primary-accent); color: #004e52; box-shadow: 0 4px 15px rgba(0,242,254,0.3); }
+
+        .instruction-box {
+            text-align: left; background: rgba(0, 0, 0, 0.2); padding: 1.2rem;
+            border-radius: 15px; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.4;
+        }
+        .example-good { color: #99ff99; font-weight: bold; }
+        .rule-item { margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+
+        .player-setup {
+            background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: left;
+            border: 1px solid var(--glass-border);
+        }
+        input, select {
+            width: 100%; padding: 12px; border-radius: 8px; border: none; margin: 8px 0;
+            background: white; font-size: 1rem; color: #333;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);
+            padding: 14px; border-radius: 12px; color: white; cursor: pointer;
+            transition: 0.3s; font-size: 1.1rem; width: 100%; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .option-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+        .action-btn {
+            padding: 16px; border-radius: 12px; border: none; cursor: pointer;
+            font-weight: bold; font-size: 1.1rem; transition: 0.2s; width: 100%;
+        }
+        .start-btn { background: var(--primary-accent); color: #004e52; margin-top: 10px; }
+        .next-btn { background: #4facfe; color: white; }
+        .back-btn { background: rgba(255,255,255,0.1); color: white; border: 1px solid white; margin-top: 10px;}
+
+        .turn-indicator { display: flex; justify-content: space-around; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .player-tag { padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; opacity: 0.5; background: rgba(0,0,0,0.3); }
+        .player-tag.active { opacity: 1; background: var(--primary-accent); color: #004e52; font-weight: bold; transform: scale(1.05); }
+
+        .question-card {
+            background: rgba(0, 0, 0, 0.25); padding: 2rem; border-radius: 20px;
+            margin: 15px 0; min-height: 180px; display: flex; flex-direction: column;
+            justify-content: center; border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        #questionDisplay {
+            color: var(--question-yellow);
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.3;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .role-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; opacity: 0.9; color: white; }
+
+        @media (max-width: 768px) {
+            .container { padding: 1.5rem; min-height: auto; }
+            #questionDisplay { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="setupScreen" class="screen active">
+        <h1>SpeakUp! 🗣️</h1>
+        
+        <div class="mode-selector">
+            <button id="btnSolo" class="mode-btn" onclick="setMode('solo')">
+                <i class="fas fa-user"></i> Solo / Parent
+            </button>
+            <button id="btnTogether" class="mode-btn active" onclick="setMode('together')">
+                <i class="fas fa-user-friends"></i> Together
+            </button>
+        </div>
+
+        <div class="instruction-box">
+            <div class="rule-item">
+                <i class="fas fa-comment-dots" style="color: var(--primary-accent)"></i>
+                <span><b>Avoid "Yes" or "No"!</b> Use full sentences and add details (Who, What, Where, When, Why). Be as detailed as possible.</span>
+            </div>
+            <p><i>Ex: "Do you like pizza?"</i><br><span class="example-good">"Yes, I love pizza. Especially pepperoni pizza. It is my favourite food!"</span></p>
+        </div>
+
+        <div id="p1Area" class="player-setup">
+            <label id="p1Label"><b>Speaker 1</b></label>
+            <input type="text" id="p1Name" placeholder="Name">
+            <select id="p1Level">
+                <option value="preA1">Pre-A1 ⭐</option>
+                <option value="A1">A1 ⭐⭐</option>
+                <option value="A2">A2 ⭐⭐⭐</option>
+                <option value="B1">B1 ⭐⭐⭐⭐</option>
+            </select>
+        </div>
+
+        <div id="p2Area" class="player-setup">
+            <label><b>Speaker 2</b></label>
+            <input type="text" id="p2Name" placeholder="Name">
+            <select id="p2Level">
+                <option value="preA1">Pre-A1 ⭐</option>
+                <option value="A1">A1 ⭐⭐</option>
+                <option value="A2">A2 ⭐⭐⭐</option>
+                <option value="B1">B1 ⭐⭐⭐⭐</option>
+            </select>
+        </div>
+
+        <button class="action-btn start-btn" onclick="startApp()">Start Practice!</button>
+    </div>
+
+    <div id="topicScreen" class="screen">
+        <h2 id="topicTitle">Choose a Topic</h2>
+        <div id="topicList"></div>
+        <button class="action-btn back-btn" onclick="showScreen('setupScreen')">Back</button>
+    </div>
+
+    <div id="questionScreen" class="screen">
+        <div class="turn-indicator" id="turnIndicator">
+            <div id="tag1" class="player-tag">Player 1</div>
+            <div id="tag2" class="player-tag">Player 2</div>
+        </div>
+        
+        <div class="question-card">
+            <div class="role-label" id="roleLabel">Asking...</div>
+            <div id="questionDisplay">Question?</div>
+        </div>
+
+        <button class="action-btn next-btn" onclick="generateQuestion()">Next Question</button>
+        <button class="action-btn back-btn" onclick="showScreen('topicScreen')">Change Topic</button>
+    </div>
+</div>
+
+<script>
+    const data = {
+        preA1: {
+            "Personal Information": ["What is your name?", "How old are you?", "Are you a boy or a girl?", "What is your favourite colour?", "What is your favourite animal?", "Where are you from?", "Who is your favourite singer?", "Do you have a nickname?", "What is your lucky number?", "What is your favourite snack?"],
+            "Family": ["Do you have brothers or sisters?", "What is your mother’s name?", "What is your father’s name?", "How many people live in your house?", "Do you have a big or small family?", "Do you live near your grandparents?", "Do you have a baby brother or sister?", "Who is the funniest person in your family?", "Do you have any cousins?", "What does your family do together?"],
+            "School": ["What is the name of your school?", "Who is your favourite teacher?", "How do you get to school?", "What is your favourite subject?", "Do you like your school?", "Who is your best friend at school?", "Do you wear a school uniform?", "What do you do at break time?", "Which class is the hardest?", "Do you like learning English?"],
+            "Gaming & Tech": ["What is your favourite video game?", "Do you play games on a console or a phone?", "What colour is your phone?", "Do you like Roblox or Minecraft?", "Do you play games with your friends?", "Do you have a tablet or a computer?", "Can you share your games with friends?", "What is your favourite app?", "Do you like watching YouTube?", "Do you use a headset when gaming?"],
+            "Food & Drink": ["What is your favourite food?", "Do you like pizza or burgers?", "What do you eat for breakfast?", "What is your favourite fizzy drink?", "Do you like ice cream?", "What is your favourite fruit?", "What do you usually eat for lunch?", "Do you like apples or oranges?", "What do you drink when you are thirsty?", "What food do you hate?"],
+            "Clothes": ["What are you wearing right now?", "Do you like wearing hoodies?", "What colour are your trainers?", "What is your favourite t-shirt?", "Do you like wearing a jacket when it’s cold?", "What colour is your school bag?", "Do you prefer wearing shorts or trousers?", "What do you wear to a party?", "Do you have new shoes?", "Do you like wearing hats?"],
+            "Animals": ["What is your favourite animal?", "Do you have a pet?", "Do you like dogs or cats?", "What animal is the scariest?", "What animal lives in the jungle?", "Can you swim like a dolphin?", "Do you like going to the zoo?", "What is your favourite bird?", "Would you like a pet snake?", "What sound does a lion make?"],
+            "Weather & Seasons": ["Is it sunny today?", "Is it raining outside?", "Do you like sunny or snowy days?", "What do you wear when it’s freezing?", "What do you do when it’s very hot?", "Do you like snow?", "What is your favourite season?", "Is it windy today?", "Do you like thunderstorms?", "What do you do when it rains?"],
+            "Home": ["Do you live in a house or an apartment?", "How many rooms are in your house?", "What colour is your front door?", "Do you have your own bedroom?", "Do you have a garden or a balcony?", "What do you like to do in the living room?", "Do you have a TV in your room?", "Where do you do your homework?", "Do you like your house?", "Is your kitchen big or small?"],
+            "Friends": ["Who is your best friend?", "What do you do with your friends at school?", "Do you play sports with your friends?", "Do you share your snacks with friends?", "How many close friends do you have?", "What games do you play together?", "Do you like making new friends?", "Do you go to school with your neighbours?", "Do you visit your friend’s house?", "What is your best friend's favourite hobby?"]
+        },
+        A1: {
+            "Personal Information": ["What is your full name?", "How old are you exactly?", "Where were you born?", "What is your favourite colour to wear?", "Do you have any pets at home?", "When is your birthday?", "What is your favourite meal?", "What is your main hobby?", "What is your favourite season of the year?", "How are you feeling today?"],
+            "Family": ["How many people are in your immediate family?", "Do you have any older brothers or sisters?", "What is your father's job?", "What is your mother's job?", "Do you see your grandparents often?", "Do you have many cousins?", "How old are your siblings?", "What is a fun activity you do with your family?", "Does your family want a pet?", "Where does most of your family live?"],
+            "School": ["What is your favourite subject and why?", "Who is the coolest teacher at school?", "What time do you leave for school?", "How long does it take to get to school?", "What do you do during your lunch break?", "What is the best thing about your school?", "What is the name of your school?", "Do you think school uniforms are a good idea?", "What time do you get home from school?", "Do you get a lot of homework?"],
+            "Hobbies": ["What do you enjoy doing in your free time?", "What sports do you play or watch?", "Do you like reading books or comics?", "How much TV do you watch after school?", "Which video games are you playing lately?", "What is your all-time favourite game?", "Do you hang out with friends after school?", "What kind of music do you listen to?", "What is a new hobby you want to start?", "What are your plans for next weekend?"],
+            "Food & Drink": ["What is your absolute favourite food?", "What is the best breakfast?", "How often do you eat pizza?", "What is your favourite drink when it's hot?", "Do you like eating vegetables?", "What is the best thing they serve at the school canteen?", "What is your favourite ice cream flavour?", "Is there any food you really dislike?", "Can you cook any simple meals?", "What did you have for dinner last night?"],
+            "Daily Routine": ["What time do you wake up on school days?", "What is the first thing you do in the morning?", "How do you usually travel to school?", "What is the first thing you do when you get home?", "What time do you usually go to sleep?", "Do you eat breakfast every single day?", "What time is your lunch break?", "Do you have chores to do at home?", "What do you do just before you go to bed?", "Is your weekend routine different from your school routine?"],
+            "Weather": ["Describe the weather today.", "Do you prefer summer or winter weather?", "What is the best thing to do on a rainy day?", "What is your favourite season and why?", "Is the weather usually good in your country?", "Do you like playing in the snow?", "What do you wear during the winter?", "What do you do when the sun is shining?", "What is the weather like in July?", "Do you prefer a cloudy day or a sunny day?"],
+            "Friends": ["Who is your closest friend?", "What is the most fun thing you've done with friends?", "Do you talk to your friends online after school?", "Where do you usually meet your friends?", "What is a game you all like to play?", "How many years have you known your best friend?", "Do you and your friends have the same interests?", "How do you message your friends?", "Is it easy for you to make new friends?", "What are you and your friends doing this weekend?"],
+            "Home": ["Which town or city do you live in?", "Do you live in a modern house or an old one?", "Do you share your bedroom with anyone?", "How many rooms are in your home?", "Do you have a garden or a yard?", "Which room is your favourite place to be?", "How long have you lived in your current house?", "What is your neighbourhood like?", "Is your house near your school?", "What colour would you like to paint your room?"],
+            "Sports & Exercise": ["Which sports do you play regularly?", "What is the most exciting sport to watch?", "Do you have PE lessons at school?", "How often do you go for a run or a walk?", "Are you a good runner?", "Do you enjoy swimming in the sea or a pool?", "Which sport is always on your TV at home?", "Who is a famous athlete you admire?", "Do you prefer team sports like football or individual sports like tennis?", "Who do you play sports with?"]
+        },
+        A2: {
+            "Personal Information": ["Could you tell me a bit about yourself?", "Where exactly do you live and who do you live with?", "What are your main interests at the moment?", "How old are you and when is your birthday?", "How do you usually spend your Saturday mornings?", "What are your plans for when you finish school?"],
+            "Daily Routine": ["Can you describe your typical school day?", "What time do you usually get out of bed?", "What do you do to relax in the evening?", "What time do you turn off your lights at night?", "How is your weekend routine different from your week days?", "How do you manage your time for homework and hobbies?"],
+            "School & Education": ["Which subjects are you studying this year?", "Which subject do you find most interesting and why?", "How do you usually get to school in the morning?", "What are the most important rules at your school?", "Why do you think it is important to go to school?", "Are you part of any school clubs or teams?"],
+            "Hobbies & Free Time": ["What is your favourite thing to do when you have no homework?", "Do you prefer hanging out in a big group or with one friend?", "What are your current hobbies?", "How many hours a week do you spend on your hobbies?", "What is the best way to spend a Sunday afternoon?", "Do you prefer active hobbies or relaxing ones?"],
+            "Travel & Holidays": ["What was the best holiday you have ever had?", "Where did you go for your last summer break?", "Do you prefer going to the beach or exploring a city?", "What is your favourite way to travel: plane, train or car?", "Which country would you love to visit one day?", "What do you always pack in your suitcase?"],
+            "Shopping": ["Where do you usually go when you need new clothes?", "What was the last thing you bought for yourself?", "Do you prefer big shopping centres or small local shops?", "Have you ever bought anything using your phone or computer?", "Do you like to save your money or spend it quickly?", "What is your favourite brand or shop at the moment?"],
+            "Friends & Relationships": ["What makes someone a really good friend?", "How do you and your friends usually spend your time?", "How did you meet your current best friend?", "Do you think it's important to have a lot of friends?", "How do you stay in touch with friends who live far away?", "Do you find it easy to talk to new people?"],
+            "Weather": ["How is the weather affecting your plans today?", "What kind of climate do you prefer?", "What is the best activity for a very hot summer day?", "Does the weather change how you feel?", "Do you prefer a snowy winter or a sunny summer?", "What is the typical weather like in your town?"],
+            "Food & Eating Habits": ["What is your favourite meal that someone cooks for you?", "Can you cook any dishes by yourself?", "What is a traditional meal from your country?", "Do you prefer eating at home or going to a restaurant?", "What kind of snacks do you like to eat while watching a movie?", "How often does your family sit down to eat together?"],
+            "Work & Jobs": ["What kind of career would you like to have in the future?", "What do you think is the best job in the world?", "Would you like to have a part-time job while you are a student?", "Who do you know that has a really interesting job?", "What are the advantages of having a well-paid job?", "What skills do you think are important for work?"],
+            "Technology & Internet": ["How many hours a day do you spend online?", "What is your favourite website or social media app?", "Do you think the internet makes schoolwork easier?", "What do you use your smartphone for the most?", "How has technology changed the way you talk to your friends?", "Could you live for a week without any technology?"],
+            "Health & Fitness": ["What do you do to keep yourself fit?", "Do you think you have a healthy diet?", "How important is it for teenagers to get enough sleep?", "What should people do to stay healthy as they get older?", "Have you ever had a sports injury?", "Do you enjoy PE lessons at school?"],
+            "Home & Local Area": ["Can you describe the area where you live?", "What is your house like?", "What do you like most about your neighbourhood?", "If you could change one thing about your area, what would it be?", "How long has your family lived in your current home?", "Are there any cool places for teenagers to hang out near you?"],
+            "Clothes & Fashion": ["How would you describe your style of clothes?", "Do you care about the latest fashion trends?", "What do you usually wear when you go out with friends?", "Do you prefer comfortable clothes or stylish ones?", "Where is the best place to buy trainers?", "Do you like wearing bright colours or dark colours?"],
+            "Future Plans": ["What are you planning to do after you finish your exams?", "Would you like to go to university or get a job first?", "Where do you think you will be living in ten years?", "What is one thing you really want to achieve in the future?", "Would you like to live in a different country one day?", "Which new skill would you like to learn next year?"]
+        },
+        B1: {
+            "Hobbies & Free Time": ["How did you first get interested in your current hobbies?", "How do you balance your schoolwork with your free time?", "Why do you think it's important for people to have hobbies?", "Do you prefer hobbies that are creative or ones that are physical?", "What is a hobby you used to have but don't do anymore?", "How do your hobbies help you to relax?", "Do you think hobbies can ever be a waste of time?", "Have you ever met new people through your interests?", "What do you usually do on a typical Saturday night?", "How would you spend your time if the internet didn't exist?"],
+            "Travel & Holidays": ["Describe your dream holiday destination in detail.", "Do you prefer to travel with your family or with a group of friends?", "What are the pros and cons of staying in a hotel versus camping?", "How has travel changed in the last fifty years?", "What is the most interesting cultural experience you've had while travelling?", "Do you prefer relaxing on a beach or going on an active adventure?", "Which country's food would you most like to try?", "How do you usually prepare for a long journey?", "Where are you planning to go for your next break?", "Do you enjoy visiting historical sites or modern attractions?"],
+            "School & Education": ["What are the qualities of an excellent teacher?", "Do you think the subjects you are studying will be useful for your future?", "What is the best way to prepare for a difficult exam?", "Should students be allowed to choose all of their own subjects?", "What are the main advantages of learning a second language?", "How could your school's building or facilities be improved?", "Do you prefer working on projects individually or in a team?", "What are your goals for the next academic year?", "How does your school prepare you for adult life?", "If you were the headteacher, what is the first rule you would change?"],
+            "Technology & Gadgets": ["In what ways has technology made our lives more complicated?", "Which electronic gadget could you absolutely not live without?", "How do you think communication will change in the next twenty years?", "What are the dangers of spending too much time on social media?", "Should children under the age of twelve have their own smartphones?", "How does technology help you with your creative projects?", "Do you think robots will ever replace humans in most jobs?", "Which new piece of technology are you most excited about?", "How do you stay safe when you are using the internet?", "Is it better to read a physical book or use an e-reader?"],
+            "Sports & Exercise": ["Why do some people prefer watching sports to playing them?", "What are the physical and mental benefits of regular exercise?", "Should competitive sports be a compulsory part of the school day?", "Which extreme sport would you be brave enough to try?", "How do you feel when a team you support loses a big match?", "Do you think professional athletes are good role models for teenagers?", "What is the most difficult sport you have ever tried to learn?", "Is it better to be part of a team or to compete as an individual?", "How can we encourage more people to stay active?", "Do you think sports stars are paid too much money?"],
+            "Health & Lifestyle": ["What does it mean to have a truly 'healthy lifestyle'?", "How does a person's diet affect their mood and energy levels?", "What advice would you give to someone who is always stressed?", "Is mental health as important as physical health?", "How can teenagers make sure they get enough sleep?", "What are the risks of eating too much fast food?", "How has our understanding of health changed over time?", "What is the best way to recover after a long and tiring week?", "Do you think it's easy to stay healthy in the modern world?", "What habits would you like to change to improve your health?"],
+            "Work & Jobs": ["What factors are most important to you when choosing a future career?", "Is job satisfaction more important than earning a high salary?", "What are the benefits of doing work experience while still at school?", "How do you think the world of work will change for your generation?", "Which jobs do you think are the most stressful and why?", "Would you prefer to work for a big company or start your own business?", "What skills do you think will be most in demand in the future?", "How can people maintain a good balance between work and life?", "What is the most unusual job you have ever heard of?", "Do you think everyone should have to work in a shop or restaurant at least once?"],
+            "Environment & Nature": ["What are the most serious environmental problems facing the world today?", "How can individuals make a real difference to the environment?", "Do you think people in your town do enough to recycle?", "What are the potential consequences of global warming?", "Is it better to live in a bustling city or the quiet countryside?", "Why is it important to protect endangered animal species?", "What can schools do to become more eco-friendly?", "Should we use more public transport and fewer private cars?", "How can we reduce the amount of plastic waste we produce?", "What will the planet look like in fifty years if we don't take action?"],
+            "Shopping": ["Do you think online shopping will eventually replace high street shops?", "How much does advertising influence the things you buy?", "Is it important to you that the clothes you buy are ethically made?", "Do you prefer to save up for something expensive or buy lots of small things?", "What are the advantages and disadvantages of shopping in sales?", "How has the way we pay for things changed recently?", "Do you enjoy shopping as a social activity with friends?", "What is the most useful thing you have ever bought?", "Do you think we live in a 'throwaway' society?", "How do you decide whether a product is good value for money?"],
+            "Media & Entertainment": ["How do you choose which films or TV shows to watch?", "In what ways is listening to music important to you?", "Do you prefer watching a film at the cinema or at home on the sofa?", "What kind of impact does reality TV have on its viewers?", "Which book has had the biggest influence on you?", "Is it important for films and TV shows to be educational?", "How do you think the music industry has changed because of streaming?", "What would you recommend as a 'must-see' TV series?", "Do you think news media is always trustworthy?", "How do you discover new music or artists?"]
+        }
+    };
+
+    let p1 = { name: '', level: '' };
+    let p2 = { name: '', level: '' };
+    let currentTopic = '';
+    let currentMode = 'together';
+    let asker = 1;
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('btnSolo').classList.toggle('active', mode === 'solo');
+        document.getElementById('btnTogether').classList.toggle('active', mode === 'together');
+        document.getElementById('p2Area').style.display = (mode === 'solo') ? 'none' : 'block';
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function startApp() {
+        p1.name = document.getElementById('p1Name').value || 'Speaker 1';
+        p1.level = document.getElementById('p1Level').value;
+        
+        if (currentMode === 'together') {
+            p2.name = document.getElementById('p2Name').value || 'Speaker 2';
+            p2.level = document.getElementById('p2Level').value;
+            document.getElementById('turnIndicator').style.display = 'flex';
+        } else {
+            p2.name = 'Partner/Parent';
+            p2.level = p1.level;
+            document.getElementById('turnIndicator').style.display = 'none';
+        }
+
+        const topicList = document.getElementById('topicList');
+        topicList.innerHTML = '';
+        Object.keys(data[p1.level]).forEach(topic => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `${topic} <i class="fas fa-chevron-right"></i>`;
+            btn.onclick = () => selectTopic(topic);
+            topicList.appendChild(btn);
+        });
+
+        document.getElementById('tag1').innerText = p1.name;
+        document.getElementById('tag2').innerText = p2.name;
+        showScreen('topicScreen');
+    }
+
+    function selectTopic(topic) {
+        currentTopic = topic;
+        asker = 1; 
+        generateQuestion();
+        showScreen('questionScreen');
+    }
+
+    function generateQuestion() {
+        let answererName, askerName, levelToUse;
+
+        if (currentMode === 'together') {
+            asker = (asker === 1) ? 2 : 1;
+            askerName = (asker === 1) ? p1.name : p2.name;
+            answererName = (asker === 1) ? p2.name : p1.name;
+            levelToUse = (asker === 1) ? p2.level : p1.level;
+
+            document.getElementById('tag1').classList.toggle('active', asker === 1);
+            document.getElementById('tag2').classList.toggle('active', asker === 2);
+            document.getElementById('roleLabel').innerText = `${askerName} asks ${answererName}:`;
+        } else {
+            askerName = "Parent / Partner";
+            answererName = p1.name;
+            levelToUse = p1.level;
+            document.getElementById('roleLabel').innerText = `${askerName} asks ${answererName}:`;
+        }
+
+        const questions = data[levelToUse][currentTopic] || data[levelToUse]["Personal Information"];
+        const randomQ = questions[Math.floor(Math.random() * questions.length)];
+        document.getElementById('questionDisplay').innerText = randomQ;
+    }
+</script>
+
+</body>
+</html>
