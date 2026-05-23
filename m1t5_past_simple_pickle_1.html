@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Past Simple Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-blue: #4361ee;
+        }
+        html, body {            margin: 0;            padding: 0;            width: 100%;        }
+        body {            font-family: 'Lexend', sans-serif;            background: #05101a;            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);            color: white;            min-height: 100vh;            display: flex;            flex-direction: column;            overflow-x: hidden;        }
+        header {            background: var(--hero-purple-main);            padding: 2.5rem 1rem;            text-align: center;            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);            border-bottom: 5px solid var(--hero-yellow);        }
+        h1 {            font-family: 'Bangers', cursive;            font-size: 3.5rem;            letter-spacing: 3px;            margin: 0;            text-shadow: 4px 4px 0px var(--hero-purple-dark);        }
+        h2 {            font-family: 'Bangers', cursive;            color: var(--hero-yellow);            font-size: 2.2rem;            margin-top: 10px;            margin-bottom: 10px;        }
+        h3 {            color: var(--hero-cyan);            font-family: 'Bangers';            font-size: 2rem;            margin-top: 0;        }
+        main {            max-width: 1200px;            margin: 20px auto;            padding: 20px;            flex: 1;            width: 100%;            box-sizing: border-box;        }
+        .briefing-box {            background: rgba(26, 16, 42, 0.9);            border: 2px solid var(--hero-blue);            border-radius: 20px;            padding: 30px;            margin-bottom: 30px;            box-shadow: 0 0 30px rgba(0,0,0,0.5);            text-align: center;        }
+
+        #screen-trigger { display: none; }
+        #start-screen { display: block; }
+        #game-screen { display: none; }
+        #screen-trigger:checked ~ main #start-screen { display: none; }
+        #screen-trigger:checked ~ main #game-screen { display: block; }
+
+        .setup-container {            display: flex;            flex-wrap: wrap;            justify-content: center;            gap: 20px;        }
+        .player-setup {            background: rgba(0, 0, 0, 0.4);            border: 2px dashed var(--hero-cyan);            border-radius: 15px;            padding: 20px;            min-width: 280px;            text-align: center;        }
+        input[type="text"], select {            padding: 0.8rem;            font-size: 1.1rem;            margin: 1rem 0;            width: 85%;            border-radius: 50px;            border: 2px solid var(--hero-blue);            background: #05101a;            color: white;            text-align: center;        }
+        input[type="text"]:focus, select:focus {            outline: none;            border-color: var(--hero-yellow);            box-shadow: 0 0 10px var(--hero-yellow);        }
+        
+        .btn-action-label {            display: inline-block;            background: var(--hero-purple-main);            color: white;            padding: 15px 40px;            border-radius: 50px;            font-family: 'Bangers', cursive;            font-size: 1.5rem;            cursor: pointer;            transition: 0.2s;            border-bottom: 5px solid var(--hero-purple-dark);            margin-top: 1.5rem;            letter-spacing: 1px;        }
+        .btn-action-label:hover {            transform: translateY(-3px);            background: var(--hero-blue);        }
+
+        .btn-game {            background: var(--hero-purple-main);            color: white;            border: none;            padding: 12px 35px;            border-radius: 50px;            font-family: 'Bangers', cursive;            font-size: 1.3rem;            cursor: pointer;            border-bottom: 4px solid var(--hero-purple-dark);        }
+        .btn-game:hover { background: var(--hero-blue); }
+
+        #game-container {            display: flex;            justify-content: space-around;            align-items: center;            flex-wrap: wrap;            margin-bottom: 30px;            gap: 20px;        }
+        .game-card {            background: #1a102a;            border: 3px solid var(--hero-purple-dark);            border-radius: 20px;            padding: 20px;            min-width: 250px;            text-align: center;            transition: border-color 0.3s;        }
+        .game-card.active-turn {            border-color: var(--hero-cyan);            box-shadow: 0 0 20px rgba(0, 245, 212, 0.4);        }
+        .score-display {            font-size: 4rem;            font-family: 'Bangers', cursive;            color: var(--hero-yellow);            margin: 10px 0;        }
+        #question-box {            background: rgba(26, 16, 42, 0.95);            border: 3px solid var(--hero-yellow);            border-radius: 20px;            padding: 30px;            max-width: 600px;            margin: 0 auto;            box-shadow: 0 0 40px rgba(255, 183, 3, 0.2);            text-align: center;        }
+        #question {            font-size: 2rem;            color: white;            margin: 15px 0;        }
+        #question strong {            color: var(--hero-cyan);        }
+        footer {            background: #05101a;            color: rgba(255,255,255,0.8);            text-align: center;            padding: 30px 20px;            border-top: 2px solid var(--hero-purple-dark);            margin-top: 50px;        }
+        @media (max-width: 600px) {            h1 { font-size: 2.3rem; }            .player-setup { width: 100%; }        }    </style></head><body>
+
+<input type="checkbox" id="screen-trigger" onchange="initGameData()">
+
+<header>    <h1>🎮 PAST SIMPLE ARENA</h1>    <p>Vul het regelmatige werkwoord in de juiste **Past Simple (+ed)** vorm in!</p></header>
+
+<main>
+    <section id="start-screen" class="briefing-box">        <h2>⚔️ ARENA INSTELLINGEN</h2>        
+        <div style="margin-bottom: 25px;">            <label style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Kies Spelmodus:</label>            <select id="gameMode" onchange="handleModeChange()">                <option value="pvp" selected>Speler vs. Speler</option>                <option value="pve">Speler vs. Computer 🤖</option>            </select>        </div>
+
+        <div class="setup-container">            <div class="player-setup">                <h2>Speler 1</h2>                <input type="text" id="name1" placeholder="Naam Speler 1">            </div>
+
+            <div class="player-setup" id="player2-box">                <h2>Speler 2</h2>                <input type="text" id="name2" placeholder="Naam Speler 2">            </div>        </div>
+        
+        <div style="margin-top: 20px;">            <label style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Aantal beginpunten (levens):</label>            <select id="startPoints">                <option value="5">5 punten</option>                <option value="10" selected>10 punten</option>                <option value="15">15 punten</option>                <option value="20">20 punten</option>            </select>        </div>
+        
+        <label for="screen-trigger" class="btn-action-label">START DE ARENA!</label>    </section>
+
+    <section id="game-screen">        <div id="game-container">            <div class="game-card" id="card1">                <h2 id="label1">Speler 1</h2>                <div id="scoreDisplay1" class="score-display">10</div>                <p style="color: rgba(255,255,255,0.6);">Punten over</p>            </div>            <div class="game-card" id="card2">                <h2 id="label2">Speler 2</h2>                <div id="scoreDisplay2" class="score-display">10</div>                <p style="color: rgba(255,255,255,0.6);">Punten over</p>            </div>        </div>
+
+        <section id="question-box">            <h3 id="turn-indicator">Beurt: Speler 1</h3>            <p id="question">Zet om naar verleden tijd: <strong>walk</strong></p>            <input type="text" id="answer" placeholder="Typ alleen het werkwoord..." onkeydown="if(event.key === 'Enter' && !document.getElementById('submitBtn').disabled) submitAnswer()">            <br>            <button class="btn-game" id="submitBtn" style="margin-top: 10px;" onclick="submitAnswer()">VERSTUUR</button>            <p id="feedback" style="margin-top: 1.5rem; font-weight: bold; font-size: 1.2rem; min-height: 30px;"></p>        </section>    </section></main>
+
+<footer>    <p>&copy; 2026 EngliForce – Make English Your Superpower!</p></footer>
+
+<script>    var playerNames = ["Speler 1", "Speler 2"];    var currentPlayer = 1;    var scores = { 1: 10, 2: 10 };    var currentQuestion = 0;    var isVsComputer = false;
+
+    var questions = [        {text:"walk",answer:"walked"},{text:"play",answer:"played"},{text:"watch",answer:"watched"},        {text:"listen",answer:"listened"},{text:"talk",answer:"talked"},{text:"clean",answer:"cleaned"},        {text:"stay",answer:"stayed"},{text:"work",answer:"worked"},{text:"open",answer:"opened"},        {text:"close",answer:"closed"},{text:"dance",answer:"danced"},{text:"live",answer:"lived"},        {text:"love",answer:"loved"},{text:"like",answer:"liked"},{text:"smile",answer:"smiled"},        {text:"bake",answer:"baked"},{text:"change",answer:"changed"},{text:"study",answer:"studied"},        {text:"cry",answer:"cried"},{text:"try",answer:"tried"},{text:"stop",answer:"stopped"},        {text:"plan",answer:"planned"},{text:"hop",answer:"hopped"},{text:"visit",answer:"visited"},        {text:"ask",answer:"asked"},{text:"answer",answer:"answered"},{text:"call",answer:"called"},        {text:"happen",answer:"happened"},{text:"look",answer:"looked"},{text:"show",answer:"showed"},        {text:"arrive",answer:"arrived"},{text:"agree",answer:"agreed"},{text:"carry",answer:"carried"},        {text:"marry",answer:"married"},{text:"worry",answer:"worried"},{text:"copy",answer:"copied"},        {text:"drop",answer:"dropped"},{text:"rob",answer:"robbed"},{text:"travel",answer:"travelled"},        {text:"clap",answer:"clapped"},{text:"enjoy",answer:"enjoyed"},{text:"finish",answer:"finished"},        {text:"start",answer:"started"},{text:"jump",answer:"jumped"},{text:"kick",answer:"kicked"},        {text:"kiss",answer:"kissed"},{text:"laugh",answer:"laughed"},{text:"learn",answer:"learned"},        {text:"miss",answer:"missed"},{text:"need",answer:"needed"},{text:"paint",answer:"painted"},        {text:"rain",answer:"rained"},{text:"remember",answer:"remembered"},{text:"save",answer:"saved"},        {text:"shout",answer:"shouted"},{text:"touch",answer:"touched"},{text:"use",answer:"used"},        {text:"wait",answer:"waited"},{text:"wash",answer:"washed"},{text:"wish",answer:"wished"},        {text:"scare",answer:"scared"},{text:"invite",answer:"invited"},{text:"hate",answer:"hated"},        {text:"hope",answer:"hoped"},{text:"decide",answer:"decided"},{text:"waste",answer:"wasted"},        {text:"taste",answer:"tasted"},{text:"score",answer:"scored"},{text:"bother",answer:"bothered"},        {text:"borrow",answer:"borrowed"},{text:"brush",answer:"brushed"},{text:"climb",answer:"climbed"},        {text:"cook",answer:"cooked"},{text:"cross",answer:"crossed"},{text:"deliver",answer:"delivered"},        {text:"dress",answer:"dressed"},{text:"earn",answer:"earned"},{text:"explain",answer:"explained"},        {text:"follow",answer:"followed"},{text:"guess",answer:"guessed"},{text:"help",answer:"helped"},        {text:"introduce",answer:"introduced"},{text:"manage",answer:"managed"},{text:"notice",answer:"noticed"},        {text:"order",answer:"ordered"},{text:"pack",answer:"packed"},{text:"pass",answer:"passed"},        {text:"pick",answer:"picked"},{text:"pull",answer:"pulled"},{text:"push",answer:"pushed"},        {text:"receive",answer:"received"},{text:"refuse",answer:"refused"},{text:"repair",answer:"repaired"},        {text:"repeat",answer:"repeated"},{text:"smoke",answer:"smoked"},{text:"suppose",answer:"supposed"},        {text:"turn",answer:"turned"},{text:"warn",answer:"warned"},{text:"slip",answer:"slipped"},        {text:"jog",answer:"jogged"}    ];
+
+    function shuffle(array) {        for (var i = array.length - 1; i > 0; i--) {            var j = Math.floor(Math.random() * (i + 1));            var temp = array[i];            array[i] = array[j];            array[j] = temp;        }    }
+
+    function handleModeChange() {        var mode = document.getElementById('gameMode').value;        var p2Box = document.getElementById('player2-box');        if (mode === 'pve') {            p2Box.style.display = 'none';            isVsComputer = true;        } else {            p2Box.style.display = 'block';            isVsComputer = false;        }    }
+
+    function initGameData() {        shuffle(questions);
+
+        playerNames[0] = document.getElementById('name1').value || "Speler 1";        var mode = document.getElementById('gameMode').value;        
+        if (mode === 'pve') {            isVsComputer = true;            playerNames[1] = "Computer 🤖";        } else {            isVsComputer = false;            playerNames[1] = document.getElementById('name2').value || "Speler 2";        }
+
+        var points = parseInt(document.getElementById('startPoints').value) || 10;        scores[1] = points;        scores[2] = points;
+
+        document.getElementById('label1').textContent = playerNames[0];        document.getElementById('label2').textContent = playerNames[1];        document.getElementById('scoreDisplay1').textContent = points;        document.getElementById('scoreDisplay2').textContent = points;
+
+        updateQuestion();        updateTurnHighlight();    }
+
+    function updateQuestion() {        document.getElementById('turn-indicator').textContent = "Beurt van: " + playerNames[currentPlayer - 1];        document.getElementById('question').innerHTML = "Zet om naar verleden tijd: <strong>" + questions[currentQuestion].text + "</strong>";        document.getElementById('answer').value = "";        
+        if (isVsComputer && currentPlayer === 2) {            document.getElementById('answer').disabled = true;            document.getElementById('submitBtn').disabled = true;            document.getElementById('answer').placeholder = "Computer denkt na...";            setTimeout(computerTurn, 1500);        } else {            document.getElementById('answer').disabled = false;            document.getElementById('submitBtn').disabled = false;            document.getElementById('answer').placeholder = "Typ alleen het werkwoord...";            document.getElementById('answer').focus();        }    }
+
+    function updateTurnHighlight() {        if (currentPlayer === 1) {            document.getElementById('card1').classList.add('active-turn');            document.getElementById('card2').classList.remove('active-turn');        } else {            document.getElementById('card2').classList.add('active-turn');            document.getElementById('card1').classList.remove('active-turn');        }    }
+
+    function computerTurn() {        var correct = questions[currentQuestion].answer;        var isCorrect = Math.random() < 0.70;        
+        document.getElementById('answer').value = isCorrect ? correct : (questions[currentQuestion].text + "edded");        
+        setTimeout(submitAnswer, 800);    }
+
+    function submitAnswer() {        document.getElementById('answer').disabled = true;        document.getElementById('submitBtn').disabled = true;
+
+        var input = document.getElementById("answer").value.trim().toLowerCase();        var correct = questions[currentQuestion].answer.toLowerCase();        var feedback = document.getElementById("feedback");
+
+        if (input === correct) {            var target = currentPlayer === 1 ? 2 : 1;            scores[target]--;            feedback.style.color = "var(--hero-cyan)";            feedback.textContent = "💥 GOED! Schade uitgedeeld aan de tegenstander!";        } else {            scores[currentPlayer]--;            feedback.style.color = "var(--hero-orange)";            feedback.textContent = "❌ FOUT! Je verliest een eigen punt. Het was: \"" + correct + "\"";        }
+
+        document.getElementById('scoreDisplay1').textContent = Math.max(0, scores[1]);        document.getElementById('scoreDisplay2').textContent = Math.max(0, scores[2]);
+
+        if (scores[1] <= 0 || scores[2] <= 0) {            var loser = scores[1] <= 0 ? playerNames[0] : playerNames[1];            var winner = scores[1] <= 0 ? playerNames[1] : playerNames[0];            setTimeout(function() {                alert("👑 K.O.! " + loser + " is door al zijn punten heen! " + winner + " WINT DE BATTLE!");                location.reload();            }, 400);            return;        }
+
+        currentPlayer = currentPlayer === 1 ? 2 : 1;        currentQuestion = (currentQuestion + 1) % questions.length;        
+        setTimeout(function() {            feedback.textContent = "";            updateQuestion();            updateTurnHighlight();        }, 3500);    } </script></body></html>

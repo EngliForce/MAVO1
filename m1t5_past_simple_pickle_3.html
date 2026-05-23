@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Mega Quiz: Past Simple Masterclass</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-blue: #4361ee;
+            --hero-red: #d32f2f;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background: rgba(26, 16, 42, 0.9);
+            border: 3px solid var(--hero-blue);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            color: white;
+            text-align: center;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0px var(--hero-purple-dark);
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--hero-cyan);
+            font-family: 'Bangers';
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        .score-box {
+            color: var(--hero-yellow);
+            font-weight: bold;
+        }
+        .question-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--hero-cyan);
+        }
+        .input-label {
+            font-size: 1rem;
+            color: var(--hero-yellow);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .text-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--hero-purple-main);
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            font-family: 'Lexend', sans-serif;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .text-input:focus { border-color: var(--hero-cyan); }
+        .text-input:disabled { background: rgba(255,255,255,0.05); color: #aaa; }
+
+        .feedback-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+            border-left: 5px solid white;
+        }
+        .feedback-title { font-family: 'Bangers'; font-size: 1.4rem; margin-bottom: 5px; }
+        .correct-style { border-left-color: var(--hero-green); background: rgba(76, 175, 80, 0.1); }
+        .wrong-style { border-left-color: var(--hero-red); background: rgba(211, 47, 47, 0.1); }
+
+        .action-btn {
+            width: 100%;
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            border-bottom: 5px solid #e64a19;
+            padding: 15px;
+            font-family: 'Bangers';
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.1s;
+        }
+        .action-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+        .check-btn { background: var(--hero-blue); border-bottom-color: #273fc4; }
+
+        .result-screen { text-align: center; display: none; }
+        .result-title { font-family: 'Bangers'; font-size: 3rem; color: var(--hero-yellow); margin-bottom: 20px; }
+        .final-score { font-size: 2rem; margin-bottom: 30px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <div class="subtitle">THE ULTIMATE PAST SIMPLE MIX (10 RANDOM MISSIONS)</div>
+
+    <div class="quiz-container">
+        <div id="quiz-screen">
+            <div class="status-bar">
+                <span id="question-number">Missie: 1 / 10</span>
+                <span class="score-box" id="score-display">⚡ Score: 0</span>
+            </div>
+            
+            <div class="question-text" id="question-text">Tijdreismachine start op...</div>
+            
+            <div class="type-area">
+                <span class="input-label" id="input-instruction">Vul het werkwoord correct in:</span>
+                <input type="text" id="user-answer" class="text-input" placeholder="Typ hier je antwoord..." autocomplete="off" autocapitalize="none" autocorrect="off">
+            </div>
+
+            <button class="action-btn check-btn" id="check-btn" onclick="checkTypedAnswer()">CHECK MIJN POWER!</button>
+            <button class="action-btn" id="next-btn" style="display: none;" onclick="nextQuestion()">VOLGENDE MISSIE!</button>
+
+            <div class="feedback-box" id="feedback-box">
+                <div class="feedback-title" id="feedback-title">RESULTAAT</div>
+                <div id="feedback-text">Uitleg...</div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="result-screen">
+            <div class="result-title" id="result-title">MISSIE VOLBRACHT!</div>
+            <div class="final-score" id="final-score">Jouw score: 0 / 10</div>
+            <p id="result-comment">Ben jij de Master of Time?</p>
+            <button class="action-btn" onclick="restartQuiz()">NIEUWE MIX (HUSSALEN!)</button>
+        </div>
+    </div>
+
+<script>
+    const database = [
+        // CATEGORIE: BEVESTIGEN (+ed, +d, +ied, verdubbeling)
+        { sentence: "I _______________ (work) hard all day yesterday.", answer: "worked", type: "bevestigen" },
+        { sentence: "She _______________ (dance) with her friends last night.", answer: "danced", type: "bevestigen" },
+        { sentence: "They _______________ (stop) at the red light.", answer: "stopped", type: "bevestigen" },
+        { sentence: "He _______________ (study) for his English test.", answer: "studied", type: "bevestigen" },
+        { sentence: "We _______________ (play) football in the park.", answer: "played", type: "bevestigen" },
+        { sentence: "The bus _______________ (arrive) ten minutes late.", answer: "arrived", type: "bevestigen" },
+        { sentence: "I _______________ (clean) my room on Saturday.", answer: "cleaned", type: "bevestigen" },
+        { sentence: "You _______________ (watch) a cool movie last week.", answer: "watched", type: "bevestigen" },
+        { sentence: "It _______________ (happen) very suddenly.", answer: "happened", type: "bevestigen" },
+        { sentence: "She _______________ (tidy) her desk yesterday.", answer: "tidied", type: "bevestigen" },
+        { sentence: "They _______________ (travel) to London by train.", answer: "traveled", alt: "travelled", type: "bevestigen" },
+        { sentence: "He _______________ (cook) a delicious pizza.", answer: "cooked", type: "bevestigen" },
+        { sentence: "We _______________ (stay) at a nice hotel.", answer: "stayed", type: "bevestigen" },
+        { sentence: "I _______________ (open) the window for some fresh air.", answer: "opened", type: "bevestigen" },
+        { sentence: "The cat _______________ (jump) on the table.", answer: "jumped", type: "bevestigen" },
+        { sentence: "They _______________ (listen) to music all evening.", answer: "listened", type: "bevestigen" },
+        { sentence: "The rain _______________ (stop) five minutes ago.", answer: "stopped", type: "bevestigen" },
+        { sentence: "You _______________ (miss) the bus this morning.", answer: "missed", type: "bevestigen" },
+        { sentence: "He _______________ (finish) his homework on time.", answer: "finished", type: "bevestigen" },
+        { sentence: "We _______________ (visit) the museum yesterday.", answer: "visited", type: "bevestigen" },
+        { sentence: "She _______________ (close) the door quietly.", answer: "closed", type: "bevestigen" },
+        { sentence: "I _______________ (wash) my hands before dinner.", answer: "washed", type: "bevestigen" },
+        { sentence: "The dog _______________ (bark) at the neighbor.", answer: "barked", type: "bevestigen" },
+        { sentence: "They _______________ (start) the project last week.", answer: "started", type: "bevestigen" },
+        { sentence: "He _______________ (walk) the dog in the rain.", answer: "walked", type: "bevestigen" },
+        { sentence: "We _______________ (laugh) at the funny joke.", answer: "laughed", type: "bevestigen" },
+        { sentence: "I _______________ (ask) the teacher a question.", answer: "asked", type: "bevestigen" },
+        { sentence: "She _______________ (wait) for the train.", answer: "waited", type: "bevestigen" },
+        { sentence: "They _______________ (need) some help with the bags.", answer: "needed", type: "bevestigen" },
+        { sentence: "He _______________ (paint) a beautiful picture.", answer: "painted", type: "bevestigen" },
+        { sentence: "It _______________ (snow) a lot last winter.", answer: "snowed", type: "bevestigen" },
+        { sentence: "We _______________ (invite) all our friends.", answer: "invited", type: "bevestigen" },
+        { sentence: "I _______________ (love) that computer game.", answer: "loved", type: "bevestigen" },
+
+        // CATEGORIE: ONTKENNEN (didn't + hele werkwoord)
+        { sentence: "I _______________ (not watch) TV yesterday morning.", answer: "didn't watch", alt: "did not watch", type: "ontkennen" },
+        { sentence: "She _______________ (not study) hard for the test.", answer: "didn't study", alt: "did not study", type: "ontkennen" },
+        { sentence: "We _______________ (not stay) at home last night.", answer: "didn't stay", alt: "did not stay", type: "ontkennen" },
+        { sentence: "They _______________ (not play) football on Sunday.", answer: "didn't play", alt: "did not play", type: "ontkennen" },
+        { sentence: "He _______________ (not clean) his room.", answer: "didn't clean", alt: "did not clean", type: "ontkennen" },
+        { sentence: "You _______________ (not miss) the train.", answer: "didn't miss", alt: "did not miss", type: "ontkennen" },
+        { sentence: "It _______________ (not happen) during the lesson.", answer: "didn't happen", alt: "did not happen", type: "ontkennen" },
+        { sentence: "The chef _______________ (not cook) the soup.", answer: "didn't cook", alt: "did not cook", type: "ontkennen" },
+        { sentence: "We _______________ (not visit) London last year.", answer: "didn't visit", alt: "did not visit", type: "ontkennen" },
+        { sentence: "I _______________ (not open) the heavy gate.", answer: "didn't open", alt: "did not open", type: "ontkennen" },
+        { sentence: "The bus _______________ (not stop) here.", answer: "didn't stop", alt: "did not stop", type: "ontkennen" },
+        { sentence: "She _______________ (not tidy) her desk.", answer: "didn't tidy", alt: "did not tidy", type: "ontkennen" },
+        { sentence: "They _______________ (not travel) by plane.", answer: "didn't travel", alt: "did not travel", type: "ontkennen" },
+        { sentence: "He _______________ (not finish) the work.", answer: "didn't finish", alt: "did not finish", type: "ontkennen" },
+        { sentence: "I _______________ (not like) that loud music.", answer: "didn't like", alt: "did not like", type: "ontkennen" },
+        { sentence: "She _______________ (not arrive) on time.", answer: "didn't arrive", alt: "did not arrive", type: "ontkennen" },
+        { sentence: "The dog _______________ (not bark) at us.", answer: "didn't bark", alt: "did not bark", type: "ontkennen" },
+        { sentence: "We _______________ (not listen) to the teacher.", answer: "didn't listen", alt: "did not listen", type: "ontkennen" },
+        { sentence: "You _______________ (not close) the window.", answer: "didn't close", alt: "did not close", type: "ontkennen" },
+        { sentence: "They _______________ (not start) the match yet.", answer: "didn't start", alt: "did not start", type: "ontkennen" },
+        { sentence: "I _______________ (not ask) for any help.", answer: "didn't ask", alt: "did not ask", type: "ontkennen" },
+        { sentence: "He _______________ (not paint) the fence.", answer: "didn't paint", alt: "did not paint", type: "ontkennen" },
+        { sentence: "She _______________ (not wash) her car.", answer: "didn't wash", alt: "did not wash", type: "ontkennen" },
+        { sentence: "We _______________ (not wait) long for the bus.", answer: "didn't wait", alt: "did not wait", type: "ontkennen" },
+        { sentence: "They _______________ (not invite) many people.", answer: "didn't invite", alt: "did not invite", type: "ontkennen" },
+        { sentence: "It _______________ (not snow) in Africa.", answer: "didn't snow", alt: "did not snow", type: "ontkennen" },
+        { sentence: "You _______________ (not talk) during the movie.", answer: "didn't talk", alt: "did not talk", type: "ontkennen" },
+        { sentence: "He _______________ (not answer) my call.", answer: "didn't answer", alt: "did not answer", type: "ontkennen" },
+        { sentence: "She _______________ (not use) her computer.", answer: "didn't use", alt: "did not use", type: "ontkennen" },
+        { sentence: "I _______________ (not jump) over the fence.", answer: "didn't jump", alt: "did not jump", type: "ontkennen" },
+        { sentence: "We _______________ (not need) extra time.", answer: "didn't need", alt: "did not need", type: "ontkennen" },
+        { sentence: "They _______________ (not walk) to school.", answer: "didn't walk", alt: "did not walk", type: "ontkennen" },
+        { sentence: "The show _______________ (not end) late.", answer: "didn't end", alt: "did not end", type: "ontkennen" },
+
+        // CATEGORIE: VRAGEN (did ... + hele werkwoord)
+        { sentence: "_______________ you _______________ (clean) your room?", answer: "did you clean", alt: "did clean", type: "vragen" },
+        { sentence: "_______________ they _______________ (dance) at the party?", answer: "did they dance", alt: "did dance", type: "vragen" },
+        { sentence: "_______________ Sam _______________ (stop) the car?", answer: "did sam stop", alt: "did stop", type: "vragen" },
+        { sentence: "_______________ it _______________ (happen) very fast?", answer: "did it happen", alt: "did happen", type: "vragen" },
+        { sentence: "_______________ she _______________ (finish) her work?", answer: "did she finish", alt: "did finish", type: "vragen" },
+        { sentence: "Why _______________ you _______________ (miss) the train?", answer: "did you miss", alt: "did miss", type: "vragen" },
+        { sentence: "_______________ he _______________ (listen) to the news?", answer: "did he listen", alt: "did listen", type: "vragen" },
+        { sentence: "_______________ they _______________ (travel) by bus?", answer: "did they travel", alt: "did travel", type: "vragen" },
+        { sentence: "When _______________ you _______________ (arrive) home?", answer: "did you arrive", alt: "did arrive", type: "vragen" },
+        { sentence: "_______________ the dog _______________ (bark) at you?", answer: "did the dog bark", alt: "did bark", type: "vragen" },
+        { sentence: "_______________ she _______________ (tidy) her room?", answer: "did she tidy", alt: "did tidy", type: "vragen" },
+        { sentence: "Where _______________ he _______________ (stay) in London?", answer: "did he stay", alt: "did stay", type: "vragen" },
+        { sentence: "_______________ they _______________ (invite) many friends?", answer: "did they invite", alt: "did invite", type: "vragen" },
+        { sentence: "_______________ you _______________ (play) games yesterday?", answer: "did you play", alt: "did play", type: "vragen" },
+        { sentence: "Why _______________ it _______________ (stop) working?", answer: "did it stop", alt: "did stop", type: "vragen" },
+        { sentence: "_______________ the chef _______________ (cook) the soup?", answer: "did the chef cook", alt: "did cook", type: "vragen" },
+        { sentence: "_______________ she _______________ (paint) that wall?", answer: "did she paint", alt: "did paint", type: "vragen" },
+        { sentence: "When _______________ they _______________ (start) the match?", answer: "did they start", alt: "did start", type: "vragen" },
+        { sentence: "_______________ you _______________ (study) for your test?", answer: "did you study", alt: "did study", type: "vragen" },
+        { sentence: "_______________ he _______________ (wash) his dirty car?", answer: "did he wash", alt: "did wash", type: "vragen" },
+        { sentence: "Where _______________ they _______________ (visit) on Sunday?", answer: "did they visit", alt: "did visit", type: "vragen" },
+        { sentence: "_______________ she _______________ (close) the window?", answer: "did she close", alt: "did close", type: "vragen" },
+        { sentence: "_______________ you _______________ (ask) a question?", answer: "did you ask", alt: "did ask", type: "vragen" },
+        { sentence: "How _______________ it _______________ (happen) so fast?", answer: "did it happen", alt: "did happen", type: "vragen" },
+        { sentence: "_______________ they _______________ (notice) the difference?", answer: "did they notice", alt: "did notice", type: "vragen" },
+        { sentence: "_______________ he _______________ (reboot) his system?", answer: "did he reboot", alt: "did reboot", type: "vragen" },
+        { sentence: "Why _______________ she _______________ (laugh) so loud?", answer: "did she laugh", alt: "did laugh", type: "vragen" },
+        { sentence: "_______________ you _______________ (need) any help?", answer: "did you need", alt: "did need", type: "vragen" },
+        { sentence: "_______________ they _______________ (talk) about the trip?", answer: "did they talk", alt: "did talk", type: "vragen" },
+        { sentence: "_______________ it _______________ (snow) last night?", answer: "did it snow", alt: "did snow", type: "vragen" },
+        { sentence: "When _______________ she _______________ (pack) her bags?", answer: "did she pack", alt: "did pack", type: "vragen" },
+        { sentence: "_______________ he _______________ (open) the gift?", answer: "did he open", alt: "did open", type: "vragen" },
+        { sentence: "_______________ you _______________ (wait) long for us?", answer: "did you wait", alt: "did wait", type: "vragen" },
+        { sentence: "_______________ the show _______________ (end) at ten?", answer: "did the show end", alt: "did end", type: "vragen" }
+    ];
+
+    let currentQuestions = [];
+    let currentIdx = 0;
+    let score = 0;
+
+    function shuffle() {
+        let pool = [...database];
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        currentQuestions = pool.slice(0, 10);
+    }
+
+    function normalize(t) { return t.toLowerCase().trim().replace(/[‘’'’`´‘]/g, "'").replace(/\s+/g, ' '); }
+
+    function load() {
+        const q = currentQuestions[currentIdx];
+        document.getElementById("feedback-box").style.display = "none";
+        document.getElementById("next-btn").style.display = "none";
+        document.getElementById("check-btn").style.display = "block";
+        document.getElementById("user-answer").disabled = false;
+        document.getElementById("user-answer").value = "";
+        document.getElementById("question-number").innerText = `Missie: ${currentIdx + 1} / 10`;
+        document.getElementById("question-text").innerHTML = q.sentence;
+        setTimeout(() => document.getElementById("user-answer").focus(), 100);
+    }
+
+    function checkTypedAnswer() {
+        const q = currentQuestions[currentIdx];
+        const input = normalize(document.getElementById("user-answer").value);
+        if (!input) return alert("Typ eerst iets!");
+        
+        document.getElementById("user-answer").disabled = true;
+        document.getElementById("check-btn").style.display = "none";
+        
+        const isCorrect = (input === normalize(q.answer)) || (q.alt && input === normalize(q.alt));
+        const fb = document.getElementById("feedback-box");
+        fb.className = "feedback-box " + (isCorrect ? "correct-style" : "wrong-style");
+        
+        if (isCorrect) {
+            score++;
+            document.getElementById("score-display").innerText = `⚡ Score: ${score}`;
+            document.getElementById("feedback-title").innerText = "💥 BOOM! CORRECT!";
+        } else {
+            document.getElementById("feedback-title").innerText = "🚨 ALARM! FOUTJE...";
+        }
+
+        let recept = q.type === "bevestigen" ? "Werkwoord + ed (let op spelling!)" : (q.type === "vragen" ? "Did ... + hele werkwoord" : "Didn't + hele werkwoord");
+        document.getElementById("feedback-text").innerHTML = `Correct: <b style="color:var(--hero-yellow)">${q.answer}</b><br><br><i>Onthoud: ${recept}</i>`;
+        fb.style.display = "block";
+        document.getElementById("next-btn").style.display = "block";
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < 10) load();
+        else {
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            document.getElementById("final-score").innerText = `Jouw score: ${score} / 10`;
+        }
+    }
+
+    function restartQuiz() {
+        currentIdx = 0; score = 0;
+        document.getElementById("score-display").innerText = "⚡ Score: 0";
+        document.getElementById("quiz-screen").style.display = "block";
+        document.getElementById("result-screen").style.display = "none";
+        shuffle(); load();
+    }
+
+    shuffle(); load();
+</script>
+</body>
+</html>
