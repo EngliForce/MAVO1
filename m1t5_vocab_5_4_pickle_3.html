@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Pickle: Fake News Detective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #6a1b9a;
+            --hero-purple-dark: #4a148c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #b39ddb;
+            --dark-bg: #0b101a;
+            --hero-orange: #ff5722;
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05051a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background: var(--hero-purple-main);
+            padding: 2rem 0;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            margin-bottom: 20px;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); color: white; }
+        .container { max-width: 700px; width: 90%; margin: 20px auto; }
+        .section {
+            background: rgba(26, 16, 42, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .instructions { font-size: 0.9rem; color: var(--hero-cyan); line-height: 1.5; margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-top: 1rem; font-family: 'Bangers'; color: var(--hero-yellow); font-size: 1.2rem; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 2px solid var(--hero-purple-main);
+            background: #0b101a;
+            color: white;
+            box-sizing: border-box;
+            font-family: 'Lexend', sans-serif;
+        }
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+            margin: 10px 5px 0 0;
+            width: 100%;
+        }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn-purple { background: var(--hero-purple-main); border-bottom-color: var(--hero-purple-dark); }
+        .turn { font-family: 'Bangers'; font-size: 2.2rem; color: var(--hero-yellow); text-align: center; margin-bottom: 10px; }
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--hero-purple-main);
+        }
+        .word-card {
+            background: #1a102a;
+            border: 3px solid var(--hero-purple-main);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        .hint-text {
+            font-size: 1.2rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .answer-reveal {
+            font-family: 'Bangers';
+            font-size: 2rem;
+            color: var(--hero-yellow);
+            display: none;
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px dashed var(--hero-yellow);
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            width: 100%;
+        }
+        .flex-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>PICKLE 3: FAKE NEWS DETECTIVE</h1>
+</header>
+
+<div class="container">
+    <div class="section" id="setup">
+        <div class="instructions">
+            🔎 <strong>Missie:</strong> Raad het Fake News woord met zo min mogelijk hints.<br>
+            🌟 <strong>Bonus:</strong> Gebruik <strong>Engelse</strong> hints voor +1 extra punt!
+        </div>
+        <label>Aantal Agents:</label>
+        <select id="playerCount" onchange="togglePlayer2()">
+            <option value="1">1 Agent</option>
+            <option value="2" selected>2 Agents</option>
+        </select>
+        <label>Agent 1:</label>
+        <input type="text" id="player1" placeholder="Naam van Agent 1" />
+        <div id="player2Section">
+            <label>Agent 2:</label>
+            <input type="text" id="player2" placeholder="Naam van Agent 2" />
+        </div>
+        <button class="btn" style="margin-top: 30px;" onclick="startGame()">Start Missie 🚀</button>
+    </div>
+
+    <div id="game" style="display: none;">
+        <div class="turn" id="turnIndicator">Beurt: ...</div>
+        <div class="scoreboard">
+            <div><span id="name1"></span>: <span id="score1" style="color:var(--hero-yellow)">0</span></div>
+            <div id="p2ScoreDisplay"><span id="name2"></span>: <span id="score2" style="color:var(--hero-yellow)">0</span></div>
+        </div>
+        <div class="word-card">
+            <div class="answer-reveal" id="word-reveal">Antwoord: ...</div>
+            <label>Hint Taal:</label>
+            <select id="hintLanguage" onchange="resetClue()">
+                <option value="nl">Nederlands</option>
+                <option value="en">English (Bonus +1)</option>
+            </select>
+            <div class="hint-text" id="hintBox">Klik op 'Volgende Hint' om te starten</div>
+            <div class="flex-buttons">
+                <button class="btn btn-purple" onclick="nextHint()">Volgende Hint 💡</button>
+                <button class="btn btn-purple" onclick="showWord()">Toon Antwoord 👁️</button>
+                <button class="btn" style="background:#4caf50; border-color:#2e7d32;" onclick="correctGuess()">Correct ✅</button>
+                <button class="btn" style="background:var(--hero-orange); border-color:#bf360c;" onclick="wrongGuess()">Fout ❌</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 EngliForce: Make English Your Superpower!
+</footer>
+
+<script>
+const words = [
+    { en: "share", hints: { nl: ["Dit doe je online met een link of video.", "Een bericht doorsturen zodat je volgers het ook zien.", "In het Nederlands: delen."], en: ["To distribute a link or video online.", "Sending a post forward so your followers see it.", "In Dutch: delen."] }},
+    { en: "difficult", hints: { nl: ["Het is soms heel erg ... om nepnieuws te herkennen.", "Het tegenovergestelde van makkelijk of 'easy'.", "In het Nederlands: moeilijk."], en: ["It is sometimes very ... to spot fake news.", "The opposite of easy.", "In Dutch: moeilijk."] }},
+    { en: "article", hints: { nl: ["Een geschreven tekst van een journalist.", "Dit lees je in een krant of op een nieuwswebsite.", "In het Nederlands: artikel."], en: ["A piece of writing created by a journalist.", "You read this in a newspaper or on a news website.", "In Dutch: artikel."] }},
+    { en: "advertisement", hints: { nl: ["Een pop-up of plaatje dat je probeert te overtuigen iets te kopen.", "Soms lijkt het op nieuws, maar het is eigenlijk marketing.", "In het Nederlands: advertentie."], en: ["A pop-up or picture trying to convince you to buy something.", "Sometimes it looks like news, but it is actually marketing.", "In Dutch: advertentie."] }},
+    { en: "angry", hints: { nl: ["Nepnieuws probeert lezers vaak heel erg ... te maken.", "Een emotie vol woede en frustratie.", "In het Nederlands: boos."], en: ["Fake news often tries to make readers feel very ...", "An emotion full of rage and frustration.", "In Dutch: boos."] }},
+    { en: "different", hints: { nl: ["Als twee verhalen niet met elkaar overeenkomen, zijn ze ...", "Het tegenovergestelde van hetzelfde ('the same').", "In het Nederlands: verschillend."], en: ["If two stories do not match, they are ...", "The opposite of the same.", "In Dutch: verschillend."] }},
+    { en: "immediately", hints: { nl: ["Als iets heel belangrijk is, moet je ... actie ondernemen.", "Nu meteen, zonder zelfs maar één seconde te wachten.", "In het Nederlands: onmiddellijk."], en: ["If something is very important, you must act ...", "Right now, without waiting even a single second.", "In Dutch: onmiddellijk."] }},
+    { en: "real", hints: { nl: ["Een fact-checker onderzoekt of het nieuws nep of ... is.", "Iets wat echt bestaat en waar is.", "In het Nederlands: echt."], en: ["A fact-checker investigates if news is fake or ...", "Something that actually exists and is true.", "In Dutch: echt."] }},
+    { en: "mistake", hints: { nl: ["Soms deelt een journalist per ongeluk foutieve informatie.", "Een onbedoelde fout of misstap.", "In het Nederlands: fout / vergissing."], en: ["Sometimes a journalist accidentally shares wrong information.", "An unintended error.", "In Dutch: fout / vergissing."] }},
+    { en: "certain", hints: { nl: ["Weet je honderd procent ... dat deze bron betrouwbaar is?", "Erg笃 (volledig) overtuigd zijn, zonder twijfel.", "In het Nederlands: zeker."], en: ["Are you one hundred percent ... that this source is reliable?", "Being completely convinced without any doubt.", "In Dutch: zeker."] }},
+    { en: "change", hints: { nl: ["Soms moet een krant de kop van een artikel achteraf ...", "Iets aanpassen of transformeren.", "In het Nederlands: veranderen."], en: ["Sometimes a newspaper has to ... the headline of an article later.", "To adjust or transform something.", "In Dutch: veranderen."] }},
+    { en: "famous", hints: { nl: ["Bekende influencers of ... sterren worden vaak slachtoffer van deepfakes.", "Iemand die bekend is bij het grote publiek.", "In het Nederlands: beroemd."], en: ["Well-known influencers or ... stars are often victims of deepfakes.", "Someone who is widely known by the public.", "In Dutch: beroemd."] }},
+    { en: "attention", hints: { nl: ["Clickbait koppen proberen direct jouw ... te trekken.", "Focus of opgemerkt worden door het publiek.", "In het Nederlands: aandacht."], en: ["Clickbait headlines try to grab your ... instantly.", "Focus or notice taken by the audience.", "In Dutch: aandacht."] }},
+    { en: "feeling", hints: { nl: ["Een emotie of intuïtie die je ervaart bij een bericht.", "Een onderbuikgevoel.", "In het Nederlands: gevoel."], en: ["An emotion or intuition you experience when reading a post.", "A gut reaction.", "In Dutch: gevoel."] }},
+    { en: "careful", hints: { nl: ["Wees heel ... met wat je gelooft op het internet.", "Goed opletten om online gevaren of leugens te voorkomen.", "In het Nederlands: voorzichtig."], en: ["Be very ... with what you believe on the internet.", "Paying close attention to avoid online dangers or lies.", "In Dutch: voorzichtig."] }}
+];
+
+let p1 = '', p2 = '', playerCount = 2;
+let score = [0, 0];
+let currentIndex = 0;
+let currentHint = 0;
+let currentPlayer = 0;
+
+function togglePlayer2() {
+    const val = document.getElementById("playerCount").value;
+    document.getElementById("player2Section").style.display = (val === "1") ? "none" : "block";
+}
+
+function startGame() {
+    playerCount = parseInt(document.getElementById("playerCount").value);
+    p1 = document.getElementById("player1").value || "Agent 1";
+    p2 = document.getElementById("player2").value || "Agent 2";
+    words.sort(() => 0.5 - Math.random());
+    score = [0, 0];
+    currentIndex = 0;
+    currentPlayer = 0;
+    document.getElementById("name1").textContent = p1;
+    document.getElementById("name2").textContent = (playerCount === 2) ? p2 : "";
+    document.getElementById("p2ScoreDisplay").style.visibility = (playerCount === 2) ? "visible" : "hidden";
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("game").style.display = "block";
+    updateScore();
+    showTurn();
+    resetWordCard();
+}
+
+function showTurn() {
+    const name = currentPlayer === 0 ? p1 : p2;
+    document.getElementById("turnIndicator").textContent = (playerCount === 1) ? `Agent: ${p1}` : `Beurt: ${name}`;
+}
+
+function resetWordCard() {
+    currentHint = 0;
+    document.getElementById("hintBox").textContent = "Klik op 'Volgende Hint' om te starten";
+    document.getElementById("word-reveal").style.display = "none";
+}
+
+function nextHint() {
+    if (currentHint >= 3) return;
+    const lang = document.getElementById("hintLanguage").value;
+    const hint = words[currentIndex].hints[lang][currentHint];
+    document.getElementById("hintBox").textContent = `Hint ${currentHint + 1}: ${hint}`;
+    currentHint++;
+}
+
+function showWord() {
+    document.getElementById("word-reveal").textContent = `Antwoord: ${words[currentIndex].en}`;
+    document.getElementById("word-reveal").style.display = "block";
+}
+
+function correctGuess() {
+    const lang = document.getElementById("hintLanguage").value;
+    let points = Math.max(1, 4 - currentHint);
+    if (lang === "en") points += 1;
+    score[currentPlayer] += points;
+    nextWord();
+}
+
+function wrongGuess() {
+    nextWord();
+}
+
+function nextWord() {
+    currentIndex++;
+    if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+    updateScore();
+    if (currentIndex >= words.length) {
+        document.getElementById("turnIndicator").textContent = "Missie Voltooid!";
+        document.getElementById("hintBox").textContent = "Alle woorden ontdekt!";
+        document.getElementById("word-reveal").style.display = "none";
+    } else {
+        showTurn();
+        resetWordCard();
+    }
+}
+
+function updateScore() {
+    document.getElementById("score1").textContent = score[0] + " pt";
+    document.getElementById("score2").textContent = score[1] + " pt";
+}
+
+function resetClue() {
+    if (currentHint > 0) {
+        const lang = document.getElementById("hintLanguage").value;
+        const hint = words[currentIndex].hints[lang][currentHint - 1];
+        document.getElementById("hintBox").textContent = `Hint ${currentHint}: ${hint}`;
+    }
+}
+</script>
+</body>
+</html>
