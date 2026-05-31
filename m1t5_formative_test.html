@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Mastery Check - Ultimate Edition ⚡</title>
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff007f;
+            --neon-purple: #9d00ff;
+            --neon-green: #39ff14;
+            --bg-dark: #0a0612;
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 50%, #1e0b36, var(--bg-dark));
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .bg-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .glow-1 { top: 10%; left: 10%; background: var(--neon-cyan); }
+        .glow-2 { bottom: 10%; right: 10%; background: var(--neon-pink); }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 800px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-purple);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #b3b3b3;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .instruction-text {
+            text-align: center;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.8), 0 0 10px var(--neon-cyan);
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        .progress-container {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            box-shadow: 0 0 10px var(--neon-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .category-tag {
+            color: var(--neon-cyan);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+
+        .question-box {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 16px 20px;
+            border-radius: 12px;
+            color: #fff;
+            text-align: left;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            transform: scale(1.01);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .result-card:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+        }
+
+        .result-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-card h3::after {
+            content: '▼';
+            font-size: 0.8rem;
+            color: var(--neon-cyan);
+            transition: transform 0.2s;
+        }
+
+        .result-card.expanded h3::after {
+            transform: rotate(180deg);
+        }
+
+        .result-score-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .result-score-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .score-good { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+        .score-medium { background: orange; box-shadow: 0 0 8px orange; }
+        .score-bad { background: var(--neon-pink); box-shadow: 0 0 8px var(--neon-pink); }
+
+        .status-text {
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .review-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--glass-border);
+        }
+
+        .result-card.expanded .review-details {
+            display: block;
+        }
+
+        .review-item {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .review-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .review-q {
+            font-weight: 500;
+            color: #e0e0e0;
+            margin-bottom: 4px;
+        }
+
+        .review-a {
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .text-wrong { color: var(--neon-pink); text-shadow: 0 0 4px rgba(255, 0, 127, 0.2); }
+        .text-correct { color: var(--neon-green); text-shadow: 0 0 4px rgba(57, 255, 20, 0.2); }
+
+        .total-score-box {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 20px;
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 16px;
+            box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+
+        .total-score-box h2 {
+            font-size: 2rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <div class="container">
+        <div id="start-screen" class="screen active">
+            <h1>Mastery Check</h1>
+            <p class="subtitle">Word een pro in Engels! Je krijgt van elk onderdeel 10 willekeurige vragen uit onze grote database. Succes! ⚡</p>
+            <button class="btn" onclick="startQuiz()">Start de Toets</button>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <span id="question-number">Vraag 1/80</span>
+                <span id="category-name" class="category-tag">Grammatica</span>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div id="question-text" class="question-box">Loading...</div>
+            <div id="options-container" class="options-grid"></div>
+        </div>
+
+        <div id="results-screen" class="screen">
+            <h1>Jouw Resultaten</h1>
+            <div class="total-score-box">
+                <p>Totale score</p>
+                <h2 id="total-score-text">0 / 80 correct</h2>
+            </div>
+            
+            <p class="instruction-text">👇 Klik op de tegels hieronder om te zien wat je goed en fout hebt gedaan! 👇</p>
+            
+            <div id="results-list" class="results-grid"></div>
+            <button class="btn" onclick="resetQuiz()">Opnieuw Proberen</button>
+        </div>
+    </div>
+
+    <script>
+        const itemDatabase = {
+            "Klokkijken": [
+                { q: "De digitale klok geeft 03:08 aan. Wat is de juiste Engelse tijd?", a: "eight past three", o: ["eight past three o'clock", "eight past three", "three hours and eight minutes", "eight over three"] },
+                { q: "Het is op de klok 'tien voor half zes' (17:20). Hoe zeg je dit in correct Engels?", a: "twenty past five", o: ["ten to half past six", "twenty past five", "twenty past five o'clock", "ten before half six"] },
+                { q: "De klok geeft exact 08:00 aan. Hoe spreek je dit uit?", a: "eight o'clock", o: ["eight o'clock", "eight past zero", "eight hours", "just eight"] },
+                { q: "De klok staat op 'vijf over half negen' (08:35). Wat is the juiste Engelse vertaling?", a: "twenty-five to nine", o: ["five past half past eight", "twenty-five to nine", "twenty-five to nine o'clock", "thirty-five past eight"] },
+                { q: "Op een analoge klok staat de grote wijzer op de twee en de kleine wijzer net voorbij de twaalf (12:10). Wat is dit voluit geschreven?", a: "ten past twelve", o: ["ten past twelve o'clock", "twenty to half past one", "ten past twelve", "ten over twelve"] },
+                { q: "Vertaal de Nederlandse tijd 'tien over half twaalf' (11:40) naar goed Engels.", a: "twenty to twelve", o: ["ten past half past eleven", "twenty to twelve o'clock", "forty past eleven", "twenty to twelve"] },
+                { q: "De digitale tijd is 04:15. Hoe schrijf je dit voluit?", a: "quarter past four", o: ["quarter past four o'clock", "fifteen over four", "quarter past four", "ten to half past five"] },
+                { q: "De klok geeft 'vijf voor half twee' aan (13:25). Welke Engelse optie klopt?", a: "twenty-five past one", o: ["five to half past two", "twenty-five past one o'clock", "twenty-five past one", "five before half two"] },
+                { q: "De digitale klok geeft 06:45 aan. Wat zegt een Engelsman?", a: "quarter to seven", o: ["quarter to seven o'clock", "fifteen to seven", "quarter to seven", "five past half past six"] },
+                { q: "De klok geeft exact 11:00 aan. Welke optie is correct?", a: "eleven o'clock", o: ["eleven o'clock", "eleven past zero o'clock", "eleven hours", "eleven minutes past zero"] },
+                { q: "De digitale klok geeft 09:12 aan. Welke optie is correct?", a: "twelve past nine", o: ["twelve past nine o'clock", "twelve past nine", "twelve over nine", "nine hours twelve"] },
+                { q: "Het is 'vijf voor half zeven' (18:25). Hoe zeg je dit in Groot-Brittannië?", a: "twenty-five past six", o: ["five to half past seven", "twenty-five past six o'clock", "twenty-five past six", "five before half seven"] },
+                { q: "De klok geeft exact 02:00 aan. Wat is het juiste antwoord?", a: "two o'clock", o: ["two o'clock", "two hours", "two past zero", "just two"] },
+                { q: "Het is 'tien voor half vier' (15:20). Wat is de correcte Engelse kloktijd?", a: "twenty past three", o: ["ten to half past four", "twenty past three o'clock", "twenty past three", "ten before half four"] },
+                { q: "De digitale klok geeft 10:50 aan. Hoe schrijf je dit voluit?", a: "ten to eleven", o: ["ten to eleven o'clock", "fifty past ten", "ten to eleven", "ten before eleven"] },
+                { q: "Het is 'vijf over half acht' (19:35). Hoe schrijf je dit in het Engels?", a: "twenty-five to eight", o: ["five past half past seven", "twenty-five to eight o'clock", "twenty-five to eight", "thirty-five past seven"] },
+                { q: "Op een analoge klok staat de grote wijzer op de drie en de kleine wijzer net voorbij de twaalf (12:15).", a: "quarter past twelve", o: ["quarter past twelve o'clock", "fifteen over twelve", "quarter past twelve", "quarter over twelve"] },
+                { q: "Het is 'tien over half drie' (14:40). Welke Engelse zin is juist?", a: "twenty to three", o: ["ten past half past two", "twenty to three o'clock", "twenty to three", "forty past two"] },
+                { q: "De klok geeft 07:30 aan. Hoe zeg je 'half acht' in het Engels?", a: "half past seven", o: ["half past seven o'clock", "half eight", "half past seven", "half to eight"] },
+                { q: "De klok geeft exact 05:00 aan. Wat kies je?", a: "five o'clock", o: ["five o'clock", "five hours", "five past zero", "just five"] }
+            ],
+            "To be going to": [
+                { q: "Welke zin is correct voor de toekomst?", a: "I am going to watch a movie tonight.", o: ["I going to watch a movie tonight.", "I am going to watch a movie tonight.", "I am go to watch a movie tonight.", "I will going to watch a movie."] },
+                { q: "Maak de zin af: 'They ______ (play) football tomorrow.'", a: "are going to play", o: ["is going to play", "are going to play", "am going to play", "are go to play"] },
+                { q: "Hoe maak je een ontkenning? 'She ______ (not visit) us.'", a: "is not going to visit", o: ["is not going to visit", "not going to visit", "are not going to visit", "is going to not visit"] },
+                { q: "Maak er een vraagzin van: '______ (you / buy) that game?'", a: "Are you going to buy", o: ["Is you going to buy", "Are you going to buy", "Do you going to buy", "Going you to buy"] },
+                { q: "Vul in: 'Look at those dark clouds! It ______ rain.'", a: "is going to", o: ["is going to", "are going to", "am going to", "goes to"] },
+                { q: "Wat is de juiste vorm voor 'He'?", a: "He is going to study.", o: ["He are going to study.", "He am going to study.", "He is going to study.", "He is go to study."] },
+                { q: "Vertaal: 'Wij gaan niet dansen.'", a: "We are not going to dance.", o: ["We isn't going to dance.", "We not going to dance.", "We are not going to dance.", "We don't going to dance."] },
+                { q: "Maak de vraag compleet: 'What ______ do?'", a: "is he going to", o: ["he is going to", "is he going to", "are he going to", "does he going to"] },
+                { q: "Kies de juiste zin:", a: "Are they going to help us?", o: ["Going they to help us?", "Is they going to help us?", "Are they going to help us?", "Are they go to help us?"] },
+                { q: "Vul in: 'I ______ (clean) my room.'", a: "am going to clean", o: ["are going to clean", "is going to clean", "am going to clean", "going to clean"] },
+                { q: "Vul in: 'We ______ (build) a prototype next week.'", a: "are going to build", o: ["is going to build", "are going to build", "am going to build", "going to build"] },
+                { q: "Kies de juiste zin voor 'She':", a: "She is going to design an app.", o: ["She are going to design an app.", "She is going to design an app.", "She going to design an app.", "She am going to design an app."] },
+                { q: "Maak de ontkenning: 'I ______ (not charge) my phone now.'", a: "am not going to charge", o: ["isn't going to charge", "aren't going to charge", "am not going to charge", "not going to charge"] },
+                { q: "Maak een vraagzin van: '______ (it / cost) a lot of money?'", a: "Is it going to cost", o: ["Are it going to cost", "Is it going to cost", "Does it going to cost", "Going it to cost"] },
+                { q: "Vul in: 'The engineer ______ (fix) the network.'", a: "is going to fix", o: ["are going to fix", "is going to fix", "going to fix", "am going to fix"] },
+                { q: "Vertaal: 'Gaan zij een sms sturen?'", a: "Are they going to send a text message?", o: ["Going they to send a text message?", "Is they going to send a text message?", "Are they going to send a text message?", "Do they going to send a text message?"] },
+                { q: "Vul in: 'You ______ (experience) something awesome.'", a: "are going to experience", o: ["is going to experience", "am going to experience", "are going to experience", "going to experience"] },
+                { q: "Maak de ontkenning: 'He ______ (not release) the game yet.'", a: "is not going to release", o: ["are not going to release", "is not going to release", "am not going to release", "not going to release"] },
+                { q: "Maak een vraag: '______ (we / connect) the device?'", a: "Are we going to connect", o: ["Is we going to connect", "Are we going to connect", "Going we to connect", "Do we going to connect"] },
+                { q: "Vul in: 'The scientist ______ (prove) his theory.'", a: "is going to prove", o: ["is going to prove", "are going to prove", "am going to prove", "going to prove"] }
+            ],
+            "In, on, at voor plaats": [
+                { q: "Vul in: 'I live ______ Amsterdam.'", a: "in", o: ["in", "on", "at"] },
+                { q: "Vul in: 'The book is ______ the table.'", a: "on", o: ["in", "on", "at"] },
+                { q: "Vul in: 'Meet me ______ the bus stop.'", a: "at", o: ["in", "on", "at"] },
+                { q: "Vul in: 'She is sitting ______ a chair.'", a: "on", o: ["in", "on", "at"] },
+                { q: "Vul in: 'My grandmother was born ______ Japan.'", a: "in", o: ["in", "on", "at"] },
+                { q: "Vul in: 'There is a beautiful painting ______ the wall.'", a: "on", o: ["in", "on", "at"] },
+                { q: "Vul in: 'He is currently ______ school.'", a: "at", o: ["in", "on", "at"] },
+                { q: "Vul in: 'Who is that standing ______ the door?'", a: "at", o: ["in", "on", "at"] },
+                { q: "Vul in: 'The keys are ______ my pocket.'", a: "in", o: ["in", "on", "at"] },
+                { q: "Vul in: 'We arrived ______ the airport late.'", a: "at", o: ["in", "on", "at"] },
+                { q: "Vul in: 'There are many arcade machines ______ the building.'", a: "in", o: ["in", "on", "at"] },
+                { q: "Vul in: 'The data is stored ______ this device.'", a: "on", o: ["in", "on", "at"] },
+                { q: "Vul in: 'The engineer is working ______ the factory.'", a: "at", o: ["in", "on", "at"] },
+                { q: "Vul in: 'I saw an advertisement ______ television.'", a: "on", o: ["in", "on", "at"] },
+                { q: "Vul in: 'He left his touch screen device ______ the kitchen counter.'", a: "on", o: ["in", "on", "at"] },
+                { q: "Vul in: 'We like to play outside ______ the park.'", a: "in", o: ["in", "on", "at"] },
+                { q: "Vul in: 'The public is waiting ______ the entrance.'", a: "at", o: ["in", "on", "at"] },
+                { q: "Vul in: 'There is a crack ______ that brick over there.'", a: "in", o: ["in", "on", "at"] },
+                { q: "Vul in: 'I read an interesting article ______ the newspaper.'", a: "in", o: ["in", "on", "at"] },
+                { q: "Vul in: 'The subscribers are gathered ______ the main hall.'", a: "at", o: ["in", "on", "at"] }
+            ],
+            "A, an, the": [
+                { q: "Vul in: 'Can I have ______ apple, please?'", a: "an", o: ["a", "an", "the"] },
+                { q: "Vul in: 'Look at ______ moon! It's so bright tonight.'", a: "the", o: ["a", "an", "the"] },
+                { q: "Vul in: 'My brother wants to buy ______ fast car.'", a: "a", o: ["a", "an", "the"] },
+                { q: "Vul in: 'He is ______ honest boy.'", a: "an", o: ["a", "an", "the"] },
+                { q: "Vul in: 'Paris is ______ capital of France.'", a: "the", o: ["a", "an", "the"] },
+                { q: "Vul in: 'I saw ______ European bird yesterday.'", a: "a", o: ["a", "an", "the"] },
+                { q: "Vul in: 'Do you have ______ dog?'", a: "a", o: ["a", "an", "the"] },
+                { q: "Vul in: 'She is ______ uniform designer.'", a: "a", o: ["a", "an", "the"] },
+                { q: "Vul in: 'Give me ______ umbrella.'", a: "an", o: ["a", "an", "the"] },
+                { q: "______ sun rises in the east.'", a: "The", o: ["A", "An", "The"] },
+                { q: "He bought ______ new device yesterday.'", a: "a", o: ["a", "an", "the"] },
+                { q: "This is ______ ultimate challenge for you.'", a: "the", o: ["a", "an", "the"] },
+                { q: "The scientist found ______ unique solution.'", a: "a", o: ["a", "an", "the"] },
+                { q: "I sent ______ text message to my friend.'", a: "a", o: ["a", "an", "the"] },
+                { q: "They visited ______ old arcade hall.", a: "an", o: ["a", "an", "the"] },
+                { q: "He is ______ engineer who built the network.", a: "the", o: ["a", "an", "the"] },
+                { q: "What ______ amazing feature this app has!", a: "an", o: ["a", "an", "the"] },
+                { q: "______ earth travels around the sun.", a: "The", o: ["A", "An", "The"] },
+                { q: "The project was ______ total flop.", a: "a", o: ["a", "an", "the"] },
+                { q: "Can you show me ______ picture you took?", a: "the", o: ["a", "an", "the"] }
+            ],
+            "Some / any": [
+                { q: "Vul in: 'I would like ______ water, please.'", a: "some", o: ["some", "any"] },
+                { q: "Vul in: 'Do you have ______ questions?'", a: "any", o: ["some", "any"] },
+                { q: "Vul in: 'There aren't ______ biscuits left in the jar.'", a: "any", o: ["some", "any"] },
+                { q: "Vul in: 'She bought ______ new clothes yesterday.'", a: "some", o: ["some", "any"] },
+                { q: "Vul in: 'Is there ______ milk in the fridge?'", a: "any", o: ["some", "any"] },
+                { q: "Vul in: 'He doesn't need ______ help.'", a: "any", o: ["some", "any"] },
+                { q: "Vul in: 'Would you like ______ coffee?' (Aanbod!)", a: "some", o: ["some", "any"] },
+                { q: "Vul in: 'We saw ______ amazing prototypes at the arcade.'", a: "some", o: ["some", "any"] },
+                { q: "Vul in: 'Can I borrow ______ money?' (Verzoek!)", a: "some", o: ["some", "any"] },
+                { q: "Vul in: 'I haven't received ______ text messages today.'", a: "any", o: ["some", "any"] },
+                { q: "Are there ______ new features in this update?", a: "any", o: ["some", "any"] },
+                { q: "The engineer needs ______ tools to fix this.", a: "some", o: ["some", "any"] },
+                { q: "We didn't find ______ realistic graphics in that old game.", a: "any", o: ["some", "any"] },
+                { q: "He has ______ very powerful devices in his lab.", a: "some", o: ["some", "any"] },
+                { q: "I don't have ______ data left on my bundle.", a: "any", o: ["some", "any"] },
+                { q: "Could you give me ______ advice? (Verzoek!)", a: "some", o: ["some", "any"] },
+                { q: "There are ______ angry comments under that post.", a: "some", o: ["some", "any"] },
+                { q: "Did you make ______ mistakes on the test?", a: "any", o: ["some", "any"] },
+                { q: "We need ______ bricks to build the wall.", a: "some", o: ["some", "any"] },
+                { q: "She didn't show ______ emotion during the film.", a: "any", o: ["some", "any"] }
+            ],
+            "Should / shouldn't": [
+                { q: "Vul in: 'You ______ eat so much candy, it's bad for your teeth.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'It's raining outside. You ______ take an umbrella.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'The engineer ______ double-check the server connection before leaving.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'Children ______ watch too much television.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ be careful when crossing the street.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'If you feel sick, you ______ see a doctor.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ make mistakes on purpose.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'We ______ backup our files daily to prevent losing important data.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'Drivers ______ look at their touchscreen while driving.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ always try to improve your skills.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ ignore negative comments on your content.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'We ______ waste our limited data bundle.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ charge your phone before going on a long trip.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'People ______ believe everything on the internet.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ inspire others by sharing positive articles.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'We ______ be angry when someone makes a small mistake.'", a: "shouldn't", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ pay attention when the teacher explains the feature.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'They ______ test the prototype thoroughly before releasing it to the public.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Vul in: 'You ______ feel comfortable in your own skin.'", a: "should", o: ["should", "shouldn't"] },
+                { q: "Students ______ change their answers at the last second without thinking.", a: "shouldn't", o: ["should", "shouldn't"] }
+            ],
+            "Past simple (regelmatige werkwoorden)": [
+                { q: "Wat is de past simple van 'walk'?", a: "walked", o: ["walks", "walked", "walking", "did walk"] },
+                { q: "Maak de ontkenning: 'He ______ (not play) games yesterday.'", a: "didn't play", o: ["didn't play", "didn't played", "not played", "played not"] },
+                { q: "Maak een vraagzin: '______ (you / watch) that amazing video?'", a: "Did you watch", o: ["Did you watched", "Did you watch", "Watched you", "Do you watched"] },
+                { q: "Wat is de past simple van 'cook'?", a: "cooked", o: ["cooks", "cooked", "cooking", "cook"] },
+                { q: "Vul in: 'Yesterday, the scientist ______ (develop) a new feature.'", a: "developed", o: ["develop", "developed", "did develop", "was develop"] },
+                { q: "Maak een vraagzin: '______ (she / listen) to the new song?'", a: "Did she listen", o: ["Did she listened", "Did she listen", "Listened she", "Does she listen"] },
+                { q: "Maak de ontkenning: 'We ______ (not phoned) our friends last night.'", a: "didn't phone", o: ["don't phone", "didn't phoned", "didn't phone", "not phoned"] },
+                { q: "Maak de vraag: 'Where ______ (she / live) five years ago?'", a: "did she live", o: ["did she live", "did she lived", "lived she", "does she live"] },
+                { q: "Vul in: 'The engineer ______ (fix) the machine this morning.'", a: "fixed", o: ["fixes", "fixed", "fixing", "did fixed"] },
+                { q: "Wat is de past simple van 'start'?", a: "started", o: ["started", "starts", "starting", "was start"] },
+                { q: "Vul in: 'The industry ______ (change) rapidly in the 90s.'", a: "changed", o: ["change", "changed", "did changed", "was change"] },
+                { q: "Maak een vraag: '______ (the student / finish) the test on time?'", a: "Did the student finish", o: ["Did the student finish", "Did the student finished", "Finished the student", "Does the student finish"] },
+                { q: "Maak de ontkenning: 'I ______ (not recognize) his face at first.'", a: "didn't recognize", o: ["didn't recognize", "didn't recognized", "not recognized", "don't recognize"] },
+                { q: "Vul in: 'We ______ (experience) an awesome adventure at the event.'", a: "experienced", o: ["experiences", "experienced", "experiencing", "did experience"] },
+                { q: "Wat is de past simple van 'compete'?", a: "competed", o: ["compete", "competed", "competing", "was compete"] },
+                { q: "Maak de vraag: 'Why ______ (you / post) that comment?'", a: "did you post", o: ["did you post", "did you posted", "posted you", "do you posted"] },
+                { q: "Maak de ontkenning: 'She ______ (not share) the picture with us.'", a: "didn't share", o: ["don't share", "didn't shared", "didn't share", "not shared"] },
+                { q: "Vul in: 'They ______ (release) the prototype last month.'", a: "released", o: ["release", "released", "did release", "was release"] },
+                { q: "Maak een vraag: '______ (he / answer) the phone?'", a: "Did he answer", o: ["Did he answer", "Did he answered", "Answered he", "Does he answered"] },
+                { q: "Wat is de past simple van 'like'?", a: "liked", o: ["likes", "liked", "liking", "was like"] }
+            ],
+            "Vocabulaire": [
+                { q: "Wat is de Nederlandse betekenis van 'device'?", a: "apparaat", o: ["apparaat", "netwerk", "ingenieur", "functie"] },
+                { q: "Wat is de Nederlandse betekenis van 'network'?", a: "netwerk", o: ["dienst", "apparaat", "netwerk", "gegevens"] },
+                { q: "Wat is de Nederlandse betekenis van 'engineer'?", a: "ingenieur", o: ["wetenschapper", "ingenieur", "ontwerper", "volger"] },
+                { q: "Wat is de Nederlandse betekenis van 'service'?", a: "dienst", o: ["ontwerp", "dienst", "ervaring", "bericht"] },
+                { q: "Wat is de Nederlandse betekenis van 'to build'?", a: "bouwen", o: ["ontwikkelen", "ontwerpen", "bouwen", "uitbrengen"] },
+                { q: "Wat is de Nederlandse betekenis van 'prototype'?", a: "testmodel", o: ["baksteen", "testmodel", "functie", "apparaat"] },
+                { q: "Wat is de Nederlandse betekenis van 'cost'?", a: "kosten / prijs", o: ["opladen", "kosten / prijs", "gegevens", "ontwerp"] },
+                { q: "Wat is de Nederlandse betekenis van 'charge'?", a: "opladen", o: ["veranderen", "ontwikkelen", "opladen", "verbinden"] },
+                { q: "Wat is de Nederlandse betekenis van 'data'?", a: "gegevens", o: ["foto", "bericht", "gegevens", "inhoud"] },
+                { q: "Wat is de Nederlandse betekenis van 'touchscreen'?", a: "aanraakscherm", o: ["aanraakscherm", "testmodel", "apparaat", "bericht"] },
+                { q: "Wat is de Nederlandse betekenis van 'brick'?", a: "baksteen", o: ["baksteen", "mislukking", "apparaat", "testmodel"] },
+                { q: "Wat is de Nederlandse betekenis van 'text message'?", a: "sms / bericht", o: ["reactie", "artikel", "sms / bericht", "advertentie"] },
+                { q: "Wat is de Nederlandse betekenis van 'develop'?", a: "ontwikkelen", o: ["ontwikkelen", "ontwerpen", "verbeteren", "concurreren"] },
+                { q: "Wat is de Nederlandse betekenis van 'feature'?", a: "functie", o: ["ontwerp", "functie", "ervaring", "bericht"] },
+                { q: "Wat is de Nederlandse betekenis van 'design'?", a: "ontwerp", o: ["ontwerp", "apparaat", "testmodel", "baksteen"] },
+                { q: "Wat is de Nederlandse betekenis van 'enormous'?", a: "enorm", o: ["krachtig", "enorm", "realistisch", "populair"] },
+                { q: "Wat is de Nederlandse betekenis van 'scientist'?", a: "wetenschapper", o: ["wetenschapper", "ingenieur", "volger", "abonnee"] },
+                { q: "Wat is de Nederlandse betekenis van 'public'?", a: "het publiek", o: ["het publiek", "de industrie", "de speelhal", "de volger"] },
+                { q: "Wat is de Nederlandse betekenis van 'arcade'?", a: "speelhal", o: ["industrie", "speelhal", "testmodel", "functie"] },
+                { q: "Wat is de Nederlandse betekenis van 'industry'?", a: "industrie", o: ["industrie", "apparaat", "dienst", "netwerk"] },
+                { q: "Wat is de Nederlandse betekenis van 'to release'?", a: "uitbrengen", o: ["concurreren", "uitbrengen", "verbeteren", "veranderen"] },
+                { q: "Wat is de Nederlandse betekenis van 'to compete'?", a: "concurreren", o: ["concurreren", "verbeteren", "inspireren", "delen"] },
+                { q: "Wat is de Nederlandse betekenis van 'realistic'?", a: "realistisch", o: ["echt", "realistisch", "zeker", "krachtig"] },
+                { q: "Wat is de Nederlandse betekenis van 'to improve'?", a: "verbeteren", o: ["ontwikkelen", "verbeteren", "veranderen", "herkennen"] },
+                { q: "Wat is de Nederlandse betekenis van 'a flop'?", a: "een mislukking", o: ["een succes", "een mislukking", "een functie", "een ervaring"] },
+                { q: "Wat is de Nederlandse betekenis van 'powerful'?", a: "krachtig", o: ["enorm", "krachtig", "realistisch", "zelfverzekerd"] },
+                { q: "Wat is de Nederlandse betekenis van 'to connect'?", a: "verbinden", o: ["verbinden", "delen", "herkennen", "uitbrengen"] },
+                { q: "Wat is de Nederlandse betekenis van 'popular'?", a: "populair", o: ["beroemd", "populair", "enorm", "echt"] },
+                { q: "Wat is de Nederlandse betekenis van 'experience'?", a: "ervaring", o: ["ervaring", "gevoel", "advies", "aandacht"] },
+                { q: "Wat is de Nederlandse betekenis van 'follower'?", a: "volger", o: ["abonnee", "volger", "wetenschapper", "ingenieur"] },
+                { q: "Wat is de Nederlandse betekenis van 'subscriber'?", a: "abonnee", o: ["volger", "abonnee", "het publiek", "wetenschapper"] },
+                { q: "Wat is de Nederlandse betekenis van 'early'?", a: "vroeg", o: ["vroeg", "meestal", "buiten", "begin"] },
+                { q: "Wat is de Nederlandse betekenis van 'usually'?", a: "meestal", o: ["vroeg", "meestal", "onmiddellijk", "zeker"] },
+                { q: "Wat is de Nederlandse betekenis van 'content'?", a: "inhoud", o: ["inhoud", "artikel", "advertentie", "reactie"] },
+                { q: "Wat is de Nederlandse betekenis van 'recognise'?", a: "herkennen", o: ["herkennen", "veranderen", "inspireren", "verbeteren"] },
+                { q: "Wat is de Nederlandse betekenis van 'outside'?", a: "buiten", o: ["buiten", "op je gemak", "vroeg", "begin"] },
+                { q: "Wat is de Nederlandse betekenis van 'picture'?", a: "foto", o: ["artikel", "advertentie", "foto", "bericht"] },
+                { q: "Wat is de Nederlandse betekenis van 'negative'?", a: "negatief", o: ["negatief", "boos", "moeilijk", "verschillend"] },
+                { q: "Wat is de Nederlandse betekenis van 'confident'?", a: "zelfverzekerd", o: ["op je gemak", "zelfverzekerd", "voorzichtig", "zeker"] },
+                { q: "Wat is de Nederlandse betekenis van 'comment'?", a: "reactie", o: ["advies", "bericht", "reactie", "artikel"] },
+                { q: "Wat is de Nederlandse betekenis van 'beginning'?", a: "begin", o: ["begin", "vroeg", "meestal", "advies"] },
+                { q: "Wat is de Nederlandse betekenis van 'advice'?", a: "advies", o: ["advies", "aandacht", "gevoel", "ervaring"] },
+                { q: "Wat is de Nederlandse betekenis van 'comfortable'?", a: "op je gemak", o: ["zelfverzekerd", "op je gemak", "voorzichtig", "zeker"] },
+                { q: "Wat is de Nederlandse betekenis van 'inspire'?", a: "inspireren", o: ["veranderen", "inspireren", "verbeteren", "concurreren"] },
+                { q: "Wat is de Nederlandse betekenis van 'share'?", a: "delen", o: ["verbinden", "delen", "uitbrengen", "ontwikkelen"] },
+                { q: "Wat is de Nederlandse betekenis van 'difficult'?", a: "moeilijk", o: ["verschillend", "moeilijk", "enorm", "negatief"] },
+                { q: "Wat is de Nederlandse betekenis van 'article'?", a: "artikel", o: ["artikel", "advertentie", "comment", "picture"] },
+                { q: "Wat is de Nederlandse betekenis van 'advertisement'?", a: "advertentie", o: ["artikel", "foto", "advertentie", "bericht"] },
+                { q: "Wat is de Nederlandse betekenis van 'angry'?", a: "boos", o: ["boos", "negatief", "moeilijk", "voorzichtig"] },
+                { q: "Wat is de Nederlandse betekenis van 'different'?", a: "verschillend", o: ["moeilijk", "verschillend", "echt", "zeker"] },
+                { q: "Wat is de Nederlandse betekenis van 'immediately'?", a: "onmiddellijk", o: ["meestal", "vroeg", "onmiddellijk", "zeker"] },
+                { q: "Wat is de Nederlandse betekenis van 'real'?", a: "echt", o: ["realistisch", "echt", "zeker", "populair"] },
+                { q: "Wat is de Nederlandse betekenis van 'a mistake'?", a: "fout", o: ["fout", "mislukking", "ontwerp", "testmodel"] },
+                { q: "Wat is de Nederlandse betekenis van 'certain'?", a: "zeker", o: ["zeker", "echt", "zelfverzekerd", "meestal"] },
+                { q: "Wat is de Nederlandse betekenis van 'change'?", a: "veranderen", o: ["veranderen", "verbeteren", "ontwikkelen", "bouwen"] },
+                { q: "Wat is de Nederlandse betekenis van 'famous'?", a: "beroemd", o: ["populair", "beroemd", "krachtig", "enorm"] },
+                { q: "Wat is de Nederlandse betekenis van 'attention'?", a: "aandacht", o: ["aandacht", "advies", "gevoel", "ervaring"] },
+                { q: "Wat is de Nederlandse betekenis van 'feeling'?", a: "gevoel", o: ["gevoel", "ervaring", "aandacht", "advies"] },
+                { q: "Wat is de Nederlandse betekenis van 'careful'?", a: "voorzichtig", o: ["voorzichtig", "zelfverzekerd", "op je gemak", "boos"] },
+
+                // NEDERLANDS NAAR ENGELS
+                { q: "Wat is de Engelse vertaling van 'apparaat'?", a: "device", o: ["device", "network", "engineer", "feature"] },
+                { q: "Wat is de Engelse vertaling van 'netwerk'?", a: "network", o: ["service", "device", "network", "data"] },
+                { q: "Wat is de Engelse vertaling van 'dienst'?", a: "service", o: ["design", "service", "experience", "comment"] },
+                { q: "Wat is de Engelse vertaling van 'testmodel'?", a: "prototype", o: ["brick", "prototype", "feature", "device"] },
+                { q: "Wat is de Engelse vertaling van 'kosten / prijs'?", a: "cost", o: ["charge", "cost", "data", "design"] },
+                { q: "Wat is de Engelse vertaling van 'opladen'?", a: "charge", o: ["change", "develop", "charge", "connect"] },
+                { q: "Wat is de Engelse vertaling van 'gegevens'?", a: "data", o: ["picture", "text message", "data", "content"] },
+                { q: "Wat is de Engelse vertaling van 'aanraakscherm'?", a: "touchscreen", o: ["touchscreen", "prototype", "device", "text message"] },
+                { q: "Wat is de Engelse vertaling van 'baksteen'?", a: "brick", o: ["brick", "a flop", "device", "prototype"] },
+                { q: "Wat is de Engelse vertaling van 'sms / bericht'?", a: "text message", o: ["comment", "article", "text message", "advertisement"] },
+                { q: "Wat is de Engelse vertaling van 'enorm'?", a: "enormous", o: ["powerful", "enormous", "realistic", "popular"] },
+                { q: "Wat is de Engelse vertaling van 'het publiek'?", a: "public", o: ["public", "industry", "arcade", "follower"] },
+                { q: "Wat is de Engelse vertaling van 'speelhal'?", a: "arcade", o: ["industry", "arcade", "prototype", "feature"] },
+                { q: "Wat is de Engelse vertaling van 'industrie'?", a: "industry", o: ["industry", "device", "service", "network"] },
+                { q: "Wat is de Engelse vertaling van 'realistisch'?", a: "realistic", o: ["real", "realistic", "certain", "powerful"] },
+                { q: "Wat is de Engelse vertaling van 'krachtig'?", a: "powerful", o: ["enormous", "powerful", "realistic", "confident"] },
+                { q: "Wat is de Engelse vertaling van 'populair'?", a: "popular", o: ["famous", "popular", "enormous", "real"] },
+                { q: "Wat is de Engelse vertaling van 'volger'?", a: "follower", o: ["subscriber", "follower", "scientist", "engineer"] },
+                { q: "Wat is de Engelse vertaling van 'abonnee'?", a: "subscriber", o: ["follower", "subscriber", "public", "scientist"] },
+                { q: "Wat is de Engelse vertaling van 'vroeg'?", a: "early", o: ["early", "usually", "outside", "beginning"] },
+                { q: "Wat is de Engelse vertaling van 'meestal'?", a: "usually", o: ["early", "usually", "immediately", "certain"] },
+                { q: "Wat is de Engelse vertaling van 'inhoud'?", a: "content", o: ["content", "article", "advertisement", "comment"] },
+                { q: "Wat is de Engelse vertaling van 'buiten'?", a: "outside", o: ["outside", "comfortable", "early", "beginning"] },
+                { q: "Wat is de Engelse vertaling van 'foto'?", a: "picture", o: ["article", "advertisement", "picture", "text message"] },
+                { q: "Wat is de Engelse vertaling van 'negatief'?", a: "negative", o: ["negative", "angry", "difficult", "different"] },
+                { q: "Wat is de Engelse vertaling van 'reactie'?", a: "comment", o: ["advice", "text message", "comment", "article"] },
+                { q: "Wat is de Engelse vertaling van 'begin'?", a: "beginning", o: ["beginning", "early", "usually", "advice"] },
+                { q: "Wat is de Engelse vertaling van 'advies'?", a: "advice", o: ["advice", "attention", "feeling", "experience"] },
+                { q: "Wat is de Engelse vertaling van 'op je gemak'?", a: "comfortable", o: ["confident", "comfortable", "careful", "certain"] },
+                { q: "Wat is de Engelse vertaling van 'moeilijk'?", a: "difficult", o: ["different", "difficult", "enormous", "negative"] },
+                { q: "Wat is de Engelse vertaling van 'artikel'?", a: "article", o: ["article", "advertisement", "comment", "picture"] },
+                { q: "Wat is de Engelse vertaling van 'advertentie'?", a: "advertisement", o: ["article", "picture", "advertisement", "text message"] },
+                { q: "Wat is de Engelse vertaling van 'boos'?", a: "angry", o: ["angry", "negative", "difficult", "careful"] },
+                { q: "Wat is de Engelse vertaling van 'verschillend'?", a: "different", o: ["difficult", "different", "real", "certain"] },
+                { q: "Wat is de Engelse vertaling van 'onmiddellijk'?", a: "immediately", o: ["usually", "early", "immediately", "certain"] },
+                { q: "Wat is de Engelse vertaling van 'fout'?", a: "mistake", o: ["mistake", "a flop", "design", "prototype"] },
+                { q: "Wat is de Engelse vertaling van 'zeker'?", a: "certain", o: ["certain", "real", "confident", "usually"] },
+                { q: "Wat is de Engelse vertaling van 'beroemd'?", a: "famous", o: ["popular", "famous", "powerful", "enormous"] },
+                { q: "Wat is de Engelse vertaling van 'aandacht'?", a: "attention", o: ["attention", "advice", "feeling", "experience"] },
+                { q: "Wat is de Engelse vertaling van 'gevoel'?", a: "feeling", o: ["feeling", "experience", "attention", "advice"] },
+                { q: "Wat is de Engelse vertaling van 'voorzichtig'?", a: "careful", o: ["careful", "confident", "comfortable", "angry"] }
+            ]
+        };
+
+        let activeQuizQuestions = [];
+        let currentQuestionIndex = 0;
+        let categoryScores = {};
+        let totalQuestionsCount = 0;
+        let userAnswersLog = [];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            activeQuizQuestions = [];
+            currentQuestionIndex = 0;
+            categoryScores = {};
+            userAnswersLog = [];
+
+            for (const category in itemDatabase) {
+                categoryScores[category] = { correct: 0, total: 10 };
+                let shuffledCategoryQuestions = shuffleArray([...itemDatabase[category]]);
+                let selectedQuestions = shuffledCategoryQuestions.slice(0, 10).map(q => {
+                    return {
+                        ...q,
+                        category: category,
+                        o: shuffleArray([...q.o])
+                    };
+                });
+                activeQuizQuestions = activeQuizQuestions.concat(selectedQuestions);
+            }
+
+            shuffleArray(activeQuizQuestions);
+            totalQuestionsCount = activeQuizQuestions.length;
+
+            showScreen('quiz-screen');
+            loadQuestion();
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= totalQuestionsCount) {
+                showResults();
+                return;
+            }
+
+            const currentQuestion = activeQuizQuestions[currentQuestionIndex];
+            
+            document.getElementById('question-number').innerText = `Vraag ${currentQuestionIndex + 1} / ${totalQuestionsCount}`;
+            document.getElementById('category-name').innerText = currentQuestion.category;
+            const progressPercent = (currentQuestionIndex / totalQuestionsCount) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            document.getElementById('question-text').innerText = currentQuestion.q;
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            currentQuestion.o.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = option;
+                btn.onclick = () => checkAnswer(option, currentQuestion);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedOption, questionObj) {
+            const isCorrect = selectedOption.toLowerCase() === questionObj.a.toLowerCase();
+            
+            if (isCorrect) {
+                categoryScores[questionObj.category].correct++;
+            }
+
+            userAnswersLog.push({
+                q: questionObj.q,
+                category: questionObj.category,
+                userAnswer: selectedOption,
+                correctAnswer: questionObj.a,
+                isCorrect: isCorrect
+            });
+
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function toggleCard(cardElement) {
+            cardElement.classList.toggle('expanded');
+        }
+
+        function showResults() {
+            document.getElementById('progress-bar').style.width = '100%';
+            showScreen('results-screen');
+
+            let totalCorrect = 0;
+            const resultsList = document.getElementById('results-list');
+            resultsList.innerHTML = '';
+
+            for (const category in categoryScores) {
+                const score = categoryScores[category].correct;
+                const total = categoryScores[category].total;
+                totalCorrect += score;
+
+                let statusClass = 'score-bad';
+                let statusText = 'Nog even goed oefenen! ❌';
+                if (score >= 8) {
+                    statusClass = 'score-good';
+                    statusText = 'Super gedaan! Topbeheersing! 🔥';
+                } else if (score >= 6) {
+                    statusClass = 'score-medium';
+                    statusText = 'Je bent er bijna, nog een beetje oefenen! ⚡';
+                }
+
+                const percentage = (score / total) * 100;
+
+                const categoryLog = userAnswersLog.filter(log => log.category === category);
+                let reviewHTML = '';
+
+                categoryLog.forEach(item => {
+                    reviewHTML += `
+                        <div class="review-item">
+                            <div class="review-q"><strong>Vraag:</strong> ${item.q}</div>
+                            <div class="review-a">
+                                ${item.isCorrect 
+                                    ? `<span class="text-correct">✓ Goed ingevuld: ${item.userAnswer}</span>` 
+                                    : `<span class="text-wrong">✗ Jouw antwoord: ${item.userAnswer}</span><br><span class="text-correct">→ Correcte antwoord: ${item.correctAnswer}</span>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.setAttribute('onclick', 'toggleCard(this)');
+                card.innerHTML = `
+                    <div>
+                        <h3>${category}</h3>
+                        <p>${score} van de ${total} goed</p>
+                        <div class="result-score-bar">
+                            <div class="result-score-fill ${statusClass}" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="status-text" style="color: ${score >= 8 ? 'var(--neon-green)' : score >= 6 ? 'orange' : 'var(--neon-pink)'}">${statusText}</div>
+                    </div>
+                    <div class="review-details">
+                        ${reviewHTML}
+                    </div>
+                `;
+                resultsList.appendChild(card);
+            }
+
+            document.getElementById('total-score-text').innerText = `${totalCorrect} / ${totalQuestionsCount} correct`;
+        }
+
+        function resetQuiz() {
+            showScreen('start-screen');
+        }
+    </script>
+</body>
+</html>
