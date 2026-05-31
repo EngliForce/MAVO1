@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secret Mission: Floor Plan Blueprint</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Courier New', Courier, monospace;
+      color: #ffffff;
+      background-color: #0b2545;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+      padding: 20px;
+    }
+
+    .container {
+      width: min(1200px, 98%);
+      margin: 0 auto;
+      background: rgba(11, 37, 69, 0.9);
+      border: 3px solid #00a8ff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(0, 168, 255, 0.3);
+    }
+
+    header {
+      text-align: center;
+      border-bottom: 2px dashed #00a8ff;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: #00ffff;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .subtitle {
+      color: #78c0e0;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .story-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid #00a8ff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .story-box h2 {
+      color: #00ffff;
+      margin-top: 0;
+      font-size: 18px;
+      text-transform: uppercase;
+    }
+
+    .blueprint-title {
+      color: #00ffff;
+      text-transform: uppercase;
+      font-size: 16px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* HET GEBOUW (FLOOR PLAN LAYOUT) */
+    .blueprint-map {
+      background: #061a30;
+      border: 4px solid #00a8ff;
+      border-radius: 8px;
+      padding: 24px;
+      position: relative;
+      /* CSS Grid om een echt vloerplan te bouwen met variërende kamers */
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 140px);
+      gap: 12px;
+    }
+
+    /* Algemene stijl voor een kamer (binnenmuren) */
+    .room {
+      border: 2px solid #00a8ff;
+      background: rgba(0, 168, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #00a8ff;
+      font-weight: bold;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .room:hover {
+      background: rgba(0, 255, 255, 0.15);
+      border-color: #00ffff;
+      color: #00ffff;
+      box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.2);
+    }
+
+    .room-num {
+      font-size: 24px;
+      display: block;
+    }
+
+    .room-name {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+      color: #78c0e0;
+    }
+
+    /* Richtingaanwijzers (deuren/routes) */
+    .door-indicator {
+      position: absolute;
+      font-size: 12px;
+      color: #00ffff;
+      opacity: 0.7;
+    }
+    .door-bottom { bottom: -10px; left: 50%; transform: translateX(-50%); }
+    .door-right { right: -10px; top: 50%; transform: translateY(-50%); }
+    .door-left { left: -10px; top: 50%; transform: translateY(-50%); }
+
+    /* SPECIFIEKE AFMETINGEN EN POSITIES VAN DE KAMERS IN HET GEBOUW */
+    .r1 { grid-column: 1; grid-row: 1; background: rgba(0, 255, 255, 0.1); } /* Ingang */
+    .r2 { grid-column: 2; grid-row: 1; }
+    .r3 { grid-column: 3; grid-row: 1; }
+    .r4 { grid-column: 4; grid-row: 1; }
+    
+    /* Rij 2 sluit aan en loopt terug of splitst */
+    .r5 { grid-column: 4; grid-row: 2; }
+    .r6 { grid-column: 3; grid-row: 2; }
+    .r7 { grid-column: 2; grid-row: 2; }
+    
+    /* Rij 3 */
+    .r8 { grid-column: 1; grid-row: 2 / 4; } /* Grote langwerpige kamer */
+    .r9 { grid-column: 2 / 4; grid-row: 3; } /* Brede kamer die stopt bij de dichte muur */
+
+    /* DE GEHEIME VERBORGEN MUUR (Waar Room 10 achter zit) */
+    .hidden-vault-wall {
+      grid-column: 4;
+      grid-row: 3;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.4),
+        rgba(0, 0, 0, 0.4) 10px,
+        rgba(255, 255, 255, 0.05) 10px,
+        rgba(255, 255, 255, 0.05) 20px
+      );
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .hidden-vault-wall span {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    /* Responsief maken voor kleinere schermen */
+    @media (max-width: 768px) {
+      .blueprint-map {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+      }
+      .room, .hidden-vault-wall {
+        height: 100px;
+        margin-bottom: 10px;
+      }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #78c0e0;
+      font-size: 12px;
+      border-top: 1px solid rgba(0, 168, 255, 0.2);
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <header>
+      <h1>🕵️‍♂️ MISSION: TECH THEFT</h1>
+      <div class="subtitle">HQ Building Layout · Top Secret Blueprint</div>
+    </header>
+
+    <!-- VERHAAL (A2 ENGELS) -->
+    <section class="story-box">
+      <h2>Your Mission Instructions:</h2>
+      <p>
+        Welcome, Secret Agent. A tech company created a prototype of the <strong>newest mobile phone</strong>. It is the most advanced phone in the world. Your mission is to <strong>steal it</strong>.
+      </p>
+      <p>
+        The phone is locked inside a secret vault in this building. However, the vault is <strong>completely hidden</strong> on this blueprint! You cannot see it. You must explore the building room by room to find where it is.
+      </p>
+      <p>
+        Start your mission by clicking on <strong>Room 1 (The Entrance)</strong>. Solve the puzzle, get the code, and follow the doors to the next rooms!
+      </p>
+    </section>
+
+    <!-- HET GEBOUW / BLAUWDRUK -->
+    <main>
+      <div class="blueprint-title">
+        <span>📐</span> ARCHITECTURAL FLOOR PLAN - Follow the arrows
+      </div>
+      
+      <div class="blueprint-map">
+        
+        <!-- ROOM 1 (ENTRANCE) -->
+        <a href="m1t5_escape_room_1.html" class="room r1">
+          <span class="room-num">01</span>
+          <span class="room-name">Entrance</span>
+          <div class="door-indicator door-right">➔</div>
+        </a>
+
+        <!-- ROOM 2 -->
+        <a href="m1t5_escape_room_2.html" class="room r2">
+          <span class="room-num">02</span>
+          <span class="room-name">Office A</span>
+          <div class="door-indicator door-right">➔</div>
+        </a>
+
+        <!-- ROOM 3 -->
+        <a href="m1t5_escape_room_3.html" class="room r3">
+          <span class="room-num">03</span>
+          <span class="room-name">Server Room</span>
+          <div class="door-indicator door-right">➔</div>
+        </a>
+
+        <!-- ROOM 4 -->
+        <a href="m1t5_escape_room_4.html" class="room r4">
+          <span class="room-num">04</span>
+          <span class="room-name">Lab 1</span>
+          <div class="door-indicator door-bottom">▼</div>
+        </a>
+
+        <!-- ROOM 5 -->
+        <a href="m1t5_escape_room_5.html" class="room r5">
+          <span class="room-num">05</span>
+          <span class="room-name">Lab 2</span>
+          <div class="door-indicator door-left">Layout ➔</div>
+        </a>
+
+        <!-- ROOM 6 -->
+        <a href="m1t5_escape_room_6.html" class="room r6">
+          <span class="room-num">06</span>
+          <span class="room-name">Breakroom</span>
+          <div class="door-indicator door-left">➔</div>
+        </a>
+
+        <!-- ROOM 7 -->
+        <a href="m1t5_escape_room_7.html" class="room r7">
+          <span class="room-num">07</span>
+          <span class="room-name">Office B</span>
+          <div class="door-indicator door-left">➔</div>
+        </a>
+
+        <!-- ROOM 8 -->
+        <a href="m1t5_escape_room_8.html" class="room r8">
+          <span class="room-num">08</span>
+          <span class="room-name">Main Hallway</span>
+          <div class="door-indicator door-bottom">▼</div>
+        </a>
+
+        <!-- ROOM 9 -->
+        <a href="m1t5_escape_room_9.html" class="room r9">
+          <span class="room-num">09</span>
+          <span class="room-name">Security HQ</span>
+          <div class="door-indicator door-right" style="color: #ff3dff;">??? ➔</div>
+        </a>
+
+        <!-- GEHEIME WAR-ZONE (VERBORGEN ROOM 10) -->
+        <div class="hidden-vault-wall">
+          <span>🧱</span>
+          <strong>SOLID WALL</strong><br>
+          <small>No Room Detected</small>
+        </div>
+
+      </div>
+    </main>
+
+    <footer>
+      <p>CONFIDENTIAL // PROPERTY OF THE SIA // DO NOT DUPLICATE</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

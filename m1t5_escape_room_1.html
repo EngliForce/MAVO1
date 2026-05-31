@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room - Room 1: The Clock Room</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(0, 255, 255, 0.35), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(255, 0, 255, 0.35), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(0, 255, 120, 0.25), transparent 30%),
+        linear-gradient(135deg, #070717, #11112b 45%, #070717);
+      overflow-x: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(1100px, 94%);
+      margin: 0 auto;
+      padding: 36px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      box-shadow: 0 0 35px rgba(0, 255, 255, 0.18);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(0, 255, 255, 0.15);
+      border: 1px solid rgba(0, 255, 255, 0.45);
+      color: #7ffcff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+      font-weight: bold;
+      box-shadow: 0 0 18px rgba(0, 255, 255, 0.3);
+      margin-bottom: 14px;
+    }
+
+    .mission {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #eafcff;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      font-size: 26px;
+      color: #8dfcff;
+      margin: 40px 0 20px;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 8px;
+    }
+
+    .clocks-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .clock-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 24px rgba(255, 0, 255, 0.12);
+      text-align: center;
+      transition: transform 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .clock-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 34px rgba(0, 255, 255, 0.25);
+    }
+
+    .clock-header {
+      margin-bottom: 12px;
+    }
+
+    .clock-title {
+      font-weight: bold;
+      color: #8dfcff;
+      letter-spacing: 1px;
+      font-size: 13px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .clock-target-text {
+      font-size: 14px;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 65, 255, 0.5);
+      font-weight: 600;
+      line-height: 1.3;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .digital-screen {
+      background: #04040d;
+      border: 2px solid #ff3dff;
+      border-radius: 12px;
+      padding: 15px 10px;
+      margin: 10px auto 20px;
+      width: 140px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 32px;
+      font-weight: bold;
+      color: #ff3dff;
+      text-shadow: 0 0 10px rgba(255, 61, 255, 0.7);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 0 15px rgba(255, 0, 255, 0.2);
+      letter-spacing: 2px;
+    }
+
+    .clock {
+      width: 140px;
+      height: 140px;
+      margin: 10px auto 20px;
+      border-radius: 50%;
+      position: relative;
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.20), rgba(255,255,255,0.04) 55%, rgba(0,0,0,0.25)),
+        conic-gradient(from 0deg, rgba(0,255,255,0.35), rgba(255,0,255,0.3), rgba(0,255,255,0.35));
+      border: 3px solid rgba(255,255,255,0.55);
+      box-shadow: 0 0 25px rgba(0,255,255,0.30), inset 0 0 25px rgba(0,0,0,0.4);
+    }
+
+    .clock::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.22);
+    }
+
+    .number {
+      position: absolute;
+      font-size: 11px;
+      font-weight: bold;
+      color: #fff;
+      transform: translate(-50%, -50%);
+      text-shadow: 0 0 5px #00ffff;
+    }
+
+    .n12 { left: 50%; top: 13%; }
+    .n3 { left: 87%; top: 50%; }
+    .n6 { left: 50%; top: 87%; }
+    .n9 { left: 13%; top: 50%; }
+
+    .hand {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform-origin: bottom center;
+      border-radius: 999px;
+    }
+
+    .hour-hand {
+      width: 5px;
+      height: 38px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(255,255,255,0.9);
+    }
+
+    .minute-hand {
+      width: 3px;
+      height: 54px;
+      background: #00ffff;
+      box-shadow: 0 0 12px rgba(0,255,255,1);
+    }
+
+    .center-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff3dff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 15px rgba(255,0,255,1);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 6px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #061018;
+      background: linear-gradient(135deg, #7fffff, #ff82ff);
+      box-shadow: 0 0 14px rgba(0,255,255,0.2);
+      transition: transform 0.18s, filter 0.18s;
+    }
+
+    button:hover {
+      transform: scale(1.04);
+      filter: brightness(1.12);
+    }
+
+    .status {
+      min-height: 20px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #ffd6ff;
+    }
+
+    .vault {
+      margin-top: 40px;
+      padding: 26px;
+      border-radius: 28px;
+      background: rgba(0, 0, 0, 0.30);
+      border: 1px solid rgba(255, 255, 255, 0.20);
+      backdrop-filter: blur(16px);
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255,0,255,0.18);
+    }
+
+    .vault-door {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 16px;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.22), transparent 30%),
+        linear-gradient(135deg, #1d2746, #070812);
+      border: 3px solid rgba(0,255,255,0.55);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 25px rgba(0,255,255,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      transition: transform 0.6s, box-shadow 0.6s;
+    }
+
+    .vault.open .vault-door {
+      transform: rotateY(18deg) scale(1.05);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 50px rgba(0,255,120,0.7);
+    }
+
+    .code-box {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(0,255,120,0.12);
+      border: 1px solid rgba(0,255,120,0.55);
+      box-shadow: 0 0 22px rgba(0,255,120,0.35);
+    }
+
+    .vault.open .code-box {
+      display: block;
+    }
+
+    .next-code {
+      font-size: 44px;
+      letter-spacing: 4px;
+      font-weight: bold;
+      color: #7cffb2;
+      text-shadow: 0 0 18px rgba(0,255,120,1);
+      margin-top: 8px;
+    }
+
+    .check-button {
+      margin-top: 12px;
+      font-size: 18px;
+      padding: 14px 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-grid"></div>
+
+  <main class="container">
+    <section class="hero">
+      <span class="badge">Room 1 · The Clock Room</span>
+      <div class="mission">
+        <strong>Task:</strong> Use the buttons to set the digital and analog clocks to the exact English times written directly above them. When all 10 clocks show the correct time, the door will open and reveal the code for Room 2.
+      </div>
+    </section>
+
+    <!-- SECTION 1: DIGITAL CLOCKS -->
+    <h2 class="section-title">Part 1: Digital Clocks</h2>
+    <section class="clocks-grid" id="digital-clocks-container"></section>
+
+    <!-- SECTION 2: ANALOG CLOCKS -->
+    <h2 class="section-title">Part 2: Analog Clocks</h2>
+    <section class="clocks-grid" id="analog-clocks-container"></section>
+
+    <!-- THE VAULT -->
+    <section class="vault" id="vault">
+      <div class="vault-door" id="vaultDoor">🔒</div>
+      <h2 id="vaultTitle">Vault Locked</h2>
+      <div id="vaultText"><p>Set all 10 clocks to the right time.</p></div>
+      <button class="check-button" onclick="checkAllClocks()">Check Clocks</button>
+
+      <!-- De codebox met vaste code -->
+      <div class="code-box">
+        <p>Outstanding job! Copy or write down your code below and proceed to the next room:</p>
+        <div class="next-code">CLOCK77</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Vaste lijst met 15 klokken (waaruit er 10 gekozen worden)
+    const clockDatabase = [
+      { hour: 8, minute: 17, textWithDaypart: "Seventeen minutes past eight in the morning", textClean: "Seventeen minutes past eight" },
+      { hour: 10, minute: 43, textWithDaypart: "Seventeen minutes to eleven in the morning", textClean: "Seventeen minutes to eleven" },
+      { hour: 13, minute: 29, textWithDaypart: "Twenty-nine minutes past one in the afternoon", textClean: "Twenty-nine minutes past one" },
+      { hour: 18, minute: 56, textWithDaypart: "Four minutes to seven in the evening", textClean: "Four minutes to seven" },
+      { hour: 21, minute: 8, textWithDaypart: "Eight minutes past nine in the evening", textClean: "Eight minutes past nine" },
+      { hour: 7, minute: 15, textWithDaypart: "Quarter past seven in the morning", textClean: "Quarter past seven" },
+      { hour: 11, minute: 30, textWithDaypart: "Half past eleven in the morning", textClean: "Half past eleven" },
+      { hour: 14, minute: 45, textWithDaypart: "Quarter to three in the afternoon", textClean: "Quarter to three" },
+      { hour: 16, minute: 20, textWithDaypart: "Twenty minutes past four in the afternoon", textClean: "Twenty minutes past four" },
+      { hour: 19, minute: 35, textWithDaypart: "Twenty-five minutes to eight in the evening", textClean: "Twenty-five minutes to eight" },
+      { hour: 22, minute: 10, textWithDaypart: "Ten minutes past ten in the evening", textClean: "Ten minutes past ten" },
+      { hour: 6, minute: 50, textWithDaypart: "Ten minutes to seven in the morning", textClean: "Ten minutes to seven" },
+      { hour: 9, minute: 5, textWithDaypart: "Five minutes past nine in the morning", textClean: "Five minutes past nine" },
+      { hour: 12, minute: 0, textWithDaypart: "Twelve o'clock (Noon)", textClean: "Twelve o'clock" },
+      { hour: 15, minute: 12, textWithDaypart: "Twelve minutes past three in the afternoon", textClean: "Twelve minutes past three" }
+    ];
+
+    let digitalTargets = [];
+    let analogTargets = [];
+    let digitalClocks = [];
+    let analogClocks = [];
+
+    // Omdat we geen namen meer gebruiken, kiezen we nu een vaste selectie klokken.
+    // Dit zorgt ervoor dat de klokken bij het testen/verversen altijd hetzelfde blijven.
+    function initializeSeparateTargets() {
+      digitalTargets = clockDatabase.slice(0, 5);
+      analogTargets = clockDatabase.slice(5, 10);
+
+      digitalClocks = digitalTargets.map(() => ({ hour: 0, minute: 0 }));
+      analogClocks = analogTargets.map(() => ({ hour: 0, minute: 0 }));
+    }
+
+    function pad(number) {
+      return String(number).padStart(2, "0");
+    }
+
+    function createDigitalClocks() {
+      const container = document.getElementById("digital-clocks-container");
+      container.innerHTML = "";
+
+      digitalClocks.forEach((clock, index) => {
+        const target = digitalTargets[index];
+        const card = document.createElement("div");
+        card.className = "clock-card";
+        card.innerHTML = `
+          <div class="clock-header">
+            <div class="clock-title">Digital Clock ${index + 1}</div>
+            <div class="clock-target-text">${target.textWithDaypart}</div>
+          </div>
+          <div class="digital-screen" id="digi-display-${index}">00:00</div>
+          <div class="controls">
+            <button onclick="changeDigitalHour(${index}, -1)">Hour -</button>
+            <button onclick="changeDigitalHour(${index}, 1)">Hour +</button>
+            <button onclick="changeDigitalMinute(${index}, -1)">Min -</button>
+            <button onclick="changeDigitalMinute(${index}, 1)">Min +</button>
+          </div>
+          <div class="status" id="digi-status-${index}">Not checked</div>
+        `;
+        container.appendChild(card);
+        updateDigitalClock(index);
+      });
+    }
+
+    function createAnalogClocks() {
+      const container = document.getElementById("analog-clocks-container");
+      container.innerHTML = "";
+
+      analogClocks.forEach((clock, index) => {
+        const target = analogTargets[index];
+        const card = document.createElement("div");
+        card.className = "clock-card";
+        card.innerHTML = `
+          <div class="clock-header">
+            <div class="clock-title">Analog Clock ${index + 1}</div>
+            <div class="clock-target-text">${target.textClean}</div>
+          </div>
+          <div class="clock">
+            <div class="number n12">12</div>
+            <div class="number n3">3</div>
+            <div class="number n6">6</div>
+            <div class="number n9">9</div>
+            <div class="hand hour-hand" id="analog-hour-${index}"></div>
+            <div class="hand minute-hand" id="analog-minute-${index}"></div>
+            <div class="center-dot"></div>
+          </div>
+          <div class="controls">
+            <button onclick="changeAnalogHour(${index}, -1)">Hour -</button>
+            <button onclick="changeAnalogHour(${index}, 1)">Hour +</button>
+            <button onclick="changeAnalogMinute(${index}, -1)">Min -</button>
+            <button onclick="changeAnalogMinute(${index}, 1)">Min +</button>
+          </div>
+          <div class="status" id="analog-status-${index}">Not checked</div>
+        `;
+        container.appendChild(card);
+        updateAnalogClock(index);
+      });
+    }
+
+    function changeDigitalHour(index, amount) {
+      digitalClocks[index].hour = (digitalClocks[index].hour + amount + 24) % 24;
+      updateDigitalClock(index);
+    }
+
+    function changeDigitalMinute(index, amount) {
+      digitalClocks[index].minute += amount;
+      if (digitalClocks[index].minute > 59) {
+        digitalClocks[index].minute = 0;
+        digitalClocks[index].hour = (digitalClocks[index].hour + 1) % 24;
+      }
+      if (digitalClocks[index].minute < 0) {
+        digitalClocks[index].minute = 59;
+        digitalClocks[index].hour = (digitalClocks[index].hour + 23) % 24;
+      }
+      updateDigitalClock(index);
+    }
+
+    function updateDigitalClock(index) {
+      const clock = digitalClocks[index];
+      document.getElementById(`digi-display-${index}`).textContent = `${pad(clock.hour)}:${pad(clock.minute)}`;
+      document.getElementById(`digi-status-${index}`).textContent = "Ready to check";
+      document.getElementById(`digi-status-${index}`).style.color = "#ffd6ff";
+    }
+
+    function changeAnalogHour(index, amount) {
+      analogClocks[index].hour = (analogClocks[index].hour + amount + 24) % 24;
+      updateAnalogClock(index);
+    }
+
+    function changeAnalogMinute(index, amount) {
+      analogClocks[index].minute += amount;
+      if (analogClocks[index].minute > 59) {
+        analogClocks[index].minute = 0;
+        analogClocks[index].hour = (analogClocks[index].hour + 1) % 24;
+      }
+      if (analogClocks[index].minute < 0) {
+        analogClocks[index].minute = 59;
+        analogClocks[index].hour = (analogClocks[index].hour + 23) % 24;
+      }
+      updateAnalogClock(index);
+    }
+
+    function updateAnalogClock(index) {
+      const clock = analogClocks[index];
+      const hourHand = document.getElementById(`analog-hour-${index}`);
+      const minuteHand = document.getElementById(`analog-minute-${index}`);
+      
+      const hourForAnalog = clock.hour % 12;
+      const minuteDegrees = clock.minute * 6;
+      const hourDegrees = (hourForAnalog * 30) + (clock.minute * 0.5);
+
+      minuteHand.style.transform = `translateX(-50%) rotate(${minuteDegrees}deg)`;
+      hourHand.style.transform = `translateX(-50%) rotate(${hourDegrees}deg)`;
+
+      document.getElementById(`analog-status-${index}`).textContent = "Ready to check";
+      document.getElementById(`analog-status-${index}`).style.color = "#ffd6ff";
+    }
+
+    function checkAllClocks() {
+      let allCorrect = true;
+
+      // Controleer Digitale Klokken
+      digitalClocks.forEach((clock, index) => {
+        const target = digitalTargets[index];
+        const status = document.getElementById(`digi-status-${index}`);
+
+        if (clock.hour === target.hour && clock.minute === target.minute) {
+          status.textContent = "Correct";
+          status.style.color = "#7cffb2";
+        } else {
+          status.textContent = "Wrong time";
+          status.style.color = "#ff9aa9";
+          allCorrect = false;
+        }
+      });
+
+      // Controleer Analoge Klokken
+      analogClocks.forEach((clock, index) => {
+        const target = analogTargets[index];
+        const status = document.getElementById(`analog-status-${index}`);
+
+        const currentHourMod12 = clock.hour % 12;
+        const targetHourMod12 = target.hour % 12;
+
+        if (currentHourMod12 === targetHourMod12 && clock.minute === target.minute) {
+          status.textContent = "Correct";
+          status.style.color = "#7cffb2";
+        } else {
+          status.textContent = "Wrong time";
+          status.style.color = "#ff9aa9";
+          allCorrect = false;
+        }
+      });
+
+      const vault = document.getElementById("vault");
+      const vaultDoor = document.getElementById("vaultDoor");
+      const vaultTitle = document.getElementById("vaultTitle");
+      const vaultText = document.getElementById("vaultText");
+
+      if (allCorrect) {
+        vault.classList.add("open");
+        vaultDoor.textContent = "🔓";
+        vaultTitle.textContent = "Vault Open";
+        
+        // De doorverwijs-knop naar het exacte bestand m1t5_escape_room_2.html
+        vaultText.innerHTML = `
+          <p>Excellent work! You unlocked the first door.</p>
+          <button class="check-button" style="background: linear-gradient(135deg, #7cffb2, #00ffff); margin-top: 15px;" 
+                  onclick="window.location.href='m1t5_escape_room_2.html'">
+            Go to Room 2 ➔
+          </button>
+        `;
+      } else {
+        vault.classList.remove("open");
+        vaultDoor.textContent = "🔒";
+        vaultTitle.textContent = "Vault Locked";
+        vaultText.innerHTML = "<p>One or more clocks are still misaligned. Keep decoding!</p>";
+      }
+    }
+
+    initializeSeparateTargets();
+    createDigitalClocks();
+    createAnalogClocks();
+  </script>
+</body>
+</html>
