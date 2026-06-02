@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room - Room 6: The Future Lab</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 15% 85%, rgba(0, 255, 120, 0.2), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(0, 168, 255, 0.2), transparent 30%),
+        linear-gradient(135deg, #051414, #0b2525 50%, #051414);
+      overflow-x: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 255, 120, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 120, 0.02) 1px, transparent 1px);
+      background-size: 35px 35px;
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(1000px, 96%);
+      margin: 0 auto;
+      padding: 30px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero {
+      padding: 24px;
+      border: 1px solid rgba(0, 255, 120, 0.3);
+      background: rgba(11, 37, 37, 0.8);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 255, 120, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(0, 255, 120, 0.15);
+      border: 1px solid rgba(0, 255, 120, 0.4);
+      color: #33ff99;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .mission {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e2fff0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Inlogpoort */
+    .gate-container {
+      background: rgba(5, 20, 20, 0.9);
+      border: 2px dashed #00ff77;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 480px;
+      margin: 40px auto;
+      box-shadow: 0 0 25px rgba(0, 255, 120, 0.15);
+    }
+
+    .gate-container h2 {
+      color: #33ff99;
+      margin-top: 0;
+    }
+
+    .gate-input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .gate-input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #33ff99;
+      font-weight: bold;
+    }
+
+    .gate-input-group input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 255, 120, 0.4);
+      padding: 12px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .gate-input-group input:focus {
+      outline: none;
+      border-color: #33ff99;
+      box-shadow: 0 0 10px rgba(0, 255, 120, 0.4);
+    }
+
+    .game-content {
+      display: none;
+    }
+
+    /* Opgaven Layout */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .task-card:hover {
+      border-color: rgba(0, 255, 120, 0.3);
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .task-number {
+      background: #00ff77;
+      color: #051414;
+      font-weight: bold;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .sentence-container {
+      font-size: 18px;
+      line-height: 1.8;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* NEON TARGET WOORD STYLING */
+    .neon-keyword {
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(0, 255, 255, 0.15);
+      border: 1px solid #00ffff;
+      text-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+      display: inline-block;
+      margin: 0 4px;
+    }
+
+    /* Input velden */
+    .input-box {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 16px;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.2s;
+      width: 260px;
+      display: inline-block;
+    }
+
+    .input-box:focus {
+      outline: none;
+      border-color: #00ff77;
+      box-shadow: 0 0 8px rgba(0, 255, 120, 0.4);
+    }
+
+    .feedback-text {
+      font-size: 13px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* De Kluis */
+    .vault {
+      padding: 24px;
+      border-radius: 20px;
+      background: rgba(5, 20, 20, 0.85);
+      border: 1px solid rgba(0, 255, 120, 0.3);
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 255, 120, 0.1);
+    }
+
+    .vault-door {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #123a3a, #051414);
+      border: 3px solid #00ff77;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 20px rgba(0,255,120,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      transition: transform 0.5s;
+    }
+
+    .vault.open .vault-door {
+      transform: rotate(270deg);
+      border-color: #00ff77;
+      box-shadow: 0 0 25px rgba(0,255,119,0.5);
+    }
+
+    .code-box {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(0,255,119,0.1);
+      border: 1px solid #00ff77;
+    }
+
+    .vault.open .code-box {
+      display: block;
+    }
+
+    .next-code {
+      font-size: 36px;
+      letter-spacing: 4px;
+      font-weight: bold;
+      color: #00ff77;
+      text-shadow: 0 0 12px rgba(0,255,119,0.6);
+      margin-top: 6px;
+    }
+
+    button.action-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #051414;
+      background: linear-gradient(135deg, #33ff99, #00ff77);
+      transition: transform 0.15s, filter 0.15s;
+    }
+
+    button.action-btn:hover {
+      transform: scale(1.03);
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="background-grid"></div>
+
+  <main class="container">
+    
+    <!-- INLOGPOORT -->
+    <section class="gate-container" id="gateScreen">
+      <h2>🔒 Room 6 Lab is Locked</h2>
+      <p>Enter the code from Room 5 to gain access.</p>
+      
+      <div class="gate-input-group">
+        <label for="gateCode">Security Code:</label>
+        <input type="text" id="gateCode" placeholder="Enter code...">
+      </div>
+      
+      <button class="action-btn" onclick="tryUnlockRoom()">Verify Code</button>
+    </section>
+
+    <!-- HOOFDSPEL -->
+    <div class="game-content" id="mainGame">
+      <section class="hero">
+        <span class="badge">Room 6 · The Future (To be going to)</span>
+        <div class="mission">
+          <strong>Instructions:</strong> Look closely at the context of each sentence and fill in the missing **'to be going to'** structure using the neon verb.                 </div>
+      </section>
+
+      <div class="exercise-list" id="tasks-container"></div>
+
+      <!-- DE KLUIS -->
+      <section class="vault" id="vault">
+        <div class="vault-door" id="vaultDoor">🔒</div>
+        <h2 id="vaultTitle">Future Timeline Locked</h2>
+        <div id="vaultText"><p>Correctly sync all 10 future events to unlock the grid exit.</p></div>
+        <button class="action-btn" onclick="checkFutureAnswers()">Sync Timeline</button>
+
+        <!-- Codebox voor Room 7 -->
+        <div class="code-box">
+          <p>Timeline synchronized! Write down your access key for Room 7:</p>
+          <div class="next-code">NEXUS77</div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <script>
+    // Database voor de 'to be going to' future (bevestigend, ontkennend, vragend)
+    const futureDatabase = [
+      // Bevestigend (Positive)
+      { word: "buy", pre: "Look at his old shoes! He ", post: " a new pair tomorrow.", answers: ["is going to buy"] },
+      { word: "visit", pre: "We have bought our tickets. We ", post: " Paris next week.", answers: ["are going to visit"] },
+      { word: "study", pre: "I ", post: " hard tonight because I have an exam tomorrow.", answers: ["am going to study"] },
+      { word: "watch", pre: "They have turned on the TV. They ", post: " a movie.", answers: ["are going to watch"] },
+      { word: "rain", pre: "Look at those dark clouds! It ", post: " very soon.", answers: ["is going to rain"] },
+      { word: "clean", pre: "My bedroom is a mess. I ", post: " it this afternoon.", answers: ["am going to clean"] },
+      { word: "cook", pre: "She has all the ingredients. She ", post: " dinner for us.", answers: ["is going to cook"] },
+
+      // Ontkennend (Negative)
+      { word: "not play", pre: "He is injured, so he ", post: " in the match today.", answers: ["is not going to play", "isn't going to play"] },
+      { word: "not go", pre: "We are too tired. We ", post: " to the party tonight.", answers: ["are not going to go", "aren't going to go"] },
+      { word: "not buy", pre: "I don't have enough money. I ", post: " that expensive phone.", answers: ["am not going to buy", "i'm not going to buy"] },
+      { word: "not watch", pre: "They don't like football, so they ", post: " the game.", answers: ["are not going to watch", "aren't going to watch"] },
+      { word: "not sleep", pre: "She drank too much coffee. She ", post: " well tonight.", answers: ["is not going to sleep", "isn't going to sleep"] },
+
+      // Vragend (Questions)
+      { word: "you / invite", pre: "", post: " Lucy to your birthday party?", answers: ["are you going to invite"] },
+      { word: "he / join", pre: "", post: " the local sports club next month?", answers: ["is he going to join"] },
+      { word: "they / stay", pre: "Where ", post: " during their holiday in London?", answers: ["are they going to stay"] },
+      { word: "she / do", pre: "What ", post: " after she finishes school?", answers: ["is she going to do"] },
+      { word: "you / cook", pre: "What ", post: " for dinner tonight?", answers: ["are you going to cook"] }
+    ];
+
+    let activeQuestions = [];
+
+    function tryUnlockRoom() {
+      const codeInput = document.getElementById("gateCode").value.trim().toUpperCase();
+      if (codeInput === "GRID66") {
+        document.getElementById("gateScreen").style.display = "none";
+        document.getElementById("mainGame").style.display = "block";
+        
+        generateFutureTasks();
+      } else {
+        alert("Access Denied! Check your code from Room 5.");
+      }
+    }
+
+    function generateFutureTasks() {
+      const shuffled = [...futureDatabase].sort(() => 0.5 - Math.random());
+      activeQuestions = shuffled.slice(0, 10);
+
+      const container = document.getElementById("tasks-container");
+      container.innerHTML = "";
+
+      activeQuestions.forEach((q, idx) => {
+        const card = document.createElement("div");
+        card.className = "task-card";
+
+        card.innerHTML = `
+          <div class="task-header">
+            <div class="task-info">
+              <div class="task-number">${idx + 1}</div>
+            </div>
+            <div class="feedback-text" id="feedback-${idx}">Awaiting compilation</div>
+          </div>
+          <div class="sentence-container">
+            ${q.pre ? `<span>${q.pre}</span>` : ''}
+            <span class="neon-keyword">${q.word}</span>
+            <input type="text" class="input-box" id="input-${idx}" placeholder="Type future form...">
+            <span>${q.post}</span>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function sanitizeInput(str) {
+      return str
+        .replace(/[‘’]/g, "'") // Normaliseer schuine apostrofen naar rechte apostrofen
+        .replace(/\s+/g, " ")   // Haal dubbele spaties weg
+        .trim()
+        .toLowerCase();
+    }
+
+    function checkFutureAnswers() {
+      let perfectScore = true;
+
+      activeQuestions.forEach((q, idx) => {
+        const inputElem = document.getElementById(`input-${idx}`);
+        const feedbackElem = document.getElementById(`feedback-${idx}`);
+        
+        let userVal = sanitizeInput(inputElem.value);
+
+        if (!userVal) {
+          feedbackElem.textContent = "Empty! ✗";
+          feedbackElem.style.color = "#ff82ff";
+          perfectScore = false;
+          return;
+        }
+
+        // Check of de invoer overeenkomt met een van de geaccepteerde antwoordvarianten
+        let isCorrect = q.answers.some(ans => sanitizeInput(ans) === userVal);
+
+        if (isCorrect) {
+          feedbackElem.textContent = "Synced ✓";
+          feedbackElem.style.color = "#00ff77";
+        } else {
+          feedbackElem.textContent = "Desync Error ✗";
+          feedbackElem.style.color = "#ff82ff";
+          perfectScore = false;
+        }
+      });
+
+      const vault = document.getElementById("vault");
+      const vaultDoor = document.getElementById("vaultDoor");
+      const vaultTitle = document.getElementById("vaultTitle");
+      const vaultText = document.getElementById("vaultText");
+
+      if (perfectScore) {
+        vault.classList.add("open");
+        vaultDoor.textContent = "🔓";
+        vaultTitle.textContent = "Timeline Synchronized";
+        vaultText.innerHTML = `
+          <p>The time-space continuum is stable. Proceed to the next area!</p>
+          <button class="action-btn" style="background: linear-gradient(135deg, #00ff77, #00ffff); margin-top: 10px;" 
+                  onclick="window.location.href='m1t5_escape_room_7.html'">
+            Proceed to Room 7 ➔
+          </button>
+        `;
+      } else {
+        vault.classList.remove("open");
+        vaultDoor.textContent = "🔒";
+        vaultTitle.textContent = "Timeline Locked";
+        vaultText.innerHTML = "<p>Some future formulas are broken. Double check your choices for 'am', 'is' or 'are'!</p>";
+      }
+    }
+  </script>
+</body>
+</html>

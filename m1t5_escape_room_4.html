@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room - Room 4: The Past Simple Lab</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(0, 168, 255, 0.25), transparent 30%),
+        radial-gradient(circle at 15% 75%, rgba(255, 61, 255, 0.2), transparent 30%),
+        linear-gradient(135deg, #07111e, #0b1a2f 50%, #07111e);
+      overflow-x: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 168, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 168, 255, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(1000px, 96%);
+      margin: 0 auto;
+      padding: 30px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero {
+      padding: 24px;
+      border: 1px solid rgba(0, 168, 255, 0.3);
+      background: rgba(11, 26, 47, 0.8);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 168, 255, 0.15);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(0, 168, 255, 0.15);
+      border: 1px solid rgba(0, 168, 255, 0.4);
+      color: #00ffff;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .mission {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e2f1ff;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Inlogpoort */
+    .gate-container {
+      background: rgba(7, 17, 30, 0.9);
+      border: 2px dashed #00a8ff;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 480px;
+      margin: 40px auto;
+      box-shadow: 0 0 25px rgba(0, 168, 255, 0.2);
+    }
+
+    .gate-container h2 {
+      color: #00ffff;
+      margin-top: 0;
+    }
+
+    .gate-input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .gate-input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #78c0e0;
+      font-weight: bold;
+    }
+
+    .gate-input-group input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 168, 255, 0.4);
+      padding: 12px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .gate-input-group input:focus {
+      outline: none;
+      border-color: #00ffff;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+    }
+
+    .game-content {
+      display: none;
+    }
+
+    /* Opgaven Layout */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .task-card:hover {
+      border-color: rgba(0, 168, 255, 0.3);
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .task-number {
+      background: #00a8ff;
+      color: #07111e;
+      font-weight: bold;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .task-type-badge {
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .type-pos { background: rgba(0, 255, 120, 0.15); color: #7cffb2; border: 1px solid rgba(0, 255, 120, 0.3); }
+    .type-neg { background: rgba(255, 61, 255, 0.15); color: #ff82ff; border: 1px solid rgba(255, 61, 255, 0.3); }
+    .type-qst { background: rgba(255, 165, 0, 0.15); color: #ffb84d; border: 1px solid rgba(255, 165, 0, 0.3); }
+
+    .prompt-text {
+      font-size: 15px;
+      color: #78c0e0;
+      font-style: italic;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border-left: 3px solid #00a8ff;
+    }
+
+    .sentence-container {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Input velden */
+    .input-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .input-box:focus {
+      outline: none;
+      border-color: #00ffff;
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    }
+
+    /* Kort invulveld voor enkele woorden (bevestigend) */
+    .input-short {
+      width: 140px;
+      text-align: center;
+      display: inline-block;
+      margin: 0 6px;
+    }
+
+    /* Breed invulveld voor hele zinnen (ontkennend / vraag) */
+    .input-full {
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .feedback-text {
+      font-size: 13px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* De Kluis */
+    .vault {
+      padding: 24px;
+      border-radius: 20px;
+      background: rgba(7, 17, 30, 0.85);
+      border: 1px solid rgba(0, 168, 255, 0.3);
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 168, 255, 0.1);
+    }
+
+    .vault-door {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a365d, #07111e);
+      border: 3px solid #00a8ff;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 20px rgba(0,168,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      transition: transform 0.5s;
+    }
+
+    .vault.open .vault-door {
+      transform: rotate(90deg);
+      border-color: #00ff77;
+      box-shadow: 0 0 25px rgba(0,255,119,0.5);
+    }
+
+    .code-box {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(0,255,119,0.1);
+      border: 1px solid #00ff77;
+    }
+
+    .vault.open .code-box {
+      display: block;
+    }
+
+    .next-code {
+      font-size: 36px;
+      letter-spacing: 4px;
+      font-weight: bold;
+      color: #00ff77;
+      text-shadow: 0 0 12px rgba(0,255,119,0.6);
+      margin-top: 6px;
+    }
+
+    button.action-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #07111e;
+      background: linear-gradient(135deg, #00ffff, #00a8ff);
+      transition: transform 0.15s, filter 0.15s;
+    }
+
+    button.action-btn:hover {
+      transform: scale(1.03);
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="background-grid"></div>
+
+  <main class="container">
+    
+    <!-- INLOGPOORT -->
+    <section class="gate-container" id="gateScreen">
+      <h2>🔒 Room 4 Lab is Locked</h2>
+      <p>Enter the code from Room 3 to gain access.</p>
+      
+      <div class="gate-input-group">
+        <label for="gateCode">Security Code:</label>
+        <input type="text" id="gateCode" placeholder="Enter code...">
+      </div>
+      
+      <button class="action-btn" onclick="tryUnlockRoom()">Verify Code</button>
+    </section>
+
+    <!-- HOOFDSPEL -->
+    <div class="game-content" id="mainGame">
+      <section class="hero">
+        <span class="badge">Room 4 · The Past Simple Lab</span>
+        <div class="mission">
+          <strong>Instructions:</strong> Show your knowledge of regular verbs in the Past Simple. 
+          <br>• For <strong>Positive</strong> sentences: fill in just the correct verb form.
+          <br>• For <strong>Negative</strong> and <strong>Question</strong> sentences: rewrite the given sentence completely. 
+          <br><small style="color:#00ffff;">💡 Device friendly: any apostrophe type works. Don't forget your capitals and punctuation marks (. or ?)!</small>
+        </div>
+      </section>
+
+      <div class="exercise-list" id="tasks-container"></div>
+
+      <!-- DE KLUIS -->
+      <section class="vault" id="vault">
+        <div class="vault-door" id="vaultDoor">🔒</div>
+        <h2 id="vaultTitle">Terminal Locked</h2>
+        <div id="vaultText"><p>Complete all 10 laboratory diagnostics correctly to override security.</p></div>
+        <button class="action-btn" onclick="checkLabAnswers()">Analyze Diagnostics</button>
+
+        <!-- Codebox voor Room 5 -->
+        <div class="code-box">
+          <p>Security bypassed successfully! Write down your access key for Room 5:</p>
+          <div class="next-code">CYBER55</div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <script>
+    // Database zonder inhoudelijke hints
+    const verbDatabase = [
+      // Bevestigend (pos)
+      { type: "pos", prompt: "Fill in the verb 'play' in the Past Simple.", sentencePre: "Yesterday, they ", sentencePost: " football in the park.", answers: ["played"] },
+      { type: "pos", prompt: "Fill in the verb 'stop' in the Past Simple.", sentencePre: "The bus suddenly ", sentencePost: " in front of the school.", answers: ["stopped"] },
+      { type: "pos", prompt: "Fill in the verb 'cry' in the Past Simple.", sentencePre: "The little baby ", sentencePost: " all night long.", answers: ["cried"] },
+      { type: "pos", prompt: "Fill in the verb 'visit' in the Past Simple.", sentencePre: "We ", sentencePost: " our grandparents last weekend.", answers: ["visited"] },
+      { type: "pos", prompt: "Fill in the verb 'plan' in the Past Simple.", sentencePre: "She ", sentencePost: " a wonderful birthday party.", answers: ["planned"] },
+      { type: "pos", prompt: "Fill in the verb 'study' in the Past Simple.", sentencePre: "He ", sentencePost: " hard for his English exam.", answers: ["studied"] },
+      { type: "pos", prompt: "Fill in the verb 'drop' in the Past Simple.", sentencePre: "Oh no! I accidentally ", sentencePost: " my glass.", answers: ["dropped"] },
+      { type: "pos", prompt: "Fill in the verb 'try' in the Past Simple.", sentencePre: "They ", sentencePost: " to open the heavy door.", answers: ["tried"] },
+
+      // Ontkennend (neg)
+      { type: "neg", prompt: "Make this sentence NEGATIVE: 'She liked the movie.'", answers: ["She didn't like the movie.", "She did not like the movie."] },
+      { type: "neg", prompt: "Make this sentence NEGATIVE: 'We washed the car.'", answers: ["We didn't wash the car.", "We did not wash the car."] },
+      { type: "neg", prompt: "Make this sentence NEGATIVE: 'They arrived on time.'", answers: ["They didn't arrive on time.", "They did not arrive on time."] },
+      { type: "neg", prompt: "Make this sentence NEGATIVE: 'He dropped the ball.'", answers: ["He didn't drop the ball.", "He did not drop the ball."] },
+      { type: "neg", prompt: "Make this sentence NEGATIVE: 'I phoned my friend.'", answers: ["I didn't phone my friend.", "I did not phone my friend."] },
+      { type: "neg", prompt: "Make this sentence NEGATIVE: 'Tom stayed at home.'", answers: ["Tom didn't stay at home.", "Tom did not stay at home."] },
+
+      // Vragend (qst)
+      { type: "qst", prompt: "Make this sentence a QUESTION: 'They cleaned their rooms.'", answers: ["Did they clean their rooms?"] },
+      { type: "qst", prompt: "Make this sentence a QUESTION: 'You watched TV.'", answers: ["Did you watch TV?"] },
+      { type: "qst", prompt: "Make this sentence a QUESTION: 'He kissed his mother.'", answers: ["Did he kiss his mother?"] },
+      { type: "qst", prompt: "Make this sentence a QUESTION: 'The train stopped.'", answers: ["Did the train stop?"] },
+      { type: "qst", prompt: "Make this sentence a QUESTION: 'She married him.'", answers: ["Did she marry him?"] },
+      { type: "qst", prompt: "Make this sentence a QUESTION: 'It rained heavily.'", answers: ["Did it rain heavily?"] }
+    ];
+
+    let activeQuestions = [];
+
+    function tryUnlockRoom() {
+      const codeInput = document.getElementById("gateCode").value.trim().toUpperCase();
+      if (codeInput === "PLACES99") {
+        document.getElementById("gateScreen").style.display = "none";
+        document.getElementById("mainGame").style.display = "block";
+        
+        generateDiagnostics();
+      } else {
+        alert("Access Denied! Check your code from Room 3.");
+      }
+    }
+
+    function generateDiagnostics() {
+      const shuffled = [...verbDatabase].sort(() => 0.5 - Math.random());
+      activeQuestions = shuffled.slice(0, 10);
+
+      const container = document.getElementById("tasks-container");
+      container.innerHTML = "";
+
+      activeQuestions.forEach((q, idx) => {
+        const card = document.createElement("div");
+        card.className = "task-card";
+
+        let typeLabel = "";
+        let typeClass = "";
+        if (q.type === 'pos') { typeLabel = "Positive"; typeClass = "type-pos"; }
+        if (q.type === 'neg') { typeLabel = "Negative"; typeClass = "type-neg"; }
+        if (q.type === 'qst') { typeLabel = "Question"; typeClass = "type-qst"; }
+
+        let interactionHtml = "";
+        if (q.type === 'pos') {
+          interactionHtml = `
+            <div class="sentence-container">
+              ${q.sentencePre}<input type="text" class="input-box input-short" id="input-${idx}" placeholder="verb...">${q.sentencePost}
+            </div>
+          `;
+        } else {
+          interactionHtml = `
+            <div class="sentence-container">
+              <input type="text" class="input-box input-full" id="input-${idx}" placeholder="Type the entire sentence here...">
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="task-header">
+            <div class="task-info">
+              <div class="task-number">${idx + 1}</div>
+              <span class="task-type-badge ${typeClass}">${typeLabel}</span>
+            </div>
+            <div class="feedback-text" id="feedback-${idx}">Not processed</div>
+          </div>
+          <div class="prompt-text">${q.prompt}</div>
+          ${interactionHtml}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function sanitizeInput(str) {
+      return str
+        .replace(/[‘’]/g, "'") 
+        .trim();
+    }
+
+    function checkLabAnswers() {
+      let perfectScore = true;
+
+      activeQuestions.forEach((q, idx) => {
+        const inputElem = document.getElementById(`input-${idx}`);
+        const feedbackElem = document.getElementById(`feedback-${idx}`);
+        
+        let userVal = sanitizeInput(inputElem.value);
+
+        if (!userVal) {
+          feedbackElem.textContent = "Missing input! ✗";
+          feedbackElem.style.color = "#ff82ff";
+          perfectScore = false;
+          return;
+        }
+
+        let isCorrect = q.answers.some(possibleAns => {
+          let cleanPossible = sanitizeInput(possibleAns);
+          return userVal.toLowerCase() === cleanPossible.toLowerCase();
+        });
+
+        if (isCorrect) {
+          feedbackElem.textContent = "Diagnostic Pass ✓";
+          feedbackElem.style.color = "#00ff77";
+        } else {
+          feedbackElem.textContent = "Error Detected ✗";
+          feedbackElem.style.color = "#ff82ff";
+          perfectScore = false;
+        }
+      });
+
+      const vault = document.getElementById("vault");
+      const vaultDoor = document.getElementById("vaultDoor");
+      const vaultTitle = document.getElementById("vaultTitle");
+      const vaultText = document.getElementById("vaultText");
+
+      if (perfectScore) {
+        vault.classList.add("open");
+        vaultDoor.textContent = "🔓";
+        vaultTitle.textContent = "Lab Security Bypassed";
+        vaultText.innerHTML = `
+          <p>All diagnostic sectors are stable. You have found the pathway forward!</p>
+          <button class="action-btn" style="background: linear-gradient(135deg, #00ff77, #00ffff); margin-top: 10px;" 
+                  onclick="window.location.href='m1t5_escape_room_5.html'">
+            Proceed to Room 5 ➔
+          </button>
+        `;
+      } else {
+        vault.classList.remove("open");
+        vaultDoor.textContent = "🔒";
+        vaultTitle.textContent = "Terminal Locked";
+        vaultText.innerHTML = "<p>Some parameters are incorrect. Check your verb spellings, punctuation, or helper verbs!</p>";
+      }
+    }
+  </script>
+</body>
+</html>

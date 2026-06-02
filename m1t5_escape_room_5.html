@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room - Room 5: The Comparison Lab</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 165, 0, 0.2), transparent 30%),
+        radial-gradient(circle at 85% 85%, rgba(0, 255, 255, 0.2), transparent 30%),
+        linear-gradient(135deg, #110922, #1c1335 50%, #110922);
+      overflow-x: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 165, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 165, 0, 0.03) 1px, transparent 1px);
+      background-size: 35px 35px;
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(1000px, 96%);
+      margin: 0 auto;
+      padding: 30px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero {
+      padding: 24px;
+      border: 1px solid rgba(255, 165, 0, 0.3);
+      background: rgba(28, 19, 53, 0.8);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 165, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 165, 0, 0.15);
+      border: 1px solid rgba(255, 165, 0, 0.4);
+      color: #ffb84d;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .mission {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #f1e2ff;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Inlogpoort */
+    .gate-container {
+      background: rgba(17, 9, 34, 0.9);
+      border: 2px dashed #ffa500;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 480px;
+      margin: 40px auto;
+      box-shadow: 0 0 25px rgba(255, 165, 0, 0.15);
+    }
+
+    .gate-container h2 {
+      color: #ffb84d;
+      margin-top: 0;
+    }
+
+    .gate-input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .gate-input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #ffb84d;
+      font-weight: bold;
+    }
+
+    .gate-input-group input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 165, 0, 0.4);
+      padding: 12px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .gate-input-group input:focus {
+      outline: none;
+      border-color: #ffb84d;
+      box-shadow: 0 0 10px rgba(255, 165, 0, 0.4);
+    }
+
+    .game-content {
+      display: none;
+    }
+
+    /* Opgaven Layout */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .task-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .task-card:hover {
+      border-color: rgba(255, 165, 0, 0.3);
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .task-number {
+      background: #ffa500;
+      color: #110922;
+      font-weight: bold;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .sentence-container {
+      font-size: 18px;
+      line-height: 1.8;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* NEON TARGET WOORD STYLING */
+    .neon-keyword {
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 0, 128, 0.15);
+      border: 1px solid #ff0080;
+      text-shadow: 0 0 8px #ff0080, 0 0 15px #ff0080;
+      box-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+      display: inline-block;
+      margin: 0 4px;
+    }
+
+    /* Input velden */
+    .input-box {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 16px;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.2s;
+      width: 180px;
+      display: inline-block;
+    }
+
+    .input-box:focus {
+      outline: none;
+      border-color: #ffa500;
+      box-shadow: 0 0 8px rgba(255, 165, 0, 0.4);
+    }
+
+    .feedback-text {
+      font-size: 13px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* De Kluis */
+    .vault {
+      padding: 24px;
+      border-radius: 20px;
+      background: rgba(17, 9, 34, 0.85);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 165, 0, 0.1);
+    }
+
+    .vault-door {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2c1a4d, #110922);
+      border: 3px solid #ffa500;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 20px rgba(255,165,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      transition: transform 0.5s;
+    }
+
+    .vault.open .vault-door {
+      transform: rotate(180deg);
+      border-color: #00ff77;
+      box-shadow: 0 0 25px rgba(0,255,119,0.5);
+    }
+
+    .code-box {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(0,255,119,0.1);
+      border: 1px solid #00ff77;
+    }
+
+    .vault.open .code-box {
+      display: block;
+    }
+
+    .next-code {
+      font-size: 36px;
+      letter-spacing: 4px;
+      font-weight: bold;
+      color: #00ff77;
+      text-shadow: 0 0 12px rgba(0,255,119,0.6);
+      margin-top: 6px;
+    }
+
+    button.action-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #110922;
+      background: linear-gradient(135deg, #ffb84d, #ffa500);
+      transition: transform 0.15s, filter 0.15s;
+    }
+
+    button.action-btn:hover {
+      transform: scale(1.03);
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="background-grid"></div>
+
+  <main class="container">
+    
+    <!-- INLOGPOORT -->
+    <section class="gate-container" id="gateScreen">
+      <h2>🔒 Room 5 Lab is Locked</h2>
+      <p>Enter the code from Room 4 to gain access.</p>
+      
+      <div class="gate-input-group">
+        <label for="gateCode">Security Code:</label>
+        <input type="text" id="gateCode" placeholder="Enter code...">
+      </div>
+      
+      <button class="action-btn" onclick="tryUnlockRoom()">Verify Code</button>
+    </section>
+
+    <!-- HOOFDSPEL -->
+    <div class="game-content" id="mainGame">
+      <section class="hero">
+        <span class="badge">Room 5 · Comparisons</span>
+        <div class="mission">
+          <strong>Instructions:</strong> Convert the neon keyword into its correct comparative or superlative form based on the context of the sentence.
+          <br>• <em>The</em> and <em>than</em> are already provided in the sentences where necessary.
+        </div>
+      </section>
+
+      <div class="exercise-list" id="tasks-container"></div>
+
+      <!-- DE KLUIS -->
+      <section class="vault" id="vault">
+        <div class="vault-door" id="vaultDoor">🔒</div>
+        <h2 id="vaultTitle">Data Locked</h2>
+        <div id="vaultText"><p>Correctly complete all 10 comparisons to decrypt the data stream.</p></div>
+        <button class="action-btn" onclick="checkComparisonAnswers()">Decrypt Data</button>
+
+        <!-- Codebox voor Room 6 -->
+        <div class="code-box">
+          <p>Decryption complete! Write down your access key for Room 6:</p>
+          <div class="next-code">GRID66</div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <script>
+    // Database met strikt 1 of 3+ lettergrepen. Geen 2 lettergrepen.
+    const comparisonDatabase = [
+      // 1 lettergreep (Vergrotende trap)
+      { word: "fast", pre: "A plane is ", post: " than a car.", answer: "faster" },
+      { word: "old", pre: "My grandfather is ", post: " than my father.", answer: "older" },
+      { word: "small", pre: "A mouse is ", post: " than an elephant.", answer: "smaller" },
+      { word: "tall", pre: "Harry is ", post: " than his brother.", answer: "taller" },
+      { word: "big", pre: "London is ", post: " than Oxford.", answer: "bigger" },
+      { word: "hot", pre: "Summer is ", post: " than spring.", answer: "hotter" },
+      { word: "cold", pre: "Ice cream is ", post: " than soup.", answer: "colder" },
+
+      // 3+ lettergrepen (Vergrotende trap)
+      { word: "beautiful", pre: "This painting is more ", post: " than that one.", answer: "beautiful" },
+      { word: "expensive", pre: "A sports car is more ", post: " than a bicycle.", answer: "expensive" },
+      { word: "dangerous", pre: "A tiger is more ", post: " than a rabbit.", answer: "dangerous" },
+      { word: "intelligent", pre: "Humans are more ", post: " than computers.", answer: "intelligent" },
+      { word: "interesting", pre: "This book is more ", post: " than the history lesson.", answer: "interesting" },
+
+      // 1 lettergreep (Overtreffende trap)
+      { word: "fast", pre: "The rocket is the ", post: " vehicle in the world.", answer: "fastest" },
+      { word: "old", pre: "This castle is the ", post: " building in our city.", answer: "oldest" },
+      { word: "small", pre: "That tiny bug is the ", post: " insect I have ever seen.", answer: "smallest" },
+      { word: "big", pre: "Russia is the ", post: " country in the world.", answer: "biggest" },
+      { word: "hot", pre: "The Sahara is the ", post: " desert on earth.", answer: "hottest" },
+
+      // 3+ lettergrepen (Overtreffende trap)
+      { word: "beautiful", pre: "She wore the most ", post: " dress at the party.", answer: "beautiful" },
+      { word: "expensive", pre: "This diamond ring is the most ", post: " item in the shop.", answer: "expensive" },
+      { word: "dangerous", pre: "Lions are among the most ", post: " animals in Africa.", answer: "dangerous" },
+      { word: "exciting", pre: "That roller coaster ride was the most ", post: " experience ever.", answer: "exciting" }
+    ];
+
+    let activeQuestions = [];
+
+    function tryUnlockRoom() {
+      const codeInput = document.getElementById("gateCode").value.trim().toUpperCase();
+      if (codeInput === "CYBER55") {
+        document.getElementById("gateScreen").style.display = "none";
+        document.getElementById("mainGame").style.display = "block";
+        
+        generateComparisons();
+      } else {
+        alert("Access Denied! Check your code from Room 4.");
+      }
+    }
+
+    function generateComparisons() {
+      const shuffled = [...comparisonDatabase].sort(() => 0.5 - Math.random());
+      activeQuestions = shuffled.slice(0, 10);
+
+      const container = document.getElementById("tasks-container");
+      container.innerHTML = "";
+
+      activeQuestions.forEach((q, idx) => {
+        const card = document.createElement("div");
+        card.className = "task-card";
+
+        card.innerHTML = `
+          <div class="task-header">
+            <div class="task-info">
+              <div class="task-number">${idx + 1}</div>
+            </div>
+            <div class="feedback-text" id="feedback-${idx}">Awaiting input</div>
+          </div>
+          <div class="sentence-container">
+            <span>${q.pre}</span>
+            <span class="neon-keyword">${q.word}</span>
+            <input type="text" class="input-box" id="input-${idx}" placeholder="Type here...">
+            <span>${q.post}</span>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function checkComparisonAnswers() {
+      let perfectScore = true;
+
+      activeQuestions.forEach((q, idx) => {
+        const inputElem = document.getElementById(`input-${idx}`);
+        const feedbackElem = document.getElementById(`feedback-${idx}`);
+        
+        let userVal = inputElem.value.trim().toLowerCase();
+
+        if (!userVal) {
+          feedbackElem.textContent = "Empty! ✗";
+          feedbackElem.style.color = "#ff82ff";
+          perfectScore = false;
+          return;
+        }
+
+        if (userVal === q.answer.toLowerCase()) {
+          feedbackElem.textContent = "Correct ✓";
+          feedbackElem.style.color = "#00ff77";
+        } else {
+          feedbackElem.textContent = "Incorrect ✗";
+          feedbackElem.style.color = "#ff82ff";
+          perfectScore = false;
+        }
+      });
+
+      const vault = document.getElementById("vault");
+      const vaultDoor = document.getElementById("vaultDoor");
+      const vaultTitle = document.getElementById("vaultTitle");
+      const vaultText = document.getElementById("vaultText");
+
+      if (perfectScore) {
+        vault.classList.add("open");
+        vaultDoor.textContent = "🔓";
+        vaultTitle.textContent = "Data Decrypted";
+        vaultText.innerHTML = `
+          <p>All data sequences are fully balanced. The path to Room 6 is open!</p>
+          <button class="action-btn" style="background: linear-gradient(135deg, #00ff77, #00ffff); margin-top: 10px;" 
+                  onclick="window.location.href='m1t5_escape_room_6.html'">
+            Proceed to Room 6 ➔
+          </button>
+        `;
+      } else {
+        vault.classList.remove("open");
+        vaultDoor.textContent = "🔒";
+        vaultTitle.textContent = "Data Locked";
+        vaultText.innerHTML = "<p>Some modifiers are incorrect. Check your spellings carefully!</p>";
+      }
+    }
+  </script>
+</body>
+</html>

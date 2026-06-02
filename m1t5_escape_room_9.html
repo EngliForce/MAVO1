@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room - The Master Vault</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255, 0, 128, 0.2), transparent 40%),
+        radial-gradient(circle at 70% 70%, rgba(0, 255, 128, 0.15), transparent 40%),
+        linear-gradient(135deg, #05020a, #0f0717 50%, #05020a);
+      overflow-x: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(1300px, 96%);
+      margin: 0 auto;
+      padding: 30px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero {
+      padding: 24px;
+      border: 1px solid rgba(0, 255, 128, 0.3);
+      background: rgba(0, 255, 128, 0.05);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      box-shadow: 0 0 35px rgba(0, 255, 128, 0.1);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(0, 255, 128, 0.15);
+      border: 1px solid rgba(0, 255, 128, 0.5);
+      color: #a3ffcf;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+      font-weight: bold;
+      box-shadow: 0 0 18px rgba(0, 255, 128, 0.2);
+      margin-bottom: 14px;
+    }
+
+    /* Inlogpoort */
+    .gate-container {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px dashed rgba(0, 255, 128, 0.4);
+      padding: 40px 30px;
+      border-radius: 24px;
+      text-align: center;
+      max-width: 500px;
+      margin: 60px auto;
+      box-shadow: 0 0 40px rgba(0, 255, 128, 0.1);
+    }
+
+    .gate-container h2 {
+      color: #a3ffcf;
+      margin-top: 0;
+    }
+
+    .gate-input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .gate-input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #a3ffcf;
+      font-weight: bold;
+    }
+
+    .gate-input-group input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 255, 128, 0.3);
+      padding: 14px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .gate-input-group input:focus {
+      outline: none;
+      border-color: #00ff80;
+      box-shadow: 0 0 15px rgba(0, 255, 128, 0.4);
+    }
+
+    .game-content {
+      display: none;
+    }
+
+    /* 3x5 Tegel Matrix */
+    .vault-matrix {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .vault-matrix { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .vault-matrix { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .vault-matrix { grid-template-columns: 1fr; }
+    }
+
+    .vocab-tile {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .tile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .tile-number {
+      font-size: 12px;
+      font-weight: bold;
+      color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .direction-badge {
+      font-size: 10px;
+      font-weight: bold;
+      padding: 3px 6px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .dir-en-nl { background: rgba(0, 255, 255, 0.15); color: #8effff; border: 1px solid rgba(0, 255, 255, 0.3); }
+    .dir-nl-en { background: rgba(216, 112, 255, 0.15); color: #f2bfff; border: 1px solid rgba(216, 112, 255, 0.3); }
+
+    .word-to-translate {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .vocab-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .vocab-input:focus {
+      outline: none;
+      border-color: #00ff80;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    /* Status per tegel */
+    .tile-feedback {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: bold;
+      text-align: center;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* Grote Kraken Sectie */
+    .crack-action-container {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    /* Het Geheim Overwinningsscherm */
+    .victory-screen {
+      display: none;
+      animation: fadeIn 1s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .victory-box {
+      background: linear-gradient(180deg, rgba(5, 20, 12, 0.85), rgba(10, 5, 20, 0.85));
+      border: 3px solid #00ff80;
+      box-shadow: 0 0 50px rgba(0, 255, 128, 0.3);
+      border-radius: 32px;
+      padding: 40px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .victory-title {
+      font-size: 36px;
+      color: #00ff80;
+      text-shadow: 0 0 20px rgba(0, 255, 128, 0.6);
+      margin-top: 0;
+      letter-spacing: 1px;
+    }
+
+    .victory-message {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #e0f7ec;
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgba(0, 255, 128, 0.2);
+      padding-bottom: 24px;
+    }
+
+    /* CSS Geanimeerd Supergeheim Prototype */
+    .prototype-container {
+      margin: 30px auto;
+      position: relative;
+      width: 220px;
+      height: 440px;
+      background: linear-gradient(145deg, #181c24, #0b0d13);
+      border-radius: 42px;
+      padding: 12px;
+      box-shadow: 
+        0 0 0 4px #2c3545,
+        0 0 30px rgba(0, 255, 255, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+      animation: floatPhone 4s ease-in-out infinite;
+    }
+
+    @keyframes floatPhone {
+      0%, 100% { transform: translateY(0) rotate(0deg); box-shadow: 0 0 30px rgba(0, 255, 255, 0.3); }
+      50% { transform: translateY(-12px) rotate(1deg); box-shadow: 0 15px 45px rgba(0, 255, 255, 0.5); }
+    }
+
+    .prototype-screen {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #102a3a, #050d14);
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Hologram Holografische Matrix op het scherm */
+    .prototype-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(rgba(0, 255, 128, 0.05) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(0, 255, 128, 0.05) 2px, transparent 2px);
+      background-size: 15px 15px;
+      animation: scanline 8s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 440px; }
+    }
+
+    .camera-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 18px;
+      background: #181c24;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      z-index: 10;
+    }
+
+    .prototype-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .holo-core {
+      width: 70px;
+      height: 70px;
+      background: conic-gradient(from 0deg, transparent, #00ffff, #00ff80, transparent);
+      border-radius: 50%;
+      animation: spinCore 2s linear infinite;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0, 255, 128, 0.6);
+    }
+
+    .holo-core::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      background: #050d14;
+      border-radius: 50%;
+    }
+
+    @keyframes spinCore {
+      100% { transform: rotate(360deg); }
+    }
+
+    .proto-text-1 {
+      font-size: 11px;
+      color: #00ffff;
+      font-family: monospace;
+      margin-top: 25px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px rgba(0,255,255,0.7);
+    }
+
+    .proto-text-2 {
+      font-size: 14px;
+      color: #00ff80;
+      font-weight: bold;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    .proto-battery {
+      position: absolute;
+      bottom: 25px;
+      width: 40px;
+      height: 18px;
+      border: 2px solid #00ff80;
+      border-radius: 4px;
+      padding: 2px;
+    }
+
+    .proto-battery::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #00ff80;
+      animation: chargePulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes chargePulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* Knoppen */
+    button.action-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #05020a;
+      background: linear-gradient(135deg, #00ff80, #00ffff);
+      box-shadow: 0 0 20px rgba(0,255,128,0.3);
+      transition: all 0.2s ease;
+    }
+
+    button.action-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0,255,128,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="background-grid"></div>
+
+  <main class="container">
+    
+    <section class="gate-container" id="gateScreen">
+      <h2>🔒 The Master Vault is Locked</h2>
+      <p>Enter the code from Room 8 to start the terminal.</p>
+      
+      <div class="gate-input-group">
+        <label for="gateCode">Code from Room 8:</label>
+        <input type="text" id="gateCode" placeholder="Enter code here...">
+      </div>
+      
+      <button class="action-btn" onclick="tryUnlockRoom()">Boot Terminal</button>
+    </section>
+
+    <div class="game-content" id="mainGame">
+      <section class="hero" id="gameHero">
+        <span class="badge">Final Room · The Master Vault</span>
+        <p style="font-size: 16px; color: #e0f7ec; margin: 5px 0 0 0;">
+          You found the master vault. Fill in the correct translations to open it.
+        </p>
+      </section>
+
+      <section class="vault-matrix" id="matrixContainer"></section>
+
+      <div class="crack-action-container" id="actionArea">
+        <button class="action-btn" onclick="crackTheVault()">Override Security Systems</button>
+      </div>
+
+      <section class="victory-screen" id="victoryScreen">
+        <div class="victory-box">
+          <h2 class="victory-title">YOU WIN!</h2>
+          
+          <div class="victory-message">
+            <p><strong>Well done, Agent!</strong> You finished the escape room. You are very good at English grammar and vocabulary!</p>
+            <p>You found the secret **Next-Gen Mobile Prototype**. It is safe now. Please go to your teacher and show the phone on your screen to complete the mission!</p>
+          </div>
+
+          <div class="prototype-container">
+            <div class="camera-notch"></div>
+            <div class="prototype-screen">
+              <div class="prototype-content">
+                <div class="holo-core"></div>
+                <div class="proto-text-1">PROTOTYPE v9.0</div>
+                <div class="proto-text-2">FOUND</div>
+                <div style="font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 4px; font-family: monospace;">MISSION DONE</div>
+                <div class="proto-battery"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Complete aangeleverde vocabulairelijst (Eerste optie is de primaire juiste)
+    const masterVocabulary = [
+      { en: "device", nl: ["apparaat"] },
+      { en: "network", nl: ["netwerk"] },
+      { en: "engineer", nl: ["ingenieur"] },
+      { en: "service", nl: ["dienst"] },
+      { en: "build", nl: ["bouwen"] },
+      { en: "prototype", nl: ["testmodel"] },
+      { en: "cost", nl: ["kosten", "prijs"] },
+      { en: "charge", nl: ["opladen"] },
+      { en: "data", nl: ["gegevens"] },
+      { en: "touchscreen", nl: ["aanraakscherm"] },
+      { en: "brick", nl: ["baksteen"] },
+      { en: "text message", nl: ["sms", "bericht"] },
+      { en: "develop", nl: ["ontwikkelen"] },
+      { en: "feature", nl: ["functie"] },
+      { en: "design", nl: ["ontwerp"] },
+      { en: "enormous", nl: ["enorm"] },
+      { en: "scientist", nl: ["wetenschapper"] },
+      { en: "public", nl: ["het publiek", "publiek"] },
+      { en: "arcade", nl: ["speelhal"] },
+      { en: "industry", nl: ["industrie"] },
+      { en: "to release", nl: ["uitbrengen"] },
+      { en: "to compete", nl: ["concurreren"] },
+      { en: "realistic", nl: ["realistisch"] },
+      { en: "to improve", nl: ["verbeteren"] },
+      { en: "a flop", nl: ["een mislukking", "mislukking"] },
+      { en: "powerful", nl: ["krachtig"] },
+      { en: "to connect", nl: ["verbinden"] },
+      { en: "popular", nl: ["populair"] },
+      { en: "experience", nl: ["ervaring"] },
+      { en: "follower", nl: ["volger"] },
+      { en: "subscriber", nl: ["abonnee"] },
+      { en: "early", nl: ["vroeg"] },
+      { en: "usually", nl: ["meestal"] },
+      { en: "content", nl: ["inhoud"] },
+      { en: "recognise", nl: ["herkennen"] },
+      { en: "outside", nl: ["buiten"] },
+      { en: "picture", nl: ["foto"] },
+      { en: "negative", nl: ["negatief"] },
+      { en: "confident", nl: ["zelfverzekerd"] },
+      { en: "comment", nl: ["reactie"] },
+      { en: "beginning", nl: ["begin"] },
+      { en: "advice", nl: ["advies"] },
+      { en: "comfortable", nl: ["op je gemak"] },
+      { en: "inspire", nl: ["inspireren"] },
+      { en: "share", nl: ["delen"] },
+      { en: "difficult", nl: ["moeilijk"] },
+      { en: "article", nl: ["artikel"] },
+      { en: "advertisement", nl: ["advertentie"] },
+      { en: "angry", nl: ["boos"] },
+      { en: "different", nl: ["verschillend"] },
+      { en: "immediately", nl: ["onmiddellijk", "meteen"] },
+      { en: "real", nl: ["echt"] },
+      { en: "mistake", nl: ["fout"] },
+      { en: "certain", nl: ["zeker"] },
+      { en: "change", nl: ["veranderen"] },
+      { en: "famous", nl: ["beroemd"] },
+      { en: "attention", nl: ["aandacht"] },
+      { en: "feeling", nl: ["gevoel"] },
+      { en: "careful", nl: ["voorzichtig"] }
+    ];
+
+    let chosenTiles = [];
+
+    function tryUnlockRoom() {
+      const codeInput = document.getElementById("gateCode").value.trim().toUpperCase();
+      if (codeInput === "HALLWAY88") {
+        document.getElementById("gateScreen").style.display = "none";
+        document.getElementById("mainGame").style.display = "block";
+        generateMatrix();
+      } else {
+        alert("Access Denied! Check your room code from Room 8.");
+      }
+    }
+
+    function generateMatrix() {
+      const shuffled = [...masterVocabulary].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, 15);
+
+      chosenTiles = selected.map((item, idx) => {
+        const direction = idx % 2 === 0 ? "en-to-nl" : "nl-to-en";
+        
+        let wordToShow = "";
+        let correctAnswers = [];
+
+        if (direction === "en-to-nl") {
+          wordToShow = item.en;
+          correctAnswers = item.nl;
+        } else {
+          wordToShow = item.nl[0];
+          correctAnswers = [item.en];
+        }
+
+        return {
+          wordToShow: wordToShow,
+          direction: direction,
+          correctAnswers: correctAnswers.map(ans => ans.toLowerCase().trim())
+        };
+      });
+
+      const container = document.getElementById("matrixContainer");
+      container.innerHTML = "";
+
+      chosenTiles.forEach((tile, index) => {
+        const tileDiv = document.createElement("div");
+        tileDiv.className = "vocab-tile";
+        tileDiv.id = `tile-${index}`;
+
+        const badgeText = tile.direction === "en-to-nl" ? "EN ➔ NL" : "NL ➔ EN";
+        const badgeClass = tile.direction === "en-to-nl" ? "dir-en-nl" : "dir-nl-en";
+
+        tileDiv.innerHTML = `
+          <div class="tile-header">
+            <span class="tile-number">Node ${index + 1}</span>
+            <span class="direction-badge ${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="word-to-translate">"${tile.wordToShow}"</div>
+          <input type="text" class="vocab-input" id="input-${index}" placeholder="Type here..." autocomplete="off">
+          <div class="tile-feedback" id="feedback-${index}">Awaiting data</div>
+        `;
+        container.appendChild(tileDiv);
+      });
+    }
+
+    function crackTheVault() {
+      let vaultCleared = true;
+
+      chosenTiles.forEach((tile, index) => {
+        const inputElement = document.getElementById(`input-${index}`);
+        const feedbackElement = document.getElementById(`feedback-${index}`);
+        const tileElement = document.getElementById(`tile-${index}`);
+        
+        const userValue = inputElement.value.toLowerCase().trim();
+
+        if (userValue === "") {
+          feedbackElement.textContent = "⚠️ Missing input";
+          feedbackElement.style.color = "#ffb347";
+          tileElement.style.borderColor = "rgba(255, 179, 71, 0.4)";
+          vaultCleared = false;
+          return;
+        }
+
+        const isCorrect = tile.correctAnswers.some(possibleAns => {
+          return userValue === possibleAns || 
+                 userValue === possibleAns.replace(/^to\s+/, "") || 
+                 userValue === "to " + possibleAns;
+        });
+
+        if (isCorrect) {
+          feedbackElement.textContent = "🔒 Decrypted";
+          feedbackElement.style.color = "#00ff80";
+          tileElement.style.borderColor = "rgba(0, 255, 128, 0.5)";
+          tileElement.style.background = "rgba(0, 255, 128, 0.03)";
+          inputElement.disabled = true;
+        } else {
+          feedbackElement.textContent = "❌ Access Denied";
+          feedbackElement.style.color = "#ff4757";
+          tileElement.style.borderColor = "rgba(255, 71, 87, 0.5)";
+          vaultCleared = false;
+        }
+      });
+
+      if (vaultCleared) {
+        document.getElementById("matrixContainer").style.display = "none";
+        document.getElementById("actionArea").style.display = "none";
+        document.getElementById("gameHero").style.display = "none";
+        
+        document.getElementById("victoryScreen").style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        alert("The firewall rejected some inputs. Check the red blocks and try again!");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room - Room 7: Office B</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: Arial, sans-serif; color: #ffffff; background: linear-gradient(135deg, #0f0717, #19112b 45%, #0f0717); overflow-x: hidden; }
+    .container { width: min(1200px, 96%); margin: 0 auto; padding: 36px 0; position: relative; z-index: 2; }
+    .hero { padding: 24px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(16px); border-radius: 24px; margin-bottom: 24px; }
+    .badge { display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255, 0, 255, 0.15); border: 1px solid rgba(255, 0, 255, 0.45); color: #ffbfff; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: bold; margin-bottom: 14px; }
+    .mission { padding: 16px; border-radius: 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); color: #f7eaff; font-size: 15px; line-height: 1.5; }
+    .gate-container { background: rgba(0, 0, 0, 0.4); border: 2px dashed rgba(255, 0, 255, 0.4); padding: 30px; border-radius: 24px; text-align: center; max-width: 500px; margin: 40px auto; box-shadow: 0 0 30px rgba(255, 0, 255, 0.1); }
+    .gate-container h2 { color: #ffbfff; margin-top: 0; }
+    .gate-input-group { margin-bottom: 16px; text-align: left; }
+    .gate-input-group label { display: block; margin-bottom: 6px; font-size: 13px; color: #dcbfff; font-weight: bold; }
+    .gate-input-group input { width: 100%; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px; border-radius: 10px; color: #fff; font-size: 16px; text-align: center; letter-spacing: 2px; }
+    .game-content { display: none; }
+    .exercise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .grammar-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 18px; padding: 16px; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .sentence-number { background: linear-gradient(135deg, #ff82ff, #7fffff); color: #061018; font-weight: bold; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .situation-label { color: #ffbfff; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+    .sentence-text { font-size: 15px; line-height: 1.4; flex-grow: 1; }
+    .sentence-gap { display: inline-block; min-width: 60px; border-bottom: 2px solid #ff3dff; text-align: center; color: #ff3dff; font-weight: bold; padding: 0 4px; }
+    .btn-grid-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+    .option-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 8px 2px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .option-btn.selected { background: rgba(0, 255, 255, 0.25); border-color: #00ffff; color: #7fffff; }
+    .status-text { font-size: 12px; font-weight: bold; text-align: center; color: rgba(255, 255, 255, 0.4); }
+    .vault { margin-top: 30px; padding: 26px; border-radius: 28px; background: rgba(0, 0, 0, 0.30); border: 1px solid rgba(255, 255, 255, 0.20); text-align: center; }
+    .vault-door { width: 120px; height: 120px; margin: 0 auto 16px; border-radius: 22px; background: linear-gradient(135deg, #2b1d46, #0c0712); border: 3px solid rgba(255,0,255,0.55); display: flex; align-items: center; justify-content: center; font-size: 44px; }
+    .code-box { display: none; margin-top: 18px; padding: 18px; border-radius: 18px; background: rgba(0,255,120,0.12); border: 1px solid rgba(0,255,120,0.55); }
+    .vault.open .code-box { display: block; }
+    .action-btn { cursor: pointer; border: none; border-radius: 10px; padding: 12px 24px; font-weight: bold; background: linear-gradient(135deg, #7fffff, #ff82ff); color: #061018; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="gate-container" id="gateScreen">
+      <h2>🔒 Room 7 is Locked</h2>
+      <p>Enter the code from Room 6 to enter Office B.</p>
+      <div class="gate-input-group">
+        <label for="gateCode">Code from Room 6:</label>
+        <input type="text" id="gateCode" placeholder="Enter code here...">
+      </div>
+      <button class="action-btn" onclick="tryUnlockRoom()">Unlock Room 7</button>
+    </section>
+
+    <div class="game-content" id="mainGame">
+      <section class="hero">
+        <span class="badge">Room 7 · Office B</span>
+        <div class="mission">
+          <strong>Theme:</strong> Articles (a, an, the). <br>
+                 </div>
+      </section>
+      <section class="exercise-grid" id="questions-container"></section>
+      <section class="vault" id="vault">
+        <div class="vault-door" id="vaultDoor">🔒</div>
+        <h2 id="vaultTitle">Desk Drawer Locked</h2>
+        <div id="vaultText"><p>Determine the correct articles in all 10 sentences to unlock the drawer.</p></div>
+        <button class="action-btn" onclick="checkGrammarAnswers()">Search Desk</button>
+        <div class="code-box">
+          <p>Splendid job! You organized the office perfectly.</p>
+          <div class="next-code" style="font-size: 44px; font-weight: bold; color: #7cffb2;">OFFICE77</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const articleDatabase = [
+      { context: "Exception", preText: "She studies at ", postText: " university.", answer: "a" },
+      { context: "Exception", preText: "The nurse took ", postText: " X-ray.", answer: "an" },
+      { context: "Exception", preText: "It took ", postText: " hour to finish.", answer: "an" },
+      { context: "Exception", preText: "He is ", postText: " honest man.", answer: "an" },
+      { context: "Exception", preText: "They met ", postText: " European visitor.", answer: "a" },
+      { context: "Exception", preText: "She works for ", postText: " MP.", answer: "an" },
+      { context: "Exception", preText: "He drives ", postText: " yellow car.", answer: "a" },
+      { context: "Exception", preText: "It was ", postText: " ugly situation.", answer: "an" },
+      { context: "General", preText: "I need ", postText: " stapler.", answer: "a" },
+      { context: "General", preText: "She ate ", postText: " apple.", answer: "an" },
+      { context: "Specific", preText: "Pass me ", postText: " red pen on your desk.", answer: "the" },
+      { context: "Specific", preText: "Where is ", postText: " boss?", answer: "the" },
+      { context: "General", preText: "He bought ", postText: " new laptop.", answer: "a" },
+      { context: "General", preText: "It is ", postText: " interesting job.", answer: "an" },
+      { context: "Specific", preText: "Close ", postText: " door.", answer: "the" },
+      { context: "General", preText: "We have ", postText: " meeting.", answer: "a" },
+      { context: "General", preText: "She wants ", postText: " ice cream.", answer: "an" },
+      { context: "Specific", preText: "Did you find ", postText: " keys?", answer: "the" },
+      { context: "General", preText: "It is ", postText: " cold day.", answer: "a" },
+      { context: "Specific", preText: "Put it on ", postText: " table.", answer: "the" }
+    ];
+
+    let userAnswers = {};
+    function tryUnlockRoom() {
+      if (document.getElementById("gateCode").value.trim().toUpperCase() === "COMPARE66") {
+        document.getElementById("gateScreen").style.display = "none";
+        document.getElementById("mainGame").style.display = "block";
+        // Shuffle and select 10 from the 20 available questions
+        articleDatabase.sort(() => 0.5 - Math.random());
+        buildGrammarExercises();
+      }
+    }
+
+    function buildGrammarExercises() {
+      const container = document.getElementById("questions-container");
+      container.innerHTML = "";
+      articleDatabase.slice(0, 10).forEach((ex, i) => {
+        const card = document.createElement("div");
+        card.className = "grammar-card";
+        card.innerHTML = `
+          <div><div class="card-header"><div class="sentence-number">${i+1}</div><span class="situation-label">${ex.context}</span></div>
+          <div class="sentence-text">${ex.preText}<span class="sentence-gap" id="gap-${i}">&nbsp;</span>${ex.postText}</div></div>
+          <div><div class="btn-grid-options">${['a','an','the'].map(o => `<button class="option-btn" id="btn-${i}-${o}" onclick="selectOption(${i},'${o}')">${o}</button>`).join('')}</div>
+          <div class="status-text" id="status-${i}">Not answered</div></div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function selectOption(i, val) {
+      userAnswers[i] = val;
+      document.getElementById(`gap-${i}`).textContent = val;
+      ['a','an','the'].forEach(o => document.getElementById(`btn-${i}-${o}`).classList.remove('selected'));
+      document.getElementById(`btn-${i}-${val}`).classList.add('selected');
+      document.getElementById(`status-${i}`).textContent = "Selected";
+    }
+
+    function checkGrammarAnswers() {
+      const allCorrect = articleDatabase.slice(0, 10).every((ex, i) => userAnswers[i] === ex.answer);
+      if (allCorrect) {
+        document.getElementById("vault").classList.add("open");
+        document.getElementById("vaultDoor").textContent = "🔓";
+        document.getElementById("vaultTitle").textContent = "Drawer Unlocked";
+      } else {
+        alert("Some items are still incorrect!");
+      }
+    }
+  </script>
+</body>
+</html>
