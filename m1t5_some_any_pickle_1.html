@@ -1,228 +1,105 @@
-<!DOCTYPE html><html lang="nl"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Some or Any/title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <title>Some vs. Any Quest ⚔️</title>
     <style>
-        :root {
-            --hero-purple: #bc13fe; --hero-purple-dark: #4a148c;
-            --hero-yellow: #ffb703; --alert-red: #cc0000; --dark-bg: #020205;
-        }
-
-        body {
-            background: var(--dark-bg); color: #fff; font-family: 'Lexend', sans-serif;
-            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #1a0533, #020205);
-        }
-
-        header {
-            background: var(--hero-purple-dark); width: 100%; padding: 1rem 1rem 1.8rem 1rem; 
-            text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-            border-bottom: 4px solid var(--hero-yellow); flex-shrink: 0; z-index: 100;
-            position: relative;
-        }
-        header h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; margin: 0; color: white; text-shadow: 3px 3px 0px #000; }
-
-        #score-board {
-            position: absolute; right: 20px; top: 20px; background: rgba(0,0,0,0.5);
-            padding: 10px 20px; border-radius: 15px; border: 2px solid var(--hero-yellow);
-            font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow);
-        }
-
-        #game-container {
-            flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; position: relative;
-        }
-
-        #sentence-box {
-            background: rgba(255, 255, 255, 0.05); border: 2px solid var(--hero-purple);
-            border-radius: 20px; padding: 25px; margin-bottom: 30px; width: 100%; max-width: 600px;
-            text-align: center; font-size: 1.4rem; font-weight: bold; box-shadow: inset 0 0 20px rgba(188, 19, 254, 0.2);
-            min-height: 80px; display: flex; align-items: center; justify-content: center;
-        }
-
-        .box-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; max-width: 600px; }
-
-        .choice-box {
-            background: #111; border: 4px solid var(--hero-purple); border-radius: 25px;
-            height: 180px; cursor: pointer; position: relative; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: inset 0 10px 40px rgba(0,0,0,1); overflow: hidden;
-        }
-        .choice-box span.label { font-family: 'Bangers'; font-size: 3.2rem; color: var(--hero-yellow); z-index: 50; pointer-events: none; }
-
-        .symbol {
-            position: absolute; font-size: 5rem; z-index: 55; opacity: 0; pointer-events: none;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-        }
-        .choice-box.active-symbol .symbol { opacity: 1; transform: scale(1.2); }
-
-        .confetti {
-            position: absolute; width: 8px; height: 8px; z-index: 60;
-            top: 50%; left: 50%; animation: confetti-fall 3s forwards cubic-bezier(0.1, 1, 0.3, 1);
-            pointer-events: none;
-        }
-        @keyframes confetti-fall {
-            0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)) rotate(var(--dr)); opacity: 0; }
-        }
-
-        .slime-flow {
-            position: absolute; top: 0; left: 0; width: 100%; height: 0%;
-            background: var(--alert-red); box-shadow: 0 0 30px var(--alert-red);
-            transition: height 0.6s cubic-bezier(0.5, 0, 0.5, 1);
-            z-index: 10; opacity: 0;
-        }
-        .choice-box.ooze-alert .slime-flow { height: 100%; opacity: 1; }
-
-        #win-screen { text-align: center; z-index: 200; }
-        #win-screen h2 { font-family: 'Bangers'; font-size: 3.5rem; color: var(--hero-yellow); }
-
-        footer { padding: 1rem; font-size: 0.75rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); color: #666; }
-        .hidden { display: none !important; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .game-panel { background: #1e293b; padding: 30px; border-radius: 25px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .sentence { font-size: 26px; margin: 40px 0; min-height: 70px; font-weight: bold; color: #38bdf8; }
+        .btn { background: #3b82f6; color: white; border: none; padding: 15px 40px; border-radius: 50px; font-size: 18px; cursor: pointer; margin: 10px; transition: transform 0.2s; }
+        .btn:hover { transform: scale(1.05); background: #2563eb; }
+        
+        /* Spectaculaire Badge */
+        #badge { font-size: 80px; display: none; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+        .shine { animation: shine 1.5s infinite; color: gold; }
+        @keyframes shine { 0% { text-shadow: 0 0 5px gold; } 50% { text-shadow: 0 0 20px gold; } 100% { text-shadow: 0 0 5px gold; } }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>ENGLIFORCE ACADEMY</h1>
-    <p>SOME OR ANY: DIAMOND & SKULL</p>
-    <div id="score-board">SCORE: <span id="current-score">0</span></div>
-</header>
-
-<div id="game-container">
-    <div id="quiz-ui" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-        <div id="sentence-box">Initializing Mission...</div>
-        <div class="box-grid">
-            <div class="choice-box" id="box-some" onclick="choose('some')">
-                <span class="label">SOME</span>
-                <div class="slime-flow"></div>
-                <div class="symbol" id="symbol-some"></div>
-            </div>
-            <div class="choice-box" id="box-any" onclick="choose('any')">
-                <span class="label">ANY</span>
-                <div class="slime-flow"></div>
-                <div class="symbol" id="symbol-any"></div>
-            </div>
-        </div>
-        <div id="feedback" style="margin-top: 25px; height: 30px; font-weight: bold; font-size: 1.3rem;"></div>
+<div class="game-panel">
+    <div id="start">
+        <h1>Some vs. Any Quest</h1>
+        <p>Fill in: some or any</p>
+        <button class="btn" onclick="start()">Start Game</button>
     </div>
 
-    <div id="win-screen" class="hidden">
-        <div style="font-size: 6rem;">👑</div>
-        <h2>MISSION SUCCESS</h2>
-        <p style="font-size: 1.5rem; font-weight: bold;">TOTAL SCORE: <span id="final-score">0</span></p>
-        <button onclick="location.reload()" style="background:var(--hero-yellow); border:none; padding:12px 40px; border-radius:30px; font-weight:900; cursor:pointer; font-family:'Lexend'; margin-top:20px;">NEW MISSION</button>
+    <div id="quiz" style="display:none;">
+        <div id="status">Vraag 1/10</div>
+        <div class="sentence" id="sentence">---</div>
+        <button class="btn" onclick="check('some')">Some</button>
+        <button class="btn" onclick="check('any')">Any</button>
+    </div>
+
+    <div id="end" style="display:none;">
+        <div id="badge" class="shine">🧙‍♂️</div>
+        <h2 id="msg"></h2>
+        <button class="btn" onclick="location.reload()">Try again</button>
     </div>
 </div>
 
-<footer>© 2026, EngliForce Academy: Make English Your Superpower!</footer>
-
 <script>
-    const db = [
-        // 50 x SOME
-        {q: "I have ___ apples for you.", c: "some"}, {q: "There is ___ milk.", c: "some"}, {q: "She bought ___ flowers.", c: "some"}, {q: "He found ___ money.", c: "some"}, {q: "I need ___ help.", c: "some"},
-        {q: "We saw ___ birds.", c: "some"}, {q: "There are ___ trees.", c: "some"}, {q: "They want ___ soup.", c: "some"}, {q: "I bought ___ pens.", c: "some"}, {q: "She has ___ friends.", c: "some"},
-        {q: "He saw ___ cool cars.", c: "some"}, {q: "There is ___ snow.", c: "some"}, {q: "I need ___ time.", c: "some"}, {q: "She found ___ gold.", c: "some"}, {q: "We have ___ news.", c: "some"},
-        {q: "I want ___ juice.", c: "some"}, {q: "Give me ___ bread.", c: "some"}, {q: "There are ___ clouds.", c: "some"}, {q: "She has ___ secrets.", c: "some"}, {q: "He bought ___ cheese.", c: "some"},
-        {q: "We need ___ eggs.", c: "some"}, {q: "I saw ___ elephants.", c: "some"}, {q: "There is ___ sand.", c: "some"}, {q: "He has ___ energy.", c: "some"}, {q: "She needs ___ sleep.", c: "some"},
-        {q: "I found ___ old coins.", c: "some"}, {q: "There are ___ stars.", c: "some"}, {q: "We bought ___ oranges.", c: "some"}, {q: "She has ___ homework.", c: "some"}, {q: "He saw ___ movies.", c: "some"},
-        {q: "I need ___ advice.", c: "some"}, {q: "There is ___ ice.", c: "some"}, {q: "He bought ___ milk.", c: "some"}, {q: "We found ___ keys.", c: "some"}, {q: "She has ___ pencils.", c: "some"},
-        {q: "I want ___ cake.", c: "some"}, {q: "There are ___ cookies.", c: "some"}, {q: "She bought ___ pens.", c: "some"}, {q: "I have ___ work.", c: "some"}, {q: "Give him ___ water.", c: "some"},
-        {q: "We saw ___ people.", c: "some"}, {q: "There is ___ soup.", c: "some"}, {q: "He has ___ toys.", c: "some"}, {q: "She told ___ stories.", c: "some"}, {q: "I need ___ eggs.", c: "some"},
-        {q: "There are ___ chairs.", c: "some"}, {q: "I found ___ shells.", c: "some"}, {q: "He has ___ ideas.", c: "some"}, {q: "She bought ___ sugar.", c: "some"}, {q: "We need ___ music.", c: "some"},
+// Database met enkel standaard vragen en ontkenningen
+const db = [
+    {s: "I have ___ friends in town.", a: "some"}, {s: "Do you have ___ brothers?", a: "any"},
+    {s: "I don't have ___ money.", a: "any"}, {s: "There is ___ milk in the glass.", a: "some"},
+    {s: "Are there ___ cars in the street?", a: "any"}, {s: "She wants ___ sugar in her tea.", a: "some"},
+    {s: "I haven't got ___ time today.", a: "any"}, {s: "There are ___ apples in the bag.", a: "some"},
+    {s: "There aren't ___ people here.", a: "any"}, {s: "We bought ___ new shoes.", a: "some"},
+    {s: "Is there ___ water in the bottle?", a: "any"}, {s: "I need ___ help with this.", a: "some"},
+    {s: "There isn't ___ bread left.", a: "any"}, {s: "Do you need ___ paper for the test?", a: "any"},
+    {s: "I saw ___ birds in the tree.", a: "some"}, {s: "They don't want ___ food now.", a: "any"},
+    {s: "There are ___ flowers in the garden.", a: "some"}, {s: "Did you buy ___ gifts for them?", a: "any"},
+    {s: "I have ___ cool ideas for the project.", a: "some"}, {s: "There isn't ___ gas in the car.", a: "any"},
+    {s: "Do you have ___ coins in your pocket?", a: "any"}, {s: "I have ___ cats at home.", a: "some"},
+    {s: "She didn't find ___ keys.", a: "any"}, {s: "He has ___ books on his desk.", a: "some"},
+    {s: "I don't see ___ cars on the road.", a: "any"}, {s: "Are there ___ cookies in the box?", a: "any"},
+    {s: "We found ___ shells on the beach.", a: "some"}, {s: "There isn't ___ milk in the fridge.", a: "any"},
+    {s: "He needs ___ rest after the long day.", a: "some"}, {s: "Do you have ___ spare parts?", a: "any"},
+    {s: "I have ___ fruit in my lunchbox.", a: "some"}, {s: "I won't give ___ money to him.", a: "any"},
+    {s: "There are ___ people waiting outside.", a: "some"}, {s: "Can you hear ___ noise?", a: "any"},
+    {s: "I bought ___ pens at the shop.", a: "some"}, {s: "He hasn't got ___ pets.", a: "any"},
+    {s: "Are there ___ errors in the text?", a: "any"}, {s: "There is ___ wine in the bottle.", a: "some"},
+    {s: "They don't have ___ dogs.", a: "any"}, {s: "I need ___ minutes to finish.", a: "some"},
+    {s: "Did he leave ___ messages for me?", a: "any"}, {s: "There's ___ sand in my shoes.", a: "some"},
+    {s: "There isn't ___ hope left.", a: "any"}, {s: "Do you have ___ pencils?", a: "any"},
+    {s: "I'll make ___ tea for us later.", a: "some"}, {s: "I don't have ___ homework today.", a: "any"},
+    {s: "There are ___ trees in the park.", a: "some"}, {s: "Is there ___ chance to win?", a: "any"},
+    {s: "I have ___ pictures of my family.", a: "some"}, {s: "He doesn't have ___ free time.", a: "any"}
+];
 
-        // 50 x ANY (Negative)
-        {q: "I don't have ___ apples.", c: "any"}, {q: "There isn't ___ milk.", c: "any"}, {q: "She didn't buy ___ flowers.", c: "any"}, {q: "He hasn't got ___ money.", c: "any"}, {q: "I don't need ___ help.", c: "any"},
-        {q: "We didn't see ___ birds.", c: "any"}, {q: "There aren't ___ trees.", c: "any"}, {q: "They don't want ___ soup.", c: "any"}, {q: "I didn't buy ___ pens.", c: "any"}, {q: "She hasn't got ___ friends.", c: "any"},
-        {q: "He didn't see ___ cars.", c: "any"}, {q: "There isn't ___ snow.", c: "any"}, {q: "I don't need ___ time.", c: "any"}, {q: "She didn't find ___ gold.", c: "any"}, {q: "We haven't got ___ news.", c: "any"},
-        {q: "I don't want ___ juice.", c: "any"}, {q: "Don't give me ___ bread.", c: "any"}, {q: "There aren't ___ clouds.", c: "any"}, {q: "She hasn't got ___ secrets.", c: "any"}, {q: "He didn't buy ___ cheese.", c: "any"},
-        {q: "We don't need ___ eggs.", c: "any"}, {q: "I didn't see ___ elephants.", c: "any"}, {q: "There isn't ___ sand.", c: "any"}, {q: "He hasn't got ___ energy.", c: "any"}, {q: "She doesn't need ___ sleep.", c: "any"},
-        {q: "I didn't find ___ coins.", c: "any"}, {q: "There aren't ___ stars.", c: "any"}, {q: "We didn't buy ___ oranges.", c: "any"}, {q: "She hasn't got ___ homework.", c: "any"}, {q: "He didn't see ___ movies.", c: "any"},
-        {q: "I don't need ___ advice.", c: "any"}, {q: "There isn't ___ ice.", c: "any"}, {q: "He didn't buy ___ milk.", c: "any"}, {q: "We didn't find ___ keys.", c: "any"}, {q: "She hasn't got ___ pencils.", c: "any"},
-        {q: "I don't want ___ cake.", c: "any"}, {q: "There aren't ___ cookies.", c: "any"}, {q: "She didn't buy ___ pens.", c: "any"}, {q: "I haven't got ___ work.", c: "any"}, {q: "Don't give him ___ water.", c: "any"},
-        {q: "We didn't see ___ people.", c: "any"}, {q: "There isn't ___ soup.", c: "any"}, {q: "He hasn't got ___ toys.", c: "any"}, {q: "She didn't tell ___ stories.", c: "any"}, {q: "I don't need ___ eggs.", c: "any"},
-        {q: "There aren't ___ chairs.", c: "any"}, {q: "I didn't find ___ shells.", c: "any"}, {q: "He hasn't got ___ ideas.", c: "any"}, {q: "She didn't buy ___ sugar.", c: "any"}, {q: "We don't need ___ music.", c: "any"},
+let q = [], i = 0, score = 0;
 
-        // 50 x ANY (Questions)
-        {q: "Do you have ___ apples?", c: "any"}, {q: "Is there ___ milk?", c: "any"}, {q: "Did she buy ___ flowers?", c: "any"}, {q: "Has he got ___ money?", c: "any"}, {q: "Do you need ___ help?", c: "any"},
-        {q: "Did we see ___ birds?", c: "any"}, {q: "Are there ___ trees?", c: "any"}, {q: "Do they want ___ soup?", c: "any"}, {q: "Did you buy ___ pens?", c: "any"}, {q: "Has she got ___ friends?", c: "any"},
-        {q: "Did he see ___ cars?", c: "any"}, {q: "Is there ___ snow?", c: "any"}, {q: "Do you need ___ time?", c: "any"}, {q: "Did she find ___ gold?", c: "any"}, {q: "Have you got ___ news?", c: "any"},
-        {q: "Do you want ___ juice?", c: "any"}, {q: "Can you give me ___ bread?", c: "any"}, {q: "Are there ___ clouds?", c: "any"}, {q: "Has she got ___ secrets?", c: "any"}, {q: "Did he buy ___ cheese?", c: "any"},
-        {q: "Do we need ___ eggs?", c: "any"}, {q: "Did you see ___ elephants?", c: "any"}, {q: "Is there ___ sand?", c: "any"}, {q: "Has he got ___ energy?", c: "any"}, {q: "Does she need ___ sleep?", c: "any"},
-        {q: "Did you find ___ coins?", c: "any"}, {q: "Are there ___ stars?", c: "any"}, {q: "Did we buy ___ oranges?", c: "any"}, {q: "Has she got ___ homework?", c: "any"}, {q: "Did he see ___ movies?", c: "any"},
-        {q: "Do you need ___ advice?", c: "any"}, {q: "Is there ___ ice?", c: "any"}, {q: "Did he buy ___ milk?", c: "any"}, {q: "Did we find ___ keys?", c: "any"}, {q: "Has she got ___ pencils?", c: "any"},
-        {q: "Do you want ___ cake?", c: "any"}, {q: "Are there ___ cookies?", c: "any"}, {q: "Did she buy ___ pens?", c: "any"}, {q: "Have you got ___ work?", c: "any"}, {q: "Can you give him ___ water?", c: "any"},
-        {q: "Did you see ___ people?", c: "any"}, {q: "Is there ___ soup?", c: "any"}, {q: "Has he got ___ toys?", c: "any"}, {q: "Did she tell ___ stories?", c: "any"}, {q: "Do you need ___ eggs?", c: "any"},
-        {q: "Are there ___ chairs?", c: "any"}, {q: "Did you find ___ shells?", c: "any"}, {q: "Has he got ___ ideas?", c: "any"}, {q: "Did she buy ___ sugar?", c: "any"}, {q: "Do you need ___ music?", c: "any"}
-    ];
+function start() {
+    q = db.sort(() => 0.5 - Math.random()).slice(0, 10);
+    document.getElementById('start').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    show();
+}
 
-    let score = 0;
-    let currentIdx = 0;
-    let activeQuestions = db.sort(() => 0.5 - Math.random()).slice(0, 10);
+function show() {
+    document.getElementById('status').innerText = `Vraag ${i + 1}/10`;
+    document.getElementById('sentence').innerText = q[i].s;
+}
 
-    function loadQ() {
-        if (currentIdx >= 10) {
-            document.getElementById('quiz-ui').classList.add('hidden');
-            document.getElementById('win-screen').classList.remove('hidden');
-            document.getElementById('final-score').innerText = score;
-            return;
-        }
-        document.getElementById('sentence-box').innerText = activeQuestions[currentIdx].q;
-        document.getElementById('feedback').innerText = "";
-        document.querySelectorAll('.choice-box').forEach(b => {
-            b.classList.remove('ooze-alert', 'active-symbol');
-            b.querySelector('.symbol').innerText = "";
-        });
+function check(val) {
+    if (val === q[i].a) score++;
+    if (++i < 10) show();
+    else endGame();
+}
+
+function endGame() {
+    document.getElementById('quiz').style.display = 'none';
+    document.getElementById('end').style.display = 'block';
+    if(score === 10) {
+        document.getElementById('badge').style.display = 'block';
+        document.getElementById('msg').innerHTML = "PERFECT! You are a <br>Grammar Wizard! 🧙‍♂️";
+    } else {
+        document.getElementById('msg').innerText = `Your score: ${score}/10. Try again for the badge`;
     }
-
-    function choose(ans) {
-        const correct = activeQuestions[currentIdx].c;
-        const box = document.getElementById('box-' + ans);
-        const symbolEl = document.getElementById('symbol-' + ans);
-        const fb = document.getElementById('feedback');
-
-        if (ans === correct) {
-            score += 100;
-            fb.innerText = "⭐ +100 POINTS ⭐"; fb.style.color = "var(--hero-yellow)";
-            symbolEl.innerText = "💎";
-            box.classList.add('active-symbol');
-            createExplosiveConfetti(box);
-            currentIdx++;
-            updateScoreDisplay();
-            setTimeout(loadQ, 1000); 
-        } else {
-            score = Math.max(0, score - 50);
-            fb.innerText = "💀 -50 POINTS 💀"; fb.style.color = "var(--alert-red)";
-            symbolEl.innerText = "💀";
-            box.classList.add('ooze-alert', 'active-symbol');
-            currentIdx++;
-            updateScoreDisplay();
-            setTimeout(loadQ, 1000); 
-        }
-    }
-
-    function updateScoreDisplay() {
-        document.getElementById('current-score').innerText = score;
-    }
-
-    function createExplosiveConfetti(box) {
-        const colors = ['#bc13fe', '#ffb703', '#39ff14', '#00d2ff', '#ffffff'];
-        for(let i=0; i<60; i++) {
-            const p = document.createElement('div');
-            p.className = 'confetti';
-            p.style.background = colors[Math.floor(Math.random() * colors.length)];
-            const dx = (Math.random() * 600 - 300) + "px";
-            const dy = (Math.random() * 400 - 100) + "px"; 
-            const dr = (Math.random() * 1500) + "deg";
-            p.style.setProperty('--dx', dx);
-            p.style.setProperty('--dy', dy);
-            p.style.setProperty('--dr', dr);
-            box.appendChild(p);
-            setTimeout(() => p.remove(), 3000);
-        }
-    }
-
-    loadQ();
+}
 </script>
-</body></html>
+</body>
+</html>
