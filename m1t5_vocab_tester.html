@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Trainer 🚀</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1e0533, #110a5c); color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px; width: 90%; max-width: 500px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); text-align: center; }
+        h1 { margin-top: 0; font-size: 28px; color: #00e5ff; }
+        .settings-group { text-align: left; margin-bottom: 20px; background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 12px; }
+        label.group-title { display: block; margin-bottom: 12px; font-weight: bold; }
+        input[type="number"], select, input[type="text"] { width: 100%; padding: 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); outline: none; margin-bottom: 10px; box-sizing: border-box; }
+        .toggle-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.2); border-radius: 34px; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: .4s; }
+        input:checked + .slider { background-color: #ff00ea; }
+        input:checked + .slider:before { transform: translateX(18px); }
+        button { background: linear-gradient(45deg, #00e5ff, #0077ff); border: none; padding: 12px; color: white; font-weight: bold; border-radius: 25px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .hidden { display: none; }
+        .context-box { background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #ff00ea; }
+        .highlight { color: #00e5ff; font-weight: bold; }
+        #feedback { margin-top: 15px; font-weight: bold; }
+        .correct { color: #00ff88; }
+        .wrong { color: #ff3366; }
+    </style>
+</head>
+<body>
+    <div class="glass-panel" id="app">
+        <div id="start-screen">
+            <h1>🚀 Vocab Tester</h1>
+            <div class="settings-group">
+                <label class="group-title">Kies je lijsten:</label>
+                <div class="toggle-container"><span>Mobile Society</span><label class="switch"><input type="checkbox" value="mob" class="list-cb" checked><span class="slider"></span></label></div>
+                <div class="toggle-container"><span>World of Gaming</span><label class="switch"><input type="checkbox" value="gam" class="list-cb" checked><span class="slider"></span></label></div>
+                <div class="toggle-container"><span>Social Media</span><label class="switch"><input type="checkbox" value="soc" class="list-cb" checked><span class="slider"></span></label></div>
+                <div class="toggle-container"><span>Fake News</span><label class="switch"><input type="checkbox" value="fak" class="list-cb" checked><span class="slider"></span></label></div>
+            </div>
+            <div class="settings-group">
+                <label for="num-questions" class="group-title">Aantal vragen:</label>
+                <input type="number" id="num-questions" value="10" min="1" max="60">
+                <label for="mode" class="group-title">Richting:</label>
+                <select id="mode">
+                    <option value="mixed">Mixed (EN-NL & NL-EN)</option>
+                    <option value="en-nl">English ➔ Dutch</option>
+                    <option value="nl-en">Dutch ➔ English</option>
+                </select>
+            </div>
+            <button onclick="startQuiz()">Start de Quiz!</button>
+        </div>
+        <div id="quiz-screen" class="hidden">
+            <div class="context-box" id="question-text"></div>
+            <input type="text" id="answer-input" placeholder="Type je antwoord...">
+            <div id="feedback"></div>
+            <button id="action-btn" onclick="checkAnswer()">Check</button>
+        </div>
+        <div id="result-screen" class="hidden">
+            <h1>🎉 Klaar!</h1>
+            <h2 id="final-score"></h2>
+            <button onclick="location.reload()">Opnieuw</button>
+        </div>
+    </div>
+    <script>
+        const vocabData = [
+            { list: "mob", en: "device", nl: "apparaat", context: "A smartphone is a useful [WORD]." },
+            { list: "mob", en: "network", nl: "netwerk", context: "The phone [WORD] is very fast." },
+            { list: "mob", en: "engineering", nl: "engineering", context: "He studies [WORD] at the university." },
+            { list: "mob", en: "service", nl: "dienst", context: "The customer [WORD] is excellent." },
+            { list: "mob", en: "build", nl: "bouwen", context: "They [WORD] a new app." },
+            { list: "mob", en: "prototype", nl: "testmodel", context: "The first [WORD] is ready." },
+            { list: "mob", en: "cost", nl: "kosten / prijs", context: "The [WORD] of this phone is high." },
+            { list: "mob", en: "charge", nl: "opladen", context: "I need to [WORD] my battery." },
+            { list: "mob", en: "data", nl: "gegevens", context: "Secure your personal [WORD]." },
+            { list: "mob", en: "touchscreen", nl: "aanraakscherm", context: "The [WORD] is very sensitive." },
+            { list: "mob", en: "brick", nl: "baksteen", context: "The old phone was as heavy as a [WORD]." },
+            { list: "mob", en: "text message", nl: "sms / bericht", context: "I sent a [WORD] to my friend." },
+            { list: "mob", en: "develop", nl: "ontwikkelen", context: "We [WORD] new software." },
+            { list: "mob", en: "feature", nl: "functie", context: "The camera is a cool [WORD]." },
+            { list: "mob", en: "design", nl: "ontwerp", context: "I love the [WORD] of this phone." },
+            { list: "gam", en: "enormous", nl: "enorm", context: "The game world is [WORD]." },
+            { list: "gam", en: "scientist", nl: "wetenschapper", context: "The [WORD] did an experiment." },
+            { list: "gam", en: "public", nl: "het publiek", context: "The game is for the general [WORD]." },
+            { list: "gam", en: "arcade", nl: "speelhal", context: "We played games at the [WORD]." },
+            { list: "gam", en: "industry", nl: "industrie", context: "The gaming [WORD] is growing." },
+            { list: "gam", en: "release", nl: "uitbrengen", context: "They will [WORD] the game soon." },
+            { list: "gam", en: "compete", nl: "concurreren", context: "Players [WORD] against each other." },
+            { list: "gam", en: "realistic", nl: "realistisch", context: "The graphics look very [WORD]." },
+            { list: "gam", en: "improve", nl: "verbeteren", context: "I want to [WORD] my skills." },
+            { list: "gam", en: "flop", nl: "een mislukking", context: "The game was a total [WORD]." },
+            { list: "gam", en: "powerful", nl: "krachtig", context: "This is a [WORD] computer." },
+            { list: "gam", en: "connect", nl: "verbinden", context: "I need to [WORD] to the internet." },
+            { list: "gam", en: "popular", nl: "populair", context: "This game is very [WORD]." },
+            { list: "gam", en: "experience", nl: "ervaring", context: "It was a great gaming [WORD]." },
+            { list: "soc", en: "follower", nl: "volger", context: "She has many [WORD] on Instagram." },
+            { list: "soc", en: "subscriber", nl: "abonnee", context: "Click to become a [WORD]." },
+            { list: "soc", en: "early", nl: "vroeg", context: "I wake up [WORD] every day." },
+            { list: "soc", en: "usually", nl: "meestal", context: "I [WORD] eat lunch at 12." },
+            { list: "soc", en: "content", nl: "inhoud", context: "She makes interesting [WORD]." },
+            { list: "soc", en: "recognise", nl: "herkennen", context: "I didn't [WORD] him at first." },
+            { list: "soc", en: "outside", nl: "buiten", context: "It is sunny [WORD]." },
+            { list: "soc", en: "picture", nl: "foto", context: "Look at this [WORD] of us." },
+            { list: "soc", en: "negative", nl: "negatief", context: "Don't be so [WORD]." },
+            { list: "soc", en: "confident", nl: "zelfverzekerd", context: "She is very [WORD] on stage." },
+            { list: "soc", en: "comment", nl: "reactie", context: "Leave a [WORD] below the video." },
+            { list: "soc", en: "beginning", nl: "begin", context: "This is the [WORD] of the story." },
+            { list: "soc", en: "advice", nl: "advies", context: "Can you give me some [WORD]?" },
+            { list: "soc", en: "comfortable", nl: "op je gemak", context: "Make yourself [WORD]." },
+            { list: "soc", en: "inspire", nl: "inspireren", context: "He wants to [WORD] others." },
+            { list: "fak", en: "share", nl: "delen", context: "Don't [WORD] fake news." },
+            { list: "fak", en: "difficult", nl: "moeilijk", context: "This is a [WORD] question." },
+            { list: "fak", en: "article", nl: "artikel", context: "I read an interesting [WORD]." },
+            { list: "fak", en: "advertisement", nl: "advertentie", context: "I saw an [WORD] on TV." },
+            { list: "fak", en: "angry", nl: "boos", context: "The man was very [WORD]." },
+            { list: "fak", en: "different", nl: "verschillend", context: "We have [WORD] opinions." },
+            { list: "fak", en: "immediately", nl: "onmiddellijk", context: "Do it [WORD], please." },
+            { list: "fak", en: "real", nl: "echt", context: "Is this news [WORD]?" },
+            { list: "fak", en: "mistake", nl: "fout", context: "I made a [WORD] in my homework." },
+            { list: "fak", en: "certain", nl: "zeker", context: "Are you [WORD] about this?" },
+            { list: "fak", en: "change", nl: "veranderen", context: "Things [WORD] all the time." },
+            { list: "fak", en: "famous", nl: "beroemd", context: "He is a [WORD] singer." },
+            { list: "fak", en: "attention", nl: "aandacht", context: "Please pay [WORD]!" },
+            { list: "fak", en: "feeling", nl: "gevoel", context: "I have a good [WORD] about this." },
+            { list: "fak", en: "careful", nl: "voorzichtig", context: "Be [WORD] when you cross the road." }
+        ];
+
+        let quizQuestions = [], current = 0, score = 0, isAnswering = true;
+        function shuffle(a) { for(let i=a.length-1; i>0; i--) { let j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
+        
+        function startQuiz() {
+            let selected = Array.from(document.querySelectorAll('.list-cb')).filter(cb => cb.checked).map(cb => cb.value);
+            if(!selected.length) return alert("Kies minimaal 1 lijst!");
+            
+            let pool = vocabData.filter(w => selected.includes(w.list));
+            shuffle(pool);
+            
+            let num = Math.min(parseInt(document.getElementById('num-questions').value) || 10, pool.length);
+            pool = pool.slice(0, num);
+            
+            const mode = document.getElementById('mode').value;
+            
+            quizQuestions = pool.map(item => {
+                let currentMode = mode === "mixed" ? (Math.random() > 0.5 ? "en-nl" : "nl-en") : mode;
+                return currentMode === "en-nl" ? 
+                    { q: `Vertaal naar NL: <i>"${item.context.replace('[WORD]', `<span class='highlight'>${item.en}</span>`)}"</i>`, ans: item.nl } :
+                    { q: `Vul in (Hint: ${item.nl}):<br><br><i>"${item.context.replace('[WORD]', `_______`)}"</i>`, ans: item.en };
+            });
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            current = 0; score = 0;
+            show();
+        }
+
+        function show() {
+            document.getElementById('question-text').innerHTML = quizQuestions[current].q;
+            document.getElementById('answer-input').value = "";
+            document.getElementById('answer-input').disabled = false;
+            document.getElementById('answer-input').focus();
+            document.getElementById('feedback').innerHTML = "";
+            document.getElementById('action-btn').innerText = "Check";
+            isAnswering = true;
+        }
+
+        function checkAnswer() {
+            if(!isAnswering) { 
+                current++; 
+                if(current < quizQuestions.length) show(); 
+                else { 
+                    document.getElementById('quiz-screen').classList.add('hidden'); 
+                    document.getElementById('result-screen').classList.remove('hidden'); 
+                    document.getElementById('final-score').innerText = `Score: ${score}/${quizQuestions.length}`; 
+                } 
+                return; 
+            }
+            let user = document.getElementById('answer-input').value.toLowerCase().trim();
+            if(quizQuestions[current].ans.toLowerCase().split('/').map(s=>s.trim()).includes(user)) { 
+                document.getElementById('feedback').innerHTML = `<span class="correct">✅ Goed!</span>`; 
+                score++; 
+            } else { 
+                document.getElementById('feedback').innerHTML = `<span class="wrong">❌ Fout! Het was: <b>${quizQuestions[current].ans}</b></span>`; 
+            }
+            document.getElementById('answer-input').disabled = true;
+            document.getElementById('action-btn').innerText = "Volgende";
+            isAnswering = false;
+        }
+
+        document.getElementById('answer-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') checkAnswer(); });
+    </script>
+</body>
+</html>
