@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparison Master 👑</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .panel { background: #1e293b; padding: 40px; border-radius: 30px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .btn { background: #f59e0b; color: #0f172a; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; margin: 10px; }
+        .btn:hover { background: #fbbf24; }
+        .sentence { font-size: 20px; margin: 30px 0; color: #e2e8f0; font-weight: 600; min-height: 60px; }
+        input { padding: 15px; font-size: 18px; border-radius: 15px; border: none; width: 85%; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <div id="start">
+        <h1>Comparison Master</h1>
+        <button class="btn" onclick="start('easy')">Easy Mode</button>
+        <button class="btn" onclick="start('hard')">Hard Mode</button>
+    </div>
+
+    <div id="quiz" style="display:none;">
+        <div id="status">Vraag 1/10</div>
+        <div class="sentence" id="sentence"></div>
+        <input type="text" id="answer" placeholder="Typ je antwoord...">
+        <br><button class="btn" onclick="check()">CHECK</button>
+    </div>
+
+    <div id="end" style="display:none;">
+        <h2 id="msg"></h2>
+        <button class="btn" onclick="location.reload()">OPNIEUW</button>
+    </div>
+</div>
+
+<script>
+const db = [
+    {s: "A plane is ___ a train.", w: "fast", t: "1", type: "comp"},
+    {s: "The cheetah is ___ animal in the world.", w: "fast", t: "1", type: "super"},
+    {s: "A turtle is ___ a rabbit.", w: "slow", t: "1", type: "comp"},
+    {s: "This snail is ___ animal here.", w: "slow", t: "1", type: "super"},
+    {s: "My brother is ___ me.", w: "tall", t: "1", type: "comp"},
+    {s: "He is ___ boy in our class.", w: "tall", t: "1", type: "super"},
+    {s: "This book is ___ that one.", w: "cheap", t: "1", type: "comp"},
+    {s: "It is ___ item in the shop.", w: "cheap", t: "1", type: "super"},
+    {s: "A whale is ___ a shark.", w: "big", t: "1", type: "comp"},
+    {s: "The ocean is ___ place on earth.", w: "big", t: "1", type: "super"},
+    {s: "An athlete is ___ me.", w: "strong", t: "1", type: "comp"},
+    {s: "He is ___ person I know.", w: "strong", t: "1", type: "super"},
+    {s: "Summer is ___ winter.", w: "hot", t: "1", type: "comp"},
+    {s: "Today is ___ day of the year.", w: "hot", t: "1", type: "super"},
+    {s: "My house is ___ yours.", w: "nice", t: "1", type: "comp"},
+    {s: "This is ___ park in town.", w: "nice", t: "1", type: "super"},
+    {s: "This road is ___ the other one.", w: "long", t: "1", type: "comp"},
+    {s: "This is ___ river in Europe.", w: "long", t: "1", type: "super"},
+    {s: "A mouse is ___ a cat.", w: "small", t: "1", type: "comp"},
+    {s: "This is ___ room in the house.", w: "small", t: "1", type: "super"},
+    {s: "A mansion is ___ a cottage.", w: "expensive", t: "3", type: "comp"},
+    {s: "It is ___ car in the showroom.", w: "expensive", t: "3", type: "super"},
+    {s: "A park is ___ a parking lot.", w: "beautiful", t: "3", type: "comp"},
+    {s: "She is ___ girl in the school.", w: "beautiful", t: "3", type: "super"},
+    {s: "A tiger is ___ a dog.", w: "dangerous", t: "3", type: "comp"},
+    {s: "This is ___ spider in the garden.", w: "dangerous", t: "3", type: "super"},
+    {s: "Love is ___ money.", w: "important", t: "3", type: "comp"},
+    {s: "Health is ___ thing in life.", w: "important", t: "3", type: "super"},
+    {s: "Math is ___ art.", w: "difficult", t: "3", type: "comp"},
+    {s: "This is ___ test of the year.", w: "difficult", t: "3", type: "super"},
+    {s: "This movie is ___ that one.", w: "interesting", t: "3", type: "comp"},
+    {s: "It was ___ book I ever read.", w: "interesting", t: "3", type: "super"},
+    {s: "This sofa is ___ the chair.", w: "comfortable", t: "3", type: "comp"},
+    {s: "This is ___ bed in the hotel.", w: "comfortable", t: "3", type: "super"},
+    {s: "The party was ___ the meeting.", w: "exciting", t: "3", type: "comp"},
+    {s: "That was ___ game of the season.", w: "exciting", t: "3", type: "super"},
+    {s: "The cake is ___ the salad.", w: "delicious", t: "3", type: "comp"},
+    {s: "It is ___ meal I ever ate.", w: "delicious", t: "3", type: "super"},
+    {s: "Football is ___ golf.", w: "popular", t: "3", type: "comp"},
+    {s: "He is ___ player on the team.", w: "popular", t: "3", type: "super"},
+    {s: "Gold is ___ silver.", w: "valuable", t: "3", type: "comp"},
+    {s: "It is ___ ring in the shop.", w: "valuable", t: "3", type: "super"},
+    {s: "Cats are ___ hamsters.", w: "intelligent", t: "3", type: "comp"},
+    {s: "She is ___ student in class.", w: "intelligent", t: "3", type: "super"},
+    {s: "This problem is ___ that one.", w: "serious", t: "3", type: "comp"},
+    {s: "It is ___ accident in history.", w: "serious", t: "3", type: "super"},
+    {s: "A giant is ___ a dwarf.", w: "enormous", t: "3", type: "comp"},
+    {s: "That is ___ cake I have ever seen.", w: "enormous", t: "3", type: "super"},
+    {s: "The weather is ___ yesterday.", w: "terrible", t: "3", type: "comp"},
+    {s: "It is ___ storm of the decade.", w: "terrible", t: "3", type: "super"}
+];
+
+let q = [], i = 0, score = 0, mode = "";
+
+function start(m) {
+    mode = m;
+    q = db.sort(() => 0.5 - Math.random()).slice(0, 10);
+    document.getElementById('start').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    show();
+}
+
+function show() {
+    let item = q[i];
+    document.getElementById('status').innerText = `Vraag ${i + 1}/10`;
+    
+    // Antwoord bepalen
+    if(item.type === 'comp') q[i].a = item.t === '1' ? item.w + "er than" : "more " + item.w + " than";
+    else q[i].a = item.t === '1' ? "the " + item.w + "est" : "the most " + item.w;
+
+    // Easy modus toont hulpwoorden in de zin
+    if(mode === 'easy') {
+        let text = item.s.replace("___", item.type === 'comp' ? "___ than" : "the ___");
+        document.getElementById('sentence').innerText = text.replace("___", "________") + " (" + item.w + ")";
+    } else {
+        document.getElementById('sentence').innerText = item.s.replace("___", "________") + " (" + item.w + ")";
+    }
+}
+
+function check() {
+    let val = document.getElementById('answer').value.toLowerCase().trim();
+    if (val === q[i].a) score++;
+    document.getElementById('answer').value = "";
+    if (++i < 10) show();
+    else {
+        document.getElementById('quiz').style.display = 'none';
+        document.getElementById('end').style.display = 'block';
+        document.getElementById('msg').innerHTML = score === 10 ? "LEGENDARY! 👑" : `Score: ${score}/10`;
+    }
+}
+</script>
+</body>
+</html>
