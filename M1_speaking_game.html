@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking Cards App</title>
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00f2ff;
+            --neon-green: #39ff14;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle, #1a0b2e, #000); color: white;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        }
+
+        .glass-card {
+            background: var(--glass); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px;
+            padding: 20px; width: 100%; max-width: 500px; text-align: center; margin-bottom: 15px;
+        }
+
+        h1 { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+        input { padding: 8px; border-radius: 10px; border: none; margin: 5px; width: 40%; }
+        .btn {
+            background: transparent; border: 2px solid var(--neon-pink); color: var(--neon-pink);
+            padding: 10px 20px; margin: 5px; border-radius: 50px; cursor: pointer; font-weight: bold;
+        }
+        .btn:hover:not(:disabled) { background: var(--neon-pink); color: white; box-shadow: 0 0 15px var(--neon-pink); }
+        .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+        
+        #setup-area, #game-area { display: none; }
+        #vraag-display { font-size: 1.3rem; margin: 20px 0; color: var(--neon-green); min-height: 80px; }
+        #turn-indicator { color: var(--neon-blue); font-weight: bold; font-size: 1.4rem; margin-bottom: 10px; }
+        ul { text-align: left; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card" id="instr-area">
+        <h1>How to play</h1>
+        <ul>
+            <li>Work in pairs. / Werk in tweetallen.</li>
+            <li>Take turns answering questions. / Beantwoord om de beurt een vraag.</li>
+            <li>For each question, choose your level. / Kies het niveau voor iedere vraag.</li>
+            <li>Answer in full sentences. / Geef antwoord met hele zinnen.</li>
+            <li>Each sentence is one point. / Elke zin is één punt.</li>
+            <li>Good luck. / Succes.</li>
+        </ul>
+        <button class="btn" onclick="goToSetup()">Start Setup</button>
+    </div>
+
+    <div class="glass-card" id="setup-area">
+        <h1>Setup</h1>
+        <input type="text" id="name1" placeholder="Player 1 name">
+        <input type="text" id="name2" placeholder="Player 2 name">
+        <br>
+        <button class="btn" onclick="startGame()">Start Game</button>
+    </div>
+
+    <div class="glass-card" id="game-area">
+        <div id="turn-indicator">Player's turn</div>
+        <button class="btn" id="btn-a1" onclick="toonVraag('A1')">Level A1</button>
+        <button class="btn" id="btn-a2" onclick="toonVraag('A2')">Level A2</button>
+        
+        <div id="vraag-display">Select a level to get a question!</div>
+        
+        <div id="score-buttons" style="display:none;">
+            <p>How many sentences?</p>
+            <button class="btn" onclick="addScore(1)">1 Point</button>
+            <button class="btn" onclick="addScore(2)">2 Points</button>
+            <button class="btn" onclick="addScore(3)">3 Points</button>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h3>Scoreboard</h3>
+        <div id="score-display">Enter names to start.</div>
+        <p>Highest score: <span id="high-score">0</span></p>
+        <button class="btn" onclick="resetGame()" style="border-color: #ff3333; color: #ff3333;">Reset</button>
+    </div>
+
+    <script>
+        const vA1 = ["What is your name?", "How old are you?", "Where do you live?", "Where are you from?", "What class are you in?", "Do you have siblings?", "Do you have a pet?", "What is your hobby?", "What sport do you play?", "What sport do you like to watch?", "What do you do after school?", "What do you do in the weekend?", "What do you do in the evening?", "What is your favorite food?", "What do you like to drink?", "What is your favorite snack?", "What is your favorite fruit?", "What is your favorite color?", "What is your favorite animal?", "What is your favorite subject?", "Which subject do you find difficult?", "Who is your favorite artist?", "What music do you like to listen to?", "What game do you like to play?", "What app do you use often?", "What series do you like to watch?", "What movie do you like?", "Which YouTuber do you like to watch?", "How do you get to school?", "What time do you wake up?", "What time do you go to bed?", "What do you eat for breakfast?", "What do you take to school?", "What do you have in your bag?", "What do you like about school?", "What do you dislike about school?", "Who is your best friend?", "What do you do with your friends?", "What do you like to do at home?", "What do you like to do outside?", "What do you like to wear?", "What shoes do you like to wear?", "What is your favorite day?", "What is your favorite month?", "What do you do on vacation?", "Where would you like to go?", "Do you prefer being inside or outside?", "Do you prefer being alone or with others?", "What are you good at?", "What do you want to learn?"];
+        const vA2 = ["Tell three things about yourself.", "What do you like to do in your free time? Why?", "Which hobby suits you best? Why?", "What do you usually do after school?", "What does your typical school day look like?", "What does your weekend look like?", "What do you like about your class?", "What do you like less about school?", "Which subject do you like? Why?", "Which subject do you find difficult? Why?", "What helps you learn well?", "What are you good at? Give an example.", "What do you want to improve this school year?", "What makes you happy?", "What makes you angry or sad?", "What do you do when you are tired?", "What do you do when you feel stressed?", "Who do you like to talk to? Why?", "Describe your best friend.", "What do you find important in a friend?", "What do you like to do with your friends?", "Who is an important person to you? Why?", "Who often helps you? How?", "What are you proud of?", "What do you find exciting?", "What are you confident in doing?", "What would you like to be able to do better?", "What do you want to be later in life? Why?", "What is your favorite place? Why?", "Describe your room.", "Describe your house or your neighborhood.", "What do you like about the place where you live?", "Where would you like to live in the future? Why?", "What do you like to eat? Why?", "What do you really dislike eating? Why?", "What is your favorite meal of the day?", "Which sport do you like to play or watch?", "Why is it important to stay active?", "Which music fits your mood?", "Which movie, series, or game do you recommend? Why?", "What do you prefer: gaming, sports, or listening to music? Why?", "How do you use your phone on a normal day?", "What do you find useful about social media?", "What do you find less enjoyable about social media?", "What do you do when you are not using your phone?", "What would you do with a free day?", "What would you do with 100 euros?", "Where would you like to go on vacation? Why?", "What do you want to try once?", "What tip would you give a new student at school?"];
+        
+        let scores = { "P1": 0, "P2": 0 };
+        let currentTurn = "P1";
+        let highScore = 0;
+
+        function goToSetup() {
+            document.getElementById('instr-area').style.display = "none";
+            document.getElementById('setup-area').style.display = "block";
+        }
+
+        function startGame() {
+            document.getElementById('setup-area').style.display = "none";
+            document.getElementById('game-area').style.display = "block";
+            updateTurnDisplay();
+        }
+
+        function updateTurnDisplay() {
+            let n1 = document.getElementById('name1').value || "Player 1";
+            let n2 = document.getElementById('name2').value || "Player 2";
+            document.getElementById('turn-indicator').innerText = (currentTurn === "P1" ? n1 : n2) + "'s turn";
+            document.getElementById('score-display').innerText = `${n1}: ${scores["P1"]} | ${n2}: ${scores["P2"]}`;
+            document.getElementById('btn-a1').disabled = false;
+            document.getElementById('btn-a2').disabled = false;
+        }
+
+        function toonVraag(level) {
+            const list = (level === 'A1') ? vA1 : vA2;
+            document.getElementById('vraag-display').innerText = list[Math.floor(Math.random() * list.length)];
+            document.getElementById('score-buttons').style.display = "block";
+            document.getElementById('btn-a1').disabled = true;
+            document.getElementById('btn-a2').disabled = true;
+        }
+
+        function addScore(points) {
+            scores[currentTurn] += points;
+            if (scores[currentTurn] > highScore) highScore = scores[currentTurn];
+            currentTurn = (currentTurn === "P1") ? "P2" : "P1";
+            
+            document.getElementById('score-buttons').style.display = "none";
+            updateTurnDisplay();
+            document.getElementById('high-score').innerText = highScore;
+            document.getElementById('vraag-display').innerText = "Good job! Next player: " + (currentTurn === "P1" ? (document.getElementById('name1').value || "Player 1") : (document.getElementById('name2').value || "Player 2"));
+        }
+
+        function resetGame() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
