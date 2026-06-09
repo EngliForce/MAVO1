@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>⚡ Mastery Check - Ultimate Edition ⚡</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root { --neon-cyan: #00f3ff; --neon-pink: #ff007f; --bg-dark: #0a0612; }
+        body { background: radial-gradient(circle, #1e0b36, var(--bg-dark)); color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { width: 90%; max-width: 800px; background: rgba(255,255,255,0.05); padding: 40px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); text-align: center; }
+        input { width: 100%; padding: 15px; margin: 20px 0; background: #000; border: 2px solid var(--neon-cyan); color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 1.1rem; }
+        .btn { width: 100%; padding: 15px; background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink)); border: none; border-radius: 12px; cursor: pointer; font-weight: bold; color: #fff; font-size: 1.1rem; margin-top: 10px; }
+        .screen { display: none; } .screen.active { display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
+        .tile { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.3s; }
+        .tile:hover { background: rgba(255,255,255,0.2); }
+        .tile h4 { margin: 0 0 10px 0; color: var(--neon-cyan); }
+        #detail-view { margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 15px; text-align: left; display: none; max-height: 300px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="instruction-screen" class="screen active">
+            <h1 style="color:var(--neon-cyan)">Mastery Check</h1>
+            <p>80 Open Vragen • 8 Categorieën</p>
+            <button class="btn" onclick="startQuiz()">Start de Toets</button>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <small id="cat-title" style="color:var(--neon-pink); text-transform: uppercase; letter-spacing: 2px;"></small>
+            <h2 id="q-text" style="margin: 20px 0;">Vraag...</h2>
+            <input type="text" id="answer-input" placeholder="Typ antwoord..." autocomplete="off">
+            <button class="btn" onclick="checkAnswer()">Bevestigen</button>
+            <p id="progress-text" style="margin-top: 20px; opacity: 0.6;">Vraag 1/80</p>
+        </div>
+
+       <div id="results-screen" class="screen">
+            <h1>Eindresultaten</h1>
+            
+            <!-- Instructie toegevoegd -->
+            <p style="font-size: 0.9rem; color: var(--neon-cyan); margin-bottom: 15px; font-style: italic;">
+                💡 Tip: Klik op een categorie-tegel om je fouten in dat onderwerp te bekijken.
+            </p>
+            
+            <div id="grid-container" class="grid"></div>
+            <div id="tips-container" style="background: rgba(0,255,255,0.1); padding: 15px; border-radius: 15px; margin: 20px 0;"></div>
+            <div id="detail-view"></div>
+            <button class="btn" onclick="location.reload()">Opnieuw Beginnen</button>
+        </div>
+    </div>
+
+    <script>
+        const itemDatabase = {
+           "Past Simple": [
+                {q: "Maak vragend: He played football.", a: "Did he play football?"},
+                {q: "Maak ontkennend: She worked hard.", a: "She did not work hard."},
+                {q: "Maak vragend: They visited their grandma.", a: "Did they visit their grandma?"},
+                {q: "Maak ontkennend: We listened to music.", a: "We did not listen to music."},
+                {q: "Maak vragend: She cooked dinner.", a: "Did she cook dinner?"},
+                {q: "Maak ontkennend: He watched the movie.", a: "He did not watch the movie."},
+                {q: "Maak vragend: She moved to London.", a: "Did she move to London?"},
+                {q: "Maak ontkennend: I parked the car.", a: "I did not park the car."},
+                {q: "Maak vragend: They repeated the exercise.", a: "Did they repeat the exercise?"},
+                {q: "Maak ontkennend: He hid the key.", a: "He did not hide the key."},
+                {q: "Maak vragend: We replied to the email.", a: "Did we reply to the email?"},
+                {q: "Maak ontkennend: She rang me.", a: "She did not ring me."},
+                {q: "Maak vragend: I began my homework.", a: "Did I begin my homework?"},
+                {q: "Maak ontkennend: He became rich.", a: "He did not become rich."},
+                {q: "Maak vragend: We came up with a plan.", a: "Did we come up with a plan?"},
+                {q: "Maak ontkennend: She caught the ball.", a: "She did not catch the ball."},
+                {q: "Maak vragend: He got the message.", a: "Did he get the message?"},
+                {q: "Maak ontkennend: She dreamed of flying.", a: "She did not dream of flying."},
+                {q: "Maak vragend: I walked to school.", a: "Did I walk to school?"},
+                {q: "Maak ontkennend: He helped his friend.", a: "He did not help his friend."},
+                {q: "Maak vragend: She cried at the movie.", a: "Did she cry at the movie?"},
+                {q: "Maak ontkennend: They enjoyed the party.", a: "They did not enjoy the party."},
+                {q: "Maak vragend: He tried his best.", a: "Did he try his best?"},
+                {q: "Maak ontkennend: We lived there for years.", a: "We did not live there for years."},
+                {q: "Maak vragend: I decided to go.", a: "Did I decide to go?"}
+            ],
+            "Past Simple vs. Past Continuous": [
+                {q: "I (read) when you called.", a: "was reading"}, {q: "She (cook) when it rang.", a: "was cooking"},
+                {q: "They (play) when I arrived.", a: "were playing"}, {q: "We (study) when light went out.", a: "were studying"},
+                {q: "He (sleep) when alarm went.", a: "was sleeping"}, {q: "I (clean) when I found ring.", a: "was cleaning"},
+                {q: "She (talk) when I entered.", a: "was talking"}, {q: "They (run) when it snowed.", a: "were running"},
+                {q: "We (eat) when he arrived.", a: "were eating"}, {q: "I (watch) when she left.", a: "was watching"},
+                {q: "He (work) when phone rang.", a: "was working"}, {q: "She (walk) when I saw her.", a: "was walking"},
+                {q: "They (wait) when bus came.", a: "were waiting"}, {q: "I (write) when light died.", a: "was writing"},
+                {q: "We (sing) when we were interrupted.", a: "were singing"}, {q: "She (listen) when door opened.", a: "was listening"},
+                {q: "He (dance) when music stopped.", a: "was dancing"}, {q: "They (smile) when I looked.", a: "were smiling"},
+                {q: "I (think) when you spoke.", a: "was thinking"}, {q: "She (paint) when day ended.", a: "was painting"},
+                {q: "We (build) when storm started.", a: "were building"}, {q: "He (fix) when I asked.", a: "was fixing"},
+                {q: "They (drink) when I sat.", a: "were drinking"}, {q: "I (dream) when I woke.", a: "was dreaming"},
+                {q: "She (check) when I called.", a: "was checking"}
+            ],
+            "Present Perfect": [
+                {q: "I (finish) my work already.", a: "have finished"}, {q: "She (just/leave).", a: "has just left"},
+                {q: "They (never/be) to London.", a: "have never been"}, {q: "He (already/eat).", a: "has already eaten"},
+                {q: "We (live) here for 5 years.", a: "have lived"}, {q: "I (not/see) that movie.", a: "have not seen"},
+                {q: "She (lose) her keys.", a: "has lost"}, {q: "They (buy) a new car.", a: "have bought"},
+                {q: "He (work) here since 2010.", a: "has worked"}, {q: "We (not/hear) from them.", a: "have not heard"},
+                {q: "She (finish) the book.", a: "has finished"}, {q: "I (know) him for years.", a: "have known"},
+                {q: "They (start) the project.", a: "have started"}, {q: "He (break) his leg.", a: "has broken"},
+                {q: "We (visit) that city.", a: "have visited"}, {q: "She (tell) me the truth.", a: "has told"},
+                {q: "I (not/eat) yet.", a: "have not eaten"}, {q: "They (win) the game.", a: "have won"},
+                {q: "He (go) to Paris.", a: "has gone"}, {q: "We (try) this before.", a: "have tried"},
+                {q: "She (learn) a lot.", a: "has learned"}, {q: "I (find) the answer.", a: "have found"},
+                {q: "They (watch) this show.", a: "have watched"}, {q: "He (teach) us.", a: "has taught"},
+                {q: "We (open) the shop.", a: "have opened"}
+            ],
+            "Present Simple - Present Continuous": [
+                {q: "He (play) football now.", a: "is playing"}, {q: "I (play) football every day.", a: "play"},
+                {q: "She (read) a book now.", a: "is reading"}, {q: "They (read) a book often.", a: "read"},
+                {q: "We (work) at the moment.", a: "are working"}, {q: "He (work) hard usually.", a: "works"},
+                {q: "I (eat) breakfast now.", a: "am eating"}, {q: "She (eat) breakfast daily.", a: "eats"},
+                {q: "They (sleep) right now.", a: "are sleeping"}, {q: "We (sleep) eight hours.", a: "sleep"},
+                {q: "He (watch) TV at the moment.", a: "is watching"}, {q: "I (watch) TV every night.", a: "watch"},
+                {q: "She (walk) to school now.", a: "is walking"}, {q: "They (walk) there often.", a: "walk"},
+                {q: "We (cook) dinner now.", a: "are cooking"}, {q: "He (cook) well always.", a: "cooks"},
+                {q: "I (study) English currently.", a: "am studying"}, {q: "She (study) much daily.", a: "studies"},
+                {q: "They (listen) to music now.", a: "are listening"}, {q: "We (listen) often.", a: "listen"},
+                {q: "He (clean) his room now.", a: "is cleaning"}, {q: "I (clean) on Sundays.", a: "clean"},
+                {q: "She (drive) her car now.", a: "is driving"}, {q: "They (drive) to work.", a: "drive"},
+                {q: "We (wait) at the bus stop.", a: "are waiting"}, {q: "He (wait) for me daily.", a: "waits"},
+                {q: "I (talk) on the phone.", a: "am talking"}
+            ],
+            "Plurals": [
+                {q: "Meervoud van 'child'?", a: "children"}, {q: "Meervoud van 'man'?", a: "men"},
+                {q: "Meervoud van 'woman'?", a: "women"}, {q: "Meervoud van 'mouse'?", a: "mice"},
+                {q: "Meervoud van 'foot'?", a: "feet"}, {q: "Meervoud van 'tooth'?", a: "teeth"},
+                {q: "Meervoud van 'goose'?", a: "geese"}, {q: "Meervoud van 'fish'?", a: "fish"},
+                {q: "Meervoud van 'sheep'?", a: "sheep"}, {q: "Meervoud van 'person'?", a: "people"},
+                {q: "Meervoud van 'box'?", a: "boxes"}, {q: "Meervoud van 'city'?", a: "cities"},
+                {q: "Meervoud van 'knife'?", a: "knives"}, {q: "Meervoud van 'life'?", a: "lives"},
+                {q: "Meervoud van 'potato'?", a: "potatoes"}, {q: "Meervoud van 'cactus'?", a: "cacti"},
+                {q: "Meervoud van 'crisis'?", a: "crises"}, {q: "Meervoud van 'datum'?", a: "data"},
+                {q: "Meervoud van 'leaf'?", a: "leaves"}, {q: "Meervoud van 'bus'?", a: "buses"},
+                {q: "Meervoud van 'hero'?", a: "heroes"}, {q: "Meervoud van 'day'?", a: "days"},
+                {q: "Meervoud van 'party'?", a: "parties"}, {q: "Meervoud van 'toy'?", a: "toys"},
+                {q: "Meervoud van 'cherry'?", a: "cherries"}
+            ],
+            "Much / Many": [
+                {q: "How ___ water do you need?", a: "much"}, {q: "How ___ friends do you have?", a: "many"},
+                {q: "There isn't ___ time left.", a: "much"}, {q: "I don't have ___ apples.", a: "many"},
+                {q: "Too ___ salt is bad.", a: "much"}, {q: "How ___ sugar?", a: "much"},
+                {q: "How ___ people are coming?", a: "many"}, {q: "I have ___ work to do.", a: "much"},
+                {q: "Not ___ students were there.", a: "many"}, {q: "How ___ cars did you see?", a: "many"},
+                {q: "Don't eat too ___ cake.", a: "much"}, {q: "We don't have ___ money.", a: "much"},
+                {q: "How ___ brothers have you?", a: "many"}, {q: "There are ___ birds here.", a: "many"},
+                {q: "I haven't got ___ patience.", a: "much"}, {q: "How ___ milk is in there?", a: "much"},
+                {q: "Not ___ days remain.", a: "many"}, {q: "How ___ questions are left?", a: "many"},
+                {q: "We have ___ fun together.", a: "much"}, {q: "Too ___ noise, please stop.", a: "much"},
+                {q: "How ___ books have you read?", a: "many"}, {q: "There's not ___ chance.", a: "much"},
+                {q: "Are there ___ chairs?", a: "many"}, {q: "I need ___ help.", a: "much"},
+                {q: "How ___ keys do you own?", a: "many"}
+            ],
+            "Comparisons": [
+                {q: "She is (tall) ___ than me.", a: "taller"}, {q: "This is (big) ___ than that.", a: "bigger"},
+                {q: "He is (fast) ___ than you.", a: "faster"}, {q: "It is (cold) ___ than yesterday.", a: "colder"},
+                {q: "She is (happy) ___ than him.", a: "happier"}, {q: "This car is (expensive) ___.", a: "more expensive"},
+                {q: "He is (smart) ___ than her.", a: "smarter"}, {q: "It was (good) ___ than expected.", a: "better"},
+                {q: "This is (bad) ___ than that.", a: "worse"}, {q: "She is (thin) ___ than before.", a: "thinner"},
+                {q: "He is (young) ___ than me.", a: "younger"}, {q: "The book is (interesting) ___.", a: "more interesting"},
+                {q: "This test is (easy) ___.", a: "easier"}, {q: "She is (pretty) ___.", a: "prettier"},
+                {q: "It is (hot) ___ than before.", a: "hotter"}, {q: "They are (strong) ___ than us.", a: "stronger"},
+                {q: "This is (difficult) ___.", a: "more difficult"}, {q: "He is (old) ___ than me.", a: "older"},
+                {q: "That movie is (scary) ___.", a: "scarier"}, {q: "We are (slow) ___ than them.", a: "slower"},
+                {q: "This house is (nice) ___.", a: "nicer"}, {q: "It is (far) ___ away.", a: "farther"},
+                {q: "She is (clever) ___ than him.", a: "cleverer"}, {q: "The game is (fun) ___.", a: "more fun"},
+                {q: "I am (busy) ___ than you.", a: "busier"}
+            ],
+           "Vocabulary 5.1-5.4": [
+                {q: "Vertaal: 'according to' (Eng > NL)", a: "Volgens"},
+                {q: "Vertaal: 'advertentie' (NL > Eng)", a: "Advertisement"},
+                {q: "Vertaal: 'although' (Eng > NL)", a: "Alhoewel"},
+                {q: "Vertaal: 'zo snel mogelijk' (NL > Eng)", a: "Asap"},
+                {q: "Vertaal: 'destination' (Eng > NL)", a: "Bestemming"},
+                {q: "Vertaal: 'vertraging' (NL > Eng)", a: "Delay"},
+                {q: "Vertaal: 'alike' (Eng > NL)", a: "Hetzelfde"},
+                {q: "Vertaal: 'verbaasd' (NL > Eng)", a: "Amazed"},
+                {q: "Vertaal: 'beard' (Eng > NL)", a: "Baard"},
+                {q: "Vertaal: 'krullend' (NL > Eng)", a: "Curly"},
+                {q: "Vertaal: 'daughter' (Eng > NL)", a: "Dochter"},
+                {q: "Vertaal: 'mopperig' (NL > Eng)", a: "Grumpy"},
+                {q: "Vertaal: 'afraid' (Eng > NL)", a: "Bang"},
+                {q: "Vertaal: 'dapper' (NL > Eng)", a: "Brave"},
+                {q: "Vertaal: 'cheerful' (Eng > NL)", a: "Opgewek"},
+                {q: "Vertaal: 'eenzaam' (NL > Eng)", a: "Lonely"},
+                {q: "Vertaal: 'medicine' (Eng > NL)", a: "Medicijn"},
+                {q: "Vertaal: 'accent' (Eng > NL)", a: "Accent"},
+                {q: "Vertaal: 'advice' (Eng > NL)", a: "Advies"},
+                {q: "Vertaal: 'olifant' (NL > Eng)", a: "Elephant"},
+                {q: "Vertaal: 'embarrassing' (Eng > NL)", a: "Gênant"},
+                {q: "Vertaal: 'onbeleefd' (NL > Eng)", a: "Rude"},
+                {q: "Vertaal: 'toenail' (Eng > NL)", a: "Teennagel"},
+                {q: "Vertaal: 'goocheltruc' (NL > Eng)", a: "Magic trick"},
+                {q: "Vertaal: 'kersenboom' (NL > Eng)", a: "Cherry tree"}
+            ]
+        };
+
+        let quizQuestions = [], currentIdx = 0, score = 0;
+
+        function startQuiz() {
+            quizQuestions = [];
+            for (const category in itemDatabase) {
+                let shuffled = itemDatabase[category].sort(() => 0.5 - Math.random());
+                quizQuestions.push(...shuffled.slice(0, 10).map(q => ({...q, cat: category})));
+            }
+            quizQuestions.sort(() => 0.5 - Math.random());
+            document.getElementById('instruction-screen').classList.remove('active');
+            document.getElementById('quiz-screen').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizQuestions[currentIdx];
+            document.getElementById('cat-title').innerText = q.cat;
+            document.getElementById('q-text').innerText = q.q;
+            document.getElementById('progress-text').innerText = `Vraag ${currentIdx + 1}/80`;
+            document.getElementById('answer-input').value = '';
+            document.getElementById('answer-input').focus();
+        }
+
+        function checkAnswer() {
+            const val = document.getElementById('answer-input').value.trim().toLowerCase();
+            quizQuestions[currentIdx].userAnswer = val;
+            if(val === quizQuestions[currentIdx].a.toLowerCase()) score++;
+            currentIdx++;
+            if(currentIdx < 80) showQuestion();
+            else showResults();
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.remove('active');
+            document.getElementById('results-screen').classList.add('active');
+            let analysis = {};
+            quizQuestions.forEach(q => {
+                if(!analysis[q.cat]) analysis[q.cat] = { goed: 0, totaal: 0, vragen: [] };
+                analysis[q.cat].totaal++;
+                analysis[q.cat].vragen.push(q);
+                if(q.userAnswer === q.a.toLowerCase()) analysis[q.cat].goed++;
+            });
+            const grid = document.getElementById('grid-container');
+            let tips = [];
+            for (const cat in analysis) {
+                let stat = analysis[cat], perc = Math.round((stat.goed / stat.totaal) * 100);
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.innerHTML = `<h4>${cat}</h4><p style="font-size: 1.5rem; font-weight: bold;">${stat.goed}/${stat.totaal}</p><small>${perc}%</small>`;
+                tile.onclick = () => showCategoryDetails(cat, stat.vragen);
+                grid.appendChild(tile);
+                if(perc < 60) tips.push(`Oefen meer: <strong>${cat}</strong>`);
+            }
+            document.getElementById('tips-container').innerHTML = `<strong>Mastery Advies:</strong><br>${tips.length > 0 ? tips.join(' | ') : 'Geweldig resultaat!'}`;
+            if(score > 40) confetti({ particleCount: 200, spread: 100 });
+        }
+
+        function showCategoryDetails(cat, vragen) {
+            const detailView = document.getElementById('detail-view');
+            detailView.style.display = 'block';
+            let html = `<h3>Details: ${cat}</h3>`;
+            vragen.forEach(q => {
+                if(q.userAnswer !== q.a.toLowerCase()) {
+                    html += `<p style="color:#ff007f;"><strong>Vraag:</strong> ${q.q}<br>Jouw antwoord: ${q.userAnswer || 'Niets'} | <strong>Correct: ${q.a}</strong></p>`;
+                }
+            });
+            detailView.innerHTML = html + `<button class="btn" onclick="document.getElementById('detail-view').style.display='none'">Sluiten</button>`;
+        }
+    </script>
+</body>
+</html>
