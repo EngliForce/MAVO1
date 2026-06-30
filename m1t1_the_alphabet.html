@@ -67,7 +67,7 @@
         footer { display: block; background: #05101a; color: rgba(255,255,255,0.8); text-align: center; padding: 40px 20px; border-top: 2px solid var(--hero-purple-dark); margin-top: 50px; width: 100%; box-sizing: border-box; }
         .footer-highlight { color: var(--hero-yellow); }
 
-        /* Flashcard specific CSS - AANGEPAST VOOR ECHTE KLEINE LETTERS */
+        /* Flashcard specific CSS */
         .fc-card { width: 100%; height: 120px; perspective: 1000px; cursor: pointer; }
         .fc-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
         .fc-card.flipped .fc-inner { transform: rotateY(180deg); }
@@ -75,7 +75,7 @@
         .fc-front { 
             background: white; 
             color: var(--hero-purple-dark); 
-            font-family: 'Lexend', sans-serif; /* Lexend toont kleine letters beter dan Bangers */
+            font-family: 'Lexend', sans-serif; 
             font-size: 2.5rem; 
             font-weight: 700;
             text-transform: none !important; 
@@ -83,7 +83,11 @@
         .fc-back { background: var(--hero-yellow); color: var(--hero-purple-dark); transform: rotateY(180deg); font-family: 'Lexend'; font-weight: bold; font-size: 1.2rem; }
     </style>
     <script>
-        function playSound(letter) { console.log('Playing: ' + letter); }
+        function playSound(letter) {
+            // Speelt bestand [letter].mp3 af (zorg dat deze in de map staan)
+            const audio = new Audio(letter + '.mp3');
+            audio.play().catch(e => console.log("Audio niet gevonden: " + letter + '.mp3'));
+        }
     </script>
 </head>
 <body>
