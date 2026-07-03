@@ -1,232 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <title>Simon Says - Alphabet Edition</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #fff8f0;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      background-color: #ff7043;
-      padding: 1rem;
-      text-align: center;
-    }
-    header img {
-      max-height: 80px;
-    }
-    main {
-      flex: 1;
-      padding: 2rem;
-      text-align: center;
-    }
-    footer {
-      background-color: #ff7043;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-    button {
-      font-size: 1.2rem;
-      margin: 0.5rem;
-      padding: 0.5rem 1.5rem;
-      cursor: pointer;
-      background-color: #ff8000;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-    button:hover {
-      background-color: #e66f00;
-    }
-    select {
-      font-size: 1rem;
-      padding: 0.4rem;
-      margin: 0.5rem;
-    }
-    .letter-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 60px);
-      justify-content: center;
-      gap: 10px;
-      margin-top: 1rem;
-    }
-    .letter {
-      font-size: 1.2rem;
-      padding: 0.5rem;
-      border: 2px solid #bbb;
-      border-radius: 8px;
-      cursor: pointer;
-      user-select: none;
-      background-color: #f5f5f5;
-      color: #222;
-      transition: all 0.3s ease;
-      box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
-    }
-    .letter:hover {
-      background-color: #eee;
-    }
-    .clicked {
-      background-color: #ffd54f !important;
-      color: #000 !important;
-      box-shadow: 0 0 12px 4px rgba(255, 213, 79, 0.6);
-      transform: scale(1.1);
-      z-index: 1;
-    }
-    #status, #levelInfo, #instructions {
-      margin-top: 1rem;
-      font-size: 1.2rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Simon Says</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --header-bg: #ff7043;
+            --header-border: #e65c30;
+        }
+        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        header { background: var(--header-bg); padding: 2rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
+        main { max-width: 700px; width: 90%; margin: 20px 0; background: rgba(26, 16, 42, 0.9); padding: 30px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; }
+        select { padding: 10px; border-radius: 10px; border: 2px solid var(--hero-cyan); background: #000; color: white; font-size: 1rem; }
+        button { font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }
+        button:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-2px); }
+        .letter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; margin-top: 20px; }
+        .letter { font-family: 'Bangers'; font-size: 1.5rem; padding: 15px; background: #1a102a; border: 2px solid var(--hero-purple-dark); border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .letter:hover { border-color: var(--hero-yellow); }
+        .clicked { background-color: var(--hero-yellow) !important; color: #000; transform: scale(1.1); box-shadow: 0 0 20px var(--hero-yellow); }
+        #status, #levelInfo { margin-top: 20px; font-weight: bold; font-size: 1.3rem; }
+        footer { margin-top: auto; padding: 20px; color: rgba(255,255,255,0.5); }
+    </style>
 </head>
 <body>
 
-  <header>
-    <img src="Logo.png" alt="Logo">
-  </header>
+<header>
+    <h1>SIMON SAYS</h1>
+</header>
 
-  <main>
-    <h1>🧠 Simon Says: Alphabet Edition</h1>
-
-    <div id="instructions">
-      <ul style="text-align: left; display: inline-block;">
-        <li>1️⃣ Choose how many letters you want to remember.</li>
-        <li>▶️ Click "Start game" to begin.</li>
-        <li>🔊 Listen carefully to the letters.</li>
-        <li>🧠 Click the letters in the same order you heard them.</li>
-        <li>✅ If correct, the sequence gets longer.</li>
-        <li>❌ If wrong, the game ends. Try again!</li>
-      </ul>
+<main>
+    <h2>🧠 Alphabet Edition</h2>
+    <div id="instructions" style="font-size: 0.9rem; margin-bottom: 20px;">
+        <p>Luister naar de reeks, onthoud de volgorde en klik op de letters!</p>
     </div>
 
-    <label for="maxLevel">📈 Choose your goal:</label>
+    <label for="maxLevel">📈 Kies je doel:</label>
     <select id="maxLevel">
-      <option value="10">10</option>
-      <option value="20" selected>20</option>
-      <option value="30">30</option>
-      <option value="40">40</option>
-      <option value="50">50</option>
+        <option value="10">10</option>
+        <option value="20" selected>20</option>
+        <option value="30">30</option>
     </select>
-
     <br>
-    <button onclick="startGame()">Start game</button>
+    <button onclick="startGame()">▶️ Start spel</button>
 
     <div id="levelInfo"></div>
     <div class="letter-grid" id="letterGrid"></div>
     <div id="status"></div>
-    <button onclick="resetGame()" style="display: none;" id="resetBtn">🔁 Play again</button>
+    <button onclick="resetGame()" style="display: none; background: var(--hero-red);" id="resetBtn">🔁 Opnieuw spelen</button>
+</main>
 
-    <audio id="audioPlayer" preload="auto"></audio>
-  </main>
+<footer>&copy; 2026, EngliForce: Make English Your Superpower!</footer>
 
-  <footer>
-    © 2025 Englix – Make English Your Superpower!
-  </footer>
-
-  <script>
+<script>
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    const audio = document.getElementById("audioPlayer");
+    const baseUrl = "https://engliforce.github.io/MAVO1/";
     const grid = document.getElementById("letterGrid");
     const status = document.getElementById("status");
     const levelInfo = document.getElementById("levelInfo");
     const resetBtn = document.getElementById("resetBtn");
+    
+    let sequence = [], userInput = [], level = 0, maxLevel = 20, gameActive = false;
+    let audioCache = {};
 
-    let sequence = [];
-    let userInput = [];
-    let level = 0;
-    let maxLevel = 20;
-    let gameActive = false;
+    // Pre-load audio
+    letters.forEach(l => {
+        audioCache[l] = new Audio(baseUrl + l.toLowerCase() + '.mp3');
+    });
 
     function startGame() {
-      const selected = document.getElementById("maxLevel").value;
-      maxLevel = parseInt(selected, 10);
-
-      sequence = [];
-      userInput = [];
-      level = 0;
-      gameActive = true;
-      status.textContent = "";
-      resetBtn.style.display = "none";
-      nextRound();
+        maxLevel = parseInt(document.getElementById("maxLevel").value, 10);
+        sequence = []; userInput = []; level = 0; gameActive = true;
+        status.textContent = ""; resetBtn.style.display = "none";
+        nextRound();
     }
 
     function nextRound() {
-      userInput = [];
-      const nextLetter = letters[Math.floor(Math.random() * letters.length)];
-      sequence.push(nextLetter);
-      level++;
-      levelInfo.textContent = `🔢 Level: ${level} of ${maxLevel}`;
-      playSequence();
+        userInput = [];
+        sequence.push(letters[Math.floor(Math.random() * letters.length)]);
+        level++;
+        levelInfo.textContent = `🔢 Level: ${level} / ${maxLevel}`;
+        playSequence();
     }
 
     function playSequence() {
-      let index = 0;
-
-      const interval = setInterval(() => {
-        if (index >= sequence.length) {
-          clearInterval(interval);
-          return;
-        }
-
-        const letter = sequence[index];
-        audio.src = `https://englix.github.io/MAVO1/${letter.toLowerCase()}.mp3`;
-        audio.play();
-        index++;
-      }, 1000);
+        gameActive = false;
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index >= sequence.length) {
+                clearInterval(interval);
+                gameActive = true;
+                return;
+            }
+            const letter = sequence[index];
+            audioCache[letter].currentTime = 0;
+            audioCache[letter].play();
+            index++;
+        }, 1000);
     }
 
     function handleClick(letter, el) {
-      if (!gameActive) return;
-
-      // Visual feedback on click only
-      el.classList.add("clicked");
-      setTimeout(() => el.classList.remove("clicked"), 300);
-
-      userInput.push(letter);
-
-      const correct = sequence[userInput.length - 1] === letter;
-      if (!correct) {
-        gameOver();
-        return;
-      }
-
-      if (userInput.length === sequence.length) {
-        if (level >= maxLevel) {
-          status.innerHTML = "<strong>🎉 Well done! You finished the game!</strong>";
-          gameActive = false;
-          resetBtn.style.display = "inline-block";
-        } else {
-          setTimeout(nextRound, 800);
+        if (!gameActive) return;
+        el.classList.add("clicked");
+        setTimeout(() => el.classList.remove("clicked"), 300);
+        
+        userInput.push(letter);
+        if (sequence[userInput.length - 1] !== letter) {
+            gameOver();
+            return;
         }
-      }
+
+        if (userInput.length === sequence.length) {
+            if (level >= maxLevel) {
+                status.innerHTML = "<strong>🎉 Geweldig! Missie voltooid!</strong>";
+                gameActive = false; resetBtn.style.display = "inline-block";
+            } else {
+                setTimeout(nextRound, 800);
+            }
+        }
     }
 
     function gameOver() {
-      status.innerHTML = `<strong>❌ Wrong letter! You reached level ${level}. Try again.</strong>`;
-      gameActive = false;
-      resetBtn.style.display = "inline-block";
+        status.innerHTML = `<strong>❌ Fout! Je bereikte level ${level}.</strong>`;
+        gameActive = false; resetBtn.style.display = "inline-block";
     }
 
-    function resetGame() {
-      startGame();
-    }
+    function resetGame() { startGame(); }
 
-    // Create letter grid
     letters.forEach(letter => {
-      const div = document.createElement("div");
-      div.textContent = letter;
-      div.classList.add("letter");
-      div.setAttribute("data-letter", letter);
-      div.onclick = () => handleClick(letter, div);
-      grid.appendChild(div);
+        const div = document.createElement("div");
+        div.textContent = letter;
+        div.className = "letter";
+        div.onclick = () => handleClick(letter, div);
+        grid.appendChild(div);
     });
-  </script>
+</script>
 </body>
 </html>
