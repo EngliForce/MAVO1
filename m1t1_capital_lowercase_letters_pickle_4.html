@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: Capitalization Race</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --header-bg: #ff7043;
+        }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        
+        header { background: var(--header-bg); width: 100%; padding: 2rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); border-bottom: 5px solid #e65c30; }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; color: white; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
+        
+        .game-container { background: rgba(26, 16, 42, 0.95); border: 3px solid var(--hero-cyan); border-radius: 25px; padding: 30px; margin: 20px; max-width: 900px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.6); text-align: center; }
+        
+        input, select { padding: 12px; border-radius: 50px; border: 2px solid var(--hero-cyan); background: #1a0a2a; color: white; margin: 5px; text-align: center; }
+        .btn { background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.2rem; cursor: pointer; border-bottom: 5px solid var(--hero-purple-dark); transition: 0.2s; margin: 10px; }
+        .btn:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-3px); }
+        
+        .track { position: relative; height: 50px; margin: 15px 0; background: #000; border-radius: 10px; border: 2px solid var(--hero-yellow); }
+        .car { position: absolute; top: 5px; font-size: 1.8rem; transition: left 0.3s ease-in-out; transform: scaleX(-1); }
+        
+        footer { margin-top: auto; padding: 40px; text-align: center; color: rgba(255,255,255,0.7); border-top: 2px solid var(--hero-purple-dark); width: 100%; }
+        .footer-highlight { color: var(--hero-yellow); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>CAPITALIZATION RACE</h1>
+</header>
+
+<div class="game-container">
+    <div id="setupArea">
+        <label>Number of players:</label>
+        <select id="playerCount" onchange="generateNameInputs()">
+            <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option>
+        </select>
+        <div id="nameInputs" style="margin: 15px 0;"></div>
+        <button class="btn" onclick="startGame()">START RACE</button>
+    </div>
+
+    <div id="gameArea" style="display: none;">
+        <div id="tracks"></div>
+        <div id="questionText" style="font-size: 1.4rem; color: var(--hero-yellow); margin: 20px 0;"></div>
+        <div id="status" style="font-size: 1.2rem; margin-bottom: 10px;"></div>
+        <input type="text" id="userInput" placeholder="Type correction..." style="width: 80%;" autocomplete="off">
+        <br>
+        <button class="btn" id="submitBtn" onclick="submitAnswer()">✔️ SUBMIT</button>
+        <button class="btn" id="playOnBtn" onclick="continueAfterFeedback()" style="display:none; background: var(--hero-cyan); color: black;">➡️ NEXT</button>
+        <div id="feedback" style="margin-top: 20px; font-weight: bold;"></div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></p>
+</footer>
+
+<script>
+    const questions = [
+        { text: "i went to london.", correct: "I went to London." }, { text: "my birthday is in october.", correct: "My birthday is in October." },
+        { text: "we celebrate christmas day.", correct: "We celebrate Christmas Day." }, { text: "he moved to france in april.", correct: "He moved to France in April." },
+        { text: "they visited the eiffel tower.", correct: "They visited the Eiffel Tower." }, { text: "we went skiing in the alps.", correct: "We went skiing in the Alps." },
+        { text: "my sister works in oxford.", correct: "My sister works in Oxford." }, { text: "i love netflix.", correct: "I love Netflix." },
+        { text: "we read harry potter.", correct: "We read Harry Potter." }, { text: "our teacher is mr. sebel.", correct: "Our teacher is Mr. Sebel." },
+        { text: "july is hot.", correct: "July is hot." }, { text: "she is from spain.", correct: "She is from Spain." },
+        { text: "we had fun on easter monday.", correct: "We had fun on Easter Monday." }, { text: "they saw the queen.", correct: "They saw the Queen." },
+        { text: "i like roald dahl.", correct: "I like Roald Dahl." }, { text: "he lives on baker street.", correct: "He lives on Baker Street." },
+        { text: "they traveled through africa.", correct: "They traveled through Africa." }, { text: "we had pancakes on shrove tuesday.", correct: "We had pancakes on Shrove Tuesday." },
+        { text: "we visited the british museum.", correct: "We visited the British Museum." }, { text: "i wrote to santa claus.", correct: "I wrote to Santa Claus." },
+        { text: "they drove to scotland.", correct: "They drove to Scotland." }, { text: "i saw the loch ness monster.", correct: "I saw the Loch Ness Monster." },
+        { text: "we saw fireworks on bonfire night.", correct: "We saw fireworks on Bonfire Night." }, { text: "my cousin lives in belfast.", correct: "My cousin lives in Belfast." },
+        { text: "i saw shakespeare’s play.", correct: "I saw Shakespeare’s play." }, { text: "we ate turkey on thanksgiving day.", correct: "We ate turkey on Thanksgiving Day." },
+        { text: "they study english every friday.", correct: "They study English every Friday." }, { text: "yesterday i went shopping.", correct: "Yesterday I went shopping." },
+        { text: "she gave it to michael.", correct: "She gave it to Michael." }, { text: "emma and i are friends.", correct: "Emma and I are friends." },
+        { text: "i always eat cereal.", correct: "I always eat cereal." }, { text: "after dinner i watched tv.", correct: "After dinner I watched TV." },
+        { text: "we travelled to rome.", correct: "We travelled to Rome." }, { text: "marco and i play chess.", correct: "Marco and I play chess." },
+        { text: "i have a friend from canada.", correct: "I have a friend from Canada." }, { text: "do you like english?", correct: "Do you like English?" },
+        { text: "this is my friend tom.", correct: "This is my friend Tom." }, { text: "we play football on monday.", correct: "We play football on Monday." },
+        { text: "my cousin lives in dublin.", correct: "My cousin lives in Dublin." }, { text: "i go to onc parkdreef.", correct: "I go to ONC Parkdreef." },
+        // ... (Vervolg tot 100 zinnen, hier ingekort voor leesbaarheid)
+        { text: "is march your favorite month?", correct: "Is March your favorite month?" }, { text: "i bought an iphone.", correct: "I bought an iPhone." },
+        { text: "he lives in amsterdam.", correct: "He lives in Amsterdam." }, { text: "we visited the white house.", correct: "We visited the White House." },
+        { text: "we saw jupiter.", correct: "We saw Jupiter." }, { text: "she learned french.", correct: "She learned French." },
+        { text: "is he from germany?", correct: "Is he from Germany?" }, { text: "we travel on sunday.", correct: "We travel on Sunday." },
+        { text: "i have a meeting in february.", correct: "I have a meeting in February." }, { text: "do you like disney?", correct: "Do you like Disney?" },
+        { text: "he eats at mcdonalds.", correct: "He eats at McDonalds." }, { text: "my dad drives a bmw.", correct: "My dad drives a BMW." },
+        { text: "is saturday your day off?", correct: "Is Saturday your day off?" }, { text: "we will go to tokyo in june.", correct: "We will go to Tokyo in June." },
+        { text: "i have an xbox.", correct: "I have an Xbox." }, { text: "it is cold in january.", correct: "It is cold in January." },
+        { text: "is the atlantic ocean big?", correct: "Is the Atlantic Ocean big?" }, { text: "we love halloween.", correct: "We love Halloween." },
+        { text: "i watched star wars.", correct: "I watched Star Wars." }, { text: "is the titanic famous?", correct: "Is the Titanic famous?" },
+        { text: "she lives near oxford street.", correct: "She lives near Oxford Street." }, { text: "is the earth a planet?", correct: "Is the Earth a planet?" },
+        { text: "i love big ben.", correct: "I love Big Ben." }, { text: "they play soccer on tuesday.", correct: "They play soccer on Tuesday." },
+        { text: "we play on wednesday.", correct: "We play on Wednesday." }, { text: "is november rainy?", correct: "Is November rainy?" },
+        { text: "do you like adidas?", correct: "Do you like Adidas?" }, { text: "i visited japan.", correct: "I visited Japan." },
+        { text: "we will be in london on thursday.", correct: "We will be in London on Thursday." }, { text: "i met michael in december.", correct: "I met Michael in December." },
+        { text: "is mars red?", correct: "Is Mars red?" }, { text: "we bought a nike shirt.", correct: "We bought a Nike shirt." },
+        { text: "the united nations meets.", correct: "The United Nations meets." }, { text: "she loves coca-cola.", correct: "She loves Coca-Cola." },
+        { text: "is your brother william?", correct: "Is your brother William?" }, { text: "do you read the quran?", correct: "Do you read the Quran?" },
+        { text: "we visited st. patrick's day.", correct: "We visited St. Patrick's Day." }, { text: "is the bible old?", correct: "Is the Bible old?" },
+        { text: "he studies at a university in italy.", correct: "He studies at a university in Italy." }, { text: "is this book by albert einstein?", correct: "Is this book by Albert Einstein?" },
+        { text: "i drink tea every morning.", correct: "I drink tea every morning." }, { text: "my cat is luna.", correct: "My cat is Luna." },
+        { text: "we go to the beach in august.", correct: "We go to the beach in August." }, { text: "is friday the last day?", correct: "Is Friday the last day?" },
+        { text: "we celebrate st george's day.", correct: "We celebrate St George's Day." }, { text: "my dad was born on new year's day.", correct: "My dad was born on New Year's Day." },
+        { text: "i met a friend from canada.", correct: "I met a friend from Canada." }, { text: "i always read at night.", correct: "I always read at night." },
+        { text: "my cousin lives in dublin.", correct: "My cousin lives in Dublin." }, { text: "we eat turkey on christmas day.", correct: "On Christmas Day we eat turkey." },
+        { text: "have you been to the united states?", correct: "Have you been to the United States?" }, { text: "is she going to the party on wednesday?", correct: "Is she going to the party on Wednesday?" }
+    ];
+
+    let playerCount, playerNames, positions, currentPlayer, currentQuestion = 0;
+    const carEmojis = ['🚗', '🚙', '🏎️', '🚕'];
+
+    function generateNameInputs() {
+        const count = parseInt(document.getElementById('playerCount').value);
+        const container = document.getElementById('nameInputs');
+        container.innerHTML = '';
+        for(let i=0; i<count; i++) {
+            container.innerHTML += `<input type="text" id="p${i}" placeholder="Player ${i+1} Name">`;
+        }
+    }
+
+    function startGame() {
+        playerCount = parseInt(document.getElementById('playerCount').value);
+        playerNames = Array.from({length: playerCount}, (_, i) => document.getElementById(`p${i}`).value || `Player ${i+1}`);
+        positions = Array(playerCount).fill(0);
+        currentPlayer = 0;
+        document.getElementById('setupArea').style.display = 'none';
+        document.getElementById('gameArea').style.display = 'block';
+        
+        let tracks = '';
+        for(let i=0; i<playerCount; i++) {
+            tracks += `<div class="track"><div class="car" id="c${i}" style="left:0">${carEmojis[i]}</div></div>`;
+        }
+        document.getElementById('tracks').innerHTML = tracks;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        document.getElementById('questionText').textContent = `Fix: "${questions[currentQuestion].text}"`;
+        document.getElementById('status').textContent = `${playerNames[currentPlayer]}'s turn!`;
+        document.getElementById('userInput').value = '';
+    }
+
+    function submitAnswer() {
+        const input = document.getElementById('userInput').value.trim();
+        if(input === questions[currentQuestion].correct) {
+            positions[currentPlayer] += 20;
+            document.getElementById(`c${currentPlayer}`).style.left = positions[currentPlayer] + '%';
+            document.getElementById('feedback').textContent = "✅ Correct!";
+            if(positions[currentPlayer] >= 80) alert(playerNames[currentPlayer] + " WINS!");
+        } else {
+            document.getElementById('feedback').textContent = "❌ Incorrect!";
+        }
+        document.getElementById('submitBtn').style.display = 'none';
+        document.getElementById('playOnBtn').style.display = 'inline-block';
+    }
+
+    function continueAfterFeedback() {
+        currentPlayer = (currentPlayer + 1) % playerCount;
+        currentQuestion = (currentQuestion + 1) % questions.length;
+        document.getElementById('submitBtn').style.display = 'inline-block';
+        document.getElementById('playOnBtn').style.display = 'none';
+        document.getElementById('feedback').textContent = '';
+        showQuestion();
+    }
+
+    window.onload = generateNameInputs;
+</script>
+</body>
+</html>
