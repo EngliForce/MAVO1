@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: Capital Drag & Drop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --header-bg: #ff7043;
+        }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        
+        header { background: var(--header-bg); width: 100%; padding: 3rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); border-bottom: 5px solid #e65c30; }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; color: white; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        
+        .game-container { background: rgba(26, 16, 42, 0.95); border: 3px solid var(--hero-cyan); border-radius: 25px; padding: 40px; margin: 20px; max-width: 900px; width: 90%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        
+        #wordBank { margin: 20px 0; padding: 15px; min-height: 80px; border: 2px dashed var(--hero-cyan); border-radius: 15px; display: flex; flex-wrap: wrap; justify-content: center; }
+        .word { display: inline-block; background: var(--hero-purple-main); color: white; padding: 10px 20px; margin: 8px; border-radius: 50px; cursor: grab; font-weight: bold; border-bottom: 4px solid var(--hero-purple-dark); transition: 0.2s; user-select: none; }
+        
+        .container { display: flex; justify-content: center; gap: 20px; margin-top: 2rem; flex-wrap: wrap; }
+        .box { width: 300px; min-height: 200px; border: 3px solid var(--hero-yellow); border-radius: 20px; padding: 1rem; background: rgba(0,0,0,0.3); transition: 0.3s; }
+        .box h3 { color: var(--hero-yellow); font-family: 'Bangers', cursive; font-size: 1.5rem; }
+        
+        .btn { background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.2rem; cursor: pointer; border-bottom: 5px solid var(--hero-purple-dark); transition: 0.2s; margin: 10px; }
+        .btn:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-3px); }
+        
+        footer { margin-top: auto; padding: 40px; text-align: center; color: rgba(255,255,255,0.7); border-top: 2px solid var(--hero-purple-dark); width: 100%; }
+        .footer-highlight { color: var(--hero-yellow); font-weight: bold; }
+        
+        #result { font-weight: bold; font-size: 1.4rem; color: var(--hero-cyan); margin-top: 1rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔠 DRAG & DROP MISSION</h1>
+</header>
+
+<div class="game-container">
+    <p>Sleep de woorden naar de juiste categorie!</p>
+    <div id="wordBank" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    
+    <div class="container">
+        <div class="box" id="capitalBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h3>Hoofdletter</h3>
+        </div>
+        <div class="box" id="lowercaseBox" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h3>Geen hoofdletter</h3>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button class="btn" onclick="checkAnswers()">✔️ CONTROLEER</button>
+        <button class="btn" onclick="loadWords()" style="background: var(--hero-red);">🔄 NIEUWE LIJST</button>
+    </div>
+    <div id="result"></div>
+</div>
+
+<footer>
+    <p>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></p>
+</footer>
+
+<script>
+    const allWords = [
+        { text: "monday", capital: true }, { text: "tuesday", capital: true }, { text: "wednesday", capital: true }, { text: "thursday", capital: true }, { text: "friday", capital: true }, { text: "saturday", capital: true }, { text: "sunday", capital: true }, { text: "january", capital: true }, { text: "february", capital: true }, { text: "march", capital: true }, { text: "april", capital: true }, { text: "may", capital: true }, { text: "june", capital: true }, { text: "july", capital: true }, { text: "august", capital: true }, { text: "september", capital: true }, { text: "october", capital: true }, { text: "november", capital: true }, { text: "december", capital: true },
+        { text: "christmas", capital: true }, { text: "easter", capital: true }, { text: "halloween", capital: true }, { text: "thanksgiving", capital: true }, { text: "new year's day", capital: true }, { text: "valentine's day", capital: true }, { text: "st. patrick's day", capital: true }, { text: "boxing day", capital: true }, { text: "good friday", capital: true },
+        { text: "london", capital: true }, { text: "paris", capital: true }, { text: "amsterdam", capital: true }, { text: "new york", capital: true }, { text: "tokyo", capital: true }, { text: "england", capital: true }, { text: "netherlands", capital: true }, { text: "france", capital: true }, { text: "spain", capital: true }, { text: "germany", capital: true }, { text: "italy", capital: true }, { text: "japan", capital: true },
+        { text: "i", capital: true }, { text: "mr. sebel", capital: true }, { text: "william", capital: true }, { text: "shakespeare", capital: true }, { text: "harry potter", capital: true }, { text: "roald dahl", capital: true }, { text: "emma", capital: true }, { text: "tom", capital: true }, { text: "queen", capital: true }, { text: "santa claus", capital: true }, { text: "michael", capital: true }, { text: "albert einstein", capital: true },
+        { text: "netflix", capital: true }, { text: "samsung", capital: true }, { text: "facebook", capital: true }, { text: "microsoft", capital: true }, { text: "google", capital: true }, { text: "nike", capital: true }, { text: "adidas", capital: true }, { text: "coca-cola", capital: true }, { text: "apple", capital: true }, { text: "amazon", capital: true }, { text: "disney", capital: true }, { text: "mcdonalds", capital: true },
+        { text: "english", capital: true }, { text: "dutch", capital: true }, { text: "french", capital: true }, { text: "german", capital: true }, { text: "eiffel tower", capital: true }, { text: "british museum", capital: true }, { text: "atlantic ocean", capital: true }, { text: "parkdreef", capital: true }, { text: "the alps", capital: true }, { text: "loch ness", capital: true }, { text: "buckingham palace", capital: true }, { text: "oxford street", capital: true }, { text: "big ben", capital: true }, { text: "united nations", capital: true }, { text: "star wars", capital: true }, { text: "titanic", capital: true }, { text: "london bridge", capital: true }, { text: "white house", capital: true }, { text: "mars", capital: true }, { text: "jupiter", capital: true }, { text: "earth", capital: true }, { text: "bible", capital: true }, { text: "quran", capital: true }, { text: "toyota", capital: true }, { text: "bmw", capital: true }, { text: "playstation", capital: true }, { text: "xbox", capital: true },
+        { text: "banana", capital: false }, { text: "table", capital: false }, { text: "chair", capital: false }, { text: "apple", capital: false }, { text: "chocolate", capital: false }, { text: "dog", capital: false }, { text: "cat", capital: false }, { text: "doctor", capital: false }, { text: "football", capital: false }, { text: "camera", capital: false }, { text: "internet", capital: false }, { text: "window", capital: false }, { text: "school", capital: false }, { text: "giraffe", capital: false }, { text: "pizza", capital: false }, { text: "beach", capital: false }, { text: "teacher", capital: false }, { text: "car", capital: false }, { text: "pen", capital: false }, { text: "river", capital: false }, { text: "footballer", capital: false }, { text: "phone", capital: false }, { text: "cloud", capital: false }, { text: "bottle", capital: false }, { text: "lamp", capital: false }, { text: "book", capital: false }, { text: "train", capital: false }, { text: "bus", capital: false }, { text: "tree", capital: false }, { text: "flower", capital: false }, { text: "mountain", capital: false }, { text: "ocean", capital: false }, { text: "city", capital: false }, { text: "house", capital: false }, { text: "computer", capital: false }, { text: "keyboard", capital: false }, { text: "mouse", capital: false }, { text: "screen", capital: false }, { text: "paper", capital: false }, { text: "pencil", capital: false }, { text: "bag", capital: false }, { text: "shoes", capital: false }, { text: "shirt", capital: false }, { text: "jacket", capital: false }, { text: "hat", capital: false }, { text: "glass", capital: false }, { text: "plate", capital: false }, { text: "spoon", capital: false }, { text: "fork", capital: false }, { text: "knife", capital: false }, { text: "water", capital: false }, { text: "milk", capital: false }, { text: "bread", capital: false }, { text: "cheese", capital: false }, { text: "egg", capital: false }, { text: "fish", capital: false }, { text: "bird", capital: false }, { text: "horse", capital: false }, { text: "cow", capital: false }, { text: "sheep", capital: false }, { text: "lion", capital: false }, { text: "tiger", capital: false }, { text: "monkey", capital: false }, { text: "elephant", capital: false }, { text: "snake", capital: false }, { text: "star", capital: false }, { text: "moon", capital: false }, { text: "sun", capital: false }, { text: "sky", capital: false }, { text: "rain", capital: false }, { text: "snow", capital: false }, { text: "wind", capital: false }, { text: "fire", capital: false }, { text: "stone", capital: false }, { text: "wood", capital: false }
+    ];
+
+    function loadWords() {
+        const bank = document.getElementById("wordBank");
+        const capitalBox = document.getElementById("capitalBox");
+        const lowercaseBox = document.getElementById("lowercaseBox");
+        
+        // Verwijder oude woorden uit de boxen en bank
+        bank.innerHTML = "";
+        capitalBox.querySelectorAll('.word').forEach(el => el.remove());
+        lowercaseBox.querySelectorAll('.word').forEach(el => el.remove());
+        
+        // Selecteer 12 willekeurige woorden
+        const selected = allWords.sort(() => 0.5 - Math.random()).slice(0, 12);
+        
+        selected.forEach((word, index) => {
+            const span = document.createElement("span");
+            span.textContent = word.text;
+            span.className = "word";
+            span.draggable = true;
+            span.id = "word-" + index;
+            span.dataset.capital = word.capital;
+            span.ondragstart = (ev) => ev.dataTransfer.setData("text", ev.target.id);
+            bank.appendChild(span);
+        });
+        document.getElementById("result").textContent = "";
+    }
+
+    function allowDrop(ev) { ev.preventDefault(); }
+    
+    function drop(ev) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        const draggedElement = document.getElementById(data);
+        
+        // Zorg dat het element in de drop-zone belandt
+        if (ev.target.classList.contains('box') || ev.target.id === 'wordBank') {
+            ev.target.appendChild(draggedElement);
+        } else if (ev.target.parentElement.classList.contains('box') || ev.target.parentElement.id === 'wordBank') {
+            ev.target.parentElement.appendChild(draggedElement);
+        }
+    }
+
+    function checkAnswers() {
+        let correct = 0;
+        document.querySelectorAll('.word').forEach(word => {
+            const isCap = word.dataset.capital === "true";
+            const parentId = word.parentElement.id;
+            
+            if (parentId === "capitalBox" || parentId === "lowercaseBox") {
+                if ((isCap && parentId === "capitalBox") || (!isCap && parentId === "lowercaseBox")) {
+                    correct++;
+                    word.style.background = "#2d6a4f";
+                } else {
+                    word.style.background = "#d32f2f";
+                }
+            }
+        });
+        document.getElementById("result").textContent = `Score: ${correct} goed!`;
+    }
+
+    window.onload = loadWords;
+</script>
+</body>
+</html>
