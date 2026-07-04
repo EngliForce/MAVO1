@@ -1,163 +1,165 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hoofdletters en kleine letters</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #ff7043;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-    header img.logo {
-      display: block;
-      margin: 0 auto 1rem auto;
-      width: 120px;
-      height: auto;
-    }
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-    section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #ff7043;
-    }
-    img.letter-chart {
-      max-width: 500px;
-      height: auto;
-      border: 1px solid #ccc;
-      margin-top: 1rem;
-    }
-    ul {
-      text-align: left;
-      max-width: 600px;
-      margin: 1rem auto;
-    }
-    ul li {
-      margin-bottom: 0.5rem;
-    }
-    .video-container {
-      margin-top: 1rem;
-    }
-    .video-container iframe {
-      width: 360px;
-      height: 203px;
-      border: none;
-    }
-    .links {
-      margin-top: 1rem;
-    }
-    .links a {
-      padding: 0.5rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .links a:hover {
-      background-color: #e65c30;
-    }
-    .pickle-jar-img {
-      margin-top: 1rem;
-      max-width: 180px;
-      height: auto;
-    }
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-.oefen-link {
-  display: inline-block;
-  margin: 0.4rem 0;
-  padding: 0.4rem 0.8rem;
-  background-color: #ff7043;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.95rem;
-}
-
-.oefen-link:hover {
-  background-color: #e65c30;
-}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Capital Letters Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+            --header-bg: #ff7043;
+            --header-border: #e65c30;
+        }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        header { background: var(--header-bg); padding: 2.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); width: 100%; }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; }
+        main { max-width: 1000px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+        
+        .briefing-box { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-cyan); border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .rule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .rule-card { background: rgba(0, 0, 0, 0.4); border-left: 5px solid var(--hero-yellow); padding: 15px; border-radius: 5px; }
+        .check { color: var(--hero-cyan); font-weight: bold; margin-right: 10px; }
+        .label-blue { color: var(--hero-cyan); font-weight: bold; }
+        
+        .toggle-container { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; }
+        .btn-toggle { background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.3rem; cursor: pointer; border-bottom: 5px solid var(--hero-purple-dark); transition: 0.2s; }
+        .btn-toggle:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-3px); }
+        .btn-video { background: var(--hero-red); border-bottom: 5px solid var(--hero-red-dark); }
+        
+        /* Gecentreerd Pickle Grid */
+        .pickle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px auto; justify-content: center; max-width: 900px; }
+        .card { background: #1a102a; border: 3px solid #3c096c; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--hero-yellow); transform: translateY(-5px); }
+        .btn-like { background: #3c096c; color: white; border: 2px solid var(--hero-cyan); padding: 5px 15px; border-radius: 10px; cursor: pointer; margin-top: 10px; }
+        .btn-like.liked { background: var(--hero-yellow); color: #000; font-weight: bold; }
+        
+        .content-hidden { display: none; margin-bottom: 30px; }
+        .video-container { background: #000; border: 4px solid var(--hero-red); border-radius: 20px; overflow: hidden; position: relative; padding-top: 56.25%; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        footer { background: #05101a; color: rgba(255,255,255,0.8); text-align: center; padding: 40px 20px; border-top: 2px solid var(--hero-purple-dark); width: 100%; }
+        .footer-highlight { color: var(--hero-yellow); font-weight: bold; }
+        
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers'; color: var(--hero-yellow); font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+    </style>
 </head>
 <body>
-  <header>
-    <img src="Logo.png" alt="Englix Logo" class="logo">
-    <h1>Hoofdletters en kleine letters</h1>
-    <p>Leer wanneer je hoofdletters moet gebruiken in het Engels!</p>
-  </header>
 
-  <main>
-    <section>
-      <h2>🔤 Overzicht</h2>
-      <p>In het Engels gebruiken we, net als in het Nederlands, hoofdletters (capital letters) en kleine letters (lowercase letters). Bekijk hieronder het overzicht van het alfabet:</p>
-      <img src="Capital_lowercase.png" alt="Capital and lowercase letter chart" class="letter-chart">
+<div class="flash-effect" id="flash"></div>
+
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>CAPITAL LETTERS COMMAND CENTER</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: CAPITAL LETTERS</h2>
+        <p style="margin-bottom: 20px; color: var(--hero-cyan);">CHECK JE TEKST OP DEZE PUNTEN:</p>
+        <div class="rule-grid">
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Zinbegin:</span> De eerste letter van elke zin.</div>
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Het woord "I":</span> ALTIJD met een hoofdletter.</div>
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Namen:</span> William Shakespeare.</div>
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Titels:</span> Mr., Mrs., Dr. of The Hunger Games.</div>
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Plaatsen:</span> England, Zoetermeer, Atlantic Ocean.</div>
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Tijd:</span> Monday, August.</div>
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Talen & Nationaliteiten:</span> English, Dutch.</div>
+            <div class="rule-card"><span class="check">✓</span> <span class="label-blue">Merken:</span> Adidas, Manchester United.</div>
+        </div>
     </section>
 
-    <section>
-      <h2>📚 Wanneer gebruik je hoofdletters?</h2>
-      <p>In het Engels gebruik hoofdletters in de volgende situaties:</p>
-      <ul>
-        <li>📌 Aan het begin van een zin.</li>
-        <li>📌 Bij namen van mensen, steden en landen (bijv. <strong>Emma</strong>, <strong>Amsterdam</strong>, <strong>Spain</strong>).</li>
-        <li>📌 Bij nationaliteiten (bijv. <strong>English</strong>, <strong>Dutch</strong>).</li>
-        <li>📌 Bij dagen van de week (bijv. <strong>Monday.</strong>)</li>
-        <li>📌 Bij feestdagen (bijv. <strong>Christmas</strong>).</li>
-        <li>📌 Bij maanden (bijv. <strong>August</strong>).</li>
-        <li>📌 Bij het woord <strong>I</strong> (ik) – dit is altijd met een hoofdletter.</li>
-        <li>📌 Bij titels van boeken, films of liedjes (bijv. <strong>Dracula</strong>, <strong>Star Wars</strong>, <strong>Imagine</strong>).</li>
-        <li>📌 Bij merken, organisaties en bedrijven (bijv. <strong>Nike</strong>, <strong>WWF</strong>, <strong>Manchester United</strong>).</li>
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="toggleSection(event, 'chart-img', 'CHART!')">🔍 Show Chart</button>
+        <button class="btn-toggle btn-video" onclick="toggleSection(event, 'vid-box', 'ACTION!')">🎬 Mission Video</button>
+    </div>
 
-      </ul>
-    </section>
+    <div id="chart-img" class="content-hidden" style="text-align:center;">
+        <img src="Capital_lowercase.png" style="max-width:80%; border:4px solid var(--hero-yellow); border-radius:15px;">
+    </div>
 
-    <section>
-      <h2>🎬 Video</h2>
-      <p>Bekijk de video hieronder voor uitleg over hoofdletters en kleine letters.</p>
-      <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/gOgcyhQvdzE" allowfullscreen></iframe>
-      </div>
-    </section>
+    <div id="vid-box" class="content-hidden">
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/gOgcyhQvdzE" allowfullscreen></iframe>
+        </div>
+    </div>
 
-<section>
-  <h2>📝 Super Pickles</h2>
-  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
-  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-    <ul class="pickle-list" style="list-style-type: none; padding: 0; margin: 0;">
-      <li><a class="oefen-link" href="m1t1_capital_lowercase_letters_pickle_1.html" target="_blank">Pickle 1: Number Quiz</a></li>
-      <li><a class="oefen-link" href="m1t1_capital_lowercase_letters_pickle_2.html" target="_blank">Pickle 2: Listening Challenge</a></li>
-      <li><a class="oefen-link" href="m1t1_capital_lowercase_letters_pickle_3.html" target="_blank">Pickle 3: Match the Number</a></li>
-      <li><a class="oefen-link" href="m1t1_capital_lowercase_letters_pickle_4.html" target="_blank">Pickle 4: Fill in the Number</a></li>
-    </ul>
-    <img class="pickle-image-tall" src="Pickles.png" alt="Super Pickle" style="max-height: 200px; height: auto;">
-  </div>
-</section>
-  </main>
-  <footer>
-    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
-  </footer>
+    <div style="text-align: center;">
+        <h2>⚔️ PICKLE MISSIONS</h2>
+        <div class="pickle-grid">
+            <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t1_capital_lowercase_letters_pickle_1.html')">
+                <span style="font-size: 2.5rem;">🎧</span>
+                <div class="title">Pickle 1</div>
+                <p style="font-size: 0.9rem;">Capitalise or not</p>
+                <button id="btn-p1" class="btn-like" onclick="toggleLike(event, 'p1')">👍 Like</button>
+            </div>
+            <div class="card" onclick="openMission(event, 'TICK TOCK!', 'm1t1_capital_lowercase_letters_pickle_2.html')">
+                <span style="font-size: 2.5rem;">✏️</span>
+                <div class="title">Pickle 2</div>
+                <p style="font-size: 0.9rem;">Find the mistakes</p>
+                <button id="btn-p2" class="btn-like" onclick="toggleLike(event, 'p2')">👍 Like</button>
+            </div>
+            <div class="card" onclick="openMission(event, 'VROOM!', 'm1t1_capital_lowercase_letters_pickle_3.html')">
+                <span style="font-size: 2.5rem;">✋</span>
+                <div class="title">Pickle 3</div>
+                <p style="font-size: 0.9rem;">Capitals Battle</p>
+                <button id="btn-p3" class="btn-like" onclick="toggleLike(event, 'p3')">👍 Like</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    function toggleSection(e, id, message) {
+        const target = document.getElementById(id);
+        document.querySelectorAll('.content-hidden').forEach(s => { if (s.id !== id) s.style.display = 'none'; });
+        target.style.display = (target.style.display === 'block') ? 'none' : 'block';
+        createExplosion(e, message);
+    }
+    function openMission(e, msg, url) {
+        if(e.target.tagName !== 'BUTTON') {
+            createExplosion(e, msg);
+            setTimeout(() => { window.location.href = url; }, 800);
+        }
+    }
+    function toggleLike(e, id) {
+        e.stopPropagation();
+        const btn = document.getElementById('btn-' + id);
+        btn.classList.toggle('liked');
+        localStorage.setItem('like-' + id, btn.classList.contains('liked'));
+    }
+    function createExplosion(e, message) {
+        const x = e.clientX, y = e.clientY;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+    document.querySelectorAll('.btn-like').forEach(btn => {
+        const id = btn.id.replace('btn-', '');
+        if(localStorage.getItem('like-' + id) === 'true') btn.classList.add('liked');
+    });
+</script>
 </body>
 </html>
-
-
-
