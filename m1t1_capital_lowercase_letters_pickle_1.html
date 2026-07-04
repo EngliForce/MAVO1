@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: Cap It or Leave It?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --header-bg: #ff7043;
+        }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        
+        header { 
+            background: var(--header-bg); 
+            width: 100%; 
+            padding: 3rem 1rem; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            border-bottom: 5px solid #e65c30;
+        }
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 4rem; 
+            color: white; 
+            margin: 0; 
+            text-shadow: 4px 4px 0px var(--hero-purple-dark);
+            letter-spacing: 2px;
+        }
+        .subtitle { font-family: 'Lexend', sans-serif; color: var(--hero-yellow); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .quiz-container { background: rgba(26, 16, 42, 0.95); border: 3px solid var(--hero-cyan); border-radius: 25px; padding: 40px; margin: 20px; max-width: 850px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        
+        .sentence { font-size: 2rem; margin: 3rem 0; line-height: 3; text-align: center; }
+        .word { 
+            cursor: pointer; padding: 8px 12px; margin: 5px; border-radius: 8px; 
+            border-bottom: 4px solid var(--hero-purple-dark); 
+            background: rgba(255,255,255,0.08); transition: 0.2s; 
+            user-select: none;
+        }
+        .word:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .selected { background-color: var(--hero-purple-main); border-bottom-color: var(--hero-cyan); }
+        .correct { background-color: #2d6a4f !important; border-bottom-color: #52b788 !important; }
+        .incorrect { background-color: var(--hero-red) !important; border-bottom-color: #ffadad !important; }
+        
+        .btn { background: var(--hero-purple-main); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.4rem; cursor: pointer; border-bottom: 5px solid var(--hero-purple-dark); transition: 0.2s; margin: 10px; }
+        .btn:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-3px); }
+        
+        .progress-container { width: 100%; background: #000; height: 15px; border-radius: 10px; margin: 20px 0; overflow: hidden; border: 1px solid var(--hero-cyan); }
+        .progress-bar { height: 100%; width: 0%; background: var(--hero-cyan); transition: 0.5s ease-in-out; }
+        
+        footer { margin-top: auto; padding: 40px; text-align: center; color: rgba(255,255,255,0.7); border-top: 2px solid var(--hero-purple-dark); width: 100%; background: #05101a; }
+        .footer-highlight { color: var(--hero-yellow); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>CAP IT OR LEAVE IT?</h1>
+    <div class="subtitle">EngliForce Mission Control</div>
+</header>
+
+<div class="quiz-container">
+    <p style="text-align: center; opacity: 0.8;">Click on the words that need a <strong>Capital Letter</strong>!</p>
+    <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
+    <div id="quiz" class="sentence"></div>
+    <div style="text-align: center;">
+        <button class="btn" id="checkBtn" onclick="checkAnswers()">✔️ CHECK</button>
+        <button class="btn" id="nextBtn" onclick="nextSentence()" style="display: none;">➡️ NEXT</button>
+        <button class="btn" onclick="startQuiz()" style="background: var(--hero-red); border-bottom-color: #8b0000;">🔄 RESTART</button>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></p>
+</footer>
+
+<script>
+    const sentenceBank = [
+      { text: "i went to london last summer.", capitalize: ["i", "london"] },
+      { text: "my birthday is in october.", capitalize: ["october"] },
+      { text: "we celebrate christmas day together.", capitalize: ["christmas", "day"] },
+      { text: "he moved to france in april.", capitalize: ["france", "april"] },
+      { text: "they visited the eiffel tower.", capitalize: ["eiffel", "tower"] },
+      { text: "our teacher is mr. sebel.", capitalize: ["mr.", "sebel"] },
+      { text: "i love watching movies on netflix.", capitalize: ["i", "netflix"] }
+    ];
+
+    let currentRound = [], currentIndex = 0, wordSpans = [];
+
+    function startQuiz() {
+        currentRound = [...sentenceBank].sort(() => 0.5 - Math.random());
+        currentIndex = 0;
+        showSentence();
+    }
+
+    function showSentence() {
+        document.getElementById('progressBar').style.width = `${(currentIndex / currentRound.length) * 100}%`;
+        const quiz = document.getElementById('quiz');
+        quiz.innerHTML = '';
+        wordSpans = [];
+        document.getElementById('checkBtn').style.display = 'inline-block';
+        document.getElementById('nextBtn').style.display = 'none';
+
+        currentRound[currentIndex].text.split(" ").forEach(word => {
+            const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
+            const span = document.createElement("span");
+            span.textContent = word;
+            span.classList.add("word");
+            span.onclick = () => span.classList.toggle("selected");
+            wordSpans.push({ span, word: cleanWord });
+            quiz.appendChild(span);
+            quiz.append(" ");
+        });
+    }
+
+    function checkAnswers() {
+        const item = currentRound[currentIndex];
+        const caps = new Set(item.capitalize.map(w => w.toLowerCase()));
+        caps.add(wordSpans[0].word); 
+
+        wordSpans.forEach(({ span, word }) => {
+            const isCorrect = caps.has(word);
+            const isSelected = span.classList.contains("selected");
+            if (isCorrect && isSelected) span.classList.add("correct");
+            else if (isCorrect || isSelected) span.classList.add("incorrect");
+            span.style.pointerEvents = 'none';
+        });
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'inline-block';
+    }
+
+    function nextSentence() {
+        currentIndex++;
+        if (currentIndex < currentRound.length) showSentence();
+        else {
+            document.getElementById('quiz').innerHTML = "<h3>MISSION COMPLETE!</h3>";
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('progressBar').style.width = '100%';
+        }
+    }
+
+    startQuiz();
+</script>
+</body>
+</html>
