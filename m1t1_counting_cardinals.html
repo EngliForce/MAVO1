@@ -1,218 +1,193 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tellen in het Engels</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #ff7043;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-    section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #ff7043;
-    }
-    table {
-      margin: 1rem auto;
-      border-collapse: collapse;
-      font-size: 1rem;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 0.5rem 1rem;
-      text-align: center;
-    }
-    .highlight {
-      color: #e53935;
-      font-weight: bold;
-    }
-    .links {
-      margin-top: 1rem;
-    }
-    .links a {
-      display: inline-block;
-      margin: 0.25rem;
-      padding: 0.5rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .links a:hover {
-      background-color: #e65c30;
-    }
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-.oefen-link {
-  display: inline-block;
-  margin: 0.4rem 0;
-  padding: 0.4rem 0.8rem;
-  background-color: #ff7043;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.95rem;
-}
-    .oefen-link:hover {
-  background-color: #e65c30;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Number Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+            --header-bg: #ff7043;
+            --header-border: #e65c30;
+        }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: var(--header-bg); padding: 2.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        main { max-width: 1000px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+        
+        .briefing-box { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-cyan); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
+        .explanation-text { font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px; border-left: 4px solid var(--hero-cyan); padding: 15px 20px; background: rgba(0, 245, 212, 0.05); }
+        
+        .toggle-container { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle { background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer; border-bottom: 5px solid var(--hero-purple-dark); }
+        .btn-toggle:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-3px); }
+        .btn-video { background: var(--hero-red); border-bottom: 5px solid var(--hero-red-dark); }
+        
+        .content-section { display: none; }
+        .table-container { background: #1a102a; border-radius: 15px; overflow: hidden; border: 2px solid var(--hero-purple-dark); }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .number-hl { color: var(--hero-yellow); font-weight: bold; font-size: 1.2rem; display: block; }
+        .highlight { color: var(--hero-cyan); font-weight: bold; }
+        
+        .pickle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .card { background: #1a102a; border: 3px solid #3c096c; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--hero-yellow); }
+        .btn-like { background: #3c096c; color: white; border: 2px solid var(--hero-cyan); padding: 5px 15px; border-radius: 10px; cursor: pointer; margin-top: 10px; }
+        
+        .video-container { text-align: center; margin-top: 20px; }
+        iframe { width: 100%; max-width: 560px; height: 315px; border: 4px solid var(--hero-red); border-radius: 20px; }
+        
+        footer { text-align: center; padding: 20px; background: rgba(0,0,0,0.3); font-family: 'Bangers'; font-size: 1.2rem; }
+        .footer-highlight { color: var(--hero-yellow); }
 
-.video-container {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-}
-
-.video-container iframe {
-  width: 100%;
-  max-width: 560px;
-  height: 315px;
-  border: none;
-}
-  </style>
+        /* Flashcard extra styles */
+        .fc-lab { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
+        .fc-card { height: 80px; perspective: 1000px; cursor: pointer; }
+        .fc-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .fc-card.flipped .fc-inner { transform: rotateY(180deg); }
+        .fc-front, .fc-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--hero-yellow); background: #1a102a; font-weight: bold; }
+        .fc-back { transform: rotateY(180deg); background: var(--hero-purple-main); color: white; }
+    </style>
 </head>
 <body>
-  <header>
-    <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
-    <h1>Tellen in het Engels</h1>
-    <p>Leer Engelse getallen en let op de lastige schrijfwijzen!</p>
-  </header>
 
-  <main>
-    <section>
-      <h2>🔢 Getallen 1 t/m 25</h2>
-      <table>
-        <tr>
-          <td>1<br><small>one</small></td>
-          <td>2<br><small>two</small></td>
-          <td>3<br><small>three</small></td>
-          <td>4<br><small>four</small></td>
-          <td>5<br><small>five</small></td>
-        </tr>
-        <tr>
-          <td>6<br><small>six</small></td>
-          <td>7<br><small>seven</small></td>
-          <td>8<br><small>eight</small></td>
-          <td>9<br><small>nine</small></td>
-          <td>10<br><small>ten</small></td>
-        </tr>
-        <tr>
-          <td>11<br><small>eleven</small></td>
-          <td>12<br><small>twelve</small></td>
-          <td>13<br><small class="highlight">thirteen (let op: geen ‘threeteen’!)</small></td>
-          <td>14<br><small>fourteen</small></td>
-          <td>15<br><small class="highlight">fifteen (let op: geen ‘fiveteen’!)</small></td>
-        </tr>
-        <tr>
-          <td>16<br><small>sixteen</small></td>
-          <td>17<br><small>seventeen</small></td>
-          <td>18<br><small class="highlight">eighteen (let op: geen ‘eightteen’!)</small></td>
-          <td>19<br><small>nineteen</small></td>
-          <td>20<br><small>twenty</small></td>
-        </tr>
-        <tr>
-          <td>21<br><small>twenty-one</small></td>
-          <td>22<br><small>twenty-two</small></td>
-          <td>23<br><small>twenty-three</small></td>
-          <td>24<br><small>twenty-four</small></td>
-          <td>25<br><small>twenty-five</small></td>
-        </tr>
-      </table>
-      <p>💡 <strong>Let op!</strong> Bij samengestelde getallen zoals <em>twenty-one</em> gebruik je altijd een streepje (-).</p>
+<header><h1>NUMBER COMMAND CENTER</h1></header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: THE NUMBERS</h2>
+        <div class="explanation-text">
+            <p>Getallen voluit kunnen schrijven is een deel van de basis van je Engelse taalvaardigheid. Je hebt deze kennis dagelijks nodig voor:</p>
+            <p>• <span class="highlight">Spreken:</span> Leeftijd, telefoonnummers, jaartallen, prijzen, etc.<br>
+               • <span class="highlight">Klokkijken:</span> Het vertellen hoe laat het is (bijv. <em>"It is twenty-five past four"</em>).<br>
+               • <span class="highlight">Rangtelwoorden:</span> 1e, 2e, 3e, etc.</p>
+          <p style="color: red;">Leer de getallen dus meteen goed, zodat je ze niets steeds opnieuw hoeft te leren.</p>
+        </div>
     </section>
 
-    <section>
-      <h2>🔟 Tientallen t/m 101</h2>
-      <table>
-        <tr>
-          <td>30<br><small>thirty</small></td>
-          <td>40<br><small class="highlight">forty (niet fourty!)</small></td>
-          <td>50<br><small class="highlight">fifty (niet fivety!)</small></td>
-          <td>60<br><small>sixty</small></td>
-        </tr>
-        <tr>
-          <td>70<br><small>seventy</small></td>
-          <td>80<br><small class="highlight">eighty (niet eightty!)</small></td>
-          <td>90<br><small>ninety</small></td>
-          <td>100<br><small>one hundred</small></td>
-        </tr>
-        <tr>
-          <td colspan="4">101<br><small>one hundred and one</small></td>
-        </tr>
-      </table>
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="show('n1-25')">1 T/M 25</button>
+        <button class="btn-toggle" onclick="show('ntien')">TIENTALLEN</button>
+        <button class="btn-toggle" onclick="show('nflash')">🃏 FLASHCARDS</button>
+        <button class="btn-toggle btn-video" onclick="show('nvideo')">🎬 VIDEO</button>
+    </div>
 
-       </section>
+    <div id="n1-25" class="content-section">
+        <div class="table-container"><table>
+            <tr><td><span class="number-hl">1</span>one</td><td><span class="number-hl">2</span>two</td><td><span class="number-hl">3</span>three</td><td><span class="number-hl">4</span>four</td><td><span class="number-hl">5</span>five</td></tr>
+            <tr><td><span class="number-hl">6</span>six</td><td><span class="number-hl">7</span>seven</td><td><span class="number-hl">8</span>eight</td><td><span class="number-hl">9</span>nine</td><td><span class="number-hl">10</span>ten</td></tr>
+            <tr><td><span class="number-hl">11</span>eleven</td><td><span class="number-hl">12</span>twelve</td><td><span class="number-hl">13</span><span class="highlight">thirteen</span></td><td><span class="number-hl">14</span>fourteen</td><td><span class="number-hl">15</span><span class="highlight">fifteen</span></td></tr>
+            <tr><td><span class="number-hl">16</span>sixteen</td><td><span class="number-hl">17</span>seventeen</td><td><span class="number-hl">18</span><span class="highlight">eighteen</span></td><td><span class="number-hl">19</span>nineteen</td><td><span class="number-hl">20</span>twenty</td></tr>
+            <tr><td><span class="number-hl">21</span>twenty-one</td><td><span class="number-hl">22</span>twenty-two</td><td><span class="number-hl">23</span>twenty-three</td><td><span class="number-hl">24</span>twenty-four</td><td><span class="number-hl">25</span>twenty-five</td></tr>
+        </table></div>
+    </div>
 
-     <section>
-      <h2>🃏 Flashcards</h2>
-      <p>Oefen de getallen met interactieve flashcards.</p>
-      <div class="links">
-        <a href="m1t1_numbers_flashcards.html" target="_blank">Open Flashcards</a>
-      </div>
-    </section>
+    <div id="ntien" class="content-section">
+        <div class="table-container"><table>
+            <tr><td><span class="number-hl">30</span>thirty</td><td><span class="number-hl">40</span><span class="highlight">forty</span></td><td><span class="number-hl">50</span><span class="highlight">fifty</span></td><td><span class="number-hl">60</span>sixty</td></tr>
+            <tr><td><span class="number-hl">70</span>seventy</td><td><span class="number-hl">80</span><span class="highlight">eighty</span></td><td><span class="number-hl">90</span>ninety</td><td><span class="number-hl">100</span>one hundred</td></tr>
+            <tr><td colspan="4"><span class="number-hl">101</span>one hundred and one</td></tr>
+        </table></div>
+    </div>
 
-   <section>
-  <h2>🎬 Video</h2>
-  <p>Bekijk de video over Engelse getallen direct hieronder:</p>
-  <div class="video-container">
-    <iframe width="560" height="315" 
-      src="https://www.youtube.com/watch?v=5J61AHOw31U" 
-      title="Video: Tellen in het Engels" frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
-</section>
+    <div id="nflash" class="content-section">
+        <h3>🃏 Flashcard Lab</h3>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <select id="aantal" class="btn-like" onchange="genCards()">
+                <option value="10">10 getallen</option><option value="20">20</option><option value="30">30</option>
+                <option value="40">40</option><option value="50">50</option><option value="60">60</option>
+                <option value="70">70</option><option value="80">80</option><option value="90">90</option>
+                <option value="101" selected>101 getallen</option>
+            </select>
+            <button class="btn-like" onclick="genCards(true)">🔀 Shuffle</button>
+        </div>
+        <div class="fc-lab" id="fc-lab"></div>
+    </div>
 
-   <section>
-  <h2>📝 Super Pickles</h2>
-  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
-  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-    <ul class="pickle-list" style="list-style-type: none; padding: 0; margin: 0;">
-      <li><a class='oefen-link' href="m1t1_numbers_pickle_1.html" target="_blank">Pickle 1: Number Quiz</a></li>
-      <li><a class="oefen-link" href="m1t1_numbers_pickle_2.html" target="_blank">Pickle 2: Listening Challenge</a></li>
-      <li><a class="oefen-link" href="m1t1_numbers_pickle_3.html" target="_blank">Pickle 3: Match the Number</a></li>
-      <li><a class='oefen-link' href="m1t1_numbers_pickle_4.html" target="_blank">Pickle 4: Fill in the Number</a></li>
-    </ul>
-    <img class="pickle-image-tall" src="Pickles.png" alt="Super Pickle" style="max-height: 200px; height: auto;">
-  </div>
-</section>
-  </main>
-  
-  <footer>
-    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-  </footer>
+    <div id="nvideo" class="content-section">
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/TnadM_mwczI" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'the_alphabet_pickle_1.html')">
+            <span style="font-size: 2.5rem;">🎧</span>
+            <div class="title">Pickle 1</div>
+            <p style="font-size: 0.9rem;">Listening Game</p>
+            <button id="btn-p1" class="btn-like" onclick="toggleLike(event, 'p1')">👍 Like</button>
+        </div>
+        <div class="card" id="card-p2" onclick="openMission(event, 'TICK TOCK!', 'the_alphabet_pickle_2.html')">
+            <span style="font-size: 2.5rem;">✏️</span>
+            <div class="title">Pickle 2</div>
+            <p style="font-size: 0.9rem;">Spelling Challenge</p>
+            <button id="btn-p2" class="btn-like" onclick="toggleLike(event, 'p2')">👍 Like</button>
+        </div>
+        <div class="card" id="card-p3" onclick="openMission(event, 'VROOM!', 'the_alphabet_pickle_3.html')">
+            <span style="font-size: 2.5rem;">✋</span>
+            <div class="title">Pickle 3</div>
+            <p style="font-size: 0.9rem;">Simon Says</p>
+            <button id="btn-p3" class="btn-like" onclick="toggleLike(event, 'p3')">👍 Like</button>
+        </div>
+        <div class="card" id="card-p4" onclick="openMission(event, 'ZAP!', 'the_alphabet_pickle_4.html')">
+            <span style="font-size: 2.5rem;">🎵</span>
+            <div class="title">Pickle 4</div>
+            <p style="font-size: 0.9rem;">Rhyming Game</p>
+            <button id="btn-p4" class="btn-like" onclick="toggleLike(event, 'p4')">👍 Like</button>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+
+<script>
+    function show(id) {
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+    function openMission(e, name, url) { window.location.href = url; }
+    function toggleLike(e, id) { e.stopPropagation(); const btn = document.getElementById('btn-'+id); btn.innerText = btn.innerText === '👍 Like' ? '❤️ Liked' : '👍 Like'; }
+
+    const units = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+    const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+    function toWords(n) {
+        if (n <= 19) return units[n];
+        if (n < 100) return tens[Math.floor(n/10)] + (n % 10 !== 0 ? "-" + units[n % 10] : "");
+        return n === 100 ? "one hundred" : "one hundred and one";
+    }
+
+    function genCards(shuff = false) {
+        const aantal = parseInt(document.getElementById('aantal').value);
+        const lab = document.getElementById('fc-lab');
+        lab.innerHTML = '';
+        
+        let allNums = Array.from({length: 101}, (_, i) => i + 1);
+        // Random selectie van N getallen
+        let selectedNums = allNums.sort(() => 0.5 - Math.random()).slice(0, aantal);
+        
+        // Sorteer alleen als we NIET in shuffle-mode zitten (of forceer volgorde)
+        if (!shuff) selectedNums.sort((a, b) => a - b);
+        
+        selectedNums.forEach(n => {
+            const c = document.createElement('div');
+            c.className = 'fc-card';
+            c.onclick = function() { this.classList.toggle('flipped'); };
+            c.innerHTML = `<div class="fc-inner"><div class="fc-front">${n}</div><div class="fc-back">${toWords(n)}</div></div>`;
+            lab.appendChild(c);
+        });
+    }
+    genCards();
+</script>
 </body>
 </html>
-
-
-
-
-
-
