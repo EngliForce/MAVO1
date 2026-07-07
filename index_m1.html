@@ -6,7 +6,6 @@
     <title>EngliForce Headquarters</title>
     
     <script src="https://cdn.counter.dev/script.js" data-id="0eed7a4e-ef67-4086-a7e5-429c47941b67" data-utcoffset="1"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     
@@ -16,7 +15,6 @@
             --hero-blue-dark: #01579b;
             --hero-yellow: #ffb703;
             --hero-cyan: #81d4fa;
-            --dark-bg: #0b1a2a;
         }
 
         body {
@@ -25,6 +23,8 @@
             color: white;
             margin: 0;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
@@ -36,42 +36,18 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        h1 { 
-            font-family: 'Bangers', cursive; 
-            font-size: 3.5rem; 
-            letter-spacing: 3px; 
-            margin: 0; 
-            text-shadow: 4px 4px 0px var(--hero-blue-dark); 
-        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-blue-dark); }
 
-        header p {
-            font-family: 'Lexend', sans-serif;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-top: 10px;
-        }
-
-        main { max-width: 1000px; margin: 20px auto; padding: 20px; }
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
         
-        .divider {
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--hero-blue-main), transparent);
-            margin: 60px 0 40px 0;
-            border-radius: 2px;
-            box-shadow: 0 0 15px var(--hero-blue-main);
-        }
+        .section-title { font-family: 'Bangers', cursive; font-size: 2.8rem; color: var(--hero-yellow); text-align: center; margin: 40px 0; }
 
-        .section-title { 
-             font-family: 'Bangers', cursive; 
-             font-size: 2.8rem; 
-             color: var(--hero-yellow); 
-             margin: 0; 
-             text-transform: uppercase; 
-             letter-spacing: 2px;
-            text-align: center;
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 20px; 
+            width: 100%;
         }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 25px; margin-top: 30px; }
 
         .card {
             background: #102a43;
@@ -80,66 +56,58 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            align-items: center;
             transition: all 0.3s ease;
             text-decoration: none;
             color: white;
-            position: relative;
             cursor: pointer;
         }
 
-        .card:hover { border-color: var(--hero-yellow); transform: translateY(-8px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-
-        .card-header { display: flex; justify-content: center; margin-bottom: 15px; }
-        .power-icon { font-size: 2.5rem; background: rgba(255,255,255,0.05); width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
-
-        .name { font-weight: bold; font-size: 1.3rem; margin-bottom: 8px; color: #f8fafc; text-align: center; }
-        .desc { font-size: 0.9rem; color: #94a3b8; flex-grow: 1; text-align: center; margin-bottom: 15px; }
-
+        .card:hover { border-color: var(--hero-yellow); transform: translateY(-8px); }
+        .power-icon { font-size: 2.5rem; background: rgba(255,255,255,0.05); width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; border-radius: 15px; margin-bottom: 15px; }
+        .name { font-weight: bold; font-size: 1.3rem; margin-bottom: 8px; }
+        .desc { font-size: 0.9rem; color: #94a3b8; margin-bottom: 15px; text-align: center; }
+        
         .btn {
             background: #243b53;
             border: none;
             color: white;
-            padding: 14px;
+            padding: 10px 20px;
             border-radius: 12px;
             cursor: pointer;
             font-family: 'Bangers', cursive;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
+            font-size: 1rem;
+            width: 100%;
             transition: 0.3s;
-            z-index: 5; 
         }
 
         .card.done { border-color: var(--hero-yellow); background: #05101a; box-shadow: 0 0 20px rgba(255, 183, 3, 0.2); }
         .card.done .btn { background: var(--hero-yellow); color: var(--hero-blue-dark); }
+        
+        /* Video & Toggle Button */
+        .video-wrapper { text-align: center; margin: 50px 0; }
+        .toggle-btn { 
+            background: var(--hero-blue-main);
+            color: white; 
+            padding: 15px 30px; 
+            font-size: 1.2rem; 
+            border: 3px solid var(--hero-yellow); 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-family: 'Bangers', cursive;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+        .toggle-btn:hover { background: var(--hero-blue-dark); }
+        
+        #video-section { display: none; margin-top: 30px; }
+        .video-title { font-family: 'Bangers', cursive; font-size: 1.8rem; color: var(--hero-cyan); margin-bottom: 15px; }
+        iframe { border-radius: 12px; max-width: 100%; border: 3px solid #243b53; }
 
         .star { position: fixed; pointer-events: none; font-size: 3rem; z-index: 1000; animation: starFly 0.8s forwards; }
         @keyframes starFly { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(2) translateY(-150px); opacity: 0; } }
 
-        .video-container {
-            background: #102a43;
-            border: 3px solid #243b53;
-            border-radius: 20px;
-            padding: 20px;
-            margin: 30px auto;
-            max-width: 520px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-
-        .video-container iframe {
-            border-radius: 12px;
-            max-width: 100%;
-            border: none; /* Zorgt dat de standaard iframe rand weg is */
-        }
-
-        .video-title {
-            font-family: 'Bangers', cursive;
-            font-size: 1.8rem;
-            color: var(--hero-cyan);
-            margin-top: 15px;
-            letter-spacing: 1px;
-        }
-
+        footer { text-align: center; padding: 40px; opacity: 0.7; font-size: 0.9rem; margin-top: auto; }
     </style>
 </head>
 <body>
@@ -150,68 +118,64 @@
 </header>
 
 <main>
-    <h2 class="section-title">🚀 THEME MISSIONS</h2>
+    <h2 class="section-title">🚀 MISSIONS</h2>
     <div class="grid" id="theme-grid"></div>
 
-    <div class="divider"></div> 
-    
-    <h2 class="section-title">📺 TRAINING VIDEO</h2>
-    <div class="video-container">
-        <iframe 
-            width="480" 
-            height="270" 
-            src="https://www.youtube.com/embed/aX_SStTRKqc" 
-            title="Hoe leer je Engels?" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-        </iframe>
-        <div class="video-title">Hoe leer je Engels?</div>
+    <div class="video-wrapper">
+        <button class="toggle-btn" onclick="toggleVideo()" id="toggle-btn">📺 SHOW: Easy Tips To Improve Your English</button>
+        <div id="video-section">
+            <h2 class="section-title">📺 Easy Tips To Improve Your English</h2>
+            <iframe width="480" height="270" src="https://www.youtube.com/embed/aX_SStTRKqc" allowfullscreen></iframe>
+        </div>
     </div>
 </main>
 
 <footer>
-    <p style="text-align: center; opacity: 0.5; padding: 60px 0;">&copy; 2025 EngliForce – Make English Your Superpower!</p>
+    &copy; 2026 EngliForce – Make English Your Superpower!
 </footer>
 
 <script>
-    // Data voor de hoofdthema's van de homepage
+    function toggleVideo() {
+        const section = document.getElementById('video-section');
+        const btn = document.getElementById('toggle-btn');
+        if (section.style.display === 'block') {
+            section.style.display = 'none';
+            btn.innerText = '📺 SHOW: Easy Tips To Improve Your English';
+        } else {
+            section.style.display = 'block';
+            btn.innerText = '📺 HIDE: Easy Tips To Improve Your English';
+        }
+    }
+
     const themeData = [
-        { id: 'theme1', name: 'Theme 1', desc: 'All About Me', icon: '👤', url: 'theme1.html' },
-        { id: 'theme2', name: 'Theme 2', desc: 'Leisure', icon: '🎮', url: 'theme2.html' },
-        { id: 'theme3', name: 'Theme 3', desc: 'The UK', icon: '🇬🇧', url: 'm1t3_theme_3.html' },
-        { id: 'theme4', name: 'Theme 4', desc: 'Food and Drinks', icon: '🍔', url: 'm1t4_food_and_drinks.html' },
-        { id: 'theme5', name: 'Theme 5', desc: 'Media & Gadgets', icon: '📟', url: 'm1t5_media_and_gadgets.html' }
+        { id: 'theme1', name: 'Mission 1', desc: 'All About Me', icon: '👤', url: 'theme1.html' },
+        { id: 'theme2', name: 'Mission 2', desc: 'Leisure', icon: '🎮', url: 'theme2.html' },
+        { id: 'theme3', name: 'Mission 3', desc: 'The UK', icon: '🇬🇧', url: 'm1t3_theme_3.html' },
+        { id: 'theme4', name: 'Mission 4', desc: 'Food and Drinks', icon: '🍔', url: 'm1t4_food_and_drinks.html' },
+        { id: 'theme5', name: 'Mission 5', desc: 'Media & Gadgets', icon: '📟', url: 'm1t5_media_and_gadgets.html' }
     ];
 
-    function createCard(item, gridId) {
-        const grid = document.getElementById(gridId);
-        
+    const grid = document.getElementById('theme-grid');
+    themeData.forEach(item => {
         const card = document.createElement('a');
         card.className = 'card';
         card.id = item.id;
         card.href = item.url;
-        
         card.innerHTML = `
-            <div class="card-header"><div class="power-icon">${item.icon}</div></div>
+            <div class="power-icon">${item.icon}</div>
             <div class="name">${item.name}</div>
             <div class="desc">${item.desc}</div>
             <button class="btn" onclick="completeTask(event, '${item.id}')">MISSION COMPLETED</button>
         `;
         grid.appendChild(card);
-    }
-
-    // Genereer de kaarten
-    themeData.forEach(i => createCard(i, 'theme-grid'));
+    });
 
     function completeTask(event, id) {
-        // Voorkomt dat de link direct geopend wordt als je op de knop klikt
-        event.preventDefault(); 
+        event.preventDefault();
         event.stopPropagation();
-        
         const card = document.getElementById(id);
         const isDone = card.classList.toggle('done');
         
-        // Sla voortgang op specifiek voor de hoofdpagina (main_progress)
         const saved = JSON.parse(localStorage.getItem('hero_progress_main') || '{}');
         saved[id] = isDone;
         localStorage.setItem('hero_progress_main', JSON.stringify(saved));
@@ -224,14 +188,14 @@
         }
     }
 
-    // Laad de opgeslagen voortgang bij het herladen van de pagina
     document.addEventListener('DOMContentLoaded', () => {
         const saved = JSON.parse(localStorage.getItem('hero_progress_main') || '{}');
-        Object.keys(saved).forEach(id => { 
-             const el = document.getElementById(id);
-            if(el && saved[id]) el.classList.add('done'); 
-         });
+        Object.keys(saved).forEach(id => {
+            const el = document.getElementById(id);
+            if(el && saved[id]) el.classList.add('done');
+        });
     });
 </script>
+
 </body>
 </html>
