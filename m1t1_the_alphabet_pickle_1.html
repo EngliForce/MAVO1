@@ -1,133 +1,126 @@
 <!DOCTYPE html>
 <html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngliForce Academy: Listening Game</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --hero-purple-main: #7b2cbf;
-            --hero-purple-dark: #3c096c;
-            --hero-yellow: #ffb703;
-            --hero-cyan: #00f5d4;
-            --header-bg: #ff7043;
-            --header-border: #e65c30;
-        }
-        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        header { background: var(--header-bg); padding: 2rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
-        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
-        main { max-width: 800px; width: 90%; margin: 20px 0; background: rgba(26, 16, 42, 0.9); padding: 30px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; }
-        input { padding: 10px; border-radius: 10px; border: none; margin: 10px; width: 200px; }
-        button { font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }
-        button:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); }
-        .letter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; margin-top: 20px; }
-        .letter { font-family: 'Bangers'; font-size: 1.5rem; padding: 15px; background: #1a102a; border: 2px solid var(--hero-purple-dark); border-radius: 10px; cursor: pointer; transition: 0.2s; }
-        .letter:hover { border-color: var(--hero-yellow); }
-        .correct { background-color: var(--hero-cyan) !important; color: #000; }
-        .wrong { background-color: var(--hero-red) !important; }
-        #feedback, #turnInfo, #scores { margin-top: 20px; font-weight: bold; }
-        footer { margin-top: auto; padding: 20px; color: rgba(255,255,255,0.5); }
+<head>    
+    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>EngliForce Academy: Listening Game</title>    
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">    
+    <style>        
+        :root {            
+            --hero-purple-main: #7b2cbf;            
+            --hero-purple-dark: #3c096c;            
+            --hero-yellow: #ffb703;            
+            --hero-cyan: #00f5d4;            
+            --header-bg: #ff7043;            
+            --header-border: var(--hero-yellow); /* Streepje is nu geel */
+        }        
+        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }        
+        header { background: var(--header-bg); padding: 2rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }        
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }        
+        main { max-width: 800px; width: 90%; margin: 20px 0; background: rgba(26, 16, 42, 0.9); padding: 30px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; }        
+        input { padding: 10px; border-radius: 10px; border: none; margin: 10px; width: 200px; }        
+        button { font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }        
+        button:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); }        
+        .letter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; margin-top: 20px; }        
+        .letter { font-family: 'Bangers'; font-size: 1.5rem; padding: 15px; background: #1a102a; border: 2px solid var(--hero-purple-dark); border-radius: 10px; cursor: pointer; transition: 0.2s; }        
+        .letter:hover { border-color: var(--hero-yellow); }        
+        .correct { background-color: var(--hero-cyan) !important; color: #000; }        
+        .wrong { background-color: var(--hero-red) !important; }        
+        #feedback, #turnInfo, #scores { margin-top: 20px; font-weight: bold; }        
+        footer { margin-top: auto; padding: 20px; color: rgba(255,255,255,0.5); }    
     </style>
 </head>
 <body>
-
-<header>
+<header>    
     <h1>ENGLIFORCE ACADEMY</h1>
 </header>
-
-<main>
-    <h2>🎧 Alphabet Listening Game</h2>
-    
-    <div id="setupArea">
-        <p>Voer je naam in om de missie te starten:</p>
-        <input type="text" id="player1Name" placeholder="Speler 1" /><br>
-        <input type="text" id="player2Name" placeholder="Speler 2 (optioneel)" /><br>
-        <button onclick="startGame()">Start Missie</button>
+<main>    
+    <h2>🎧 Alphabet Listening Game</h2>        
+    <div id="setupArea">        
+        <p>Voer je naam in om de missie te starten:</p>        
+        <input type="text" id="player1Name" placeholder="Speler 1" /><br>        
+        <input type="text" id="player2Name" placeholder="Speler 2 (optioneel)" /><br>        
+        <button onclick="startGame()">Start Missie</button>    
     </div>
-
-    <div id="gameArea" style="display: none;">
-        <div id="turnInfo"></div>
-        <button onclick="playLetter()">▶️ Speel letter</button>
-        <button id="repeatButton" onclick="repeatLetter()" style="display: none;">🔁 Opnieuw</button>
-        <div class="letter-grid" id="letterGrid"></div>
-        <div id="feedback"></div>
-        <div id="scores"></div>
-        <button id="tryAgainBtn" onclick="resetGame()" style="display: none;">🔁 Opnieuw spelen</button>
-        <audio id="audioPlayer"></audio>
+    <div id="gameArea" style="display: none;">        
+        <div id="turnInfo"></div>        
+        <button onclick="playLetter()">▶️ Speel letter</button>        
+        <button id="repeatButton" onclick="repeatLetter()" style="display: none;">🔁 Opnieuw</button>        
+        <div class="letter-grid" id="letterGrid"></div>        
+        <div id="feedback"></div>        
+        <div id="scores"></div>        
+        <button id="tryAgainBtn" onclick="resetGame()" style="display: none;">🔁 Opnieuw spelen</button>        
+        <audio id="audioPlayer"></audio>    
     </div>
 </main>
-
 <footer>&copy; 2026, EngliForce: Make English Your Superpower!</footer>
-
-<script>
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    const letterGrid = document.getElementById("letterGrid");
-    const audio = document.getElementById("audioPlayer");
+<script>    
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");    
+    const letterGrid = document.getElementById("letterGrid");    
+    const audio = document.getElementById("audioPlayer");    
     let players = [], currentPlayer = 0, currentLetter = "", turnCount = 0, maxTurns = 10, totalRounds = 10;
-
-    function startGame() {
-        const p1 = document.getElementById("player1Name").value.trim() || "Speler 1";
-        const p2Input = document.getElementById("player2Name").value.trim();
-        players = [{ name: p1, score: 0 }];
-        if (p2Input) { players.push({ name: p2Input, score: 0 }); maxTurns = totalRounds * 2; } else { maxTurns = totalRounds; }
-        document.getElementById("setupArea").style.display = "none";
-        document.getElementById("gameArea").style.display = "block";
-        updateUI();
+    
+    function startGame() {        
+        const p1 = document.getElementById("player1Name").value.trim() || "Speler 1";        
+        const p2Input = document.getElementById("player2Name").value.trim();        
+        players = [{ name: p1, score: 0 }];        
+        if (p2Input) { players.push({ name: p2Input, score: 0 }); maxTurns = totalRounds * 2; } else { maxTurns = totalRounds; }        
+        document.getElementById("setupArea").style.display = "none";        
+        document.getElementById("gameArea").style.display = "block";        
+        updateUI();    
     }
-
-    function playLetter() {
-        if (turnCount >= maxTurns) return;
-        currentLetter = letters[Math.floor(Math.random() * letters.length)];
-        audio.src = `https://engliforce.github.io/MAVO1/${currentLetter.toLowerCase()}.mp3`;
-        audio.play();
-        document.querySelectorAll(".letter").forEach(el => el.classList.remove("correct", "wrong"));
-        document.getElementById("feedback").textContent = "";
-        document.getElementById("repeatButton").style.display = "inline-block";
+    
+    function playLetter() {        
+        if (turnCount >= maxTurns) return;        
+        currentLetter = letters[Math.floor(Math.random() * letters.length)];        
+        audio.src = `https://engliforce.github.io/MAVO1/${currentLetter.toLowerCase()}.mp3`;        
+        audio.play();        
+        document.querySelectorAll(".letter").forEach(el => el.classList.remove("correct", "wrong"));        
+        document.getElementById("feedback").textContent = "";        
+        document.getElementById("repeatButton").style.display = "inline-block";    
     }
-
+    
     function repeatLetter() { if (currentLetter) { audio.src = `https://engliforce.github.io/MAVO1/${currentLetter.toLowerCase()}.mp3`; audio.play(); } }
-
-    function handleLetterClick(clickedLetter, el) {
-        if (!currentLetter) return;
-        if (clickedLetter === currentLetter) {
-            el.classList.add("correct");
-            players[currentPlayer].score++;
-            document.getElementById("feedback").textContent = "✅ Correct!";
-        } else {
-            el.classList.add("wrong");
-            document.getElementById("feedback").innerHTML = `❌ Fout. Het was: <strong>${currentLetter}</strong>`;
-        }
-        turnCount++;
-        if (turnCount >= maxTurns) {
-            document.getElementById("feedback").innerHTML += "<br><strong>🎉 Missie voltooid!</strong>";
-            document.getElementById("tryAgainBtn").style.display = "inline-block";
-        } else {
-            if (players.length === 2) currentPlayer = 1 - currentPlayer;
-            updateUI();
-        }
-        currentLetter = "";
+    
+    function handleLetterClick(clickedLetter, el) {        
+        if (!currentLetter) return;        
+        if (clickedLetter === currentLetter) {            
+            el.classList.add("correct");            
+            players[currentPlayer].score++;            
+            document.getElementById("feedback").textContent = "✅ Correct!";        
+        } else {            
+            el.classList.add("wrong");            
+            document.getElementById("feedback").innerHTML = `❌ Fout. Het was: <strong>${currentLetter}</strong>`;        
+        }        
+        turnCount++;        
+        if (turnCount >= maxTurns) {            
+            document.getElementById("feedback").innerHTML += "<br><strong>🎉 Missie voltooid!</strong>";            
+            document.getElementById("tryAgainBtn").style.display = "inline-block";        
+        } else {            
+            if (players.length === 2) currentPlayer = 1 - currentPlayer;            
+            updateUI();        
+        }        
+        currentLetter = "";    
     }
-
-    function updateUI() {
-        document.getElementById("turnInfo").innerHTML = `Aan de beurt: <strong>${players[currentPlayer].name}</strong>`;
-        document.getElementById("scores").innerHTML = players.map(p => `${p.name}: ${p.score} punten`).join(" | ");
+    
+    function updateUI() {        
+        document.getElementById("turnInfo").innerHTML = `Aan de beurt: <strong>${players[currentPlayer].name}</strong>`;        
+        document.getElementById("scores").innerHTML = players.map(p => `${p.name}: ${p.score} punten`).join(" | ");    }
+    
+    function resetGame() {        
+        players.forEach(p => p.score = 0);        
+        currentPlayer = 0; turnCount = 0; currentLetter = "";        
+        document.getElementById("tryAgainBtn").style.display = "none";        
+        document.getElementById("feedback").textContent = "";        
+        updateUI();    
     }
-
-    function resetGame() {
-        players.forEach(p => p.score = 0);
-        currentPlayer = 0; turnCount = 0; currentLetter = "";
-        document.getElementById("tryAgainBtn").style.display = "none";
-        document.getElementById("feedback").textContent = "";
-        updateUI();
-    }
-
-    letters.forEach(letter => {
-        const div = document.createElement("div");
-        div.textContent = letter;
-        div.className = "letter";
-        div.onclick = () => handleLetterClick(letter, div);
-        letterGrid.appendChild(div);
+    
+    letters.forEach(letter => {        
+        const div = document.createElement("div");        
+        div.textContent = letter;        
+        div.className = "letter";        
+        div.onclick = () => handleLetterClick(letter, div);        
+        letterGrid.appendChild(div);    
     });
 </script>
 </body>
