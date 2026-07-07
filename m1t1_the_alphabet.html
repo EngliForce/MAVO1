@@ -1,6 +1,284 @@
 <!DOCTYPE html>
 <html lang="nl">
+<head><!DOCTYPE html>
+<html lang="nl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Master the Alphabet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --dark-bg: #05101a;
+            --hero-orange: #ff5722;
+            --hero-green: #4caf50;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+            --header-bg: #ff7043;
+            --header-border: var(--hero-yellow); /* Streepje onder header is nu geel */
+        }
+        html, body { margin: 0; padding: 0; width: 100%; }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        header { background: var(--header-bg); padding: 2.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0; }
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+        .section-divider { height: 4px; background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent); margin: 50px 0; opacity: 0.8; border-radius: 2px; box-shadow: 0 0 15px var(--hero-cyan); }
+        .briefing-box { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-cyan); border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .video-container { background: #000; border: 4px solid var(--hero-red); border-radius: 20px; overflow: hidden; position: relative; padding-top: 56.25%; margin-bottom: 40px; box-shadow: 0 0 40px rgba(211, 47, 47, 0.4); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .explanation-text { font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px; border-left: 4px solid var(--hero-cyan); padding-left: 20px; background: rgba(0, 245, 212, 0.05); padding-top: 15px; padding-bottom: 15px; padding-right: 20px; }
+        .split-box-container { display: flex; gap: 20px; margin: 20px 0; }
+        .split-box { flex: 1; background: rgba(0, 0, 0, 0.4); border-radius: 15px; padding: 20px; text-align: center; border: 2px dashed; }
+        .split-box.past { border-color: var(--hero-yellow); }
+        .split-box.to { border-color: var(--hero-cyan); }
+        .split-box-title { font-family: 'Bangers', cursive; font-size: 1.5rem; letter-spacing: 1px; margin-bottom: 10px; }
+        .split-box.past .split-box-title { color: var(--hero-yellow); }
+        .split-box.to .split-box-title { color: var(--hero-cyan); }
+        @media (max-width: 600px) { .split-box-container { flex-direction: column; } }
+        .toggle-container { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle { background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer; transition: 0.2s; border-bottom: 5px solid var(--hero-purple-dark); }
+        .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        .btn-video { background: var(--hero-red); border-bottom: 5px solid var(--hero-red-dark); }
+        .btn-video:hover { background: #ff5252; color: white; }
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .pickle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .pickle-grid { grid-template-columns: repeat(1, 1fr); } }
+        .card { background: #1a102a; border: 3px solid #3c096c; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
+        .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 183, 3, 0.2); }
+        .card .title { font-family: 'Bangers'; font-size: 1.3rem; color: var(--hero-yellow); margin: 10px 0; }
+        .btn-like { background: #3c096c; color: white; border: 2px solid var(--hero-cyan); padding: 5px 15px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; margin-top: 10px; transition: 0.2s; }
+        .btn-like.liked { background: var(--hero-yellow); color: #000; border-color: #000; }
+        .table-container { width: 100%; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); margin-top: 20px; background: #1a102a; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: center; }
+        th { background: var(--hero-purple-main); color: white; padding: 18px; font-family: 'Bangers'; font-size: 1.2rem; }
+        td { padding: 15px; border: 1px solid rgba(255,255,255,0.1); font-size: 1rem; }
+        .letter-highlight { font-family: 'Bangers', cursive; font-size: 1.5rem; color: var(--hero-yellow); }
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+        footer { display: block; background: #05101a; color: rgba(255,255,255,0.8); text-align: center; padding: 40px 20px; border-top: 2px solid var(--hero-purple-dark); margin-top: 50px; width: 100%; box-sizing: border-box; }
+        .footer-highlight { color: var(--hero-yellow); }
+        .fc-card { width: 100%; height: 120px; perspective: 1000px; cursor: pointer; }
+        .fc-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .fc-card.flipped .fc-inner { transform: rotateY(180deg); }
+        .fc-front, .fc-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--hero-yellow); box-sizing: border-box; }
+        .fc-front { background: white; color: var(--hero-purple-dark); font-family: 'Lexend', sans-serif; font-size: 2.5rem; font-weight: 700; text-transform: none !important; }
+        .fc-back { background: var(--hero-yellow); color: var(--hero-purple-dark); transform: rotateY(180deg); font-family: 'Lexend'; font-weight: bold; font-size: 1.2rem; }
+    </style>
+    <script>
+        function playSound(letter) {
+            const audio = new Audio(letter + '.mp3');
+            audio.play().catch(e => console.log("Audio niet gevonden: " + letter + '.mp3'));
+        }
+    </script>
+</head>
+<body>
+<div class="flash-effect" id="flash"></div>
+<header>    
+    <h1>ENGLIFORCE ACADEMY</h1>    
+    <p>ALPHABET COMMAND CENTER</p>
+</header>
+<main>    
+    <section class="briefing-box">        
+        <h2>🚨 OBJECTIVE: MASTER THE ALPHABET</h2>        
+        <div class="explanation-text">            
+            <p>Leer de letters van het Engelse alfabet en hoe je ze uitspreekt! In het Engels klinken sommige letters heel anders dan je gewend bent.</p>            
+            <div class="split-box-container">                
+                <div class="split-box past">                    
+                    <div class="split-box-title">LET OP DEZE LETTERS</div>                    
+                    <ul style="text-align: left; display: inline-block; margin: 0; padding-left: 20px;">                        
+                        <li><strong style="color: var(--hero-yellow);">A</strong> klinkt als: <em>ee</em></li>                        
+                        <li><strong style="color: var(--hero-yellow);">E</strong> klinkt als: <em>ie</em></li>                        
+                        <li><strong style="color: var(--hero-yellow);">I</strong> klinkt als: <em>aj</em></li>                        
+                        <li><strong style="color: var(--hero-yellow);">Y</strong> klinkt als: <em>waj</em></li>                        
+                        <li><strong style="color: var(--hero-yellow);">H</strong> klinkt als: <em>eetsj</em></li>                        
+                        <li><strong style="color: var(--hero-yellow);">W</strong> klinkt als: <em>dabbel joe</em></li>                    
+                    </ul>                
+                </div>                
+                <div class="split-box to">                    
+                    <div class="split-box-title">BRITS VS AMERIKAANS</div>                    
+                    <ul style="text-align: left; display: inline-block; margin: 0; padding-left: 20px;">                        
+                        <li><strong style="color: var(--hero-cyan);">O</strong>: <em>oh</em> (UK) / <em>ow</em> (US)</li>                        
+                        <li><strong style="color: var(--hero-cyan);">R</strong>: <em>ah</em> (UK) / <em>ar</em> (US)</li>                        
+                        <li><strong style="color: var(--hero-cyan);">Z</strong>: <em>zed</em> (UK) / <em>zie</em> (US)</li>                    
+                    </ul>                
+                </div>            
+            </div>        
+        </div>    
+    </section>
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'alphabet-grid', 'ZAP!')">🔠 Het Alfabet</button>
+        <button class="btn-toggle" onclick="showSection(event, 'flashcards', 'KA-POW!')">🃏 Flashcards</button>
+        <button class="btn-toggle btn-video" onclick="showSection(event, 'video-mission', 'ACTION!')">🎬 Mission Video</button>
+    </div>
+    <div id="alphabet-grid" class="content-section" style="display: block;">
+        <h3>Tactisch Alfabet Overzicht</h3>
+        <div class="table-container">
+            <table>
+                <tbody>
+                    <tr>
+                        <td><span class="letter-highlight">A</span><br><small>ee</small><br><button class="btn-like" onclick="playSound('a')">▶️</button></td>
+                        <td><span class="letter-highlight">B</span><br><small>bie</small><br><button class="btn-like" onclick="playSound('b')">▶️</button></td>
+                        <td><span class="letter-highlight">C</span><br><small>sie</small><br><button class="btn-like" onclick="playSound('c')">▶️</button></td>
+                        <td><span class="letter-highlight">D</span><br><small>die</small><br><button class="btn-like" onclick="playSound('d')">▶️</button></td>
+                        <td><span class="letter-highlight">E</span><br><small>ie</small><br><button class="btn-like" onclick="playSound('e')">▶️</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="letter-highlight">F</span><br><small>ef</small><br><button class="btn-like" onclick="playSound('f')">▶️</button></td>
+                        <td><span class="letter-highlight">G</span><br><small>djie</small><br><button class="btn-like" onclick="playSound('g')">▶️</button></td>
+                        <td><span class="letter-highlight">H</span><br><small>eetsj</small><br><button class="btn-like" onclick="playSound('h')">▶️</button></td>
+                        <td><span class="letter-highlight">I</span><br><small>aaj</small><br><button class="btn-like" onclick="playSound('i')">▶️</button></td>
+                        <td><span class="letter-highlight">J</span><br><small>djee</small><br><button class="btn-like" onclick="playSound('j')">▶️</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="letter-highlight">K</span><br><small>kee</small><br><button class="btn-like" onclick="playSound('k')">▶️</button></td>
+                        <td><span class="letter-highlight">L</span><br><small>el</small><br><button class="btn-like" onclick="playSound('l')">▶️</button></td>
+                        <td><span class="letter-highlight">M</span><br><small>em</small><br><button class="btn-like" onclick="playSound('m')">▶️</button></td>
+                        <td><span class="letter-highlight">N</span><br><small>en</small><br><button class="btn-like" onclick="playSound('n')">▶️</button></td>
+                        <td><span class="letter-highlight">O</span><br><small>oh</small><br><button class="btn-like" onclick="playSound('o')">▶️</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="letter-highlight">P</span><br><small>pie</small><br><button class="btn-like" onclick="playSound('p')">▶️</button></td>
+                        <td><span class="letter-highlight">Q</span><br><small>kjoe</small><br><button class="btn-like" onclick="playSound('q')">▶️</button></td>
+                        <td><span class="letter-highlight">R</span><br><small>ah</small><br><button class="btn-like" onclick="playSound('r')">▶️</button></td>
+                        <td><span class="letter-highlight">S</span><br><small>es</small><br><button class="btn-like" onclick="playSound('s')">▶️</button></td>
+                        <td><span class="letter-highlight">T</span><br><small>tie</small><br><button class="btn-like" onclick="playSound('t')">▶️</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="letter-highlight">U</span><br><small>joe</small><br><button class="btn-like" onclick="playSound('u')">▶️</button></td>
+                        <td><span class="letter-highlight">V</span><br><small>vie</small><br><button class="btn-like" onclick="playSound('v')">▶️</button></td>
+                        <td><span class="letter-highlight">W</span><br><small>dobbeljoe</small><br><button class="btn-like" onclick="playSound('w')">▶️</button></td>
+                        <td><span class="letter-highlight">X</span><br><small>eks</small><br><button class="btn-like" onclick="playSound('x')">▶️</button></td>
+                        <td><span class="letter-highlight">Y</span><br><small>waj</small><br><button class="btn-like" onclick="playSound('y')">▶️</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="letter-highlight">Z</span><br><small>zed</small><br><button class="btn-like" onclick="playSound('z')">▶️</button></td>
+                        <td colspan="4"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="flashcards" class="content-section">
+        <h3>🃏 Flashcard Lab</h3>
+        <p style="margin-bottom: 20px; color: var(--hero-cyan); font-style: italic;">Hoe spreek je de letters uit in het Engels? Klik op de kaart om het antwoord te zien.</p>
+        <div class="toggle-container" style="margin-bottom: 20px;">
+            <button class="btn-like" onclick="shuffleFlashcards()" style="padding: 10px 20px; font-size: 1rem;">🔀 Shuffle</button>
+            <button class="btn-like" onclick="resetFlashcards()" style="padding: 10px 20px; font-size: 1rem;">🔁 Reset</button>
+        </div>
+        <div class="pickle-grid" id="fc-container"></div>
+    </div>
+    <div id="video-mission" class="content-section">
+        <h3>🎬 MISSION BRIEFING VIDEO</h3>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/dWaB8PepBTI" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="section-divider"></div>
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" id="card-p1" onclick="openMission(event, 'CRUNCH!', 'the_alphabet_pickle_1.html')">
+            <span style="font-size: 2.5rem;">🎧</span>
+            <div class="title">Pickle 1</div>
+            <p style="font-size: 0.9rem;">Listening Game</p>
+            <button id="btn-p1" class="btn-like" onclick="toggleLike(event, 'p1')">👍 Like</button>
+        </div>
+        <div class="card" id="card-p2" onclick="openMission(event, 'TICK TOCK!', 'the_alphabet_pickle_2.html')">
+            <span style="font-size: 2.5rem;">✏️</span>
+            <div class="title">Pickle 2</div>
+            <p style="font-size: 0.9rem;">Spelling Challenge</p>
+            <button id="btn-p2" class="btn-like" onclick="toggleLike(event, 'p2')">👍 Like</button>
+        </div>
+        <div class="card" id="card-p3" onclick="openMission(event, 'VROOM!', 'the_alphabet_pickle_3.html')">
+            <span style="font-size: 2.5rem;">✋</span>
+            <div class="title">Pickle 3</div>
+            <p style="font-size: 0.9rem;">Simon Says</p>
+            <button id="btn-p3" class="btn-like" onclick="toggleLike(event, 'p3')">👍 Like</button>
+        </div>
+        <div class="card" id="card-p4" onclick="openMission(event, 'ZAP!', 'the_alphabet_pickle_4.html')">
+            <span style="font-size: 2.5rem;">🎵</span>
+            <div class="title">Pickle 4</div>
+            <p style="font-size: 0.9rem;">Rhyming Game</p>
+            <button id="btn-p4" class="btn-like" onclick="toggleLike(event, 'p4')">👍 Like</button>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+<script>
+    const alphabetData = [
+        { letter: 'Aa', pron: 'ee' }, { letter: 'Bb', pron: 'bie' }, { letter: 'Cc', pron: 'sie' },
+        { letter: 'Dd', pron: 'die' }, { letter: 'Ee', pron: 'ie' }, { letter: 'Ff', pron: 'ef' },
+        { letter: 'Gg', pron: 'djie' }, { letter: 'Hh', pron: 'eetsj' }, { letter: 'Ii', pron: 'aaj' },
+        { letter: 'Jj', pron: 'djee' }, { letter: 'Kk', pron: 'kee' }, { letter: 'Ll', pron: 'el' },
+        { letter: 'Mm', pron: 'em' }, { letter: 'Nn', pron: 'en' }, { letter: 'Oo', pron: 'oh' },
+        { letter: 'Pp', pron: 'pie' }, { letter: 'Qq', pron: 'kjoe' }, { letter: 'Rr', pron: 'ah' },
+        { letter: 'Ss', pron: 'es' }, { letter: 'Tt', pron: 'tie' }, { letter: 'Uu', pron: 'joe' },
+        { letter: 'Vv', pron: 'vie' }, { letter: 'Ww', pron: 'dabbel joe' }, { letter: 'Xx', pron: 'eks' },
+        { letter: 'Yy', pron: 'waj' }, { letter: 'Zz', pron: 'zed' }
+    ];
+    function renderFlashcards(data) {
+        const fcGrid = document.getElementById('fc-container');
+        fcGrid.innerHTML = '';
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'fc-card';
+            card.onclick = () => card.classList.toggle('flipped');
+            card.innerHTML = `<div class="fc-inner"><div class="fc-front">${item.letter}</div><div class="fc-back">${item.pron}</div></div>`;
+            fcGrid.appendChild(card);
+        });
+    }
+    function shuffleFlashcards() {
+        const shuffled = [...alphabetData].sort(() => Math.random() - 0.5);
+        renderFlashcards(shuffled);
+    }
+    function resetFlashcards() {
+        renderFlashcards(alphabetData);
+    }
+    function openMission(e, message, url) {
+        if (e.target.tagName === 'BUTTON') return;
+        createExplosion(e, message);
+    }
+    function toggleLike(e, id) {
+        e.stopPropagation();
+        const btn = document.getElementById('btn-' + id);
+        btn.classList.toggle('liked');
+        btn.innerText = btn.classList.contains('liked') ? '❤️ Liked' : '👍 Like';
+    }
+    function showSection(e, id, boomMessage) {
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, boomMessage);
+    }
+    function createExplosion(e, message) {
+        const x = e.clientX, y = e.clientY;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3';
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px';
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
+    }
+    renderFlashcards(alphabetData);
+</script>
+</body>
+</html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EngliForce Academy: Alphabet Command Center</title>
