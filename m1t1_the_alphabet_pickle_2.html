@@ -2,154 +2,7 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!DOCTYPE html>
-<html lang="nl">
-<head>    
-    <meta charset="UTF-8">    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <title>EngliForce Academy: Spelling Challenge</title>    
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">    
-    <style>        
-        :root {            
-            --hero-purple-main: #7b2cbf;            
-            --hero-purple-dark: #3c096c;            
-            --hero-yellow: #ffb703;            
-            --hero-cyan: #00f5d4;            
-            --hero-red: #d32f2f;            
-            --header-bg: #ff7043;            
-            --header-border: var(--hero-yellow); /* Streepje is nu geel */
-        }        
-        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }        
-        header { background: var(--header-bg); padding: 2rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }        
-        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }        
-        main { max-width: 600px; width: 90%; margin: 20px 0; background: rgba(26, 16, 42, 0.9); padding: 30px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; }        
-        input { padding: 12px; border-radius: 10px; border: 2px solid var(--hero-cyan); background: #000; color: white; margin: 10px; width: 80%; text-align: center; font-size: 1rem; }        
-        button { font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }        
-        button:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-2px); }        
-        .feedback { margin-top: 20px; font-weight: bold; font-size: 1.2rem; }        
-        .correct { color: var(--hero-cyan); }        
-        .wrong { color: var(--hero-red); }        
-        .score-board { margin-top: 30px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; }        
-        .hidden { display: none; }        
-        footer { margin-top: auto; padding: 20px; color: rgba(255,255,255,0.5); }    
-    </style>
-</head>
-<body>
-<header>    
-    <h1>ENGLIFORCE ACADEMY: SPELLING CHALLENGE</h1>
-</header>
-<main>    
-    <div id="modeSelect">        
-        <p><strong>Kies de spelmodus:</strong></p>        
-        <input type="text" id="player1NameInput" placeholder="Naam speler 1" />        
-        <input type="text" id="player2NameInput" placeholder="Naam speler 2" class="hidden" disabled />        
-        <div>            
-            <button onclick="selectMode(1)">🎮 1 speler</button>            
-            <button onclick="selectMode(2)">🎮 2 spelers</button>        
-        </div>        
-        <button onclick="startGame()">▶️ Start spel</button>    
-    </div>
-    <div id="gameArea" class="hidden">        
-        <div id="playerTurn" style="font-size: 1.2rem; margin-bottom: 15px; color: var(--hero-yellow);"></div>        
-        <button onclick="playSequence()">🔊 Speel reeks af</button>        
-        <div>            
-            <input type="text" id="userInput" placeholder="Typ hier de letters" />        
-        </div>        
-        <div>            
-            <button onclick="checkAnswer()">✅ Controleer</button>            
-            <button onclick="skipQuestion()" style="background: var(--hero-red);">🤷 Weet ik niet</button>        
-        </div>        
-        <div id="feedbackMsg" class="feedback"></div>        
-        <div class="score-board">            
-            <p>🎮 <span id="name1Display">Speler 1</span>: <span id="score1">0</span> punten</p>            
-            <p id="p2Score" class="hidden">🎮 <span id="name2Display">Speler 2</span>: <span id="score2">0</span> punten</p>            
-            <p>Beurten: <span id="turns">0</span></p>        
-        </div>    
-    </div>
-</main>
-<footer>&copy; 2026, EngliForce: Make English Your Superpower!</footer>
-<script>    
-    const letters = "abcdefghijklmnopqrstuvwxyz".split('');    
-    const baseUrl = "https://engliforce.github.io/MAVO1/";    
-    let currentSequence = [], currentPlayer = 1, mode = 1, score1 = 0, score2 = 0, turns = 0, player1Name = "Speler 1", player2Name = "Speler 2";    
-    let audioCache = {};
-    
-    // Laad alle audio alvast in het geheugen    
-    letters.forEach(l => {        
-        audioCache[l] = new Audio(baseUrl + l + '.mp3');    
-    });
-    
-    function selectMode(selectedMode) {        
-        mode = selectedMode;        
-        const p2Input = document.getElementById('player2NameInput');        
-        if (mode === 2) { p2Input.classList.remove('hidden'); p2Input.disabled = false; }        
-        else { p2Input.classList.add('hidden'); p2Input.disabled = true; }    
-    }
-    
-    function startGame() {        
-        player1Name = document.getElementById('player1NameInput').value.trim() || "Speler 1";        
-        player2Name = (mode === 2 && document.getElementById('player2NameInput').value.trim()) ? document.getElementById('player2NameInput').value.trim() : "Speler 2";        
-        document.getElementById('name1Display').textContent = player1Name;        
-        document.getElementById('name2Display').textContent = player2Name;        
-        document.getElementById('modeSelect').classList.add('hidden');        
-        document.getElementById('gameArea').classList.remove('hidden');        
-        if (mode === 2) document.getElementById('p2Score').classList.remove('hidden');        
-        updateUI();    
-    }
-    
-    function playSequence() {        
-        const length = Math.floor(Math.random() * 3) + 3;        
-        currentSequence = [];        
-        for (let i = 0; i < length; i++) currentSequence.push(letters[Math.floor(Math.random() * letters.length)]);        
-        playNext(0);        
-        document.getElementById('feedbackMsg').textContent = '';        
-        document.getElementById('userInput').value = '';    
-    }
-    
-    function playNext(index) {        
-        if (index >= currentSequence.length) return;        
-        const sound = audioCache[currentSequence[index]];        
-        sound.currentTime = 0; // Reset naar begin        
-        sound.play().catch(e => console.error("Audio fout:", e));        
-        sound.onended = () => setTimeout(() => playNext(index + 1), 400);    
-    }
-    
-    function checkAnswer() {        
-        const input = document.getElementById('userInput').value.trim().toLowerCase();        
-        const feedback = document.getElementById('feedbackMsg');        
-        if (!currentSequence.length) { feedback.textContent = '🔊 Speel eerst een reeks af!'; feedback.className = 'feedback wrong'; return; }        
-        if (input === currentSequence.join('')) {            
-            feedback.textContent = `✅ Goed gedaan, ${currentPlayer === 1 ? player1Name : player2Name}!`;            
-            feedback.className = 'feedback correct';            
-            if (currentPlayer === 1) score1++; else score2++;            
-            turns++;            
-            currentSequence = [];            
-            if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;        
-        } else {            
-            feedback.textContent = `❌ Fout, probeer opnieuw.`;            
-            feedback.className = 'feedback wrong';        
-        }        
-        updateUI();    
-    }
-    
-    function skipQuestion() {        
-        if (!currentSequence.length) return;        
-        document.getElementById('feedbackMsg').textContent = `❌ De reeks was: ${currentSequence.join('')}`;        
-        document.getElementById('feedbackMsg').className = 'feedback wrong';        
-        currentSequence = []; turns++;        
-        if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;        
-        updateUI();    
-    }
-    
-    function updateUI() {        
-        document.getElementById('playerTurn').textContent = `Aan de beurt: ${currentPlayer === 1 ? player1Name : player2Name}`;        
-        document.getElementById('score1').textContent = score1;        
-        document.getElementById('score2').textContent = score2;        
-        document.getElementById('turns').textContent = turns;    
-    }
-</script>
-</body>
-</html>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EngliForce Academy: Spelling Challenge</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -160,7 +13,7 @@
             --hero-cyan: #00f5d4;
             --hero-red: #d32f2f;
             --header-bg: #ff7043;
-            --header-border: #e65c30;
+            --header-border: var(--hero-yellow); /* Streepje onder de header is geel */
         }
         body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         header { background: var(--header-bg); padding: 2rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
@@ -178,123 +31,117 @@
     </style>
 </head>
 <body>
-
-<header>
-    <h1>SPELLING CHALLENGE</h1>
-</header>
-
-<main>
-    <div id="modeSelect">
-        <p><strong>Kies de spelmodus:</strong></p>
-        <input type="text" id="player1NameInput" placeholder="Naam speler 1" />
-        <input type="text" id="player2NameInput" placeholder="Naam speler 2" class="hidden" disabled />
-        <div>
-            <button onclick="selectMode(1)">🎮 1 speler</button>
-            <button onclick="selectMode(2)">🎮 2 spelers</button>
+    <header>
+        <h1>ENGLIFORCE ACADEMY: SPELLING CHALLENGE</h1>
+    </header>
+    <main>
+        <div id="modeSelect">
+            <p><strong>Kies de spelmodus:</strong></p>
+            <input type="text" id="player1NameInput" placeholder="Naam speler 1" />
+            <input type="text" id="player2NameInput" placeholder="Naam speler 2" class="hidden" disabled />
+            <div>
+                <button onclick="selectMode(1)">🎮 1 speler</button>
+                <button onclick="selectMode(2)">🎮 2 spelers</button>
+            </div>
+            <button onclick="startGame()">▶️ Start spel</button>
         </div>
-        <button onclick="startGame()">▶️ Start spel</button>
-    </div>
-
-    <div id="gameArea" class="hidden">
-        <div id="playerTurn" style="font-size: 1.2rem; margin-bottom: 15px; color: var(--hero-yellow);"></div>
-        <button onclick="playSequence()">🔊 Speel reeks af</button>
-        <div>
-            <input type="text" id="userInput" placeholder="Typ hier de letters" />
+        <div id="gameArea" class="hidden">
+            <div id="playerTurn" style="font-size: 1.2rem; margin-bottom: 15px; color: var(--hero-yellow);"></div>
+            <button onclick="playSequence()">🔊 Speel reeks af</button>
+            <div>
+                <input type="text" id="userInput" placeholder="Typ hier de letters" />
+            </div>
+            <div>
+                <button onclick="checkAnswer()">✅ Controleer</button>
+                <button onclick="skipQuestion()" style="background: var(--hero-red);">🤷 Weet ik niet</button>
+            </div>
+            <div id="feedbackMsg" class="feedback"></div>
+            <div class="score-board">
+                <p>🎮 <span id="name1Display">Speler 1</span>: <span id="score1">0</span> punten</p>
+                <p id="p2Score" class="hidden">🎮 <span id="name2Display">Speler 2</span>: <span id="score2">0</span> punten</p>
+                <p>Beurten: <span id="turns">0</span></p>
+            </div>
         </div>
-        <div>
-            <button onclick="checkAnswer()">✅ Controleer</button>
-            <button onclick="skipQuestion()" style="background: var(--hero-red);">🤷 Weet ik niet</button>
-        </div>
-        <div id="feedbackMsg" class="feedback"></div>
-        <div class="score-board">
-            <p>🎮 <span id="name1Display">Speler 1</span>: <span id="score1">0</span> punten</p>
-            <p id="p2Score" class="hidden">🎮 <span id="name2Display">Speler 2</span>: <span id="score2">0</span> punten</p>
-            <p>Beurten: <span id="turns">0</span></p>
-        </div>
-    </div>
-</main>
+    </main>
+    <footer>&copy; 2026, EngliForce: Make English Your Superpower!</footer>
+    <script>
+        const letters = "abcdefghijklmnopqrstuvwxyz".split('');
+        const baseUrl = "https://engliforce.github.io/MAVO1/";
+        let currentSequence = [], currentPlayer = 1, mode = 1, score1 = 0, score2 = 0, turns = 0, player1Name = "Speler 1", player2Name = "Speler 2";
+        let audioCache = {};
 
-<footer>&copy; 2026, EngliForce: Make English Your Superpower!</footer>
+        letters.forEach(l => {
+            audioCache[l] = new Audio(baseUrl + l + '.mp3');
+        });
 
-<script>
-    const letters = "abcdefghijklmnopqrstuvwxyz".split('');
-    const baseUrl = "https://engliforce.github.io/MAVO1/";
-    let currentSequence = [], currentPlayer = 1, mode = 1, score1 = 0, score2 = 0, turns = 0, player1Name = "Speler 1", player2Name = "Speler 2";
-    let audioCache = {};
-
-    // Laad alle audio alvast in het geheugen
-    letters.forEach(l => {
-        audioCache[l] = new Audio(baseUrl + l + '.mp3');
-    });
-
-    function selectMode(selectedMode) {
-        mode = selectedMode;
-        const p2Input = document.getElementById('player2NameInput');
-        if (mode === 2) { p2Input.classList.remove('hidden'); p2Input.disabled = false; }
-        else { p2Input.classList.add('hidden'); p2Input.disabled = true; }
-    }
-
-    function startGame() {
-        player1Name = document.getElementById('player1NameInput').value.trim() || "Speler 1";
-        player2Name = (mode === 2 && document.getElementById('player2NameInput').value.trim()) ? document.getElementById('player2NameInput').value.trim() : "Speler 2";
-        document.getElementById('name1Display').textContent = player1Name;
-        document.getElementById('name2Display').textContent = player2Name;
-        document.getElementById('modeSelect').classList.add('hidden');
-        document.getElementById('gameArea').classList.remove('hidden');
-        if (mode === 2) document.getElementById('p2Score').classList.remove('hidden');
-        updateUI();
-    }
-
-    function playSequence() {
-        const length = Math.floor(Math.random() * 3) + 3;
-        currentSequence = [];
-        for (let i = 0; i < length; i++) currentSequence.push(letters[Math.floor(Math.random() * letters.length)]);
-        playNext(0);
-        document.getElementById('feedbackMsg').textContent = '';
-        document.getElementById('userInput').value = '';
-    }
-
-    function playNext(index) {
-        if (index >= currentSequence.length) return;
-        const sound = audioCache[currentSequence[index]];
-        sound.currentTime = 0; // Reset naar begin
-        sound.play().catch(e => console.error("Audio fout:", e));
-        sound.onended = () => setTimeout(() => playNext(index + 1), 400);
-    }
-
-    function checkAnswer() {
-        const input = document.getElementById('userInput').value.trim().toLowerCase();
-        const feedback = document.getElementById('feedbackMsg');
-        if (!currentSequence.length) { feedback.textContent = '🔊 Speel eerst een reeks af!'; feedback.className = 'feedback wrong'; return; }
-        if (input === currentSequence.join('')) {
-            feedback.textContent = `✅ Goed gedaan, ${currentPlayer === 1 ? player1Name : player2Name}!`;
-            feedback.className = 'feedback correct';
-            if (currentPlayer === 1) score1++; else score2++;
-            turns++;
-            currentSequence = [];
-            if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;
-        } else {
-            feedback.textContent = `❌ Fout, probeer opnieuw.`;
-            feedback.className = 'feedback wrong';
+        function selectMode(selectedMode) {
+            mode = selectedMode;
+            const p2Input = document.getElementById('player2NameInput');
+            if (mode === 2) { p2Input.classList.remove('hidden'); p2Input.disabled = false; }
+            else { p2Input.classList.add('hidden'); p2Input.disabled = true; }
         }
-        updateUI();
-    }
 
-    function skipQuestion() {
-        if (!currentSequence.length) return;
-        document.getElementById('feedbackMsg').textContent = `❌ De reeks was: ${currentSequence.join('')}`;
-        document.getElementById('feedbackMsg').className = 'feedback wrong';
-        currentSequence = []; turns++;
-        if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;
-        updateUI();
-    }
+        function startGame() {
+            player1Name = document.getElementById('player1NameInput').value.trim() || "Speler 1";
+            player2Name = (mode === 2 && document.getElementById('player2NameInput').value.trim()) ? document.getElementById('player2NameInput').value.trim() : "Speler 2";
+            document.getElementById('name1Display').textContent = player1Name;
+            document.getElementById('name2Display').textContent = player2Name;
+            document.getElementById('modeSelect').classList.add('hidden');
+            document.getElementById('gameArea').classList.remove('hidden');
+            if (mode === 2) document.getElementById('p2Score').classList.remove('hidden');
+            updateUI();
+        }
 
-    function updateUI() {
-        document.getElementById('playerTurn').textContent = `Aan de beurt: ${currentPlayer === 1 ? player1Name : player2Name}`;
-        document.getElementById('score1').textContent = score1;
-        document.getElementById('score2').textContent = score2;
-        document.getElementById('turns').textContent = turns;
-    }
-</script>
+        function playSequence() {
+            const length = Math.floor(Math.random() * 3) + 3;
+            currentSequence = [];
+            for (let i = 0; i < length; i++) currentSequence.push(letters[Math.floor(Math.random() * letters.length)]);
+            playNext(0);
+            document.getElementById('feedbackMsg').textContent = '';
+            document.getElementById('userInput').value = '';
+        }
+
+        function playNext(index) {
+            if (index >= currentSequence.length) return;
+            const sound = audioCache[currentSequence[index]];
+            sound.currentTime = 0;
+            sound.play().catch(e => console.error("Audio fout:", e));
+            sound.onended = () => setTimeout(() => playNext(index + 1), 400);
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('userInput').value.trim().toLowerCase();
+            const feedback = document.getElementById('feedbackMsg');
+            if (!currentSequence.length) { feedback.textContent = '🔊 Speel eerst een reeks af!'; feedback.className = 'feedback wrong'; return; }
+            if (input === currentSequence.join('')) {
+                feedback.textContent = `✅ Goed gedaan, ${currentPlayer === 1 ? player1Name : player2Name}!`;
+                feedback.className = 'feedback correct';
+                if (currentPlayer === 1) score1++; else score2++;
+                turns++;
+                currentSequence = [];
+                if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;
+            } else {
+                feedback.textContent = `❌ Fout, probeer opnieuw.`;
+                feedback.className = 'feedback wrong';
+            }
+            updateUI();
+        }
+
+        function skipQuestion() {
+            if (!currentSequence.length) return;
+            document.getElementById('feedbackMsg').textContent = `❌ De reeks was: ${currentSequence.join('')}`;
+            document.getElementById('feedbackMsg').className = 'feedback wrong';
+            currentSequence = []; turns++;
+            if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('playerTurn').textContent = `Aan de beurt: ${currentPlayer === 1 ? player1Name : player2Name}`;
+            document.getElementById('score1').textContent = score1;
+            document.getElementById('score2').textContent = score2;
+            document.getElementById('turns').textContent = turns;
+        }
+    </script>
 </body>
 </html>
