@@ -14,31 +14,27 @@
             --hero-red: #d32f2f;
             --hero-green: #38b000;
             --header-bg: #ff7043;
-            --header-border: #e65c30;
+            --header-border: var(--hero-yellow);
         }
-        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        header { background: var(--header-bg); padding: 2rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
-        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
-        main { max-width: 700px; width: 90%; margin: 20px 0; background: rgba(26, 16, 42, 0.9); padding: 30px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; }
-        input { padding: 10px; border-radius: 10px; border: 2px solid var(--hero-cyan); background: #000; color: white; margin: 5px; width: 40%; text-align: center; }
-        button { font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }
+        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+        header { background: var(--header-bg); padding: 1.5rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.5rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
+        main { max-width: 600px; width: 90%; margin: 10px 0; background: rgba(26, 16, 42, 0.9); padding: 20px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; box-sizing: border-box; }
+        input { padding: 8px; border-radius: 10px; border: 2px solid var(--hero-cyan); background: #000; color: white; margin: 5px; width: 40%; text-align: center; }
+        button { font-family: 'Bangers', cursive; font-size: 1.1rem; padding: 8px 20px; margin: 5px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }
         button:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-2px); }
-        .letter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); gap: 10px; margin: 20px 0; }
-        .letter { font-family: 'Bangers'; font-size: 1.2rem; padding: 10px; background: #1a102a; border: 2px solid var(--hero-purple-dark); border-radius: 10px; cursor: pointer; }
+        .letter-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; margin: 10px 0; }
+        .letter { font-family: 'Bangers'; font-size: 1rem; padding: 8px; background: #1a102a; border: 2px solid var(--hero-purple-dark); border-radius: 8px; cursor: pointer; }
         .clicked { background-color: var(--hero-yellow) !important; color: #000; border-color: white; }
         .correct { background-color: var(--hero-green) !important; color: white; }
         .incorrect { background-color: var(--hero-red) !important; color: white; }
         .missed { border: 2px solid var(--hero-green) !important; }
-        #playerTurn { color: var(--hero-yellow); font-size: 1.5rem; margin-bottom: 15px; }
-        footer { margin-top: auto; padding: 20px; color: rgba(255,255,255,0.5); }
+        #playerTurn { color: var(--hero-yellow); font-size: 1.2rem; margin-bottom: 10px; }
+        footer { margin-top: auto; padding: 10px; color: rgba(255,255,255,0.5); font-size: 0.8rem; }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>RHYME CHALLENGE</h1>
-</header>
-
+<header><h1>RHYME CHALLENGE</h1></header>
 <main>
     <div id="setupArea">
         <p>Voer spelersnamen in:</p>
@@ -46,41 +42,30 @@
         <input type="text" id="p2" placeholder="Speler 2" />
         <input type="text" id="p3" placeholder="Speler 3" />
         <input type="text" id="p4" placeholder="Speler 4" />
-        <br>
-        <button onclick="startGame()">▶️ Start spel</button>
+        <br><button onclick="startGame()">▶️ Start spel</button>
     </div>
-
     <div id="gameArea" style="display: none;">
         <div id="playerTurn"></div>
-        <div id="wordDisplay" style="font-size: 1.3rem;"></div>
+        <div id="wordDisplay" style="font-size: 1.1rem;"></div>
         <div class="letter-grid" id="letterGrid"></div>
         <button onclick="checkAnswer()" id="checkBtn">✅ Controleer</button>
         <button onclick="nextWord()" id="nextBtn" style="display: none;">➡️ Volgende woord</button>
-        <div id="status" style="margin-top: 15px; font-weight: bold;"></div>
+        <div id="status" style="margin-top: 10px; font-weight: bold;"></div>
     </div>
 </main>
-
 <footer>&copy; 2026, EngliForce: Make English Your Superpower!</footer>
-
 <script>
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const rhymeWords = [
         { word: "Bee", letters: ["B", "C", "D", "E", "G", "P", "T", "V"] },
-        { word: "Eye", letters: ["I", "Y"] },
-        { word: "Jay", letters: ["A", "J", "K"] },
-        { word: "Shell", letters: ["L"] },
-        { word: "Tram", letters: ["M"] },
-        { word: "Fan", letters: ["N"] },
-        { word: "Car", letters: ["R"] },
-        { word: "Mess", letters: ["S"] },
-        { word: "Flex", letters: ["X"] },
-        { word: "Go", letters: ["O"] },
-        { word: "Queue", letters: ["Q", "U", "W"] },
+        { word: "Eye", letters: ["I", "Y"] }, { word: "Jay", letters: ["A", "J", "K"] },
+        { word: "Shell", letters: ["L"] }, { word: "Tram", letters: ["M"] },
+        { word: "Fan", letters: ["N"] }, { word: "Car", letters: ["R"] },
+        { word: "Mess", letters: ["S"] }, { word: "Flex", letters: ["X"] },
+        { word: "Go", letters: ["O"] }, { word: "Queue", letters: ["Q", "U", "W"] },
         { word: "Bed", letters: ["Z"] }
     ];
-
     let players = [], currentPlayerIndex = 0, currentWord = "", expectedLetters = [], selectedLetters = [], letterElements = {};
-
     function startGame() {
         players = [document.getElementById("p1").value, document.getElementById("p2").value, document.getElementById("p3").value, document.getElementById("p4").value].filter(n => n.trim() !== "");
         if (players.length === 0) { alert("Voer ten minste één naam in."); return; }
@@ -88,58 +73,36 @@
         document.getElementById("gameArea").style.display = "block";
         nextWord();
     }
-
     function nextWord() {
         selectedLetters = [];
         const rnd = rhymeWords[Math.floor(Math.random() * rhymeWords.length)];
-        currentWord = rnd.word;
-        expectedLetters = rnd.letters;
+        currentWord = rnd.word; expectedLetters = rnd.letters;
         document.getElementById("playerTurn").textContent = `Aan de beurt: ${players[currentPlayerIndex]}`;
         document.getElementById("wordDisplay").innerHTML = `Welke letters rijmen op: <strong>"${currentWord}"</strong>?`;
-        
-        const grid = document.getElementById("letterGrid");
-        grid.innerHTML = "";
+        const grid = document.getElementById("letterGrid"); grid.innerHTML = "";
         letters.forEach(l => {
-            const div = document.createElement("div");
-            div.textContent = l;
-            div.className = "letter";
-            div.onclick = () => toggleLetter(l, div);
-            letterElements[l] = div;
-            grid.appendChild(div);
+            const div = document.createElement("div"); div.textContent = l; div.className = "letter";
+            div.onclick = () => toggleLetter(l, div); letterElements[l] = div; grid.appendChild(div);
         });
         document.getElementById("checkBtn").style.display = "inline-block";
         document.getElementById("nextBtn").style.display = "none";
         document.getElementById("status").textContent = "";
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
     }
-
     function toggleLetter(l, el) {
         if (el.classList.contains("disabled")) return;
-        if (selectedLetters.includes(l)) {
-            selectedLetters = selectedLetters.filter(x => x !== l);
-            el.classList.remove("clicked");
-        } else {
-            selectedLetters.push(l);
-            el.classList.add("clicked");
-        }
+        if (selectedLetters.includes(l)) { selectedLetters = selectedLetters.filter(x => x !== l); el.classList.remove("clicked"); }
+        else { selectedLetters.push(l); el.classList.add("clicked"); }
     }
-
     function checkAnswer() {
         const correctSet = new Set(expectedLetters);
         letters.forEach(l => {
-            const el = letterElements[l];
-            el.classList.add("disabled");
-            if (selectedLetters.includes(l)) {
-                el.classList.add(correctSet.has(l) ? "correct" : "incorrect");
-            } else if (correctSet.has(l)) {
-                el.classList.add("missed");
-            }
+            const el = letterElements[l]; el.classList.add("disabled");
+            if (selectedLetters.includes(l)) { el.classList.add(correctSet.has(l) ? "correct" : "incorrect"); }
+            else if (correctSet.has(l)) { el.classList.add("missed"); }
         });
-        document.getElementById("status").innerHTML = selectedLetters.sort().join("") === expectedLetters.sort().join("") 
-            ? "✅ Goed zo!" 
-            : `❌ Fout. Het was: <strong>${expectedLetters.join(", ")}</strong>`;
-        document.getElementById("checkBtn").style.display = "none";
-        document.getElementById("nextBtn").style.display = "inline-block";
+        document.getElementById("status").innerHTML = selectedLetters.sort().join("") === expectedLetters.sort().join("") ? "✅ Goed zo!" : `❌ Fout. Het was: <strong>${expectedLetters.join(", ")}</strong>`;
+        document.getElementById("checkBtn").style.display = "none"; document.getElementById("nextBtn").style.display = "inline-block";
     }
 </script>
 </body>
