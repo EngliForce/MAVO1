@@ -22,7 +22,7 @@
             padding: 3rem 1rem; 
             text-align: center; 
             clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-            border-bottom: 5px solid #e65c30;
+            border-bottom: 5px solid var(--hero-yellow); /* Streepje is nu geel */
         }
         h1 { 
             font-family: 'Bangers', cursive; 
@@ -59,12 +59,10 @@
     </style>
 </head>
 <body>
-
 <header>
     <h1>CAP IT OR LEAVE IT?</h1>
     <div class="subtitle">EngliForce Mission Control</div>
 </header>
-
 <div class="quiz-container">
     <p style="text-align: center; opacity: 0.8;">Click on the words that need a <strong>Capital Letter</strong>!</p>
     <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
@@ -75,11 +73,9 @@
         <button class="btn" onclick="startQuiz()" style="background: var(--hero-red); border-bottom-color: #8b0000;">🔄 RESTART</button>
     </div>
 </div>
-
 <footer>
     <p>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></p>
 </footer>
-
 <script>
     const sentenceBank = [
       { text: "i went to london last summer.", capitalize: ["i", "london"] },
@@ -90,15 +86,14 @@
       { text: "our teacher is mr. sebel.", capitalize: ["mr.", "sebel"] },
       { text: "i love watching movies on netflix.", capitalize: ["i", "netflix"] }
     ];
-
     let currentRound = [], currentIndex = 0, wordSpans = [];
-
+    
     function startQuiz() {
         currentRound = [...sentenceBank].sort(() => 0.5 - Math.random());
         currentIndex = 0;
         showSentence();
     }
-
+    
     function showSentence() {
         document.getElementById('progressBar').style.width = `${(currentIndex / currentRound.length) * 100}%`;
         const quiz = document.getElementById('quiz');
@@ -123,7 +118,7 @@
         const item = currentRound[currentIndex];
         const caps = new Set(item.capitalize.map(w => w.toLowerCase()));
         caps.add(wordSpans[0].word); 
-
+        
         wordSpans.forEach(({ span, word }) => {
             const isCorrect = caps.has(word);
             const isSelected = span.classList.contains("selected");
