@@ -13,26 +13,26 @@
             --hero-cyan: #00f5d4;
             --hero-red: #d32f2f;
             --header-bg: #ff7043;
-            --header-border: var(--hero-yellow); /* Streepje onder de header is geel */
+            --header-border: var(--hero-yellow);
         }
-        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        header { background: var(--header-bg); padding: 2rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
-        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
-        main { max-width: 600px; width: 90%; margin: 20px 0; background: rgba(26, 16, 42, 0.9); padding: 30px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; }
-        input { padding: 12px; border-radius: 10px; border: 2px solid var(--hero-cyan); background: #000; color: white; margin: 10px; width: 80%; text-align: center; font-size: 1rem; }
-        button { font-family: 'Bangers', cursive; font-size: 1.2rem; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }
+        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+        header { background: var(--header-bg); padding: 1.5rem; width: 100%; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.5rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
+        main { max-width: 600px; width: 90%; margin: 10px 0; background: rgba(26, 16, 42, 0.9); padding: 20px; border-radius: 20px; border: 2px solid var(--hero-cyan); text-align: center; box-sizing: border-box; }
+        input { padding: 8px; border-radius: 10px; border: 2px solid var(--hero-cyan); background: #000; color: white; margin: 5px; width: 70%; text-align: center; font-size: 1rem; }
+        button { font-family: 'Bangers', cursive; font-size: 1.1rem; padding: 8px 15px; margin: 5px; cursor: pointer; border-radius: 50px; border: none; background: var(--hero-purple-main); color: white; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }
         button:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-2px); }
-        .feedback { margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
+        .feedback { margin-top: 10px; font-weight: bold; font-size: 1.1rem; }
         .correct { color: var(--hero-cyan); }
         .wrong { color: var(--hero-red); }
-        .score-board { margin-top: 30px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; }
+        .score-board { margin-top: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; font-size: 0.9rem; }
         .hidden { display: none; }
-        footer { margin-top: auto; padding: 20px; color: rgba(255,255,255,0.5); }
+        footer { margin-top: auto; padding: 10px; color: rgba(255,255,255,0.5); font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <header>
-        <h1>ENGLIFORCE ACADEMY: SPELLING CHALLENGE</h1>
+        <h1>SPELLING CHALLENGE</h1>
     </header>
     <main>
         <div id="modeSelect">
@@ -46,20 +46,16 @@
             <button onclick="startGame()">▶️ Start spel</button>
         </div>
         <div id="gameArea" class="hidden">
-            <div id="playerTurn" style="font-size: 1.2rem; margin-bottom: 15px; color: var(--hero-yellow);"></div>
+            <div id="playerTurn" style="font-size: 1.1rem; margin-bottom: 10px; color: var(--hero-yellow);"></div>
             <button onclick="playSequence()">🔊 Speel reeks af</button>
-            <div>
-                <input type="text" id="userInput" placeholder="Typ hier de letters" />
-            </div>
+            <input type="text" id="userInput" placeholder="Typ hier de letters" />
             <div>
                 <button onclick="checkAnswer()">✅ Controleer</button>
                 <button onclick="skipQuestion()" style="background: var(--hero-red);">🤷 Weet ik niet</button>
             </div>
             <div id="feedbackMsg" class="feedback"></div>
             <div class="score-board">
-                <p>🎮 <span id="name1Display">Speler 1</span>: <span id="score1">0</span> punten</p>
-                <p id="p2Score" class="hidden">🎮 <span id="name2Display">Speler 2</span>: <span id="score2">0</span> punten</p>
-                <p>Beurten: <span id="turns">0</span></p>
+                <p>🎮 <span id="name1Display">Speler 1</span>: <span id="score1">0</span> | <span id="p2Score" class="hidden">🎮 <span id="name2Display">Speler 2</span>: <span id="score2">0</span> | </span> Beurten: <span id="turns">0</span></p>
             </div>
         </div>
     </main>
@@ -70,9 +66,7 @@
         let currentSequence = [], currentPlayer = 1, mode = 1, score1 = 0, score2 = 0, turns = 0, player1Name = "Speler 1", player2Name = "Speler 2";
         let audioCache = {};
 
-        letters.forEach(l => {
-            audioCache[l] = new Audio(baseUrl + l + '.mp3');
-        });
+        letters.forEach(l => { audioCache[l] = new Audio(baseUrl + l + '.mp3'); });
 
         function selectMode(selectedMode) {
             mode = selectedMode;
@@ -105,32 +99,28 @@
             if (index >= currentSequence.length) return;
             const sound = audioCache[currentSequence[index]];
             sound.currentTime = 0;
-            sound.play().catch(e => console.error("Audio fout:", e));
+            sound.play().catch(e => console.error(e));
             sound.onended = () => setTimeout(() => playNext(index + 1), 400);
         }
 
         function checkAnswer() {
             const input = document.getElementById('userInput').value.trim().toLowerCase();
             const feedback = document.getElementById('feedbackMsg');
-            if (!currentSequence.length) { feedback.textContent = '🔊 Speel eerst een reeks af!'; feedback.className = 'feedback wrong'; return; }
+            if (!currentSequence.length) { feedback.textContent = '🔊 Speel eerst!'; return; }
             if (input === currentSequence.join('')) {
-                feedback.textContent = `✅ Goed gedaan, ${currentPlayer === 1 ? player1Name : player2Name}!`;
-                feedback.className = 'feedback correct';
+                feedback.textContent = `✅ Goed!`; feedback.className = 'feedback correct';
                 if (currentPlayer === 1) score1++; else score2++;
-                turns++;
-                currentSequence = [];
+                turns++; currentSequence = [];
                 if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;
             } else {
-                feedback.textContent = `❌ Fout, probeer opnieuw.`;
-                feedback.className = 'feedback wrong';
+                feedback.textContent = `❌ Fout, probeer opnieuw.`; feedback.className = 'feedback wrong';
             }
             updateUI();
         }
 
         function skipQuestion() {
             if (!currentSequence.length) return;
-            document.getElementById('feedbackMsg').textContent = `❌ De reeks was: ${currentSequence.join('')}`;
-            document.getElementById('feedbackMsg').className = 'feedback wrong';
+            document.getElementById('feedbackMsg').textContent = `❌ ${currentSequence.join('')}`;
             currentSequence = []; turns++;
             if (mode === 2) currentPlayer = currentPlayer === 1 ? 2 : 1;
             updateUI();
