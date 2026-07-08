@@ -14,7 +14,7 @@
             --hero-red: #d32f2f;
             --hero-red-dark: #b71c1c;
             --header-bg: #ff7043;
-            --header-border: #e65c30;
+            --header-border: var(--hero-yellow); /* Streepje is nu geel */
         }
         body { font-family: 'Lexend', sans-serif; background: #05101a; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
         header { background: var(--header-bg); padding: 2.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
@@ -46,7 +46,7 @@
         
         footer { text-align: center; padding: 20px; background: rgba(0,0,0,0.3); font-family: 'Bangers'; font-size: 1.2rem; }
         .footer-highlight { color: var(--hero-yellow); }
-
+        
         /* Flashcard extra styles */
         .fc-lab { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 20px; }
         .fc-card { height: 80px; perspective: 1000px; cursor: pointer; }
@@ -57,10 +57,11 @@
     </style>
 </head>
 <body>
-
-<header><h1>NUMBER COMMAND CENTER</h1></header>
-
-<main>
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>CARDINALS COMMAND CENTER</p>
+</header>
+<main>    
     <section class="briefing-box">
         <h2>🚨 MISSION: THE NUMBERS</h2>
         <div class="explanation-text">
@@ -145,11 +146,9 @@
         </div>
     </div>
 </main>
-
 <footer>
     <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
 </footer>
-
 <script>
     function show(id) {
         document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
@@ -157,26 +156,24 @@
     }
     function openMission(e, name, url) { window.location.href = url; }
     function toggleLike(e, id) { e.stopPropagation(); const btn = document.getElementById('btn-'+id); btn.innerText = btn.innerText === '👍 Like' ? '❤️ Liked' : '👍 Like'; }
-
+    
     const units = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
     const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
-
+    
     function toWords(n) {
         if (n <= 19) return units[n];
         if (n < 100) return tens[Math.floor(n/10)] + (n % 10 !== 0 ? "-" + units[n % 10] : "");
         return n === 100 ? "one hundred" : "one hundred and one";
     }
-
+    
     function genCards(shuff = false) {
         const aantal = parseInt(document.getElementById('aantal').value);
         const lab = document.getElementById('fc-lab');
         lab.innerHTML = '';
         
         let allNums = Array.from({length: 101}, (_, i) => i + 1);
-        // Random selectie van N getallen
         let selectedNums = allNums.sort(() => 0.5 - Math.random()).slice(0, aantal);
         
-        // Sorteer alleen als we NIET in shuffle-mode zitten (of forceer volgorde)
         if (!shuff) selectedNums.sort((a, b) => a - b);
         
         selectedNums.forEach(n => {
