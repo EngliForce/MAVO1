@@ -1,179 +1,140 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Match – Personal Pronouns Dutch > English</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      padding: 2rem;
-      text-align: center;
-    }
-    h1 {
-      color: #ff7043;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .dropzone, .draggable {
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      padding: 1rem;
-      width: 160px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: white;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .draggable {
-      border-style: solid;
-      background-color: #ff7043;
-      color: white;
-    }
-    .dropzone.filled {
-      background-color: #dff0d8;
-      border-color: #5cb85c;
-    }
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-    .logo {
-      max-width: 150px;
-      margin-bottom: 1rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISSION: MATCHING PRONOUNS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf; --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703; --hero-cyan: #00f5d4;
+            --header-bg: #ff7043; --header-border: var(--hero-yellow);
+        }
+        
+        html, body { margin: 0; padding: 0; min-height: 100vh; }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        header { 
+            background: var(--header-bg); 
+            padding: 2rem 1rem; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); 
+            border-bottom: 5px solid var(--header-border); 
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
+        
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
+
+        .container { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 10px 0; max-width: 900px; }
+
+        .dropzone { border: 2px dashed var(--hero-cyan); border-radius: 8px; padding: 10px; width: 100px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); font-size: 0.85rem; font-weight: bold; color: var(--hero-yellow); }
+        .dropzone.occupied { background: var(--hero-purple-dark); border-style: solid; border-color: var(--hero-cyan); }
+        
+        .draggable { border: 2px solid var(--hero-cyan); border-radius: 8px; padding: 8px 12px; background: var(--hero-purple-main); color: white; cursor: grab; font-family: 'Bangers'; font-size: 0.85rem; user-select: none; }
+        
+        .btn-action { background: var(--hero-yellow); color: #000; border: none; padding: 10px 20px; border-radius: 50px; font-family: 'Bangers'; font-size: 1rem; cursor: pointer; margin: 5px; }
+        .btn-check { background: var(--hero-cyan); }
+
+        #feedback { font-family: 'Bangers'; font-size: 1.2rem; height: 1.5em; margin: 10px; }
+
+        footer { background: #05101a; color: rgba(255,255,255,0.5); text-align: center; padding: 15px; border-top: 2px solid var(--hero-purple-dark); }
+    </style>
 </head>
 <body>
 
-  <!-- Logo at the top -->
-  <div>
-    <img src="Logo.png" alt="Logo" class="logo">
-  </div>
+    <header><h1>MISSION: MATCHING</h1></header>
 
-  <h1>🧲 Sleep het juiste Nederlandse persoonlijke voornaamwoord</h1>
-  <p>Sleep de juiste Nederlandse betekenis naar het Engelse persoonlijke voornaamwoord.</p>
-  <div style="margin: 1rem 0;">
-    <button onclick="createElements()" style="background-color:#ff7043;color:white;border:none;padding:0.5rem 1rem;border-radius:6px;font-size:1rem;">🔄 Shuffle</button>
-  </div>
+    <main>
+        <p style="margin: 5px; font-size: 0.9rem;">Sleep de Engelse woorden naar de juiste betekenis:</p>
+        
+        <div class="container" id="dropzones-container"></div>
+        <div class="container" id="draggables-container"></div>
 
-  <div class="container" id="dropzones-container"></div>
+        <div>
+            <button class="btn-action" onclick="createElements()">🔄 RESET</button>
+            <button class="btn-action btn-check" onclick="checkAnswers()">✅ CHECK</button>
+        </div>
+        <div id="feedback"></div>
+    </main>
 
-  <div id="feedback-container" style="margin-top: 2rem;">
-    <p id="feedback" style="font-size: 1.1rem; margin-top: 1rem;"></p>
-  </div>
+    <footer>
+        &copy; 2026 EngliForce – Make English Your Superpower!
+    </footer>
 
-  <div class="container" id="draggables-container"></div>
+    <script>
+        const data = [
+            { nl: "ik", en: "I", id: "I" }, 
+            { nl: "jij", en: "you (enkelvoud)", id: "you-s" },
+            { nl: "jullie", en: "you (meervoud)", id: "you-p" },
+            { nl: "hij", en: "he", id: "he" }, 
+            { nl: "zij (ev)", en: "she", id: "she" },
+            { nl: "zij (mv)", en: "they", id: "they" },
+            { nl: "het", en: "it", id: "it" }, 
+            { nl: "wij", en: "we", id: "we" }
+        ];
 
-  <script>
-    const dropData = [
-      { label: "ik", match: "I" },
-      { label: "jij", match: "you" },
-      { label: "hij", match: "he" },
-      { label: "zij", match: "she" },
-      { label: "het", match: "it" },
-      { label: "wij", match: "we" },
-      { label: "jullie", match: "you (meervoud)" },
-      { label: "zij (meervoud)", match: "they" }
-    ];
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
 
-    const dragData = [
-      { value: "I" }, { value: "you" }, { value: "he" }, { value: "she" },
-      { value: "it" }, { value: "we" }, { value: "you (meervoud)" }, { value: "they" }
-    ];
+        function createElements() {
+            const dropContainer = document.getElementById('dropzones-container');
+            const dragContainer = document.getElementById('draggables-container');
+            document.getElementById('feedback').textContent = "";
+            dropContainer.innerHTML = ""; dragContainer.innerHTML = "";
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
+            // Dropzones (NL)
+            shuffle([...data]).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'dropzone';
+                div.dataset.match = item.id;
+                div.textContent = item.nl;
+                div.addEventListener('dragover', e => e.preventDefault());
+                div.addEventListener('drop', e => {
+                    e.preventDefault();
+                    div.textContent = e.dataTransfer.getData('text');
+                    div.classList.add('occupied');
+                    div.dataset.droppedId = e.dataTransfer.getData('id');
+                });
+                dropContainer.appendChild(div);
+            });
 
-    function createElements() {
-      const dropContainer = document.getElementById('dropzones-container');
-      const dragContainer = document.getElementById('draggables-container');
-      dropContainer.innerHTML = "";
-      dragContainer.innerHTML = "";
-
-      shuffle(dropData);
-      shuffle(dragData);
-
-      dropData.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'dropzone';
-        div.dataset.match = item.match;
-        div.textContent = item.label;
-        dropContainer.appendChild(div);
-      });
-
-      dragData.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'draggable';
-        div.draggable = true;
-        div.dataset.value = item.value;
-        div.textContent = item.value;
-        div.addEventListener('dragstart', e => {
-          e.dataTransfer.setData('text/plain', item.value);
-        });
-        dragContainer.appendChild(div);
-      });
-
-      let correctCount = 0;
-      const totalMatches = dropData.length;
-
-      document.querySelectorAll('.dropzone').forEach(zone => {
-        zone.addEventListener('dragover', e => {
-          e.preventDefault();
-          zone.style.borderColor = '#ffa07a';
-        });
-        zone.addEventListener('dragleave', () => {
-          zone.style.borderColor = '#ccc';
-        });
-        zone.addEventListener('drop', e => {
-          e.preventDefault();
-          const value = e.dataTransfer.getData('text/plain');
-          const match = zone.dataset.match;
-
-          if (value === match) {
-            zone.textContent = value;
-            zone.classList.add('filled');
-            correctCount++;
-            zone.style.borderColor = '#5cb85c';
-            const dragged = [...document.querySelectorAll('.draggable')].find(d => d.dataset.value === value);
-            if (dragged) dragged.remove();
-            updateScore();
-          } else {
-            alert("Oops, try again.");
-          }
-        });
-      });
-
-      function updateScore() {
-        const feedback = document.getElementById('feedback');
-        if (correctCount === totalMatches) {
-          feedback.textContent = "✅ Well done! You matched all the personal pronouns correctly.";
-        } else {
-          feedback.textContent = "👍 Keep going! Match all the English personal pronouns to their Dutch meanings.";
+            // Draggables (EN)
+            shuffle([...data]).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'draggable';
+                div.draggable = true;
+                div.textContent = item.en; 
+                div.addEventListener('dragstart', e => {
+                    e.dataTransfer.setData('text', item.en);
+                    e.dataTransfer.setData('id', item.id);
+                });
+                dragContainer.appendChild(div);
+            });
         }
-      }
-    }
 
-    createElements();
-  </script>
-  
-  <footer>
-    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-  </footer>
-  
+        function checkAnswers() {
+            let correct = 0;
+            const dropzones = document.querySelectorAll('.dropzone');
+            dropzones.forEach(zone => {
+                if (zone.dataset.droppedId === zone.dataset.match) {
+                    zone.style.borderColor = "#00f5d4";
+                    correct++;
+                } else {
+                    zone.style.borderColor = "#d32f2f";
+                }
+            });
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = (correct === data.length) ? "🚀 MISSION ACCOMPLISHED!" : "⚠️ NOG NIET GOED!";
+            feedback.style.color = (correct === data.length) ? "#00f5d4" : "#d32f2f";
+        }
+
+        createElements();
+    </script>
 </body>
 </html>
