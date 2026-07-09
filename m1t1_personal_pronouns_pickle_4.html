@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MISSION: FLITSQUIZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf; --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703; --hero-cyan: #00f5d4;
+            --header-bg: #ff7043; --header-border: var(--hero-yellow);
+        }
+        
+        /* Lock layout to screen */
+        html, body { 
+            margin: 0; padding: 0; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        header { 
+            flex-shrink: 0;
+            background: var(--header-bg); 
+            padding: 1rem; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); 
+            border-bottom: 3px solid var(--hero-yellow); 
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2rem; margin: 0; text-shadow: 2px 2px 0px var(--hero-purple-dark); }
+        
+        main { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            padding: 10px; 
+            width: 100%; 
+            box-sizing: border-box;
+        }
+
+        .game-container { 
+            background: rgba(255,255,255,0.05); 
+            padding: 20px; 
+            border-radius: 20px; 
+            border: 2px solid var(--hero-purple-main); 
+            width: 100%; 
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .question { font-size: 1.5rem; font-family: 'Bangers'; color: var(--hero-yellow); margin-bottom: 5px; }
+        .context { font-size: 1rem; color: var(--hero-cyan); margin-bottom: 15px; font-style: italic; }
+
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        
+        .btn-action { 
+            background: var(--hero-purple-main); color: white; border: none; padding: 10px; 
+            border-radius: 8px; font-family: 'Lexend'; font-weight: 700; cursor: pointer; 
+            font-size: 0.9rem;
+            transition: 0.2s; border: 2px solid transparent;
+        }
+        .btn-action:hover { border-color: var(--hero-cyan); }
+        .btn-restart { background: var(--hero-yellow); color: #000; margin-top: 5px; width: 100%; font-family: 'Bangers'; font-size: 1.1rem; }
+
+        .feedback { font-family: 'Bangers'; font-size: 1.3rem; margin: 10px 0; height: 1.5em; }
+        .score { font-size: 1rem; color: rgba(255,255,255,0.7); }
+
+        footer { 
+            flex-shrink: 0;
+            padding: 10px; 
+            color: rgba(255,255,255,0.3); 
+            text-align: center; 
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header><h1>⚡ FLITSQUIZ</h1></header>
+
+    <main>
+        <div class="game-container">
+            <div id="question" class="question">Loading...</div>
+            <div id="context" class="context"></div>
+            
+            <div class="options" id="options"></div>
+            
+            <div id="feedback" class="feedback"></div>
+            <div id="score" class="score">Score: 0 / 0</div>
+            
+            <button class="btn-action btn-restart" onclick="restartQuiz()">🔄 RESTART QUIZ</button>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 EngliForce – Make English Your Superpower!
+    </footer>
+
+    <script>
+        const allQuestions = [
+            { sentence: "___ go to school.", name: "Jamal and I", correct: "We" },
+            { sentence: "___ is my best friend.", name: "Emily", correct: "She" },
+            { sentence: "___ is sleeping.", name: "The cat", correct: "It" },
+            { sentence: "___ are funny.", name: "You and your sister", correct: "You (meervoud)" },
+            { sentence: "___ am Sarah.", name: "My name is Sarah", correct: "I" },
+            { sentence: "___ play football.", name: "David and Jamal", correct: "They" },
+            { sentence: "___ is our teacher.", name: "Mr. Brown", correct: "He" },
+            { sentence: "___ are happy.", name: "Lisa and I", correct: "We" },
+            { sentence: "___ is in class.", name: "Peter", correct: "He" },
+            { sentence: "___ is reading a book.", name: "Anna", correct: "She" },
+            { sentence: "___ love this dog.", name: "I", correct: "I" },
+            { sentence: "___ are very kind.", name: "You", correct: "You (enkelvoud)" },
+            { sentence: "___ are playing.", name: "Emma and Liam", correct: "They" },
+            { sentence: "___ is a good singer.", name: "Liam", correct: "He" },
+            { sentence: "___ like to paint.", name: "Sophie and I", correct: "We" },
+            { sentence: "___ is working.", name: "The robot", correct: "It" },
+            { sentence: "___ are in my team.", name: "You and Max", correct: "You (meervoud)" },
+            { sentence: "___ is dancing.", name: "Carla", correct: "She" },
+            { sentence: "___ are characters.", name: "Tom and Jerry", correct: "They" },
+            { sentence: "___ am Paul.", name: "I", correct: "I" }
+        ];
+
+        let questions = [];
+        let current = {};
+        let score = 0;
+        let total = 0;
+        let maxRounds = 10;
+        let roundsPlayed = 0;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function restartQuiz() {
+            score = 0;
+            total = 0;
+            roundsPlayed = 0;
+            questions = [...allQuestions];
+            shuffle(questions);
+            questions = questions.slice(0, maxRounds);
+            document.getElementById("feedback").textContent = "";
+            document.getElementById("score").textContent = "Score: 0 / 0";
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (roundsPlayed >= maxRounds) return;
+            document.getElementById("feedback").textContent = "";
+            current = questions[roundsPlayed];
+            document.getElementById("question").textContent = current.sentence;
+            document.getElementById("context").textContent = `(${current.name})`;
+
+            const options = ["I", "You (enkelvoud)", "You (meervoud)", "He", "She", "It", "We", "They"];
+            shuffle(options);
+
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+            options.forEach(p => {
+                const btn = document.createElement("button");
+                btn.className = "btn-action";
+                btn.textContent = p;
+                btn.onclick = () => checkAnswer(p);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(answer) {
+            total++;
+            roundsPlayed++;
+            const feedback = document.getElementById("feedback");
+            if (answer === current.correct) {
+                score++;
+                feedback.textContent = "✅ Correct!";
+                feedback.style.color = "var(--hero-cyan)";
+            } else {
+                feedback.textContent = `❌ Wrong! Answer: "${current.correct}".`;
+                feedback.style.color = "#ff7043";
+            }
+            document.getElementById("score").textContent = `Score: ${score} / ${total}`;
+            
+            if (roundsPlayed < maxRounds) {
+                setTimeout(nextQuestion, 1000);
+            } else {
+                showFinalScore();
+            }
+        }
+
+        function showFinalScore() {
+            const feedback = document.getElementById("feedback");
+            const stars = "⭐".repeat(Math.floor(score / 2)) || "😢";
+            feedback.innerHTML = `Mission complete!<br><span style="font-size:1.5rem;">${stars}</span>`;
+        }
+
+        window.onload = () => restartQuiz();
+    </script>
+</body>
+</html>
