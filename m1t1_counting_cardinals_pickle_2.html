@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: Number Sniper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --header-bg: #ff7043;
+        }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; color: white; margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        
+        header { background: var(--header-bg); width: 100%; padding: 0.8rem; text-align: center; border-bottom: 5px solid var(--hero-yellow); z-index: 100; display: flex; justify-content: space-around; align-items: center; }
+        h1 { font-family: 'Bangers', cursive; font-size: 1.8rem; margin: 0; }
+        
+        .stats { display: flex; gap: 20px; font-weight: bold; }
+        #lives { color: var(--hero-red); }
+        #levelDisplay { color: var(--hero-cyan); }
+
+        .quiz-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; position: relative; }
+
+        #numberDisplay { 
+            font-size: 5rem; font-family: 'Bangers'; color: var(--hero-yellow);
+            position: absolute; white-space: nowrap; top: 15%; left: 100%; z-index: 1;
+            pointer-events: none;
+        }
+        .fly { animation: flyAcross linear forwards; }
+        @keyframes flyAcross {
+            0% { left: 100%; }
+            100% { left: -50%; }
+        }
+
+        .input-area { z-index: 50; background: rgba(0,0,0,0.85); padding: 20px; border-radius: 20px; border: 3px solid var(--hero-cyan); text-align: center; margin-top: 120px; }
+        input { padding: 10px; font-size: 1.2rem; border-radius: 8px; border: 2px solid var(--hero-purple-main); width: 220px; text-align: center; background: #1a0a2e; color: white; }
+        
+        .btn { background: var(--hero-purple-main); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.2rem; cursor: pointer; margin-top: 15px; }
+        #message { height: 25px; margin-top: 10px; font-weight: bold; font-size: 1.1rem;}
+
+        #gameOverScreen { display: none; position: absolute; background: rgba(0,0,0,0.9); width: 100%; height: 100%; z-index: 200; flex-direction: column; justify-content: center; align-items: center; }
+
+        footer { position: fixed; bottom: 0; width: 100%; padding: 5px; text-align: center; background: #05101a; border-top: 2px solid #3c096c; font-size: 0.7rem; color: rgba(255,255,255,0.5); z-index: 100; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>NUMBER SNIPER</h1>
+    <div class="stats">
+        <div id="levelDisplay">Level: 1</div>
+        <div id="lives">Lives: ❤️❤️❤️</div>
+    </div>
+</header>
+
+<div id="gameOverScreen">
+    <h1 style="font-size: 5rem; color: var(--hero-red);">GAME OVER!</h1>
+    <button class="btn" onclick="resetGame()">PLAY AGAIN</button>
+</div>
+
+<div class="quiz-container">
+    <div id="numberDisplay">--</div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Catch it & type it!" autocomplete="off">
+        <br>
+        <button class="btn" onclick="checkAnswer()">CHECK</button>
+        <div id="message"></div>
+    </div>
+</div>
+
+<footer>&copy 2026 EngliForce - Make English Your Superpower!</footer>
+
+<script>
+    function numberToEnglish(n) {
+        const units = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+        const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+        if (n < 20) return units[n];
+        if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? "-" + units[n % 10] : "");
+        if (n === 100) return "one hundred";
+        if (n < 200) return "one hundred " + numberToEnglish(n - 100);
+        return "two hundred";
+    }
+
+    let keys = Array.from({length: 200}, (_, i) => i + 1);
+    let currentIndex = 0, lives = 3, timer;
+
+    function shuffleKeys() { keys.sort(() => Math.random() - 0.5); }
+
+    function startRound() {
+        if (currentIndex >= keys.length) { currentIndex = 0; shuffleKeys(); }
+        
+        let level = Math.floor(currentIndex / 10) + 1;
+        document.getElementById('levelDisplay').textContent = "Level: " + level;
+
+        const display = document.getElementById('numberDisplay');
+        display.textContent = keys[currentIndex];
+        display.classList.remove('fly');
+        void display.offsetWidth;
+        
+        // Start op 30 seconden, wordt per level 2 seconden sneller
+        let speed = Math.max(2, 30 - ((level - 1) * 2));
+        display.style.animationDuration = speed + "s";
+        display.classList.add('fly');
+        
+        document.getElementById('userInput').focus();
+        timer = setTimeout(() => { if (lives > 0) loseLife(); }, speed * 1000);
+    }
+
+    function loseLife() {
+        lives--;
+        document.getElementById('lives').textContent = "Lives: " + "❤️".repeat(lives);
+        if (lives > 0) { nextRound(); } 
+        else { document.getElementById('gameOverScreen').style.display = 'flex'; }
+    }
+
+    function resetGame() {
+        lives = 3; currentIndex = 0;
+        document.getElementById('lives').textContent = "Lives: ❤️❤️❤️";
+        document.getElementById('gameOverScreen').style.display = 'none';
+        shuffleKeys();
+        startRound();
+    }
+
+    function nextRound() {
+        clearTimeout(timer);
+        currentIndex++;
+        document.getElementById('userInput').value = '';
+        document.getElementById('message').textContent = "";
+        startRound();
+    }
+
+    function checkAnswer() {
+        const input = document.getElementById('userInput').value.trim().toLowerCase();
+        const correct = numberToEnglish(keys[currentIndex]);
+        const msg = document.getElementById('message');
+        if (input === correct) {
+            msg.textContent = "CORRECT!"; msg.style.color = "#52b788";
+            setTimeout(nextRound, 800);
+        } else {
+            msg.textContent = "WRONG!"; msg.style.color = "#d32f2f";
+            setTimeout(() => { document.getElementById('userInput').value = ''; }, 500);
+        }
+    }
+
+    document.getElementById('userInput').addEventListener("keypress", (e) => { if (e.key === "Enter") checkAnswer(); });
+    shuffleKeys();
+    startRound();
+</script>
+</body>
+</html>
