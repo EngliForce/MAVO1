@@ -1,264 +1,222 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Persoonlijke Voornaamwoorden</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #ff7043;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
-
-    section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      color: #ff7043;
-    }
-
-    table {
-      margin: 1rem auto;
-      border-collapse: collapse;
-      font-size: 1rem;
-    }
-
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-
-    th, td {
-      padding: 0.5rem 1rem;
-      text-align: center;
-    }
-
-    .highlight {
-      color: #e53935;
-      font-weight: bold;
-    }
-
-    .flag {
-      height: 20px;
-      vertical-align: middle;
-    }
-
-    .orange-box {
-      background-color: #ffab40;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      font-weight: bold;
-    }
-
-    .side-by-side {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      text-align: left;
-    }
-
-    .side-box {
-      flex: 1 1 280px;
-      max-width: 350px;
-      padding: 0.8rem;
-      border-radius: 8px;
-      box-sizing: border-box;
-    }
-
-    .left-box {
-      background-color: #fff176;
-    }
-
-    .right-box {
-      background-color: #4dd0e1;
-      color: black;
-    }
-
-    .right-box strong {
-      color: red;
-    }
-
-    .oefen-link {
-      display: inline-block;
-      margin: 0.4rem 0;
-      padding: 0.4rem 0.8rem;
-      background-color: #ff7043;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-
-    .oefen-link:hover {
-      background-color: #e65c30;
-    }
-
-    .video-row {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-
-    .video-column {
-      flex: 1 1 400px;
-      max-width: 560px;
-      text-align: center;
-    }
-
-    .video-column iframe {
-      width: 100%;
-      height: 315px;
-      border: none;
-      border-radius: 8px;
-    }
-
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-
-    .links a {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.6rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-    }
-
-    .links a:hover {
-      background-color: #e65c30;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBJECTIVE: MASTER PERSONAL PRONOUNS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf; --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703; --hero-cyan: #00f5d4;
+            --dark-bg: #05101a; --hero-red: #d32f2f;
+            --header-bg: #ff7043; --header-border: var(--hero-yellow);
+        }
+        html, body { margin: 0; padding: 0; width: 100%; }
+        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        
+        header { background: var(--header-bg); padding: 2.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        
+        main { max-width: 1000px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+        
+        /* Briefing Box met gekleurde Intel */
+        .briefing-box { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-cyan); border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .intel-content { text-align: left; margin-top: 15px; }
+        .highlight-yellow { color: var(--hero-yellow); font-weight: bold; }
+        .highlight-cyan { color: var(--hero-cyan); font-weight: bold; }
+        .intel-rule { background: rgba(255, 255, 255, 0.05); padding: 10px; border-left: 4px solid var(--hero-yellow); margin-bottom: 10px; border-radius: 0 5px 5px 0; }
+        
+        .toggle-container { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle { background: var(--hero-purple-main); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer; transition: 0.2s; border-bottom: 5px solid var(--hero-purple-dark); }
+        .btn-toggle:hover { transform: translateY(-3px); background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .table-container { width: 100%; max-width: 500px; margin: 20px auto; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); background: #1a102a; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: center; }
+        th { background: var(--hero-purple-main); color: white; padding: 12px; font-family: 'Bangers'; font-size: 1.1rem; }
+        td { padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 0.95rem; }
+        
+        .video-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px; }
+        .video-container { background: #000; border: 3px solid var(--hero-red); border-radius: 15px; overflow: hidden; position: relative; padding-top: 56.25%; width: 100%; flex: 1 1 350px; max-width: 350px; box-shadow: 0 0 15px rgba(211, 47, 47, 0.2); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        .pickle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(2, 1fr); } }
+        .card { background: #1a102a; border: 3px solid #3c096c; border-radius: 20px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); }
+        .card .title { font-family: 'Bangers'; font-size: 1.2rem; color: var(--hero-yellow); margin: 5px 0; }
+        
+        .btn-like { background: #3c096c; color: white; border: 2px solid var(--hero-cyan); padding: 5px 12px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; margin-top: 10px; transition: 0.2s; }
+        .btn-like.liked { background: var(--hero-yellow); color: #000; border-color: #000; }
+        
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 5rem; z-index: 2001; text-shadow: 5px 5px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        @keyframes boomAnim { 0% { transform: scale(0) rotate(-20deg); opacity: 1; } 100% { transform: scale(2) rotate(10deg); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+        
+        .fc-card { width: 100%; height: 100px; perspective: 1000px; cursor: pointer; }
+        .fc-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .fc-card.flipped .fc-inner { transform: rotateY(180deg); }
+        .fc-front, .fc-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--hero-yellow); box-sizing: border-box; }
+        .fc-front { background: white; color: var(--hero-purple-dark); font-family: 'Lexend', sans-serif; font-size: 1.3rem; font-weight: 700; }
+        .fc-back { background: var(--hero-yellow); color: var(--hero-purple-dark); transform: rotateY(180deg); font-family: 'Lexend'; font-weight: bold; font-size: 1rem; }
+        
+        footer { display: block; background: #05101a; color: rgba(255,255,255,0.8); text-align: center; padding: 30px; border-top: 2px solid var(--hero-purple-dark); margin-top: 40px; }
+    </style>
 </head>
-
 <body>
-  <header>
-    <img src="Logo.png" alt="Englix Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
-    <h1>Persoonlijke Voornaamwoorden</h1>
-    <p>Leer hoe je I, you, he, she, we en they gebruikt in het Engels!</p>
-  </header>
+    <div class="flash-effect" id="flash"></div>
+    <header>
+        <h1>ENGLIFORCE ACADEMY</h1>
+        <p>PRONOUN COMMAND CENTER</p>
+    </header>
 
-  <main>
-    <section>
-      <div class="orange-box">
-        Gebruik: Om te verwijzen naar mensen, dieren of dingen zonder die verder bij naam te noemen.
-      </div>
+    <main>
+        <section class="briefing-box">
+            <h2>🚨 MISSION: PERSONAL PRONOUNS</h2>
+            <div class="intel-content">
+                <p>Persoonlijke voornaamwoorden vervangen <span class="highlight-cyan">zelfstandige naamwoorden</span> (personen, dieren of dingen) om zinnen korter en vloeiender te maken.</p>
+                
+                <p style="margin-top: 20px;"><strong>Gouden Regels:</strong></p>
+                <div class="intel-rule">
+                    <span class="highlight-yellow">I (Ik):</span> Schrijf je ALTIJD met een hoofdletter.
+                </div>
+                <div class="intel-rule">
+                    <span class="highlight-yellow">You:</span> Super flexibel! Eén woord voor jij én jullie.
+                </div>
+                <div class="intel-rule">
+                    <span class="highlight-yellow">It:</span> Speciaal voor levenloze voorwerpen of dieren.
+                </div>
+                </div>
+        </section>
 
-      <div class="side-by-side">
-        <div class="side-box left-box">
-          <h3>🔤 Vorm</h3>
-          <ul style="list-style: none; padding-left: 0;">
-            <li>ik = <span class="highlight">I</span></li>
-            <li>jij = <span class="highlight">you</span> (enkelvoud)</li>
-            <li>hij = <span class="highlight">he</span></li>
-            <li>zij = <span class="highlight">she</span></li>
-            <li>het = <span class="highlight">it</span></li>
-            <li>wij = <span class="highlight">we</span></li>
-            <li>jullie = <span class="highlight">you</span> (meervoud)</li>
-            <li>zij = <span class="highlight">they</span></li>
-          </ul>
-          <p style="color: red; margin-top: 1rem;">I schrijf je altijd met een hoofdletter!</p>
+        <div class="toggle-container">
+            <button class="btn-toggle" onclick="showSection(event, 'pronoun-grid', 'ZAP!')">🔠 Overzicht</button>
+            <button class="btn-toggle" onclick="showSection(event, 'flashcards', 'KA-POW!')">🃏 Flashcards</button>
+            <button class="btn-toggle" onclick="showSection(event, 'video-mission', 'ACTION!')">🎬 Mission Video</button>
         </div>
 
-        <div class="side-box right-box">
-          <h3>📌 Voorbeelden</h3>
-          <p><strong>Laura</strong> walks to school.<br>→ <strong>She</strong> walks to school.</p>
-          <p><strong>Jim and I</strong> love English.<br>→ <strong>We</strong> love English.</p>
-          <p><strong>Mike and Ahmed</strong> are friends.<br>→ <strong>They</strong> are friends.</p>
+        <div id="pronoun-grid" class="content-section" style="display: block;">
+            <h3>Overzicht Voornaamwoorden</h3>
+            <div class="table-container">
+                <table>
+                    <tr><th>NL</th><th>EN</th></tr>
+                    <tr><td>Ik</td><td>I</td></tr>
+                    <tr><td>Jij</td><td>you (enkelvoud)</td></tr>
+                    <tr><td>Hij</td><td>he</td></tr>
+                    <tr><td>Zij (enkelvoud)</td><td>she</td></tr>
+                    <tr><td>Het</td><td>it</td></tr>
+                    <tr><td>Wij</td><td>we</td></tr>
+                    <tr><td>Jullie</td><td>you (meervoud)</td></tr>
+                    <tr><td>Zij (meervoud)</td><td>they</td></tr>
+                </table>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <section>
-      <h2>🇳🇱 ➡️ 🇬🇧 Overzicht in Tabelvorm</h2>
-      <table>
-        <tr>
-          <th><img src="dutch-flag.png" alt="NL" class="flag"> Nederlands</th>
-          <th><img src="uk-flag.png" alt="UK" class="flag"> Engels</th>
-        </tr>
-        <tr><td>ik</td><td><span class="highlight">I</span> (altijd hoofdletter)</td></tr>
-        <tr><td>jij</td><td>you (enkelvoud)</td></tr>
-        <tr><td>hij</td><td>he</td></tr>
-        <tr><td>zij (enkelvoud)</td><td>she</td></tr>
-        <tr><td>het</td><td>it</td></tr>
-        <tr><td>wij</td><td>we</td></tr>
-        <tr><td>jullie</td><td>you (meervoud)</td></tr>
-        <tr><td>zij (meervoud)</td><td>they</td></tr>
-      </table>
-    </section>
-
-    <section>
-      <h2>🎬 Video</h2>
-      <p>Bekijk de video's hieronder voor uitleg over persoonlijke voornaamwoorden.</p>
-      <div class="video-row">
-        <div class="video-column">
-          <iframe src="https://www.youtube.com/embed/ZN1hX3r7ky8" allowfullscreen></iframe>
-          <p>Uitleg 1</p>
+        <div id="flashcards" class="content-section">
+            <h3>🃏 Flashcard Lab</h3>
+            <div style="margin-bottom: 20px;">
+                <button class="btn-like" style="padding: 10px 20px; font-size: 1rem;" onclick="shuffleFlashcards()">🔀 Shuffle</button>
+            </div>
+            <div class="pickle-grid" id="fc-container"></div>
         </div>
-        <div class="video-column">
-          <iframe src="https://www.youtube.com/embed/ZC-H4IChL7A" allowfullscreen></iframe>
-          <p>Uitleg 2</p>
+
+        <div id="video-mission" class="content-section">
+            <h3>🎬 MISSION BRIEFING VIDEO</h3>
+            <div class="video-wrapper">
+                <div class="video-container"><iframe src="https://www.youtube.com/embed/ZN1hX3r7ky8" allowfullscreen></iframe></div>
+                <div class="video-container"><iframe src="https://www.youtube.com/embed/ZC-H4IChL7A" allowfullscreen></iframe></div>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <section>
-      <h2>🃏 Flashcards</h2>
-      <p>Oefen met de persoonlijke voornaamwoorden.</p>
-      <a class="oefen-link" href="m1t2_pronouns_flashcards.html" target="_blank">Open Flashcards</a>
-    </section>
+        <h2>⚔️ PICKLE MISSIONS</h2>
+        <div class="pickle-grid">
+            <div class="card" onclick="openMission(event, 'CRUNCH!', 'm1t1_personal_pronouns_pickle_1.html')">
+                <span style="font-size: 2rem;">🧩</span><div class="title">Pickle 1</div><p>Vul in: he, she, it...</p>
+                <button class="btn-like" onclick="toggleLike(event, this)">👍 Like</button>
+            </div>
+            <div class="card" onclick="openMission(event, 'TICK TOCK!', 'm1t1_personal_pronouns_pickle_2.html')">
+                <span style="font-size: 2rem;">👤</span><div class="title">Pickle 2</div><p>Wie hoort waar?</p>
+                <button class="btn-like" onclick="toggleLike(event, this)">👍 Like</button>
+            </div>
+            <div class="card" onclick="openMission(event, 'VROOM!', 'm1t1_personal_pronouns_pickle_3.html')">
+                <span style="font-size: 2rem;">🧠</span><div class="title">Pickle 3</div><p>Memory Game</p>
+                <button class="btn-like" onclick="toggleLike(event, this)">👍 Like</button>
+            </div>
+            <div class="card" onclick="openMission(event, 'ZAP!', 'm1t1_personal_pronouns_pickle_4.html')">
+                <span style="font-size: 2rem;">👁️</span><div class="title">Pickle 4</div><p>I Spy</p>
+                <button class="btn-like" onclick="toggleLike(event, this)">👍 Like</button>
+            </div>
+        </div>
+    </main>
 
-   <section>
-  <h2>📝 Super Pickles</h2>
-  <p>Test je kennis met leuke oefeningen!</p>
-  <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: nowrap; max-width: 1000px; margin: 0 auto; text-align: left;">
+    <footer>
+        &copy; 2026, EngliForce: <span style="color: var(--hero-yellow);">Make English Your Superpower!</span>
+    </footer>
 
-    <!-- Pickle links -->
-    <div style="min-width: 240px;">
-      <ul style="list-style: none; padding: 0; margin: 0;">
-        <li><a class='oefen-link' href='m1t1_personal_pronouns_pickle_1' target='_blank'>Pickle 1: Vul in: he, she, it...</a></li>
-        <li><a class='oefen-link' href='m1t1_personal_pronouns_pickle_2' target='_blank'>Pickle 2: Wie hoort waar?</a></li>
-        <li><a class='oefen-link' href='m1t1_personal_pronouns_pickle_3' target='_blank'>Pickle 3: Memory</a></li>
-        <li><a class='oefen-link' href='m1t1_personal_pronouns_pickle_4' target='_blank'>Pickle 4: I Spy</a></li>
-        <li><a class='oefen-link' href='m1t1_personal_pronouns_pickle_5' target='_blank'>Pickle 5: Flash Quiz</a></li>
-      </ul>
-    </div>
+    <script>
+        const pronounData = [
+            { front: 'Ik', back: 'I' }, { front: 'Jij', back: 'You' },
+            { front: 'Hij', back: 'He' }, { front: 'Zij (ev)', back: 'She' },
+            { front: 'Het', back: 'It' }, { front: 'Wij', back: 'We' },
+            { front: 'Jullie', back: 'You' }, { front: 'Zij (mv)', back: 'They' }
+        ];
 
-    <!-- Afbeelding rechts -->
-    <img src="Pickles.png" alt="Super Pickle" style="max-height: 180px; height: auto; width: auto; flex-shrink: 0;">
-    
-  </div>
-</section>
-  </main>
+        function renderFlashcards(data) {
+            const fcGrid = document.getElementById('fc-container');
+            fcGrid.innerHTML = '';
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'fc-card';
+                card.onclick = () => card.classList.toggle('flipped');
+                card.innerHTML = `<div class="fc-inner"><div class="fc-front">${item.front}</div><div class="fc-back">${item.back}</div></div>`;
+                fcGrid.appendChild(card);
+            });
+        }
 
-  <footer>
-    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-  </footer>
+        function shuffleFlashcards() {
+            const shuffled = [...pronounData].sort(() => Math.random() - 0.5);
+            renderFlashcards(shuffled);
+        }
+
+        function showSection(e, id, boomMessage) {
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            createExplosion(e, boomMessage);
+        }
+
+        function openMission(e, message, url) {
+            if (e.target.tagName === 'BUTTON') return;
+            createExplosion(e, message);
+            setTimeout(() => window.location.href = url, 600);
+        }
+
+        function toggleLike(e, btn) {
+            e.stopPropagation();
+            btn.classList.toggle('liked');
+            btn.innerText = btn.classList.contains('liked') ? '❤️ Liked' : '👍 Like';
+        }
+
+        function createExplosion(e, message) {
+            const flash = document.getElementById('flash');
+            flash.style.opacity = '0.3';
+            document.body.classList.add('shake');
+            setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+            const txt = document.createElement('div');
+            txt.className = 'boom-text';
+            txt.innerText = message;
+            txt.style.left = (e.clientX - 50) + 'px';
+            txt.style.top = (e.clientY - 50) + 'px';
+            document.body.appendChild(txt);
+            setTimeout(() => txt.remove(), 600);
+        }
+
+        renderFlashcards(pronounData);
+    </script>
 </body>
 </html>
