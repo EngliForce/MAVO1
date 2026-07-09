@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Hunter | EngliForce Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-orange-main: #ff7043;
+            --hero-yellow: #ffb703;
+            --dark-bg: #0b1a2a;
+            --card-bg: #102a43;
+        }
+        body { font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        
+        header { background: var(--hero-orange-main); width: 100%; padding: 2rem 1rem; text-align: center; border-bottom: 5px solid var(--hero-yellow); clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 2px 2px 0px #e65c30; }
+        
+        .game-container { background: var(--card-bg); border: 3px solid var(--hero-orange-main); border-radius: 20px; padding: 30px; margin-top: 40px; text-align: center; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        input { padding: 15px; font-size: 1.5rem; border-radius: 10px; border: 2px solid var(--hero-orange-main); width: 100%; text-align: center; background: #05101a; color: white; margin-top: 15px; }
+        .btn { background: var(--hero-orange-main); border: none; color: white; padding: 15px 30px; border-radius: 10px; font-family: 'Bangers'; font-size: 1.2rem; cursor: pointer; margin-top: 15px; width: 100%; transition: 0.3s; }
+        .btn:hover { background: var(--hero-yellow); color: black; }
+        
+        #feedback { font-size: 2.5rem; font-family: 'Bangers'; margin-top: 25px; color: var(--hero-yellow); min-height: 60px; }
+        #attempts { font-size: 1.2rem; color: #94a3b8; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<header><h1>NUMBER HUNTER</h1></header>
+
+<div class="game-container">
+    <p>Guess the secret number between 1 and 200!</p>
+    <input type="text" id="userInput" placeholder="Type in English..." autocomplete="off">
+    <button class="btn" onclick="checkGuess()">GUESS</button>
+    <button id="resetBtn" class="btn" style="display:none; background: #243b53;" onclick="initGame()">PLAY AGAIN</button>
+    
+    <div id="feedback">Ready?</div>
+    <div id="attempts">Attempts: 0</div>
+</div>
+
+<script>
+    const wordToNumber = { "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90 };
+    let secretNum, attempts;
+
+    function initGame() {
+        secretNum = Math.floor(Math.random() * 200) + 1;
+        attempts = 0;
+        document.getElementById('feedback').textContent = "Ready?";
+        document.getElementById('attempts').textContent = "Attempts: 0";
+        document.getElementById('resetBtn').style.display = 'none';
+        document.getElementById('userInput').value = '';
+        document.getElementById('userInput').focus();
+    }
+
+    function parseEnglishNumber(text) {
+        text = text.toLowerCase().trim();
+        let total = 0;
+        let parts = text.replace(/-/g, ' ').split(' ');
+        for (let part of parts) {
+            if (part === "hundred") continue;
+            if (wordToNumber[part]) total += wordToNumber[part];
+        }
+        if (text.includes("hundred")) {
+            if (text.startsWith("one hundred")) total += 100;
+            else if (text.startsWith("two hundred")) total = 200;
+        }
+        return total;
+    }
+
+    function checkGuess() {
+        const guess = parseEnglishNumber(document.getElementById('userInput').value);
+        const feedback = document.getElementById('feedback');
+        if (isNaN(guess) || guess < 1 || guess > 200) { feedback.textContent = "Oops! 1-200"; return; }
+        attempts++;
+        document.getElementById('attempts').textContent = "Attempts: " + attempts;
+        if (guess === secretNum) {
+            feedback.textContent = "CORRECT!";
+            document.getElementById('resetBtn').style.display = 'block';
+        } else {
+            feedback.textContent = guess < secretNum ? "HIGHER!" : "LOWER!";
+        }
+        document.getElementById('userInput').value = '';
+        document.getElementById('userInput').focus();
+    }
+
+    document.getElementById('userInput').addEventListener("keypress", (e) => { if (e.key === "Enter") checkGuess(); });
+    initGame();
+</script>
+</body>
+</html>
