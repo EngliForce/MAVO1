@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISSION: I SPY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf; --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703; --hero-cyan: #00f5d4;
+            --header-bg: #ff7043; --header-border: var(--hero-yellow);
+        }
+        
+        html, body { margin: 0; padding: 0; min-height: 100vh; }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        header { 
+            width: 100%;
+            background: var(--header-bg); 
+            padding: 2rem 1rem; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); 
+            border-bottom: 5px solid var(--header-border); 
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
+        
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; width: 100%; max-width: 800px; }
+
+        #prompt { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); margin-bottom: 20px; }
+        
+        .image-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px 0; }
+
+        .person {
+            border: 3px solid var(--hero-cyan);
+            border-radius: 15px;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            cursor: pointer;
+            font-size: 3rem;
+            transition: 0.3s;
+        }
+        .person:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
+
+        .correct { border-color: #00f5d4 !important; background: #004643 !important; }
+        .wrong { border-color: #d32f2f !important; background: #4a0000 !important; }
+
+        .btn-action { 
+            background: var(--hero-yellow); color: #000; border: none; padding: 12px 30px; 
+            border-radius: 50px; font-family: 'Bangers'; font-size: 1.2rem; cursor: pointer; 
+            border-bottom: 5px solid #b58900; transition: 0.2s;
+        }
+        .btn-action:hover { transform: translateY(-3px); }
+
+        .scoreboard { font-family: 'Bangers'; font-size: 1.2rem; margin: 20px 0; }
+        
+        footer { margin-top: auto; padding: 20px; color: rgba(255,255,255,0.5); text-align: center; }
+    </style>
+</head>
+<body>
+
+<header><h1>MISSION: I SPY</h1></header>
+
+<main>
+    <div id="prompt">Zoek: <strong id="target"></strong></div>
+
+    <div class="image-area" id="game-area"></div>
+
+    <div class="scoreboard">
+        ✅ Correct: <span id="correct-score">0</span> | ❌ Incorrect: <span id="incorrect-score">0</span>
+    </div>
+
+    <button class="btn-action" onclick="restartGame()">🔄 RESTART</button>
+</main>
+
+<footer>
+    &copy; 2026 EngliForce – Make English your superpower!
+</footer>
+
+<script>
+    const pronouns = [
+        { pronoun: "he", emojis: ["👉🏽👦🏾", "👉🏽👦🏻", "👉🏽👨🏽"] },
+        { pronoun: "she", emojis: ["👉🏽👧🏽", "👉🏽👧🏼", "👉🏽👩🏾"] },
+        { pronoun: "it", emojis: ["👉🏽🐶", "👉🏽🐱", "👉🏽🤖"] },
+        { pronoun: "you (enkelvoud)", emojis: ["🫵🏽", "🫵🏻"] },
+        { pronoun: "you (meervoud)", emojis: ["👥", "🫵🏻🫵🏼"] },
+        { pronoun: "we", emojis: ["🙋🏾‍♂️🙋🏼‍♀️", "🙋🏽‍♀️🙋🏻‍♂️", "🙋🏿‍♀️🙋🏽‍♂️"] },
+        { pronoun: "they (enkelvoud)", emojis: ["👤"], note: "they (singular)" }, 
+        { pronoun: "they (meervoud)", emojis: ["👉🏽👨🏽‍👩🏽‍👧🏾", "👉🏽👨‍👩‍👧"] },
+        { pronoun: "I", emojis: ["🙋🏾", "🙋🏻", "🙋🏽"] }
+    ];
+
+    let gamePeople = [];
+    let currentTarget = null;
+    let correctScore = 0;
+    let incorrectScore = 0;
+    let round = 0;
+    const maxRounds = 10;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function setupGame() {
+        const area = document.getElementById("game-area");
+        area.innerHTML = "";
+        gamePeople = [];
+
+        // Selecteer willekeurig items voor deze ronde
+        const roundPronouns = [...pronouns];
+        shuffle(roundPronouns);
+        const selected = roundPronouns.slice(0, 5); // Toon 5 opties
+
+        selected.forEach(p => {
+            const emoji = p.emojis[Math.floor(Math.random() * p.emojis.length)];
+            gamePeople.push({ emoji, pronoun: p.pronoun });
+        });
+
+        gamePeople.forEach(p => {
+            const container = document.createElement("div");
+            container.className = "person";
+            container.textContent = p.emoji;
+            container.onclick = () => checkAnswer(container, p.pronoun);
+            area.appendChild(container);
+        });
+
+        // Kies target uit de getoonde items
+        const options = gamePeople.map(p => p.pronoun);
+        currentTarget = options[Math.floor(Math.random() * options.length)];
+        document.getElementById("target").textContent = currentTarget;
+        round++;
+    }
+
+    function checkAnswer(element, pronoun) {
+        const all = document.querySelectorAll(".person");
+        all.forEach(p => p.onclick = null); // Blokkeer kliks tijdens animatie
+
+        if (pronoun === currentTarget) {
+            element.classList.add("correct");
+            correctScore++;
+            document.getElementById("correct-score").textContent = correctScore;
+        } else {
+            element.classList.add("wrong");
+            incorrectScore++;
+            document.getElementById("incorrect-score").textContent = incorrectScore;
+            
+            // Toon de juiste
+            Array.from(all).forEach(e => {
+                if (gamePeople.find(p => p.emoji === e.textContent).pronoun === currentTarget) {
+                    e.classList.add("correct");
+                }
+            });
+        }
+
+        setTimeout(() => {
+            if (round < maxRounds) {
+                setupGame();
+            } else {
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function endGame() {
+        document.getElementById("prompt").innerHTML = `🎉 MISSION COMPLETE!<br>
+          <span style="font-size:1rem">Score: ${correctScore}/${maxRounds}</span>`;
+        document.getElementById("game-area").innerHTML = "";
+    }
+
+    function restartGame() {
+        correctScore = 0;
+        incorrectScore = 0;
+        round = 0;
+        document.getElementById("correct-score").textContent = "0";
+        document.getElementById("incorrect-score").textContent = "0";
+        document.getElementById("prompt").innerHTML = 'Zoek: <strong id="target"></strong>';
+        setupGame();
+    }
+
+    window.onload = setupGame;
+</script>
+</body>
+</html>
