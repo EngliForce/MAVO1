@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: Number Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --header-bg: #ff7043;
+        }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: #05101a; 
+            color: white; 
+            margin: 0; 
+            height: 100vh; 
+            overflow: hidden; /* Voorkomt scrollen */
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        header { 
+            background: var(--header-bg); 
+            width: 100%; 
+            padding: 2rem 1rem; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; color: white; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); letter-spacing: 2px; }
+        .subtitle { font-family: 'Lexend', sans-serif; color: var(--hero-yellow); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; }
+
+        .quiz-container { 
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(26, 16, 42, 0.95); 
+            border: 3px solid var(--hero-cyan); 
+            border-radius: 25px; 
+            padding: 20px; 
+            margin: 20px; 
+            max-width: 850px; 
+            width: 90%; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+        }
+        
+        #numberDisplay { font-size: 4rem; font-family: 'Bangers'; color: var(--hero-yellow); margin: 10px 0; }
+        input { padding: 15px; font-size: 1.5rem; border-radius: 10px; border: 2px solid var(--hero-purple-main); width: 80%; text-align: center; background: #1a0a2e; color: white; margin-bottom: 15px;}
+        
+        .btn { background: var(--hero-purple-main); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-family: 'Bangers'; font-size: 1.2rem; cursor: pointer; border-bottom: 5px solid var(--hero-purple-dark); transition: 0.2s; margin: 5px; }
+        .btn:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-3px); }
+        
+        .feedback { height: 30px; font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
+        .correct { color: #52b788; }
+        .incorrect { color: var(--hero-red); }
+
+        footer { 
+            padding: 20px; 
+            text-align: center; 
+            color: rgba(255,255,255,0.7); 
+            border-top: 2px solid var(--hero-purple-dark); 
+            width: 100%; 
+            background: #05101a; 
+            font-size: 0.9rem;
+        }
+        .footer-highlight { color: var(--hero-yellow); font-weight: bold; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>NUMBER MASTER</h1>
+</header>
+
+<div class="quiz-container">
+    <p>How do you write this number in English?</p>
+    <div id="numberDisplay">--</div>
+    <input type="text" id="userInput" placeholder="Type here..." autocomplete="off">
+    <div id="feedback" class="feedback"></div>
+    <div>
+        <button class="btn" id="checkBtn" onclick="checkAnswer()">CHECK</button>
+        <button class="btn" id="nextBtn" onclick="nextNumber()" style="display: none;">NEXT</button>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></p>
+</footer>
+
+<script>
+    const numbers = {
+        7: "seven", 12: "twelve", 21: "twenty-one", 45: "forty-five", 
+        88: "eighty-eight", 100: "one hundred", 132: "one hundred thirty-two", 
+        150: "one hundred fifty", 199: "one hundred ninety-nine", 200: "two hundred"
+    };
+    
+    let keys = Object.keys(numbers);
+    let currentIndex = 0;
+
+    function nextNumber() {
+        currentIndex = (currentIndex + 1) % keys.length;
+        document.getElementById('numberDisplay').textContent = keys[currentIndex];
+        document.getElementById('userInput').value = '';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('checkBtn').style.display = 'inline-block';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('userInput').focus();
+    }
+
+    function checkAnswer() {
+        const input = document.getElementById('userInput').value.trim().toLowerCase();
+        const correct = numbers[keys[currentIndex]];
+        const feedback = document.getElementById('feedback');
+        
+        if (input === correct) {
+            feedback.textContent = "CORRECT!";
+            feedback.className = "feedback correct";
+        } else {
+            feedback.textContent = `OOPS! It was: ${correct}`;
+            feedback.className = "feedback incorrect";
+        }
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'inline-block';
+    }
+
+    nextNumber();
+</script>
+</body>
+</html>
