@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Dictator | EngliForce Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-orange-main: #ff7043;
+            --hero-orange-dark: #e65c30;
+            --hero-yellow: #ffb703;
+            --card-bg: #102a43;
+            --card-border: #243b53;
+        }
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%); 
+            color: white; 
+            margin: 0; 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        
+        header { 
+            background: var(--hero-orange-main); 
+            width: 100%; 
+            padding: 2rem 1rem; 
+            text-align: center; 
+            border-bottom: 5px solid var(--hero-yellow); 
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-orange-dark); }
+        
+        .game-container { 
+            background: var(--card-bg); 
+            border: 3px solid var(--card-border); 
+            border-radius: 20px; 
+            padding: 40px; 
+            text-align: center; 
+            width: 90%; 
+            max-width: 450px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Input zonder pijltjes */
+        input { 
+            padding: 15px; 
+            font-size: 1.5rem; 
+            border-radius: 12px; 
+            border: 2px solid var(--card-border); 
+            width: 100%; 
+            max-width: 300px;
+            text-align: center; 
+            background: #05101a; 
+            color: white; 
+            margin: 20px 0;
+            outline: none;
+        }
+        
+        .btn { 
+            background: var(--card-border); 
+            border: none; 
+            color: white; 
+            padding: 12px 25px; 
+            border-radius: 12px; 
+            font-family: 'Bangers', cursive; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            margin: 5px; 
+            width: 100%; 
+            max-width: 300px;
+            transition: 0.3s; 
+        }
+        .btn:hover { background: var(--hero-orange-main); transform: translateY(-3px); }
+        
+        #status { font-size: 1.8rem; font-family: 'Bangers'; margin-top: 20px; color: var(--hero-yellow); min-height: 40px; }
+        
+        footer { padding-bottom: 20px; opacity: 0.5; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header><h1>NUMBER DICTATOR</h1></header>
+
+<div class="game-container">
+    <p>Press LISTEN, hear the number, and type the digits!</p>
+    <button class="btn" style="background: var(--hero-orange-main);" onclick="playNumber()">LISTEN</button>
+    <!-- input mode zorgt voor numeriek toetsenbord op mobiel, type text voorkomt pijltjes -->
+    <input type="text" inputmode="numeric" id="userInput" placeholder="1 - 200" autocomplete="off">
+    <button class="btn" onclick="checkAnswer()">CHECK ANSWER</button>
+    
+    <div id="status">Ready?</div>
+</div>
+
+<footer>&copy; 2026 EngliForce – Make English Your Superpower!</footer>
+
+<script>
+    let currentNumber;
+
+    function playNumber() {
+        currentNumber = Math.floor(Math.random() * 200) + 1;
+        const utterance = new SpeechSynthesisUtterance(currentNumber.toString());
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+        document.getElementById('status').textContent = "Listening...";
+        document.getElementById('status').style.color = "#ffb703";
+        document.getElementById('userInput').value = '';
+        document.getElementById('userInput').focus();
+    }
+
+    function checkAnswer() {
+        const input = document.getElementById('userInput').value;
+        const status = document.getElementById('status');
+        
+        if (input.trim() === "") return;
+        
+        if (parseInt(input) === currentNumber) {
+            status.textContent = "CORRECT!";
+            status.style.color = "#00f5d4";
+        } else {
+            status.textContent = "WRONG! It was " + currentNumber;
+            status.style.color = "#ff7043";
+        }
+        document.getElementById('userInput').value = '';
+    }
+
+    document.getElementById('userInput').addEventListener("keypress", (e) => { if (e.key === "Enter") checkAnswer(); });
+</script>
+</body>
+</html>
