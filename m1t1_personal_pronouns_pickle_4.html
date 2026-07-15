@@ -6,260 +6,158 @@
     <title>MISSION: FLITSQUIZ</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --hero-purple-main: #7b2cbf; --hero-purple-dark: #3c096c;
-            --hero-yellow: #ffb703; --hero-cyan: #00f5d4;
-            --header-bg: #ff7043; --header-border: var(--hero-yellow);
-        }
-        
-        /* Lock layout to screen */
-        html, body { 
-            margin: 0; padding: 0; 
-            height: 100vh; 
-            width: 100vw;
-            overflow: hidden; 
-            font-family: 'Lexend', sans-serif; 
-            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); 
-            color: white; 
-            display: flex; 
-            flex-direction: column; 
-        }
-
-        header { 
-            flex-shrink: 0;
-            background: var(--header-bg); 
-            padding: 1rem; 
-            text-align: center; 
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); 
-            border-bottom: 3px solid var(--hero-yellow); 
-        }
-        h1 { font-family: 'Bangers', cursive; font-size: 2rem; margin: 0; text-shadow: 2px 2px 0px var(--hero-purple-dark); }
-        
-        main { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            padding: 10px; 
-            width: 100%; 
-            box-sizing: border-box;
-        }
-
-        .game-container { 
-            background: rgba(255,255,255,0.05); 
-            padding: 20px; 
-            border-radius: 20px; 
-            border: 2px solid var(--hero-purple-main); 
-            width: 100%; 
-            max-width: 500px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        
-        .question { font-size: 1.5rem; font-family: 'Bangers'; color: var(--hero-yellow); margin-bottom: 5px; }
-        .context { font-size: 1rem; color: var(--hero-cyan); margin-bottom: 15px; font-style: italic; }
-
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        
-        .btn-action { 
-            background: var(--hero-purple-main); color: white; border: none; padding: 10px; 
-            border-radius: 8px; font-family: 'Lexend'; font-weight: 700; cursor: pointer; 
-            font-size: 0.9rem;
-            transition: 0.2s; border: 2px solid transparent;
-        }
-        .btn-action:hover { border-color: var(--hero-cyan); }
-        .btn-restart { background: var(--hero-yellow); color: #000; margin-top: 5px; width: 100%; font-family: 'Bangers'; font-size: 1.1rem; }
-
-        .feedback { font-family: 'Bangers'; font-size: 1.3rem; margin: 10px 0; height: 1.5em; }
-        .score { font-size: 1rem; color: rgba(255,255,255,0.7); }
-
-        footer { 
-            flex-shrink: 0;
-            padding: 10px; 
-            color: rgba(255,255,255,0.3); 
-            text-align: center; 
-            font-size: 0.8rem;
-        }
+        :root { --hero-purple-main: #7b2cbf; --hero-yellow: #ffb703; --hero-cyan: #00f5d4; --header-bg: #ff7043; }
+        html, body { margin: 0; padding: 0; height: 100vh; overflow: hidden; font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; display: flex; flex-direction: column; }
+        header { background: var(--header-bg); padding: 1rem; text-align: center; border-bottom: 3px solid var(--hero-yellow); }
+        h1 { font-family: 'Bangers', cursive; margin: 0; }
+        main { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 10px; }
+        .game-container { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; border: 2px solid var(--hero-purple-main); width: 100%; max-width: 500px; text-align: center; }
+        .question { font-size: 1.5rem; font-family: 'Bangers'; color: var(--hero-yellow); margin-bottom: 10px; }
+        .hint-box { font-size: 0.9rem; color: var(--hero-cyan); margin-bottom: 20px; font-weight: bold; font-style: italic; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-action { background: var(--hero-purple-main); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-action:hover { border: 2px solid var(--hero-cyan); }
+        .feedback { font-family: 'Bangers'; font-size: 1.4rem; margin: 15px 0; height: 1.5em; }
     </style>
 </head>
 <body>
-
     <header><h1>⚡ FLITSQUIZ</h1></header>
-
     <main>
         <div class="game-container">
             <div id="question" class="question">Loading...</div>
-            <div id="context" class="context"></div>
-            
+            <div id="hint" class="hint-box"></div>
             <div class="options" id="options"></div>
-            
             <div id="feedback" class="feedback"></div>
             <div id="score" class="score">Score: 0 / 0</div>
-            
-            <button class="btn-action btn-restart" onclick="restartQuiz()">🔄 RESTART QUIZ</button>
         </div>
     </main>
 
-    <footer>
-        &copy; 2026 EngliForce – Make English Your Superpower!
-    </footer>
-
     <script>
         const allQuestions = [
-    // I, You, He, She, It, We, They
-    { sentence: "___ am a student.", hint: "je spreekt over jezelf", correct: "I" },
-    { sentence: "___ is my best friend.", hint: "die jongen (mannelijk)", correct: "He" },
-    { sentence: "___ are very funny.", hint: "jij en je broer (meervoud)", correct: "You (meervoud)" },
-    { sentence: "___ is running fast.", hint: "de hond (dier)", correct: "It" },
-    { sentence: "___ like ice cream.", hint: "wij (ik en mijn vrienden)", correct: "We" },
-    { sentence: "___ are playing outside.", hint: "de leerlingen (meervoud)", correct: "They" },
-    { sentence: "___ is a nice girl.", hint: "zij (vrouwelijk)", correct: "She" },
-    { sentence: "___ have a cool car.", hint: "je spreekt tegen één persoon", correct: "You (enkelvoud)" },
-    { sentence: "___ is my teacher.", hint: "meneer de Vries", correct: "He" },
-    { sentence: "___ are dancing.", hint: "Sarah en ik", correct: "We" },
-    { sentence: "___ is broken.", hint: "de computer", correct: "It" },
-    { sentence: "___ love to sing.", hint: "jij (enkelvoud)", correct: "You (enkelvoud)" },
-    { sentence: "___ am doing my homework.", hint: "ik", correct: "I" },
-    { sentence: "___ are smart kids.", hint: "die kinderen daar", correct: "They" },
-    { sentence: "___ is a tall man.", hint: "mijn vader", correct: "He" },
-    { sentence: "___ is my sister.", hint: "Anna", correct: "She" },
-    { sentence: "___ like to swim.", hint: "wij (ik en mijn familie)", correct: "We" },
-    { sentence: "___ is raining today.", hint: "het weer", correct: "It" },
-    { sentence: "___ are great at football.", hint: "jullie (meervoud)", correct: "You (meervoud)" },
-    { sentence: "___ play in the park.", hint: "Tom en Jerry", correct: "They" },
-    { sentence: "___ am reading a comic.", hint: "ik", correct: "I" },
-    { sentence: "___ is a famous doctor.", hint: "dokter Janssen", correct: "He" },
-    { sentence: "___ is baking a cake.", hint: "moeder", correct: "She" },
-    { sentence: "___ is under the table.", hint: "de kat", correct: "It" },
-    { sentence: "___ are going to the cinema.", hint: "wij (ik en mijn vriend)", correct: "We" },
-    { sentence: "___ work at the hospital.", hint: "zij (meervoud)", correct: "They" },
-    { sentence: "___ look tired.", hint: "jij (enkelvoud)", correct: "You (enkelvoud)" },
-    { sentence: "___ is green.", hint: "de appel", correct: "It" },
-    { sentence: "___ are very helpful.", hint: "jij en je zus", correct: "You (meervoud)" },
-    { sentence: "___ is a good singer.", hint: "hij (mannelijk)", correct: "He" },
-    { sentence: "___ likes to paint.", hint: "zij (vrouwelijk)", correct: "She" },
-    { sentence: "___ have a big house.", hint: "jullie (meervoud)", correct: "You (meervoud)" },
-    { sentence: "___ am going home.", hint: "ik", correct: "I" },
-    { sentence: "___ are our neighbors.", hint: "de mensen naast ons", correct: "They" },
-    { sentence: "___ is very cold.", hint: "het ijsje", correct: "It" },
-    { sentence: "___ love our dog.", hint: "wij (ik en mijn broer)", correct: "We" },
-    { sentence: "___ is handsome.", hint: "mijn broer", correct: "He" },
-    { sentence: "___ is beautiful.", hint: "mijn moeder", correct: "She" },
-    { sentence: "___ are late for school.", hint: "jullie (meervoud)", correct: "You (meervoud)" },
-    { sentence: "___ am happy today.", hint: "ik", correct: "I" },
-    { sentence: "___ is sleeping now.", hint: "de baby", correct: "It" },
-    { sentence: "___ live in London.", hint: "zij (meervoud)", correct: "They" },
-    { sentence: "___ speak good English.", hint: "jij (enkelvoud)", correct: "You (enkelvoud)" },
-    { sentence: "___ want to watch a movie.", hint: "wij (ik en mijn ouders)", correct: "We" },
-    { sentence: "___ is a bus driver.", hint: "hij", correct: "He" },
-    { sentence: "___ is wearing a dress.", hint: "zij", correct: "She" },
-    { sentence: "___ are my favorite shoes.", hint: "deze schoenen", correct: "They" },
-    { sentence: "___ am not hungry.", hint: "ik", correct: "I" },
-    { sentence: "___ is a nice book.", hint: "het boek", correct: "It" },
-    { sentence: "___ are very fast.", hint: "jullie", correct: "You (meervoud)" },
-    { sentence: "___ like chocolate.", hint: "wij", correct: "We" },
-    { sentence: "___ is waiting for the bus.", hint: "hij", correct: "He" },
-    { sentence: "___ is my aunt.", hint: "zij", correct: "She" },
-    { sentence: "___ are in the garden.", hint: "zij", correct: "They" },
-    { sentence: "___ are a good friend.", hint: "jij (enkelvoud)", correct: "You (enkelvoud)" },
-    { sentence: "___ is my phone.", hint: "het ding", correct: "It" },
-    { sentence: "___ am doing a test.", hint: "ik", correct: "I" },
-    { sentence: "___ are always late.", hint: "jullie", correct: "You (meervoud)" },
-    { sentence: "___ is a good teacher.", hint: "hij", correct: "He" },
-    { sentence: "___ is very sweet.", hint: "zij", correct: "She" },
-    { sentence: "___ like soccer.", hint: "wij", correct: "We" },
-    { sentence: "___ are heavy.", hint: "de koffers", correct: "They" },
-    { sentence: "___ is a long movie.", hint: "het", correct: "It" },
-    { sentence: "___ have a big smile.", hint: "jij", correct: "You (enkelvoud)" },
-    { sentence: "___ am tired.", hint: "ik", correct: "I" },
-    { sentence: "___ are my parents.", hint: "zij", correct: "They" },
-    { sentence: "___ is very hot outside.", hint: "het weer", correct: "It" },
-    { sentence: "___ are a great team.", hint: "jij en je teamgenoot", correct: "You (meervoud)" },
-    { sentence: "___ plays the guitar.", hint: "hij", correct: "He" },
-    { sentence: "___ loves animals.", hint: "zij", correct: "She" },
-    { sentence: "___ go to the beach.", hint: "wij", correct: "We" },
-    { sentence: "___ are expensive.", hint: "de auto's", correct: "They" },
-    { sentence: "___ is a cute pet.", hint: "het", correct: "It" },
-    { sentence: "___ can speak French.", hint: "jij", correct: "You (enkelvoud)" },
-    { sentence: "___ am ready.", hint: "ik", correct: "I" }
-];
+            { sentence: "___ am a student.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ is my best friend.", hint: "Subject: A boy", correct: "He" },
+            { sentence: "___ are funny.", hint: "Subject: You and your brother", correct: "We" },
+            { sentence: "___ is running fast.", hint: "Subject: The dog", correct: "It" },
+            { sentence: "___ like ice cream.", hint: "Subject: Me and my friends", correct: "We" },
+            { sentence: "___ are playing outside.", hint: "Subject: The students", correct: "They" },
+            { sentence: "___ is a nice girl.", hint: "Subject: A girl", correct: "She" },
+            { sentence: "___ have a cool car.", hint: "Subject: You are talking to your parents", correct: "You" },
+            { sentence: "___ is my teacher.", hint: "Subject: Mr. Smith", correct: "He" },
+            { sentence: "___ is a doctor.", hint: "Subject: Dr. Jones (female)", correct: "She" },
+            { sentence: "___ is broken.", hint: "Subject: The computer", correct: "It" },
+            { sentence: "___ love to sing.", hint: "Subject: You are talking to your friends", correct: "You" },
+            { sentence: "___ am doing my homework.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ are smart kids.", hint: "Subject: Those children", correct: "They" },
+            { sentence: "___ is a tall man.", hint: "Subject: My father", correct: "He" },
+            { sentence: "___ is my sister.", hint: "Subject: Anna", correct: "She" },
+            { sentence: "___ like to swim.", hint: "Subject: Me and my family", correct: "We" },
+            { sentence: "___ is raining today.", hint: "Subject: The weather", correct: "It" },
+            { sentence: "___ are great at football.", hint: "Subject: My friends", correct: "They" },
+            { sentence: "___ play in the park.", hint: "Subject: Tom and Jerry", correct: "They" },
+            { sentence: "___ am reading a comic.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ is a surgeon.", hint: "Subject: Dr. Miller (male)", correct: "He" },
+            { sentence: "___ is baking a cake.", hint: "Subject: A mother", correct: "She" },
+            { sentence: "___ is under the table.", hint: "Subject: The cat", correct: "It" },
+            { sentence: "___ are going to the cinema.", hint: "Subject: Me and my friend", correct: "We" },
+            { sentence: "___ work at the hospital.", hint: "Subject: The nurses", correct: "They" },
+            { sentence: "___ look tired.", hint: "Subject: You are talking to your nieghbours", correct: "You" },
+            { sentence: "___ is green.", hint: "Subject: The apple", correct: "It" },
+            { sentence: "___ are very helpful.", hint: "Subject: You and your sister", correct: "We" },
+            { sentence: "___ is a good singer.", hint: "Subject: A man", correct: "He" },
+            { sentence: "___ likes to paint.", hint: "Subject: A woman", correct: "She" },
+            { sentence: "___ have a big house.", hint: "Subject: You are talking to another person", correct: "You" },
+            { sentence: "___ am going home.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ are our neighbors.", hint: "Subject: The people next door", correct: "They" },
+            { sentence: "___ is very cold.", hint: "Subject: The ice cream", correct: "It" },
+            { sentence: "___ love our dog.", hint: "Subject: Me and my brother", correct: "We" },
+            { sentence: "___ is handsome.", hint: "Subject: My brother", correct: "He" },
+            { sentence: "___ is beautiful.", hint: "Subject: My mother", correct: "She" },
+            { sentence: "___ are late for school.", hint: "Subject: You are talking to another person", correct: "You" },
+            { sentence: "___ am happy today.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ is sleeping now.", hint: "Subject: The baby", correct: "It" },
+            { sentence: "___ live in London.", hint: "Subject: My friends", correct: "They" },
+            { sentence: "___ speak good English.", hint: "Subject: You are talking to another person", correct: "You" },
+            { sentence: "___ want to watch a movie.", hint: "Subject: Me and my parents", correct: "We" },
+            { sentence: "___ is a bus driver.", hint: "Subject: A man", correct: "He" },
+            { sentence: "___ is wearing a dress.", hint: "Subject: A woman", correct: "She" },
+            { sentence: "___ are my favorite shoes.", hint: "Subject: Those shoes", correct: "They" },
+            { sentence: "___ am not hungry.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ is a nice book.", hint: "Subject: The book", correct: "It" },
+            { sentence: "___ are very fast.", hint: "Subject: You are talking to someone", correct: "You" },
+            { sentence: "___ like chocolate.", hint: "Subject: We", correct: "We" },
+            { sentence: "___ is waiting for the bus.", hint: "Subject: A man", correct: "He" },
+            { sentence: "___ is my aunt.", hint: "Subject: A woman", correct: "She" },
+            { sentence: "___ are in the garden.", hint: "Subject: They", correct: "They" },
+            { sentence: "___ are a good friend.", hint: "Subject: You", correct: "You" },
+            { sentence: "___ is my phone.", hint: "Subject: The device", correct: "It" },
+            { sentence: "___ am doing a test.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ are always late.", hint: "Subject: My classmates", correct: "They" },
+            { sentence: "___ is a good teacher.", hint: "Subject: A man", correct: "He" },
+            { sentence: "___ is very sweet.", hint: "Subject: A woman", correct: "She" },
+            { sentence: "___ like soccer.", hint: "Subject: We", correct: "We" },
+            { sentence: "___ are heavy.", hint: "Subject: The suitcases", correct: "They" },
+            { sentence: "___ is a long movie.", hint: "Subject: The movie", correct: "It" },
+            { sentence: "___ have a big smile.", hint: "Subject: You are talking to your teacher", correct: "You" },
+            { sentence: "___ am tired.", hint: "Subject: Me", correct: "I" },
+            { sentence: "___ are my parents.", hint: "Subject: Mom and Dad", correct: "They" },
+            { sentence: "___ is very hot outside.", hint: "Subject: The weather", correct: "It" },
+            { sentence: "___ are a great team.", hint: "Subject: You and your teammate", correct: "We" },
+            { sentence: "___ plays the guitar.", hint: "Subject: A man", correct: "He" },
+            { sentence: "___ loves animals.", hint: "Subject: A woman", correct: "She" },
+            { sentence: "___ go to the beach.", hint: "Subject: We", correct: "We" },
+            { sentence: "___ are expensive.", hint: "Subject: The cars", correct: "They" },
+            { sentence: "___ is a cute pet.", hint: "Subject: The hamster", correct: "It" },
+            { sentence: "___ can speak French.", hint: "Subject: You are talking to a friend", correct: "You" },
+            { sentence: "___ am ready.", hint: "Subject: Me", correct: "I" }
+        ];
 
-        let questions = [];
-        let current = {};
-        let score = 0;
-        let total = 0;
-        let maxRounds = 10;
-        let roundsPlayed = 0;
+        let selectedQuestions = [];
+        let current, score = 0, total = 0, index = 0;
 
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        function restartQuiz() {
-            score = 0;
-            total = 0;
-            roundsPlayed = 0;
-            questions = [...allQuestions];
-            shuffle(questions);
-            questions = questions.slice(0, maxRounds);
-            document.getElementById("feedback").textContent = "";
-            document.getElementById("score").textContent = "Score: 0 / 0";
+        function initQuiz() {
+            let shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+            selectedQuestions = shuffled.slice(0, 10);
+            score = 0; total = 0; index = 0;
             nextQuestion();
         }
 
         function nextQuestion() {
-            if (roundsPlayed >= maxRounds) return;
-            document.getElementById("feedback").textContent = "";
-            current = questions[roundsPlayed];
+            if (index >= 10) return showFinal();
+            current = selectedQuestions[index];
             document.getElementById("question").textContent = current.sentence;
-            document.getElementById("context").textContent = `(${current.name})`;
-
-            const options = ["I", "You (enkelvoud)", "You (meervoud)", "He", "She", "It", "We", "They"];
-            shuffle(options);
-
+            document.getElementById("hint").textContent = current.hint;
             const optionsDiv = document.getElementById("options");
             optionsDiv.innerHTML = "";
-            options.forEach(p => {
+            ["I", "You", "He", "She", "It", "We", "They"].forEach(opt => {
                 const btn = document.createElement("button");
                 btn.className = "btn-action";
-                btn.textContent = p;
-                btn.onclick = () => checkAnswer(p);
+                btn.textContent = opt;
+                btn.onclick = () => check(opt);
                 optionsDiv.appendChild(btn);
             });
         }
 
-        function checkAnswer(answer) {
+        function check(ans) {
             total++;
-            roundsPlayed++;
-            const feedback = document.getElementById("feedback");
-            if (answer === current.correct) {
+            const fb = document.getElementById("feedback");
+            if (ans === current.correct) {
                 score++;
-                feedback.textContent = "✅ Correct!";
-                feedback.style.color = "var(--hero-cyan)";
+                fb.textContent = "✅ Correct!";
+                fb.style.color = "var(--hero-cyan)";
             } else {
-                feedback.textContent = `❌ Wrong! Answer: "${current.correct}".`;
-                feedback.style.color = "#ff7043";
+                fb.textContent = "❌ It was: " + current.correct;
+                fb.style.color = "#ff7043";
             }
             document.getElementById("score").textContent = `Score: ${score} / ${total}`;
-            
-            if (roundsPlayed < maxRounds) {
-                setTimeout(nextQuestion, 1000);
-            } else {
-                showFinalScore();
-            }
+            index++;
+            setTimeout(nextQuestion, 1200);
         }
 
-        function showFinalScore() {
-            const feedback = document.getElementById("feedback");
-            const stars = "⭐".repeat(Math.floor(score / 2)) || "😢";
-            feedback.innerHTML = `Mission complete!<br><span style="font-size:1.5rem;">${stars}</span>`;
+        function showFinal() {
+            document.querySelector(".game-container").innerHTML = `<h2>Mission Complete!</h2><p>Your final score: ${score} / ${total}</p><button class="btn-action" onclick="location.reload()">RESTART</button>`;
         }
 
-        window.onload = () => restartQuiz();
+        initQuiz();
     </script>
 </body>
 </html>
