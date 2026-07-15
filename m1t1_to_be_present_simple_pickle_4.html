@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: To Be Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --header-bg: #ff7043;
+            --header-border: var(--hero-yellow);
+        }
+        body, html { height: 100%; margin: 0; overflow: hidden; font-family: 'Lexend', sans-serif; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; display: flex; flex-direction: column; }
+        
+        header { 
+            background: var(--header-bg); 
+            padding: 1.5rem; 
+            width: 100%; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); 
+            border-bottom: 5px solid var(--header-border); 
+            box-sizing: border-box;
+        }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.5rem; margin: 0; text-shadow: 3px 3px 0px var(--hero-purple-dark); }
+        
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding: 20px; }
+        #progress { font-family: 'Bangers'; font-size: 1.5rem; color: var(--hero-yellow); }
+        #timerBadge { background: var(--hero-yellow); color: #000; padding: 5px 20px; border-radius: 20px; font-weight: bold; font-family: 'Bangers'; font-size: 1.2rem; }
+        #question { font-size: 1.8rem; font-weight: 700; text-align: center; color: var(--hero-cyan); max-width: 90%; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; width: 100%; max-width: 500px; }
+        button { font-family: 'Bangers'; padding: 12px; border-radius: 12px; border: none; cursor: pointer; background: var(--hero-purple-main); color: white; font-size: 1.2rem; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark); }
+        button:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        footer { padding: 10px; text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+
+<header><h1>ENGLIFORCE ACADEMY</h1></header>
+
+<main>
+    <div id="progress">Vraag 1/10</div>
+    <div id="timerBadge">Tijd: 8s</div>
+    <div id="question">Laden...</div>
+    <div class="grid" id="options"></div>
+</main>
+
+<footer>&copy; 2026, EngliForce: Make English Your Superpower!</footer>
+
+<script>
+    const allQuestions = [
+        { q: "The sun is hot, so ice ___ cold.", a: "isn't" },
+        { q: "A ball ___ square, it is round.", a: "isn't" },
+        { q: "Diamonds ___ hard, they are very strong.", a: "are" },
+        { q: "The moon ___ made of cheese, that is a myth.", a: "isn't" },
+        { q: "A week ___ seven days long, that is a fact.", a: "is" },
+        { q: "A cat ___ a reptile, it is a mammal.", a: "isn't" },
+        { q: "Gold ___ a metal, it is very valuable.", a: "is" },
+        { q: "Fish ___ able to fly, they live in water.", a: "aren't" },
+        { q: "Water ___ essential for life, we all need it.", a: "is" },
+        { q: "I ___ a human, I am definitely not a robot.", a: "am" },
+        { q: "They ___ at work, they are actually on holiday.", a: "aren't" },
+        { q: "He ___ tired, he slept all day and has energy.", a: "isn't" },
+        { q: "We ___ happy to see you, you are a great friend!", a: "are" },
+        { q: "___ you a student here? Tell me the truth.", a: "Are" },
+        { q: "This test ___ too difficult, it is very simple.", a: "isn't" },
+        { q: "___ it time for lunch? I am starving!", a: "Is" },
+        { q: "I ___ feeling well today, I have a bad fever.", a: "am not" },
+        { q: "These exercises ___ challenging, I can't solve them.", a: "are" },
+        { q: "___ she the winner? She has the golden trophy.", a: "Is" },
+        { q: "It ___ a sunny day, look at those dark clouds.", a: "isn't" }
+    ];
+
+    let sessionQuestions = [], idx = 0, score = 0, timeLeft = 8, timer;
+
+    function initGame() {
+        sessionQuestions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
+        idx = 0; score = 0;
+        updateUI();
+    }
+
+    function updateUI() {
+        document.getElementById('progress').textContent = `Vraag ${idx + 1}/10`;
+        document.getElementById('question').textContent = sessionQuestions[idx].q;
+        
+        const opts = ["am", "is", "are", "am not", "isn't", "aren't"];
+        const grid = document.getElementById('options');
+        grid.innerHTML = "";
+        opts.forEach(o => {
+            const b = document.createElement('button');
+            b.textContent = o;
+            b.onclick = () => check(o);
+            grid.appendChild(b);
+        });
+
+        clearInterval(timer);
+        timeLeft = 8;
+        document.getElementById('timerBadge').textContent = `Tijd: ${timeLeft}s`;
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timerBadge').textContent = `Tijd: ${timeLeft}s`;
+            if (timeLeft <= 0) check("timeout");
+        }, 1000);
+    }
+
+    function check(val) {
+        if (val === sessionQuestions[idx].a) score++;
+        idx++;
+        if (idx < 10) {
+            updateUI();
+        } else {
+            document.querySelector('main').innerHTML = `<h2>Missie Voltooid!</h2><p>Eindscore: ${score}/10</p><button onclick="location.reload()">Opnieuw spelen</button>`;
+        }
+    }
+
+    initGame();
+</script>
+</body>
+</html>
