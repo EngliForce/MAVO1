@@ -1,216 +1,382 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drag & drop – Have Got</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #ff7043;
-      padding: 1rem 0;
-      text-align: center;
-    }
-    header img {
-      width: 120px;
-      height: auto;
-    }
-    header h1 {
-      color: white;
-      margin: 0.5rem 0 0;
-    }
-    h2 {
-      text-align: center;
-      color: #ff7043;
-      margin-top: 2rem;
-    }
-    .dropzones {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      margin: 2rem 0;
-    }
-    .dropzone {
-      border: 2px dashed #ff7043;
-      border-radius: 8px;
-      width: 200px;
-      min-height: 150px;
-      padding: 1rem;
-      text-align: center;
-      background-color: #fff;
-      transition: background-color 0.3s;
-    }
-    .dropzone h3 {
-      margin-top: 0;
-      color: #ff7043;
-    }
-    .drag-items {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .drag-item {
-      background-color: white;
-      border: 2px solid #ff7043;
-      border-radius: 12px;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      color: #333;
-      cursor: grab;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      transition: border-color 0.3s;
-    }
-    .correct {
-      border-color: green !important;
-    }
-    .incorrect {
-      border-color: red !important;
-    }
-    .button-bar {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-    .tab-button {
-      padding: 0.5rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin: 0 0.5rem;
-    }
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag & Drop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --header-bg: #ff7043;
+            --color-have: #00f5d4;
+            --color-has: #ffb703;
+        }
+        
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); 
+            color: white; 
+            margin: 0; 
+            padding: 0;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+        
+        header { 
+            background: var(--header-bg); 
+            padding: 1.5rem 1rem; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); 
+            border-bottom: 5px solid var(--hero-yellow); 
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.5rem; 
+            margin: 0; 
+            text-shadow: 3px 3px 0px var(--hero-purple-dark); 
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            color: var(--hero-cyan);
+            margin-top: 15px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px var(--hero-purple-dark);
+            letter-spacing: 1px;
+        }
+        
+        main { 
+            max-width: 800px; 
+            width: 90%; 
+            margin: 10px auto; 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .dropzones { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin: 20px 0; 
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .dropzone {
+            background: rgba(26, 16, 42, 0.85);
+            border-radius: 20px;
+            width: 210px;
+            min-height: 160px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px dashed;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .dropzone:hover {
+            transform: scale(1.02);
+        }
+        
+        .dropzone-have { 
+            border-color: var(--color-have); 
+            box-shadow: 0 0 10px rgba(0, 245, 212, 0.1);
+        }
+        
+        .dropzone-has { 
+            border-color: var(--color-has); 
+            box-shadow: 0 0 10px rgba(255, 183, 3, 0.1);
+        }
+        
+        .dropzone h3 { 
+            font-family: 'Bangers'; 
+            font-size: 1.8rem; 
+            margin: 0 0 10px; 
+            letter-spacing: 1px;
+        }
+
+        .dropzone-have h3 { color: var(--color-have); }
+        .dropzone-has h3 { color: var(--color-has); }
+        
+        .pool-container { 
+            background: rgba(26, 16, 42, 0.6); 
+            border-radius: 20px; 
+            padding: 15px; 
+            min-height: 70px; 
+            width: 100%;
+            box-sizing: border-box;
+            border: 2px solid rgba(255,255,255,0.05);
+        }
+
+        .drag-item {
+            background: var(--hero-purple-main);
+            border: 2px solid #9d4edd;
+            border-radius: 15px;
+            padding: 8px 16px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 6px;
+            cursor: grab;
+            display: inline-block;
+            transition: 0.2s;
+            user-select: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
+        }
+
+        .drag-item.selected-for-tap { 
+            border: 2px solid var(--hero-cyan); 
+            box-shadow: 0 0 15px var(--hero-cyan); 
+            transform: scale(1.05); 
+        }
+        
+        .drag-item.correct { 
+            background: #1b4332 !important; 
+            border-color: #2dc653 !important; 
+            box-shadow: 0 0 10px #2dc653;
+        }
+        
+        .drag-item.incorrect { 
+            background: #5c1111 !important; 
+            border-color: var(--hero-red) !important; 
+            box-shadow: 0 0 10px var(--hero-red);
+        }
+        
+        .btn-action {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin: 8px;
+            letter-spacing: 1px;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            transition: 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-action:active {
+            transform: translateY(1px);
+            border-bottom-width: 2px;
+        }
+
+        .score-board {
+            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
+            color: var(--hero-yellow);
+            margin-top: 10px;
+            min-height: 25px;
+            letter-spacing: 1px;
+        }
+
+        footer { 
+            text-align: center; 
+            padding: 15px; 
+            background: rgba(0,0,0,0.3); 
+            font-family: 'Bangers'; 
+            font-size: 1.1rem; 
+            margin-top: 25px; 
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 2px solid rgba(255,255,255,0.05);
+        }
+        
+        .footer-highlight { 
+            color: var(--hero-yellow); 
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <img src="Logo.png" alt="Engliforce Logo">
-    <h1>🔤 Drag & drop – Have Got</h1>
-  </header>
+<header>
+    <h1>DRAG & DROP</h1>
+</header>
 
-  <h2>🧲 Sleep het juiste onderwerp naar <em>have</em> of <em>has</em></h2>
+<main>
+    <h2>🧲 Sleep of tik het juiste onderwerp naar HAVE (got) of HAS (got)</h2>
+    
+    <div class="dropzones" id="dropzones-container"></div>
 
-  <!-- Dropzones -->
-  <div class="dropzones">
-    <div class="dropzone" data-group="have">
-      <h3>have</h3>
+    <div class="pool-container" id="drag-items-pool"></div>
+
+    <div class="score-board" id="score-display"></div>
+
+    <div style="margin-top: 15px; margin-bottom: 15px;">
+        <button class="btn-action" onclick="checkAnswers()">✔ CONTROLEER</button>
+        <button class="btn-action" onclick="resetGame()" style="background: #4a148c; border-bottom-color: #2a085c;">🔄 OPNIEUW</button>
     </div>
-    <div class="dropzone" data-group="has">
-      <h3>has</h3>
-    </div>
-  </div>
+</main>
 
-  <!-- Drag items -->
-  <div class="drag-items" id="drag-items">
-    <!-- Items worden dynamisch toegevoegd -->
-  </div>
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
 
-  <!-- Buttons -->
-  <div class="button-bar">
-    <button class="tab-button" onclick="checkAnswers()">✔ Controleer</button>
-    <button class="tab-button" onclick="reset()">🔄 Opnieuw</button>
-  </div>
-
-  <footer>
-    <p>&copy; 2025 Engliforce – Make English Your Superpower!</p>
-  </footer>
-
-  <!-- Script -->
-  <script>
-    const dragContainer = document.getElementById('drag-items');
-    const dropzones = document.querySelectorAll('.dropzone');
-
-    let draggedItem = null;
+<script>
+    const dragContainer = document.getElementById('drag-items-pool');
+    const dropzonesContainer = document.getElementById('dropzones-container');
+    const scoreDisplay = document.getElementById('score-display');
 
     const items = [
-      { text: 'I', correct: 'have' },
-      { text: 'You', correct: 'have' },
-      { text: 'We', correct: 'have' },
-      { text: 'They', correct: 'have' },
-      { text: 'He', correct: 'has' },
-      { text: 'She', correct: 'has' },
-      { text: 'It', correct: 'has' }
+        { text: 'I', correct: 'have' },
+        { text: 'You', correct: 'have' },
+        { text: 'He', correct: 'has' },
+        { text: 'She', correct: 'has' },
+        { text: 'It', correct: 'has' },
+        { text: 'We', correct: 'have' },
+        { text: 'They', correct: 'have' }
     ];
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+    const zones = [
+        { id: 'have', title: 'HAVE (got)' },
+        { id: 'has', title: 'HAS (got)' }
+    ];
+
+    let selectedItem = null;
+    let draggedItem = null;
+
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    function renderDropzones() {
+        dropzonesContainer.innerHTML = '';
+        const shuffledZones = shuffle([...zones]);
+        
+        shuffledZones.forEach(zone => {
+            const zoneEl = document.createElement('div');
+            zoneEl.className = `dropzone dropzone-${zone.id}`;
+            zoneEl.dataset.group = zone.id;
+            zoneEl.innerHTML = `<h3>${zone.title}</h3>`;
+            
+            zoneEl.onclick = () => {
+                if (selectedItem) {
+                    zoneEl.appendChild(selectedItem);
+                    selectedItem.classList.remove('selected-for-tap');
+                    selectedItem = null;
+                }
+            };
+
+            zoneEl.addEventListener('dragover', e => e.preventDefault());
+            zoneEl.addEventListener('drop', () => {
+                if (draggedItem) {
+                    zoneEl.appendChild(draggedItem);
+                    draggedItem = null;
+                }
+            });
+
+            dropzonesContainer.appendChild(zoneEl);
+        });
     }
 
     function renderItems() {
-      dragContainer.innerHTML = '';
-      const shuffledItems = [...items];
-      shuffleArray(shuffledItems);
+        dragContainer.innerHTML = '';
+        const shuffledItems = shuffle([...items]);
+        
+        shuffledItems.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'drag-item';
+            el.textContent = item.text;
+            el.dataset.correct = item.correct;
+            el.setAttribute('draggable', 'true');
+            
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (selectedItem === el) {
+                    el.classList.remove('selected-for-tap');
+                    selectedItem = null;
+                } else {
+                    if (selectedItem) {
+                        selectedItem.classList.remove('selected-for-tap');
+                    }
+                    selectedItem = el;
+                    el.classList.add('selected-for-tap');
+                }
+            };
 
-      shuffledItems.forEach(({ text, correct }) => {
-        const el = document.createElement('div');
-        el.className = 'drag-item';
-        el.setAttribute('draggable', 'true');
-        el.setAttribute('data-correct', correct);
-        el.textContent = text;
-
-        el.addEventListener('dragstart', () => {
-          draggedItem = el;
+            el.addEventListener('dragstart', () => {
+                draggedItem = el;
+            });
+            
+            dragContainer.appendChild(el);
         });
-
-        dragContainer.appendChild(el);
-      });
     }
-
-    dropzones.forEach(zone => {
-      zone.addEventListener('dragover', e => e.preventDefault());
-
-      zone.addEventListener('drop', () => {
-        if (draggedItem) {
-          zone.appendChild(draggedItem);
-          draggedItem = null;
-        }
-      });
-    });
 
     function checkAnswers() {
-      document.querySelectorAll('.drag-item').forEach(item => {
-        const expected = item.getAttribute('data-correct');
-        const parent = item.parentElement;
-        const actual = parent.getAttribute('data-group');
+        let totalPlaced = 0;
+        let correctCount = 0;
 
-        item.classList.remove('correct', 'incorrect');
+        document.querySelectorAll('.drag-item').forEach(item => {
+            const parent = item.parentElement;
+            if (parent.classList.contains('dropzone')) {
+                totalPlaced++;
+                const isCorrect = parent.dataset.group === item.dataset.correct;
+                
+                if (isCorrect) {
+                    item.className = 'drag-item correct';
+                    correctCount++;
+                } else {
+                    item.className = 'drag-item incorrect';
+                }
+            }
+        });
 
-        if (expected === actual) {
-          item.classList.add('correct');
+        if (totalPlaced === 0) {
+            scoreDisplay.textContent = "Sleep of tik eerst een aantal woorden in de vakken!";
+        } else if (totalPlaced < items.length) {
+            scoreDisplay.textContent = `Je hebt ${correctCount} van de ${totalPlaced} geplaatste woorden goed! Vul de rest ook in!`;
         } else {
-          item.classList.add('incorrect');
+            if (correctCount === items.length) {
+                scoreDisplay.textContent = "🎉 Superkrachtig gedaan! Alles is perfect juist!";
+            } else {
+                scoreDisplay.textContent = `Nog even oefenen! Je hebt ${correctCount} van de ${items.length} goed.`;
+            }
         }
-      });
     }
 
-    function reset() {
-      document.querySelectorAll('.drag-item').forEach(item => {
-        item.classList.remove('correct', 'incorrect');
-      });
-      renderItems();
+    function resetGame() { 
+        scoreDisplay.textContent = '';
+        selectedItem = null;
+        draggedItem = null;
+        renderDropzones();
+        renderItems(); 
     }
 
-    // Init
-    renderItems();
-  </script>
-
+    window.onload = () => {
+        resetGame();
+    };
+</script>
 </body>
 </html>
