@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: 100 Unique Grammar Challenges</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf; --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703; --hero-cyan: #00f5d4;
+            --header-bg: #ff7043; --hero-red: #d32f2f;
+            --hero-green: #2a9d8f;
+        }
+
+        html, body { height: 100vh; width: 100vw; margin: 0; overflow: hidden; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); font-family: 'Lexend', sans-serif; color: white; display: flex; flex-direction: column; }
+        header { background: var(--header-bg); padding: 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--hero-yellow); flex-shrink: 0; }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; margin: 0; text-shadow: 2px 2px 0px var(--hero-purple-dark); }
+        main { flex: 1; display: flex; justify-content: center; align-items: center; width: 100%; overflow: hidden; }
+        
+        .game-panel { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-purple-main); border-radius: 20px; padding: 20px; width: 95%; max-width: 600px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        
+        /* Input velden */
+        input { background: rgba(255,255,255,0.1); border: 2px solid var(--hero-yellow); color: white; padding: 12px; border-radius: 10px; width: 45%; max-width: 150px; text-align: center; font-family: 'Lexend'; font-size: 1rem; margin: 5px; outline: none; box-sizing: border-box; }
+        input::placeholder { color: rgba(255,255,255,0.5); }
+        
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 15px auto; max-width: 300px; }
+        .cell { aspect-ratio: 1/1; background-color: #d4edda; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: 0.2s; color: #333; font-weight: bold; }
+        .cell.clicked { background-color: var(--hero-red); cursor: not-allowed; }
+        
+        .btn-action { background: var(--hero-purple-main); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-family: 'Bangers'; font-size: 1rem; cursor: pointer; margin: 10px; border-bottom: 4px solid var(--hero-purple-dark); }
+        
+        /* Knop Stijlen */
+        #options-container { min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
+        .btn-option { width: 100%; margin: 8px 0; display: block; font-size: 1.3rem; padding: 15px; border-radius: 12px; background: #5a189a; border: 3px solid var(--hero-yellow); color: white; font-family: 'Lexend'; cursor: pointer; transition: 0.2s; }
+        .btn-option:hover:not(:disabled) { background: var(--hero-cyan); color: #000; font-weight: bold; }
+        
+        .btn-option:disabled { cursor: default; }
+        .btn-option.correct { background: var(--hero-green) !important; border-color: #fff !important; }
+        .btn-option.wrong { background: var(--hero-red) !important; border-color: #fff !important; }
+        
+        footer { text-align: center; padding: 15px; background: rgba(0,0,0,0.3); font-family: 'Bangers'; font-size: 1rem; border-top: 2px solid rgba(0,0,0,0.2); flex-shrink: 0; }
+        .footer-highlight { color: var(--hero-yellow); }
+    </style>
+</head>
+<body>
+
+<header><h1>🏆 TREASURE HUNT</h1></header>
+
+<main>
+    <div class="game-panel">
+        <div id="start-screen">
+            <h2>Select Players</h2>
+            <button class="btn-action" onclick="initGame(1)">1 Player</button>
+            <button class="btn-action" onclick="initGame(2)">2 Players</button>
+            <div id="name-inputs"></div>
+        </div>
+
+        <div id="game-screen" style="display:none;">
+            <div id="turn-display" style="font-family: 'Bangers'; color: var(--hero-yellow); font-size: 1.4rem;"></div>
+            <div id="task-box" style="margin: 10px 0; font-style: italic; color: var(--hero-cyan); font-weight: bold;"></div>
+            <div id="base-sentence" style="margin: 10px 0; font-size: 1.2rem; font-weight: bold; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;"></div>
+            <div id="options-container"></div>
+            <div class="grid" id="grid"></div>
+            <div id="winner-text" style="color: var(--hero-cyan); font-weight: bold; font-size: 1.3rem;"></div>
+            <button id="play-again-btn" class="btn-action" style="display:none; background: var(--hero-yellow); color: black;" onclick="resetGame()">PLAY AGAIN</button>
+        </div>
+    </div>
+</main>
+
+<footer>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></footer>
+
+<script>
+    const questions = [
+        { task: "Maak ontkennend", base: "He has a new bike.", correct: "He doesn't have a new bike.", distractor: "He hasn't got a new bike." },
+        { task: "Maak vragend", base: "He has a new bike.", correct: "Does he have a new bike?", distractor: "Has he got a new bike?" },
+        { task: "Maak bevestigend", base: "He doesn't have a new bike.", correct: "He has a new bike.", distractor: "He has got a new bike." },
+        { task: "Maak ontkennend", base: "She has got a red dress.", correct: "She hasn't got a red dress.", distractor: "She doesn't have a red dress." },
+        { task: "Maak vragend", base: "She has got a red dress.", correct: "Has she got a red dress?", distractor: "Does she have a red dress?" },
+        { task: "Maak bevestigend", base: "She hasn't got a red dress.", correct: "She has got a red dress.", distractor: "She has a red dress." },
+        { task: "Maak ontkennend", base: "He has a big dog.", correct: "He doesn't have a big dog.", distractor: "He hasn't got a big dog." },
+        { task: "Maak vragend", base: "He has a big dog.", correct: "Does he have a big dog?", distractor: "Has he got a big dog?" },
+        { task: "Maak bevestigend", base: "He doesn't have a big dog.", correct: "He has a big dog.", distractor: "He has got a big dog." },
+        { task: "Maak ontkennend", base: "She has got a fast car.", correct: "She hasn't got a fast car.", distractor: "She doesn't have a fast car." },
+        { task: "Maak vragend", base: "She has got a fast car.", correct: "Has she got a fast car?", distractor: "Does she have a fast car?" },
+        { task: "Maak bevestigend", base: "She hasn't got a fast car.", correct: "She has got a fast car.", distractor: "She has a fast car." },
+        { task: "Maak ontkennend", base: "He has a small house.", correct: "He doesn't have a small house.", distractor: "He hasn't got a small house." },
+        { task: "Maak vragend", base: "He has a small house.", correct: "Does he have a small house?", distractor: "Has he got a small house?" },
+        { task: "Maak bevestigend", base: "He doesn't have a small house.", correct: "He has a small house.", distractor: "He has got a small house." },
+        { task: "Maak ontkennend", base: "She has got a blue pen.", correct: "She hasn't got a blue pen.", distractor: "She doesn't have a blue pen." },
+        { task: "Maak vragend", base: "She has got a blue pen.", correct: "Has she got a blue pen?", distractor: "Does she have a blue pen?" },
+        { task: "Maak bevestigend", base: "She hasn't got a blue pen.", correct: "She has got a blue pen.", distractor: "She has a blue pen." },
+        { task: "Maak ontkennend", base: "He has a cold drink.", correct: "He doesn't have a cold drink.", distractor: "He hasn't got a cold drink." },
+        { task: "Maak vragend", base: "He has a cold drink.", correct: "Does he have a cold drink?", distractor: "Has he got a cold drink?" },
+        { task: "Maak ontkennend", base: "I have a laptop.", correct: "I don't have a laptop.", distractor: "I haven't got a laptop." },
+        { task: "Maak vragend", base: "I have a laptop.", correct: "Do I have a laptop?", distractor: "Have I got a laptop?" },
+        { task: "Maak bevestigend", base: "I don't have a laptop.", correct: "I have a laptop.", distractor: "I have got a laptop." },
+        { task: "Maak ontkennend", base: "You have got a new friend.", correct: "You haven't got a new friend.", distractor: "You don't have a new friend." },
+        { task: "Maak vragend", base: "You have got a new friend.", correct: "Have you got a new friend?", distractor: "Do you have a new friend?" },
+        { task: "Maak bevestigend", base: "You haven't got a new friend.", correct: "You have got a new friend.", distractor: "You have a new friend." },
+        { task: "Maak ontkennend", base: "I have a busy day.", correct: "I don't have a busy day.", distractor: "I haven't got a busy day." },
+        { task: "Maak vragend", base: "I have a busy day.", correct: "Do I have a busy day?", distractor: "Have I got a busy day?" },
+        { task: "Maak bevestigend", base: "I don't have a busy day.", correct: "I have a busy day.", distractor: "I have got a busy day." },
+        { task: "Maak ontkennend", base: "You have got a sore throat.", correct: "You haven't got a sore throat.", distractor: "You don't have a sore throat." },
+        { task: "Maak vragend", base: "You have got a sore throat.", correct: "Have you got a sore throat?", distractor: "Do you have a sore throat?" },
+        { task: "Maak bevestigend", base: "You haven't got a sore throat.", correct: "You have got a sore throat.", distractor: "You have a sore throat." },
+        { task: "Maak ontkennend", base: "I have a green book.", correct: "I don't have a green book.", distractor: "I haven't got a green book." },
+        { task: "Maak vragend", base: "I have a green book.", correct: "Do I have a green book?", distractor: "Have I got a green book?" },
+        { task: "Maak bevestigend", base: "I don't have a green book.", correct: "I have a green book.", distractor: "I have got a green book." },
+        { task: "Maak ontkennend", base: "You have got a fast bike.", correct: "You haven't got a fast bike.", distractor: "You don't have a fast bike." },
+        { task: "Maak vragend", base: "You have got a fast bike.", correct: "Have you got a fast bike?", distractor: "Do you have a fast bike?" },
+        { task: "Maak bevestigend", base: "You haven't got a fast bike.", correct: "You have got a fast bike.", distractor: "You have a fast bike." },
+        { task: "Maak ontkennend", base: "I have a new watch.", correct: "I don't have a new watch.", distractor: "I haven't got a new watch." },
+        { task: "Maak vragend", base: "I have a new watch.", correct: "Do I have a new watch?", distractor: "Have I got a new watch?" },
+        { task: "Maak bevestigend", base: "I don't have a new watch.", correct: "I have a new watch.", distractor: "I have got a new watch." },
+        { task: "Maak ontkennend", base: "You have got a nice garden.", correct: "You haven't got a nice garden.", distractor: "You don't have a nice garden." },
+        { task: "Maak vragend", base: "You have got a nice garden.", correct: "Have you got a nice garden?", distractor: "Do you have a nice garden?" },
+        { task: "Maak bevestigend", base: "You haven't got a nice garden.", correct: "You have got a nice garden.", distractor: "You have a nice garden." },
+        { task: "Maak ontkennend", base: "I have a white cat.", correct: "I don't have a white cat.", distractor: "I haven't got a white cat." },
+        { task: "Maak vragend", base: "I have a white cat.", correct: "Do I have a white cat?", distractor: "Have I got a white cat?" },
+        { task: "Maak bevestigend", base: "I don't have a white cat.", correct: "I have a white cat.", distractor: "I have got a white cat." },
+        { task: "Maak ontkennend", base: "You have got a big problem.", correct: "You haven't got a big problem.", distractor: "You don't have a big problem." },
+        { task: "Maak vragend", base: "You have got a big problem.", correct: "Have you got a big problem?", distractor: "Do you have a big problem?" },
+        { task: "Maak bevestigend", base: "You haven't got a big problem.", correct: "You have got a big problem.", distractor: "You have a big problem." },
+        { task: "Maak ontkennend", base: "We have a big house.", correct: "We don't have a big house.", distractor: "We haven't got a big house." },
+        { task: "Maak vragend", base: "We have a big house.", correct: "Do we have a big house?", distractor: "Have we got a big house?" },
+        { task: "Maak bevestigend", base: "We don't have a big house.", correct: "We have a big house.", distractor: "We have got a big house." },
+        { task: "Maak ontkennend", base: "They have got a fast car.", correct: "They haven't got a fast car.", distractor: "They don't have a fast car." },
+        { task: "Maak vragend", base: "They have got a fast car.", correct: "Have they got a fast car?", distractor: "Do they have a fast car?" },
+        { task: "Maak bevestigend", base: "They haven't got a fast car.", correct: "They have got a fast car.", distractor: "They have a fast car." },
+        { task: "Maak ontkennend", base: "We have a new teacher.", correct: "We don't have a new teacher.", distractor: "We haven't got a new teacher." },
+        { task: "Maak vragend", base: "We have a new teacher.", correct: "Do we have a new teacher?", distractor: "Have we got a new teacher?" },
+        { task: "Maak bevestigend", base: "We don't have a new teacher.", correct: "We have a new teacher.", distractor: "We have got a new teacher." },
+        { task: "Maak ontkennend", base: "They have got three dogs.", correct: "They haven't got three dogs.", distractor: "They don't have three dogs." },
+        { task: "Maak vragend", base: "They have got three dogs.", correct: "Have they got three dogs?", distractor: "Do they have three dogs?" },
+        { task: "Maak bevestigend", base: "They haven't got three dogs.", correct: "They have got three dogs.", distractor: "They have three dogs." },
+        { task: "Maak ontkennend", base: "We have a long lesson.", correct: "We don't have a long lesson.", distractor: "We haven't got a long lesson." },
+        { task: "Maak vragend", base: "We have a long lesson.", correct: "Do we have a long lesson?", distractor: "Have we got a long lesson?" },
+        { task: "Maak bevestigend", base: "We don't have a long lesson.", correct: "We have a long lesson.", distractor: "We have got a long lesson." },
+        { task: "Maak ontkennend", base: "They have got a nice team.", correct: "They haven't got a nice team.", distractor: "They don't have a nice team." },
+        { task: "Maak vragend", base: "They have got a nice team.", correct: "Have they got a nice team?", distractor: "Do they have a nice team?" },
+        { task: "Maak bevestigend", base: "They haven't got a nice team.", correct: "They have got a nice team.", distractor: "They have a nice team." },
+        { task: "Maak ontkennend", base: "We have a good idea.", correct: "We don't have a good idea.", distractor: "We haven't got a good idea." },
+        { task: "Maak vragend", base: "We have a good idea.", correct: "Do we have a good idea?", distractor: "Have we got a good idea?" },
+        { task: "Maak bevestigend", base: "We don't have a good idea.", correct: "We have a good idea.", distractor: "We have got a good idea." },
+        { task: "Maak ontkennend", base: "They have got a blue ball.", correct: "They haven't got a blue ball.", distractor: "They don't have a blue ball." },
+        { task: "Maak vragend", base: "They have got a blue ball.", correct: "Have they got a blue ball?", distractor: "Do they have a blue ball?" },
+        { task: "Maak bevestigend", base: "They haven't got a blue ball.", correct: "They have got a blue ball.", distractor: "They have a blue ball." },
+        { task: "Maak ontkennend", base: "We have a hot pizza.", correct: "We don't have a hot pizza.", distractor: "We haven't got a hot pizza." },
+        { task: "Maak vragend", base: "We have a hot pizza.", correct: "Do we have a hot pizza?", distractor: "Have we got a hot pizza?" },
+        { task: "Maak bevestigend", base: "We don't have a hot pizza.", correct: "We have a hot pizza.", distractor: "We have got a hot pizza." },
+        { task: "Maak ontkennend", base: "They have got a small table.", correct: "They haven't got a small table.", distractor: "They don't have a small table." },
+        { task: "Maak vragend", base: "They have got a small table.", correct: "Have they got a small table?", distractor: "Do they have a small table?" },
+        { task: "Maak bevestigend", base: "They haven't got a small table.", correct: "They have got a small table.", distractor: "They have a small table." },
+        { task: "Maak ontkennend", base: "He has a new key.", correct: "He doesn't have a new key.", distractor: "He hasn't got a new key." },
+        { task: "Maak vragend", base: "She has got a gold ring.", correct: "Has she got a gold ring?", distractor: "Does she have a gold ring?" },
+        { task: "Maak ontkennend", base: "I have a long day.", correct: "I don't have a long day.", distractor: "I haven't got a long day." },
+        { task: "Maak vragend", base: "You have got a red bag.", correct: "Have you got a red bag?", distractor: "Do you have a red bag?" },
+        { task: "Maak bevestigend", base: "We don't have a map.", correct: "We have a map.", distractor: "We have got a map." },
+        { task: "Maak ontkennend", base: "They have got a big farm.", correct: "They haven't got a big farm.", distractor: "They don't have a big farm." },
+        { task: "Maak vragend", base: "He has a black hat.", correct: "Does he have a black hat?", distractor: "Has he got a black hat?" },
+        { task: "Maak bevestigend", base: "She hasn't got a phone.", correct: "She has got a phone.", distractor: "She has a phone." },
+        { task: "Maak ontkennend", base: "We have a sad story.", correct: "We don't have a sad story.", distractor: "We haven't got a sad story." },
+        { task: "Maak vragend", base: "I have got a new plan.", correct: "Have I got a new plan?", distractor: "Do I have a new plan?" },
+        { task: "Maak bevestigend", base: "You don't have a pen.", correct: "You have a pen.", distractor: "You have got a pen." },
+        { task: "Maak ontkennend", base: "They have a fast boat.", correct: "They don't have a fast boat.", distractor: "They haven't got a fast boat." },
+        { task: "Maak vragend", base: "She has got a long hair.", correct: "Has she got a long hair?", distractor: "Does she have a long hair?" },
+        { task: "Maak bevestigend", base: "He doesn't have a ticket.", correct: "He has a ticket.", distractor: "He has got a ticket." },
+        { task: "Maak ontkennend", base: "We have got a big problem.", correct: "We haven't got a big problem.", distractor: "We don't have a big problem." },
+        { task: "Maak vragend", base: "They have a flat tire.", correct: "Do they have a flat tire?", distractor: "Have they got a flat tire?" },
+        { task: "Maak bevestigend", base: "I haven't got a clue.", correct: "I have got a clue.", distractor: "I have a clue." },
+        { task: "Maak ontkennend", base: "You have a wet coat.", correct: "You don't have a wet coat.", distractor: "You haven't got a wet coat." },
+        { task: "Maak vragend", base: "He has got a new job.", correct: "Has he got a new job?", distractor: "Does he have a new job?" },
+        { task: "Maak bevestigend", base: "She doesn't have a hobby.", correct: "She has a hobby.", distractor: "She has got a hobby." }
+    ];
+
+    let state = { players: [], currentPlayer: 0, treasureIndex: -1, canChoose: false, currentCorrect: "" };
+
+    function initGame(num) {
+        document.getElementById('name-inputs').innerHTML = `
+            <br>
+            <input id="p1" placeholder="Name 1" maxlength="10"> 
+            ${num > 1 ? '<input id="p2" placeholder="Name 2" maxlength="10">' : ''} 
+            <br><br>
+            <button class="btn-action" onclick="start(${num})">START GAME</button>`;
+    }
+
+    function start(num) {
+        state.players = num === 1 ? [document.getElementById('p1').value || 'Player 1'] : [document.getElementById('p1').value || 'Player 1', document.getElementById('p2').value || 'Player 2'];
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        resetGame();
+    }
+
+    function resetGame() {
+        state.treasureIndex = Math.floor(Math.random() * 25);
+        state.currentPlayer = 0;
+        state.canChoose = false;
+        document.getElementById('winner-text').textContent = "";
+        document.getElementById('play-again-btn').style.display = 'none';
+        document.getElementById('grid').style.pointerEvents = 'auto';
+        renderGrid();
+        nextTurn();
+    }
+
+    function renderGrid() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        for(let i=0; i<25; i++) {
+            const div = document.createElement('div');
+            div.className = 'cell';
+            div.onclick = () => {
+                if(!state.canChoose || div.classList.contains('clicked')) return;
+                if(i === state.treasureIndex) {
+                    div.innerHTML = "💰";
+                    document.getElementById('winner-text').textContent = state.players[state.currentPlayer] + " WINS!";
+                    state.canChoose = false;
+                    document.getElementById('play-again-btn').style.display = 'inline-block';
+                    document.getElementById('grid').style.pointerEvents = 'none';
+                    document.getElementById('options-container').innerHTML = '';
+                } else {
+                    div.classList.add('clicked');
+                    state.currentPlayer = (state.currentPlayer + 1) % state.players.length;
+                    nextTurn();
+                }
+            };
+            grid.appendChild(div);
+        }
+    }
+
+    function nextTurn() {
+        state.canChoose = false;
+        const q = questions[Math.floor(Math.random() * questions.length)];
+        state.currentCorrect = q.correct;
+        
+        document.getElementById('turn-display').textContent = state.players[state.currentPlayer] + "'s turn";
+        document.getElementById('task-box').textContent = q.task;
+        document.getElementById('base-sentence').textContent = q.base;
+        
+        const cont = document.getElementById('options-container');
+        cont.innerHTML = '';
+        const options = [q.correct, q.distractor].sort(() => Math.random() - 0.5);
+        
+        options.forEach(opt => {
+             const b = document.createElement('button');
+             b.className = 'btn-option'; b.textContent = opt;
+             b.onclick = () => {
+                const allButtons = document.querySelectorAll('.btn-option');
+                allButtons.forEach(btn => btn.disabled = true);
+                
+                if(opt === state.currentCorrect) {
+                    b.classList.add('correct');
+                    state.canChoose = true;
+                    document.getElementById('turn-display').textContent = "Correct! Choose a square!";
+                } else {
+                    b.classList.add('wrong');
+                    allButtons.forEach(btn => {
+                        if(btn.textContent === state.currentCorrect) btn.classList.add('correct');
+                    });
+                    document.getElementById('turn-display').textContent = "Wrong! Next player.";
+                    setTimeout(() => {
+                        state.currentPlayer = (state.currentPlayer + 1) % state.players.length;
+                        nextTurn();
+                    }, 2000);
+                }
+             };
+             cont.appendChild(b);
+        });
+    }
+</script>
+</body>
+</html>
