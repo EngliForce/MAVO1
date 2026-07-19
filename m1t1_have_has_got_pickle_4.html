@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce: 4 in a Row</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf; --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703; --hero-red: #d32f2f;
+            --hero-green: #2a9d8f; --dark: #1a102a; --header-bg: #ff7043;
+        }
+
+        html, body { height: 100vh; width: 100vw; margin: 0; overflow: hidden; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); font-family: 'Lexend', sans-serif; color: white; display: flex; flex-direction: column; }
+        
+        header { background: var(--header-bg); padding: 1.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--hero-yellow); flex-shrink: 0; }
+        h1 { font-family: 'Bangers', cursive; font-size: 2.2rem; margin: 0; text-shadow: 2px 2px 0px var(--hero-purple-dark); }
+        
+        main { flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 10px; }
+        .game-panel { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-purple-main); border-radius: 20px; padding: 15px; width: 100%; max-width: 500px; text-align: center; position: relative; }
+        
+        #options { min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
+        #task-display { min-height: 70px; font-weight: bold; margin: 10px 0; font-size: 1.1rem; }
+        
+        .board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: var(--hero-purple-dark); padding: 8px; border-radius: 10px; margin: 10px auto; max-width: 350px; cursor: pointer; }
+        .cell { aspect-ratio: 1/1; background: #05101a; border-radius: 50%; border: 2px solid var(--hero-purple-main); }
+        .cell.p1 { background: var(--hero-yellow); }
+        .cell.p2 { background: var(--hero-red); }
+        
+        input { background: rgba(255,255,255,0.1); border: 2px solid var(--hero-yellow); color: white; padding: 10px; border-radius: 10px; width: 40%; text-align: center; font-family: 'Lexend'; margin: 5px; }
+        .btn-action { background: var(--hero-purple-main); color: white; border: none; padding: 10px 25px; border-radius: 12px; font-family: 'Bangers'; font-size: 1.1rem; cursor: pointer; margin: 10px; }
+        .btn-mode { background: #3c096c; border: 2px solid var(--hero-yellow); color: white; padding: 10px; cursor: pointer; border-radius: 10px; }
+        .btn-option { width: 100%; margin: 5px 0; padding: 10px; border-radius: 10px; background: #5a189a; border: 2px solid var(--hero-yellow); color: white; font-family: 'Lexend'; cursor: pointer; }
+        
+        .btn-option.correct { background: var(--hero-green) !important; border-color: #fff !important; }
+        .btn-option.wrong { background: var(--hero-red) !important; border-color: #fff !important; }
+        
+        .overlay { position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 100; flex-direction: column; }
+        .overlay h2 { font-size: 4rem; color: var(--hero-yellow); font-family: 'Bangers'; margin-bottom: 20px; }
+        
+        footer { text-align: center; padding: 10px; background: rgba(0,0,0,0.3); font-family: 'Lexend'; font-size: 0.9rem; border-top: 2px solid rgba(0,0,0,0.2); flex-shrink: 0; color: #888; }
+    </style>
+</head>
+<body>
+
+<header><h1>🏆 4 IN A ROW</h1></header>
+
+<main>
+    <div class="game-panel">
+        <div id="start-screen">
+            <h3>Select Mode</h3>
+            <button class="btn-mode" onclick="selectMode(1)">1 Player vs Computer</button>
+            <button class="btn-mode" onclick="selectMode(2)">2 Players</button>
+            <div id="player-inputs" style="display:none; margin-top:15px;">
+                <input id="p1" placeholder="P1 Name" maxlength="8">
+                <input id="p2" placeholder="P2 Name" maxlength="8" style="display:none;">
+                <br>
+                <button class="btn-action" onclick="startGame()">START GAME</button>
+            </div>
+        </div>
+
+        <div id="game-screen" style="display:none;">
+            <div id="status" style="font-family: 'Bangers'; color: var(--hero-yellow); font-size: 1.3rem;"></div>
+            <div id="task-display"></div>
+            <div id="options"></div>
+            <div class="board" id="board"></div>
+        </div>
+    </div>
+</main>
+
+<div id="win-overlay" class="overlay">
+    <h2 id="winner-text">Player Wins!</h2>
+    <button class="btn-action" onclick="location.reload()">PLAY AGAIN</button>
+</div>
+
+<footer>&copy; 2026, Engliforce: Make English your superpower!</footer>
+
+<script>
+    const questions = [
+        { task: "Make negative", base: "I have a bike.", correct: "I don't have a bike.", distractor: "I haven't got a bike." },
+        { task: "Make negative", base: "I have got a bike.", correct: "I haven't got a bike.", distractor: "I don't have a bike." },
+        { task: "Make question", base: "I have a bike.", correct: "Do I have a bike?", distractor: "Have I got a bike?" },
+        { task: "Make question", base: "I have got a bike.", correct: "Have I got a bike?", distractor: "Do I have a bike?" },
+        { task: "Make negative", base: "He has a car.", correct: "He doesn't have a car.", distractor: "He hasn't got a car." },
+        { task: "Make negative", base: "He has got a car.", correct: "He hasn't got a car.", distractor: "He doesn't have a car." },
+        { task: "Make question", base: "He has a car.", correct: "Does he have a car?", distractor: "Has he got a car?" },
+        { task: "Make question", base: "He has got a car.", correct: "Has he got a car?", distractor: "Does he have a car?" },
+        { task: "Make negative", base: "They have a dog.", correct: "They don't have a dog.", distractor: "They haven't got a dog." },
+        { task: "Make negative", base: "They have got a dog.", correct: "They haven't got a dog.", distractor: "They don't have a dog." },
+        { task: "Make question", base: "They have a dog.", correct: "Do they have a dog?", distractor: "Have they got a dog?" },
+        { task: "Make question", base: "They have got a dog.", correct: "Have they got a dog?", distractor: "Do they have a dog?" },
+        { task: "Make negative", base: "She has a sister.", correct: "She doesn't have a sister.", distractor: "She hasn't got a sister." },
+        { task: "Make negative", base: "She has got a sister.", correct: "She hasn't got a sister.", distractor: "She doesn't have a sister." },
+        { task: "Make question", base: "She has a sister.", correct: "Does she have a sister?", distractor: "Has she got a sister?" },
+        { task: "Make question", base: "She has got a sister.", correct: "Has she got a sister?", distractor: "Does she have a sister?" },
+        { task: "Make negative", base: "We have a computer.", correct: "We don't have a computer.", distractor: "We haven't got a computer." },
+        { task: "Make negative", base: "We have got a computer.", correct: "We haven't got a computer.", distractor: "We don't have a computer." },
+        { task: "Make question", base: "We have a computer.", correct: "Do we have a computer?", distractor: "Have we got a computer?" },
+        { task: "Make question", base: "We have got a computer.", correct: "Have we got a computer?", distractor: "Do we have a computer?" },
+        { task: "Make negative", base: "It has a tail.", correct: "It doesn't have a tail.", distractor: "It hasn't got a tail." },
+        { task: "Make negative", base: "It has got a tail.", correct: "It hasn't got a tail.", distractor: "It doesn't have a tail." },
+        { task: "Make question", base: "It has a tail.", correct: "Does it have a tail?", distractor: "Has it got a tail?" },
+        { task: "Make question", base: "It has got a tail.", correct: "Has it got a tail?", distractor: "Does it have a tail?" },
+        { task: "Make negative", base: "You have a pen.", correct: "You don't have a pen.", distractor: "You haven't got a pen." },
+        { task: "Make negative", base: "You have got a pen.", correct: "You haven't got a pen.", distractor: "You don't have a pen." },
+        { task: "Make question", base: "You have a pen.", correct: "Do you have a pen?", distractor: "Have you got a pen?" },
+        { task: "Make question", base: "You have got a pen.", correct: "Have you got a pen?", distractor: "Do you have a pen?" },
+        { task: "Make negative", base: "He has a cold.", correct: "He doesn't have a cold.", distractor: "He hasn't got a cold." },
+        { task: "Make negative", base: "He has got a cold.", correct: "He hasn't got a cold.", distractor: "He doesn't have a cold." },
+        { task: "Make question", base: "He has a cold.", correct: "Does he have a cold?", distractor: "Has he got a cold?" },
+        { task: "Make question", base: "He has got a cold.", correct: "Has he got a cold?", distractor: "Does he have a cold?" },
+        { task: "Make negative", base: "They have time.", correct: "They don't have time.", distractor: "They haven't got time." },
+        { task: "Make negative", base: "They have got time.", correct: "They haven't got time.", distractor: "They don't have time." },
+        { task: "Make question", base: "They have time.", correct: "Do they have time?", distractor: "Have they got time?" },
+        { task: "Make question", base: "They have got time.", correct: "Have they got time?", distractor: "Do they have time?" },
+        { task: "Make negative", base: "I have a ticket.", correct: "I don't have a ticket.", distractor: "I haven't got a ticket." },
+        { task: "Make negative", base: "I have got a ticket.", correct: "I haven't got a ticket.", distractor: "I don't have a ticket." },
+        { task: "Make question", base: "I have a ticket.", correct: "Do I have a ticket?", distractor: "Have I got a ticket?" },
+        { task: "Make question", base: "I have got a ticket.", correct: "Have I got a ticket?", distractor: "Do I have a ticket?" },
+        { task: "Make negative", base: "She has a job.", correct: "She doesn't have a job.", distractor: "She hasn't got a job." },
+        { task: "Make negative", base: "She has got a job.", correct: "She hasn't got a job.", distractor: "She doesn't have a job." },
+        { task: "Make question", base: "She has a job.", correct: "Does she have a job?", distractor: "Has she got a job?" },
+        { task: "Make question", base: "She has got a job.", correct: "Has she got a job?", distractor: "Does she have a job?" },
+        { task: "Make negative", base: "We have an idea.", correct: "We don't have an idea.", distractor: "We haven't got an idea." },
+        { task: "Make negative", base: "We have got an idea.", correct: "We haven't got an idea.", distractor: "We don't have an idea." },
+        { task: "Make question", base: "We have an idea.", correct: "Do we have an idea?", distractor: "Have we got an idea?" },
+        { task: "Make question", base: "We have got an idea.", correct: "Have we got an idea?", distractor: "Do we have an idea?" },
+        { task: "Make negative", base: "He has a headache.", correct: "He doesn't have a headache.", distractor: "He hasn't got a headache." },
+        { task: "Make negative", base: "He has got a headache.", correct: "He hasn't got a headache.", distractor: "He doesn't have a headache." },
+        { task: "Make question", base: "He has a headache.", correct: "Does he have a headache?", distractor: "Has he got a headache?" },
+        { task: "Make question", base: "He has got a headache.", correct: "Has he got a headache?", distractor: "Does he have a headache?" },
+        { task: "Make negative", base: "They have homework.", correct: "They don't have homework.", distractor: "They haven't got homework." },
+        { task: "Make negative", base: "They have got homework.", correct: "They haven't got homework.", distractor: "They don't have homework." },
+        { task: "Make question", base: "They have homework.", correct: "Do they have homework?", distractor: "Have they got homework?" },
+        { task: "Make question", base: "They have got homework.", correct: "Have they got homework?", distractor: "Do they have homework?" },
+        { task: "Make negative", base: "You have a question.", correct: "You don't have a question.", distractor: "You haven't got a question." },
+        { task: "Make negative", base: "You have got a question.", correct: "You haven't got a question.", distractor: "You don't have a question." },
+        { task: "Make question", base: "You have a question.", correct: "Do you have a question?", distractor: "Have you got a question?" },
+        { task: "Make question", base: "You have got a question.", correct: "Have you got a question?", distractor: "Do you have a question?" },
+        { task: "Make negative", base: "I have a bag.", correct: "I don't have a bag.", distractor: "I haven't got a bag." },
+        { task: "Make negative", base: "I have got a bag.", correct: "I haven't got a bag.", distractor: "I don't have a bag." },
+        { task: "Make question", base: "I have a bag.", correct: "Do I have a bag?", distractor: "Have I got a bag?" },
+        { task: "Make question", base: "I have got a bag.", correct: "Have I got a bag?", distractor: "Do I have a bag?" },
+        { task: "Make negative", base: "She has a cat.", correct: "She doesn't have a cat.", distractor: "She hasn't got a cat." },
+        { task: "Make negative", base: "She has got a cat.", correct: "She hasn't got a cat.", distractor: "She doesn't have a cat." },
+        { task: "Make question", base: "She has a cat.", correct: "Does she have a cat?", distractor: "Has she got a cat?" },
+        { task: "Make question", base: "She has got a cat.", correct: "Has she got a cat?", distractor: "Does she have a cat?" },
+        { task: "Make negative", base: "We have a house.", correct: "We don't have a house.", distractor: "We haven't got a house." },
+        { task: "Make negative", base: "We have got a house.", correct: "We haven't got a house.", distractor: "We don't have a house." },
+        { task: "Make question", base: "We have a house.", correct: "Do we have a house?", distractor: "Have we got a house?" },
+        { task: "Make question", base: "We have got a house.", correct: "Have we got a house?", distractor: "Do we have a house?" },
+        { task: "Make negative", base: "It has a price.", correct: "It doesn't have a price.", distractor: "It hasn't got a price." },
+        { task: "Make negative", base: "It has got a price.", correct: "It hasn't got a price.", distractor: "It doesn't have a price." },
+        { task: "Make question", base: "It has a price.", correct: "Does it have a price?", distractor: "Has it got a price?" },
+        { task: "Make question", base: "It has got a price.", correct: "Has it got a price?", distractor: "Does it have a price?" },
+        { task: "Make negative", base: "They have a plan.", correct: "They don't have a plan.", distractor: "They haven't got a plan." },
+        { task: "Make negative", base: "They have got a plan.", correct: "They haven't got a plan.", distractor: "They don't have a plan." },
+        { task: "Make question", base: "They have a plan.", correct: "Do they have a plan?", distractor: "Have they got a plan?" },
+        { task: "Make question", base: "They have got a plan.", correct: "Have they got a plan?", distractor: "Do they have a plan?" },
+        { task: "Make negative", base: "He has a son.", correct: "He doesn't have a son.", distractor: "He hasn't got a son." },
+        { task: "Make negative", base: "He has got a son.", correct: "He hasn't got a son.", distractor: "He doesn't have a son." },
+        { task: "Make question", base: "He has a son.", correct: "Does he have a son?", distractor: "Has he got a son?" },
+        { task: "Make question", base: "He has got a son.", correct: "Has he got a son?", distractor: "Does he have a son?" },
+        { task: "Make negative", base: "I have a brother.", correct: "I don't have a brother.", distractor: "I haven't got a brother." },
+        { task: "Make negative", base: "I have got a brother.", correct: "I haven't got a brother.", distractor: "I don't have a brother." },
+        { task: "Make question", base: "I have a brother.", correct: "Do I have a brother?", distractor: "Have I got a brother?" },
+        { task: "Make question", base: "I have got a brother.", correct: "Have I got a brother?", distractor: "Do I have a brother?" },
+        { task: "Make negative", base: "She has a key.", correct: "She doesn't have a key.", distractor: "She hasn't got a key." },
+        { task: "Make negative", base: "She has got a key.", correct: "She hasn't got a key.", distractor: "She doesn't have a key." },
+        { task: "Make question", base: "She has a key.", correct: "Does she have a key?", distractor: "Has she got a key?" },
+        { task: "Make question", base: "She has got a key.", correct: "Has she got a key?", distractor: "Does she have a key?" },
+        { task: "Make negative", base: "We have a reason.", correct: "We don't have a reason.", distractor: "We haven't got a reason." },
+        { task: "Make negative", base: "We have got a reason.", correct: "We haven't got a reason.", distractor: "We don't have a reason." },
+        { task: "Make question", base: "We have a reason.", correct: "Do we have a reason?", distractor: "Have we got a reason?" },
+        { task: "Make question", base: "We have got a reason.", correct: "Have we got a reason?", distractor: "Do we have a reason?" },
+        { task: "Make negative", base: "It has a name.", correct: "It doesn't have a name.", distractor: "It hasn't got a name." },
+        { task: "Make negative", base: "It has got a name.", correct: "It hasn't got a name.", distractor: "It doesn't have a name." },
+        { task: "Make question", base: "It has a name.", correct: "Does it have a name?", distractor: "Has it got a name?" },
+        { task: "Make question", base: "It has got a name.", correct: "Has it got a name?", distractor: "Does it have a name?" }
+    ];
+
+    let state = { board: [], p1: "", p2: "", turn: 0, canMove: false, activeQ: null, mode: 1 };
+
+    function selectMode(m) {
+        state.mode = m;
+        document.getElementById('player-inputs').style.display = 'block';
+        document.getElementById('p2').style.display = (m === 2) ? 'inline-block' : 'none';
+        document.getElementById('p2').value = (m === 1) ? 'Computer' : '';
+    }
+
+    function startGame() {
+        state.p1 = document.getElementById('p1').value || 'P1';
+        state.p2 = document.getElementById('p2').value || 'Computer';
+        state.board = Array(7).fill(0).map(() => Array(6).fill(0));
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        renderBoard();
+        nextTurn();
+    }
+
+    function renderBoard() {
+        const b = document.getElementById('board');
+        b.innerHTML = '';
+        for(let r=0; r<6; r++) {
+            for(let c=0; c<7; c++) {
+                const cell = document.createElement('div');
+                cell.className = `cell ${state.board[c][r] === 1 ? 'p1' : state.board[c][r] === 2 ? 'p2' : ''}`;
+                cell.onclick = () => handleMove(c);
+                b.appendChild(cell);
+            }
+        }
+    }
+
+    function handleMove(col) {
+        if(!state.canMove) return;
+        makeMove(col);
+    }
+
+    function nextTurn() {
+        state.canMove = false;
+        
+        if (state.mode === 1 && state.turn === 1) {
+            document.getElementById('status').textContent = "Computer is thinking...";
+            setTimeout(() => {
+                const col = getComputerMove();
+                makeMove(col);
+            }, 800);
+            return;
+        }
+
+        state.activeQ = questions[Math.floor(Math.random() * questions.length)];
+        document.getElementById('status').textContent = (state.turn === 0 ? state.p1 : state.p2) + "'s turn";
+        document.getElementById('task-display').innerHTML = `<em>${state.activeQ.task}:</em><br><br><strong>${state.activeQ.base}</strong>`;
+        
+        const opts = document.getElementById('options');
+        opts.innerHTML = '';
+        [state.activeQ.correct, state.activeQ.distractor].sort(() => Math.random() - 0.5).forEach(o => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-option'; btn.textContent = o;
+            btn.onclick = () => {
+                document.querySelectorAll('.btn-option').forEach(b => b.disabled = true);
+                if(o === state.activeQ.correct) {
+                    btn.classList.add('correct');
+                    state.canMove = true;
+                    document.getElementById('status').textContent = "Correct! Click a column.";
+                } else {
+                    btn.classList.add('wrong');
+                    setTimeout(() => {
+                        state.turn = 1 - state.turn;
+                        nextTurn();
+                    }, 1000);
+                }
+            };
+            opts.appendChild(btn);
+        });
+    }
+
+    function getComputerMove() {
+        for(let c=0; c<7; c++) if(canWinSim(c, 2)) return c;
+        for(let c=0; c<7; c++) if(canWinSim(c, 1)) return c;
+        const valid = [];
+        for(let c=0; c<7; c++) if(state.board[c][0] === 0) valid.push(c);
+        return valid[Math.floor(Math.random() * valid.length)];
+    }
+
+    function canWinSim(c, player) {
+        for(let r=5; r>=0; r--) {
+            if(state.board[c][r] === 0) {
+                state.board[c][r] = player;
+                const win = checkWin(c, r, player);
+                state.board[c][r] = 0;
+                return win;
+            }
+        }
+        return false;
+    }
+
+    function makeMove(col) {
+        for(let r=5; r>=0; r--) {
+            if(state.board[col][r] === 0) {
+                state.board[col][r] = state.turn + 1;
+                renderBoard();
+                if(checkWin(col, r, state.turn + 1)) {
+                    showWinner((state.turn === 0 ? state.p1 : state.p2));
+                } else {
+                    state.turn = 1 - state.turn;
+                    nextTurn();
+                }
+                return;
+            }
+        }
+    }
+
+    function showWinner(name) {
+        document.getElementById('win-overlay').style.display = 'flex';
+        document.getElementById('winner-text').textContent = name + " WINS!";
+    }
+
+    function checkWin(c, r, p) {
+        const dirs = [[1,0], [0,1], [1,1], [1,-1]];
+        for(let [dx, dy] of dirs) {
+            let count = 1;
+            for(let i=1; i<4; i++) {
+                let nc = c + dx*i, nr = r + dy*i;
+                if(nc>=0 && nc<7 && nr>=0 && nr<6 && state.board[nc][nr] === p) count++; else break;
+            }
+            for(let i=1; i<4; i++) {
+                let nc = c - dx*i, nr = r - dy*i;
+                if(nc>=0 && nc<7 && nr>=0 && nr<6 && state.board[nc][nr] === p) count++; else break;
+            }
+            if(count >= 4) return true;
+        }
+        return false;
+    }
+</script>
+</body>
+</html>
