@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Possessive Cargo Ship</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+            --header-bg: #ff7043;
+            --header-border: var(--hero-yellow);
+        }
+
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Lexend', sans-serif; 
+            background: #05101a; 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        header { 
+            background: var(--header-bg); 
+            padding: 1rem 1rem 1.8rem 1rem; 
+            text-align: center; 
+            clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%); 
+            border-bottom: 6px solid var(--header-border); 
+            z-index: 60;
+        }
+
+        header h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 2.8rem; 
+            letter-spacing: 3px; 
+            margin: 0; 
+            text-shadow: 3px 3px 0px var(--hero-purple-dark); 
+            color: white;
+            line-height: 1;
+        }
+
+        header p {
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            color: white;
+            margin: 4px 0 0 0;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px var(--hero-purple-dark);
+        }
+
+        footer { 
+            text-align: center; 
+            padding: 15px; 
+            background: rgba(0,0,0,0.3); 
+            font-family: 'Bangers', cursive; 
+            font-size: 1.2rem; 
+            z-index: 60;
+            color: white;
+        }
+
+        .footer-highlight { 
+            color: var(--hero-yellow); 
+        }
+
+        .ocean { 
+            flex: 1;
+            width: 100%; 
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%); 
+            position: relative; 
+            overflow: hidden;
+        }
+
+        .ui-panel {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 120px;
+            background: #1a102a;
+            border-top: 6px solid var(--hero-purple-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .ship-wrapper { 
+            position: absolute; 
+            right: 10%; 
+            bottom: 120px; 
+            transition: transform 8s ease-in-out; 
+            z-index: 20; 
+        }
+        
+        .sailing-away { 
+            transform: translateX(-180vw); 
+        }
+        
+        .container-box { 
+            animation: drop 0.4s ease-out; 
+            border: 1px solid rgba(0,0,0,0.2); 
+        }
+        
+        @keyframes drop { 
+            0% { transform: translateY(-150px); opacity: 0; } 
+            100% { transform: translateY(0); opacity: 1; } 
+        }
+        
+        .bobbing { 
+            animation: bob 4s ease-in-out infinite; 
+        }
+        
+        @keyframes bob { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-10px); } 
+        }
+
+        .ship-bow {
+            position: absolute;
+            left: -59px;
+            top: 0;
+            width: 60px;
+            height: 48px;
+            background: #1e293b;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+        }
+
+        .sentence-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            gap: 8px;
+        }
+
+        .inline-input {
+            border-bottom: 4px solid var(--hero-cyan);
+            background: #05101a;
+            text-align: center;
+            outline: none;
+            color: var(--hero-cyan);
+            width: 110px;
+            padding: 0 5px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+
+        .btn-game {
+            background: var(--hero-purple-main);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-bottom: 5px solid var(--hero-purple-dark);
+            transition: 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .btn-game:hover {
+            background: var(--hero-cyan);
+            color: var(--hero-purple-dark);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ENGLIFORCE ACADEMY</h1>
+        <p>POSSESSIVE CARGO SHIP COMMAND CENTER</p>
+    </header>
+
+    <div id="root" style="flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden;"></div>
+
+    <footer>
+        <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+    </footer>
+
+    <script type="text/babel">
+        const { useState, useMemo, useEffect, useRef } = React;
+
+        const ALL_QUESTIONS = [
+            { prompt: "I have a pen. It is ___ pen.", a: "my" },
+            { prompt: "I am wearing ___ favorite shirt today.", a: "my" },
+            { prompt: "I love ___ new shoes.", a: "my" },
+            { prompt: "I live here with ___ father.", a: "my" },
+            { prompt: "You have a nice bike. I like ___ bike.", a: "your" },
+            { prompt: "You must do ___ homework now.", a: "your" },
+            { prompt: "Can you tell me ___ phone number?", a: "your" },
+            { prompt: "You left ___ jacket in the hall.", a: "your" },
+            { prompt: "He has a brother. ___ brother is very tall.", a: "his" },
+            { prompt: "He forgot ___ bag at school.", a: "his" },
+            { prompt: "He told me that ___ name is Peter.", a: "his" },
+            { prompt: "He lives in London with ___ parents.", a: "his" },
+            { prompt: "She has a sister. ___ sister is very nice.", a: "her" },
+            { prompt: "Sarah is happy in ___ new room.", a: "her" },
+            { prompt: "She has beautiful blue eyes. ___ eyes are blue.", a: "her" },
+            { prompt: "She is riding ___ horse in the woods.", a: "her" },
+            { prompt: "We have a big house. It is ___ house.", a: "our" },
+            { prompt: "We are eating ___ dinner right now.", a: "our" },
+            { prompt: "We love going to ___ school.", a: "our" },
+            { prompt: "We invited all our friends to ___ party.", a: "our" },
+            { prompt: "They have a dog. ___ dog barks a lot.", a: "their" },
+            { prompt: "They sold ___ old car last week.", a: "their" },
+            { prompt: "I don't know those people or ___ names.", a: "their" },
+            { prompt: "They are visiting ___ grandma today.", a: "their" },
+            { prompt: "The bird is in the tree. ___ nest is small.", a: "its" },
+            { prompt: "The cat licked ___ own paw.", a: "its" },
+            { prompt: "The company changed ___ logo yesterday.", a: "its" },
+            { prompt: "The dog wagged ___ tail.", a: "its" },
+            { prompt: "This is ___ car, not yours.", a: "my" },
+            { prompt: "Mark lost ___ keys yesterday.", a: "his" },
+            { prompt: "Mary brought ___ own lunch.", a: "her" },
+            { prompt: "We should respect ___ neighbors.", a: "our" },
+            { prompt: "Please give me ___ opinion.", a: "your" },
+            { prompt: "She washed ___ face before bed.", a: "her" },
+            { prompt: "He cleaned ___ room without complaining.", a: "his" },
+            { prompt: "They forgot ___ passports at home.", a: "their" },
+            { prompt: "Can I borrow ___ phone charger?", a: "your" },
+            { prompt: "She found ___ missing ring.", a: "her" },
+            { prompt: "He takes ___ dog for a walk.", a: "his" },
+            { prompt: "We love ___ new English teacher.", a: "our" },
+            { prompt: "I parked ___ car outside.", a: "my" },
+            { prompt: "You should finish ___ project.", a: "your" },
+            { prompt: "He fixed ___ computer by himself.", a: "his" },
+            { prompt: "She loves ___ new hairstyle.", a: "her" },
+            { prompt: "They are proud of ___ children.", a: "their" },
+            { prompt: "We value ___ traditions.", a: "our" },
+            { prompt: "We completed ___ task on time.", a: "our" },
+            { prompt: "They brought ___ own instruments.", a: "their" },
+            { prompt: "I lost ___ way in the city.", a: "my" },
+            { prompt: "You must write down ___ name.", a: "your" },
+            { prompt: "He solved the puzzle on ___ own.", a: "his" },
+            { prompt: "She cooked ___ favorite meal.", a: "her" },
+            { prompt: "We shared ___ experiences.", a: "our" },
+            { prompt: "They defended ___ point of view.", a: "their" },
+            { prompt: "The city lost ___ charm in the rain.", a: "its" },
+            { prompt: "He introduced ___ parents to us.", a: "his" },
+            { prompt: "She forgot ___ keys on the table.", a: "her" },
+            { prompt: "I left ___ umbrella in the office.", a: "my" },
+            { prompt: "You should clean ___ room today.", a: "your" },
+            { prompt: "Tom has a cat, and ___ cat is playful.", a: "his" },
+            { prompt: "I need to clean ___ desk before I leave.", a: "my" },
+            { prompt: "Look at that bird spreading ___ wings.", a: "its" },
+            { prompt: "Do you know where I put ___ glasses?", a: "my" },
+            { prompt: "We brought ___ own drinks to the party.", a: "our" },
+            { prompt: "The teacher asked us to open ___ books.", a: "our" },
+            { prompt: "Each country has ___ own culture.", a: "its" },
+            { prompt: "She takes ___ guitar lessons on Tuesday.", a: "her" },
+            { prompt: "He is looking for ___ passport.", a: "his" },
+            { prompt: "They are painting ___ house blue.", a: "their" },
+            { prompt: "Can you lend me ___ pen for a second?", a: "your" },
+            { prompt: "I met ___ brother at the station.", a: "my" },
+            { prompt: "The lion protects ___ territory fiercely.", a: "its" },
+            { prompt: "We are proud of ___ school team.", a: "our" },
+            { prompt: "She always forgets ___ scarf.", a: "her" },
+            { prompt: "He always forgets ___ jacket.", a: "his" },
+            { prompt: "Did you enjoy ___ trip to France?", a: "your" },
+            { prompt: "They invited all ___ friends over.", a: "their" },
+            { prompt: "I love ___ new job.", a: "my" },
+            { prompt: "The robot moved ___ arm smoothly.", a: "its" },
+            { prompt: "We must finish ___ assignment today.", a: "our" },
+            { prompt: "She is showing ___ drawings to everyone.", a: "her" },
+            { prompt: "He put ___ hands in his pockets.", a: "his" },
+            { prompt: "They put ___ bags in the locker.", a: "their" },
+            { prompt: "Is this ___ notebook on the table?", a: "your" },
+            { prompt: "The tree lost ___ leaves in autumn.", a: "its" },
+            { prompt: "I checked ___ email this morning.", a: "my" },
+            { prompt: "We organized ___ files properly.", a: "our" },
+            { prompt: "She shared ___ secret with me.", a: "her" },
+            { prompt: "He updated ___ resume yesterday.", a: "his" },
+            { prompt: "They completed ___ homework early.", a: "their" },
+            { prompt: "You should wear ___ coat outside.", a: "your" },
+            { prompt: "I found ___ old diary in the attic.", a: "my" },
+            { prompt: "The restaurant is famous for ___ food.", a: "its" },
+            { prompt: "We planned ___ vacation carefully.", a: "our" },
+            { prompt: "She styled ___ hair differently.", a: "her" },
+            { prompt: "He bruised ___ knee during the match.", a: "his" },
+            { prompt: "They parked ___ bicycles outside.", a: "their" },
+            { prompt: "You must follow ___ instructions.", a: "your" },
+            { prompt: "I love ___ family very much.", a: "my" },
+            { prompt: "The cat chased ___ tail in circles.", a: "its" }
+        ];
+
+        const CONTAINER_COLORS = ['#FF5733', '#33FF57', '#3357FF', '#F333FF', '#33FFF3', '#FFB833', '#8D33FF', '#FF3385', '#57FF33', '#FFD433'];
+
+        const App = () => {
+            const currentQuestions = useMemo(() => [...ALL_QUESTIONS].sort(() => 0.5 - Math.random()).slice(0, 10), []);
+            const [currentIdx, setCurrentIdx] = useState(0);
+            const [input, setInput] = useState("");
+            const [phase, setPhase] = useState('START');
+            const [containers, setContainers] = useState([]);
+            const inputRef = useRef(null);
+
+            useEffect(() => {
+                if (phase === 'PLAY' && inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, [phase, currentIdx]);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (input.toLowerCase().trim() === currentQuestions[currentIdx].a.toLowerCase()) {
+                    setContainers([...containers, { text: input.toLowerCase().trim(), color: CONTAINER_COLORS[containers.length % 10] }]);
+                    if (containers.length + 1 >= 10) {
+                        setPhase('SAILING');
+                        setTimeout(() => setPhase('WIN'), 8000);
+                    } else {
+                        setCurrentIdx(currentIdx + 1);
+                        setInput("");
+                    }
+                } else { setInput(""); }
+            };
+
+            const q = currentQuestions[currentIdx];
+            const parts = q ? q.prompt.split("___") : ["", ""];
+
+            return (
+                <div className="relative h-full w-full overflow-hidden flex flex-col flex-1">
+                    <div className="ocean">
+                        <div className={`ship-wrapper ${phase === 'SAILING' || phase === 'WIN' ? 'sailing-away' : ''}`}>
+                            <div className="bobbing flex flex-col items-start w-[400px] relative">
+                                
+                                <div className="flex flex-wrap-reverse gap-0.5 ml-28 mb-[-2px] w-[220px] z-30">
+                                    {containers.map((c, i) => (
+                                        <div key={i} style={{ backgroundColor: c.color }} className="container-box w-12 h-9 flex items-center justify-center text-[10px] text-white font-bold shadow-inner rounded-sm">{c.text}</div>
+                                    ))}
+                                </div>
+
+                                <div className="w-[400px] h-12 bg-slate-800 rounded-br-[10px] shadow-2xl relative border-t-4 border-slate-700">
+                                    <div className="ship-bow"></div>
+                                    
+                                    <div className="absolute -top-10 left-4 w-20 h-10 bg-slate-700 rounded-t-lg border-t-2 border-slate-500 flex p-1.5 gap-2 z-40">
+                                        <div className="w-3 h-2 bg-cyan-200 opacity-50 rounded-sm"></div>
+                                        <div className="w-3 h-2 bg-cyan-200 opacity-50 rounded-sm"></div>
+                                    </div>
+                                    
+                                    <div className="absolute -top-16 left-8 w-1 h-16 bg-slate-800 z-10">
+                                        <div className="h-2 w-4 bg-red-600 -ml-1.5 mt-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="ui-panel">
+                        <div className="w-full max-w-4xl text-center">
+                            {phase === 'START' && <button onClick={() => setPhase('PLAY')} className="btn-game">START LOADING</button>}
+                            
+                            {(phase === 'PLAY' || phase === 'SAILING') && (
+                                <form onSubmit={handleSubmit} className={`px-4 ${phase === 'SAILING' ? 'opacity-0' : ''}`}>
+                                    <div className="sentence-container text-base md:text-xl text-white font-bold bg-[#241738] p-4 rounded-xl shadow-lg border-2 border-[#3c096c]">
+                                        <span>{parts[0]}</span>
+                                        <input 
+                                            ref={inputRef}
+                                            className="inline-input"
+                                            value={input}
+                                            onChange={(e) => setInput(e.target.value)}
+                                            disabled={phase === 'SAILING'}
+                                            autoComplete="off"
+                                        />
+                                        <span>{parts[1]}</span>
+                                    </div>
+                                    <div className="text-[11px] text-[#ffb703] mt-2 uppercase font-bold tracking-widest" style={{fontFamily: 'Bangers, cursive', fontSize: '1rem'}}>Progress: {containers.length}/10 Containers</div>
+                                </form>
+                            )}
+
+                            {phase === 'WIN' && <button onClick={() => window.location.reload()} className="btn-game animate-bounce">WELL DONE! PLAY AGAIN?</button>}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
