@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Possessive Adjectives Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #7b2cbf;
+            --hero-purple-dark: #3c096c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #00f5d4;
+            --hero-red: #d32f2f;
+            --hero-red-dark: #b71c1c;
+            --header-bg: #ff7043;
+            --header-border: var(--hero-yellow);
+        }
+        body { font-family: 'Lexend', sans-serif; background: #05101a; background: radial-gradient(circle at center, #1a102a 0%, #05101a 100%); color: white; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: var(--header-bg); padding: 2.5rem 1rem; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); border-bottom: 5px solid var(--header-border); }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        main { max-width: 1000px; margin: 20px auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+        .briefing-box { background: rgba(26, 16, 42, 0.9); border: 2px solid var(--hero-cyan); border-radius: 20px; padding: 30px; margin-bottom: 30px; }
+        .explanation-text { font-size: 1.1rem; line-height: 1.6; margin-bottom: 15px; border-left: 4px solid var(--hero-cyan); padding: 15px 20px; background: rgba(0, 245, 212, 0.05); }
+        .highlight { color: var(--hero-cyan); font-weight: bold; }
+        .important { color: var(--hero-red); font-weight: bold; }
+        .toggle-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle { background: var(--hero-purple-main); color: white; border: none; padding: 12px 20px; border-radius: 50px; font-family: 'Bangers', cursive; font-size: 1.1rem; cursor: pointer; border-bottom: 5px solid var(--hero-purple-dark); transition: 0.2s; }
+        .btn-toggle:hover { background: var(--hero-cyan); color: var(--hero-purple-dark); transform: translateY(-3px); }
+        .content-section { display: none; }
+        .table-container { background: #1a102a; border-radius: 15px; overflow: hidden; border: 2px solid var(--hero-purple-dark); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        th { background: rgba(0,0,0,0.2); color: var(--hero-yellow); }
+        .pickle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        @media (max-width: 900px) { .pickle-grid { grid-template-columns: repeat(2, 1fr); } }
+        .card { background: #1a102a; border: 3px solid #3c096c; border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: var(--hero-yellow); transform: scale(1.05); }
+        .card .title { font-family: 'Bangers', cursive; font-size: 1.3rem; color: var(--hero-yellow); margin: 5px 0; }
+        .btn-like { background: #3c096c; color: white; border: 2px solid var(--hero-cyan); padding: 5px 15px; border-radius: 10px; cursor: pointer; margin-top: 10px; font-size: 0.9rem; }
+        footer { text-align: center; padding: 20px; background: rgba(0,0,0,0.3); font-family: 'Bangers', cursive; font-size: 1.2rem; margin-top: auto; }
+        .footer-highlight { color: var(--hero-yellow); }
+    </style>
+</head>
+<body>
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>POSSESSIVE ADJECTIVES COMMAND CENTER</p>
+</header>
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: POSSESSIVE ADJECTIVES</h2>
+        <div class="explanation-text">
+            <p>Met een bezittelijk voornaamwoord geef je aan <span class="important">van wie iets is</span>. In het Engels gebruik je hiervoor woorden zoals <span class="highlight">my</span>, <span class="highlight">your</span>, <span class="highlight">his</span>, <span class="highlight">her</span>, <span class="highlight">its</span>, <span class="highlight">our</span> en <span class="highlight">their</span>.</p>
+            <p><span class="important">Belangrijk:</span> Je gebruikt deze woorden ontzettend vaak om bezit aan te geven. Leer ze goed uit je hoofd!</p>
+        </div>
+    </section>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="show('n-overzicht')">OVERZICHT</button>
+        <button class="btn-toggle" onclick="show('n-video')" style="background:var(--hero-red);">🎬 VIDEO</button>
+    </div>
+
+    <div id="n-overzicht" class="content-section" style="display: block;">
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Persoon</th>
+                    <th>Bezittelijk Voornaamwoord</th>
+                    <th>Voorbeeldzin</th>
+                </tr>
+                <tr><td>I</td><td>my</td><td>This is <span class="highlight">my</span> book.</td></tr>
+                <tr><td>you</td><td>your</td><td>Is this <span class="highlight">your</span> pen?</td></tr>
+                <tr><td>he</td><td>his</td><td>That is <span class="highlight">his</span> dog.</td></tr>
+                <tr><td>she</td><td>her</td><td>This is <span class="highlight">her</span> bike.</td></tr>
+                <tr><td>it</td><td>its</td><td>The cat eats <span class="highlight">its</span> food.</td></tr>
+                <tr><td>we</td><td>our</td><td>This is <span class="highlight">our</span> house.</td></tr>
+                <tr><td>you (mv)</td><td>your</td><td>Is this <span class="highlight">your</span> classroom?</td></tr>
+                <tr><td>they</td><td>their</td><td><span class="highlight">Their</span> car is red.</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="n-video" class="content-section">
+        <div style="text-align:center;">
+            <iframe src="https://www.youtube.com/embed/x_3HPjdzQ-Y" style="width:100%; max-width:560px; height:315px; border:4px solid var(--hero-red); border-radius:20px;" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="card" id="card-p1" onclick="window.open('https://wordwall.net/embed/826d69f9000d4ca1b04b8aa77d75f4a4?themeId=1&templateId=5&fontStackId=0', '_blank')">
+            <span style="font-size: 2.5rem;">🧩</span>
+            <div class="title">Pickle 1</div>
+            <p style="font-size: 0.9rem;">Quiz 1</p>
+            <button class="btn-like" onclick="event.stopPropagation(); toggleLike(this)">👍 Like</button>
+        </div>
+        <div class="card" id="card-p2" onclick="window.open('https://wordwall.net/embed/573c3816df144bad8c0fcc8f93f38780?themeId=1&templateId=5&fontStackId=0', '_blank')">
+            <span style="font-size: 2.5rem;">🧠</span>
+            <div class="title">Pickle 2</div>
+            <p style="font-size: 0.9rem;">Quiz 2</p>
+            <button class="btn-like" onclick="event.stopPropagation(); toggleLike(this)">👍 Like</button>
+        </div>
+        <div class="card" id="card-p3" onclick="window.open('https://wordwall.net/embed/5e6f5558de4f4daa92dca852178b2ae4?themeId=23&templateId=49&fontStackId=0', '_blank')">
+            <span style="font-size: 2.5rem;">👤</span>
+            <div class="title">Pickle 3</div>
+            <p style="font-size: 0.9rem;">Maze Chase</p>
+            <button class="btn-like" onclick="event.stopPropagation(); toggleLike(this)">👍 Like</button>
+        </div>
+        <div class="card" id="card-p4" onclick="window.open('https://wordwall.net/embed/743dfa147dac4f0a90bfbbe004602f39?themeId=1&templateId=46&fontStackId=0', '_blank')">
+            <span style="font-size: 2.5rem;">⚡</span>
+            <div class="title">Pickle 4</div>
+            <p style="font-size: 0.9rem;">Find the match</p>
+            <button class="btn-like" onclick="event.stopPropagation(); toggleLike(this)">👍 Like</button>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="footer-text">&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+</footer>
+<script>
+    function show(id) {
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+    function toggleLike(btn) { 
+        btn.innerText = btn.innerText === '👍 Like' ? '❤️ Liked' : '👍 Like'; 
+    }
+</script>
+</body>
+</html>
