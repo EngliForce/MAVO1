@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Roach Rage - Have / Have Got</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@500;700&family=Inter:wght@400;600;700&family=Creepster&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Quicksand:wght@700&display=swap');
+                
+        :root {
+            --bg-color: #05070a; 
+            --glass-bg: rgba(10, 15, 25, 0.98);
+            --primary: #ff7043;
+            --header-bg: #ff7043;
+            --header-border: #ffb703;
+            --hero-yellow: #ffb703;
+        }
+
+        body, html { 
+             margin: 0; padding: 0; 
+             font-family: 'Inter', sans-serif; 
+             background: radial-gradient(circle at center, #1a1c2c 0%, #05070a 100%); 
+             color: #f0f0f0; 
+             height: 100dvh; 
+             overflow: hidden; 
+             touch-action: manipulation;
+             display: flex;
+             flex-direction: column;
+        }
+
+        header { 
+             background: var(--header-bg); 
+             padding: 1rem 1rem 1.8rem 1rem; 
+             text-align: center; 
+             clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%); 
+             border-bottom: 6px solid var(--header-border); 
+             z-index: 60;
+        }
+        header h1 { 
+             font-family: 'Bangers', cursive; 
+             font-size: 2.8rem; 
+             letter-spacing: 3px; 
+             margin: 0; 
+             text-shadow: 3px 3px 0px #3c096c; 
+             color: white;
+             line-height: 1;
+        }
+        header p {
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            color: white;
+            margin: 4px 0 0 0;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px #3c096c;
+        }
+
+        footer { 
+             text-align: center; 
+             padding: 12px; 
+             background: rgba(0,0,0,0.3); 
+             font-family: 'Bangers', cursive; 
+             font-size: 1.1rem; 
+             z-index: 60; 
+             color: white;
+        }
+        .footer-highlight { color: var(--hero-yellow); }
+
+        h2, .score-font { font-family: 'Creepster', cursive; }
+        .game-area {            
+            position: relative;            
+            width: 100%;            
+            height: 42vh;            
+            background: #0f172a;            
+            border: 4px solid #1e293b;            
+            border-radius: 24px;            
+            overflow: hidden;            
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.9);        
+        }
+        .cockroach {            
+            position: absolute;            
+            font-size: 32px;            
+            transition: all 0.6s ease-in-out;            
+            z-index: 30;            
+            user-select: none;            
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.8));        
+        }
+        .splat-stain {            
+            position: absolute;            
+            z-index: 5;            
+            pointer-events: none;            
+            filter: blur(3px);            
+            opacity: 0.75;            
+            border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%;        }
+        .dead-roach {            
+            position: absolute;            
+            font-size: 35px;            
+            z-index: 10;            
+            pointer-events: none;            
+            transform: translate(-50%, -50%) scaleY(0.25) scaleX(1.4);            
+            filter: grayscale(0.4) brightness(0.5) sepia(0.8);            
+            opacity: 0.8;        }
+        .input-field { text-transform: lowercase; }    
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ENGLIFORCE ACADEMY</h1>
+        <p>HAVE / HAVE GOT ROACH RAGE</p>
+    </header>
+
+    <div id="root" class="flex-1 flex flex-col"></div>
+
+    <footer>
+        <div>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></div>
+    </footer>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const QUESTIONS = [
+            // --- CATEGORIE 1: BEVESTIGENDE ZINNEN (Have / Has & Have got / Has got) ---
+            { p: "I ___ a blue pen.", accepted: ["have", "have got"] },
+            { p: "You ___ a fast red car.", accepted: ["have", "have got"] },
+            { p: "He ___ a cool mountain bike.", accepted: ["has", "has got"] },
+            { p: "She ___ a very cute dog.", accepted: ["has", "has got"] },
+            { p: "It ___ a very long tail.", accepted: ["has", "has got"] },
+            { p: "We ___ lots of interesting books.", accepted: ["have", "have got"] },
+            { p: "They ___ a large modern house.", accepted: ["have", "have got"] },
+            { p: "Tom ___ a brand new computer.", accepted: ["has", "has got"] },
+            { p: "Anna ___ a sweet red apple.", accepted: ["has", "has got"] },
+            { p: "My friends ___ awesome skateboards.", accepted: ["have", "have got"] },
+            { p: "Jack ___ a green skateboard.", accepted: ["have", "have got"] },
+            { p: "You ___ a very nice big room.", accepted: ["have", "have got"] },
+            { p: "Peter ___ an electric guitar.", accepted: ["has", "has got"] },
+            { p: "Sarah ___ a pink smartphone.", accepted: ["has", "has got"] },
+            { p: "We ___ a difficult math test.", accepted: ["have", "have got"] },
+            { p: "They ___ a fluffy pet rabbit.", accepted: ["have", "have got"] },
+            { p: "My older brother ___ a leather football.", accepted: ["has", "has got"] },
+            { p: "The black cat ___ bright green eyes.", accepted: ["has", "has got"] },
+            { p: "You ___ a very stylish jacket.", accepted: ["have", "have got"] },
+            { p: "I ___ a brilliant idea now.", accepted: ["have", "have got"] },
+            { p: "The school ___ a big playground.", accepted: ["has", "has got"] },
+            { p: "Our teacher ___ a red pen.", accepted: ["has", "has got"] },
+            { p: "The kids ___ chocolate milk.", accepted: ["have", "have got"] },
+            { p: "My uncle ___ a fast motorboat.", accepted: ["has", "has got"] },
+            { p: "Those horses ___ strong legs.", accepted: ["have", "has got"] },
+
+            // --- CATEGORIE 2: VRAGEN MAKEN (Do / Does / Have / Has) ---
+            { p: "___ you have a fast car?", accepted: ["do", "do you"] },
+            { p: "___ she have a small cat?", accepted: ["does", "does she"] },
+            { p: "___ he have an expensive watch?", accepted: ["does", "does he"] },
+            { p: "___ they have modern bicycles?", accepted: ["do", "do they"] },
+            { p: "___ we have difficult homework?", accepted: ["do", "do we"] },
+            { p: "___ you got a sharp pencil?", accepted: ["have", "have you"] },
+            { p: "___ she got a younger sister?", accepted: ["has", "has she"] },
+            { p: "___ he got a powerful laptop?", accepted: ["has", "has he"] },
+            { p: "___ they got a sunny garden?", accepted: ["have", "have they"] },
+            { p: "___ it got four strong legs?", accepted: ["has", "has it"] },
+            { p: "___ Mark have a guitar?", accepted: ["does", "does mark"] },
+            { p: "___ Lily have a puppy?", accepted: ["does", "does lily"] },
+            { p: "___ the boys have tickets?", accepted: ["do", "do the boys"] },
+            { p: "___ your dad have a car?", accepted: ["does", "does your dad"] },
+            { p: "___ your friends have bikes?", accepted: ["do", "do your friends"] },
+            { p: "___ I got your notebook?", accepted: ["have", "have i"] },
+            { p: "___ mum got my keys?", accepted: ["has", "has mum"] },
+            { p: "___ the dog got a bone?", accepted: ["has", "has the dog"] },
+            { p: "___ you got a question?", accepted: ["have", "have you"] },
+            { p: "___ Tom got a new phone?", accepted: ["has", "has tom"] },
+            { p: "Where ___ you have your lunch?", accepted: ["do"] },
+            { p: "What ___ she have in her bag?", accepted: ["does"] },
+            { p: "Why ___ he have two coats?", accepted: ["does"] },
+            { p: "How many books ___ they have?", accepted: ["do"] },
+            { p: "When ___ we have English class?", accepted: ["do"] },
+
+            // --- CATEGORIE 3: ONTKENNEN ZONDER GOT (Don't have / Doesn't have & Do not have / Does not have) ---
+            { p: "Negative of: I have a pen. -> I ___ a pen.", accepted: ["don't have", "do not have"] },
+            { p: "Negative of: You have a bike. -> You ___ a bike.", accepted: ["don't have", "do not have"] },
+            { p: "Negative of: He has a dog. -> He ___ a dog.", accepted: ["doesn't have", "does not have"] },
+            { p: "Negative of: She has a cat. -> She ___ a cat.", accepted: ["doesn't have", "does not have"] },
+            { p: "Negative of: We have time. -> We ___ time.", accepted: ["don't have", "do not have"] },
+            { p: "Negative of: They have a car. -> They ___ a car.", accepted: ["don't have", "do not have"] },
+            { p: "Negative of: Tom has a phone. -> Tom ___ a phone.", accepted: ["doesn't have", "does not have"] },
+            { p: "Negative of: Anna has an apple. -> Anna ___ an apple.", accepted: ["doesn't have", "does not have"] },
+            { p: "Negative of: The dog has a bone. -> The dog ___ a bone.", accepted: ["doesn't have", "does not have"] },
+            { p: "Negative of: You have a sister. -> You ___ a sister.", accepted: ["don't have", "do not have"] },
+            { p: "I ___ a computer at home.", accepted: ["don't have", "do not have"] },
+            { p: "He ___ a bicycle to ride.", accepted: ["doesn't have", "does not have"] },
+            { p: "She ___ much money left.", accepted: ["doesn't have", "does not have"] },
+            { p: "We ___ lessons on Sunday.", accepted: ["don't have", "do not have"] },
+            { p: "They ___ a swimming pool.", accepted: ["don't have", "do not have"] },
+            { p: "My brother ___ a PlayStation.", accepted: ["doesn't have", "does not have"] },
+            { p: "The cat ___ food right now.", accepted: ["doesn't have", "does not have"] },
+            { p: "You ___ enough time for that.", accepted: ["don't have", "do not have"] },
+            { p: "Our house ___ a garage.", accepted: ["doesn't have", "does not have"] },
+            { p: "The teacher ___ a mustache.", accepted: ["doesn't have", "does not have"] },
+            { p: "I ___ brothers or sisters.", accepted: ["don't have", "do not have"] },
+            { p: "He ___ a winter jacket.", accepted: ["doesn't have", "does not have"] },
+            { p: "She ___ a blue umbrella.", accepted: ["doesn't have", "does not have"] },
+            { p: "We ___ homework today.", accepted: ["don't have", "do not have"] },
+            { p: "They ___ a television.", accepted: ["don't have", "do not have"] },
+
+            // --- CATEGORIE 4: ONTKENNEN MET GOT (Haven't got / Hasn't got & Have not got / Has not got) ---
+            { p: "Negative of: I have got a pen. -> I ___ a pen.", accepted: ["haven't got", "have not got"] },
+            { p: "Negative of: You have got a car. -> You ___ a car.", accepted: ["haven't got", "have not got"] },
+            { p: "Negative of: He has got a bike. -> He ___ a bike.", accepted: ["hasn't got", "has not got"] },
+            { p: "Negative of: She has got a book. -> She ___ a book.", accepted: ["hasn't got", "has not got"] },
+            { p: "Negative of: We have got time. -> We ___ time.", accepted: ["haven't got", "have not got"] },
+            { p: "Negative of: They have got a dog. -> They ___ a dog.", accepted: ["haven't got", "have not got"] },
+            { p: "Negative of: Tom has got a key. -> Tom ___ a key.", accepted: ["hasn't got", "has not got"] },
+            { p: "Negative of: Anna has got a hat. -> Anna ___ a hat.", accepted: ["hasn't got", "has not got"] },
+            { p: "I ___ milk in the fridge.", accepted: ["haven't got", "have not got"] },
+            { p: "He ___ a single clue about it.", accepted: ["hasn't got", "has not got"] },
+            { p: "She ___ a passport yet.", accepted: ["hasn't got", "has not got"] },
+            { p: "We ___ clean shirts.", accepted: ["haven't got", "have not got"] },
+            { p: "They ___ a working printer.", accepted: ["haven't got", "have not got"] },
+            { p: "My phone ___ battery left.", accepted: ["hasn't got", "has not got"] },
+            { p: "You ___ your shoes on.", accepted: ["haven't got", "have not got"] },
+            { p: "I ___ spare time today.", accepted: ["haven't got", "have not got"] },
+            { p: "She ___ friends here.", accepted: ["hasn't got", "has not got"] },
+            { p: "We ___ food left.", accepted: ["haven't got", "have not got"] },
+            { p: "They ___ money.", accepted: ["haven't got", "have not got"] },
+            { p: "He ___ patience.", accepted: ["hasn't got", "has not got"] },
+            { p: "I ___ paper to write on.", accepted: ["haven't got", "have not got"] },
+            { p: "You ___ a ticket for the show.", accepted: ["haven't got", "have not got"] },
+            { p: "He ___ an excuse for being late.", accepted: ["hasn't got", "has not got"] },
+            { p: "She ___ a computer in her room.", accepted: ["hasn't got", "has not got"] },
+            { p: "We ___ plans for tonight.", accepted: ["haven't got", "have not got"] }
+        ];
+
+        const App = () => {            
+            const [phase, setPhase] = useState('START');            
+            const [timeLeft, setTimeLeft] = useState(180);            
+            const [score, setScore] = useState(0);            
+            const [currentQ, setCurrentQ] = useState(null);            
+            const [input, setInput] = useState("");            
+            const [roaches, setRoaches] = useState([]);            
+            const [splats, setSplats] = useState([]);            
+            const [questionPool, setQuestionPool] = useState([]);
+            const [feedback, setFeedback] = useState(null); 
+            const inputRef = useRef(null);
+
+            useEffect(() => {                
+                if (phase === 'PLAY') {                    
+                    setQuestionPool([...QUESTIONS]);                                        
+                    const initialRoaches = Array.from({ length: 50 }, (_, i) => ({                        
+                        id: i,                        
+                        x: Math.random() * 90 + 5,                        
+                        y: Math.random() * 90 + 5,                        
+                        rotation: Math.random() * 360                    }));                    
+                    setRoaches(initialRoaches);
+
+                    const timer = setInterval(() => {                        
+                        setTimeLeft(p => {                            
+                            if (p <= 1) { setPhase('END'); return 0; }                            
+                            return p - 1;                        
+                        });
+
+                        setRoaches(prev => prev.map(r => ({                            
+                            ...r,                            
+                            x: Math.max(5, Math.min(95, r.x + (Math.random() - 0.5) * 40)),                            
+                            y: Math.max(5, Math.min(95, r.y + (Math.random() - 0.5) * 40)),                            
+                            rotation: r.rotation + (Math.random() - 0.5) * 120                        })));                    
+                    }, 700);
+
+                    return () => clearInterval(timer);                
+                }            
+            }, [phase]);
+
+            useEffect(() => {                
+                if (phase === 'PLAY' && questionPool.length > 0 && !currentQ && !feedback) {                    
+                    nextQuestion(questionPool);                
+                }            
+            }, [phase, questionPool, currentQ, feedback]);
+
+            const nextQuestion = (currentPool) => {                
+                let activePool = currentPool || questionPool;                
+                if (activePool.length === 0) activePool = [...QUESTIONS];                
+                const randomIndex = Math.floor(Math.random() * activePool.length);                
+                const selectedQ = activePool[randomIndex];                
+                const newPool = activePool.filter((_, i) => i !== randomIndex);                
+                setQuestionPool(newPool);                
+                setCurrentQ(selectedQ);                
+                setInput("");
+                setFeedback(null);
+                setTimeout(() => inputRef.current?.focus(), 50);            
+            };
+
+            const handleSubmit = (e) => {                
+                e.preventDefault();
+                if (feedback) return; 
+
+                const cleanInput = input.toLowerCase().trim();
+                const isCorrect = currentQ.accepted.includes(cleanInput);
+
+                if (isCorrect) {                    
+                    const victimIndex = Math.floor(Math.random() * roaches.length);                    
+                    const victim = roaches[victimIndex];                    
+                    const newSplat = {                        
+                        id: Date.now(),                        
+                        x: victim.x,                        
+                        y: victim.y,                        
+                        rotation: victim.rotation,                        
+                        size: 45 + Math.random() * 35,                        
+                        color: ['#4b5320', '#3f301d', '#2d3300', '#5c4010'][Math.floor(Math.random()*4)]                    };                    
+                    setSplats(prev => [...prev, newSplat]);                    
+                    setScore(s => s + 1);                    
+                    setRoaches(prev => {                        
+                        const next = [...prev];                        
+                        next[victimIndex] = { ...victim, id: Date.now()+1, x: Math.random()*90, y: Math.random()*90 };                        
+                        return next;                    });                    
+                    nextQuestion();                
+                } else {                    
+                    setFeedback({
+                        wrongText: input,
+                        correctText: currentQ.accepted.join(" / ")
+                    });
+                    
+                    setTimeout(() => {
+                        nextQuestion();
+                    }, 7000);
+                }            
+            };
+
+            return (                
+                <div className="flex flex-col items-center justify-between h-full w-full p-4 max-w-4xl mx-auto text-white flex-1">                    
+                    {phase === 'PLAY' && (                        
+                        <div className="flex flex-col items-center w-full flex-1 justify-center gap-3">                            
+                            <div className="flex justify-between items-center w-full px-4">                                
+                                <div className="score-font text-5xl text-amber-400 drop-shadow-lg">SQUASHED: {score}</div>                                
+                                <div className="bg-red-600 px-6 py-1 rounded-full font-bold border-b-4 border-red-900 shadow-xl">                                    
+                                    {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}                                
+                                </div>                            
+                            </div>                                                        
+                            <div className="game-area">                                
+                                {splats.map(s => (                                    
+                                    <React.Fragment key={s.id}>                                        
+                                        <div className="splat-stain" style={{                                             
+                                             left: `${s.x}%`, top: `${s.y}%`,                                             
+                                             width: s.size, height: s.size * 0.7,                                            
+                                             background: s.color,                                            
+                                             transform: `translate(-50%, -50%) rotate(${s.rotation}deg)`                                         }} />                                        
+                                        <div className="dead-roach" style={{ left: `${s.x}%`, top: `${s.y}%`, transform: `translate(-50%, -50%) rotate(${s.rotation}deg)` }}>                                            
+                                            🪳                                        
+                                        </div>                                    
+                                    </React.Fragment>                                
+                                ))}                                
+                                {roaches.map(r => (                                    
+                                    <div key={r.id} className="cockroach" style={{ left: `${r.x}%`, top: `${r.y}%`, transform: `translate(-50%, -50%) rotate(${r.rotation}deg)` }}>                                        
+                                        🪳                                    
+                                    </div>                                
+                                ))}                            
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="w-full bg-slate-900 p-5 rounded-3xl border-2 border-slate-700 shadow-2xl relative overflow-hidden">                                
+                                <p className="text-xl text-center text-slate-200">                                    
+                                    {currentQ?.p.split("___")[0]}                                    
+                                    <input                                         
+                                         ref={inputRef}
+                                         disabled={feedback !== null}
+                                         className="input-field mx-2 border-b-4 border-amber-500 bg-black w-full md:w-80 text-center outline-none py-2 text-amber-400 font-black block md:inline-block mt-4 md:mt-0 rounded-t-lg shadow-inner disabled:opacity-50"                                         
+                                         value={input}                                         
+                                         onChange={(e) => setInput(e.target.value)}                                         
+                                         autoComplete="off"                                     
+                                    />                                    
+                                    {currentQ?.p.split("___")[1]}                                
+                                </p>
+
+                                {feedback && (
+                                    <div className="absolute inset-0 bg-red-950/95 rounded-3xl flex flex-col items-center justify-center p-2 text-center border-2 border-red-500 z-40 overflow-y-auto">
+                                        <div className="text-red-400 font-bold text-lg leading-tight">❌ OEPS, DAT IS FOUT!</div>
+                                        <div className="text-xs text-slate-300 mt-1">
+                                            Jouw antwoord: <span className="text-red-300 line-through font-semibold">"{feedback.wrongText || '(leeg)'}"</span>
+                                        </div>
+                                        <div className="text-sm text-emerald-400 font-bold mt-1 leading-tight">
+                                            Goede opties: "{feedback.correctText}"
+                                        </div>
+                                        <div className="text-[10px] text-slate-400 mt-1 tracking-wide uppercase">
+                                            Even geduld (7 seconden)...
+                                        </div>
+                                    </div>
+                                )}
+                            </form>                        
+                        </div>                    
+                    )}
+
+                    {phase === 'START' && (                        
+                        <div className="bg-slate-900 p-12 rounded-[50px] text-center border-b-[12px] border-amber-600 my-auto shadow-2xl max-w-md">                            
+                            <div className="text-8xl mb-6">🪳</div>                            
+                            <h2 className="text-5xl mb-4 text-amber-400 uppercase tracking-tighter">Infestation</h2>                            
+                            <p className="mb-10 text-slate-400 font-bold">The classroom is infested with roaches. Type the correct have / have got answers to squash them. You have 3 Minutes.</p>                            
+                            <button onClick={() => setPhase('PLAY')} className="bg-amber-600 hover:bg-amber-500 text-slate-950 font-black text-2xl px-16 py-5 rounded-2xl w-full transition-all active:scale-95 shadow-xl">START SQUASHING</button>                        
+                        </div>                    
+                    )}
+
+                    {phase === 'END' && (                        
+                        <div className="bg-slate-900 p-12 rounded-[50px] text-center border-t-[12px] border-red-600 my-auto shadow-2xl">                            
+                            <h2 className="text-6xl font-black mb-4 text-red-600">TIME'S UP!</h2>                            
+                            <div className="bg-black/50 p-8 rounded-3xl mb-10">                                
+                                <p className="text-slate-400 uppercase tracking-widest text-sm mb-2">Total Squashed</p>                                
+                                <p className="text-9xl font-black text-amber-500 score-font">{score}</p>                            
+                            </div>                            
+                            <button onClick={() => window.location.reload()} className="bg-white text-black px-12 py-5 rounded-2xl font-black w-full uppercase text-xl hover:bg-slate-200 transition-colors">START NEW ROUND</button>                        
+                        </div>                    
+                    )}
+                </div>            
+            );        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));        
+        root.render(<App />);    
+    </script>
+</body>
+</html>
