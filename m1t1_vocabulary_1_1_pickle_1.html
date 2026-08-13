@@ -1,299 +1,336 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulary 1.1: Me, myself and I</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Pickle: Personal Data Drag & Drop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #ff5722;
+            --hero-purple-dark: #bf360c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #b39ddb;
+            --dark-bg: #0b101a;
+            --hero-orange: #ff5722;
+        }
 
-    header {
-      background-color: #ff7043;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05051a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
 
-    header img {
-      max-width: 120px;
-      display: block;
-      margin: 0 auto 1rem auto;
-    }
+        header {
+            background: var(--hero-purple-main);
+            padding: 2rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
 
-    header h1 {
-      font-size: 2rem;
-      margin: 0 0 0.5rem 0;
-    }
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 3rem; 
+            margin: 0; 
+            text-shadow: 3px 3px 0px var(--hero-purple-dark); 
+        }
 
-    header p {
-      font-size: 1rem;
-      margin: 0;
-    }
+        h2 { 
+            font-family: 'Bangers', cursive; 
+            color: var(--hero-yellow); 
+            text-align: center; 
+        }
 
-    .language-select {
-      text-align: center;
-      margin: 1.5rem 0 2rem 0;
-    }
+        .container { 
+            max-width: 1000px; 
+            margin: 20px auto; 
+            padding: 20px; 
+        }
 
-    .language-select label {
-      margin: 0 1em;
-      font-weight: bold;
-      color: #444;
-    }
+        .language-select {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 50px;
+            border: 1px solid var(--hero-cyan);
+        }
 
-    .word-bank {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
+        .language-select label { 
+            font-family: 'Bangers'; 
+            color: var(--hero-cyan); 
+            cursor: pointer; 
+        }
 
-    .draggable-word {
-      background-color: white;
-      padding: 0.6em 1.2em;
-      border: 2px solid #ff7043;
-      border-radius: 6px;
-      cursor: grab;
-      user-select: none;
-      font-weight: bold;
-      color: #333;
-    }
+        /* STICKY WORD BANK */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(26, 16, 42, 0.95);
+            border-radius: 20px;
+            border: 2px dashed var(--hero-cyan);
+            position: sticky;
+            top: 10px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
 
-    .draggable-word:hover {
-      background-color: #ffe6dc;
-    }
+        .draggable-word {
+            background: var(--hero-purple-main);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 10px;
+            cursor: grab;
+            font-family: 'Lexend', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            border-bottom: 4px solid var(--hero-purple-dark);
+            user-select: none;
+            transition: 0.2s;
+        }
 
-    .exercise-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 1.5rem;
-      justify-content: center;
-    }
+        .draggable-word:active { 
+            cursor: grabbing; 
+            transform: scale(1.1); 
+        }
 
-    .sentence-box {
-      flex: 0 0 48%;
-      background-color: white;
-      border: 2px solid #ff7043;
-      border-radius: 8px;
-      padding: 1rem;
-      text-align: left;
-      box-sizing: border-box;
-    }
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
 
-    .sentence-box p {
-      margin: 0 0 0.3em 0;
-      font-weight: 500;
-      color: #444;
-    }
+        .sentence-box {
+            background: #1a102a;
+            border: 2px solid var(--hero-purple-main);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
 
-    .drop-zone {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 150px;
-      padding: 0.6em;
-      background: #e0e0e0;
-      border-radius: 3px;
-      border: 2px dashed #999;
-      font-size: 1.1em;
-      font-weight: bold;
-    }
+        .sentence-box p { 
+            margin: 0; 
+            font-size: 0.95rem; 
+            line-height: 1.4; 
+            color: var(--hero-cyan); 
+        }
 
-    .correct {
-      background-color: #c8f7c5 !important;
-      border-color: #28a745 !important;
-    }
+        .drop-zone {
+            height: 55px;
+            background: rgba(0,0,0,0.3);
+            border: 2px dashed #444;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
 
-    .wrong {
-      background-color: #f7c5c5 !important;
-      border-color: #dc3545 !important;
-    }
+        .drop-zone.drag-over { 
+            background: rgba(179, 157, 219, 0.2); 
+            border-color: var(--hero-cyan); 
+        }
 
-    .button-row {
-      text-align: center;
-      margin-top: 2rem;
-    }
+        .correct { 
+            border: 3px solid #4caf50 !important; 
+            background: rgba(76, 175, 80, 0.1) !important; 
+        }
 
-    button {
-      background-color: #ff7043;
-      color: white;
-      border: none;
-      padding: 0.7rem 1.4rem;
-      border-radius: 6px;
-      font-size: 1rem;
-      margin: 0 0.5rem;
-      cursor: pointer;
-    }
+        .wrong { 
+            border: 3px solid var(--hero-orange) !important; 
+            background: rgba(255, 87, 34, 0.1) !important; 
+        }
 
-    button:hover {
-      background-color: #e85d2c;
-    }
+        .button-row { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-top: 40px; 
+            padding-bottom: 50px; 
+        }
 
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.95rem;
-      margin-top: 3rem;
-    }
-  </style>
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+        }
+
+        .btn:hover { 
+            transform: translateY(-3px); 
+        }
+
+        .boom-text {
+            position: fixed; 
+            pointer-events: none; 
+            font-family: 'Bangers';
+            color: var(--hero-yellow); 
+            font-size: 4rem; 
+            z-index: 2000;
+            text-shadow: 3px 3px 0px #000; 
+            animation: boom 0.6s ease-out forwards;
+        }
+
+        @keyframes boom { 
+            0% { transform: scale(0); opacity: 1; } 
+            100% { transform: scale(1.5); opacity: 0; } 
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0,0,0,0.2);
+            color: rgba(255,255,255,0.6);
+            margin-top: 50px;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <img src="Logo.png" alt="EngliForce Logo" />
-    <h1>🔠 Vocabulary 1.1: Me, myself and I</h1>
-    <p>Sleep het juiste woord naar de bijpassende omschrijving</p>
-  </header>
+<header>
+    <h1>PICKLE 1: PERSONAL DATA</h1>
+    <p>sleep de woorden naar de juiste omschrijving</p>
+</header>
 
-  <div class="language-select">
-    <label><input type="radio" name="language" value="nl" checked> Nederlands</label>
-    <label><input type="radio" name="language" value="en"> Engels</label>
-    <label><input type="radio" name="language" value="mixed"> Gemengd</label>
-  </div>
+<div class="container">
+    <div class="language-select">
+        <label><input type="radio" name="language" value="nl" checked onchange="setupGame()"> nederlands</label>
+        <label><input type="radio" name="language" value="en" onchange="setupGame()"> english</label>
+        <label><input type="radio" name="language" value="mixed" onchange="setupGame()"> mixed mode</label>
+    </div>
 
-  <div class="word-bank" id="wordBank"></div>
-  <div id="sentenceGrid"></div>
+    <div class="word-bank" id="wordBank"></div>
+    <div class="exercise-grid" id="sentenceGrid"></div>
 
-  <div class="button-row">
-    <button onclick="checkAnswers()">✅ Controleer antwoorden</button>
-    <button onclick="setupGame()">🔁 Opnieuw</button>
-  </div>
+    <div class="button-row">
+        <button class="btn" onclick="checkAnswers(event)">controleer ✅</button>
+        <button class="btn" style="background:var(--hero-purple-main); border-bottom-color:var(--hero-purple-dark);" onclick="setupGame()">opnieuw 🔁</button>
+    </div>
+</div>
 
-  <footer>
-    &copy; 2025 EngliForce – Make English your superpower!
-  </footer>
+<footer>
+    &copy; 2026 EngliForce: Make English Your Superpower!
+</footer>
 
-  <script>
+<script>
     const vocabData = {
-      "address": { nl: "Waar je woont (straat + huisnummer).", en: "Where you live (street + house number)." },
-      "age": { nl: "Hoe oud je bent.", en: "How old you are." },
-      "birthday": { nl: "De dag waarop je geboren bent.", en: "The day you were born." },
-      "city": { nl: "Een grote plaats waar mensen wonen.", en: "A large town where people live." },
-      "country": { nl: "Een land, zoals Nederland of België.", en: "A nation, like the Netherlands or Belgium." },
-      "email address": { nl: "Een digitaal adres waar je berichten ontvangt.", en: "An address where you receive digital messages." },
-      "first name": { nl: "Je voornaam, bijvoorbeeld ‘Emma’.", en: "Your given name, like 'Emma'." },
-      "nationality": { nl: "Bij welk land je officieel hoort.", en: "The country you officially belong to." },
-      "phone number": { nl: "Een reeks cijfers waarmee iemand je kan bellen.", en: "A series of numbers to call you." },
-      "postcode": { nl: "Code bij je adres (bijv. 1234 AB).", en: "Code for your address (e.g., 1234 AB)." },
-      "surname / family name": { nl: "Je achternaam, zoals ‘Jansen’.", en: "Your last name, like 'Smith'." },
-      "athletic": { nl: "Een sportief gebouwd persoon.", en: "A person with a sporty body." },
-      "braces": { nl: "Een beugel die je tanden rechtzet.", en: "A device to straighten your teeth." },
-      "build": { nl: "Hoe je lichaam is gebouwd.", en: "How your body is shaped." },
-      "contact lenses": { nl: "Doorzichtige lenzen die je in je ogen draagt.", en: "Clear lenses you wear in your eyes." },
-      "freckles": { nl: "Kleine vlekjes op je huid, vaak op je gezicht.", en: "Small spots on your skin, often on your face." },
-      "glasses": { nl: "Wat je draagt om beter te kunnen zien.", en: "What you wear to see better." },
-      "height": { nl: "Hoe lang je bent.", en: "How tall you are." },
-      "slim": { nl: "Slank, niet dik.", en: "Thin, not fat." },
-      "looks": { nl: "Je uiterlijk, hoe je eruitziet.", en: "Your appearance, how you look." },
-      "handsome": { nl: "Knappe man of jongen.", en: "Good-looking man or boy." },
-      "ordinary": { nl: "Niet speciaal, heel gewoon.", en: "Not special, very normal." },
-      "pretty": { nl: "Mooi meisje of vrouw.", en: "Beautiful girl or woman." }
+        "first name": { nl: "je eigen voornaam.", en: "your given personal name." },
+        "surname": { nl: "je achternaam of familienaam.", en: "your family name." },
+        "age": { nl: "hoe oud je bent in jaren.", en: "how old you are in years." },
+        "date of birth": { nl: "de dag waarop je geboren bent.", en: "the exact day you were born." },
+        "birthday": { nl: "de jaarlijkse dag van je geboorte.", en: "the yearly anniversary of the day you were born." },
+        "address": { nl: "de plek waar je woont.", en: "the location where you live." },
+        "house number": { nl: "het nummer van je huis in de straat.", en: "the specific number of your house." },
+        "street": { nl: "de straatnaam waar je woont.", en: "the road name where your house is located." },
+        "postcode": { nl: "de cijfers en letters van je postcode.", en: "the postal code for your area." },
+        "town": { nl: "de plaats of stad waar je woont.", en: "the city or town where you live." },
+        "country": { nl: "het land waar je woont of vandaan komt.", en: "the nation you live in or come from." },
+        "nationality": { nl: "tot welk land jij hoort qua staatsburgerschap.", en: "the status of belonging to a particular nation." },
+        "telephone number": { nl: "het nummer om je te bellen.", en: "the digits used to call your phone." },
+        "email address": { nl: "je digitale adres voor online berichten.", en: "your electronic mail contact address." },
+        "colour": { nl: "een visuele tint zoals rood of blauw.", en: "a visual hue like red, blue, or green." }
     };
 
-    function getLanguage() {
-      const selected = document.querySelector('input[name="language"]:checked');
-      return selected ? selected.value : 'nl';
-    }
-
     function setupGame() {
-      const wordBank = document.getElementById('wordBank');
-      const sentenceGrid = document.getElementById('sentenceGrid');
-      wordBank.innerHTML = '';
-      sentenceGrid.innerHTML = '';
+        const wordBank = document.getElementById('wordBank');
+        const sentenceGrid = document.getElementById('sentenceGrid');
+        wordBank.innerHTML = '';
+        sentenceGrid.innerHTML = '';
 
-      const allWords = Object.keys(vocabData);
-      const selectedWords = shuffleArray(allWords).slice(0, 12);
-      const sentenceWords = shuffleArray([...selectedWords]).slice(0, 10);
+        const allWords = Object.keys(vocabData);
+        const selectedWords = allWords.sort(() => 0.5 - Math.random()).slice(0, 10);
+                
+        [...selectedWords].sort().forEach(word => {
+            const el = document.createElement('div');
+            el.className = 'draggable-word';
+            el.textContent = word;
+            el.draggable = true;
+            el.addEventListener('dragstart', e => e.dataTransfer.setData("text", word));
+            wordBank.appendChild(el);
+        });
 
-      selectedWords.forEach(word => {
-        const el = document.createElement('div');
-        el.className = 'draggable-word';
-        el.textContent = word;
-        el.draggable = true;
-        el.addEventListener('dragstart', drag);
-        wordBank.appendChild(el);
-      });
+        const lang = document.querySelector('input[name="language"]:checked').value;
+        
+        selectedWords.forEach((word, index) => {
+            let desc = lang === 'en' ? vocabData[word].en :
+                       lang === 'nl' ? vocabData[word].nl :
+                       (Math.random() > 0.5 ? vocabData[word].nl : vocabData[word].en);
 
-      const lang = getLanguage();
-      for (let i = 0; i < sentenceWords.length; i += 2) {
-        const row = document.createElement('div');
-        row.className = 'exercise-row';
-
-        for (let j = i; j < i + 2 && j < sentenceWords.length; j++) {
-          const word = sentenceWords[j];
-          let desc = lang === 'en' ? vocabData[word].en
-                     : lang === 'nl' ? vocabData[word].nl
-                     : Math.random() < 0.5 ? vocabData[word].nl : vocabData[word].en;
-
-          const box = document.createElement('div');
-          box.className = 'sentence-box';
-          box.innerHTML = `
-            <p>${j + 1}. ${desc}</p>
-            <div class="drop-zone" data-word="${word}"></div>
-          `;
-
-          const dropZone = box.querySelector('.drop-zone');
-          dropZone.addEventListener('dragover', allowDrop);
-          dropZone.addEventListener('drop', drop);
-
-          row.appendChild(box);
-        }
-
-        sentenceGrid.appendChild(row);
-      }
+            const box = document.createElement('div');
+            box.className = 'sentence-box';
+            box.innerHTML = `
+                <p><strong>mission ${index + 1}:</strong> ${desc}</p>
+                <div class="drop-zone" data-word="${word}"></div>
+            `;
+            
+            const zone = box.querySelector('.drop-zone');
+            zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+            zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                const droppedWord = e.dataTransfer.getData("text");
+                zone.innerHTML = `<div class="draggable-word" draggable="true">${droppedWord}</div>`;
+                zone.querySelector('.draggable-word').addEventListener('dragstart', ev => ev.dataTransfer.setData("text", droppedWord));
+            });
+            
+            sentenceGrid.appendChild(box);
+        });
     }
 
-    function shuffleArray(array) {
-      return array.sort(() => Math.random() - 0.5);
+    function checkAnswers(e) {
+        let allCorrect = true;
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            const correctWord = zone.getAttribute('data-word');
+            const userWord = zone.textContent.trim();
+            zone.classList.remove('correct', 'wrong');
+
+            if (userWord === correctWord) {
+                zone.classList.add('correct');
+            } else if (userWord !== "") {
+                zone.classList.add('wrong');
+                allCorrect = false;
+            } else {
+                allCorrect = false;
+            }
+        });
+        
+        createExplosion(e, allCorrect ? 'mission complete!' : 'check again!');
     }
 
-    function allowDrop(e) {
-      e.preventDefault();
+    function createExplosion(e, message) {
+        const txt = document.createElement('div');
+        txt.className = 'boom-text';
+        txt.innerText = message;
+        txt.style.left = (e.clientX - 50) + 'px';
+        txt.style.top = (e.clientY - 50) + 'px';
+        document.body.appendChild(txt);
+        setTimeout(() => txt.remove(), 600);
     }
 
-    function drag(e) {
-      e.dataTransfer.setData("text/plain", e.target.textContent);
-    }
+    window.onload = setupGame;
+</script>
 
-    function drop(e) {
-      e.preventDefault();
-      const word = e.dataTransfer.getData("text/plain");
-      e.target.innerHTML = '';
-
-      const el = document.createElement('span');
-      el.textContent = word;
-      el.className = 'draggable-word';
-      el.draggable = true;
-      el.addEventListener('dragstart', drag);
-      e.target.appendChild(el);
-    }
-
-    function checkAnswers() {
-      document.querySelectorAll('.drop-zone').forEach(zone => {
-        const expected = zone.getAttribute('data-word');
-        const given = zone.textContent.trim();
-        zone.classList.remove('correct', 'wrong');
-        zone.classList.add(given === expected ? 'correct' : 'wrong');
-      });
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      setupGame();
-      document.querySelectorAll('input[name="language"]').forEach(input =>
-        input.addEventListener('change', setupGame)
-      );
-    });
-  </script>
 </body>
 </html>
-
-
-

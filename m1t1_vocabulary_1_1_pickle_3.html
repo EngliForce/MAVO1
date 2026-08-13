@@ -1,345 +1,357 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulary Detective – Vocab 1.1: Me, myself and I</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Pickle: Personal Data Detective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #6a1b9a;
+            --hero-purple-dark: #4a148c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #b39ddb;
+            --dark-bg: #0b101a;
+            --hero-orange: #ff5722;
+        }
 
-    #topbar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 220px;
-      background-color: #ff7043;
-      z-index: -1;
-    }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05051a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .logo-container {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #ff7043;
-      padding: 2rem 0 2rem 0;
-    }
+        header {
+            width: 100%;
+            background: var(--hero-orange);
+            padding: 2rem 0;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            margin-bottom: 20px;
+        }
 
-    img.logo {
-      max-width: 120px;
-      margin-bottom: 0.5rem;
-    }
+        h1 { 
+            font-family: 'Bangers', cursive; 
+            font-size: 3rem; 
+            margin: 0; 
+            text-shadow: 3px 3px 0px #bf360c; 
+            color: white; 
+        }
 
-    h1 {
-      color: white;
-      margin: 0;
-    }
+        .container { 
+            max-width: 700px; 
+            width: 90%; 
+            margin: 20px auto; 
+        }
 
-    .description {
-      text-align: center;
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin: 2rem 0;
-    }
+        .section {
+            background: rgba(26, 16, 42, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--hero-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
 
-    .section {
-      max-width: 600px;
-      width: 100%;
-      margin-bottom: 2rem;
-    }
+        .instructions { 
+            font-size: 0.9rem; 
+            color: var(--hero-cyan); 
+            line-height: 1.5; 
+            margin-bottom: 20px; 
+            text-align: left; 
+        }
 
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
+        label { 
+            display: block; 
+            margin-top: 1rem; 
+            font-family: 'Bangers'; 
+            color: var(--hero-yellow); 
+            font-size: 1.2rem; 
+        }
 
-    input, select, button {
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 100%;
-      font-size: 1rem;
-    }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 2px solid var(--hero-purple-main);
+            background: #0b101a;
+            color: white;
+            box-sizing: border-box;
+            font-family: 'Lexend', sans-serif;
+        }
 
-    button {
-      background-color: #ff7043;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+        .btn {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Bangers';
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-bottom: 5px solid #bf360c;
+            transition: 0.2s;
+            margin: 10px 5px 0 0;
+            width: 100%;
+        }
 
-    .word-card {
-      border: 2px solid #ff7043;
-      background-color: white;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-top: 1.5rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+        .btn:hover { 
+            transform: translateY(-3px); 
+            filter: brightness(1.1); 
+        }
 
-    .word-to-guess {
-      font-size: 1.4rem;
-      color: #ff7043;
-      font-weight: bold;
-      text-align: center;
-      display: none;
-      margin-top: 1rem;
-    }
+        .btn-purple { 
+            background: var(--hero-purple-main); 
+            border-bottom-color: var(--hero-purple-dark); 
+        }
 
-    .hint {
-      margin-top: 1rem;
-      font-style: italic;
-      color: #444;
-      text-align: center;
-    }
+        .turn { 
+            font-family: 'Bangers'; 
+            font-size: 2.2rem; 
+            color: var(--hero-yellow); 
+            text-align: center; 
+            margin-bottom: 10px; 
+        }
 
-    .scoreboard {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 1rem;
-      font-size: 1.2rem;
-      width: 100%;
-    }
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--hero-purple-main);
+        }
 
-    .score {
-      font-weight: bold;
-      color: #333;
-    }
+        .word-card {
+            background: #1a102a;
+            border: 3px solid var(--hero-purple-main);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
 
-    .turn {
-      font-weight: bold;
-      color: #2e7d32;
-      margin-bottom: 1rem;
-      font-size: 2rem;
-      text-align: center;
-    }
+        .hint-text {
+            font-size: 1.2rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
 
-    footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      width: 100%;
-      margin-top: 3rem;
-    }
-  </style>
+        .answer-reveal {
+            font-family: 'Bangers';
+            font-size: 2rem;
+            color: var(--hero-yellow);
+            display: none;
+            margin: 15px 0;
+            padding: 10px;
+            border: 2px dashed var(--hero-yellow);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            width: 100%;
+        }
+
+        .flex-buttons { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+        }
+    </style>
 </head>
 <body>
-  <div id="topbar"></div>
-  <div class="logo-container">
-    <img src="Logo.png" alt="Logo" class="logo" />
-    <h1>Vocabulary Detective – Vocab 1.1: Me, myself and I</h1>
-  </div>
 
-  <!-- Taalkeuze -->
-  <div style="margin-bottom: 1rem;">
-    <label for="languageSwitch">Taal / Language:</label>
-    <select id="languageSwitch" onchange="switchLanguage()">
-      <option value="nl">Nederlands</option>
-      <option value="en">English</option>
-    </select>
-  </div>
+<header>
+    <h1>PICKLE 3: PERSONAL DATA DETECTIVE</h1>
+</header>
 
-  <!-- Uitleg -->
-  <p class="description" id="instructions">
-    📋 <strong>Doel:</strong> Raad het <strong>Engelse woord</strong> met behulp van hints. <br /><br />
-    <strong>Start:</strong> – Begin het spel.<br />
-    <strong>Volgende hint:</strong> – Nieuwe hint (max. 3)<br />
-    <strong>Antwoord:</strong> – Laat het Engelse woord zien.<br />
-    <strong>Correct:</strong> – Speler krijgt punten.<br />
-    <strong>Fout:</strong> – Geen punten, volgende woord.<br /><br />
-    Minder hints = meer punten.<br />
-    Engelse hints = bonuspunt!
-  </p>
-
-  <!-- Spelinstellingen -->
-  <div class="section" id="setup">
-    <label for="playerCount">Aantal spelers:</label>
-    <select id="playerCount">
-      <option value="2">2 spelers</option>
-      <option value="1">1 speler</option>
-    </select>
-
-    <label for="player1">Speler 1:</label>
-    <input type="text" id="player1" placeholder="bijv. Sam" />
-
-    <div id="player2Section">
-      <label for="player2">Speler 2:</label>
-      <input type="text" id="player2" placeholder="bijv. Alex" />
+<div class="container">
+    <div class="section" id="setup">
+        <div class="instructions">
+            🔎 <strong>Mission:</strong> Guess the personal data word using as few hints as possible.<br>
+            🌟 <strong>Bonus:</strong> Use <strong>English</strong> hints for +1 extra point!
+        </div>
+        
+        <label>Number of Agents:</label>
+        <select id="playerCount" onchange="togglePlayer2()">
+            <option value="1">1 Agent</option>
+            <option value="2" selected>2 Agents</option>
+        </select>
+        
+        <label>Agent 1:</label>
+        <input type="text" id="player1" placeholder="Name of Agent 1" />
+        
+        <div id="player2Section">
+            <label>Agent 2:</label>
+            <input type="text" id="player2" placeholder="Name of Agent 2" />
+        </div>
+        
+        <button class="btn" style="margin-top: 30px;" onclick="startGame()">Start Mission 🚀</button>
     </div>
 
-    <button onclick="startGame()">Start</button>
-  </div>
-
-  <!-- Spel -->
-  <div class="section" id="game" style="display: none;">
-    <div class="turn" id="turnIndicator">Speler: ...</div>
-
-    <div class="scoreboard">
-      <div><span id="name1"></span>: <span id="score1" class="score">0</span> punten</div>
-      <div id="player2Score"><span id="name2"></span>: <span id="score2" class="score">0</span> punten</div>
+    <div id="game" style="display: none;">
+        <div class="turn" id="turnIndicator">Turn: ...</div>
+        
+        <div class="scoreboard">
+            <div><span id="name1"></span>: <span id="score1" style="color:var(--hero-yellow)">0</span></div>
+            <div id="p2ScoreDisplay"><span id="name2"></span>: <span id="score2" style="color:var(--hero-yellow)">0</span></div>
+        </div>
+        
+        <div class="word-card">
+            <div class="answer-reveal" id="word-reveal">Answer: ...</div>
+            
+            <label>Hint Language:</label>
+            <select id="hintLanguage" onchange="resetClue()">
+                <option value="nl">Dutch</option>
+                <option value="en">English (Bonus +1)</option>
+            </select>
+            
+            <div class="hint-text" id="hintBox">Click 'Next Hint' to start</div>
+            
+            <div class="flex-buttons">
+                <button class="btn btn-purple" onclick="nextHint()">Next Hint 💡</button>
+                <button class="btn btn-purple" onclick="showWord()">Show Answer 👁️</button>
+                <button class="btn" style="background:#4caf50; border-color:#2e7d32;" onclick="correctGuess()">Correct ✅</button>
+                <button class="btn" style="background:var(--hero-orange); border-color:#bf360c;" onclick="wrongGuess()">Wrong ❌</button>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="word-card" id="word-card">
-      <div class="word-to-guess" id="word-to-guess">Antwoord: —</div>
+<footer>
+    &copy; 2026 EngliForce: Make English Your Superpower!
+</footer>
 
-      <label for="hintLanguage">Hinttaal:</label>
-      <select id="hintLanguage" onchange="resetClue()">
-        <option value="nl">Nederlands</option>
-        <option value="en">English</option>
-      </select>
-
-      <p class="hint" id="hint">Klik op ‘Volgende hint’ om te beginnen.</p>
-      <button onclick="nextHint()">Volgende hint</button>
-      <button onclick="showWord()">Antwoord</button>
-      <button onclick="correctGuess()">Correct</button>
-      <button onclick="wrongGuess()">Fout</button>
-    </div>
-  </div>
-
-  <footer>
-    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-  </footer>
-
-  <script>
-    const words = [
-      { en: "address", nl: "adres", hints: { nl: ["Waar je woont.", "Straat + huisnummer.", "Adres."], en: ["Where you live.", "Street + number.", "Address."] }},
-      { en: "age", nl: "leeftijd", hints: { nl: ["Hoe oud je bent.", "Aantal jaren.", "Leeftijd."], en: ["How old you are.", "Number of years.", "Age."] }},
-      { en: "birthday", nl: "verjaardag", hints: { nl: ["Feestdag van je geboorte.", "Taart en cadeaus.", "Verjaardag."], en: ["Your birth celebration.", "Cake and gifts.", "Birthday."] }},
-      { en: "city", nl: "stad", hints: { nl: ["Grote plaats.", "Amsterdam of Rotterdam.", "Stad."], en: ["Big place.", "Amsterdam or London.", "City."] }},
-      { en: "country", nl: "land", hints: { nl: ["Bijv. Nederland.", "Op de kaart.", "Land."], en: ["Like the Netherlands.", "On the map.", "Country."] }},
-      { en: "email address", nl: "e-mailadres", hints: { nl: ["Voor e-mail.", "Bevat een @.", "E-mailadres."], en: ["Used for email.", "Has an @ sign.", "Email address."] }},
-      { en: "first name", nl: "voornaam", hints: { nl: ["Bijv. Emma of Daan.", "Niet je achternaam.", "Voornaam."], en: ["Like Emma or John.", "Not your last name.", "First name."] }},
-      { en: "nationality", nl: "nationaliteit", hints: { nl: ["Bijv. Nederlands.", "Welk land je komt.", "Nationaliteit."], en: ["Dutch, French, etc.", "Where you're from.", "Nationality."] }},
-      { en: "phone number", nl: "telefoonnummer", hints: { nl: ["Gebruik je om te bellen.", "Begint met +31.", "Telefoonnummer."], en: ["Used to call.", "Starts with a code.", "Phone number."] }},
-      { en: "postcode", nl: "postcode", hints: { nl: ["Voor post.", "Cijfers en letters.", "Postcode."], en: ["Used for mail.", "Numbers and letters.", "Postcode."] }},
-      { en: "surname / family name", nl: "achternaam", hints: { nl: ["Bijv. Jansen of De Vries.", "Niet je voornaam.", "Achternaam."], en: ["Like Smith or Garcia.", "Not your first name.", "Surname."] }},
-      { en: "athletic", nl: "sportief gebouwd", hints: { nl: ["Lijkt op een sporter.", "Sterk lichaam.", "Sportief gebouwd."], en: ["Like an athlete.", "Strong body.", "Athletic."] }},
-      { en: "braces", nl: "beugel", hints: { nl: ["Voor rechte tanden.", "Zit in je mond.", "Beugel."], en: ["Straightens teeth.", "In your mouth.", "Braces."] }},
-      { en: "build", nl: "postuur", hints: { nl: ["Je lichaamsvorm.", "Slank of stevig.", "Postuur."], en: ["Body shape.", "Slim or broad.", "Build."] }},
-      { en: "contact lenses", nl: "contactlenzen", hints: { nl: ["In plaats van bril.", "In je ogen.", "Contactlenzen."], en: ["Instead of glasses.", "In your eyes.", "Contact lenses."] }},
-      { en: "freckles", nl: "sproeten", hints: { nl: ["Kleine bruine stipjes.", "Op je gezicht.", "Sproeten."], en: ["Small brown dots.", "On your face.", "Freckles."] }},
-      { en: "glasses", nl: "bril", hints: { nl: ["Voor je ogen.", "Helpt met kijken.", "Bril."], en: ["Helps you see.", "Worn on your nose.", "Glasses."] }},
-      { en: "height", nl: "lengte", hints: { nl: ["Hoe lang je bent.", "In centimeters.", "Lengte."], en: ["How tall you are.", "In centimeters.", "Height."] }},
-      { en: "slim", nl: "slank", hints: { nl: ["Niet dik.", "Dun postuur.", "Slank."], en: ["Not fat.", "Thin build.", "Slim."] }},
-      { en: "looks", nl: "uiterlijk", hints: { nl: ["Hoe je eruitziet.", "Je gezicht.", "Uiterlijk."], en: ["How you look.", "Your appearance.", "Looks."] }},
-      { en: "handsome", nl: "knap", hints: { nl: ["Mooi voor jongens.", "Aantrekkelijk gezicht.", "Knap."], en: ["Nice looking (for boys).", "Attractive face.", "Handsome."] }},
-      { en: "ordinary", nl: "gewoon", hints: { nl: ["Niet bijzonder.", "Normaal.", "Gewoon."], en: ["Not special.", "Normal looking.", "Ordinary."] }},
-      { en: "pretty", nl: "mooi", hints: { nl: ["Mooi voor meisjes.", "Aantrekkelijk uiterlijk.", "Mooi."], en: ["Nice looking (for girls).", "Attractive.", "Pretty."] }}
+<script>
+    const wordList = [
+        { en: "first name", hints: { nl: ["Dit is je eigen roepnaam.", "Niet je achternaam.", "Het begint met de letter F."], en: ["Your given name.", "Not your surname.", "It starts with the letter F."] }},
+        { en: "surname", hints: { nl: ["De naam van je familie.", "Je achternaam.", "De naam die je deelt met je ouders."], en: ["Your family name.", "Also known as your last name.", "Shared with your family members."] }},
+        { en: "age", hints: { nl: ["Hoe oud je bent.", "Wordt uitgedrukt in jaren.", "Vraag je vaak op je verjaardag."], en: ["How old you are.", "Measured in years.", "It goes up every year."] }},
+        { en: "date of birth", hints: { nl: ["De dag waarop je geboren bent.", "Bevat een dag, maand en jaar.", "Niet te verwarren met je leeftijd."], en: ["The exact day you were born.", "Includes day, month, and year.", "Your special calendar day from the past."] }},
+        { en: "address", hints: { nl: ["Waar je woont.", "Bestaat uit een straat en huisnummer.", "Waar de postbode je brieven brengt."], en: ["Where you live.", "Includes your street and house number.", "Where mail gets delivered to you."] }},
+        { en: "postcode", hints: { nl: ["Cijfers en letters van je woonplaats.", "Handig voor de navigatie.", "Zes tekens in Nederland (bijv. 1234 AB)."], en: ["Numbers and letters for your area.", "Helps mail find your neighborhood.", "Six characters in the Netherlands."] }},
+        { en: "nationality", hints: { nl: ["Uit welk land je komt of welke paspoort je hebt.", "Bijvoorbeeld Nederlands of Brits.", "Je staatsburgerschap."], en: ["Which country you belong to.", "Shown on your passport.", "For example: Dutch or Canadian."] }},
+        { en: "telephone number", hints: { nl: ["Hiermee kun je iemand bellen.", "Bestaat uit een reeks cijfers.", "Staat op je mobiel opgeslagen."], en: ["Used to call someone.", "Made up of a sequence of digits.", "Saved in your mobile phone."] }},
+        { en: "email address", hints: { nl: ["Hiermee stuur je digitale berichten.", "Bevat vaak een @-teken.", "Bijvoorbeeld naam@provider.nl."], en: ["Used to send digital messages.", "Always contains an @ symbol.", "Your online mail destination."] }},
+        { en: "town", hints: { nl: ["Een woonplaats of kleine stad.", "Groter dan een dorp, kleiner dan een metropool.", "Waar je woont binnen een land."], en: ["A settlement smaller than a city.", "Where you reside locally.", "A populated urban area."] }}
     ];
 
-    let currentLang = 'nl';
+    let words = [];
     let p1 = '', p2 = '', playerCount = 2;
     let score = [0, 0];
     let currentIndex = 0;
     let currentHint = 0;
     let currentPlayer = 0;
 
-    function startGame() {
-      playerCount = parseInt(document.getElementById("playerCount").value);
-      p1 = document.getElementById("player1").value || "Speler 1";
-      p2 = playerCount === 2 ? (document.getElementById("player2").value || "Speler 2") : "—";
-
-      shuffle(words);
-      score = [0, 0];
-      currentIndex = 0;
-      currentHint = 0;
-      currentPlayer = 0;
-
-      document.getElementById("name1").textContent = p1;
-      document.getElementById("name2").textContent = p2;
-      document.getElementById("setup").style.display = "none";
-      document.getElementById("game").style.display = "block";
-
-      updateScore();
-      showTurn();
-      resetWordCard();
+    function togglePlayer2() {
+        const val = document.getElementById("playerCount").value;
+        document.getElementById("player2Section").style.display = (val === "1") ? "none" : "block";
     }
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+    function startGame() {
+        playerCount = parseInt(document.getElementById("playerCount").value);
+        p1 = document.getElementById("player1").value || "Agent 1";
+        p2 = document.getElementById("player2").value || "Agent 2";
+
+        // Kopieer de lijst en schud hem volledig willekeurig door elkaar
+        words = [...wordList].sort(() => Math.random() - 0.5);
+
+        score = [0, 0];
+        currentIndex = 0;
+        currentPlayer = 0;
+
+        document.getElementById("name1").textContent = p1;
+        document.getElementById("name2").textContent = (playerCount === 2) ? p2 : "";
+        document.getElementById("p2ScoreDisplay").style.visibility = (playerCount === 2) ? "visible" : "hidden";
+
+        document.getElementById("setup").style.display = "none";
+        document.getElementById("game").style.display = "block";
+        updateScore();
+        showTurn();
+        resetWordCard();
     }
 
     function showTurn() {
-      const name = currentPlayer === 0 ? p1 : p2;
-      const text = playerCount === 1 ? `Speler: ${p1}` : `Beurt: ${name}`;
-      document.getElementById("turnIndicator").textContent = text;
+        const name = currentPlayer === 0 ? p1 : p2;
+        document.getElementById("turnIndicator").textContent = (playerCount === 1) ? `Agent: ${p1}` : `Turn: ${name}`;
     }
 
     function resetWordCard() {
-      document.getElementById("hint").textContent = "Klik op ‘Volgende hint’ om te beginnen.";
-      document.getElementById("word-to-guess").style.display = "none";
+        currentHint = 0;
+        document.getElementById("hintBox").textContent = "Click 'Next Hint' to start";
+        document.getElementById("word-reveal").style.display = "none";
     }
 
     function nextHint() {
-      if (currentHint >= 3) return;
-      const lang = document.getElementById("hintLanguage").value;
-      const hint = words[currentIndex].hints[lang][currentHint];
-      document.getElementById("hint").textContent = `Hint ${currentHint + 1}: ${hint}`;
-      currentHint++;
+        if (currentHint >= 3) return;
+        const lang = document.getElementById("hintLanguage").value;
+        const hint = words[currentIndex].hints[lang][currentHint];
+        document.getElementById("hintBox").textContent = `Hint ${currentHint + 1}: ${hint}`;
+        currentHint++;
     }
 
     function showWord() {
-      const answer = words[currentIndex].en;
-      document.getElementById("word-to-guess").textContent = `Antwoord (Engels): ${answer}`;
-      document.getElementById("word-to-guess").style.display = "block";
+        document.getElementById("word-reveal").textContent = `Answer: ${words[currentIndex].en}`;
+        document.getElementById("word-reveal").style.display = "block";
     }
 
     function correctGuess() {
-      const lang = document.getElementById("hintLanguage").value;
-      let points = 3 - (currentHint - 1);
-      if (lang === "en") points += 1;
-      score[currentPlayer] += points;
-      nextWord();
+        const lang = document.getElementById("hintLanguage").value;
+        let points = Math.max(1, 4 - currentHint);
+        if (lang === "en") points += 1;
+        score[currentPlayer] += points;
+        nextWord();
     }
 
     function wrongGuess() {
-      nextWord();
+        nextWord();
     }
 
     function nextWord() {
-      currentIndex++;
-      currentHint = 0;
-      if (playerCount === 2) currentPlayer = 1 - currentPlayer;
-      updateScore();
-      if (currentIndex >= words.length) {
-        document.getElementById("hint").textContent = "🎉 Einde van het spel!";
-        document.getElementById("word-to-guess").style.display = "none";
-      } else {
-        showTurn();
-        resetWordCard();
-      }
+        currentIndex++;
+        if (playerCount === 2) currentPlayer = 1 - currentPlayer;
+        updateScore();
+        if (currentIndex >= words.length) {
+            document.getElementById("turnIndicator").textContent = "Mission Accomplished!";
+            document.getElementById("hintBox").textContent = "All words discovered!";
+            document.getElementById("word-reveal").style.display = "none";
+        } else {
+            showTurn();
+            resetWordCard();
+        }
     }
 
     function updateScore() {
-      document.getElementById("score1").textContent = score[0];
-      document.getElementById("score2").textContent = score[1];
+        document.getElementById("score1").textContent = score[0] + " pt";
+        document.getElementById("score2").textContent = score[1] + " pt";
     }
 
     function resetClue() {
-      currentHint = 0;
-      resetWordCard();
+        if (currentHint > 0) {
+            const lang = document.getElementById("hintLanguage").value;
+            const hint = words[currentIndex].hints[lang][currentHint - 1];
+            document.getElementById("hintBox").textContent = `Hint ${currentHint}: ${hint}`;
+        }
     }
+</script>
 
-    function switchLanguage() {
-      currentLang = document.getElementById('languageSwitch').value;
-      document.getElementById("hintLanguage").value = currentLang;
-    }
-  </script>
 </body>
 </html>
-
