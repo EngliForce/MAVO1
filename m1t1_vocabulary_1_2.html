@@ -1,295 +1,310 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulary 1.2: Me and my family</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
-      margin: 0;
-      padding: 0;
-    }
-  footer {
-      background-color: #ffe6dc;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Family Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hero-purple-main: #ff5722;
+            --hero-purple-dark: #bf360c;
+            --hero-yellow: #ffb703;
+            --hero-cyan: #b39ddb;
+            --dark-bg: #0b101a;
+            --hero-orange: #ff5722;
+            --thumb-up: #4caf50;
+            --success-green: #2ecc71;
+        }
 
-    header {
-      background-color: #ff7043;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #1a102a 0%, #05051a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    main {
-      padding: 2rem;
-      text-align: center;
-    }
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
 
-    section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+        h1 { font-family: 'Bangers', cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        h2 { font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: 'Bangers'; font-size: 1.8rem; margin-top: 0;}
 
-    h2 {
-      color: #ff7043;
-    }
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; text-align: center; }
 
-    .table-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 1rem;
-    }
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 50px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
 
-    .table-column {
-      flex: 1 1 300px;
-      max-width: 400px;
-    }
+        .briefing-box {
+            background: rgba(26, 16, 42, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            text-align: left;
+        }
 
-    table {
-      border-collapse: collapse;
-      font-size: 1rem;
-      width: 100%;
-    }
+        .explanation-text {
+            font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
+            border-left: 4px solid var(--hero-orange); padding-left: 20px;
+            background: rgba(255, 87, 34, 0.05); padding-top: 10px; padding-bottom: 10px;
+        }
 
-    th {
-      font-weight: bold;
-      background-color: #fff1e6;
-    }
+        .keyword { color: var(--hero-orange); font-weight: 700; }
 
-    td {
-      font-weight: normal;
-    }
+        .toggle-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle {
+            background: var(--hero-purple-main); color: white; border: none;
+            padding: 10px 20px; border-radius: 50px; font-family: 'Bangers', cursive;
+            font-size: 1.1rem; cursor: pointer; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark);
+        }
+        .btn-toggle:hover { transform: translateY(-2px); background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        .btn-video { background: var(--hero-orange); border-bottom-color: #bf360c; }
 
-    table, th, td {
-      border: 1px solid #ddd;
-    }
+        .table-container { width: 100%; border-radius: 15px; background: #1a102a; overflow: hidden; margin-top: 20px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--hero-purple-main); padding: 15px; text-align: left; font-family: 'Bangers'; }
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
 
-    th, td {
-      padding: 0.5rem 1rem;
-      text-align: left;
-    }
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .links {
-      margin-top: 1rem;
-    }
+        .controls { background: rgba(26, 16, 42, 0.8); padding: 20px; border-radius: 15px; border: 1px solid var(--hero-cyan); display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; margin-bottom: 30px; }
+        .controls label { font-family: 'Bangers'; font-size: 1.1rem; color: var(--hero-cyan); display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        
+        .flashcards-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 20px; min-height: 300px; }
+        .card { width: 280px; height: 260px; perspective: 1000px; position: relative; transition: transform 0.4s, opacity 0.4s; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; border: 4px solid var(--hero-cyan); }
+        .card-front { background: var(--hero-purple-dark); color: white; font-size: 1.8rem; font-family: 'Bangers'; }
+        .card-back { background: var(--hero-yellow); color: var(--dark-bg); transform: rotateY(180deg); font-size: 1.6rem; font-family: 'Bangers'; }
 
-    .links a, .links button {
-      padding: 0.5rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-      border: none;
-      cursor: pointer;
-    }
+        .known-btn {
+            margin-top: 15px; background: rgba(0,0,0,0.1); color: var(--dark-bg);
+            border: 2px solid var(--dark-bg); padding: 8px 15px; border-radius: 10px;
+            font-family: 'Lexend', sans-serif; font-weight: bold; cursor: pointer;
+        }
+        .card.is-known .card-front { border-color: var(--success-green); box-shadow: 0 0 15px rgba(46, 204, 113, 0.6); }
 
-    .links a:hover, .links button:hover {
-      background-color: #e65c30;
-    }
-
-    #context-sentences {
-      display: none;
-      text-align: center;
-      margin-top: 2rem;
-    }
-
-    .oefen-link {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background-color: #ff7043;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: background-color 0.3s;
-    }
-
-    .oefen-link:hover {
-      background-color: #e65c30;
-    }
-
-    .pickle-list {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .pickle-list li {
-      margin-bottom: 1rem;
-    }
-
-    .pickle-image-tall {
-      height: 260px;
-      width: auto;
-      margin-top: 0.25rem;
-    }
-  </style>
+        .pickle-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 20px; }
+        .mission-card { background: #1a102a; border: 3px solid #3b2453; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; width: 220px; }
+        .mission-card:hover { border-color: var(--hero-yellow); transform: translateY(-5px); }
+        .like-btn { background: rgba(255, 255, 255, 0.05); border: 2px solid var(--hero-cyan); border-radius: 10px; color: white; padding: 8px; margin-top: 15px; cursor: pointer; }
+        
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text { position: fixed; pointer-events: none; font-family: 'Bangers', cursive; color: var(--hero-yellow); font-size: 4rem; z-index: 2001; text-shadow: 3px 3px 0px #000; }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+        
+        footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.5); }
+    </style>
 </head>
 <body>
+    <div class="flash-effect" id="flash"></div>
+    <header>
+        <h1>ENGLIFORCE ACADEMY</h1>
+        <p>Family Data</p>
+    </header>
 
-<header>
-  <img src="Logo.png" alt="EngliForce Logo" style="display: block; margin: 0 auto 1rem auto; width: 120px; height: auto;">
-  <h1>Vocabulary 1.2: Me and my family</h1>
-</header>
+    <main>
+        <section class="briefing-box">
+            <h2>🚨 MISSION: FAMILY VOCABULARY</h2>
+            <div class="explanation-text">
+                Leer alle benamingen voor familieleden. Gebruik de <strong>video</strong> voor uitspraak en de <strong>flashcards</strong> om te oefenen.
+            </div>
+        </section>
 
-<main>
+        <div class="section-divider"></div>
 
-<section>
-  <div class="table-row">
-    <div class="table-column">
-      <table>
-        <tr><th>Engels</th><th>Nederlands</th></tr>
-        <tr><td>aunt</td><td>tante</td></tr>
-        <tr><td>baby</td><td>baby</td></tr>
-        <tr><td>brother</td><td>broer</td></tr>
-        <tr><td>child</td><td>kind</td></tr>
-        <tr><td>cousin</td><td>neef / nicht</td></tr>
-        <tr><td>dad</td><td>papa</td></tr>
-        <tr><td>daughter</td><td>dochter</td></tr>
-        <tr><td>family</td><td>familie</td></tr>
-        <tr><td>father</td><td>vader</td></tr>
-        <tr><td>mother</td><td>moeder</td></tr>
-        <tr><td>parents</td><td>ouders</td></tr>
-        <tr><td>sister</td><td>zus</td></tr>
-        <tr><td>son</td><td>zoon</td></tr>
-        <tr><td>uncle</td><td>oom</td></tr>
-      </table>
-    </div>
+        <div class="toggle-container">
+            <button class="btn-toggle" onclick="showSection(event, 'vocab-list', 'ZAP!')">Lijst</button>
+            <button class="btn-toggle" onclick="showSection(event, 'context-list', 'KA-POW!')">Context</button>
+            <button class="btn-toggle" onclick="showSection(event, 'flashcards-section', 'BOOST!')">Flashcards</button>
+            <button class="btn-toggle btn-video" onclick="showSection(event, 'video-section', 'BOOM!')">Video</button>
+        </div>
 
-    <div class="table-column">
-      <table>
-        <tr><th>Engels</th><th>Nederlands</th></tr>
-        <tr><td>wife</td><td>vrouw</td></tr>
-        <tr><td>foster family</td><td>pleeggezin</td></tr>
-        <tr><td>god…</td><td>peet…</td></tr>
-        <tr><td>grand…</td><td>groot…</td></tr>
-        <tr><td>guardian</td><td>voogd</td></tr>
-        <tr><td>half-…</td><td>half…</td></tr>
-        <tr><td>mum</td><td>mama</td></tr>
-        <tr><td>nephew</td><td>neef (zoon van broer/zus)</td></tr>
-        <tr><td>niece</td><td>nicht (dochter van broer/zus)</td></tr>
-        <tr><td>only child</td><td>enig kind</td></tr>
-        <tr><td>relatives</td><td>familieleden</td></tr>
-        <tr><td>siblings</td><td>broers en zussen</td></tr>
-        <tr><td>step…</td><td>stief…</td></tr>
-        <tr><td>twins</td><td>tweeling</td></tr>
-      </table>
-    </div>
-  </div>
+        <div id="vocab-list" class="content-section" style="display: block;">
+            <h3>Tactisch Overzicht</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Engels</th><th>Nederlands</th></tr></thead>
+                    <tbody id="vocab-table-body"></tbody>
+                </table>
+            </div>
+        </div>
 
-  <div class="links">
-    <button onclick="toggleContextSentences()">Toon woorden in context</button>
-  </div>
+        <div id="context-list" class="content-section">
+            <h3>Action Lab (Zinnen)</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Woord</th><th>Zin</th></tr></thead>
+                    <tbody id="context-table-body"></tbody>
+                </table>
+            </div>
+        </div>
 
-  <div id="context-sentences">
-    <h3>📘 Woorden in context</h3>
-    <div style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr><th>Woord</th><th>Engelse zin</th><th>Nederlandse vertaling</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>aunt</td><td>My aunt is visiting us today.</td><td>Mijn tante komt vandaag op bezoek.</td></tr>
-          <tr><td>baby</td><td>The baby is sleeping in the crib.</td><td>De baby slaapt in het wiegje.</td></tr>
-          <tr><td>brother</td><td>My brother plays football.</td><td>Mijn broer speelt voetbal.</td></tr>
-          <tr><td>child</td><td>The child is five years old.</td><td>Het kind is vijf jaar oud.</td></tr>
-          <tr><td>cousin</td><td>My cousin lives in Belgium.</td><td>Mijn neef/nicht woont in België.</td></tr>
-          <tr><td>dad</td><td>Dad is cooking dinner.</td><td>Papa kookt het avondeten.</td></tr>
-          <tr><td>daughter</td><td>He has one daughter and two sons.</td><td>Hij heeft één dochter en twee zonen.</td></tr>
-          <tr><td>family</td><td>My family is very big.</td><td>Mijn familie is heel groot.</td></tr>
-          <tr><td>father</td><td>My father is a doctor.</td><td>Mijn vader is arts.</td></tr>
-          <tr><td>mother</td><td>My mother loves gardening.</td><td>Mijn moeder houdt van tuinieren.</td></tr>
-          <tr><td>parents</td><td>My parents are kind.</td><td>Mijn ouders zijn vriendelijk.</td></tr>
-          <tr><td>sister</td><td>My sister is older than me.</td><td>Mijn zus is ouder dan ik.</td></tr>
-          <tr><td>son</td><td>They have a teenage son.</td><td>Ze hebben een tienerzoon.</td></tr>
-          <tr><td>uncle</td><td>My uncle tells funny stories.</td><td>Mijn oom vertelt grappige verhalen.</td></tr>
-          <tr><td>wife</td><td>His wife is very friendly.</td><td>Zijn vrouw is erg vriendelijk.</td></tr>
-          <tr><td>foster family</td><td>He lives with a foster family.</td><td>Hij woont bij een pleeggezin.</td></tr>
-          <tr><td>god…</td><td>My godmother gave me a present.</td><td>Mijn peettante gaf me een cadeau.</td></tr>
-          <tr><td>grand…</td><td>My grandfather is 80 years old.</td><td>Mijn opa is 80 jaar oud.</td></tr>
-          <tr><td>guardian</td><td>She is his legal guardian.</td><td>Zij is zijn wettelijke voogd.</td></tr>
-          <tr><td>half-…</td><td>He is my half-brother.</td><td>Hij is mijn halfbroer.</td></tr>
-          <tr><td>mum</td><td>Mum is reading a book.</td><td>Mama leest een boek.</td></tr>
-          <tr><td>nephew</td><td>My nephew is very playful.</td><td>Mijn neefje is erg speels.</td></tr>
-          <tr><td>niece</td><td>My niece is coming over today.</td><td>Mijn nichtje komt vandaag langs.</td></tr>
-          <tr><td>only child</td><td>I’m an only child.</td><td>Ik ben enig kind.</td></tr>
-          <tr><td>relatives</td><td>All our relatives came to the party.</td><td>Al onze familieleden kwamen naar het feest.</td></tr>
-          <tr><td>siblings</td><td>She has two siblings.</td><td>Ze heeft twee broers of zussen.</td></tr>
-          <tr><td>step…</td><td>My stepfather is very nice.</td><td>Mijn stiefvader is erg aardig.</td></tr>
-          <tr><td>twins</td><td>The twins are five years old.</td><td>De tweeling is vijf jaar oud.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
+        <div id="flashcards-section" class="content-section">
+            <h3>Flashcard Simulator</h3>
+            <div class="controls">
+                <label>Aantal: 
+                    <select id="card-count" onchange="generateCards()">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15" selected>Alle</option>
+                    </select>
+                </label>
+                <label><input type="checkbox" id="show-examples" onchange="generateCards()"> Voorbeelden</label>
+                <label><input type="checkbox" id="reverse-cards" onchange="generateCards()"> NL → EN</label>
+                <label style="color: var(--success-green);"><input type="checkbox" id="hide-known" onchange="generateCards()"> Verberg gekende woorden</label>
+                <button class="btn-toggle" onclick="resetKnown()" style="padding: 5px 10px; font-size: 0.8rem; background: #444;">Reset</button>
+                <button class="btn-toggle" onclick="generateCards()">Husselen 🔄</button>
+            </div>
+            <div class="flashcards-container" id="flashcards-container"></div>
+        </div>
 
-<section>
-  <h2>🎬 Video</h2>
-  <div class="video-row">
-    <div class="video-column">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/v0vjOpeaa6Q" frameborder="0" allowfullscreen></iframe>
-    </div>
-  </div>
-</section>
+        <div id="video-section" class="content-section">
+            <h3>🎬 Uitspraak Training</h3>
+            <div style="max-width: 800px; margin: auto;">
+                <div style="position: relative; padding-top: 56.25%; border: 4px solid var(--hero-purple-main); border-radius: 20px; overflow: hidden;">
+                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="https://www.youtube.com/embed/XmXeeTTuans?rel=0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
 
-<section>
-  <h2>🃏 Flashcards</h2>
-  <p>Oefen deze woorden met interactieve flashcards.</p>
-  <div class="links">
-    <a href="m1t1_vocabulary_1_2_flashcards" target="_blank">Open Flashcards</a>
-  </div>
-</section>
+        <div class="section-divider"></div>
 
-<section>
-  <h2>📝 Super Pickles</h2>
-  <p>Klaar om je kennis te testen? Kies een oefening hieronder!</p>
-  <div class="exercise-content" style="display: flex; align-items: flex-start; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-    <ul class="pickle-list">
-      <li><a class='oefen-link' href="m1t1_vocabulary_1_2_pickle_1" target="_blank">Pickle 1: Drag & Drop</a></li>
-      <li><a class="oefen-link" href="m1t1_vocabulary_1_2_pickle_2" target="_blank">Pickle 2: Vocabulary Grid</a></li>
-      <li><a class="oefen-link" href="m1t1_vocabulary_1_2_pickle_3" target="_blank">Pickle 3: Vocabulary Detective</a></li>
-      <li><a class='oefen-link' href="m1t1_vocabulary_1_2_pickle_4" target="_blank">Pickle 4: Flashcard Challenge</a></li>
-      <li><a class='oefen-link' href="m1t1_vocabulary_1_2_pickle_5" target="_blank">Pickle 5: Time Challenge</a></li>
-    </ul>
-    <img class="pickle-image-tall" src="Pickle.png" alt="Super Pickle">
-  </div>
-</section>
+        <h2>⚔️ PICKLE MISSIONS</h2>
+        <div class="pickle-grid">
+            <div class="mission-card" onclick="openPickle(event, 'vocab_1_2_pickle_1.html', 'CRUNCH!')">
+                <div class="title">Pickle 1</div><p>Drag & Drop</p>
+                <button class="like-btn" onclick="toggleLike(event, this)">👍 Like!</button>
+            </div>
+            <div class="mission-card" onclick="openPickle(event, 'vocab_1_2_pickle_2.html', 'SQUASH!')">
+                <div class="title">Pickle 2</div><p>Vocab Grid</p>
+                <button class="like-btn" onclick="toggleLike(event, this)">👍 Like!</button>
+            </div>
+            <div class="mission-card" onclick="openPickle(event, 'vocab_1_2_pickle_3.html', 'KABOOM!')">
+                <div class="title">Pickle 3</div><p>Vocab Detective</p>
+                <button class="like-btn" onclick="toggleLike(event, this)">👍 Like!</button>
+            </div>
+        </div>
+    </main>
 
-</main>
+    <footer><p>&copy; 2026 EngliForce: Make English Your Superpower!</p></footer>
 
-<footer>
-  <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-</footer>
+    <script>
+        const flashcardsData = [
+            { en: 'family', nl: 'familie / gezin', exEN: 'I love my family.', exNL: 'Ik hou van mijn familie.' },
+            { en: 'parents', nl: 'ouders', exEN: 'My parents are supportive.', exNL: 'Mijn ouders zijn steunend.' },
+            { en: 'siblings', nl: 'broers en zussen', exEN: 'Do you have any siblings?', exNL: 'Heb je broers of zussen?' },
+            { en: 'brother', nl: 'broer', exEN: 'He is my older brother.', exNL: 'Hij is mijn oudere broer.' },
+            { en: 'sister', nl: 'zus', exEN: 'She is my younger sister.', exNL: 'Zij is mijn jongere zus.' },
+            { en: 'grandparents', nl: 'grootouders', exEN: 'My grandparents visit often.', exNL: 'Mijn grootouders komen vaak op bezoek.' },
+            { en: 'uncle', nl: 'oom', exEN: 'Uncle John lives in London.', exNL: 'Oom John woont in Londen.' },
+            { en: 'aunt', nl: 'tante', exEN: 'Aunt Sarah bakes great cookies.', exNL: 'Tante Sarah bakken geweldige koekjes.' },
+            { en: 'cousin', nl: 'neef / nicht (kind van oom of tante)', exEN: 'My cousin is visiting us.', exNL: 'Mijn neef/nicht bezoekt ons.' },
+            { en: 'nephew', nl: 'neef (zoon van broer of zus)', exEN: 'My nephew plays football.', exNL: 'Mijn neef voetbalt.' },
+            { en: 'niece', nl: 'nicht (dochter van broer of zus)', exEN: 'My niece loves reading books.', exNL: 'Mijn nicht leest graag boeken.' },
+            { en: 'godfather', nl: 'peetvader', exEN: 'He is my godfather.', exNL: 'Hij is mijn peetvader.' },
+            { en: 'stepsister', nl: 'stiefzus', exEN: 'I share a room with my stepsister.', exNL: 'Ik deel een kamer met mijn stiefzus.' },
+            { en: 'half-brother', nl: 'halfbroer', exEN: 'My half-brother lives nearby.', exNL: 'Mijn halfbroer woont vlakbij.' },
+            { en: 'twin', nl: 'tweeling', exEN: 'They are identical twins.', exNL: 'Zij zijn een eeneiige tweeling.' }
+        ];
 
-<script>
-  function toggleContextSentences() {
-    const div = document.getElementById("context-sentences");
-    div.style.display = (div.style.display === "block") ? "none" : "block";
-  }
-</script>
+        let knownWords = JSON.parse(localStorage.getItem('engliforce_family_known')) || [];
 
-<script>
-  function toggleContextSentences() {
-    const div = document.getElementById("context-sentences");
-    div.style.display = (div.style.display === "block") ? "none" : "block";
-  }
-</script>
+        function init() {
+            const vBody = document.getElementById('vocab-table-body');
+            const cBody = document.getElementById('context-table-body');
+            flashcardsData.forEach(item => {
+                vBody.innerHTML += `<tr><td>${item.en}</td><td>${item.nl}</td></tr>`;
+                const highlightedEx = item.exEN.replace(new RegExp(item.en, 'gi'), match => `<span class="keyword">${match}</span>`);
+                cBody.innerHTML += `<tr><td>${item.en}</td><td>${highlightedEx}<br><small style="opacity:0.6">${item.exNL}</small></td></tr>`;
+            });
+            generateCards();
+        }
 
+        function generateCards() {
+            const container = document.getElementById('flashcards-container');
+            const count = document.getElementById('card-count').value === "15" ? flashcardsData.length : parseInt(document.getElementById('card-count').value);
+            const showEx = document.getElementById('show-examples').checked;
+            const reversed = document.getElementById('reverse-cards').checked;
+            container.innerHTML = '';
+            
+            let data = [...flashcardsData].filter(w => !document.getElementById('hide-known').checked || !knownWords.includes(w.en));
+            data = data.sort(() => 0.5 - Math.random()).slice(0, count);
 
+            data.forEach(word => {
+                const isKnown = knownWords.includes(word.en);
+                const card = document.createElement('div');
+                card.className = `card ${isKnown ? 'is-known' : ''}`;
+                
+                let frontContent = reversed ? word.nl : word.en;
+                if (showEx) frontContent += `<div class="card-example" style="font-family:'Lexend'; font-size:0.85rem; margin-top:10px; font-style:italic; color:rgba(255,255,255,0.8);">${reversed ? word.exNL : word.exEN}</div>`;
+
+                let backContent = reversed ? word.en : word.nl;
+                if (showEx) backContent += `<div class="card-example" style="font-family:'Lexend'; font-size:0.85rem; margin-top:10px; font-style:italic; color:rgba(0,0,0,0.7);">${reversed ? word.exEN : word.exNL}</div>`;
+
+                card.innerHTML = `
+                    <div class="card-inner" onclick="this.parentElement.classList.toggle('flipped')">
+                        <div class="card-front">${frontContent}</div>
+                        <div class="card-back">${backContent}
+                            <button class="known-btn" onclick="event.stopPropagation(); toggleKnown('${word.en}', this.parentElement.parentElement.parentElement)">
+                                ${isKnown ? '✅ Gekend' : '✔️ Ken ik'}
+                            </button>
+                        </div>
+                    </div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleKnown(wordEn, cardElem) {
+            const index = knownWords.indexOf(wordEn);
+            if (index === -1) knownWords.push(wordEn); else knownWords.splice(index, 1);
+            localStorage.setItem('engliforce_family_known', JSON.stringify(knownWords));
+            generateCards();
+        }
+
+        function resetKnown() {
+            if(confirm("Voortgang wissen?")) { knownWords = []; localStorage.removeItem('engliforce_family_known'); generateCards(); }
+        }
+
+        function toggleLike(e, btn) { 
+            e.stopPropagation(); 
+            btn.classList.toggle('liked'); 
+            btn.innerText = btn.classList.contains('liked') ? "👍 Liked!" : "👍 Like!"; 
+        }
+
+        function openPickle(e, url, msg) { 
+            const flash = document.getElementById('flash');
+            flash.style.opacity = '0.3'; 
+            document.body.classList.add('shake');
+            setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+            setTimeout(() => window.open(url, '_blank'), 400);
+        }
+
+        function showSection(e, id, msg) {
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
-
-
-
-
