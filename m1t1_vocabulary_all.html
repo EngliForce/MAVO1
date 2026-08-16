@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngliForce Academy: Flashcards Trainer</title>
+    <title>EngliForce Academy: Flashcards & Typing Trainer</title>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -151,6 +151,15 @@
             transform: translateY(-1px);
         }
 
+        .btn-action.btn-mistakes {
+            background: var(--error-red);
+            border-bottom-color: #922b21;
+        }
+
+        .btn-action.btn-mistakes:hover {
+            background: #ec7063;
+        }
+
         /* FLIP CARD SECTION */
         .flashcards-container {
             display: flex;
@@ -196,22 +205,22 @@
             box-sizing: border-box;
             border: 4px solid var(--hero-cyan);
             box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            font-family: 'Lexend', sans-serif;
+            font-weight: 700;
         }
 
         .card-front {
             background: var(--hero-orange-dark);
             color: white;
-            font-size: 1.7rem;
-            font-family: 'Bangers', cursive;
-            letter-spacing: 1px;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
         }
 
         .card-back {
             background: var(--hero-yellow);
             color: var(--dark-bg);
             transform: rotateY(180deg);
-            font-size: 1.5rem;
-            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
         }
 
         .list-badge {
@@ -311,11 +320,12 @@
         }
 
         .prompt-word {
-            font-family: 'Bangers', cursive;
-            font-size: 2.5rem;
+            font-family: 'Lexend', sans-serif;
+            font-weight: 700;
+            font-size: 2.3rem;
             color: #ffffff;
             margin: 0;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .typing-input-group {
@@ -423,6 +433,90 @@
 
         .btn-next:hover { background: #ff7043; }
 
+        /* MODAL STYLES FOR MISTAKES LIST */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 3px solid var(--hero-yellow);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--hero-orange);
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            color: var(--hero-yellow);
+            margin: 0;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 5px;
+        }
+
+        .modal-close {
+            background: var(--hero-orange);
+            color: white;
+            border: none;
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            padding: 6px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .modal-close:hover { background: #ff7043; }
+
+        .mistake-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0b101a;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--hero-cyan);
+        }
+
+        .mistake-word-en {
+            font-weight: bold;
+            color: var(--hero-yellow);
+            font-size: 1.1rem;
+        }
+
+        .mistake-word-nl {
+            color: white;
+            font-size: 1.05rem;
+        }
+
         .flash-effect {
             position: fixed;
             top: 0; left: 0;
@@ -475,6 +569,17 @@
 
 <div class="flash-effect" id="flash"></div>
 
+<!-- MODAL VOOR FOUTENLIJST -->
+<div class="modal-overlay" id="mistakes-modal" onclick="if(event.target === this) closeMistakesModal()">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title-text">❌ Foutenlijst</h3>
+            <button class="modal-close" onclick="closeMistakesModal()">Sluiten ✖</button>
+        </div>
+        <div class="modal-body" id="modal-list-content"></div>
+    </div>
+</div>
+
 <header>
     <h1>ENGLIFORCE ACADEMY</h1>
     <p class="subtitle">⚡ FLASHCARD VOCAB TRAINER ⚡</p>
@@ -483,15 +588,15 @@
 <main>
     <!-- MODE SELECTION -->
     <div class="mode-container">
-        <button class="btn-mode active" id="mode-flip-btn" onclick="switchMode('flip')">🎴 Draaikaarten (Self-Check)</button>
-        <button class="btn-mode" id="mode-type-btn" onclick="switchMode('type')">⌨️ Typen (Antwoord Invoeren)</button>
+        <button class="btn-mode active" id="mode-flip-btn" onclick="switchMode('flip')">🎴 Flip Cards (Self-Check)</button>
+        <button class="btn-mode" id="mode-type-btn" onclick="switchMode('type')">⌨️ Typing (Enter Answer)</button>
     </div>
 
     <!-- GLOBAL CONTROLS BAR -->
     <div class="controls">
-        <label>Selecteer Lijst:
+        <label>Select List:
             <select id="list-filter" onchange="resetAndGenerate()">
-                <option value="all" selected>Alle Lijsten (1.1 t/m 1.4)</option>
+                <option value="all" selected>All Lists (1.1 - 1.4)</option>
                 <option value="Vocab 1.1">Vocab 1.1: Personal Data</option>
                 <option value="Vocab 1.2">Vocab 1.2: Family</option>
                 <option value="Vocab 1.3">Vocab 1.3: Friends & Personality</option>
@@ -501,30 +606,31 @@
 
         <label>Status:
             <select id="status-filter" onchange="resetAndGenerate()">
-                <option value="all" selected>Alle woorden</option>
-                <option value="unknown">Alleen onbekende (Niet gekend) ❌</option>
-                <option value="known">Alleen gekende woorden ✅</option>
+                <option value="all" selected>All words</option>
+                <option value="unknown">Words to practice ❌</option>
+                <option value="known">Known words ✅</option>
             </select>
         </label>
 
-        <label>Aantal woorden:
+        <label>Word Count:
             <select id="count-filter" onchange="resetAndGenerate()">
-                <option value="all" selected>Alle woorden</option>
-                <option value="5">5 woorden</option>
-                <option value="10">10 woorden</option>
-                <option value="15">15 woorden</option>
+                <option value="all" selected>All words</option>
+                <option value="5">5 words</option>
+                <option value="10">10 words</option>
+                <option value="15">15 words</option>
             </select>
         </label>
 
-        <label>Richting:
+        <label>Direction:
             <select id="direction-select" onchange="resetAndGenerate()">
-                <option value="EN-NL" selected>Engels ➔ Nederlands</option>
-                <option value="NL-EN">Nederlands ➔ Engels</option>
-                <option value="MIX">Gemengd (Mix)</option>
+                <option value="EN-NL" selected>English ➔ Dutch</option>
+                <option value="NL-EN">Dutch ➔ English</option>
+                <option value="MIX">Mixed (Random)</option>
             </select>
         </label>
 
-        <button class="btn-action" onclick="shuffleCurrentData()">Husselen 🔄</button>
+        <button class="btn-action" onclick="shuffleCurrentData()">Shuffle 🔄</button>
+        <button class="btn-action btn-mistakes" onclick="openMistakesModal()">📋 Bekijk Foutenlijst</button>
     </div>
 
     <!-- MODE 1: FLIP CARDS -->
@@ -536,20 +642,20 @@
     <div id="type-mode-section" style="display: none;">
         <div class="typing-wrapper">
             <div class="typing-header">
-                <span class="progress-text" id="type-progress">Vraag 1 van 60</span>
+                <span class="progress-text" id="type-progress">Question 1 of 60</span>
                 <span class="score-text" id="type-score">Score: 0 / 0</span>
                 <span class="highscore-text" id="type-highscore">Highscore: 0</span>
             </div>
 
             <div class="prompt-box">
-                <div class="prompt-label" id="prompt-label">Vertaal naar het Nederlands</div>
+                <div class="prompt-label" id="prompt-label">Translate to Dutch</div>
                 <h2 class="prompt-word" id="prompt-word">surname</h2>
             </div>
 
             <form onsubmit="checkTypedAnswer(event)">
                 <div class="typing-input-group">
-                    <input type="text" id="typing-input" class="typing-input" placeholder="Typ je antwoord hier..." autocomplete="off">
-                    <button type="submit" class="btn-submit" id="btn-check">Controleer</button>
+                    <input type="text" id="typing-input" class="typing-input" placeholder="Type your answer here..." autocomplete="off">
+                    <button type="submit" class="btn-submit" id="btn-check">Check</button>
                 </div>
             </form>
 
@@ -558,7 +664,7 @@
                 <div class="feedback-details" id="feedback-details"></div>
             </div>
 
-            <button class="btn-next" id="btn-next" onclick="nextTypingQuestion()">Volgende Vraag ➔</button>
+            <button class="btn-next" id="btn-next" onclick="nextTypingQuestion()">Next Question ➔</button>
         </div>
     </div>
 </main>
@@ -640,8 +746,13 @@
 
     let activeData = [];
     let currentMode = 'flip';
-    let knownWords = JSON.parse(localStorage.getItem('engliforce_known_v2')) || [];
-    let highScore = parseInt(localStorage.getItem('engliforce_highscore_v2')) || 0;
+
+    // Track progress and explicit mistakes for typing mode
+    let knownWordsFlip = JSON.parse(localStorage.getItem('engliforce_known_flip_v3')) || [];
+    let knownWordsType = JSON.parse(localStorage.getItem('engliforce_known_type_v3')) || [];
+    let mistakesType = JSON.parse(localStorage.getItem('engliforce_mistakes_type_v3')) || [];
+
+    let highScore = parseInt(localStorage.getItem('engliforce_highscore_v3')) || 0;
 
     let typeIndex = 0;
     let typeScore = 0;
@@ -659,16 +770,22 @@
 
         let filtered = fullVocabData;
 
-        // 1. Filter op lijst
+        // 1. Filter by list
         if (listFilter !== 'all') {
             filtered = filtered.filter(item => item.list === listFilter);
         }
 
-        // 2. Filter op gekend / onbekend
+        // 2. Filter by status based on the current mode
         if (statusFilter === 'unknown') {
-            filtered = filtered.filter(item => !knownWords.includes(item.en));
+            if (currentMode === 'flip') {
+                filtered = filtered.filter(item => !knownWordsFlip.includes(item.en));
+            } else {
+                // Typing mode: Only words that were answered INCORRECTLY
+                filtered = filtered.filter(item => mistakesType.includes(item.en));
+            }
         } else if (statusFilter === 'known') {
-            filtered = filtered.filter(item => knownWords.includes(item.en));
+            const currentKnownList = (currentMode === 'flip') ? knownWordsFlip : knownWordsType;
+            filtered = filtered.filter(item => currentKnownList.includes(item.en));
         }
 
         return filtered;
@@ -685,7 +802,7 @@
     function resetAndGenerate() {
         let data = shuffleArray(filterData());
 
-        // 3. Filter op gekozen aantal woorden (5, 10, 15 of alle)
+        // 3. Filter by word count selection
         const countFilter = document.getElementById('count-filter').value;
         if (countFilter !== 'all') {
             const limit = parseInt(countFilter, 10);
@@ -720,6 +837,52 @@
         document.getElementById('type-highscore').innerText = `Highscore: ${highScore}`;
     }
 
+    /* MISTAKES MODAL LOGIC */
+    function openMistakesModal() {
+        const modal = document.getElementById('mistakes-modal');
+        const titleElem = document.getElementById('modal-title-text');
+        const listElem = document.getElementById('modal-list-content');
+        const listFilter = document.getElementById('list-filter').value;
+        
+        listElem.innerHTML = '';
+
+        let wrongWords = [];
+
+        if (currentMode === 'flip') {
+            titleElem.innerText = '❌ Te oefenen woorden (Flip Cards)';
+            wrongWords = fullVocabData.filter(item => !knownWordsFlip.includes(item.en));
+        } else {
+            titleElem.innerText = '❌ Foute woorden (Typoefening)';
+            wrongWords = fullVocabData.filter(item => mistakesType.includes(item.en));
+        }
+
+        if (listFilter !== 'all') {
+            wrongWords = wrongWords.filter(item => item.list === listFilter);
+        }
+
+        if (wrongWords.length === 0) {
+            listElem.innerHTML = '<p style="text-align:center; color: var(--success-green); font-family: Bangers; font-size: 1.5rem; margin-top: 20px;">🎉 Geen fouten gevonden! Geweldig gedaan!</p>';
+        } else {
+            wrongWords.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'mistake-list-item';
+                div.innerHTML = `
+                    <div>
+                        <span class="mistake-word-en">${item.en}</span> = <span class="mistake-word-nl">${item.nl}</span>
+                    </div>
+                    <span class="list-badge">${item.list}</span>
+                `;
+                listElem.appendChild(div);
+            });
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function closeMistakesModal() {
+        document.getElementById('mistakes-modal').style.display = 'none';
+    }
+
     /* FLIP CARDS LOGIC */
     function renderFlipCards() {
         const container = document.getElementById('flashcards-container');
@@ -727,7 +890,7 @@
         container.innerHTML = '';
 
         if (activeData.length === 0) {
-            container.innerHTML = '<p style="font-family:Bangers; font-size:1.5rem; color:var(--hero-yellow);">Geen woorden gevonden voor deze selectie.</p>';
+            container.innerHTML = '<p style="font-family:Bangers; font-size:1.5rem; color:var(--hero-yellow);">No words found for this selection.</p>';
             return;
         }
 
@@ -738,7 +901,7 @@
 
             const frontText = isReversed ? wordObj.nl : wordObj.en;
             const backText = isReversed ? wordObj.en : wordObj.nl;
-            const isKnown = knownWords.includes(wordObj.en);
+            const isKnown = knownWordsFlip.includes(wordObj.en);
 
             const cardWrap = document.createElement('div');
             cardWrap.className = `card ${isKnown ? 'is-known' : ''}`;
@@ -761,7 +924,7 @@
 
             kBtn.onclick = (e) => {
                 e.stopPropagation();
-                toggleKnown(e, wordObj.en, cardWrap, kBtn);
+                toggleKnownFlip(e, wordObj.en, cardWrap, kBtn);
             };
 
             back.appendChild(kBtn);
@@ -772,29 +935,29 @@
         });
     }
 
-    function toggleKnown(e, wordEn, cardElem, btn) {
-        const index = knownWords.indexOf(wordEn);
+    function toggleKnownFlip(e, wordEn, cardElem, btn) {
+        const index = knownWordsFlip.indexOf(wordEn);
         if (index === -1) {
-            knownWords.push(wordEn);
+            knownWordsFlip.push(wordEn);
             cardElem.classList.add('is-known');
             updateKnownBtnStyle(btn, true);
             createExplosion(e, 'CHECK!');
         } else {
-            knownWords.splice(index, 1);
+            knownWordsFlip.splice(index, 1);
             cardElem.classList.remove('is-known');
             updateKnownBtnStyle(btn, false);
             createExplosion(e, 'RESET!');
         }
-        localStorage.setItem('engliforce_known_v2', JSON.stringify(knownWords));
+        localStorage.setItem('engliforce_known_flip_v3', JSON.stringify(knownWordsFlip));
     }
 
     function updateKnownBtnStyle(btn, isKnown) {
         if (isKnown) {
-            btn.innerHTML = '✅ Gekend';
+            btn.innerHTML = '✅ Known';
             btn.style.background = 'var(--success-green)';
             btn.style.color = 'white';
         } else {
-            btn.innerHTML = '✔️ Ken ik';
+            btn.innerHTML = '✔️ I know this';
             btn.style.background = 'rgba(0,0,0,0.15)';
             btn.style.color = 'var(--dark-bg)';
         }
@@ -821,9 +984,15 @@
         checkBtn.disabled = false;
 
         if (activeData.length === 0) {
-            document.getElementById('prompt-label').innerText = 'GEEN WOORDEN';
-            document.getElementById('prompt-word').innerText = 'Geen resultaten! 🔍';
-            document.getElementById('type-progress').innerText = `Totaal: 0 / 0`;
+            const statusFilter = document.getElementById('status-filter').value;
+            if (statusFilter === 'unknown') {
+                document.getElementById('prompt-label').innerText = 'NO MISTAKES FOUND!';
+                document.getElementById('prompt-word').innerText = 'No words to practice 🎉';
+            } else {
+                document.getElementById('prompt-label').innerText = 'NO WORDS FOUND';
+                document.getElementById('prompt-word').innerText = 'No results available! 🔍';
+            }
+            document.getElementById('type-progress').innerText = `Total: 0 / 0`;
             document.getElementById('type-score').innerText = `Score: 0 / 0`;
             inputElem.style.display = 'none';
             checkBtn.style.display = 'none';
@@ -831,16 +1000,16 @@
         }
 
         if (typeIndex >= activeData.length) {
-            document.getElementById('prompt-label').innerText = 'GEFELICITEERD!';
-            document.getElementById('prompt-word').innerText = 'Set Afgerond! 🎉';
-            document.getElementById('type-progress').innerText = `Totaal: ${activeData.length} / ${activeData.length}`;
-            document.getElementById('type-score').innerText = `Eindscore: ${typeScore} / ${activeData.length}`;
+            document.getElementById('prompt-label').innerText = 'CONGRATULATIONS!';
+            document.getElementById('prompt-word').innerText = 'Set Completed! 🎉';
+            document.getElementById('type-progress').innerText = `Total: ${activeData.length} / ${activeData.length}`;
+            document.getElementById('type-score').innerText = `Final Score: ${typeScore} / ${activeData.length}`;
             inputElem.style.display = 'none';
             checkBtn.style.display = 'none';
 
             if (typeScore > highScore) {
                 highScore = typeScore;
-                localStorage.setItem('engliforce_highscore_v2', highScore);
+                localStorage.setItem('engliforce_highscore_v3', highScore);
                 updateHighScoreDisplay();
             }
 
@@ -859,20 +1028,21 @@
         else currentDirection = (typeIndex % 2 === 0) ? 'EN-NL' : 'NL-EN';
 
         if (currentDirection === 'EN-NL') {
-            document.getElementById('prompt-label').innerText = 'Vertaal naar het Nederlands:';
+            document.getElementById('prompt-label').innerText = 'Translate to Dutch:';
             document.getElementById('prompt-word').innerText = item.en;
         } else {
-            document.getElementById('prompt-label').innerText = 'Vertaal naar het Engels:';
+            document.getElementById('prompt-label').innerText = 'Translate to English:';
             document.getElementById('prompt-word').innerText = item.nl;
         }
 
-        document.getElementById('type-progress').innerText = `Vraag ${typeIndex + 1} van ${activeData.length}`;
+        document.getElementById('type-progress').innerText = `Question ${typeIndex + 1} of ${activeData.length}`;
         document.getElementById('type-score').innerText = `Score: ${typeScore} / ${typeTotal}`;
         inputElem.focus();
     }
 
+    // Geen .toLowerCase() meer om hoofdlettergebruik strikt te controleren
     function normalizeString(str) {
-        return str.toLowerCase().trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ");
+        return str.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s+/g, " ");
     }
 
     function checkTypedAnswer(e) {
@@ -904,16 +1074,40 @@
         if (isCorrect) {
             typeScore++;
             feedbackBox.className = 'feedback-box correct';
-            feedbackTitle.innerHTML = '🎉 Uitstekend! Juist antwoord!';
+            feedbackTitle.innerHTML = '🎉 Excellent! Correct answer!';
             feedbackDetails.innerHTML = `<strong>${currentItem.en}</strong> = <strong>${currentItem.nl}</strong>`;
+            
+            // Mark as known
+            if (!knownWordsType.includes(currentItem.en)) {
+                knownWordsType.push(currentItem.en);
+                localStorage.setItem('engliforce_known_type_v3', JSON.stringify(knownWordsType));
+            }
+            // Remove from mistakes list once answered correctly
+            const mIdx = mistakesType.indexOf(currentItem.en);
+            if (mIdx !== -1) {
+                mistakesType.splice(mIdx, 1);
+                localStorage.setItem('engliforce_mistakes_type_v3', JSON.stringify(mistakesType));
+            }
             createExplosion(null, 'GREAT!');
         } else {
             feedbackBox.className = 'feedback-box incorrect';
-            feedbackTitle.innerHTML = '❌ Helaas, niet helemaal juist!';
+            feedbackTitle.innerHTML = '❌ Oops, not quite right!';
             feedbackDetails.innerHTML = `
-                <div>Het juiste antwoord is: <strong>${targetText}</strong></div>
-                <div class="feedback-list-info">📍 Dit woord staat in: <strong>${currentItem.list}</strong></div>
+                <div>The correct answer is: <strong>${targetText}</strong> (Pay attention to capital letters!)</div>
+                <div class="feedback-list-info">📍 Word list: <strong>${currentItem.list}</strong></div>
             `;
+            
+            // Add explicitly to mistakes list for practice
+            if (!mistakesType.includes(currentItem.en)) {
+                mistakesType.push(currentItem.en);
+                localStorage.setItem('engliforce_mistakes_type_v3', JSON.stringify(mistakesType));
+            }
+            // Remove from known words
+            const kIdx = knownWordsType.indexOf(currentItem.en);
+            if (kIdx !== -1) {
+                knownWordsType.splice(kIdx, 1);
+                localStorage.setItem('engliforce_known_type_v3', JSON.stringify(knownWordsType));
+            }
             createExplosion(null, 'OOPS!');
         }
 
