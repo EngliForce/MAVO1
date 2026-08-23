@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klassentimer & Groepsindeling</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header met kleurig verloop en neon-accent */
+        header {
+            background: linear-gradient(90deg, #ff007f, #7928ca, #4299e1);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Glassmorphism basis stijl */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            margin-bottom: 2rem;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Formulieren & Inputs */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        select option {
+            background: #1e1b4b;
+            color: #fff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #ff007f;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        /* Absentenlijst styling */
+        .student-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.8rem;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .student-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        .student-item:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .student-item.absent {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            text-decoration: line-through;
+            color: #fca5a5;
+        }
+
+        /* Knoppen */
+        .btn {
+            background: linear-gradient(135deg, #7928ca, #ff007f);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        /* Groepsknoppen 2 t/m 10 */
+        .group-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-group-num {
+            flex: 1;
+            min-width: 50px;
+            padding: 0.8rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-group-num:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-group-num.active {
+            background: linear-gradient(135deg, #ff007f, #7928ca);
+            border-color: #ff007f;
+            box-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
+        }
+
+        /* Dashboard Grid met Timers */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .group-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .group-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff007f, #4299e1);
+        }
+
+        .group-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #38bdf8;
+        }
+
+        .student-list {
+            list-style: none;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .student-list li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: monospace;
+            margin: 0.5rem 0 1rem 0;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .timer-btn-group {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .timer-btn-group .btn {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .flex-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Custom Modal Popup (Glassmorphism) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(30, 27, 75, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ff007f;
+        }
+
+        .modal-card p {
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🚀 Klas Groeps- & Timer Dashboard</h1>
+    </header>
+
+    <main>
+        <!-- SCHERM 1: CONFIGURATIE -->
+        <div id="setup-screen" class="screen active">
+            <!-- Opslaan / Laden blok -->
+            <div class="glass-card">
+                <h2>📁 Opgeslagen Klassen</h2>
+                <br>
+                <div class="form-group">
+                    <label for="saved-classes-select">Kies een eerder opgeslagen klas:</label>
+                    <select id="saved-classes-select" onchange="loadSelectedClass()">
+                        <option value="">-- Selecteer een klas --</option>
+                    </select>
+                </div>
+                <button class="btn btn-danger" onclick="confirmDeleteClass()">🗑️ Klas Verwijderen</button>
+            </div>
+
+            <!-- Invoer blok -->
+            <div class="glass-card">
+                <h2>1. Klas Aanmaken of Bewerken</h2>
+                <br>
+                <div class="form-group">
+                    <label for="class-name">Klasnaam</label>
+                    <input type="text" id="class-name" placeholder="bijv. Klas 3B">
+                </div>
+                <div class="form-group">
+                    <label for="students-input">Leerlingen (één naam per regel)</label>
+                    <textarea id="students-input" rows="6" placeholder="Jan&#10;Piet&#10;Klaas&#10;Sanne&#10;Eva"></textarea>
+                </div>
+                <div class="flex-actions">
+                    <button class="btn" onclick="processStudents()">Verwerk Leerlingen</button>
+                    <button class="btn btn-secondary" onclick="saveCurrentClass()">💾 Klas Opslaan</button>
+                </div>
+            </div>
+
+            <div id="absence-section" class="glass-card" style="display: none;">
+                <h2>2. Absenten & Groepsindeling</h2>
+                <br>
+                <p>Klik op leerlingen die **afwezig** zijn om ze uit te sluiten:</p>
+                <div id="student-checkboxes" class="student-checkboxes"></div>
+                
+                <br><hr style="border-color: rgba(255,255,255,0.1);"><br>
+
+                <div class="form-group">
+                    <label>Aantal gewenste groepjes (2 t/m 10)</label>
+                    <div id="group-buttons-container" class="group-selector"></div>
+                </div>
+
+                <button class="btn btn-success" onclick="generateGroupsAndStart()">Start Groepen & Timers ➔</button>
+            </div>
+        </div>
+
+        <!-- SCHERM 2: GROEPEN EN TIMERS DASHBOARD -->
+        <div id="dashboard-screen" class="screen">
+            <div class="controls-bar glass-card">
+                <div>
+                    <h2 id="dashboard-title">Klas Dashboard</h2>
+                    <p style="color: #94a3b8; font-size: 0.9rem;" id="active-student-count"></p>
+                </div>
+                <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="startAllTimers()">▶ Start Alle Timers</button>
+                    <button class="btn btn-danger" onclick="stopAllTimers()">⏸ Stop Alle Timers</button>
+                    <button class="btn btn-secondary" onclick="resetAllTimers()">🔄 Reset Timers</button>
+                    <button class="btn" onclick="reshuffleGroups()">🔀 Nieuwe Groepen</button>
+                    <button class="btn btn-secondary" onclick="showSetupScreen()">⚙️ Klas Aanpassen</button>
+                </div>
+            </div>
+
+            <div id="groups-container" class="groups-grid"></div>
+        </div>
+    </main>
+
+    <!-- CUSTOM POPUP MODAL -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modal-title">Melding</h3>
+            <p id="modal-message">Inhoud van de melding...</p>
+            <div id="modal-actions" class="modal-buttons">
+                <button class="btn" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rawStudents = [];
+        let absentStudents = new Set();
+        let groupTimers = [];
+        let selectedGroupCount = 4; // Standaard 4 groepen
+
+        // Direct opgeslagen klassen laden en knoppen 2-10 genereren
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSavedClassesDropdown();
+            renderGroupButtons();
+        });
+
+        // --- CUSTOM MODAL POPUPS ---
+        function showPopup(title, message, onConfirm = null) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            
+            const actionsContainer = document.getElementById('modal-actions');
+            actionsContainer.innerHTML = '';
+
+            if (onConfirm) {
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = 'btn btn-danger';
+                confirmBtn.innerText = 'Ja, Verwijder';
+                confirmBtn.onclick = () => {
+                    closeModal();
+                    onConfirm();
+                };
+
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn btn-secondary';
+                cancelBtn.innerText = 'Annuleren';
+                cancelBtn.onclick = closeModal;
+
+                actionsContainer.appendChild(cancelBtn);
+                actionsContainer.appendChild(confirmBtn);
+            } else {
+                const okBtn = document.createElement('button');
+                okBtn.className = 'btn';
+                okBtn.innerText = 'OK';
+                okBtn.onclick = closeModal;
+                actionsContainer.appendChild(okBtn);
+            }
+
+            document.getElementById('custom-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.remove('active');
+        }
+
+        // --- GROEPSKNOPPEN 2 T/M 10 GENEREREN ---
+        function renderGroupButtons() {
+            const container = document.getElementById('group-buttons-container');
+            container.innerHTML = '';
+
+            for (let i = 2; i <= 10; i++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn-group-num' + (i === selectedGroupCount ? ' active' : '');
+                btn.innerText = i;
+                btn.onclick = () => selectGroupCount(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function selectGroupCount(num) {
+            selectedGroupCount = num;
+            renderGroupButtons();
+        }
+
+        // --- LOCAL STORAGE LOGICA ---
+        function getSavedClasses() {
+            const data = localStorage.getItem('saved_classes');
+            return data ? JSON.parse(data) : {};
+        }
+
+        function saveCurrentClass() {
+            const className = document.getElementById('class-name').value.trim();
+            const input = document.getElementById('students-input').value;
+            const students = input.split('\\n').map(s => s.trim()).filter(s => s.length > 0);
+
+            if (!className) {
+                showPopup('Fout', 'Vul een klasnaam in om op te slaan.');
+                return;
+            }
+
+            if (students.length === 0) {
+                showPopup('Fout', 'Voer minimaal één leerling in om de klas op te slaan.');
+                return;
+            }
+
+            const savedClasses = getSavedClasses();
+            savedClasses[className] = students;
+            localStorage.setItem('saved_classes', JSON.stringify(savedClasses));
+
+            updateSavedClassesDropdown();
+            document.getElementById('saved-classes-select').value = className;
+            showPopup('Succes!', `Klas "${className}" is succesvol opgeslagen.`);
+        }
+
+        function updateSavedClassesDropdown() {
+            const dropdown = document.getElementById('saved-classes-select');
+            const savedClasses = getSavedClasses();
+            
+            dropdown.innerHTML = '<option value="">-- Selecteer een klas --</option>';
+            
+            Object.keys(savedClasses).forEach(className => {
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = className;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function loadSelectedClass() {
+            const selectedName = document.getElementById('saved-classes-select').value;
+            if (!selectedName) return;
+
+            const savedClasses = getSavedClasses();
+            const students = savedClasses[selectedName];
+
+            if (students) {
+                document.getElementById('class-name').value = selectedName;
+                document.getElementById('students-input').value = students.join('\\n');
+                processStudents();
+            }
+        }
+
+        function confirmDeleteClass() {
+            const selectedName = document.getElementById('saved-classes-select').value;
+            if (!selectedName) {
+                showPopup('Fout', 'Selecteer eerst een klas om te verwijderen.');
+                return;
+            }
+
+            showPopup('Bevestigen', `Weet je zeker dat je klas "${selectedName}" wilt verwijderen?`, () => {
+                const savedClasses = getSavedClasses();
+                delete savedClasses[selectedName];
+                localStorage.setItem('saved_classes', JSON.stringify(savedClasses));
+                
+                document.getElementById('class-name').value = '';
+                document.getElementById('students-input').value = '';
+                document.getElementById('absence-section').style.display = 'none';
+                
+                updateSavedClassesDropdown();
+            });
+        }
+
+        // --- KERNSFUNCTIONALITEITEN ---
+        function processStudents() {
+            const input = document.getElementById('students-input').value;
+            rawStudents = input.split('\\n').map(s => s.trim()).filter(s => s.length > 0);
+
+            if (rawStudents.length === 0) {
+                showPopup('Fout', 'Voer minimaal één leerling in.');
+                return;
+            }
+
+            absentStudents.clear();
+            renderAbsenceList();
+            document.getElementById('absence-section').style.display = 'block';
+        }
+
+        function renderAbsenceList() {
+            const container = document.getElementById('student-checkboxes');
+            container.innerHTML = '';
+
+            rawStudents.forEach(student => {
+                const item = document.createElement('div');
+                item.className = 'student-item' + (absentStudents.has(student) ? ' absent' : '');
+                item.innerText = student;
+                item.onclick = () => toggleAbsent(student, item);
+                container.appendChild(item);
+            });
+        }
+
+        function toggleAbsent(student, element) {
+            if (absentStudents.has(student)) {
+                absentStudents.delete(student);
+                element.classList.remove('absent');
+            } else {
+                absentStudents.add(student);
+                element.classList.add('absent');
+            }
+        }
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function createGroupDivision() {
+            const numGroups = selectedGroupCount;
+            const activeStudents = rawStudents.filter(s => !absentStudents.has(s));
+
+            if (activeStudents.length === 0) {
+                showPopup('Geen leerlingen', 'Alle leerlingen zijn als afwezig gemarkeerd!');
+                return null;
+            }
+
+            const shuffled = shuffle([...activeStudents]);
+            const groups = Array.from({ length: numGroups }, () => []);
+
+            shuffled.forEach((student, index) => {
+                groups[index % numGroups].push(student);
+            });
+
+            return { groups, activeStudentsCount: activeStudents.length };
+        }
+
+        function generateGroupsAndStart() {
+            const className = document.getElementById('class-name').value || 'Klas';
+            const result = createGroupDivision();
+            if (!result) return;
+
+            document.getElementById('dashboard-title').innerText = `${className} - Groepsindeling`;
+            document.getElementById('active-student-count').innerText = 
+                `Aanwezig: ${result.activeStudentsCount} / Totaal: ${rawStudents.length} (Afwezig: ${absentStudents.size})`;
+
+            renderDashboard(result.groups);
+
+            document.getElementById('setup-screen').classList.remove('active');
+            document.getElementById('dashboard-screen').classList.add('active');
+        }
+
+        function reshuffleGroups() {
+            const result = createGroupDivision();
+            if (!result) return;
+
+            renderDashboard(result.groups);
+        }
+
+        function renderDashboard(groups) {
+            const container = document.getElementById('groups-container');
+            container.innerHTML = '';
+            
+            groupTimers.forEach(t => clearInterval(t.interval));
+            groupTimers = [];
+
+            groups.forEach((group, index) => {
+                const groupCard = document.createElement('div');
+                groupCard.className = 'group-card';
+
+                const timerObj = {
+                    seconds: 0,
+                    interval: null,
+                    displayEl: null
+                };
+
+                const studentListHTML = group.map(s => `<li>${s}</li>`).join('');
+
+                groupCard.innerHTML = `
+                    <div class="group-title">Groep ${index + 1}</div>
+                    <ul class="student-list">
+                        ${studentListHTML || '<li style="color:#64748b"><i>Leeg</i></li>'}
+                    </ul>
+                    <div class="timer-display" id="timer-display-${index}">00:00</div>
+                    <div class="timer-btn-group">
+                        <button class="btn btn-success" onclick="startTimer(${index})">Start</button>
+                        <button class="btn btn-danger" onclick="stopTimer(${index})">Stop</button>
+                    </div>
+                `;
+
+                container.appendChild(groupCard);
+
+                timerObj.displayEl = document.getElementById(`timer-display-${index}`);
+                groupTimers.push(timerObj);
+            });
+        }
+
+        // --- TIMER LOGICA ---
+        function formatTime(totalSeconds) {
+            const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const secs = (totalSeconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        }
+
+        function startTimer(index) {
+            const timer = groupTimers[index];
+            if (timer.interval) return;
+
+            timer.interval = setInterval(() => {
+                timer.seconds++;
+                timer.displayEl.innerText = formatTime(timer.seconds);
+            }, 1000);
+        }
+
+        function stopTimer(index) {
+            const timer = groupTimers[index];
+            if (timer.interval) {
+                clearInterval(timer.interval);
+                timer.interval = null;
+            }
+        }
+
+        function startAllTimers() {
+            groupTimers.forEach((_, index) => startTimer(index));
+        }
+
+        function stopAllTimers() {
+            groupTimers.forEach((_, index) => stopTimer(index));
+        }
+
+        function resetAllTimers() {
+            stopAllTimers();
+            groupTimers.forEach(timer => {
+                timer.seconds = 0;
+                timer.displayEl.innerText = "00:00";
+            });
+        }
+
+        function showSetupScreen() {
+            stopAllTimers();
+            document.getElementById('dashboard-screen').classList.remove('active');
+            document.getElementById('setup-screen').classList.add('active');
+        }
+    </script>
+</body>
+</html>
