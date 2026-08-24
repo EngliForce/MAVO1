@@ -353,7 +353,7 @@
 <body>
 
     <header>
-        <h1>🚀 Klas, Groep- & Timer Dashboard</h1>
+        <h1>🚀 Klas Groeps- & Timer Dashboard</h1>
     </header>
 
     <main>
@@ -399,7 +399,7 @@
                 <br><hr style="border-color: rgba(255,255,255,0.1);"><br>
 
                 <div class="form-group">
-                    <label>Aantal gewenste groepjes (2 t/m 10)</label>
+                    <label>Aantal gewenste groepjes (Kies 6 voor groepen van 4-5 personen bij 28 leerlingen)</label>
                     <div id="group-buttons-container" class="group-selector"></div>
                 </div>
 
@@ -418,7 +418,7 @@
                     <button class="btn btn-success" onclick="startAllTimers()">▶ Start Alle Timers</button>
                     <button class="btn btn-danger" onclick="stopAllTimers()">⏸ Stop Alle Timers</button>
                     <button class="btn btn-secondary" onclick="resetAllTimers()">🔄 Reset Timers</button>
-                    <button class="btn" onclick="reshuffleGroups()">🔀 Nieuwe Groepen</button>
+                    <button class="btn" onclick="reshuffleGroups()">🔀 Volgende Ronde</button>
                     <button class="btn btn-secondary" onclick="showSetupScreen()">⚙️ Klas Aanpassen</button>
                 </div>
             </div>
@@ -442,13 +442,54 @@
         let rawStudents = [];
         let absentStudents = new Set();
         let groupTimers = [];
-        let selectedGroupCount = 4; // Standaard 4 groepen
+        let selectedGroupCount = 6; // Standaard 6 groepen (ideaal voor 28 leerlingen: 4 van 5, 2 van 4)
 
-        // Direct opgeslagen klassen laden en knoppen 2-10 genereren
+        // LOGICA VOOR HISTORIE: MAXIMAAL 2 KEER SAMEN
+        let pairHistory = {}; // Format: { "LeerlingA|||LeerlingB": aantal_keer_samen }
+        let currentRound = 0;
+        const MAX_TOGETHER = 2; // Maximaal 2 keer bij elkaar over alle rondes
+
         document.addEventListener('DOMContentLoaded', () => {
             updateSavedClassesDropdown();
             renderGroupButtons();
         });
+
+        // Genereer unieke sleutel voor een duo (alfabetisch gesorteerd)
+        function getPairKey(student1, student2) {
+            return [student1, student2].sort().join('|||');
+        }
+
+        // Vraag op hoe vaak twee leerlingen al samen zijn ingedeeld
+        function getTogetherCount(student1, student2) {
+            const key = getPairKey(student1, student2);
+            return pairHistory[key] || 0;
+        }
+
+        // Sla de gemaakte groepsindeling op in de historie
+        function recordGroupHistory(groups) {
+            groups.forEach(group => {
+                for (let i = 0; i < group.length; i++) {
+                    for (let j = i + 1; j < group.length; j++) {
+                        const key = getPairKey(group[i], group[j]);
+                        pairHistory[key] = (pairHistory[key] || 0) + 1;
+                    }
+                }
+            });
+        }
+
+        // Valideer of in deze indeling niemand voor een 3e keer samen zit
+        function isValidDivision(groups) {
+            for (let group of groups) {
+                for (let i = 0; i < group.length; i++) {
+                    for (let j = i + 1; j < group.length; j++) {
+                        if (getTogetherCount(group[i], group[j]) >= MAX_TOGETHER) {
+                            return false; // Dit paar zit al aan het maximum van 2 keer
+                        }
+                    }
+                }
+            }
+            return true;
+        }
 
         // --- CUSTOM MODAL POPUPS ---
         function showPopup(title, message, onConfirm = null) {
@@ -489,7 +530,7 @@
             document.getElementById('custom-modal').classList.remove('active');
         }
 
-        // --- GROEPSKNOPPEN 2 T/M 10 GENEREREN ---
+        // --- GROEPSKNOPPEN GENEREREN ---
         function renderGroupButtons() {
             const container = document.getElementById('group-buttons-container');
             container.innerHTML = '';
@@ -518,7 +559,7 @@
         function saveCurrentClass() {
             const className = document.getElementById('class-name').value.trim();
             const input = document.getElementById('students-input').value;
-            const students = input.split('\\n').map(s => s.trim()).filter(s => s.length > 0);
+            const students = input.split('\n').map(s => s.trim()).filter(s => s.length > 0);
 
             if (!className) {
                 showPopup('Fout', 'Vul een klasnaam in om op te slaan.');
@@ -562,7 +603,7 @@
 
             if (students) {
                 document.getElementById('class-name').value = selectedName;
-                document.getElementById('students-input').value = students.join('\\n');
+                document.getElementById('students-input').value = students.join('\n');
                 processStudents();
             }
         }
@@ -590,7 +631,7 @@
         // --- KERNSFUNCTIONALITEITEN ---
         function processStudents() {
             const input = document.getElementById('students-input').value;
-            rawStudents = input.split('\\n').map(s => s.trim()).filter(s => s.length > 0);
+            rawStudents = input.split('\n').map(s => s.trim()).filter(s => s.length > 0);
 
             if (rawStudents.length === 0) {
                 showPopup('Fout', 'Voer minimaal één leerling in.');
@@ -598,6 +639,8 @@
             }
 
             absentStudents.clear();
+            pairHistory = {}; // Historie resetten bij invoer nieuwe klas
+            currentRound = 0;
             renderAbsenceList();
             document.getElementById('absence-section').style.display = 'block';
         }
@@ -635,6 +678,7 @@
             return array;
         }
 
+        // SLIMME INDELING MET MAX 2x REGEL
         function createGroupDivision() {
             const numGroups = selectedGroupCount;
             const activeStudents = rawStudents.filter(s => !absentStudents.has(s));
@@ -644,25 +688,45 @@
                 return null;
             }
 
-            const shuffled = shuffle([...activeStudents]);
-            const groups = Array.from({ length: numGroups }, () => []);
+            let validGroups = null;
+            let attempts = 0;
+            const maxAttempts = 2000; // Probeer tot 2000 keer een geldige schudding te vinden
 
-            shuffled.forEach((student, index) => {
-                groups[index % numGroups].push(student);
-            });
+            while (!validGroups && attempts < maxAttempts) {
+                attempts++;
+                const shuffled = shuffle([...activeStudents]);
+                const testGroups = Array.from({ length: numGroups }, () => []);
 
-            return { groups, activeStudentsCount: activeStudents.length };
+                shuffled.forEach((student, index) => {
+                    testGroups[index % numGroups].push(student);
+                });
+
+                if (isValidDivision(testGroups)) {
+                    validGroups = testGroups;
+                }
+            }
+
+            // Mocht de wiskundige limiet onverhoopt bereikt zijn
+            if (!validGroups) {
+                showPopup('Wiskundige limiet', 'Er kon geen indeling meer gevonden worden waarin niemand voor de 3e keer bij elkaar zit. De historie wordt gereset.');
+                pairHistory = {};
+                return createGroupDivision(); // Opnieuw proberen met schone lei
+            }
+
+            recordGroupHistory(validGroups);
+            currentRound++;
+            return { groups: validGroups, activeStudentsCount: activeStudents.length };
         }
 
         function generateGroupsAndStart() {
+            pairHistory = {}; // Schone lei voor de rondes
+            currentRound = 0;
+
             const className = document.getElementById('class-name').value || 'Klas';
             const result = createGroupDivision();
             if (!result) return;
 
-            document.getElementById('dashboard-title').innerText = `${className} - Groepsindeling`;
-            document.getElementById('active-student-count').innerText = 
-                `Aanwezig: ${result.activeStudentsCount} / Totaal: ${rawStudents.length} (Afwezig: ${absentStudents.size})`;
-
+            updateDashboardHeader(className, result.activeStudentsCount);
             renderDashboard(result.groups);
 
             document.getElementById('setup-screen').classList.remove('active');
@@ -670,10 +734,18 @@
         }
 
         function reshuffleGroups() {
+            const className = document.getElementById('class-name').value || 'Klas';
             const result = createGroupDivision();
             if (!result) return;
 
+            updateDashboardHeader(className, result.activeStudentsCount);
             renderDashboard(result.groups);
+        }
+
+        function updateDashboardHeader(className, activeCount) {
+            document.getElementById('dashboard-title').innerText = `${className} - Ronde ${currentRound}`;
+            document.getElementById('active-student-count').innerText = 
+                `Aanwezig: ${activeCount} / Totaal: ${rawStudents.length} (Afwezig: ${absentStudents.size})`;
         }
 
         function renderDashboard(groups) {
