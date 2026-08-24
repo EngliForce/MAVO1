@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speeddate</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ff007f, #7928ca, #4299e1);
+            padding: 0.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        main {
+            flex: 1;
+            padding: 0.8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 45px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            height: 100%;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            height: 100%;
+        }
+
+        /* INSTELLINGENSCHERM OVERFLOW CONTROL */
+        #settings-screen.active {
+            overflow-y: auto;
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card h2 {
+            font-size: 1.2rem;
+            color: #38bdf8;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* FORM CONTROLS */
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        select option {
+            background: #1e1b4b;
+            color: #fff;
+        }
+
+        /* BUTTONS */
+        .btn {
+            background: linear-gradient(135deg, #7928ca, #ff007f);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 0, 127, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .flex-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        /* PAIRS CONTAINER COMPACT FLEX */
+        .pairs-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .pairs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.6rem;
+            overflow-y: auto;
+            padding-right: 4px;
+            flex: 1;
+        }
+
+        .student-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+
+        .student-item {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .student-item.absent {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            text-decoration: line-through;
+            color: #fca5a5;
+        }
+
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: bold;
+            background: #10b981;
+            color: white;
+        }
+
+        .student-item.absent .status-badge {
+            background: #ef4444;
+        }
+
+        /* PAIR CARDS - ULTRA DUIDELIJK & COMPACT */
+        .pair-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .pair-card.triad {
+            border-color: rgba(245, 158, 11, 0.6);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .pair-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.2rem;
+        }
+
+        .pair-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #38bdf8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pair-card.triad .pair-title {
+            color: #fbbf24;
+        }
+
+        .pair-members {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .pair-member {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+        }
+
+        /* UNIFIED TIMER & QUESTION BOX (STEEVAAST ONDERAAN) */
+        .bottom-control-box {
+            background: linear-gradient(135deg, rgba(121, 40, 202, 0.3), rgba(255, 0, 127, 0.3));
+            border: 1px solid rgba(255, 0, 127, 0.5);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.15);
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .timer-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 10px;
+            padding: 0.6rem;
+        }
+
+        .timer-display {
+            font-size: 2.3rem;
+            font-weight: 800;
+            font-family: 'Courier New', Courier, monospace;
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            line-height: 1;
+            margin: 0.2rem 0;
+        }
+
+        .timer-display.danger {
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .question-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .question-badge {
+            display: inline-block;
+            background: rgba(255, 0, 127, 0.3);
+            color: #ff70ba;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 0, 127, 0.4);
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.6rem;
+            line-height: 1.25;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ANIMATION FOR QUESTION */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-question {
+            animation: popIn 0.3s ease-out forwards;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 0.3rem;
+            margin-top: 0.3rem;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(30, 27, 75, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .modal-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+            color: #ff007f;
+        }
+
+        .modal-card p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .info-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>💬 SPEEDDATE</h1>
+    </header>
+
+    <main>
+        <!-- STAP 1: INSTELLINGEN -->
+        <div id="settings-screen" class="screen active">
+            <div class="glass-card">
+                <h2>👥 Klas & Leerlingen Beheren</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+                    <div>
+                        <div class="form-group">
+                            <label for="saved-classes-select">Opgeslagen klassen:</label>
+                            <select id="saved-classes-select" onchange="loadSelectedClass()">
+                                <option value="">-- Selecteer een klas --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="class-name">Klasnaam:</label>
+                            <input type="text" id="class-name" placeholder="bijv. Klas 1A">
+                        </div>
+                        <div class="flex-actions" style="margin-bottom: 0.8rem;">
+                            <button class="btn btn-secondary" onclick="saveCurrentClass()">💾 Opslaan</button>
+                            <button class="btn btn-danger" onclick="confirmDeleteClass()">🗑️ Verwijderen</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label for="students-input">Leerlingen (1 naam per regel):</label>
+                            <textarea id="students-input" rows="4" placeholder="Emma&#10;Daan&#10;Sophie&#10;Lars&#10;Mila&#10;Lucas"></textarea>
+                        </div>
+                        <button class="btn" style="width: 100%;" onclick="processStudents()">Verwerk Leerlingen ➔</button>
+                    </div>
+                </div>
+
+                <!-- ABSENTIE GEDEELTE -->
+                <div id="absence-section" style="display: none; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.8rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <label style="margin:0;">Klik op een leerling om afwezig te melden:</label>
+                        <div id="absence-summary" class="info-pill">📊 Aanwezig: 0 leerlingen</div>
+                    </div>
+                    
+                    <div id="student-checkboxes" class="student-checkboxes"></div>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <button class="btn btn-success" style="font-size: 1rem; padding: 0.7rem 1.6rem;" onclick="generatePairsAndStart()">
+                            🚀 Genereer Duo's & Start ➔
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAP 2: SPEELPAGINA (VOLLEDIG SCHERMVULLEND & SCROLLVRIJ) -->
+        <div id="play-screen" class="screen">
+            <!-- ACTIEVE DUO'S -->
+            <div class="glass-card pairs-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-shrink: 0;">
+                    <h2 id="round-title" style="margin: 0;">⚡ Actieve Duo's</h2>
+                    <button class="btn" onclick="reshufflePairs()">🔀 Nieuwe Duo's</button>
+                </div>
+
+                <div id="pairs-container" class="pairs-grid"></div>
+            </div>
+
+            <!-- TIMER & VRAAG IN EÉN VAK (ONDERAAN INTEGRAL) -->
+            <div class="glass-card bottom-control-box">
+                <!-- LINKERKANT: TIMER -->
+                <div class="timer-side">
+                    <div style="font-size: 0.75rem; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px;">Ronde Timer</div>
+                    <div class="timer-display" id="main-timer">02:00</div>
+                    <div class="flex-actions" style="margin-bottom: 0.2rem;">
+                        <button class="btn btn-success" id="btn-start-timer" onclick="startTimer()">▶ Start</button>
+                        <button class="btn btn-warning" id="btn-pause-timer" onclick="pauseTimer()">⏸ Pauze</button>
+                    </div>
+                    <div class="preset-buttons">
+                        <button type="button" class="preset-btn" onclick="setTimerPreset(1)">1 m</button>
+                        <button type="button" class="preset-btn" onclick="setTimerPreset(1.5)">1.5 m</button>
+                        <button type="button" class="preset-btn" onclick="setTimerPreset(2)">2 m</button>
+                        <button type="button" class="preset-btn" onclick="setTimerPreset(3)">3 m</button>
+                    </div>
+                </div>
+
+                <!-- RECHTERKANT: VRAAG MET ANIMATIE -->
+                <div class="question-side">
+                    <span class="question-badge" id="question-badge-text">Kennismakingsvragen</span>
+                    <div class="question-text" id="current-question-text">
+                        Klik op 'Volgende Vraag' om te beginnen!
+                    </div>
+                    <div class="flex-actions">
+                        <button class="btn" onclick="nextQuestion()">🎲 Volgende Vraag</button>
+                        <button class="btn btn-secondary" onclick="resetQuestionsPool()" title="Reset Vragen">🔄 Reset Vragen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- CUSTOM POPUP MODAL -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modal-title">Melding</h3>
+            <p id="modal-message">Inhoud van de melding...</p>
+            <div id="modal-actions" class="flex-actions" style="justify-content: center;">
+                <button class="btn" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="timer-beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+    <script>
+        // --- DATA STRUCTURES ---
+        let rawStudents = [];
+        let absentStudents = new Set();
+        let pairHistory = {}; 
+        let currentRound = 0;
+
+        // Timer State
+        let timerDurationSeconds = 120;
+        let timerRemainingSeconds = 120;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // Questions Pool
+        const defaultQuestions = [
+            "Wat is je absolute lievelingseten als je echt alles mag kiezen?",
+            "Welke superkracht zou jij het liefst willen hebben voor één dag?",
+            "Welke serie, film of YouTube-kanaal kijk je op dit moment het liefst?",
+            "Wat is je leukste vak op school en wat vind je het minst leuk?",
+            "Als je 1000 euro zou krijgen die je vandaag moet uitgeven, wat koop je?",
+            "Heb je huisdieren, of welk dier zou je heel graag als huisdier willen?",
+            "Zou je liever nooit meer huiswerk hebben of nooit meer je kamer hoeven opruimen?",
+            "Wat is je favoriete game, sport of hobby om in je vrije tijd te doen?",
+            "Als er een film over jouw leven gemaakt zou worden, welke acteur/actrice speelt jou?",
+            "Wat is de leukste of mooiste vakantie waar je ooit bent geweest?",
+            "Zou je liever kunnen vliegen of onzichtbaar kunnen worden?",
+            "Wat is een gekke of grappige gewoonte van jou die bijna niemand weet?",
+            "Welk nummer draai je op dit moment helemaal grijs op Spotify of YouTube?",
+            "Als je zelf je eigen voornaam mocht kiezen, welke naam zou je kiezen?",
+            "Wat is het raarste of vieste dat je ooit hebt gegeten?",
+            "Zou je liever 100 jaar in het verleden leven of 100 jaar in de toekomst?",
+            "Wat is het leukste ding dat je het afgelopen jaar hebt meegemaakt?",
+            "Ben je liever op een zonnig strand of in de sneeuw om te skieën of sleeën?",
+            "Wat zou je worden als je nu meteen al een beroep moest kiezen?",
+            "Als je voor 1 dag een bekende YouTuber of TikTokker mocht zijn, wie kies je?",
+            "Zou je liever met dieren kunnen praten of alle talen ter wereld spreken?",
+            "Wat is jouw favoriete snack of snoep waar je nooit genoeg van krijgt?",
+            "Welk pretpark vind jij het allerleukst en wat is je favoriete attractie?",
+            "Waar kan iemand jou echt midden in de nacht voor wakker maken?",
+            "Zou je liever heel goed kunnen zingen of heel goed kunnen sporten?",
+            "Wat is de grappigste blunder die je ooit hebt meegemaakt?",
+            "Als je een eigen onbewoond eiland had, hoe zou je het noemen en wat zou er staan?",
+            "Wat vind je het fijnste om te doen op een luie zondag?",
+            "Zou je liever een draak of een dinosaurus als huisdier hebben?",
+            "Welke app op je telefoon of tablet gebruik je het allermeest?",
+            "Wat is het beste of leukste cadeau dat je ooit voor je verjaardag hebt gekregen?",
+            "Zou je liever elke dag pannenkoeken als ontbijt eten of elke dag pizza als lunch?",
+            "Wat is een bijzondere vaardigheid of talent dat je graag zou willen leren?",
+            "Als jij voor één dag de baas van de school was, wat zou je meteen veranderen?",
+            "Welk dier past volgens jou het beste bij jouw persoonlijkheid en waarom?",
+            "Zou je liever nooit meer een telefoon hebben of nooit meer tv/films kijken?",
+            "Wat is het eerste wat je zou doen als je wakker wordt en de enige persoon op aarde bent?",
+            "Welke nieuwe smaak ijs zou jij uitvinden als je een eigen ijssalon had?",
+            "Wat is jouw lievelingsseizoen van het jaar en waarom?",
+            "Wie maakt jou altijd het hardst aan het lachen?",
+            "Zou je liever onder water kunnen ademen of door muren kunnen lopen?",
+            "Wat is iets wat heel veel mensen leuk vinden, maar jij echt helemaal niks aan vindt?",
+            "Welke 3 spullen zou je meenemen naar een onbewoond eiland?",
+            "Als je moest kiezen: voor altijd zomer of voor altijd winter?",
+            "Zou je liever een tijdmachine hebben of een teleportatie-apparaat?",
+            "Welk liedje kan jij helemaal uit je hoofd meezingen?",
+            "Omschrijf jezelf in 3 woorden!",
+            "Wat is de beste raad of tip die iemand jou ooit heeft gegeven?",
+            "Zou je liever altijd eerlijk moeten zijn of nooit meer mogen praten?",
+            "Wat is je favoriete feestdag van het jaar en hoe vier je die het liefst?"
+        ];
+
+        let remainingQuestions = [];
+        let usedQuestions = [];
+        let currentQuestion = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSavedClassesDropdown();
+            initQuestionsPool();
+        });
+
+        // --- QUESTIONS LOGIC & ANIMATION ---
+        function initQuestionsPool() {
+            remainingQuestions = [...defaultQuestions];
+            usedQuestions = [];
+            shuffleArray(remainingQuestions);
+        }
+
+        function nextQuestion() {
+            if (remainingQuestions.length === 0) {
+                showPopup("Vragen op!", "Alle vragen zijn geweest! De vragenpool wordt opnieuw geschud.", () => {
+                    initQuestionsPool();
+                    nextQuestion();
+                });
+                return;
+            }
+
+            currentQuestion = remainingQuestions.pop();
+            usedQuestions.push(currentQuestion);
+
+            const qElem = document.getElementById('current-question-text');
+            
+            // Trigger CSS Animation
+            qElem.classList.remove('animate-question');
+            void qElem.offsetWidth; // Force reflow
+            qElem.innerText = currentQuestion;
+            qElem.classList.add('animate-question');
+
+            document.getElementById('question-badge-text').innerText = `Vraag ${usedQuestions.length} / ${defaultQuestions.length}`;
+        }
+
+        function resetQuestionsPool() {
+            initQuestionsPool();
+            const qElem = document.getElementById('current-question-text');
+            qElem.classList.remove('animate-question');
+            qElem.innerText = "Klik op 'Volgende Vraag' om te beginnen!";
+            document.getElementById('question-badge-text').innerText = `Kennismakingsvragen`;
+            showPopup("Reset", "De vragenpool is gereset!");
+        }
+
+        // --- CLASS MANAGEMENT ---
+        function getSavedClasses() {
+            const data = localStorage.getItem('saved_speeddate_classes');
+            return data ? JSON.parse(data) : {};
+        }
+
+        function saveCurrentClass() {
+            const className = document.getElementById('class-name').value.trim();
+            const input = document.getElementById('students-input').value;
+            const students = input.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+
+            if (!className) {
+                showPopup("Fout", "Vul een klasnaam in voordat je opslaat.");
+                return;
+            }
+
+            if (students.length === 0) {
+                showPopup("Fout", "Voer minimaal één leerling in.");
+                return;
+            }
+
+            const classes = getSavedClasses();
+            classes[className] = students;
+            localStorage.setItem('saved_speeddate_classes', JSON.stringify(classes));
+            
+            updateSavedClassesDropdown();
+            document.getElementById('saved-classes-select').value = className;
+            showPopup("Opgeslagen", `Klas '${className}' is succesvol opgeslagen!`);
+        }
+
+        function updateSavedClassesDropdown() {
+            const select = document.getElementById('saved-classes-select');
+            const classes = getSavedClasses();
+            select.innerHTML = '<option value="">-- Selecteer een klas --</option>';
+            
+            Object.keys(classes).forEach(cls => {
+                const opt = document.createElement('option');
+                opt.value = cls;
+                opt.textContent = cls;
+                select.appendChild(opt);
+            });
+        }
+
+        function loadSelectedClass() {
+            const select = document.getElementById('saved-classes-select');
+            const className = select.value;
+            if (!className) return;
+
+            const classes = getSavedClasses();
+            if (classes[className]) {
+                document.getElementById('class-name').value = className;
+                document.getElementById('students-input').value = classes[className].join('\n');
+                processStudents();
+            }
+        }
+
+        function confirmDeleteClass() {
+            const select = document.getElementById('saved-classes-select');
+            const className = select.value;
+            if (!className) {
+                showPopup("Melding", "Selecteer eerst een klas om te verwijderen.");
+                return;
+            }
+
+            showPopup("Klas Verwijderen", `Weet je zeker dat je klas '${className}' wilt verwijderen?`, () => {
+                const classes = getSavedClasses();
+                delete classes[className];
+                localStorage.setItem('saved_speeddate_classes', JSON.stringify(classes));
+                updateSavedClassesDropdown();
+                document.getElementById('class-name').value = '';
+                document.getElementById('students-input').value = '';
+                document.getElementById('absence-section').style.display = 'none';
+            }, true);
+        }
+
+        // --- STUDENT & ABSENCE LOGIC ---
+        function processStudents() {
+            const input = document.getElementById('students-input').value;
+            rawStudents = input.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+            
+            if (rawStudents.length < 2) {
+                showPopup("Te weinig leerlingen", "Voer minimaal 2 leerlingen in om te kunnen koppelen.");
+                return;
+            }
+
+            absentStudents.clear();
+            pairHistory = {};
+            currentRound = 0;
+            
+            renderStudentCheckboxes();
+            document.getElementById('absence-section').style.display = 'block';
+        }
+
+        function renderStudentCheckboxes() {
+            const container = document.getElementById('student-checkboxes');
+            container.innerHTML = '';
+
+            rawStudents.forEach(student => {
+                const isAbsent = absentStudents.has(student);
+                const item = document.createElement('div');
+                item.className = 'student-item' + (isAbsent ? ' absent' : '');
+                item.onclick = () => toggleAbsent(student);
+                item.innerHTML = `
+                    <span>${student}</span>
+                    <span class="status-badge">${isAbsent ? 'Afwezig' : 'Aanwezig'}</span>
+                `;
+                container.appendChild(item);
+            });
+
+            const activeCount = rawStudents.length - absentStudents.size;
+            document.getElementById('absence-summary').innerHTML = `📊 Aanwezig: ${activeCount} van de ${rawStudents.length} leerlingen`;
+        }
+
+        function toggleAbsent(student) {
+            if (absentStudents.has(student)) {
+                absentStudents.delete(student);
+            } else {
+                absentStudents.add(student);
+            }
+            renderStudentCheckboxes();
+        }
+
+        // --- TIMER LOGIC ---
+        function setTimerPreset(minutes) {
+            timerDurationSeconds = Math.round(minutes * 60);
+            resetTimer();
+        }
+
+        function startTimer() {
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            
+            timerInterval = setInterval(() => {
+                if (timerRemainingSeconds > 0) {
+                    timerRemainingSeconds--;
+                    updateTimerDisplay();
+                } else {
+                    pauseTimer();
+                    playTimerSound();
+                    showPopup("Tijd is om!", "De ronde is afgelopen. Wissel van gesprekspartner!");
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isTimerRunning = false;
+            if (timerInterval) clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerRemainingSeconds = timerDurationSeconds;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('main-timer');
+            const mins = Math.floor(timerRemainingSeconds / 60);
+            const secs = timerRemainingSeconds % 60;
+            display.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            
+            if (timerRemainingSeconds <= 10 && timerRemainingSeconds > 0) {
+                display.classList.add('danger');
+            } else {
+                display.classList.remove('danger');
+            }
+        }
+
+        function playTimerSound() {
+            const audio = document.getElementById('timer-beep');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("Audio playing blocked:", e));
+            }
+        }
+
+        // --- PAIRING & SCREEN TRANSITION LOGIC ---
+        function generatePairsAndStart() {
+            reshufflePairs();
+            if (!currentQuestion) nextQuestion();
+            
+            // Switch screen from settings to play screen
+            document.getElementById('settings-screen').classList.remove('active');
+            document.getElementById('play-screen').classList.add('active');
+        }
+
+        function reshufflePairs() {
+            const activeStudents = rawStudents.filter(s => !absentStudents.has(s));
+            
+            if (activeStudents.length < 2) {
+                showPopup("Fout", "Er moeten minimaal 2 aanwezige leerlingen zijn.");
+                return;
+            }
+
+            currentRound++;
+            document.getElementById('round-title').innerText = `⚡ Actieve Duo's (Ronde ${currentRound})`;
+
+            const pairs = createSmartPairs([...activeStudents]);
+            renderPairs(pairs);
+            resetTimer();
+        }
+
+        function createSmartPairs(students) {
+            shuffleArray(students);
+            let pairs = [];
+
+            while (students.length >= 2) {
+                if (students.length === 3) {
+                    pairs.push({ members: [students.pop(), students.pop(), students.pop()], isTriad: true });
+                } else {
+                    const s1 = students.pop();
+                    let bestMatchIdx = 0;
+                    let minHistory = Infinity;
+
+                    for (let i = 0; i < students.length; i++) {
+                        const key = getPairKey(s1, students[i]);
+                        const count = pairHistory[key] || 0;
+                        if (count < minHistory) {
+                            minHistory = count;
+                            bestMatchIdx = i;
+                        }
+                    }
+
+                    const s2 = students.splice(bestMatchIdx, 1)[0];
+                    const key = getPairKey(s1, s2);
+                    pairHistory[key] = (pairHistory[key] || 0) + 1;
+                    pairs.push({ members: [s1, s2], isTriad: false });
+                }
+            }
+
+            return pairs;
+        }
+
+        function getPairKey(a, b) {
+            return [a, b].sort().join('|||');
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+
+        function renderPairs(pairs) {
+            const container = document.getElementById('pairs-container');
+            container.innerHTML = '';
+
+            pairs.forEach((pair, idx) => {
+                const card = document.createElement('div');
+                card.className = 'pair-card' + (pair.isTriad ? ' triad' : '');
+                
+                const titleText = pair.isTriad ? `Groepje ${idx + 1}` : `Duo ${idx + 1}`;
+
+                const membersHtml = pair.members.map(m => `
+                    <div class="pair-member">
+                        <span>👤</span> <span>${m}</span>
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="pair-header">
+                        <span class="pair-title">${titleText}</span>
+                    </div>
+                    <div class="pair-members">
+                        ${membersHtml}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- MODAL POPUP ---
+        function showPopup(title, message, onConfirm = null, showCancel = false) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            
+            const actions = document.getElementById('modal-actions');
+            actions.innerHTML = '';
+
+            if (showCancel) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn btn-secondary';
+                cancelBtn.innerText = 'Annuleren';
+                cancelBtn.onclick = closeModal;
+                actions.appendChild(cancelBtn);
+            }
+
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn';
+            confirmBtn.innerText = showCancel ? 'Bevestigen' : 'OK';
+            confirmBtn.onclick = () => {
+                closeModal();
+                if (onConfirm) onConfirm();
+            };
+            actions.appendChild(confirmBtn);
+
+            document.getElementById('custom-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
