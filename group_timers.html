@@ -18,9 +18,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-bottom: 90px;
         }
 
-        /* Header met kleurig verloop en neon-accent */
         header {
             background: linear-gradient(90deg, #ff007f, #7928ca, #4299e1);
             padding: 1.5rem;
@@ -44,7 +44,6 @@
             width: 100%;
         }
 
-        /* Glassmorphism basis stijl */
         .glass-card {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(12px);
@@ -64,7 +63,6 @@
             display: block;
         }
 
-        /* Formulieren & Inputs */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -76,7 +74,7 @@
             color: #cbd5e1;
         }
 
-        input[type="text"], select, textarea {
+        input[type="text"], input[type="number"], select, textarea {
             width: 100%;
             padding: 0.8rem 1rem;
             background: rgba(15, 23, 42, 0.6);
@@ -98,7 +96,13 @@
             box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
         }
 
-        /* Absentenlijst styling */
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
         .student-checkboxes {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -132,7 +136,6 @@
             color: #fca5a5;
         }
 
-        /* Knoppen */
         .btn {
             background: linear-gradient(135deg, #7928ca, #ff007f);
             color: white;
@@ -173,7 +176,6 @@
             background: linear-gradient(135deg, #10b981, #059669);
         }
 
-        /* Groepsknoppen 2 t/m 10 */
         .group-selector {
             display: flex;
             flex-wrap: wrap;
@@ -206,20 +208,40 @@
             box-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
         }
 
-        /* Dashboard Grid met Timers */
-        .controls-bar {
+        .dashboard-header-simple {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .dashboard-header-simple h2 {
+            font-size: 2rem;
+            color: #38bdf8;
+        }
+
+        .controls-bar-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            gap: 0.8rem;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            z-index: 100;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.5);
         }
 
         .groups-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .group-card {
@@ -254,21 +276,30 @@
         .student-list {
             list-style: none;
             width: 100%;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             font-size: 0.95rem;
         }
 
         .student-list li {
             padding: 0.4rem 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
         }
 
         .timer-display {
             font-size: 2.5rem;
             font-weight: bold;
             font-family: monospace;
-            margin: 0.5rem 0 1rem 0;
+            margin: 0.5rem 0;
             text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #facc15;
+            margin-bottom: 1rem;
         }
 
         .timer-btn-group {
@@ -289,7 +320,67 @@
             flex-wrap: wrap;
         }
 
-        /* Custom Modal Popup (Glassmorphism) */
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            min-height: 250px;
+        }
+
+        .podium-place {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 120px;
+        }
+
+        .podium-block {
+            width: 100%;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .place-1 .podium-block { height: 160px; background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .place-2 .podium-block { height: 120px; background: linear-gradient(135deg, #94a3b8, #64748b); }
+        .place-3 .podium-block { height: 90px; background: linear-gradient(135deg, #b45309, #78350f); }
+
+        .podium-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .podium-score {
+            font-size: 0.9rem;
+            color: #facc15;
+            margin-bottom: 0.3rem;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard-table th {
+            color: #38bdf8;
+        }
+
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -359,7 +450,6 @@
     <main>
         <!-- SCHERM 1: CONFIGURATIE -->
         <div id="setup-screen" class="screen active">
-            <!-- Opslaan / Laden blok -->
             <div class="glass-card">
                 <h2>📁 Opgeslagen Klassen</h2>
                 <br>
@@ -372,7 +462,6 @@
                 <button class="btn btn-danger" onclick="confirmDeleteClass()">🗑️ Klas Verwijderen</button>
             </div>
 
-            <!-- Invoer blok -->
             <div class="glass-card">
                 <h2>1. Klas Aanmaken of Bewerken</h2>
                 <br>
@@ -391,7 +480,7 @@
             </div>
 
             <div id="absence-section" class="glass-card" style="display: none;">
-                <h2>2. Absenten & Groepsindeling</h2>
+                <h2>2. Absenten & Spelinstellingen</h2>
                 <br>
                 <p>Klik op leerlingen die **afwezig** zijn om ze uit te sluiten:</p>
                 <div id="student-checkboxes" class="student-checkboxes"></div>
@@ -399,31 +488,60 @@
                 <br><hr style="border-color: rgba(255,255,255,0.1);"><br>
 
                 <div class="form-group">
-                    <label>Aantal gewenste groepjes (Kies 6 voor groepen van 4-5 personen bij 28 leerlingen)</label>
+                    <label>Aantal gewenste groepjes</label>
                     <div id="group-buttons-container" class="group-selector"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Punten per positie (volgorde van stoppen):</label>
+                    <div id="points-inputs-container" class="points-grid"></div>
                 </div>
 
                 <button class="btn btn-success" onclick="generateGroupsAndStart()">Start Groepen & Timers ➔</button>
             </div>
         </div>
 
-        <!-- SCHERM 2: GROEPEN EN TIMERS DASHBOARD -->
+        <!-- SCHERM 2: DASHBOARD -->
         <div id="dashboard-screen" class="screen">
-            <div class="controls-bar glass-card">
-                <div>
-                    <h2 id="dashboard-title">Klas Dashboard</h2>
-                    <p style="color: #94a3b8; font-size: 0.9rem;" id="active-student-count"></p>
-                </div>
-                <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-                    <button class="btn btn-success" onclick="startAllTimers()">▶ Start Alle Timers</button>
-                    <button class="btn btn-danger" onclick="stopAllTimers()">⏸ Stop Alle Timers</button>
-                    <button class="btn btn-secondary" onclick="resetAllTimers()">🔄 Reset Timers</button>
-                    <button class="btn" onclick="reshuffleGroups()">🔀 Volgende Ronde</button>
-                    <button class="btn btn-secondary" onclick="showSetupScreen()">⚙️ Klas Aanpassen</button>
-                </div>
+            <div class="dashboard-header-simple">
+                <h2 id="dashboard-title">Ronde 1</h2>
             </div>
 
             <div id="groups-container" class="groups-grid"></div>
+
+            <div class="controls-bar-bottom">
+                <button class="btn btn-success" onclick="startAllTimers()">▶ Start Alle Timers</button>
+                <button class="btn btn-danger" onclick="stopAllTimers()">⏸ Stop Alle Timers</button>
+                <button class="btn btn-secondary" onclick="resetAllTimers()">🔄 Reset Timers</button>
+                <button class="btn" onclick="reshuffleGroups()">🔀 Volgende Ronde</button>
+                <button class="btn btn-secondary" onclick="toggleScoresVisibility()">👁️ Scores <span id="scores-toggle-text">Verbergen</span></button>
+                <button class="btn btn-danger" onclick="endGame()">🏆 Einde Spel</button>
+            </div>
+        </div>
+
+        <!-- SCHERM 3: EINDE SPEL (PODIUM) -->
+        <div id="endgame-screen" class="screen">
+            <div class="glass-card" style="text-align: center;">
+                <h2>🎉 Eindklassement 🎉</h2>
+                <p style="color: #cbd5e1; margin-top: 0.5rem;">Hier zijn de winnaars van het spel!</p>
+
+                <div id="podium-view" class="podium-container"></div>
+
+                <h3>Volledige Uitslag</h3>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Naam</th>
+                            <th>Totaal Punten</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-tbody"></tbody>
+                </table>
+
+                <br>
+                <button class="btn" onclick="restartGame()">🔄 Nieuw Spel Starten</button>
+            </div>
         </div>
     </main>
 
@@ -442,30 +560,29 @@
         let rawStudents = [];
         let absentStudents = new Set();
         let groupTimers = [];
-        let selectedGroupCount = 6; // Standaard 6 groepen (ideaal voor 28 leerlingen: 4 van 5, 2 van 4)
+        let selectedGroupCount = 6; 
+        let customPointsList = []; 
 
-        // LOGICA VOOR HISTORIE: MAXIMAAL 2 KEER SAMEN
-        let pairHistory = {}; // Format: { "LeerlingA|||LeerlingB": aantal_keer_samen }
+        let playerScores = {}; 
+        let pairHistory = {}; 
         let currentRound = 0;
-        const MAX_TOGETHER = 2; // Maximaal 2 keer bij elkaar over alle rondes
+        let showScores = true;
 
         document.addEventListener('DOMContentLoaded', () => {
             updateSavedClassesDropdown();
             renderGroupButtons();
+            renderPointsInputs();
         });
 
-        // Genereer unieke sleutel voor een duo (alfabetisch gesorteerd)
         function getPairKey(student1, student2) {
             return [student1, student2].sort().join('|||');
         }
 
-        // Vraag op hoe vaak twee leerlingen al samen zijn ingedeeld
         function getTogetherCount(student1, student2) {
             const key = getPairKey(student1, student2);
             return pairHistory[key] || 0;
         }
 
-        // Sla de gemaakte groepsindeling op in de historie
         function recordGroupHistory(groups) {
             groups.forEach(group => {
                 for (let i = 0; i < group.length; i++) {
@@ -477,21 +594,18 @@
             });
         }
 
-        // Valideer of in deze indeling niemand voor een 3e keer samen zit
-        function isValidDivision(groups) {
+        function calculateDivisionScore(groups) {
+            let score = 0;
             for (let group of groups) {
                 for (let i = 0; i < group.length; i++) {
                     for (let j = i + 1; j < group.length; j++) {
-                        if (getTogetherCount(group[i], group[j]) >= MAX_TOGETHER) {
-                            return false; // Dit paar zit al aan het maximum van 2 keer
-                        }
+                        score += getTogetherCount(group[i], group[j]);
                     }
                 }
             }
-            return true;
+            return score;
         }
 
-        // --- CUSTOM MODAL POPUPS ---
         function showPopup(title, message, onConfirm = null) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-message').innerText = message;
@@ -530,7 +644,6 @@
             document.getElementById('custom-modal').classList.remove('active');
         }
 
-        // --- GROEPSKNOPPEN GENEREREN ---
         function renderGroupButtons() {
             const container = document.getElementById('group-buttons-container');
             container.innerHTML = '';
@@ -545,12 +658,27 @@
             }
         }
 
+        function renderPointsInputs() {
+            const container = document.getElementById('points-inputs-container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < selectedGroupCount; i++) {
+                const div = document.createElement('div');
+                const defaultVal = Math.max(1, selectedGroupCount - i);
+                div.innerHTML = `
+                    <label style="font-size:0.85rem; margin-bottom:0.2rem;">Stop ${i + 1}</label>
+                    <input type="number" class="custom-point-val" value="${defaultVal}" min="0">
+                `;
+                container.appendChild(div);
+            }
+        }
+
         function selectGroupCount(num) {
             selectedGroupCount = num;
             renderGroupButtons();
+            renderPointsInputs();
         }
 
-        // --- LOCAL STORAGE LOGICA ---
         function getSavedClasses() {
             const data = localStorage.getItem('saved_classes');
             return data ? JSON.parse(data) : {};
@@ -628,7 +756,6 @@
             });
         }
 
-        // --- KERNSFUNCTIONALITEITEN ---
         function processStudents() {
             const input = document.getElementById('students-input').value;
             rawStudents = input.split('\n').map(s => s.trim()).filter(s => s.length > 0);
@@ -639,7 +766,10 @@
             }
 
             absentStudents.clear();
-            pairHistory = {}; // Historie resetten bij invoer nieuwe klas
+            pairHistory = {}; 
+            playerScores = {};
+            rawStudents.forEach(s => playerScores[s] = 0);
+
             currentRound = 0;
             renderAbsenceList();
             document.getElementById('absence-section').style.display = 'block';
@@ -678,7 +808,6 @@
             return array;
         }
 
-        // SLIMME INDELING MET MAX 2x REGEL
         function createGroupDivision() {
             const numGroups = selectedGroupCount;
             const activeStudents = rawStudents.filter(s => !absentStudents.has(s));
@@ -688,12 +817,11 @@
                 return null;
             }
 
-            let validGroups = null;
-            let attempts = 0;
-            const maxAttempts = 2000; // Probeer tot 2000 keer een geldige schudding te vinden
+            let bestGroups = null;
+            let bestScore = Infinity;
+            const maxAttempts = 1000;
 
-            while (!validGroups && attempts < maxAttempts) {
-                attempts++;
+            for (let i = 0; i < maxAttempts; i++) {
                 const shuffled = shuffle([...activeStudents]);
                 const testGroups = Array.from({ length: numGroups }, () => []);
 
@@ -701,32 +829,40 @@
                     testGroups[index % numGroups].push(student);
                 });
 
-                if (isValidDivision(testGroups)) {
-                    validGroups = testGroups;
+                const currentScore = calculateDivisionScore(testGroups);
+
+                if (currentScore === 0) {
+                    bestGroups = testGroups;
+                    break;
+                }
+
+                if (currentScore < bestScore) {
+                    bestScore = currentScore;
+                    bestGroups = testGroups;
                 }
             }
 
-            // Mocht de wiskundige limiet onverhoopt bereikt zijn
-            if (!validGroups) {
-                showPopup('Wiskundige limiet', 'Er kon geen indeling meer gevonden worden waarin niemand voor de 3e keer bij elkaar zit. De historie wordt gereset.');
-                pairHistory = {};
-                return createGroupDivision(); // Opnieuw proberen met schone lei
-            }
-
-            recordGroupHistory(validGroups);
+            recordGroupHistory(bestGroups);
             currentRound++;
-            return { groups: validGroups, activeStudentsCount: activeStudents.length };
+            return { groups: bestGroups, activeStudentsCount: activeStudents.length };
         }
 
         function generateGroupsAndStart() {
-            pairHistory = {}; // Schone lei voor de rondes
+            pairHistory = {}; 
+            playerScores = {};
+            rawStudents.forEach(s => playerScores[s] = 0);
             currentRound = 0;
 
-            const className = document.getElementById('class-name').value || 'Klas';
+            const inputs = document.querySelectorAll('.custom-point-val');
+            customPointsList = Array.from(inputs).map(inp => {
+                const val = parseInt(inp.value);
+                return isNaN(val) ? 0 : val;
+            });
+
             const result = createGroupDivision();
             if (!result) return;
 
-            updateDashboardHeader(className, result.activeStudentsCount);
+            updateDashboardHeader();
             renderDashboard(result.groups);
 
             document.getElementById('setup-screen').classList.remove('active');
@@ -734,18 +870,15 @@
         }
 
         function reshuffleGroups() {
-            const className = document.getElementById('class-name').value || 'Klas';
             const result = createGroupDivision();
             if (!result) return;
 
-            updateDashboardHeader(className, result.activeStudentsCount);
+            updateDashboardHeader();
             renderDashboard(result.groups);
         }
 
-        function updateDashboardHeader(className, activeCount) {
-            document.getElementById('dashboard-title').innerText = `${className} - Ronde ${currentRound}`;
-            document.getElementById('active-student-count').innerText = 
-                `Aanwezig: ${activeCount} / Totaal: ${rawStudents.length} (Afwezig: ${absentStudents.size})`;
+        function updateDashboardHeader() {
+            document.getElementById('dashboard-title').innerText = `Ronde ${currentRound}`;
         }
 
         function renderDashboard(groups) {
@@ -760,12 +893,22 @@
                 groupCard.className = 'group-card';
 
                 const timerObj = {
+                    groupMembers: group,
                     seconds: 0,
                     interval: null,
-                    displayEl: null
+                    points: null, 
+                    displayEl: null,
+                    scoreEl: null
                 };
 
-                const studentListHTML = group.map(s => `<li>${s}</li>`).join('');
+                const studentListHTML = group.map(s => {
+                    const safeId = s.replace(/[^a-zA-Z0-9]/g, '_');
+                    return `
+                    <li>
+                        <span>${s}</span>
+                        <span class="score-val score-val-${safeId}" style="display: ${showScores ? 'inline' : 'none'}; font-weight: bold; color: #facc15;">${playerScores[s] || 0} pt</span>
+                    </li>`;
+                }).join('');
 
                 groupCard.innerHTML = `
                     <div class="group-title">Groep ${index + 1}</div>
@@ -773,20 +916,21 @@
                         ${studentListHTML || '<li style="color:#64748b"><i>Leeg</i></li>'}
                     </ul>
                     <div class="timer-display" id="timer-display-${index}">00:00</div>
+                    <div class="score-display" id="score-display-${index}" style="display: ${showScores ? 'block' : 'none'};">Rondepunten: -</div>
                     <div class="timer-btn-group">
                         <button class="btn btn-success" onclick="startTimer(${index})">Start</button>
-                        <button class="btn btn-danger" onclick="stopTimer(${index})">Stop</button>
+                        <button class="btn btn-danger" onclick="stopTimerHandmatig(${index})">Stop</button>
                     </div>
                 `;
 
                 container.appendChild(groupCard);
 
                 timerObj.displayEl = document.getElementById(`timer-display-${index}`);
+                timerObj.scoreEl = document.getElementById(`score-display-${index}`);
                 groupTimers.push(timerObj);
             });
         }
 
-        // --- TIMER LOGICA ---
         function formatTime(totalSeconds) {
             const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
             const secs = (totalSeconds % 60).toString().padStart(2, '0');
@@ -803,11 +947,26 @@
             }, 1000);
         }
 
-        function stopTimer(index) {
+        function stopTimerHandmatig(index) {
             const timer = groupTimers[index];
             if (timer.interval) {
                 clearInterval(timer.interval);
                 timer.interval = null;
+
+                const alGestopt = groupTimers.filter(t => t.points !== null).length;
+                
+                const awardedPoints = customPointsList[alGestopt] !== undefined ? customPointsList[alGestopt] : 0;
+                timer.points = awardedPoints;
+                
+                timer.groupMembers.forEach(member => {
+                    playerScores[member] = (playerScores[member] || 0) + awardedPoints;
+                    const safeId = member.replace(/[^a-zA-Z0-9]/g, '_');
+                    document.querySelectorAll(`.score-val-${safeId}`).forEach(el => {
+                        el.innerText = `${playerScores[member]} pt`;
+                    });
+                });
+
+                timer.scoreEl.innerText = `Rondepunten: +${timer.points}`;
             }
         }
 
@@ -816,20 +975,92 @@
         }
 
         function stopAllTimers() {
-            groupTimers.forEach((_, index) => stopTimer(index));
-        }
-
-        function resetAllTimers() {
-            stopAllTimers();
-            groupTimers.forEach(timer => {
-                timer.seconds = 0;
-                timer.displayEl.innerText = "00:00";
+            groupTimers.forEach((timer) => {
+                if (timer.interval) {
+                    clearInterval(timer.interval);
+                    timer.interval = null;
+                    timer.points = 0;
+                    timer.scoreEl.innerText = `Rondepunten: 0`;
+                }
             });
         }
 
-        function showSetupScreen() {
+        function resetAllTimers() {
+            groupTimers.forEach((timer) => {
+                if (timer.interval) {
+                    clearInterval(timer.interval);
+                    timer.interval = null;
+                }
+                timer.seconds = 0;
+                timer.points = null;
+                timer.displayEl.innerText = "00:00";
+                timer.scoreEl.innerText = "Rondepunten: -";
+            });
+        }
+
+        function toggleScoresVisibility() {
+            showScores = !showScores;
+            document.getElementById('scores-toggle-text').innerText = showScores ? 'Verbergen' : 'Tonen';
+            
+            document.querySelectorAll('.score-val').forEach(el => {
+                el.style.display = showScores ? 'inline' : 'none';
+            });
+            document.querySelectorAll('.score-display').forEach(el => {
+                el.style.display = showScores ? 'block' : 'none';
+            });
+        }
+
+        function endGame() {
             stopAllTimers();
+
+            const sortedPlayers = Object.keys(playerScores)
+                .map(name => ({ name, score: playerScores[name] }))
+                .sort((a, b) => b.score - a.score);
+
+            const podiumContainer = document.getElementById('podium-view');
+            podiumContainer.innerHTML = '';
+
+            const p1 = sortedPlayers[0] || { name: '-', score: 0 };
+            const p2 = sortedPlayers[1] || { name: '-', score: 0 };
+            const p3 = sortedPlayers[2] || { name: '-', score: 0 };
+
+            podiumContainer.innerHTML = `
+                <div class="podium-place place-2">
+                    <div class="podium-name">${p2.name}</div>
+                    <div class="podium-score">${p2.score} pt</div>
+                    <div class="podium-block">2</div>
+                </div>
+                <div class="podium-place place-1">
+                    <div class="podium-name">👑 ${p1.name}</div>
+                    <div class="podium-score">${p1.score} pt</div>
+                    <div class="podium-block">1</div>
+                </div>
+                <div class="podium-place place-3">
+                    <div class="podium-name">${p3.name}</div>
+                    <div class="podium-score">${p3.score} pt</div>
+                    <div class="podium-block">3</div>
+                </div>
+            `;
+
+            const tbody = document.getElementById('leaderboard-tbody');
+            tbody.innerHTML = '';
+
+            sortedPlayers.forEach((player, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${idx + 1}</strong></td>
+                    <td>${player.name}</td>
+                    <td><strong>${player.score}</strong> pt</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
             document.getElementById('dashboard-screen').classList.remove('active');
+            document.getElementById('endgame-screen').classList.add('active');
+        }
+
+        function restartGame() {
+            document.getElementById('endgame-screen').classList.remove('active');
             document.getElementById('setup-screen').classList.add('active');
         }
     </script>
