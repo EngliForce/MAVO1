@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room Classroom Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ff007f, #7928ca, #38bdf8);
+            padding: 0.6rem 1.2rem;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        main {
+            flex: 1;
+            padding: 0.8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 50px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            height: 100%;
+        }
+
+        .screen.active {
+            display: flex !important;
+            flex-direction: column;
+            gap: 0.8rem;
+            height: 100%;
+        }
+
+        #settings-screen.active {
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.8rem;
+        }
+
+        .glass-card h2 {
+            font-size: 1.15rem;
+            color: #38bdf8;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+        }
+
+        select option {
+            background: #1e1b4b;
+            color: #fff;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #7928ca, #ff007f);
+            color: white;
+            border: none;
+            padding: 0.55rem 1rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 0, 127, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-success:hover:not(:disabled) {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .btn-sm {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.72rem;
+        }
+
+        .flex-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .student-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+
+        .student-item {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 0.85rem;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .student-item:hover {
+            transform: scale(1.02);
+        }
+
+        .student-item.absent {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            text-decoration: line-through;
+            color: #fca5a5;
+        }
+
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            background: #10b981;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .student-item.absent .status-badge {
+            background: #ef4444;
+        }
+
+        .info-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .groups-config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .group-config-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            padding: 0.8rem;
+        }
+
+        .group-config-header {
+            font-weight: 700;
+            color: #38bdf8;
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .puzzle-item-config {
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 3px solid #ff007f;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .puzzle-item-config h4 {
+            font-size: 0.78rem;
+            color: #ff70ba;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .play-header-bar {
+            background: linear-gradient(135deg, rgba(121, 40, 202, 0.35), rgba(255, 0, 127, 0.35));
+            border: 1px solid rgba(255, 0, 127, 0.4);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .main-timer-display {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'Courier New', Courier, monospace;
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+
+        .main-timer-display.danger {
+            color: #ef4444;
+            text-shadow: 0 0 12px rgba(239, 68, 68, 0.9);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+
+        .overall-status {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .status-counter {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+        }
+
+        .groups-play-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+        }
+
+        .group-play-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* ANIMATIE EN STIJL VOOR ONTSNAPTE GROEPEN */
+        @keyframes escapePop {
+            0% { transform: scale(0.85); opacity: 0; }
+            50% { transform: scale(1.06); }
+            75% { transform: scale(0.98); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes rankPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.9)); }
+        }
+
+        .group-play-card.escaped {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.18);
+            box-shadow: 0 0 22px rgba(16, 185, 129, 0.35);
+            animation: escapePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .escaped-box {
+            text-align: center;
+            padding: 0.8rem 0.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+        }
+
+        .escape-rank-badge {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #fbbf24;
+            margin-bottom: 0.3rem;
+            animation: rankPulse 2s infinite ease-in-out;
+            letter-spacing: 0.5px;
+        }
+
+        .escape-time-info {
+            font-size: 1rem;
+            color: #f8fafc;
+            font-weight: 700;
+        }
+
+        .group-play-card.timeout {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        .group-header-play {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.4rem;
+        }
+
+        .group-play-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .group-members-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .member-tag {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+
+        .progress-bar-container {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin: 0.4rem 0 0.8rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #10b981);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .clues-box {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 0.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .clues-box h5 {
+            color: #fbbf24;
+            margin-bottom: 0.3rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .clue-entry {
+            background: rgba(245, 158, 11, 0.15);
+            border-left: 3px solid #f59e0b;
+            padding: 0.3rem 0.5rem;
+            margin-bottom: 0.3rem;
+            border-radius: 0 4px 4px 0;
+            color: #fef08a;
+            font-size: 0.82rem;
+            word-break: break-word;
+        }
+
+        .timeout-banner {
+            background: rgba(239, 68, 68, 0.25);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            text-align: center;
+            padding: 0.4rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(30, 27, 75, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 460px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        .modal-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #38bdf8;
+        }
+
+        .modal-card p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .victory-banner {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🔐 ESCAPE ROOM CLASSROOM TOOL</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-switch-settings" style="display: none;" onclick="showSettingsScreen()">⚙️ Instellingen</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- STAP 1: INSTELLINGENSCHERM -->
+        <div id="settings-screen" class="screen active">
+            
+            <div class="glass-card">
+                <h2>👥 Klas & Leerlingen Beheren</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    <div>
+                        <div class="form-group">
+                            <label for="saved-classes-select">Opgeslagen klassen:</label>
+                            <select id="saved-classes-select" onchange="loadSelectedClass()">
+                                <option value="">-- Selecteer een klas --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="class-name">Klasnaam:</label>
+                            <input type="text" id="class-name" placeholder="bijv. Klas 3B">
+                        </div>
+                        <div class="flex-actions" style="margin-bottom: 0.8rem;">
+                            <button class="btn btn-secondary" onclick="saveCurrentClass()">💾 Klas Opslaan</button>
+                            <button class="btn btn-danger" onclick="confirmDeleteClass()">🗑️ Verwijderen</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            <label for="students-input">Leerlingen (Plakken vanuit Excel toegestaan):</label>
+                            <textarea id="students-input" rows="4" placeholder="Kopieer & plak direct vanuit Excel of typ 1 naam per regel:&#10;Sophie&#10;Daan&#10;Lucas&#10;Emma"></textarea>
+                            <p class="help-text">💡 Tip: Kopieer een kolom direct uit Excel.</p>
+                        </div>
+                        <button class="btn" style="width: 100%;" onclick="processStudents()">Verwerk Leerlingen ➔</button>
+                    </div>
+                </div>
+
+                <div id="absence-section" style="display: none; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.8rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <label style="margin:0;">Klik op een leerling om afwezig te melden:</label>
+                        <div id="absence-summary" class="info-pill">📊 Aanwezig: 0 leerlingen</div>
+                    </div>
+                    <div id="student-checkboxes" class="student-checkboxes"></div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2>🗝️ Escape Room Scenario's Opslaan & Beheren</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    <div>
+                        <div class="form-group">
+                            <label for="saved-rooms-select">Opgeslagen Escape Rooms:</label>
+                            <select id="saved-rooms-select" onchange="loadSelectedEscapeRoom()">
+                                <option value="">-- Selecteer een Escape Room --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="room-name">Escape Room Naam:</label>
+                            <input type="text" id="room-name" placeholder="bijv. Geschiedenis - Franse Revolutie">
+                        </div>
+                        <div class="flex-actions">
+                            <button class="btn btn-secondary" onclick="saveCurrentEscapeRoom()">💾 Escape Room Opslaan</button>
+                            <button class="btn btn-danger" onclick="confirmDeleteEscapeRoom()">🗑️ Verwijderen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2>⏱️ Escape Room Instellingen</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label for="escape-timer-input">Escape Room Tijd (minuten):</label>
+                        <input type="number" id="escape-timer-input" min="1" max="180" value="45">
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn" onclick="setTimerInput(15)">15 m</button>
+                            <button type="button" class="preset-btn" onclick="setTimerInput(30)">30 m</button>
+                            <button type="button" class="preset-btn" onclick="setTimerInput(45)">45 m</button>
+                            <button type="button" class="preset-btn" onclick="setTimerInput(60)">60 m</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeout-input">Time-out bij Fout Antwoord (seconden):</label>
+                        <input type="number" id="timeout-input" min="0" max="600" value="30">
+                        <div class="preset-buttons">
+                            <button type="button" class="preset-btn" onclick="setTimeoutInput(15)">15 s</button>
+                            <button type="button" class="preset-btn" onclick="setTimeoutInput(30)">30 s</button>
+                            <button type="button" class="preset-btn" onclick="setTimeoutInput(60)">60 s</button>
+                            <button type="button" class="preset-btn" onclick="setTimeoutInput(120)">120 s</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-groups-select">Aantal Groepjes (2 t/m 10):</label>
+                        <select id="num-groups-select" onchange="renderGroupPuzzleInputs()">
+                            <option value="2">2 Groepen</option>
+                            <option value="3">3 Groepen</option>
+                            <option value="4" selected>4 Groepen</option>
+                            <option value="5">5 Groepen</option>
+                            <option value="6">6 Groepen</option>
+                            <option value="7">7 Groepen</option>
+                            <option value="8">8 Groepen</option>
+                            <option value="9">9 Groepen</option>
+                            <option value="10">10 Groepen</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-puzzles-select">Puzzels per Groep (1 t/m 10):</label>
+                        <select id="num-puzzles-select" onchange="renderGroupPuzzleInputs()">
+                            <option value="1">1 Puzzel (Direct Ontsnappen)</option>
+                            <option value="2">2 Puzzels</option>
+                            <option value="3" selected>3 Puzzels</option>
+                            <option value="4">4 Puzzels</option>
+                            <option value="5">5 Puzzels</option>
+                            <option value="6">6 Puzzels</option>
+                            <option value="7">7 Puzzels</option>
+                            <option value="8">8 Puzzels</option>
+                            <option value="9">9 Puzzels</option>
+                            <option value="10">10 Puzzels</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.4rem; margin-bottom: 0.8rem;">
+                    <h2 style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">🔑 Oplossingen & Aanwijzingen Per Groep</h2>
+                    <div class="flex-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="copyGroup1ToAll()">📋 Kopieer Groep 1 Naar Alles</button>
+                        <button class="btn btn-warning btn-sm" onclick="fillExampleData()">⚡ Laad Voorbeeld Gegevens</button>
+                    </div>
+                </div>
+
+                <div id="groups-config-container" class="groups-config-grid"></div>
+
+                <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+                    <button class="btn btn-success" style="font-size: 1.1rem; padding: 0.8rem 2.5rem;" onclick="startEscapeRoom()">
+                        🚀 Start Escape Room Spel ➔
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- STAP 2: SPEELSCHERM -->
+        <div id="play-screen" class="screen">
+            <div class="play-header-bar">
+                <div class="timer-container">
+                    <div>
+                        <div style="font-size: 0.7rem; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.5px;">Resterende Tijd</div>
+                        <div class="main-timer-display" id="play-timer-display">45:00</div>
+                    </div>
+                    <div class="flex-actions">
+                        <button class="btn btn-success btn-sm" id="btn-timer-start" onclick="toggleMainTimer()">▶ Start</button>
+                        <button class="btn btn-secondary btn-sm" onclick="resetMainTimer()">🔄 Reset</button>
+                        <button class="btn btn-secondary btn-sm" onclick="adjustMainTimer(5)">+5m</button>
+                        <button class="btn btn-secondary btn-sm" onclick="adjustMainTimer(-5)">-5m</button>
+                    </div>
+                </div>
+
+                <div class="overall-status">
+                    <div id="escaped-counter" class="status-counter">🏆 0 / 4 Groepen Ontsnapt</div>
+                </div>
+            </div>
+
+            <div id="victory-banner-box" class="victory-banner">
+                🎉 GEFELICITEERD! ALLE GROEPEN ZIJN SUCCESVOL ONTSNAPT! 🎉
+            </div>
+
+            <div id="groups-play-container" class="groups-play-grid"></div>
+        </div>
+    </main>
+
+    <!-- MODALS -->
+    <div id="puzzle-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="puzzle-modal-title">🔓 Groep 1 - Puzzel Invoeren</h3>
+            <p id="puzzle-modal-desc">Vul hieronder het antwoord in:</p>
+            
+            <div class="form-group" style="text-align: left; margin-bottom: 1.2rem;">
+                <label for="puzzle-answer-input">Code / Oplossing:</label>
+                <input type="text" id="puzzle-answer-input" style="font-size: 1.1rem; text-align: center;" onkeyup="if(event.key==='Enter') submitPuzzleAnswer()">
+            </div>
+
+            <div class="flex-actions" style="justify-content: center;">
+                <button class="btn btn-secondary" onclick="closePuzzleModal()">Annuleren</button>
+                <button class="btn btn-success" onclick="submitPuzzleAnswer()">Verifiëren ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modal-title">Melding</h3>
+            <p id="modal-message">Inhoud...</p>
+            <div class="flex-actions" style="justify-content: center;">
+                <button class="btn" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rawStudents = [];
+        let absentStudents = new Set();
+        let mainTimerInterval = null;
+        let mainTimerSeconds = 2700; 
+        let initialTimerSeconds = 2700;
+        let escapeOrderCounter = 1;
+        let isTimerRunning = false;
+        let activeGroupIndexForPuzzle = null;
+
+        let gameState = {
+            timeoutDuration: 30,
+            groups: []
+        };
+
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new AudioCtx();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+
+                if (type === 'success') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.3);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + idx * 0.08);
+                        osc.stop(ctx.currentTime + idx * 0.08 + 0.3);
+                    });
+                } else if (type === 'error') {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    osc.frequency.setValueAtTime(110, ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'victory') {
+                    [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.12);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.5);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + idx * 0.12);
+                        osc.stop(ctx.currentTime + idx * 0.12 + 0.5);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio exception:", e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSavedClassesDropdown();
+            updateSavedEscapeRoomsDropdown();
+            renderGroupPuzzleInputs();
+        });
+
+        function extractStudentsFromText(text) {
+            return text
+                .split(/\r?\n/)
+                .map(line => line.replace(/\t+/g, ' ').trim())
+                .filter(name => name.length > 0);
+        }
+
+        function processStudents() {
+            const input = document.getElementById('students-input').value;
+            rawStudents = extractStudentsFromText(input);
+            absentStudents.clear();
+
+            if (rawStudents.length === 0) {
+                document.getElementById('absence-section').style.display = 'none';
+                return false;
+            }
+
+            renderAbsenceGrid();
+            document.getElementById('absence-section').style.display = 'block';
+            return true;
+        }
+
+        function renderAbsenceGrid() {
+            const container = document.getElementById('student-checkboxes');
+            container.innerHTML = '';
+
+            const presentCount = rawStudents.length - absentStudents.size;
+            document.getElementById('absence-summary').innerText = `📊 Aanwezig: ${presentCount} / ${rawStudents.length} leerlingen`;
+
+            rawStudents.forEach((student) => {
+                const isAbsent = absentStudents.has(student);
+                const item = document.createElement('div');
+                item.className = `student-item ${isAbsent ? 'absent' : ''}`;
+                item.onclick = () => toggleStudentAbsence(student);
+                item.innerHTML = `
+                    <span>${student}</span>
+                    <span class="status-badge">${isAbsent ? 'Afwezig' : 'Aanwezig'}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleStudentAbsence(student) {
+            if (absentStudents.has(student)) absentStudents.delete(student);
+            else absentStudents.add(student);
+            renderAbsenceGrid();
+        }
+
+        /* --- BEHEER VAN KLASSEN --- */
+        function getSavedClasses() {
+            const data = localStorage.getItem('saved_escape_classes');
+            return data ? JSON.parse(data) : {};
+        }
+
+        function updateSavedClassesDropdown() {
+            const select = document.getElementById('saved-classes-select');
+            const classes = getSavedClasses();
+            select.innerHTML = '<option value="">-- Selecteer een klas --</option>';
+            Object.keys(classes).forEach(className => {
+                const option = document.createElement('option');
+                option.value = className;
+                option.textContent = className;
+                select.appendChild(option);
+            });
+        }
+
+        function saveCurrentClass() {
+            const className = document.getElementById('class-name').value.trim();
+            const students = extractStudentsFromText(document.getElementById('students-input').value);
+
+            if (!className || students.length === 0) {
+                showPopup("Fout", "Vul een klasnaam en minimaal één leerling in.");
+                return;
+            }
+
+            const classes = getSavedClasses();
+            classes[className] = students;
+            localStorage.setItem('saved_escape_classes', JSON.stringify(classes));
+            updateSavedClassesDropdown();
+            document.getElementById('saved-classes-select').value = className;
+            showPopup("Succes", `Klas "${className}" is opgeslagen!`);
+        }
+
+        function loadSelectedClass() {
+            const className = document.getElementById('saved-classes-select').value;
+            if (!className) return;
+
+            const classes = getSavedClasses();
+            if (classes[className]) {
+                document.getElementById('class-name').value = className;
+                document.getElementById('students-input').value = classes[className].join('\n');
+                processStudents();
+            }
+        }
+
+        function confirmDeleteClass() {
+            const className = document.getElementById('saved-classes-select').value || document.getElementById('class-name').value.trim();
+            if (!className) return;
+
+            const classes = getSavedClasses();
+            if (classes[className]) {
+                delete classes[className];
+                localStorage.setItem('saved_escape_classes', JSON.stringify(classes));
+                updateSavedClassesDropdown();
+                document.getElementById('class-name').value = '';
+                document.getElementById('students-input').value = '';
+                document.getElementById('absence-section').style.display = 'none';
+                showPopup("Verwijderd", `Klas "${className}" is verwijderd.`);
+            }
+        }
+
+        /* --- BEHEER VAN ESCAPE ROOM SCENARIO'S --- */
+        function getSavedEscapeRooms() {
+            const data = localStorage.getItem('saved_escape_rooms');
+            return data ? JSON.parse(data) : {};
+        }
+
+        function updateSavedEscapeRoomsDropdown() {
+            const select = document.getElementById('saved-rooms-select');
+            const rooms = getSavedEscapeRooms();
+            select.innerHTML = '<option value="">-- Selecteer een Escape Room --</option>';
+            Object.keys(rooms).forEach(roomName => {
+                const option = document.createElement('option');
+                option.value = roomName;
+                option.textContent = roomName;
+                select.appendChild(option);
+            });
+        }
+
+        function saveCurrentEscapeRoom() {
+            const roomName = document.getElementById('room-name').value.trim();
+            if (!roomName) {
+                showPopup("Fout", "Vul een naam in voor de Escape Room.");
+                return;
+            }
+
+            const numGroups = parseInt(document.getElementById('num-groups-select').value, 10);
+            const numPuzzles = parseInt(document.getElementById('num-puzzles-select').value, 10);
+            const timer = parseInt(document.getElementById('escape-timer-input').value, 10);
+            const timeout = parseInt(document.getElementById('timeout-input').value, 10);
+
+            const puzzlesData = {};
+            for (let g = 1; g <= numGroups; g++) {
+                puzzlesData[g] = {};
+                for (let p = 1; p <= numPuzzles; p++) {
+                    const ansEl = document.getElementById(`ans-g${g}-p${p}`);
+                    const clueEl = document.getElementById(`clue-g${g}-p${p}`);
+                    puzzlesData[g][`ans_${p}`] = ansEl ? ansEl.value : '';
+                    puzzlesData[g][`clue_${p}`] = clueEl ? clueEl.value : '';
+                }
+            }
+
+            const rooms = getSavedEscapeRooms();
+            rooms[roomName] = {
+                timer: timer,
+                timeout: timeout,
+                numGroups: numGroups,
+                numPuzzles: numPuzzles,
+                puzzlesData: puzzlesData
+            };
+
+            localStorage.setItem('saved_escape_rooms', JSON.stringify(rooms));
+            updateSavedEscapeRoomsDropdown();
+            document.getElementById('saved-rooms-select').value = roomName;
+            showPopup("Succes", `Escape Room "${roomName}" is succesvol opgeslagen!`);
+        }
+
+        function loadSelectedEscapeRoom() {
+            const roomName = document.getElementById('saved-rooms-select').value;
+            if (!roomName) return;
+
+            const rooms = getSavedEscapeRooms();
+            const room = rooms[roomName];
+            if (!room) return;
+
+            document.getElementById('room-name').value = roomName;
+            document.getElementById('escape-timer-input').value = room.timer || 45;
+            document.getElementById('timeout-input').value = room.timeout || 30;
+            document.getElementById('num-groups-select').value = room.numGroups || 4;
+            document.getElementById('num-puzzles-select').value = room.numPuzzles || 3;
+
+            renderGroupPuzzleInputs();
+
+            if (room.puzzlesData) {
+                for (let g = 1; g <= room.numGroups; g++) {
+                    for (let p = 1; p <= room.numPuzzles; p++) {
+                        const ansTarget = document.getElementById(`ans-g${g}-p${p}`);
+                        const clueTarget = document.getElementById(`clue-g${g}-p${p}`);
+                        if (ansTarget && room.puzzlesData[g]?.[`ans_${p}`] !== undefined) {
+                            ansTarget.value = room.puzzlesData[g][`ans_${p}`];
+                        }
+                        if (clueTarget && room.puzzlesData[g]?.[`clue_${p}`] !== undefined) {
+                            clueTarget.value = room.puzzlesData[g][`clue_${p}`];
+                        }
+                    }
+                }
+            }
+
+            showPopup("Geladen", `Escape Room "${roomName}" is geladen!`);
+        }
+
+        function confirmDeleteEscapeRoom() {
+            const roomName = document.getElementById('saved-rooms-select').value || document.getElementById('room-name').value.trim();
+            if (!roomName) return;
+
+            const rooms = getSavedEscapeRooms();
+            if (rooms[roomName]) {
+                delete rooms[roomName];
+                localStorage.setItem('saved_escape_rooms', JSON.stringify(rooms));
+                updateSavedEscapeRoomsDropdown();
+                document.getElementById('room-name').value = '';
+                showPopup("Verwijderd", `Escape Room "${roomName}" is verwijderd.`);
+            }
+        }
+
+        function setTimerInput(val) { document.getElementById('escape-timer-input').value = val; }
+        function setTimeoutInput(val) { document.getElementById('timeout-input').value = val; }
+
+        function renderGroupPuzzleInputs() {
+            const numGroups = parseInt(document.getElementById('num-groups-select').value, 10);
+            const numPuzzles = parseInt(document.getElementById('num-puzzles-select').value, 10);
+            const container = document.getElementById('groups-config-container');
+
+            const existingData = {};
+            for (let g = 1; g <= 10; g++) {
+                existingData[g] = {};
+                for (let p = 1; p <= 10; p++) {
+                    const ansEl = document.getElementById(`ans-g${g}-p${p}`);
+                    const clueEl = document.getElementById(`clue-g${g}-p${p}`);
+                    if (ansEl) existingData[g][`ans_${p}`] = ansEl.value;
+                    if (clueEl) existingData[g][`clue_${p}`] = clueEl.value;
+                }
+            }
+
+            container.innerHTML = '';
+
+            for (let g = 1; g <= numGroups; g++) {
+                const card = document.createElement('div');
+                card.className = 'group-config-card';
+
+                let puzzlesHTML = '';
+                for (let p = 1; p <= numPuzzles; p++) {
+                    const prevAns = existingData[g]?.[`ans_${p}`] || '';
+                    const prevClue = existingData[g]?.[`clue_${p}`] || '';
+                    const isLast = (p === numPuzzles);
+
+                    puzzlesHTML += `
+                        <div class="puzzle-item-config">
+                            <h4>Puzzel ${p} ${isLast ? '(Finale)' : ''}</h4>
+                            <div class="form-group" style="margin-bottom:0.4rem;">
+                                <label style="font-size:0.75rem;">Oplossing / Code:</label>
+                                <input type="text" id="ans-g${g}-p${p}" value="${prevAns}" placeholder="bijv. CODE${g}${p}">
+                            </div>
+                            ${!isLast ? `
+                            <div class="form-group" style="margin-bottom:0.2rem;">
+                                <label style="font-size:0.75rem;">Aanwijzing na Oplossing:</label>
+                                <input type="text" id="clue-g${g}-p${p}" value="${prevClue}" placeholder="Aanwijzing...">
+                            </div>` : ''}
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `<div class="group-config-header">👥 Groep ${g}</div>${puzzlesHTML}`;
+                container.appendChild(card);
+            }
+        }
+
+        function copyGroup1ToAll() {
+            const numGroups = parseInt(document.getElementById('num-groups-select').value, 10);
+            const numPuzzles = parseInt(document.getElementById('num-puzzles-select').value, 10);
+
+            for (let p = 1; p <= numPuzzles; p++) {
+                const ans1 = document.getElementById(`ans-g1-p${p}`)?.value || '';
+                const clue1 = document.getElementById(`clue-g1-p${p}`)?.value || '';
+
+                for (let g = 2; g <= numGroups; g++) {
+                    const ansTarget = document.getElementById(`ans-g${g}-p${p}`);
+                    const clueTarget = document.getElementById(`clue-g${g}-p${p}`);
+                    if (ansTarget) ansTarget.value = ans1;
+                    if (clueTarget) clueTarget.value = clue1;
+                }
+            }
+            showPopup("Gekopieerd", "Oplossingen van Groep 1 zijn gekopieerd naar alle overige groepen!");
+        }
+
+        function fillExampleData() {
+            const numGroups = parseInt(document.getElementById('num-groups-select').value, 10);
+            const numPuzzles = parseInt(document.getElementById('num-puzzles-select').value, 10);
+
+            for (let g = 1; g <= numGroups; g++) {
+                for (let p = 1; p <= numPuzzles; p++) {
+                    const ansTarget = document.getElementById(`ans-g${g}-p${p}`);
+                    const clueTarget = document.getElementById(`clue-g${g}-p${p}`);
+                    if (ansTarget) ansTarget.value = `CODE${g}${p}`;
+                    if (clueTarget) clueTarget.value = `Aanwijzing voor puzzel ${p + 1}`;
+                }
+            }
+        }
+
+        function startEscapeRoom() {
+            if (rawStudents.length === 0) {
+                processStudents();
+            }
+
+            const activeStudents = rawStudents.filter(s => !absentStudents.has(s));
+            
+            if (activeStudents.length === 0) {
+                showPopup("Geen leerlingen", "Vul eerst leerlingen in via het tekstveld.");
+                return;
+            }
+
+            const numGroups = parseInt(document.getElementById('num-groups-select').value, 10);
+            const numPuzzles = parseInt(document.getElementById('num-puzzles-select').value, 10);
+            const timerMinutes = parseInt(document.getElementById('escape-timer-input').value, 10) || 45;
+            const timeoutSeconds = parseInt(document.getElementById('timeout-input').value, 10) || 30;
+
+            for (let g = 1; g <= numGroups; g++) {
+                for (let p = 1; p <= numPuzzles; p++) {
+                    const ansEl = document.getElementById(`ans-g${g}-p${p}`);
+                    if (ansEl && !ansEl.value.trim()) {
+                        ansEl.value = `CODE${g}${p}`;
+                    }
+                }
+            }
+
+            const shuffled = [...activeStudents].sort(() => Math.random() - 0.5);
+            
+            const groups = [];
+            for (let g = 0; g < numGroups; g++) {
+                groups.push({
+                    id: g + 1,
+                    name: `Groep ${g + 1}`,
+                    members: [],
+                    currentPuzzle: 1,
+                    totalPuzzles: numPuzzles,
+                    puzzles: [],
+                    unlockedClues: [],
+                    escaped: false,
+                    rank: null,
+                    elapsedTimeStr: '',
+                    timeoutUntil: 0
+                });
+            }
+
+            shuffled.forEach((student, index) => {
+                groups[index % numGroups].members.push(student);
+            });
+
+            for (let g = 1; g <= numGroups; g++) {
+                const groupObj = groups[g - 1];
+                for (let p = 1; p <= numPuzzles; p++) {
+                    const ans = document.getElementById(`ans-g${g}-p${p}`).value.trim();
+                    const clue = document.getElementById(`clue-g${g}-p${p}`)?.value.trim() || '';
+                    groupObj.puzzles.push({
+                        puzzleNumber: p,
+                        answer: ans.toLowerCase(),
+                        clueAfter: clue
+                    });
+                }
+            }
+
+            gameState = {
+                timeoutDuration: timeoutSeconds,
+                groups: groups
+            };
+
+            mainTimerSeconds = timerMinutes * 60;
+            initialTimerSeconds = mainTimerSeconds;
+            escapeOrderCounter = 1;
+            updateMainTimerDisplay();
+
+            document.getElementById('settings-screen').classList.remove('active');
+            document.getElementById('play-screen').classList.add('active');
+            document.getElementById('btn-switch-settings').style.display = 'inline-flex';
+
+            renderPlayScreen();
+            startMainTimer();
+        }
+
+        function showSettingsScreen() {
+            if (isTimerRunning) toggleMainTimer();
+            document.getElementById('play-screen').classList.remove('active');
+            document.getElementById('settings-screen').classList.add('active');
+            document.getElementById('btn-switch-settings').style.display = 'none';
+        }
+
+        function updateMainTimerDisplay() {
+            const mins = Math.floor(mainTimerSeconds / 60);
+            const secs = mainTimerSeconds % 60;
+            const displayStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            const timerEl = document.getElementById('play-timer-display');
+            timerEl.innerText = displayStr;
+
+            if (mainTimerSeconds <= 300) timerEl.classList.add('danger');
+            else timerEl.classList.remove('danger');
+        }
+
+        function startMainTimer() {
+            if (mainTimerInterval) clearInterval(mainTimerInterval);
+            isTimerRunning = true;
+            document.getElementById('btn-timer-start').innerText = '⏸ Pauze';
+            document.getElementById('btn-timer-start').className = 'btn btn-warning btn-sm';
+
+            mainTimerInterval = setInterval(() => {
+                if (mainTimerSeconds > 0) {
+                    mainTimerSeconds--;
+                    updateMainTimerDisplay();
+                    checkGroupTimeouts();
+                } else {
+                    clearInterval(mainTimerInterval);
+                    isTimerRunning = false;
+                    showPopup("Tijd is Om!", "De reguliere tijd is verstreken!");
+                }
+            }, 1000);
+        }
+
+        function toggleMainTimer() {
+            if (isTimerRunning) {
+                clearInterval(mainTimerInterval);
+                isTimerRunning = false;
+                document.getElementById('btn-timer-start').innerText = '▶ Start';
+                document.getElementById('btn-timer-start').className = 'btn btn-success btn-sm';
+            } else {
+                startMainTimer();
+            }
+        }
+
+        function resetMainTimer() {
+            const timerMinutes = parseInt(document.getElementById('escape-timer-input').value, 10) || 45;
+            mainTimerSeconds = timerMinutes * 60;
+            initialTimerSeconds = mainTimerSeconds;
+            updateMainTimerDisplay();
+        }
+
+        function adjustMainTimer(minutes) {
+            mainTimerSeconds = Math.max(0, mainTimerSeconds + minutes * 60);
+            updateMainTimerDisplay();
+        }
+
+        function checkGroupTimeouts() {
+            const now = Date.now();
+            let needsRerender = false;
+            gameState.groups.forEach(g => {
+                if (g.timeoutUntil > 0 && now >= g.timeoutUntil) {
+                    g.timeoutUntil = 0;
+                    needsRerender = true;
+                }
+            });
+            if (needsRerender) renderPlayScreen();
+        }
+
+        function getRankBadgeText(rank) {
+            const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
+            const medal = medals[rank] || '🏆';
+            return `${medal} ${rank}e Plaats`;
+        }
+
+        function renderPlayScreen() {
+            const container = document.getElementById('groups-play-container');
+            container.innerHTML = '';
+            let escapedCount = 0;
+
+            gameState.groups.forEach((group, index) => {
+                if (group.escaped) escapedCount++;
+
+                const now = Date.now();
+                const isTimedOut = group.timeoutUntil > now;
+                const remainingTimeoutSecs = Math.ceil((group.timeoutUntil - now) / 1000);
+
+                const card = document.createElement('div');
+                let cardClass = 'group-play-card';
+                if (group.escaped) cardClass += ' escaped';
+                else if (isTimedOut) cardClass += ' timeout';
+                card.className = cardClass;
+
+                const progressPct = group.escaped ? 100 : Math.round(((group.currentPuzzle - 1) / group.totalPuzzles) * 100);
+                const membersHTML = group.members.map(m => `<span class="member-tag">${m}</span>`).join('');
+
+                let cluesHTML = '';
+                if (group.unlockedClues.length > 0) {
+                    const entries = group.unlockedClues.map(c => `
+                        <div class="clue-entry">
+                            <strong>Puzzel ${c.puzzleNum}:</strong> ${c.clueText}
+                        </div>
+                    `).join('');
+                    cluesHTML = `<div class="clues-box"><h5>💡 Aanwijzingen:</h5>${entries}</div>`;
+                }
+
+                let actionHTML = '';
+                if (group.escaped) {
+                    actionHTML = `
+                        <div class="escaped-box">
+                            <div class="escape-rank-badge">${getRankBadgeText(group.rank)}</div>
+                            <div class="escape-time-info">⏱️ Opgelost in: <strong>${group.elapsedTimeStr}</strong></div>
+                        </div>
+                    `;
+                } else if (isTimedOut) {
+                    actionHTML = `
+                        <div class="timeout-banner">⏳ TIME-OUT: ${remainingTimeoutSecs}s wachten...</div>
+                        <button class="btn btn-secondary" style="width: 100%;" disabled>🔒 Geblokkeerd</button>
+                    `;
+                } else {
+                    actionHTML = `
+                        <button class="btn btn-success" style="width: 100%;" onclick="openPuzzleModal(${index})">
+                            🔓 Invoeren Puzzel ${group.currentPuzzle} Code
+                        </button>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="group-header-play">
+                            <div class="group-play-title"><span>${group.name}</span></div>
+                            <span class="info-pill">${group.escaped ? 'Ontsnapt' : `Puzzel ${group.currentPuzzle}/${group.totalPuzzles}`}</span>
+                        </div>
+                        <div class="group-members-tags">${membersHTML}</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${progressPct}%;"></div>
+                        </div>
+                        ${cluesHTML}
+                    </div>
+                    <div>${actionHTML}</div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('escaped-counter').innerText = `🏆 ${escapedCount} / ${gameState.groups.length} Groepen Ontsnapt`;
+            document.getElementById('victory-banner-box').style.display = (escapedCount === gameState.groups.length && gameState.groups.length > 0) ? 'block' : 'none';
+        }
+
+        function openPuzzleModal(groupIndex) {
+            activeGroupIndexForPuzzle = groupIndex;
+            const group = gameState.groups[groupIndex];
+
+            document.getElementById('puzzle-modal-title').innerText = `🔓 ${group.name} - Puzzel ${group.currentPuzzle}`;
+            document.getElementById('puzzle-modal-desc').innerText = `Vul het antwoord in voor Puzzel ${group.currentPuzzle} van ${group.totalPuzzles}:`;
+            
+            const input = document.getElementById('puzzle-answer-input');
+            input.value = '';
+            
+            document.getElementById('puzzle-modal').classList.add('active');
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closePuzzleModal() {
+            document.getElementById('puzzle-modal').classList.remove('active');
+            activeGroupIndexForPuzzle = null;
+        }
+
+        function submitPuzzleAnswer() {
+            if (activeGroupIndexForPuzzle === null) return;
+
+            const group = gameState.groups[activeGroupIndexForPuzzle];
+            const input = document.getElementById('puzzle-answer-input').value.trim().toLowerCase();
+            const currentPuzzleObj = group.puzzles[group.currentPuzzle - 1];
+
+            if (input === currentPuzzleObj.answer) {
+                playSound('success');
+
+                if (currentPuzzleObj.clueAfter) {
+                    group.unlockedClues.push({
+                        puzzleNum: group.currentPuzzle,
+                        clueText: currentPuzzleObj.clueAfter
+                    });
+                }
+
+                if (group.currentPuzzle < group.totalPuzzles) {
+                    group.currentPuzzle++;
+                } else {
+                    group.escaped = true;
+                    group.rank = escapeOrderCounter++;
+                    
+                    const elapsedSecs = Math.max(0, initialTimerSeconds - mainTimerSeconds);
+                    const mins = Math.floor(elapsedSecs / 60);
+                    const secs = elapsedSecs % 60;
+                    group.elapsedTimeStr = `${mins} min ${secs} sec`;
+
+                    if (gameState.groups.every(g => g.escaped || g === group)) playSound('victory');
+                }
+
+                closePuzzleModal();
+                renderPlayScreen();
+            } else {
+                playSound('error');
+                group.timeoutUntil = Date.now() + (gameState.timeoutDuration * 1000);
+                closePuzzleModal();
+                renderPlayScreen();
+            }
+        }
+
+        function showPopup(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            document.getElementById('custom-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
