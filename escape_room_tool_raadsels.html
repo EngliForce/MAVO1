@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room Wendagen</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ff007f, #7928ca, #38bdf8);
+            padding: 0.6rem 1.2rem;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        main {
+            flex: 1;
+            padding: 0.8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 50px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            height: 100%;
+        }
+
+        .screen.active {
+            display: flex !important;
+            flex-direction: column;
+            gap: 0.8rem;
+            height: 100%;
+        }
+
+        #settings-screen.active {
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.8rem;
+        }
+
+        .glass-card h2 {
+            font-size: 1.15rem;
+            color: #38bdf8;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+        }
+
+        select option {
+            background: #1e1b4b;
+            color: #fff;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #7928ca, #ff007f);
+            color: white;
+            border: none;
+            padding: 0.55rem 1rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 0, 127, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .btn-sm {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.72rem;
+        }
+
+        .flex-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .student-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+
+        .student-item {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 0.85rem;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .student-item.absent {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            text-decoration: line-through;
+            color: #fca5a5;
+        }
+
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            background: #10b981;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .student-item.absent .status-badge {
+            background: #ef4444;
+        }
+
+        .info-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .groups-config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .group-config-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            padding: 0.8rem;
+        }
+
+        .group-config-header {
+            font-weight: 700;
+            color: #38bdf8;
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .puzzle-item-config {
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 3px solid #ff007f;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .puzzle-item-config h4 {
+            font-size: 0.78rem;
+            color: #ff70ba;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .play-header-bar {
+            background: linear-gradient(135deg, rgba(121, 40, 202, 0.35), rgba(255, 0, 127, 0.35));
+            border: 1px solid rgba(255, 0, 127, 0.4);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .main-timer-display {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'Courier New', Courier, monospace;
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+
+        .overall-status {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .status-counter {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+        }
+
+        .groups-play-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+        }
+
+        .group-play-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .group-play-card.escaped {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.18);
+            box-shadow: 0 0 22px rgba(16, 185, 129, 0.35);
+        }
+
+        .escaped-box {
+            text-align: center;
+            padding: 0.8rem 0.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.5);
+        }
+
+        .escape-rank-badge {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #fbbf24;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        .escape-time-info {
+            font-size: 1rem;
+            color: #f8fafc;
+            font-weight: 700;
+        }
+
+        .group-play-card.timeout {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        .group-header-play {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.4rem;
+        }
+
+        .group-play-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .group-members-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .member-tag {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .progress-bar-container {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin: 0.4rem 0 0.8rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #10b981);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .clues-box {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 0.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            max-height: 120px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .clues-box h5 {
+            color: #fbbf24;
+            margin-bottom: 0.3rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .clue-entry {
+            background: rgba(245, 158, 11, 0.15);
+            border-left: 3px solid #f59e0b;
+            padding: 0.3rem 0.5rem;
+            margin-bottom: 0.3rem;
+            border-radius: 0 4px 4px 0;
+            color: #fef08a;
+            font-size: 0.82rem;
+            word-break: break-word;
+        }
+
+        .clue-entry.latest-clue {
+            background: rgba(56, 189, 248, 0.2);
+            border-left-color: #38bdf8;
+            color: #ffffff;
+            animation: highlightClue 1.5s ease;
+        }
+
+        @keyframes highlightClue {
+            0% { background: rgba(56, 189, 248, 0.5); }
+            100% { background: rgba(56, 189, 248, 0.2); }
+        }
+
+        .timeout-banner {
+            background: rgba(239, 68, 68, 0.25);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            text-align: center;
+            padding: 0.4rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.6rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(30, 27, 75, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 95%;
+            max-width: 650px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        .modal-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #38bdf8;
+        }
+
+        .modal-card p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .virtual-keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 1rem;
+            margin-bottom: 1.2rem;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .key-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            min-width: 38px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.1s;
+        }
+
+        .key-btn:active {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .key-btn.wide { min-width: 70px; font-size: 0.85rem; }
+        .key-btn.space { flex-grow: 1; max-width: 250px; font-size: 0.85rem; }
+
+        .victory-banner {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🔐 ESCAPE ROOM WENDAGEN</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-switch-settings" style="display: none;" onclick="showSettingsScreen()">⚙️ Instellingen</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="settings-screen" class="screen active">
+            
+            <div class="glass-card">
+                <h2>👥 Klas & Leerlingen Beheren</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    <div>
+                        <div class="form-group">
+                            <label for="class-select">Selecteer Klas:</label>
+                            <div style="display: flex; gap: 0.4rem;">
+                                <select id="class-select" onchange="loadSelectedClass()">
+                                </select>
+                                <button class="btn btn-danger btn-sm" onclick="confirmDeleteCurrentClass()">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="class-name">Klasnaam (Nieuw / Bewerken):</label>
+                            <input type="text" id="class-name" placeholder="bijv. Klas 1A">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="students-input">Leerlingen Invoeren (1 per regel):</label>
+                            <textarea id="students-input" rows="3" placeholder="Typ of plak leerlingen hier..." oninput="processStudentList()"></textarea>
+                        </div>
+                        <div class="flex-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="saveClassToStorage()">💾 Klas Opslaan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.0rem;">
+                    <label>Aanwezigheid Sturen (Klik op een naam om als absent te markeren):</label>
+                    <div id="student-checkboxes-container" class="student-checkboxes"></div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h2>⏱️ Escape Room Instellingen</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label for="escape-timer-input">Tijd (minuten):</label>
+                        <input type="number" id="escape-timer-input" min="1" max="180" value="45">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeout-input">Time-out bij Fout Antwoord (sec):</label>
+                        <input type="number" id="timeout-input" min="0" max="600" value="30">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-groups-select">Aantal Groepjes:</label>
+                        <select id="num-groups-select" onchange="renderGroupPuzzleInputs()">
+                            <option value="6" selected>6 Groepen</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-puzzles-select">Puzzels per Groep:</label>
+                        <select id="num-puzzles-select" onchange="renderGroupPuzzleInputs()">
+                            <option value="10" selected>10 Puzzels</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.4rem; margin-bottom: 0.8rem;">
+                    <h2>🔑 Oplossingen & Doorverwijzhints Per Groep</h2>
+                    <button class="btn btn-warning btn-sm" onclick="loadPreconfiguredData(); showAlertModal('Succes', 'Het 6-groepen route schema is opnieuw geladen.');">⚡ Laad 6-Groepen Route Schema opnieuw</button>
+                </div>
+
+                <div id="groups-config-container" class="groups-config-grid"></div>
+
+                <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+                    <button class="btn btn-success" style="font-size: 1.1rem; padding: 0.8rem 2.5rem;" onclick="startEscapeRoom()">
+                        🚀 Start Escape Room Spel ➔
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="play-screen" class="screen">
+            <div class="play-header-bar">
+                <div class="timer-container">
+                    <div>
+                        <div style="font-size: 0.7rem; color: #cbd5e1; text-transform: uppercase;">Resterende Tijd</div>
+                        <div class="main-timer-display" id="play-timer-display">45:00</div>
+                    </div>
+                    <div class="flex-actions">
+                        <button class="btn btn-success btn-sm" id="btn-timer-start" onclick="toggleMainTimer()">▶ Start</button>
+                        <button class="btn btn-secondary btn-sm" onclick="resetMainTimer()">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <div class="overall-status">
+                    <div id="escaped-counter" class="status-counter">🏆 0 / 6 Groepen Ontsnapt</div>
+                </div>
+            </div>
+
+            <div id="victory-banner-box" class="victory-banner">
+                🎉 GEFELICITEERD! ALLE GROEPEN ZIJN SUCCESVOL ONTSNAPT! 🎉
+            </div>
+
+            <div id="groups-play-container" class="groups-play-grid"></div>
+        </div>
+    </main>
+
+    <!-- IN-APP PUZZEL MODAL -->
+    <div id="puzzle-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="puzzle-modal-title">🔓 Groep 1 - Puzzel Invoeren</h3>
+            <p id="puzzle-modal-desc">Vul hieronder het antwoord in:</p>
+            
+            <div class="form-group" style="text-align: left; margin-bottom: 0.8rem;">
+                <label for="puzzle-answer-input">Code / Oplossing:</label>
+                <input type="text" id="puzzle-answer-input" style="font-size: 1.2rem; text-align: center;" onkeyup="if(event.key==='Enter') submitPuzzleAnswer()">
+            </div>
+
+            <div class="virtual-keyboard">
+                <div class="keyboard-row">
+                    <button class="key-btn" onclick="typeKey('1')">1</button>
+                    <button class="key-btn" onclick="typeKey('2')">2</button>
+                    <button class="key-btn" onclick="typeKey('3')">3</button>
+                    <button class="key-btn" onclick="typeKey('4')">4</button>
+                    <button class="key-btn" onclick="typeKey('5')">5</button>
+                    <button class="key-btn" onclick="typeKey('6')">6</button>
+                    <button class="key-btn" onclick="typeKey('7')">7</button>
+                    <button class="key-btn" onclick="typeKey('8')">8</button>
+                    <button class="key-btn" onclick="typeKey('9')">9</button>
+                    <button class="key-btn" onclick="typeKey('0')">0</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key-btn" onclick="typeKey('Q')">Q</button>
+                    <button class="key-btn" onclick="typeKey('W')">W</button>
+                    <button class="key-btn" onclick="typeKey('E')">E</button>
+                    <button class="key-btn" onclick="typeKey('R')">R</button>
+                    <button class="key-btn" onclick="typeKey('T')">T</button>
+                    <button class="key-btn" onclick="typeKey('Y')">Y</button>
+                    <button class="key-btn" onclick="typeKey('U')">U</button>
+                    <button class="key-btn" onclick="typeKey('I')">I</button>
+                    <button class="key-btn" onclick="typeKey('O')">O</button>
+                    <button class="key-btn" onclick="typeKey('P')">P</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key-btn" onclick="typeKey('A')">A</button>
+                    <button class="key-btn" onclick="typeKey('S')">S</button>
+                    <button class="key-btn" onclick="typeKey('D')">D</button>
+                    <button class="key-btn" onclick="typeKey('F')">F</button>
+                    <button class="key-btn" onclick="typeKey('G')">G</button>
+                    <button class="key-btn" onclick="typeKey('H')">H</button>
+                    <button class="key-btn" onclick="typeKey('J')">J</button>
+                    <button class="key-btn" onclick="typeKey('K')">K</button>
+                    <button class="key-btn" onclick="typeKey('L')">L</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key-btn" onclick="typeKey('Z')">Z</button>
+                    <button class="key-btn" onclick="typeKey('X')">X</button>
+                    <button class="key-btn" onclick="typeKey('C')">C</button>
+                    <button class="key-btn" onclick="typeKey('V')">V</button>
+                    <button class="key-btn" onclick="typeKey('B')">B</button>
+                    <button class="key-btn" onclick="typeKey('N')">N</button>
+                    <button class="key-btn" onclick="typeKey('M')">M</button>
+                    <button class="key-btn wide" onclick="typeKey('BACKSPACE')">⌫ Wis</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key-btn wide" onclick="typeKey('CLEAR')">❌ Alles</button>
+                    <button class="key-btn space" onclick="typeKey(' ')">Spatie</button>
+                </div>
+            </div>
+
+            <div class="flex-actions" style="justify-content: center;">
+                <button class="btn btn-secondary" onclick="closePuzzleModal()">Annuleren</button>
+                <button class="btn btn-success" onclick="submitPuzzleAnswer()">Verifiëren ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- IN-APP SYSTEM MODAL -->
+    <div id="system-modal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 450px;">
+            <h3 id="sys-modal-title">Melding</h3>
+            <p id="sys-modal-desc"></p>
+            <div class="flex-actions" style="justify-content: center; margin-top: 1.2rem;" id="sys-modal-actions">
+                <button class="btn btn-primary" onclick="closeSystemModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // AANGEPAST SCHEMA: 3 en 4 zitten nergens na elkaar; 6 en 13 zijn gescheiden.
+        const preconfiguredData = {
+            "1": {
+                "ans_1": "5e", "clue_1": "Goedgekeurd! Ga nu naar VRAAG 2.",
+                "ans_2": "25", "clue_2": "Goedgekeurd! Ga nu naar VRAAG 3.",
+                "ans_3": "n", "clue_3": "Goedgekeurd! Ga nu naar VRAAG 6.",
+                "ans_4": "parfum", "clue_4": "Goedgekeurd! Ga nu naar VRAAG 12.",
+                "ans_5": "handdoek", "clue_5": "Goedgekeurd! Ga nu naar VRAAG 4.",
+                "ans_6": "n", "clue_6": "Goedgekeurd! Ga nu naar VRAAG 13.",
+                "ans_7": "perzik", "clue_7": "Goedgekeurd! Ga nu naar VRAAG 8.",
+                "ans_8": "4", "clue_8": "Goedgekeurd! Ga nu naar VRAAG 5.",
+                "ans_9": "geen", "clue_9": "Goedgekeurd! Ga nu naar VRAAG 16.",
+                "ans_10": "tuinslang", "clue_10": "GEFELICITEERD! Jullie zijn ONTSNAPT! 🎉"
+            },
+            "2": {
+                "ans_1": "25", "clue_1": "Goedgekeurd! Ga nu naar VRAAG 6.",
+                "ans_2": "parfum", "clue_2": "Goedgekeurd! Ga nu naar VRAAG 4.",
+                "ans_3": "n", "clue_3": "Goedgekeurd! Ga nu naar VRAAG 8.",
+                "ans_4": "4", "clue_4": "Goedgekeurd! Ga nu naar VRAAG 16.",
+                "ans_5": "tuinslang", "clue_5": "Goedgekeurd! Ga nu naar VRAAG 1.",
+                "ans_6": "5e", "clue_6": "Goedgekeurd! Ga nu naar VRAAG 3.",
+                "ans_7": "n", "clue_7": "Goedgekeurd! Ga nu naar VRAAG 12.",
+                "ans_8": "handdoek", "clue_8": "Goedgekeurd! Ga nu naar VRAAG 13.",
+                "ans_9": "perzik", "clue_9": "Goedgekeurd! Ga nu naar VRAAG 5.",
+                "ans_10": "geen", "clue_10": "GEFELICITEERD! Jullie zijn ONTSNAPT! 🎉"
+            },
+            "3": {
+                "ans_1": "n", "clue_1": "Goedgekeurd! Ga nu naar VRAAG 8.",
+                "ans_2": "4", "clue_2": "Goedgekeurd! Ga nu naar VRAAG 12.",
+                "ans_3": "handdoek", "clue_3": "Goedgekeurd! Ga nu naar VRAAG 1.",
+                "ans_4": "5e", "clue_4": "Goedgekeurd! Ga nu naar VRAAG 5.",
+                "ans_5": "geen", "clue_5": "Goedgekeurd! Ga nu naar VRAAG 3.",
+                "ans_6": "n", "clue_6": "Goedgekeurd! Ga nu naar VRAAG 2.",
+                "ans_7": "25", "clue_7": "Goedgekeurd! Ga nu naar VRAAG 13.",
+                "ans_8": "perzik", "clue_8": "Goedgekeurd! Ga nu naar VRAAG 16.",
+                "ans_9": "tuinslang", "clue_9": "Goedgekeurd! Ga nu naar VRAAG 6.",
+                "ans_10": "parfum", "clue_10": "GEFELICITEERD! Jullie zijn ONTSNAPT! 🎉"
+            },
+            "4": {
+                "ans_1": "n", "clue_1": "Goedgekeurd! Ga nu naar VRAAG 12.",
+                "ans_2": "handdoek", "clue_2": "Goedgekeurd! Ga nu naar VRAAG 1.",
+                "ans_3": "5e", "clue_3": "Goedgekeurd! Ga nu naar VRAAG 13.",
+                "ans_4": "perzik", "clue_4": "Goedgekeurd! Ga nu naar VRAAG 8.",
+                "ans_5": "4", "clue_5": "Goedgekeurd! Ga nu naar VRAAG 3.",
+                "ans_6": "n", "clue_6": "Goedgekeurd! Ga nu naar VRAAG 16.",
+                "ans_7": "tuinslang", "clue_7": "Goedgekeurd! Ga nu naar VRAAG 5.",
+                "ans_8": "geen", "clue_8": "Goedgekeurd! Ga nu naar VRAAG 2.",
+                "ans_9": "25", "clue_9": "Goedgekeurd! Ga nu naar VRAAG 6.",
+                "ans_10": "parfum", "clue_10": "GEFELICITEERD! Jullie zijn ONTSNAPT! 🎉"
+            },
+            "5": {
+                "ans_1": "geen", "clue_1": "Goedgekeurd! Ga nu naar VRAAG 12.",
+                "ans_2": "handdoek", "clue_2": "Goedgekeurd! Ga nu naar VRAAG 3.",
+                "ans_3": "n", "clue_3": "Goedgekeurd! Ga nu naar VRAAG 2.",
+                "ans_4": "25", "clue_4": "Goedgekeurd! Ga nu naar VRAAG 16.",
+                "ans_5": "tuinslang", "clue_5": "Goedgekeurd! Ga nu naar VRAAG 8.",
+                "ans_6": "4", "clue_6": "Goedgekeurd! Ga nu naar VRAAG 13.",
+                "ans_7": "perzik", "clue_7": "Goedgekeurd! Ga nu naar VRAAG 6.",
+                "ans_8": "parfum", "clue_8": "Goedgekeurd! Ga nu naar VRAAG 1.",
+                "ans_9": "5e", "clue_9": "Goedgekeurd! Ga nu naar VRAAG 4.",
+                "ans_10": "n", "clue_10": "GEFELICITEERD! Jullie zijn ONTSNAPT! 🎉"
+            },
+            "6": {
+                "ans_1": "parfum", "clue_1": "Goedgekeurd! Ga nu naar VRAAG 16.",
+                "ans_2": "tuinslang", "clue_2": "Goedgekeurd! Ga nu naar VRAAG 8.",
+                "ans_3": "4", "clue_3": "Goedgekeurd! Ga nu naar VRAAG 6.",
+                "ans_4": "parfum", "clue_4": "Goedgekeurd! Ga nu naar VRAAG 2.",
+                "ans_5": "25", "clue_5": "Goedgekeurd! Ga nu naar VRAAG 12.",
+                "ans_6": "handdoek", "clue_6": "Goedgekeurd! Ga nu naar VRAAG 3.",
+                "ans_7": "n", "clue_7": "Goedgekeurd! Ga nu naar VRAAG 1.",
+                "ans_8": "5e", "clue_8": "Goedgekeurd! Ga nu naar VRAAG 5.",
+                "ans_9": "geen", "clue_9": "Goedgekeurd! Ga nu naar VRAAG 13.",
+                "ans_10": "perzik", "clue_10": "GEFELICITEERD! Jullie zijn ONTSNAPT! 🎉"
+            }
+        };
+
+        let rawStudents = [];
+        let absentStudents = new Set();
+        let mainTimerInterval = null;
+        let mainTimerSeconds = 2700; 
+        let initialTimerSeconds = 2700;
+        let escapeOrderCounter = 1;
+        let isTimerRunning = false;
+        let activeGroupIndexForPuzzle = null;
+
+        let gameState = { timeoutDuration: 30, groups: [] };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGroupPuzzleInputs();
+            loadPreconfiguredData();
+            refreshClassDropdown();
+            loadSelectedClass();
+        });
+
+        function showAlertModal(title, text) {
+            document.getElementById('sys-modal-title').innerText = title;
+            document.getElementById('sys-modal-desc').innerText = text;
+            document.getElementById('sys-modal-actions').innerHTML = `
+                <button class="btn btn-primary" onclick="closeSystemModal()">OK</button>
+            `;
+            document.getElementById('system-modal').classList.add('active');
+        }
+
+        function showConfirmModal(title, text, onConfirm) {
+            document.getElementById('sys-modal-title').innerText = title;
+            document.getElementById('sys-modal-desc').innerText = text;
+            
+            const actions = document.getElementById('sys-modal-actions');
+            actions.innerHTML = '';
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn btn-secondary';
+            cancelBtn.innerText = 'Annuleren';
+            cancelBtn.onclick = closeSystemModal;
+
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn btn-danger';
+            confirmBtn.innerText = 'Verwijderen';
+            confirmBtn.onclick = () => {
+                closeSystemModal();
+                onConfirm();
+            };
+
+            actions.appendChild(cancelBtn);
+            actions.appendChild(confirmBtn);
+            document.getElementById('system-modal').classList.add('active');
+        }
+
+        function closeSystemModal() {
+            document.getElementById('system-modal').classList.remove('active');
+        }
+
+        function getSavedClasses() {
+            return JSON.parse(localStorage.getItem('escape_classes') || '{}');
+        }
+
+        function refreshClassDropdown() {
+            const classes = getSavedClasses();
+            const select = document.getElementById('class-select');
+            select.innerHTML = '';
+            
+            const keys = Object.keys(classes);
+            if (keys.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = "";
+                opt.innerText = "-- Geen klas geselecteerd --";
+                select.appendChild(opt);
+            } else {
+                keys.forEach(k => {
+                    const opt = document.createElement('option');
+                    opt.value = k;
+                    opt.innerText = k;
+                    select.appendChild(opt);
+                });
+            }
+        }
+
+        function saveClassToStorage() {
+            const name = document.getElementById('class-name').value.trim();
+            if (!name) {
+                showAlertModal('Invoer Fout', 'Vul a.u.b. een klasnaam in.');
+                return;
+            }
+            const text = document.getElementById('students-input').value;
+            const classes = getSavedClasses();
+            classes[name] = text;
+            localStorage.setItem('escape_classes', JSON.stringify(classes));
+            refreshClassDropdown();
+            document.getElementById('class-select').value = name;
+            showAlertModal('Opgeslagen', `Klas '${name}' is succesvol opgeslagen!`);
+        }
+
+        function loadSelectedClass() {
+            const name = document.getElementById('class-select').value;
+            document.getElementById('class-name').value = name;
+            const classes = getSavedClasses();
+            if (classes[name] !== undefined) {
+                document.getElementById('students-input').value = classes[name];
+            } else {
+                document.getElementById('students-input').value = '';
+            }
+            processStudentList();
+        }
+
+        function confirmDeleteCurrentClass() {
+            const name = document.getElementById('class-select').value;
+            if (!name) return;
+            showConfirmModal(
+                'Klas Verwijderen',
+                `Weet je zeker dat je de klas '${name}' wilt verwijderen?`,
+                deleteCurrentClass
+            );
+        }
+
+        function deleteCurrentClass() {
+            const name = document.getElementById('class-select').value;
+            if (!name) return;
+            const classes = getSavedClasses();
+            if (classes[name]) {
+                delete classes[name];
+                localStorage.setItem('escape_classes', JSON.stringify(classes));
+                document.getElementById('class-name').value = '';
+                document.getElementById('students-input').value = '';
+                refreshClassDropdown();
+                loadSelectedClass();
+                showAlertModal('Verwijderd', `Klas '${name}' is verwijderd.`);
+            }
+        }
+
+        function processStudentList() {
+            const text = document.getElementById('students-input').value;
+            rawStudents = text.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+            renderStudentCheckboxes();
+        }
+
+        function renderStudentCheckboxes() {
+            const container = document.getElementById('student-checkboxes-container');
+            container.innerHTML = '';
+
+            if (rawStudents.length === 0) {
+                container.innerHTML = '<div style="color:#94a3b8; font-size:0.85rem;">Geen leerlingen ingevoerd. Voer hierboven namen in om absenties te kunnen beheren.</div>';
+                return;
+            }
+
+            rawStudents.forEach((student) => {
+                const isAbsent = absentStudents.has(student);
+                const item = document.createElement('div');
+                item.className = `student-item ${isAbsent ? 'absent' : ''}`;
+                item.onclick = () => toggleAbsent(student);
+
+                item.innerHTML = `
+                    <span>${student}</span>
+                    <span class="status-badge">${isAbsent ? 'Absent' : 'Aanwezig'}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleAbsent(student) {
+            if (absentStudents.has(student)) {
+                absentStudents.delete(student);
+            } else {
+                absentStudents.add(student);
+            }
+            renderStudentCheckboxes();
+        }
+
+        function generateGroupMembers(numGroups) {
+            const activeStudents = rawStudents.filter(s => !absentStudents.has(s));
+            
+            if (activeStudents.length === 0) {
+                const generated = [];
+                for (let g = 0; g < numGroups; g++) {
+                    generated.push([`Leerling ${g+1}A`, `Leerling ${g+1}B`]);
+                }
+                return generated;
+            }
+
+            const shuffled = [...activeStudents].sort(() => 0.5 - Math.random());
+            const groupList = Array.from({ length: numGroups }, () => []);
+
+            shuffled.forEach((student, idx) => {
+                groupList[idx % numGroups].push(student);
+            });
+
+            return groupList;
+        }
+
+        function typeKey(char) {
+            const input = document.getElementById('puzzle-answer-input');
+            if (char === 'BACKSPACE') input.value = input.value.slice(0, -1);
+            else if (char === 'CLEAR') input.value = '';
+            else input.value += char;
+            input.focus();
+        }
+
+        function renderGroupPuzzleInputs() {
+            const numGroups = 6;
+            const numPuzzles = 10;
+            const container = document.getElementById('groups-config-container');
+            container.innerHTML = '';
+
+            for (let g = 1; g <= numGroups; g++) {
+                const card = document.createElement('div');
+                card.className = 'group-config-card';
+
+                let puzzlesHTML = '';
+                for (let p = 1; p <= numPuzzles; p++) {
+                    const isLast = (p === numPuzzles);
+                    puzzlesHTML += `
+                        <div class="puzzle-item-config">
+                            <h4>Stap ${p} ${isLast ? '(Finale Vraag)' : ''}</h4>
+                            <div class="form-group" style="margin-bottom:0.4rem;">
+                                <label style="font-size:0.75rem;">Oplossing Code:</label>
+                                <input type="text" id="ans-g${g}-p${p}">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0.2rem;">
+                                <label style="font-size:0.75rem;">Hint (Doorverwijzing):</label>
+                                <input type="text" id="clue-g${g}-p${p}">
+                            </div>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `<div class="group-config-header">👥 Groep ${g}</div>${puzzlesHTML}`;
+                container.appendChild(card);
+            }
+        }
+
+        function loadPreconfiguredData() {
+            for (let g = 1; g <= 6; g++) {
+                for (let p = 1; p <= 10; p++) {
+                    const ansEl = document.getElementById(`ans-g${g}-p${p}`);
+                    const clueEl = document.getElementById(`clue-g${g}-p${p}`);
+                    if (ansEl && preconfiguredData[g]?.[`ans_${p}`]) {
+                        ansEl.value = preconfiguredData[g][`ans_${p}`];
+                    }
+                    if (clueEl && preconfiguredData[g]?.[`clue_${p}`]) {
+                        clueEl.value = preconfiguredData[g][`clue_${p}`];
+                    }
+                }
+            }
+        }
+
+        function startEscapeRoom() {
+            const numGroups = 6;
+            const numPuzzles = 10;
+            const timerMinutes = parseInt(document.getElementById('escape-timer-input').value, 10) || 45;
+            const timeoutSeconds = parseInt(document.getElementById('timeout-input').value, 10) || 30;
+
+            const groupMembersAllocated = generateGroupMembers(numGroups);
+
+            const groups = [];
+            for (let g = 0; g < numGroups; g++) {
+                groups.push({
+                    id: g + 1,
+                    name: `Groep ${g + 1}`,
+                    members: groupMembersAllocated[g],
+                    currentPuzzle: 1,
+                    totalPuzzles: numPuzzles,
+                    puzzles: [],
+                    unlockedClues: [],
+                    escaped: false,
+                    rank: null,
+                    elapsedTimeStr: '',
+                    timeoutUntil: 0
+                });
+            }
+
+            for (let g = 1; g <= numGroups; g++) {
+                const groupObj = groups[g - 1];
+                for (let p = 1; p <= numPuzzles; p++) {
+                    const ans = document.getElementById(`ans-g${g}-p${p}`).value.trim();
+                    const clue = document.getElementById(`clue-g${g}-p${p}`)?.value.trim() || '';
+                    groupObj.puzzles.push({
+                        puzzleNumber: p,
+                        answer: ans.toLowerCase(),
+                        clueAfter: clue
+                    });
+                }
+            }
+
+            gameState = {
+                timeoutDuration: timeoutSeconds,
+                groups: groups
+            };
+
+            mainTimerSeconds = timerMinutes * 60;
+            initialTimerSeconds = mainTimerSeconds;
+            escapeOrderCounter = 1;
+            updateMainTimerDisplay();
+
+            document.getElementById('settings-screen').classList.remove('active');
+            document.getElementById('play-screen').classList.add('active');
+            document.getElementById('btn-switch-settings').style.display = 'inline-flex';
+
+            renderPlayScreen();
+            startMainTimer();
+        }
+
+        function showSettingsScreen() {
+            if (isTimerRunning) toggleMainTimer();
+            document.getElementById('play-screen').classList.remove('active');
+            document.getElementById('settings-screen').classList.add('active');
+            document.getElementById('btn-switch-settings').style.display = 'none';
+        }
+
+        function updateMainTimerDisplay() {
+            const mins = Math.floor(mainTimerSeconds / 60);
+            const secs = mainTimerSeconds % 60;
+            const displayStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            document.getElementById('play-timer-display').innerText = displayStr;
+        }
+
+        function startMainTimer() {
+            if (mainTimerInterval) clearInterval(mainTimerInterval);
+            isTimerRunning = true;
+            document.getElementById('btn-timer-start').innerText = '⏸ Pauze';
+            document.getElementById('btn-timer-start').className = 'btn btn-warning btn-sm';
+
+            mainTimerInterval = setInterval(() => {
+                if (mainTimerSeconds > 0) {
+                    mainTimerSeconds--;
+                    updateMainTimerDisplay();
+                    checkGroupTimeouts();
+                } else {
+                    clearInterval(mainTimerInterval);
+                    isTimerRunning = false;
+                }
+            }, 1000);
+        }
+
+        function toggleMainTimer() {
+            if (isTimerRunning) {
+                clearInterval(mainTimerInterval);
+                isTimerRunning = false;
+                document.getElementById('btn-timer-start').innerText = '▶ Start';
+                document.getElementById('btn-timer-start').className = 'btn btn-success btn-sm';
+            } else {
+                startMainTimer();
+            }
+        }
+
+        function resetMainTimer() {
+            mainTimerSeconds = (parseInt(document.getElementById('escape-timer-input').value, 10) || 45) * 60;
+            updateMainTimerDisplay();
+        }
+
+        function checkGroupTimeouts() {
+            const now = Date.now();
+            let hasActiveTimeouts = false;
+
+            gameState.groups.forEach((g, index) => {
+                if (g.timeoutUntil > 0) {
+                    const element = document.getElementById(`timeout-banner-group-${index}`);
+                    if (now >= g.timeoutUntil) {
+                        g.timeoutUntil = 0;
+                        renderPlayScreen();
+                    } else if (element) {
+                        const remainingSecs = Math.ceil((g.timeoutUntil - now) / 1000);
+                        const mins = Math.floor(remainingSecs / 60);
+                        const secs = remainingSecs % 60;
+                        const formattedTime = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                        element.innerText = `⏳ TIME-OUT: ${formattedTime} wachten...`;
+                        hasActiveTimeouts = true;
+                    } else {
+                        hasActiveTimeouts = true;
+                    }
+                }
+            });
+
+            if (hasActiveTimeouts && !document.querySelector('.timeout-banner')) {
+                renderPlayScreen();
+            }
+        }
+
+        function renderPlayScreen() {
+            const container = document.getElementById('groups-play-container');
+            container.innerHTML = '';
+            let escapedCount = 0;
+
+            gameState.groups.forEach((group, index) => {
+                if (group.escaped) escapedCount++;
+
+                const now = Date.now();
+                const isTimedOut = group.timeoutUntil > now;
+                const remainingTimeoutSecs = Math.max(0, Math.ceil((group.timeoutUntil - now) / 1000));
+                const mins = Math.floor(remainingTimeoutSecs / 60);
+                const secs = remainingTimeoutSecs % 60;
+                const formattedTimeout = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                const card = document.createElement('div');
+                let cardClass = 'group-play-card';
+                if (group.escaped) cardClass += ' escaped';
+                else if (isTimedOut) cardClass += ' timeout';
+                card.className = cardClass;
+
+                const progressPct = group.escaped ? 100 : Math.round(((group.currentPuzzle - 1) / group.totalPuzzles) * 100);
+
+                let membersHTML = '';
+                if (group.members && group.members.length > 0) {
+                    const tags = group.members.map(m => `<span class="member-tag">${m}</span>`).join('');
+                    membersHTML = `<div class="group-members-tags">${tags}</div>`;
+                }
+
+                // HINTS: Nieuwste hints worden VOORAN geplaatst (omgekeerd gesorteerd)
+                let cluesHTML = '';
+                if (group.unlockedClues.length > 0) {
+                    const reversedClues = [...group.unlockedClues].reverse();
+                    const entries = reversedClues.map((c, i) => `
+                        <div class="clue-entry ${i === 0 ? 'latest-clue' : ''}">
+                            <strong>Stap ${c.puzzleNum}:</strong> ${c.clueText}
+                        </div>
+                    `).join('');
+                    cluesHTML = `<div class="clues-box" id="clues-box-group-${index}"><h5>💡 Ontvangen Hints (Nieuwste bovenaan):</h5>${entries}</div>`;
+                }
+
+                let actionHTML = '';
+                if (group.escaped) {
+                    actionHTML = `
+                        <div class="escaped-box">
+                            <div class="escape-rank-badge">🏆 ${group.rank}e Plaats</div>
+                            <div class="escape-time-info">⏱️ Tijd: <strong>${group.elapsedTimeStr}</strong></div>
+                        </div>
+                    `;
+                } else if (isTimedOut) {
+                    actionHTML = `
+                        <div class="timeout-banner" id="timeout-banner-group-${index}">⏳ TIME-OUT: ${formattedTimeout} wachten...</div>
+                        <button class="btn btn-secondary" style="width: 100%;" disabled>🔒 Geblokkeerd</button>
+                    `;
+                } else {
+                    actionHTML = `
+                        <button class="btn btn-success" style="width: 100%;" onclick="openPuzzleModal(${index})">
+                            🔓 Code Invoeren (Stap ${group.currentPuzzle}/10)
+                        </button>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="group-header-play">
+                            <div class="group-play-title"><span>${group.name}</span></div>
+                            <span class="info-pill">${group.escaped ? 'Ontsnapt' : `Stap ${group.currentPuzzle}/10`}</span>
+                        </div>
+                        ${membersHTML}
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${progressPct}%;"></div>
+                        </div>
+                        ${cluesHTML}
+                    </div>
+                    <div>${actionHTML}</div>
+                `;
+                container.appendChild(card);
+
+                // Zorg ervoor dat het hintskader altijd automatisch naar de nieuwste hint (bovenaan) scrollt
+                setTimeout(() => {
+                    const clueBox = document.getElementById(`clues-box-group-${index}`);
+                    if (clueBox) clueBox.scrollTop = 0;
+                }, 10);
+            });
+
+            document.getElementById('escaped-counter').innerText = `🏆 ${escapedCount} / ${gameState.groups.length} Groepen Ontsnapt`;
+            document.getElementById('victory-banner-box').style.display = (escapedCount === gameState.groups.length && gameState.groups.length > 0) ? 'block' : 'none';
+        }
+
+        function openPuzzleModal(groupIndex) {
+            activeGroupIndexForPuzzle = groupIndex;
+            const group = gameState.groups[groupIndex];
+
+            document.getElementById('puzzle-modal-title').innerText = `🔓 ${group.name} - Stap ${group.currentPuzzle}`;
+            document.getElementById('puzzle-modal-desc').innerText = `Vul het antwoord / de oplossing in voor Stap ${group.currentPuzzle}:`;
+            
+            const input = document.getElementById('puzzle-answer-input');
+            input.value = '';
+            
+            document.getElementById('puzzle-modal').classList.add('active');
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closePuzzleModal() {
+            document.getElementById('puzzle-modal').classList.remove('active');
+            activeGroupIndexForPuzzle = null;
+        }
+
+        function submitPuzzleAnswer() {
+            if (activeGroupIndexForPuzzle === null) return;
+
+            const group = gameState.groups[activeGroupIndexForPuzzle];
+            const input = document.getElementById('puzzle-answer-input').value.trim().toLowerCase();
+            const currentPuzzleObj = group.puzzles[group.currentPuzzle - 1];
+
+            if (input === currentPuzzleObj.answer) {
+                if (currentPuzzleObj.clueAfter) {
+                    group.unlockedClues.push({
+                        puzzleNum: group.currentPuzzle,
+                        clueText: currentPuzzleObj.clueAfter
+                    });
+                }
+
+                if (group.currentPuzzle < group.totalPuzzles) {
+                    group.currentPuzzle++;
+                } else {
+                    group.escaped = true;
+                    group.rank = escapeOrderCounter++;
+                    
+                    const elapsedSecs = Math.max(0, initialTimerSeconds - mainTimerSeconds);
+                    const mins = Math.floor(elapsedSecs / 60);
+                    const secs = elapsedSecs % 60;
+                    group.elapsedTimeStr = `${mins} min ${secs} sec`;
+                }
+
+                closePuzzleModal();
+                renderPlayScreen();
+            } else {
+                group.timeoutUntil = Date.now() + (gameState.timeoutDuration * 1000);
+                closePuzzleModal();
+                renderPlayScreen();
+            }
+        }
+    </script>
+</body>
+</html>
