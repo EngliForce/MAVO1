@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBC Newsround Roulette - Ultimate Edition</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ff0055, #7928ca, #00d4ff);
+            padding: 0.6rem 1.2rem;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        main {
+            flex: 1;
+            padding: 0.8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 50px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            height: 100%;
+        }
+
+        .screen.active {
+            display: flex !important;
+            flex-direction: column;
+            gap: 0.8rem;
+            height: 100%;
+        }
+
+        #setup-screen.active {
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.8rem;
+        }
+
+        .glass-card h2 {
+            font-size: 1.15rem;
+            color: #00d4ff;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+        }
+
+        select option {
+            background: #1e1b4b;
+            color: #fff;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #7928ca, #ff0055);
+            color: white;
+            border: none;
+            padding: 0.55rem 1rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 0, 85, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); }
+        .btn-accent { background: linear-gradient(135deg, #00d4ff, #008eb3); color: #0f172a; }
+
+        .btn-sm {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.72rem;
+        }
+
+        .student-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+
+        .student-item {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 0.85rem;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .student-item.absent {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            text-decoration: line-through;
+            color: #fca5a5;
+        }
+
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            background: #10b981;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .student-item.absent .status-badge {
+            background: #ef4444;
+        }
+
+        /* Speelscherm Stijlen */
+        #roulette-container {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .roulette-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .class-badge {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        #picked-student-box {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            padding: 6px 18px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+        }
+
+        #display-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #question-display {
+            width: 100%;
+            text-align: center;
+            line-height: 1.1;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            word-wrap: break-word;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 80px;
+            color: #ffffff;
+            transition: color 0.2s;
+        }
+
+        .rolling {
+            animation: pulse 0.1s infinite;
+            filter: blur(2px);
+            opacity: 0.6;
+            color: #00d4ff !important;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.99); }
+            100% { transform: scale(1); }
+        }
+
+        #translation-display {
+            font-size: 1.6rem;
+            color: #94a3b8;
+            min-height: 40px;
+            font-weight: normal;
+            opacity: 0;
+            transition: opacity 0.3s;
+            margin-top: 15px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding-top: 10px;
+            flex-shrink: 0;
+        }
+
+        .button-group-main {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .main-btn {
+            background: linear-gradient(135deg, #00d4ff, #008eb3);
+            color: #0f172a;
+            border: none;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #005f78, 0 0 15px rgba(0, 212, 255, 0.3);
+            transition: all 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .watch-btn {
+            background: linear-gradient(135deg, #ff0055, #dc2626);
+            color: #ffffff;
+            box-shadow: 0 5px 0 #991b1b, 0 0 15px rgba(255, 0, 85, 0.3);
+        }
+
+        .after-btn {
+            background: linear-gradient(135deg, #a855f7, #6b21a8);
+            color: #ffffff;
+            box-shadow: 0 5px 0 #4c1d95, 0 0 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .picker-btn {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #0f172a;
+            box-shadow: 0 5px 0 #b45309, 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .main-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #005f78, 0 0 10px rgba(0, 212, 255, 0.4);
+        }
+
+        .watch-btn:active { box-shadow: 0 2px 0 #991b1b; }
+        .after-btn:active { box-shadow: 0 2px 0 #4c1d95; }
+        .picker-btn:active { box-shadow: 0 2px 0 #b45309; }
+
+        .main-btn:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+            box-shadow: none;
+            transform: none;
+        }
+
+        .sub-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #cbd5e1;
+            padding: 8px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .sub-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+        }
+
+        .show { opacity: 1 !important; }
+
+        .questions-preview {
+            max-height: 180px;
+            overflow-y: auto;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .question-item {
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .question-item:last-child { border-bottom: none; }
+        .tag {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📺 BBC Newsround Roulette</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-switch-setup" style="display: none;" onclick="showSetupScreen()">⚙️ Instellingen</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- STARTSCHERM / INSTELLINGEN -->
+        <div id="setup-screen" class="screen active">
+            
+            <!-- KLASSEN & LEERLINGEN -->
+            <div class="glass-card">
+                <h2>🏫 1. Klassen- & Leerlingenbeheer</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    <div>
+                        <div class="form-group">
+                            <label for="class-select">Selecteer Bestaande Klas:</label>
+                            <div style="display: flex; gap: 0.4rem;">
+                                <select id="class-select" onchange="onClassSelectChange()">
+                                </select>
+                                <button class="btn btn-danger btn-sm" onclick="deleteCurrentClass()">🗑️ Verwijder</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label for="class-name">Nieuwe Klas Naam:</label>
+                            <input type="text" id="class-name" placeholder="bijv. Klas 2B">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 0.5rem;">
+                    <label for="student-input">Leerlingen invoeren (1 naam per regel OF gescheiden door komma's):</label>
+                    <textarea id="student-input" rows="3" placeholder="Sanne&#10;Daan&#10;Emma&#10;Tim"></textarea>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button class="btn btn-success btn-sm" onclick="saveClass()">💾 Klas & Leerlingen Opslaan</button>
+                </div>
+
+                <div id="absentee-section" style="margin-top: 1.2rem; display: none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.8rem;">
+                    <label><strong>Aanwezigheid registreren voor: <span id="current-class-label" style="color: #00d4ff;"></span></strong></label>
+                    <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.5rem;">Klik op een leerling om deze op <strong>ABSENT (AFWEZIG)</strong> te zetten. Absente leerlingen worden overgeslagen bij de namenkiezer.</p>
+                    <div class="student-checkboxes" id="student-grid"></div>
+                </div>
+            </div>
+
+            <!-- VRAGEN TOEVOEGEN -->
+            <div class="glass-card">
+                <h2>➕ 2. Extra Vraag Toevoegen aan Roulette</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label for="custom-en">Engelse Vraag:</label>
+                        <input type="text" id="custom-en" placeholder="e.g. Which country was mentioned?">
+                    </div>
+                    <div class="form-group">
+                        <label for="custom-nl">Nederlandse Vertaling:</label>
+                        <input type="text" id="custom-nl" placeholder="bijv. Welk land werd genoemd?">
+                    </div>
+                    <div class="form-group">
+                        <label for="custom-type">Type Vraag:</label>
+                        <select id="custom-type">
+                            <option value="during">Tijdens Kijken (TASK)</option>
+                            <option value="after">Na Kijken (AFTER WATCHING)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-accent btn-sm" onclick="addCustomQuestion()">➕ Vraag Toevoegen</button>
+            </div>
+
+            <!-- DATABASE OVERZICHT -->
+            <div class="glass-card">
+                <h2>📚 3. Vragen-Database Overzicht (<span id="total-q-count">0</span> vragen)</h2>
+                <div class="questions-preview" id="questions-list"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 0.5rem;">
+                <button class="btn btn-success" style="font-size: 1.1rem; padding: 0.8rem 2.5rem;" onclick="startRoulette()">
+                    🚀 Start Roulette Spel ➔
+                </button>
+            </div>
+
+        </div>
+
+        <!-- SPEELSCHERM -->
+        <div id="play-screen" class="screen">
+            <div id="roulette-container">
+                <div class="roulette-header">
+                    <span class="class-badge" id="active-class-display">Klas: Geen</span>
+                    <div id="picked-student-box">👤 Beurt: <span id="picked-student-name">-</span></div>
+                    <button class="btn btn-secondary btn-sm" onclick="showSetupScreen()">⚙️ Klas / Vragen Aanpassen</button>
+                </div>
+
+                <div id="display-wrapper">
+                    <div id="question-display">Ready?</div>
+                    <div id="translation-display"></div>
+                </div>
+
+                <div class="controls">
+                    <div class="button-group-main">
+                        <button class="main-btn" id="generate-btn" onclick="startRoll('during')">⚡ TASK</button>
+                        <a href="https://www.bbc.co.uk/newsround/news/watch_newsround" target="_blank" class="main-btn watch-btn">▶ PLAY EPISODE</a>
+                        <button class="main-btn after-btn" id="after-btn" onclick="startRoll('after')">🔍 AFTER WATCHING</button>
+                        <button class="main-btn picker-btn" id="pick-btn" onclick="pickRandomStudent()">🎲 NAME</button>
+                    </div>
+                    <button class="sub-btn" id="trans-btn" onclick="toggleTranslation()" style="visibility: hidden;">Translate</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script>
+    // Vragen voor "Tijdens het kijken" (TASK)
+    const taskQuestions = [
+        {en: "Which numbers or statistics were mentioned in the broadcast?", nl: "Welke getallen of statistieken werden in de uitzending genoemd?", category: "during"},
+        {en: "Describe what the news presenter was wearing today.", nl: "Beschrijf wat de nieuwslezer vandaag droeg.", category: "during"},
+        {en: "Name three countries, cities, or locations that appeared in the news.", nl: "Noem drie landen, steden of locaties die in het nieuws kwamen.", category: "during"},
+        {en: "Who was interviewed today? Describe who they were (e.g. an expert, a child, an athlete).", nl: "Wie werd er vandaag geïnterviewd? Beschrijf wie het was (bijv. een expert, kind, sporter).", category: "during"},
+        {en: "What was shown in the background during the studio segments?", nl: "Wat was er op de achtergrond te zien tijdens de studiobeelden?", category: "during"},
+        {en: "Quote one exact sentence or phrase spoken by a person in the news.", nl: "Citeer één exacte zin of uitspraak van iemand uit de uitzending.", category: "during"},
+        {en: "Were there any animals featured in today's broadcast? Describe what they were doing.", nl: "Kwamen er dieren in de uitzending voor? Beschrijf wat ze aan het doen waren.", category: "during"},
+        {en: "What colors dominated the graphics or headlines of today's main story?", nl: "Welke kleuren overheersten in de afbeeldingen/titels van het hoofdverhaal?", category: "during"},
+        {en: "Write down 5 words you hear that you don't know yet.", nl: "Schrijf 5 woorden op die je hoort en nog niet kent.", category: "during"}
+    ];
+
+    // Vragen voor "Na het kijken" (AFTER WATCHING)
+    const afterQuestions = [
+        {en: "How many subjects were there in total?", nl: "Hoeveel onderwerpen waren er in totaal?", category: "after"},
+        {en: "What were today's subjects?", nl: "Wat waren de onderwerpen van vandaag?", category: "after"},
+        {en: "For each subject, choose the topic: people, nature, sport, school, or something else.", nl: "Voor elk onderwerp kies je het thema: mensen, natuur, sport, school of iets anders.", category: "after"},
+        {en: "For each subject, choose the feeling: happy, sad, serious, funny, or something else.", nl: "Voor elk onderwerp kies je het gevoel: vrolijk, verdrietig, serieus, grappig of iets anders.", category: "after"},
+        {en: "What was the very first subject? Summarise it in 5 sentences.", nl: "Wat was het allereerste onderwerp? Vat het samen in 5 zinnen.", category: "after"},
+        {en: "What was the very last subject? Summarise it in 5 sentences.", nl: "Wat was het allerlaatste onderwerp? Vat het samen in 5 zinnen.", category: "after"},
+        {en: "Explain each topic in one sentence.", nl: "Leg elk onderwerp uit in één zin.", category: "after"},
+        {en: "Choose one subject and explain it in simple words.", nl: "Kies één onderwerp en leg het simpel uit.", category: "after"},
+        {en: "Which subject did you like most? Explain why?", nl: "Welk onderwerp vond je het leukst? Leg uit waarom.", category: "after"},
+        {en: "Which subject did you like least? Explain why?", nl: "Welk onderwerp vond je het minst leuk? Leg uit waarom.", category: "after"},
+        {en: "Did you learn something new? What?", nl: "Heb je iets nieuws geleerd? Wat?", category: "after"},
+        {en: "Which subject would you like to know more about? Explain why?", nl: "Over welk onderwerp zou je meer willen weten? Leg uit waarom.", category: "after"},
+        {en: "Was there a subject you didn’t understand?", nl: "Was er een onderwerp dat je niet begreep?", category: "after"},
+        {en: "If you were the editor, which subject would you skip? Explain why.", nl: "Als jij de redacteur was, welk onderwerp zou je overslaan? Leg uit waarom.", category: "after"},
+        {en: "Which subject would get the most likes on social media? Explain why.", nl: "Welk onderwerp krijgt de meeste likes op social media? Leg uit waarom.", category: "after"}
+    ];
+
+    let defaultQuestions = [...taskQuestions, ...afterQuestions];
+    let allQuestions = [];
+    let classesData = {}; 
+    let selectedClassName = "";
+    let currentNL = "";
+    let isRolling = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadQuestions();
+        loadClassesData();
+        refreshClassDropdown();
+        renderQuestionsList();
+    });
+
+    // --- Klassen & Absentensysteem ---
+    function loadClassesData() {
+        const stored = localStorage.getItem('newsround_classes_v2');
+        if (stored) {
+            classesData = JSON.parse(stored);
+        } else {
+            classesData = {};
+        }
+    }
+
+    function saveClassesToStorage() {
+        localStorage.setItem('newsround_classes_v2', JSON.stringify(classesData));
+    }
+
+    function refreshClassDropdown() {
+        const select = document.getElementById('class-select');
+        select.innerHTML = '<option value="">-- Kies een klas --</option>';
+
+        Object.keys(classesData).forEach(className => {
+            const opt = document.createElement('option');
+            opt.value = className;
+            opt.innerText = className;
+            select.appendChild(opt);
+        });
+
+        if (selectedClassName && classesData[selectedClassName]) {
+            select.value = selectedClassName;
+            renderStudentGrid();
+        } else {
+            document.getElementById('absentee-section').style.display = 'none';
+        }
+    }
+
+    function onClassSelectChange() {
+        const select = document.getElementById('class-select');
+        selectedClassName = select.value;
+        if (selectedClassName && classesData[selectedClassName]) {
+            document.getElementById('class-name').value = selectedClassName;
+            const namesStr = classesData[selectedClassName].map(s => s.name).join('\n');
+            document.getElementById('student-input').value = namesStr;
+            renderStudentGrid();
+        } else {
+            document.getElementById('class-name').value = '';
+            document.getElementById('student-input').value = '';
+            document.getElementById('absentee-section').style.display = 'none';
+        }
+    }
+
+    function saveClass() {
+        let name = document.getElementById('class-name').value.trim();
+        const rawInput = document.getElementById('student-input').value;
+
+        if (!name) {
+            alert("Vul a.u.b. een klasnaam in.");
+            return;
+        }
+
+        const parsedNames = rawInput
+            .split(/[\n,]+/)
+            .map(n => n.trim())
+            .filter(n => n.length > 0);
+
+        const existingStudents = classesData[name] || [];
+        const updatedStudents = parsedNames.map(studentName => {
+            const existing = existingStudents.find(s => s.name.toLowerCase() === studentName.toLowerCase());
+            return {
+                name: studentName,
+                absent: existing ? existing.absent : false
+            };
+        });
+
+        classesData[name] = updatedStudents;
+        selectedClassName = name;
+        saveClassesToStorage();
+        refreshClassDropdown();
+        alert(`Klas "${name}" succesvol opgeslagen!`);
+    }
+
+    function deleteCurrentClass() {
+        if (!selectedClassName || !classesData[selectedClassName]) return;
+        if (confirm(`Weet je zeker dat je klas "${selectedClassName}" wilt verwijderen?`)) {
+            delete classesData[selectedClassName];
+            selectedClassName = "";
+            saveClassesToStorage();
+            refreshClassDropdown();
+            document.getElementById('class-name').value = '';
+            document.getElementById('student-input').value = '';
+        }
+    }
+
+    function renderStudentGrid() {
+        const section = document.getElementById('absentee-section');
+        const grid = document.getElementById('student-grid');
+        const label = document.getElementById('current-class-label');
+
+        if (!selectedClassName || !classesData[selectedClassName]) {
+            section.style.display = 'none';
+            return;
+        }
+
+        label.innerText = selectedClassName;
+        grid.innerHTML = '';
+        section.style.display = 'block';
+
+        classesData[selectedClassName].forEach((student, index) => {
+            const item = document.createElement('div');
+            item.className = `student-item ${student.absent ? 'absent' : ''}`;
+            item.innerHTML = `
+                <span>${student.name}</span>
+                <span class="status-badge">${student.absent ? 'Absent' : 'Aanwezig'}</span>
+            `;
+            item.onclick = () => toggleAbsent(index);
+            grid.appendChild(item);
+        });
+    }
+
+    function toggleAbsent(index) {
+        if (selectedClassName && classesData[selectedClassName][index]) {
+            classesData[selectedClassName][index].absent = !classesData[selectedClassName][index].absent;
+            saveClassesToStorage();
+            renderStudentGrid();
+        }
+    }
+
+    // --- Namenkiezer Logica ---
+    function pickRandomStudent() {
+        if (!selectedClassName || !classesData[selectedClassName] || classesData[selectedClassName].length === 0) {
+            alert("Selecteer eerst een klas met ingevoerde leerlingen in de instellingen.");
+            return;
+        }
+
+        const presentStudents = classesData[selectedClassName].filter(s => !s.absent);
+
+        if (presentStudents.length === 0) {
+            alert("Alle leerlingen in deze klas staan als absent gemarkeerd!");
+            return;
+        }
+
+        const nameDisplay = document.getElementById('picked-student-name');
+        const pickBtn = document.getElementById('pick-btn');
+        pickBtn.disabled = true;
+
+        let counter = 0;
+        const interval = setInterval(() => {
+            const temp = presentStudents[Math.floor(Math.random() * presentStudents.length)];
+            nameDisplay.innerText = temp.name;
+            counter++;
+            if (counter > 15) {
+                clearInterval(interval);
+                const final = presentStudents[Math.floor(Math.random() * presentStudents.length)];
+                nameDisplay.innerText = final.name;
+                pickBtn.disabled = false;
+            }
+        }, 60);
+    }
+
+    // --- Vragenbeheer ---
+    function loadQuestions() {
+        const stored = localStorage.getItem('newsround_custom_q');
+        if (stored) {
+            allQuestions = [...defaultQuestions, ...JSON.parse(stored)];
+        } else {
+            allQuestions = [...defaultQuestions];
+        }
+    }
+
+    function addCustomQuestion() {
+        const en = document.getElementById('custom-en').value.trim();
+        const nl = document.getElementById('custom-nl').value.trim();
+        const category = document.getElementById('custom-type').value;
+
+        if (!en || !nl) {
+            alert("Vul a.u.b. zowel de Engelse als Nederlandse vraag in.");
+            return;
+        }
+
+        const newQ = { en, nl, category };
+        allQuestions.push(newQ);
+
+        const storedCustom = JSON.parse(localStorage.getItem('newsround_custom_q') || '[]');
+        storedCustom.push(newQ);
+        localStorage.setItem('newsround_custom_q', JSON.stringify(storedCustom));
+
+        document.getElementById('custom-en').value = '';
+        document.getElementById('custom-nl').value = '';
+        renderQuestionsList();
+    }
+
+    function renderQuestionsList() {
+        const container = document.getElementById('questions-list');
+        document.getElementById('total-q-count').innerText = allQuestions.length;
+        container.innerHTML = '';
+
+        allQuestions.forEach((q, idx) => {
+            const item = document.createElement('div');
+            item.className = 'question-item';
+            const catTag = q.category === 'during' ? 'Tijdens Kijken' : 'Na Kijken';
+            item.innerHTML = `
+                <span><strong>${idx + 1}.</strong> ${q.en}</span>
+                <span class="tag">${catTag}</span>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    // --- Schermwissels & Roulette ---
+    function startRoulette() {
+        document.getElementById('setup-screen').classList.remove('active');
+        document.getElementById('play-screen').classList.add('active');
+        document.getElementById('btn-switch-setup').style.display = 'inline-flex';
+        document.getElementById('active-class-display').innerText = `Klas: ${selectedClassName || 'Geen'}`;
+        document.getElementById('picked-student-name').innerText = '-';
+        fitText();
+    }
+
+    function showSetupScreen() {
+        document.getElementById('play-screen').classList.remove('active');
+        document.getElementById('setup-screen').classList.add('active');
+        document.getElementById('btn-switch-setup').style.display = 'none';
+    }
+
+    function fitText() {
+        const display = document.getElementById('question-display');
+        const wrapper = document.getElementById('display-wrapper');
+        if (!display || !wrapper) return;
+                
+        let fontSize = 90; 
+        display.style.fontSize = fontSize + "px";
+
+        const maxHeight = wrapper.clientHeight * 0.85;
+        const maxWidth = wrapper.clientWidth * 0.95;
+
+        while ((display.scrollHeight > maxHeight || display.scrollWidth > maxWidth) && fontSize > 25) {
+            fontSize -= 2;
+            display.style.fontSize = fontSize + "px";
+        }
+    }
+
+    function startRoll(filterCategory) {
+        if (isRolling) return;
+        isRolling = true;
+                
+        const display = document.getElementById('question-display');
+        const transDiv = document.getElementById('translation-display');
+        const transBtn = document.getElementById('trans-btn');
+        const mainBtn = document.getElementById('generate-btn');
+        const afterBtn = document.getElementById('after-btn');
+
+        // Strikt scheiden van vragen op basis van gekozen knop
+        const pool = allQuestions.filter(q => q.category === filterCategory);
+                
+        transDiv.classList.remove('show');
+        transBtn.style.visibility = "hidden";
+        display.classList.add('rolling');
+        mainBtn.disabled = true;
+        afterBtn.disabled = true;
+
+        let counter = 0;
+        const interval = setInterval(() => {
+            const randomTemp = pool[Math.floor(Math.random() * pool.length)];
+            display.innerText = randomTemp.en;
+            fitText(); 
+            counter++;
+                        
+            if (counter > 20) {
+                clearInterval(interval);
+                finalize();
+            }
+        }, 50);
+
+        function finalize() {
+            const final = pool[Math.floor(Math.random() * pool.length)];
+            display.innerText = final.en;
+            currentNL = final.nl;
+            fitText();
+            display.classList.remove('rolling');
+            transBtn.style.visibility = "visible";
+            mainBtn.disabled = false;
+            afterBtn.disabled = false;
+            isRolling = false;
+        }
+    }
+
+    function toggleTranslation() {
+        const transDiv = document.getElementById('translation-display');
+        transDiv.classList.toggle('show');
+        transDiv.innerText = transDiv.classList.contains('show') ? currentNL : "";
+    }
+
+    window.addEventListener('resize', fitText);
+</script>
+</body>
+</html>
