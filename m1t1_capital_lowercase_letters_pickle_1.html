@@ -22,7 +22,7 @@
             padding: 3rem 1rem; 
             text-align: center; 
             clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-            border-bottom: 5px solid var(--hero-yellow); /* Streepje is nu geel */
+            border-bottom: 5px solid var(--hero-yellow);
         }
         h1 { 
             font-family: 'Bangers', cursive; 
@@ -59,12 +59,14 @@
     </style>
 </head>
 <body>
+
 <header>
     <h1>CAP IT OR LEAVE IT?</h1>
     <div class="subtitle">EngliForce Mission Control</div>
 </header>
+
 <div class="quiz-container">
-    <p style="text-align: center; opacity: 0.8;">Click on the words that need a <strong>Capital Letter</strong>!</p>
+    <p style="text-align: center; opacity: 0.8;">Click on words that contain <strong>capitalization errors</strong> (missing OR unnecessary capital)!</p>
     <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
     <div id="quiz" class="sentence"></div>
     <div style="text-align: center;">
@@ -73,27 +75,123 @@
         <button class="btn" onclick="startQuiz()" style="background: var(--hero-red); border-bottom-color: #8b0000;">🔄 RESTART</button>
     </div>
 </div>
+
 <footer>
     <p>&copy; 2026, EngliForce: <span class="footer-highlight">Make English Your Superpower!</span></p>
 </footer>
+
 <script>
     const sentenceBank = [
-      { text: "i went to london last summer.", capitalize: ["i", "london"] },
-      { text: "my birthday is in october.", capitalize: ["october"] },
-      { text: "we celebrate christmas day together.", capitalize: ["christmas", "day"] },
+      { text: "i went to london last Summer.", capitalize: ["london"] },
+      { text: "my Birthday is in october.", capitalize: ["october"] },
+      { text: "we celebrate christmas day Together.", capitalize: ["christmas", "day"] },
       { text: "he moved to france in april.", capitalize: ["france", "april"] },
-      { text: "they visited the eiffel tower.", capitalize: ["eiffel", "tower"] },
-      { text: "our teacher is mr. sebel.", capitalize: ["mr.", "sebel"] },
-      { text: "i love watching movies on netflix.", capitalize: ["i", "netflix"] }
+      { text: "they Visited the eiffel tower.", capitalize: ["eiffel", "tower"] },
+      { text: "our Teacher is mr. sebel.", capitalize: ["mr", "sebel"] },
+      { text: "i love watching Movies on netflix.", capitalize: ["netflix"] },
+      { text: "she speaks english and spanish Fluently.", capitalize: ["english", "spanish"] },
+      { text: "my Brother works for google in california.", capitalize: ["google", "california"] },
+      { text: "we are going to new york on monday.", capitalize: ["new", "york", "monday"] },
+      { text: "mrs. johnson Taught us history.", capitalize: ["mrs", "johnson"] },
+      { text: "is halloween in october or november?", capitalize: ["halloween", "october", "november"] },
+      { text: "the River thames flows through london.", capitalize: ["river", "thames", "london"] },
+      { text: "i study german on tuesdays.", capitalize: ["german", "tuesdays"] },
+      { text: "last friday we ate italian food.", capitalize: ["friday", "italian"] },
+      { text: "the grand canyon is in arizona.", capitalize: ["grand", "canyon", "arizona"] },
+      { text: "we visited dr. smith at the Clinic.", capitalize: ["dr", "smith"] },
+      { text: "japan is Famous for mount fuji.", capitalize: ["japan", "mount", "fuji"] },
+      { text: "does the Train leave on wednesday?", capitalize: ["wednesday"] },
+      { text: "my cousin lives in sydney, australia.", capitalize: ["sydney", "australia"] },
+      { text: "easter is Usually in march or april.", capitalize: ["easter", "march", "april"] },
+      { text: "we watched a Film about queen victoria.", capitalize: ["queen", "victoria"] },
+      { text: "my favorite Continent is africa.", capitalize: ["africa"] },
+      { text: "is harry potter Written by j.k. rowling?", capitalize: ["harry", "potter", "j.k", "rowling"] },
+      { text: "they cross the atlantic ocean every Year.", capitalize: ["atlantic", "ocean"] },
+      { text: "we stayed at the hilton Hotel.", capitalize: ["hilton", "hotel"] },
+      { text: "can you Speak french?", capitalize: ["french"] },
+      { text: "we celebrated new year's eve in madrid.", capitalize: ["new", "year's", "eve", "madrid"] },
+      { text: "she loves Driving her ford car.", capitalize: ["ford"] },
+      { text: "is president biden Speaking today?", capitalize: ["president", "biden"] },
+      { text: "the amazon river is in south america.", capitalize: ["amazon", "river", "south", "america"] },
+      { text: "we visited the british museum.", capitalize: ["british", "museum"] },
+      { text: "my Dog is named max.", capitalize: ["max"] },
+      { text: "they Live on main street.", capitalize: ["main", "street"] },
+      { text: "can we go to mcdonald's for Dinner?", capitalize: ["mcdonald's"] },
+      { text: "we have a Test next thursday.", capitalize: ["thursday"] },
+      { text: "my uncle serves in the us navy.", capitalize: ["us", "navy"] },
+      { text: "the statue of liberty is in new york.", capitalize: ["statue", "liberty", "new", "york"] },
+      { text: "i bought a Pair of nike shoes.", capitalize: ["nike"] },
+      { text: "does Class start in september?", capitalize: ["september"] },
+      { text: "we saw the colosseum in rome.", capitalize: ["colosseum", "rome"] },
+      { text: "my Friend sara plays chess.", capitalize: ["sara"] },
+      { text: "they traveled across asia last winter.", capitalize: ["asia"] },
+      { text: "prof. brown gave a Lecture.", capitalize: ["prof", "brown"] },
+      { text: "we Flew across the pacific ocean.", capitalize: ["pacific", "ocean"] },
+      { text: "is valentine's day in february?", capitalize: ["valentine's", "day", "february"] },
+      { text: "he works at microsoft in seattle.", capitalize: ["microsoft", "seattle"] },
+      { text: "we learned about Ancient egypt.", capitalize: ["egypt"] },
+      { text: "my sister Studies chinese culture.", capitalize: ["chinese"] },
+      { text: "they took Photos of big ben.", capitalize: ["big", "ben"] },
+      { text: "the sahara desert is Very hot.", capitalize: ["sahara", "desert"] },
+      { text: "we are Going to disneyland in june.", capitalize: ["disneyland", "june"] },
+      { text: "does mr. adams Live in canada?", capitalize: ["mr", "adams", "canada"] },
+      { text: "my Flight to berlin was delayed.", capitalize: ["berlin"] },
+      { text: "we listened to a Song by taylor swift.", capitalize: ["taylor", "swift"] },
+      { text: "the olympics were Held in paris.", capitalize: ["olympics", "paris"] },
+      { text: "i love Eating mexican tacos.", capitalize: ["mexican"] },
+      { text: "we went Skiing in the alps.", capitalize: ["alps"] },
+      { text: "my Cat is named whiskers.", capitalize: ["whiskers"] },
+      { text: "they visited king charles in london.", capitalize: ["king", "charles", "london"] },
+      { text: "we crossed the golden gate bridge.", capitalize: ["golden", "gate", "bridge"] },
+      { text: "my birthday is on sunday.", capitalize: ["sunday"] },
+      { text: "is the taj mahal in india?", capitalize: ["taj", "mahal", "india"] },
+      { text: "we drink Lipton tea every morning.", capitalize: ["lipton"] },
+      { text: "she met ms. davis at the Library.", capitalize: ["ms", "davis"] },
+      { text: "we studied the american revolution.", capitalize: ["american", "revolution"] },
+      { text: "i bought a new apple ipad.", capitalize: ["apple", "ipad"] },
+      { text: "is toronto in canada?", capitalize: ["toronto", "canada"] },
+      { text: "they celebrated thanksgiving in november.", capitalize: ["thanksgiving", "november"] },
+      { text: "we Hiked up mount everest.", capitalize: ["mount", "everest"] },
+      { text: "does john Speak russian?", capitalize: ["john", "russian"] },
+      { text: "the louvre is a Famous museum in france.", capitalize: ["louvre", "france"] },
+      { text: "my Aunt lives near lake michigan.", capitalize: ["lake", "michigan"] },
+      { text: "we have Art class on saturdays.", capitalize: ["saturdays"] },
+      { text: "is captain america a marvel hero?", capitalize: ["captain", "america", "marvel"] },
+      { text: "we ordered a dominos pizza.", capitalize: ["dominos"] },
+      { text: "my family visited hawaii in august.", capitalize: ["hawaii", "august"] },
+      { text: "they walked Along oxford street.", capitalize: ["oxford", "street"] },
+      { text: "does uncle bob like fishing?", capitalize: ["uncle", "bob"] },
+      { text: "we studied greek mythology in school.", capitalize: ["greek"] },
+      { text: "i use spotify to listen to music.", capitalize: ["spotify"] },
+      { text: "they arrived in dublin on monday.", capitalize: ["dublin", "monday"] },
+      { text: "is the red sea near egypt?", capitalize: ["red", "sea", "egypt"] },
+      { text: "we read a Book about abraham lincoln.", capitalize: ["abraham", "lincoln"] },
+      { text: "my Favorite month is july.", capitalize: ["july"] },
+      { text: "they sailed on the caribbean sea.", capitalize: ["caribbean", "sea"] },
+      { text: "we went to the samsung store.", capitalize: ["samsung"] },
+      { text: "does officer jones work here?", capitalize: ["officer", "jones"] },
+      { text: "i love visiting central park.", capitalize: ["central", "park"] },
+      { text: "my Cousin is learning japanese.", capitalize: ["japanese"] },
+      { text: "they stayed in los angeles for a week.", capitalize: ["los", "angeles"] },
+      { text: "we saw the northern lights in norway.", capitalize: ["norway"] },
+      { text: "is christmas in december?", capitalize: ["christmas", "december"] },
+      { text: "my Teacher is dr. evans.", capitalize: ["dr", "evans"] },
+      { text: "we visited the white house in washington.", capitalize: ["white", "house", "washington"] },
+      { text: "they Play games on playstation.", capitalize: ["playstation"] },
+      { text: "does emily live in chicago?", capitalize: ["emily", "chicago"] },
+      { text: "we bought swiss chocolate.", capitalize: ["swiss"] },
+      { text: "i am going to brazil in january.", capitalize: ["brazil", "january"] },
+      { text: "is the pacific ocean the largest ocean?", capitalize: ["pacific", "ocean"] }
     ];
+
     let currentRound = [], currentIndex = 0, wordSpans = [];
-    
+
     function startQuiz() {
-        currentRound = [...sentenceBank].sort(() => 0.5 - Math.random());
+        currentRound = [...sentenceBank].sort(() => 0.5 - Math.random()).slice(0, 10);
         currentIndex = 0;
         showSentence();
     }
-    
+
     function showSentence() {
         document.getElementById('progressBar').style.width = `${(currentIndex / currentRound.length) * 100}%`;
         const quiz = document.getElementById('quiz');
@@ -102,13 +200,25 @@
         document.getElementById('checkBtn').style.display = 'inline-block';
         document.getElementById('nextBtn').style.display = 'none';
 
-        currentRound[currentIndex].text.split(" ").forEach(word => {
-            const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
+        currentRound[currentIndex].text.split(" ").forEach((word, index) => {
+            const cleanWord = word.replace(/[.,!?]/g, "");
+            
+            // Controleer of de eerste letter van de tekst in de zinnenbank daadwerkelijk een hoofdletter is
+            const firstChar = cleanWord.charAt(0);
+            const isCapitalizedInText = firstChar.length > 0 && firstChar === firstChar.toUpperCase() && firstChar !== firstChar.toLowerCase();
+
             const span = document.createElement("span");
             span.textContent = word;
             span.classList.add("word");
             span.onclick = () => span.classList.toggle("selected");
-            wordSpans.push({ span, word: cleanWord });
+            
+            wordSpans.push({ 
+                span, 
+                cleanWord: cleanWord.toLowerCase(), 
+                index, 
+                isCapitalizedInText 
+            });
+            
             quiz.appendChild(span);
             quiz.append(" ");
         });
@@ -116,25 +226,38 @@
 
     function checkAnswers() {
         const item = currentRound[currentIndex];
-        const caps = new Set(item.capitalize.map(w => w.toLowerCase()));
-        caps.add(wordSpans[0].word); 
-        
-        wordSpans.forEach(({ span, word }) => {
-            const isCorrect = caps.has(word);
+        const caps = new Set(item.capitalize.map(w => w.replace(/[.,!?]/g, "").toLowerCase()));
+
+        wordSpans.forEach(({ span, cleanWord, index, isCapitalizedInText }) => {
+            // Regel: Eerste woord van de zin of woord uit capitalize-lijst HOORT een hoofdletter te hebben
+            const shouldHaveCapital = (index === 0) || caps.has(cleanWord);
+
+            // Een FOUT aanwezig die de leerling moet aanklikken ontstaat als:
+            // 1. Het HOORT een hoofdletter te hebben, maar staat met een kleine letter.
+            // 2. Het HOORT GEEN hoofdletter te hebben, maar staat WEL met een hoofdletter.
+            const isError = (shouldHaveCapital && !isCapitalizedInText) || (!shouldHaveCapital && isCapitalizedInText);
+
             const isSelected = span.classList.contains("selected");
-            if (isCorrect && isSelected) span.classList.add("correct");
-            else if (isCorrect || isSelected) span.classList.add("incorrect");
+
+            if (isError && isSelected) {
+                span.classList.add("correct");
+            } else if (isError || isSelected) {
+                span.classList.add("incorrect");
+            }
             span.style.pointerEvents = 'none';
         });
+
         document.getElementById('checkBtn').style.display = 'none';
         document.getElementById('nextBtn').style.display = 'inline-block';
     }
 
     function nextSentence() {
         currentIndex++;
-        if (currentIndex < currentRound.length) showSentence();
-        else {
+        if (currentIndex < currentRound.length) {
+            showSentence();
+        } else {
             document.getElementById('quiz').innerHTML = "<h3>MISSION COMPLETE!</h3>";
+            document.getElementById('checkBtn').style.display = 'none';
             document.getElementById('nextBtn').style.display = 'none';
             document.getElementById('progressBar').style.width = '100%';
         }
@@ -142,5 +265,6 @@
 
     startQuiz();
 </script>
+
 </body>
 </html>
