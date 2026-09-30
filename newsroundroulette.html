@@ -477,6 +477,7 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <button class="btn btn-success btn-sm" onclick="saveClass()">💾 Klas & Leerlingen Opslaan</button>
+                    <button class="btn btn-secondary btn-sm" onclick="resetClassHistory()">🔄 Vraaggeschiedenis Klas Wissen</button>
                 </div>
 
                 <div id="absentee-section" style="margin-top: 1.2rem; display: none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.8rem;">
@@ -551,39 +552,253 @@
     </main>
 
 <script>
-    // Vragen voor "Tijdens het kijken" (TASK)
-    const taskQuestions = [
-        {en: "Which numbers or statistics were mentioned in the broadcast?", nl: "Welke getallen of statistieken werden in de uitzending genoemd?", category: "during"},
-        {en: "Describe what the news presenter was wearing today.", nl: "Beschrijf wat de nieuwslezer vandaag droeg.", category: "during"},
-        {en: "Name three countries, cities, or locations that appeared in the news.", nl: "Noem drie landen, steden of locaties die in het nieuws kwamen.", category: "during"},
-        {en: "Who was interviewed today? Describe who they were (e.g. an expert, a child, an athlete).", nl: "Wie werd er vandaag geïnterviewd? Beschrijf wie het was (bijv. een expert, kind, sporter).", category: "during"},
-        {en: "What was shown in the background during the studio segments?", nl: "Wat was er op de achtergrond te zien tijdens de studiobeelden?", category: "during"},
-        {en: "Quote one exact sentence or phrase spoken by a person in the news.", nl: "Citeer één exacte zin of uitspraak van iemand uit de uitzending.", category: "during"},
-        {en: "Were there any animals featured in today's broadcast? Describe what they were doing.", nl: "Kwamen er dieren in de uitzending voor? Beschrijf wat ze aan het doen waren.", category: "during"},
-        {en: "What colors dominated the graphics or headlines of today's main story?", nl: "Welke kleuren overheersten in de afbeeldingen/titels van het hoofdverhaal?", category: "during"},
-        {en: "Write down 5 words you hear that you don't know yet.", nl: "Schrijf 5 woorden op die je hoort en nog niet kent.", category: "during"}
+    // Alle 120 TASK + 100 AFTER WATCHING vragen in één volledige array
+    const defaultQuestions = [
+        // --- TASK QUESTIONS (120 VRAGEN) ---
+        {en: "Listen for one important fact from three different stories.", nl: "Luister naar één belangrijk feit uit drie verschillende verhalen.", category: "during"},
+        {en: "Remember one key word from three different stories.", nl: "Onthoud één trefwoord uit drie verschillende verhalen.", category: "during"},
+        {en: "Keep track of how many different stories there are.", nl: "Houd bij hoeveel verschillende verhalen er zijn.", category: "during"},
+        {en: "Remember the main topic of three different stories.", nl: "Onthoud het hoofdonderwerp van drie verschillende verhalen.", category: "during"},
+        {en: "Listen for three facts you did not know before.", nl: "Luister naar drie feiten die je nog niet wist.", category: "during"},
+        {en: "Remember one detail from the beginning, middle and end of the programme.", nl: "Onthoud één detail uit het begin, het midden en het einde van het programma.", category: "during"},
+        {en: "Listen for five words you understand clearly.", nl: "Luister naar vijf woorden die je duidelijk verstaat.", category: "during"},
+        {en: "Watch for three pictures that help you understand the news.", nl: "Let op drie beelden die je helpen het nieuws te begrijpen.", category: "during"},
+        {en: "Remember three things that happened in the programme.", nl: "Onthoud drie dingen die in het programma gebeurden.", category: "during"},
+        {en: "Listen for three important names, words or places.", nl: "Luister naar drie belangrijke namen, woorden of plaatsen.", category: "during"},
+        {en: "Remember one fact from four different stories.", nl: "Onthoud één feit uit vier verschillende verhalen.", category: "during"},
+        {en: "Listen for one key word from four different stories.", nl: "Luister naar één trefwoord uit vier verschillende verhalen.", category: "during"},
+        {en: "Keep track of the order of the stories.", nl: "Houd de volgorde van de verhalen bij.", category: "during"},
+        {en: "Remember the topic of every story.", nl: "Onthoud het onderwerp van elk verhaal.", category: "during"},
+        {en: "Listen for three short facts you can explain afterwards.", nl: "Luister naar drie korte feiten die je achteraf kunt uitleggen.", category: "during"},
+        {en: "Watch for three things that give you extra information.", nl: "Let op drie dingen die je extra informatie geven.", category: "during"},
+        {en: "Remember two stories and two facts about each.", nl: "Onthoud twee verhalen en twee feiten over elk verhaal.", category: "during"},
+        {en: "Listen for information from three different parts of the programme.", nl: "Luister naar informatie uit drie verschillende delen van het programma.", category: "during"},
+        {en: "Remember five important words from the whole programme.", nl: "Onthoud vijf belangrijke woorden uit het hele programma.", category: "during"},
+        {en: "Watch for one useful picture in three different stories.", nl: "Let op één nuttig beeld in drie verschillende verhalen.", category: "during"},
+        {en: "Listen for one fact that is easy to remember in three stories.", nl: "Luister in drie verhalen naar één feit dat makkelijk te onthouden is.", category: "during"},
+        {en: "Remember three different subjects from the programme.", nl: "Onthoud drie verschillende onderwerpen uit het programma.", category: "during"},
+        {en: "Listen for one important detail from three stories.", nl: "Luister naar één belangrijk detail uit drie verhalen.", category: "during"},
+        {en: "Watch for three things you can describe in English.", nl: "Let op drie dingen die je in het Engels kunt beschrijven.", category: "during"},
+        {en: "Remember three pieces of information from different stories.", nl: "Onthoud drie stukjes informatie uit verschillende verhalen.", category: "during"},
+        {en: "Listen for two facts from the first half and two from the second half.", nl: "Luister naar twee feiten uit de eerste helft en twee uit de tweede helft.", category: "during"},
+        {en: "Keep track of how many topics are discussed.", nl: "Houd bij hoeveel onderwerpen er besproken worden.", category: "during"},
+        {en: "Remember one short sentence about three different stories.", nl: "Onthoud één korte zin over drie verschillende verhalen.", category: "during"},
+        {en: "Listen for four words connected to today’s news.", nl: "Luister naar vier woorden die te maken hebben met het nieuws van vandaag.", category: "during"},
+        {en: "Watch for three details you only notice by looking carefully.", nl: "Let op drie details die je alleen opmerkt door goed te kijken.", category: "during"},
+        {en: "Listen for three details you only notice by listening carefully.", nl: "Luister naar drie details die je alleen opmerkt door goed te luisteren.", category: "during"},
+        {en: "Remember one thing you saw and one thing you heard in three stories.", nl: "Onthoud in drie verhalen één ding dat je zag en één ding dat je hoorde.", category: "during"},
+        {en: "Listen for three facts that help explain what happened.", nl: "Luister naar drie feiten die helpen uitleggen wat er is gebeurd.", category: "during"},
+        {en: "Remember three facts from three different moments in the programme.", nl: "Onthoud drie feiten van drie verschillende momenten uit de uitzending.", category: "during"},
+        {en: "Watch for three things that show where a story takes place.", nl: "Let op drie dingen die laten zien waar een verhaal zich afspeelt.", category: "during"},
+        {en: "Listen for three clues that tell you what a story is about.", nl: "Luister naar drie aanwijzingen die je vertellen waar een verhaal over gaat.", category: "during"},
+        {en: "Remember four things that happened during the programme.", nl: "Onthoud vier dingen die tijdens het programma gebeurden.", category: "during"},
+        {en: "Listen for one useful word from three different stories.", nl: "Luister naar één nuttig woord uit drie verschillende verhalen.", category: "during"},
+        {en: "Watch for three moments when the pictures make the English clearer.", nl: "Let op drie momenten waarop de beelden het Engels duidelijker maken.", category: "during"},
+        {en: "Remember one important fact from the start, middle and end.", nl: "Onthoud één belangrijk feit van het begin, midden en einde.", category: "during"},
+        {en: "Listen for three different actions. What happened?", nl: "Luister naar drie verschillende acties. Wat is er gebeurd?", category: "during"},
+        {en: "Remember three people, groups or organisations mentioned.", nl: "Onthoud drie genoemde personen, groepen of organisaties.", category: "during"},
+        {en: "Listen for one fact connected to three different people or groups.", nl: "Luister naar één feit dat gekoppeld is aan drie verschillende personen of groepen.", category: "during"},
+        {en: "Watch for three people or groups and remember what they are doing.", nl: "Let op drie mensen of groepen en onthoud wat ze aan het doen zijn.", category: "during"},
+        {en: "Remember two people or groups and one fact about each.", nl: "Onthoud twee personen of groepen en één feit over elk.", category: "during"},
+        {en: "Listen for three pieces of information about people or groups.", nl: "Luister naar drie stukjes informatie over mensen of groepen.", category: "during"},
+        {en: "Watch for two people or groups from different stories.", nl: "Let op twee personen of groepen uit verschillende verhalen.", category: "during"},
+        {en: "Remember who or what is important in three different stories.", nl: "Onthoud wie of wat belangrijk is in drie verschillende verhalen.", category: "during"},
+        {en: "Listen for three words that describe people, places or events.", nl: "Luister naar drie woorden die mensen, plaatsen of gebeurtenissen beschrijven.", category: "during"},
+        {en: "Remember one person, group or organisation from three stories.", nl: "Onthoud één persoon, groep of organisatie uit drie verhalen.", category: "during"},
+        {en: "Listen for three place names or locations.", nl: "Luister naar drie plaatsnamen of locaties.", category: "during"},
+        {en: "Remember one place and one fact connected to it.", nl: "Onthoud één plaats en één feit dat eraan gekoppeld is.", category: "during"},
+        {en: "Watch for two different places and remember what happens there.", nl: "Let op twee verschillende plaatsen en onthoud wat daar gebeurt.", category: "during"},
+        {en: "Listen for information about where three stories happen.", nl: "Luister naar informatie over waar drie verhalen zich afspelen.", category: "during"},
+        {en: "Remember three places or settings from the programme.", nl: "Onthoud drie plaatsen of omgevingen uit het programma.", category: "during"},
+        {en: "Watch for one place from the beginning, middle and end.", nl: "Let op één plaats uit het begin, midden en einde.", category: "during"},
+        {en: "Listen for one location connected to two different stories.", nl: "Luister naar één locatie die gekoppeld is aan twee verschillende verhalen.", category: "during"},
+        {en: "Remember where two different stories happen.", nl: "Onthoud waar twee verschillende verhalen zich afspelen.", category: "during"},
+        {en: "Watch for three different settings in the programme.", nl: "Let op drie verschillende decors/omgevingen in het programma.", category: "during"},
+        {en: "Listen for a place and remember why it is mentioned.", nl: "Luister naar een plaats en onthoud waarom deze wordt genoemd.", category: "during"},
+        {en: "Listen for three English words you already know.", nl: "Luister naar drie Engelse woorden die je al kent.", category: "during"},
+        {en: "Listen for two English words that are new to you.", nl: "Luister naar twee Engelse woorden die nieuw voor je zijn.", category: "during"},
+        {en: "Listen for one word you hear more than once.", nl: "Luister naar één woord dat je vaker dan één keer hoort.", category: "during"},
+        {en: "Remember five English words from the whole programme.", nl: "Onthoud vijf Engelse woorden uit het hele programma.", category: "during"},
+        {en: "Listen for three verbs. What actions do they describe?", nl: "Luister naar drie werkwoorden. Welke acties beschrijven ze?", category: "during"},
+        {en: "Listen for three nouns connected to the news.", nl: "Luister naar drie zelfstandige naamwoorden die met het nieuws te maken hebben.", category: "during"},
+        {en: "Remember one useful English word from three stories.", nl: "Onthoud één nuttig Engels woord uit drie verhalen.", category: "during"},
+        {en: "Listen for a word you can understand from the pictures.", nl: "Luister naar een woord dat je kunt begrijpen aan de hand van de beelden.", category: "during"},
+        {en: "Listen for a word you can understand from the sentence.", nl: "Luister naar een woord dat je kunt begrijpen uit de context van de zin.", category: "during"},
+        {en: "Remember three short English phrases you understand.", nl: "Onthoud drie korte Engelse zinnen/uitdrukkingen die je begrijpt.", category: "during"},
+        {en: "Watch for three pictures that give important information.", nl: "Let op drie beelden die belangrijke informatie geven.", category: "during"},
+        {en: "Listen for three facts that are not clear from the pictures alone.", nl: "Luister naar drie feiten die niet uit alleen de beelden duidelijk worden.", category: "during"},
+        {en: "Watch for three facts you can understand without hearing every word.", nl: "Let op drie feiten die je kunt begrijpen zonder elk woord te horen.", category: "during"},
+        {en: "Remember one thing you learned from pictures in three stories.", nl: "Onthoud één ding dat je door beelden hebt geleerd in drie verhalen.", category: "during"},
+        {en: "Listen for one thing you learned from the sound in three stories.", nl: "Luister naar één ding dat je door het geluid hebt geleerd in drie verhalen.", category: "during"},
+        {en: "Watch for two moments when pictures and words work together.", nl: "Let op twee momenten waarop beelden en woorden samenwerken.", category: "during"},
+        {en: "Remember three visual details from different stories.", nl: "Onthoud drie visuele details uit verschillende verhalen.", category: "during"},
+        {en: "Listen for three spoken details from different stories.", nl: "Luister naar drie gesproken details uit verschillende verhalen.", category: "during"},
+        {en: "Watch for one useful visual clue in three different stories.", nl: "Let op één nuttige visuele aanwijzing in drie verschillende verhalen.", category: "during"},
+        {en: "Remember two facts you heard and two facts you saw.", nl: "Onthoud twee feiten die je hoorde en twee feiten die je zag.", category: "during"},
+        {en: "Keep track of the story order and remember three story topics.", nl: "Houd de volgorde van verhalen bij en onthoud drie onderwerpen.", category: "during"},
+        {en: "Remember what happens in three different stories.", nl: "Onthoud wat er gebeurt in drie verschillende verhalen.", category: "during"},
+        {en: "Listen for one main fact in each of three stories.", nl: "Luister naar het hoofdfeit in elk van de drie verhalen.", category: "during"},
+        {en: "Remember three stories well enough to give them short titles.", nl: "Onthoud drie verhalen goed genoeg om ze een korte titel te geven.", category: "during"},
+        {en: "Listen for three facts from stories that are not next to each other.", nl: "Luister naar drie feiten uit verhalen die niet direct op elkaar volgen.", category: "during"},
+        {en: "Remember one detail from three stories spread across the programme.", nl: "Onthoud één detail uit drie verhalen verspreid over het programma.", category: "during"},
+        {en: "Listen for two facts from different stories that you can match to the correct topic.", nl: "Luister naar twee feiten uit verschillende verhalen die je aan het juiste onderwerp kunt koppelen.", category: "during"},
+        {en: "Remember three story topics and one key word for each.", nl: "Onthoud drie onderwerpen en voor elk onderwerp één trefwoord.", category: "during"},
+        {en: "Listen for three stories and remember one action from each.", nl: "Luister naar drie verhalen en onthoud uit elk verhaal één actie.", category: "during"},
+        {en: "Remember three stories and one person, place or thing from each.", nl: "Onthoud drie verhalen en uit elk verhaal één persoon, plaats of ding.", category: "during"},
+        {en: "Collect five facts from five different moments in the programme.", nl: "Verzamel vijf feiten van vijf verschillende momenten uit het programma.", category: "during"},
+        {en: "Collect four key words from four different moments.", nl: "Verzamel vier trefwoorden van vier verschillende momenten.", category: "during"},
+        {en: "Collect three facts, three words and three visual details.", nl: "Verzamel drie feiten, drie woorden en drie visuele details.", category: "during"},
+        {en: "Remember one fact, one word and one picture from three different stories.", nl: "Onthoud één feit, één woord en één beeld uit drie verschillende verhalen.", category: "during"},
+        {en: "Listen for three facts you could tell someone who missed the programme.", nl: "Luister naar drie feiten die je zou kunnen vertellen aan iemand die het programma gemist heeft.", category: "during"},
+        {en: "Remember three facts that show you watched the whole programme.", nl: "Onthoud drie feiten die bewijzen dat je het hele programma hebt gekeken.", category: "during"},
+        {en: "Collect one important detail every time the topic changes.", nl: "Verzamel telkens een belangrijk detail wanneer het onderwerp verandert.", category: "during"},
+        {en: "Remember one thing from the beginning, two from the middle and one from the end.", nl: "Onthoud één ding van het begin, twee uit het midden en één uit het einde.", category: "during"},
+        {en: "Collect four facts from different parts of the programme.", nl: "Verzamel vier feiten uit verschillende delen van het programma.", category: "during"},
+        {en: "During the whole programme, collect five short facts you can check afterwards.", nl: "Verzamel gedurende het hele programma vijf korte feiten die je achteraf kunt controleren.", category: "during"},
+        {en: "Listen for the main reason why the first story is in the news.", nl: "Luister naar de hoofdredenen waarom het eerste verhaal in het nieuws is.", category: "during"},
+        {en: "Remember one number or statistic mentioned in any story.", nl: "Onthoud één getal of statistiek die in een verhaal wordt genoemd.", category: "during"},
+        {en: "Listen for a quote or direct words spoken by a person in the news.", nl: "Luister naar een citaat of directe uitspraak van iemand in het nieuws.", category: "during"},
+        {en: "Watch for a map or diagram and remember what it showed.", nl: "Let op een kaart of diagram en onthoud wat er werd getoond.", category: "during"},
+        {en: "Listen for a problem presented in a story and how it was solved.", nl: "Luister naar een probleem in een verhaal en hoe het werd opgelost.", category: "during"},
+        {en: "Remember the main color or visual element in two different reports.", nl: "Onthoud de hoofdkleur of het visuele element in twee verschillende verslagen.", category: "during"},
+        {en: "Listen for two contrasting opinions or viewpoints on a topic.", nl: "Luister naar twee verschillende meningen of standpunten over een onderwerp.", category: "during"},
+        {en: "Remember one emotion or feeling expressed by someone interviewed.", nl: "Onthoud één emotie of gevoel dat geuit werd door iemand die werd geïnterviewd.", category: "during"},
+        {en: "Listen for any future plans or upcoming events mentioned.", nl: "Luister naar toekomstige plannen of opkomende gebeurtenissen die genoemd worden.", category: "during"},
+        {en: "Watch for background text, signs, or banners in three scenes.", nl: "Let op achtergrondteksten, borden of banners in drie scènes.", category: "during"},
+        {en: "Listen for a comparison made between two things or places.", nl: "Luister naar een vergelijking die gemaakt wordt tussen twee dingen of plaatsen.", category: "during"},
+        {en: "Remember what the reporter said at the very end of the programme.", nl: "Onthoud wat de verslaggever aan het allerlaatste einde van het programma zei.", category: "during"},
+        {en: "Listen for one fact about nature, science, or technology.", nl: "Luister naar één feit over natuur, wetenschap of technologie.", category: "during"},
+        {en: "Watch for an animal or object and note what story it belonged to.", nl: "Let op een dier of voorwerp en noteer bij welk verhaal het hoorde.", category: "during"},
+        {en: "Listen for three adjectives that describe the atmosphere of a story.", nl: "Luister naar drie bijvoeglijke naamwoorden die de sfeer van een verhaal beschrijven.", category: "during"},
+        {en: "Remember one fact that surprised you the most during the show.", nl: "Onthoud één feit dat je het meest verraste tijdens de uitzending.", category: "during"},
+        {en: "Listen for time words (e.g., yesterday, next week, soon) used in two stories.", nl: "Luister naar tijdsaanduidingen (bijv. gisteren, volgende week, binnenkort) in twee verhalen.", category: "during"},
+        {en: "Watch for a scene where music plays and describe how it set the mood.", nl: "Let op een scène waarin muziek speelt en beschrijf hoe dit de sfeer bepaalde.", category: "during"},
+        {en: "Listen for one question asked by the presenter during the broadcast.", nl: "Luister naar één vraag die door de presentator gesteld wordt tijdens de uitzending.", category: "during"},
+        {en: "Remember one piece of advice or safety tip given in any report.", nl: "Onthoud één advies of tip die gegeven werd in een verslag.", category: "during"},
+
+        // --- AFTER WATCHING QUESTIONS (100 VRAGEN) ---
+        {en: "Which story do you remember best? Give two details.", nl: "Welk verhaal herinner je je het best? Geef twee details.", category: "after"},
+        {en: "Which story did you understand best? Give two details.", nl: "Welk verhaal begreep je het best? Geef twee details.", category: "after"},
+        {en: "Which story was hardest to understand? Tell us what you did understand.", nl: "Welk verhaal was het moeilijkst om te begrijpen? Vertel wat je wel begreep.", category: "after"},
+        {en: "Which story gave you the most new information? What did you learn?", nl: "Welk verhaal gaf je de meeste nieuwe informatie? Wat heb je geleerd?", category: "after"},
+        {en: "Which story had the clearest message? What was it?", nl: "Welk verhaal had de duidelijkste boodschap? Wat was die?", category: "after"},
+        {en: "Which story had the most important facts? Give two.", nl: "Welk verhaal had de belangrijkste feiten? Geef er twee.", category: "after"},
+        {en: "Which story can you explain best? Explain it in three sentences.", nl: "Welk verhaal kun je het best uitleggen? Leg het uit in drie zinnen.", category: "after"},
+        {en: "Which story can you remember in most detail? Give three details.", nl: "Welk verhaal herinner je je in het meeste detail? Geef drie details.", category: "after"},
+        {en: "Which story can you remember least well? Tell us what you still remember.", nl: "Welk verhaal herinner je je het minst goed? Vertel wat je nog wel weet.", category: "after"},
+        {en: "Which story had the clearest beginning, middle and end? Explain them.", nl: "Welk verhaal had het duidelijkste begin, midden en einde? Leg ze uit.", category: "after"},
+        {en: "Which two stories were most different? Explain both.", nl: "Welke twee verhalen verschilden het meest? Leg beide uit.", category: "after"},
+        {en: "Which two stories had something in common? Explain what.", nl: "Welke twee verhalen hadden iets gemeen? Leg uit wat.", category: "after"},
+        {en: "Choose two stories that you remember well. Give two facts about each.", nl: "Kies twee verhalen die je je goed herinnert. Geef twee feiten over elk.", category: "after"},
+        {en: "Which two stories were easiest to understand? What helped you?", nl: "Welke twee verhalen waren het makkelijkst te begrijpen? Wat hielp je?", category: "after"},
+        {en: "Which two stories were hardest to understand? What made them difficult?", nl: "Welke twee verhalen waren het moeilijkst te begrijpen? Wat maakte ze moeilijk?", category: "after"},
+        {en: "Which two stories gave you the most information?", nl: "Welke twee verhalen gaven je de meeste informatie?", category: "after"},
+        {en: "Which two stories can you explain without looking anything up?", nl: "Welke twee verhalen kun je uitleggen zonder iets op te zoeken?", category: "after"},
+        {en: "Find one connection between two different stories.", nl: "Zoek één verband tussen twee verschillende verhalen.", category: "after"},
+        {en: "Choose two stories and explain the main idea of each.", nl: "Kies twee verhalen en leg het hoofdidee van elk uit.", category: "after"},
+        {en: "Choose two stories and give one important detail from each.", nl: "Kies twee verhalen en geef van elk één belangrijk detail.", category: "after"},
+        {en: "What were the main subjects in today's programme?", nl: "Wat waren de belangrijkste onderwerpen in het programma van vandaag?", category: "after"},
+        {en: "How many different news stories were there?", nl: "Hoeveel verschillende nieuwsverhalen waren er?", category: "after"},
+        {en: "Give one key word for every story.", nl: "Geef één trefwoord voor elk verhaal.", category: "after"},
+        {en: "Give one short sentence about every story.", nl: "Geef één korte zin over elk verhaal.", category: "after"},
+        {en: "Put the stories in the correct order.", nl: "Zet de verhalen in de juiste volgorde.", category: "after"},
+        {en: "Give the stories short titles of your own.", nl: "Geef de verhalen korte titels die je zelf bedenkt.", category: "after"},
+        {en: "What are the three most important facts from the whole programme?", nl: "Wat zijn de drie belangrijkste feiten uit het hele programma?", category: "after"},
+        {en: "What are the three things you remember best from the whole programme?", nl: "Wat zijn de drie dingen die je het best herinnert uit het hele programma?", category: "after"},
+        {en: "What are three new things you learned today?", nl: "Wat zijn drie nieuwe dingen die je vandaag hebt geleerd?", category: "after"},
+        {en: "What information would you tell someone who missed Newsround?", nl: "Welke informatie zou je vertellen aan iemand die Newsround heeft gemist?", category: "after"},
+        {en: "Which story had the most useful pictures? How did they help?", nl: "Welk verhaal had de nuttigste beelden? Hoe hielpen ze?", category: "after"},
+        {en: "Which story needed the most careful listening? Why?", nl: "Bij welk verhaal moest je het meest aandachtig luisteren? Waarom?", category: "after"},
+        {en: "Which story was easiest to understand from the pictures? Explain.", nl: "Welk verhaal was het makkelijkst te begrijpen uit de beelden? Leg uit.", category: "after"},
+        {en: "Which story would be hardest to understand without the pictures? Why?", nl: "Welk verhaal zou het moeilijkst te begrijpen zijn zonder beelden? Waarom?", category: "after"},
+        {en: "Which story would be hardest to understand without the sound? Why?", nl: "Welk verhaal zou het moeilijkst te begrijpen zijn zonder geluid? Waarom?", category: "after"},
+        {en: "Which story had pictures that gave you extra information?", nl: "Welk verhaal had beelden die je extra informatie gaven?", category: "after"},
+        {en: "Which story had spoken information that you could not see?", nl: "Welk verhaal had gesproken informatie die je niet kon zien?", category: "after"},
+        {en: "Which story used pictures and words best together? Give an example.", nl: "Welk verhaal gebruikte beelden en woorden het best samen? Geef een voorbeeld.", category: "after"},
+        {en: "Which story could you partly understand without hearing the words? What did the pictures tell you?", nl: "Welk verhaal kon je gedeeltelijk begrijpen zonder de woorden te horen? Wat vertelden de beelden je?", category: "after"},
+        {en: "Which story could you not understand from the pictures alone? What did you need to hear?", nl: "Welk verhaal kon je niet begrijpen uit alleen de beelden? Wat moest je horen?", category: "after"},
+        {en: "What are three things you learned by listening?", nl: "Wat zijn drie dingen die je hebt geleerd door te luisteren?", category: "after"},
+        {en: "What are three things you learned by watching?", nl: "Wat zijn drie dingen die je hebt geleerd door te kijken?", category: "after"},
+        {en: "Give one fact you heard but did not see.", nl: "Geef één feit dat je hoorde maar niet zag.", category: "after"},
+        {en: "Give one fact you understood because of a picture or video.", nl: "Geef één feit dat je begreep dankzij een foto of video.", category: "after"},
+        {en: "What was one important thing you heard and one important thing you saw?", nl: "Wat was één belangrijk ding dat je hoorde en één belangrijk ding dat je zag?", category: "after"},
+        {en: "Which spoken detail do you remember best?", nl: "Welk gesproken detail herinner je je het best?", category: "after"},
+        {en: "Which visual detail do you remember best?", nl: "Welk visueel detail herinner je je het best?", category: "after"},
+        {en: "What did you hear that helped you understand something you saw?", nl: "Wat hoorde je dat je hielp te begrijpen wat je zag?", category: "after"},
+        {en: "What did you see that helped you understand something you heard?", nl: "Wat zag je dat je hielp te begrijpen wat je hoorde?", category: "after"},
+        {en: "Give two examples of how the pictures helped you understand the English.", nl: "Geef twee voorbeelden van hoe de beelden je hielpen het Engels te begrijpen.", category: "after"},
+        {en: "Which story had the most important detail? What was it?", nl: "Welk verhaal had het belangrijkste detail? Wat was het?", category: "after"},
+        {en: "Which detail from today's programme do you remember best?", nl: "Welk detail uit het programma van vandaag herinner je je het best?", category: "after"},
+        {en: "Which small detail helped you understand a bigger story?", nl: "Welk klein detail hielp je om een groter verhaal te begrijpen?", category: "after"},
+        {en: "Give one important detail from two different stories.", nl: "Geef één belangrijk detail uit twee verschillende verhalen.", category: "after"},
+        {en: "Which story had the most facts you could remember? Name them.", nl: "Welk verhaal had de meeste feiten die je kon onthouden? Noem ze op.", category: "after"},
+        {en: "What fact did you hear that you did not expect?", nl: "Welk feit hoorde je dat je niet had verwacht?", category: "after"},
+        {en: "Which fact was easiest to remember? Why?", nl: "Welk feit was het makkelijkst te onthouden? Waarom?", category: "after"},
+        {en: "Which fact was hardest to understand? Explain what you understood.", nl: "Welk feit was het moeilijkst te begrijpen? Leg uit wat je begreep.", category: "after"},
+        {en: "Which fact would you write down if you could only choose one?", nl: "Welk feit zou je opschrijven als je er maar één mocht kiezen?", category: "after"},
+        {en: "What detail would be important when explaining today's news to someone else?", nl: "Welk detail zou belangrijk zijn als je het nieuws van vandaag aan iemand anders uitlegt?", category: "after"},
+        {en: "Which story was easiest to summarise? Summarise it.", nl: "Welk verhaal was het makkelijkst samen te vatten? Vat het samen.", category: "after"},
+        {en: "Which story was hardest to summarise? Try to summarise it.", nl: "Welk verhaal was het moeilijkst samen te vatten? Probeer het samen te vatten.", category: "after"},
+        {en: "Summarise two different stories in one sentence each.", nl: "Vat twee verschillende verhalen samen in elk één zin.", category: "after"},
+        {en: "Summarise the whole programme in three sentences.", nl: "Vat het hele programma samen in drie zinnen.", category: "after"},
+        {en: "Summarise today's programme using five key words.", nl: "Vat het programma van vandaag samen met vijf trefwoorden.", category: "after"},
+        {en: "Give a ten-word summary of one story.", nl: "Geef een samenvatting van tien woorden van één verhaal.", category: "after"},
+        {en: "Tell one story using first, then and finally.", nl: "Vertel één verhaal met 'first', 'then' en 'finally'.", category: "after"},
+        {en: "Explain one story in exactly three sentences.", nl: "Leg één verhaal uit in precies drie zinnen.", category: "after"},
+        {en: "Explain one story without using any names.", nl: "Leg één verhaal uit zonder namen te gebruiken.", category: "after"},
+        {en: "Explain one story without saying which story it is. Can the class guess?", nl: "Leg één verhaal uit zonder te zeggen welk verhaal het is. Kan de klas het raden?", category: "after"},
+        {en: "Which story had the clearest order of events? What was the order?", nl: "Welk verhaal had de duidelijkste volgorde van gebeurtenissen? Wat was de volgorde?", category: "after"},
+        {en: "Choose one story and tell what happened first, next and last.", nl: "Kies één verhaal en vertel wat er als eerste, daarna en als laatste gebeurde.", category: "after"},
+        {en: "Which story included things that happened at different times? Explain the order.", nl: "In welk verhaal gebeurden dingen op verschillende tijdstippen? Leg de volgorde uit.", category: "after"},
+        {en: "What happened earlier and what happened later in one story?", nl: "Wat gebeurde er eerder en wat gebeurde er later in één verhaal?", category: "after"},
+        {en: "Choose one story and put three facts in the correct order.", nl: "Kies één verhaal en zet drie feiten in de juiste volgorde.", category: "after"},
+        {en: "Which story was about something happening now, and which story talked about something from another time?", nl: "Welk verhaal ging over iets dat nu gebeurt, en welk verhaal ging over een andere tijd?", category: "after"},
+        {en: "What information near the end helped you understand something you heard earlier?", nl: "Welke informatie aan het einde hielp je om iets te begrijpen wat je eerder hoorde?", category: "after"},
+        {en: "Which story became clearer as you watched more of it? Explain.", nl: "Welk verhaal werd duidelijker naarmate je er meer van zag? Leg uit.", category: "after"},
+        {en: "What did you understand at the end of a story that was not clear at the beginning?", nl: "Wat begreep je aan het einde van een verhaal dat aan het begin nog niet duidelijk was?", category: "after"},
+        {en: "Which report gave information step by step? Explain the steps.", nl: "Welk verslag gaf stap voor stap informatie? Leg de stappen uit.", category: "after"},
+        {en: "Which person from today's programme do you remember best? Why were they in the news?", nl: "Welke persoon uit het programma herinner je je het best? Waarom waren ze in het nieuws?", category: "after"},
+        {en: "Choose two people from different stories. What do you know about them?", nl: "Kies twee mensen uit verschillende verhalen. Wat weet je over hen?", category: "after"},
+        {en: "Which person gave you useful information? What information?", nl: "Welke persoon gaf je nuttige informatie? Welke informatie?", category: "after"},
+        {en: "Which person was important for understanding a story? Explain why.", nl: "Welke persoon was belangrijk om een verhaal te begrijpen? Leg uit waarom.", category: "after"},
+        {en: "What did you learn about one person during the programme?", nl: "Wat heb je tijdens het programma geleerd over één persoon?", category: "after"},
+        {en: "Choose one person and explain their part in the story.", nl: "Kies één persoon en leg zijn of haar rol in het verhaal uit.", category: "after"},
+        {en: "Which person can you describe using three facts from the programme?", nl: "Welke persoon kun je beschrijven met behulp van drie feiten uit de uitzending?", category: "after"},
+        {en: "Which person would be difficult to explain without explaining the whole story?", nl: "Welke persoon zou moeilijk uit te leggen zijn zonder het hele verhaal uit te leggen?", category: "after"},
+        {en: "Choose two people and explain how they were different.", nl: "Kies twee mensen en leg uit hoe ze verschilden.", category: "after"},
+        {en: "Which person's words helped you understand a story best? What did you understand?", nl: "Wens woorden hielpen je een verhaal het best te begrijpen? Wat begreep je?", category: "after"},
+        {en: "Which place from today's programme do you remember best? What happened there?", nl: "Welke plaats uit het programma herinner je je het best? Wat is daar gebeurd?", category: "after"},
+        {en: "Choose two places from different stories. What happened in each place?", nl: "Kies twee plaatsen uit verschillende verhalen. Wat gebeurde er op elke plaats?", category: "after"},
+        {en: "Which place was important for understanding a story? Why?", nl: "Welke plaats was belangrijk om een verhaal te begrijpen? Waarom?", category: "after"},
+        {en: "What did the pictures tell you about one of the places?", nl: "Wat vertelden de beelden je over één van de plaatsen?", category: "after"},
+        {en: "What did the reporter tell you about one of the places?", nl: "Wat vertelde de verslaggever over één van de plaatsen?", category: "after"},
+        {en: "Which place can you describe best after watching the programme?", nl: "Welke plaats kun je het best beschrijven na het bekijken van het programma?", category: "after"},
+        {en: "Which place was new to you? What did you learn about it?", nl: "Welke plaats was nieuw voor je? Wat heb je erover geleerd?", category: "after"},
+        {en: "Choose a place and give two facts connected to it.", nl: "Kies een plaats en geef twee feiten die ermee verband houden.", category: "after"},
+        {en: "Which two places looked most different? Explain.", nl: "Welke twee plaatsen zagen er het meest verschillend uit? Leg uit.", category: "after"},
+        {en: "What place would you mention when explaining one of today's stories?", nl: "Welke plaats zou je noemen bij het uitleggen van één van de verhalen?", category: "after"},
+        {en: "Write down five English words that helped you understand today's programme.", nl: "Schrijf vijf Engelse woorden op die je hielpen het programma te begrijpen.", category: "after"},
+        {en: "Which three words were most important for understanding one story?", nl: "Welke drie woorden waren het belangrijkst voor het begrijpen van één verhaal?", category: "after"},
+        {en: "Choose one difficult English word you heard. What do you think it means?", nl: "Kies één moeilijk Engels woord dat je hoorde. Wat denk je dat het betekent?", category: "after"},
+        {en: "Which new word could you understand from the pictures?", nl: "Welk nieuw woord kon je begrijpen door de beelden?", category: "after"},
+        {en: "Which new word could you understand from the rest of the sentence?", nl: "Welk nieuw woord kon je begrijpen uit de rest van de zin?", category: "after"},
+        {en: "Which English word did you hear more than once? Where did you hear it?", nl: "Welk Engels woord hoorde je meer dan één keer? Waar hoorde je het?", category: "after"},
+        {en: "Choose three key words for the whole programme. Explain your choices.", nl: "Kies drie kernwoorden voor het hele programma. Leg je keuzes uit.", category: "after"},
+        {en: "Choose one story and give four key words for it.", nl: "Kies één verhaal en geef er vier trefwoorden voor.", category: "after"},
+        {en: "Which English word from today's programme would be useful to learn?", nl: "Welk Engels woord uit de uitzending zou nuttig zijn om te leren?", category: "after"},
+        {en: "Which word or short phrase do you remember best? What did it mean?", nl: "Welk woord of korte zin herinner je je het best? Wat betekende het?", category: "after"},
+        {en: "Which story would be easiest to explain to a classmate? Explain it.", nl: "Welk verhaal zou het makkelijkst uit te leggen zijn aan een klasgenoot? Leg het uit.", category: "after"},
+        {en: "Which story would be hardest to explain to a classmate? What makes it difficult?", nl: "Welk verhaal zou het moeilijkst uit te leggen zijn aan een klasgenoot? Wat maakt het moeilijk?", category: "after"},
+        {en: "Which story could you explain using only three facts? What are they?", nl: "Welk verhaal zou je kunnen uitleggen met slechts drie feiten? Welke zijn dat?", category: "after"},
+        {en: "Which story needs more than three facts to understand it well? Give the facts.", nl: "Welk verhaal heeft meer dan drie feiten nodig om het goed te begrijpen? Geef de feiten.", category: "after"},
+        {en: "Which story did you understand differently at the end than at the beginning? Explain.", nl: "Welk verhaal begreep je aan het einde anders dan aan het begin? Leg uit.", category: "after"},
+        {en: "What information helped you understand the programme even when you did not know every English word?", nl: "Welke informatie hielp je het programma te begrijpen, zelfs toen je niet elk Engels woord kende?", category: "after"},
+        {en: "Which part made you listen most carefully? What information did you hear?", nl: "Welk deel zorgde ervoor dat je het best luisterde? Welke informatie hoorde je?", category: "after"},
+        {en: "Which part made you look most carefully at the screen? What information did you see?", nl: "Welk deel zorgde ervoor dat je het aandachtigst naar het scherm keek? Wat zag je?", category: "after"},
+        {en: "What are the three pieces of information you think you will still remember tomorrow?", nl: "Wat zijn de drie stukjes informatie die je morgen volgens jou nog weet?", category: "after"},
+        {en: "If you had to explain today's whole Newsround in one minute, what would you say?", nl: "Als je heel Newsround van vandaag in één minuut uit zou moeten leggen, wat zou je dan zeggen?", category: "after"}
     ];
 
-    // Vragen voor "Na het kijken" (AFTER WATCHING)
-    const afterQuestions = [
-        {en: "How many subjects were there in total?", nl: "Hoeveel onderwerpen waren er in totaal?", category: "after"},
-        {en: "What were today's subjects?", nl: "Wat waren de onderwerpen van vandaag?", category: "after"},
-        {en: "For each subject, choose the topic: people, nature, sport, school, or something else.", nl: "Voor elk onderwerp kies je het thema: mensen, natuur, sport, school of iets anders.", category: "after"},
-        {en: "For each subject, choose the feeling: happy, sad, serious, funny, or something else.", nl: "Voor elk onderwerp kies je het gevoel: vrolijk, verdrietig, serieus, grappig of iets anders.", category: "after"},
-        {en: "What was the very first subject? Summarise it in 5 sentences.", nl: "Wat was het allereerste onderwerp? Vat het samen in 5 zinnen.", category: "after"},
-        {en: "What was the very last subject? Summarise it in 5 sentences.", nl: "Wat was het allerlaatste onderwerp? Vat het samen in 5 zinnen.", category: "after"},
-        {en: "Explain each topic in one sentence.", nl: "Leg elk onderwerp uit in één zin.", category: "after"},
-        {en: "Choose one subject and explain it in simple words.", nl: "Kies één onderwerp en leg het simpel uit.", category: "after"},
-        {en: "Which subject did you like most? Explain why?", nl: "Welk onderwerp vond je het leukst? Leg uit waarom.", category: "after"},
-        {en: "Which subject did you like least? Explain why?", nl: "Welk onderwerp vond je het minst leuk? Leg uit waarom.", category: "after"},
-        {en: "Did you learn something new? What?", nl: "Heb je iets nieuws geleerd? Wat?", category: "after"},
-        {en: "Which subject would you like to know more about? Explain why?", nl: "Over welk onderwerp zou je meer willen weten? Leg uit waarom.", category: "after"},
-        {en: "Was there a subject you didn’t understand?", nl: "Was er een onderwerp dat je niet begreep?", category: "after"},
-        {en: "If you were the editor, which subject would you skip? Explain why.", nl: "Als jij de redacteur was, welk onderwerp zou je overslaan? Leg uit waarom.", category: "after"},
-        {en: "Which subject would get the most likes on social media? Explain why.", nl: "Welk onderwerp krijgt de meeste likes op social media? Leg uit waarom.", category: "after"}
-    ];
-
-    let defaultQuestions = [...taskQuestions, ...afterQuestions];
     let allQuestions = [];
     let classesData = {}; 
     let selectedClassName = "";
@@ -659,7 +874,10 @@
             .map(n => n.trim())
             .filter(n => n.length > 0);
 
-        const existingStudents = classesData[name] || [];
+        const existingClass = classesData[name] || [];
+        const existingStudents = Array.isArray(existingClass) ? existingClass : (existingClass.students || []);
+        const usedQuestions = existingClass.usedQuestions || [];
+
         const updatedStudents = parsedNames.map(studentName => {
             const existing = existingStudents.find(s => s.name.toLowerCase() === studentName.toLowerCase());
             return {
@@ -668,7 +886,11 @@
             };
         });
 
-        classesData[name] = updatedStudents;
+        classesData[name] = {
+            students: updatedStudents,
+            usedQuestions: usedQuestions
+        };
+
         selectedClassName = name;
         saveClassesToStorage();
         refreshClassDropdown();
@@ -687,6 +909,25 @@
         }
     }
 
+    function resetClassHistory() {
+        if (!selectedClassName || !classesData[selectedClassName]) {
+            alert("Selecteer eerst een klas.");
+            return;
+        }
+        if (confirm(`Weet je zeker dat je de vraaggeschiedenis voor klas "${selectedClassName}" wilt wissen? Alle vragen kunnen dan weer opnieuw worden getoond.`)) {
+            if (Array.isArray(classesData[selectedClassName])) {
+                classesData[selectedClassName] = {
+                    students: classesData[selectedClassName],
+                    usedQuestions: []
+                };
+            } else {
+                classesData[selectedClassName].usedQuestions = [];
+            }
+            saveClassesToStorage();
+            alert(`Geschiedenis gewist voor klas ${selectedClassName}!`);
+        }
+    }
+
     function renderStudentGrid() {
         const section = document.getElementById('absentee-section');
         const grid = document.getElementById('student-grid');
@@ -701,7 +942,9 @@
         grid.innerHTML = '';
         section.style.display = 'block';
 
-        classesData[selectedClassName].forEach((student, index) => {
+        const students = getStudentsOfClass(selectedClassName);
+
+        students.forEach((student, index) => {
             const item = document.createElement('div');
             item.className = `student-item ${student.absent ? 'absent' : ''}`;
             item.innerHTML = `
@@ -713,22 +956,33 @@
         });
     }
 
+    function getStudentsOfClass(className) {
+        const classObj = classesData[className];
+        if (!classObj) return [];
+        if (Array.isArray(classObj)) return classObj;
+        return classObj.students || [];
+    }
+
     function toggleAbsent(index) {
-        if (selectedClassName && classesData[selectedClassName][index]) {
-            classesData[selectedClassName][index].absent = !classesData[selectedClassName][index].absent;
-            saveClassesToStorage();
-            renderStudentGrid();
+        if (selectedClassName && classesData[selectedClassName]) {
+            const students = getStudentsOfClass(selectedClassName);
+            if (students[index]) {
+                students[index].absent = !students[index].absent;
+                saveClassesToStorage();
+                renderStudentGrid();
+            }
         }
     }
 
     // --- Namenkiezer Logica ---
     function pickRandomStudent() {
-        if (!selectedClassName || !classesData[selectedClassName] || classesData[selectedClassName].length === 0) {
+        if (!selectedClassName || !classesData[selectedClassName]) {
             alert("Selecteer eerst een klas met ingevoerde leerlingen in de instellingen.");
             return;
         }
 
-        const presentStudents = classesData[selectedClassName].filter(s => !s.absent);
+        const students = getStudentsOfClass(selectedClassName);
+        const presentStudents = students.filter(s => !s.absent);
 
         if (presentStudents.length === 0) {
             alert("Alle leerlingen in deze klas staan als absent gemarkeerd!");
@@ -793,13 +1047,63 @@
         allQuestions.forEach((q, idx) => {
             const item = document.createElement('div');
             item.className = 'question-item';
-            const catTag = q.category === 'during' ? 'Tijdens Kijken' : 'Na Kijken';
+            const catTag = q.category === 'during' ? 'Tijdens Kijken (TASK)' : 'Na Kijken (AFTER)';
             item.innerHTML = `
                 <span><strong>${idx + 1}.</strong> ${q.en}</span>
                 <span class="tag">${catTag}</span>
             `;
             container.appendChild(item);
         });
+    }
+
+    // --- Unieke vragen logica per klas ---
+    function getUnusedQuestions(filterCategory) {
+        const categoryPool = allQuestions.filter(q => q.category === filterCategory);
+
+        if (!selectedClassName || !classesData[selectedClassName]) {
+            return categoryPool;
+        }
+
+        if (Array.isArray(classesData[selectedClassName])) {
+            classesData[selectedClassName] = {
+                students: classesData[selectedClassName],
+                usedQuestions: []
+            };
+        }
+
+        let used = classesData[selectedClassName].usedQuestions || [];
+        let available = categoryPool.filter(q => !used.includes(q.en));
+
+        if (available.length === 0) {
+            classesData[selectedClassName].usedQuestions = used.filter(qEn => {
+                const found = allQuestions.find(item => item.en === qEn);
+                return found && found.category !== filterCategory;
+            });
+            saveClassesToStorage();
+            available = categoryPool;
+        }
+
+        return available;
+    }
+
+    function markQuestionAsUsed(questionText) {
+        if (!selectedClassName || !classesData[selectedClassName]) return;
+
+        if (Array.isArray(classesData[selectedClassName])) {
+            classesData[selectedClassName] = {
+                students: classesData[selectedClassName],
+                usedQuestions: []
+            };
+        }
+
+        if (!classesData[selectedClassName].usedQuestions) {
+            classesData[selectedClassName].usedQuestions = [];
+        }
+
+        if (!classesData[selectedClassName].usedQuestions.includes(questionText)) {
+            classesData[selectedClassName].usedQuestions.push(questionText);
+            saveClassesToStorage();
+        }
     }
 
     // --- Schermwissels & Roulette ---
@@ -829,7 +1133,7 @@
         const maxHeight = wrapper.clientHeight * 0.85;
         const maxWidth = wrapper.clientWidth * 0.95;
 
-        while ((display.scrollHeight > maxHeight || display.scrollWidth > maxWidth) && fontSize > 25) {
+        while ((display.scrollHeight > maxHeight || display.scrollWidth > maxWidth) && fontSize > 20) {
             fontSize -= 2;
             display.style.fontSize = fontSize + "px";
         }
@@ -845,8 +1149,8 @@
         const mainBtn = document.getElementById('generate-btn');
         const afterBtn = document.getElementById('after-btn');
 
-        // Strikt scheiden van vragen op basis van gekozen knop
-        const pool = allQuestions.filter(q => q.category === filterCategory);
+        const pool = getUnusedQuestions(filterCategory);
+        const fullCategoryPool = allQuestions.filter(q => q.category === filterCategory);
                 
         transDiv.classList.remove('show');
         transBtn.style.visibility = "hidden";
@@ -856,7 +1160,7 @@
 
         let counter = 0;
         const interval = setInterval(() => {
-            const randomTemp = pool[Math.floor(Math.random() * pool.length)];
+            const randomTemp = fullCategoryPool[Math.floor(Math.random() * fullCategoryPool.length)];
             display.innerText = randomTemp.en;
             fitText(); 
             counter++;
@@ -871,6 +1175,9 @@
             const final = pool[Math.floor(Math.random() * pool.length)];
             display.innerText = final.en;
             currentNL = final.nl;
+            
+            markQuestionAsUsed(final.en);
+
             fitText();
             display.classList.remove('rolling');
             transBtn.style.visibility = "visible";
