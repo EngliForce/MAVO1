@@ -1,0 +1,152 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EngliForce · Mission 1 Test Review</title><style>
+:root{font-family:Arial,Helvetica,sans-serif;color:#132b4f;background:#eaf2fa;font-synthesis:none}*{box-sizing:border-box}body{margin:0;overflow:hidden}button{font:inherit;cursor:pointer}header{height:74px;background:#102e54;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 2.4vw;gap:16px} .logo{font-weight:900;font-size:clamp(20px,2vw,31px)}.logo span{color:#fb5b60}.strap{font-size:clamp(11px,1.05vw,16px);opacity:.8}.headline{display:flex;flex-direction:column}.topright{display:flex;align-items:center;gap:14px}.pill{background:#294d79;border-radius:999px;padding:8px 16px;font-weight:700}.iconbtn{border:1px solid #8098b6;background:#244a77;color:#fff;border-radius:12px;padding:10px 15px;font-size:17px}main{height:calc(100dvh - 154px);display:flex;flex-direction:column;padding:1.2vh 2.4vw 1vh;gap:1vh}.heading{display:flex;align-items:baseline;gap:17px;flex-shrink:0}.letter{background:#dce9f8;color:#0c3a72;border-radius:13px;padding:6px 16px;font-size:clamp(26px,3vw,43px);font-weight:900}.heading h1{font-size:clamp(28px,3vw,46px);line-height:1;margin:0}.category{color:#617993;text-transform:uppercase;font-weight:bold;letter-spacing:.1em;font-size:clamp(11px,1.1vw,16px)}.instruction{font-size:clamp(17px,1.65vw,25px);font-weight:600;color:#375575;flex-shrink:0}.content{flex:1;min-height:0;background:#fff;border:1px solid #d3e2f2;border-radius:19px;box-shadow:0 8px 30px #1b376216;padding:1.3vh 1.7vw;display:flex;flex-direction:column;overflow:hidden}.questions{display:flex;flex-direction:column;justify-content:space-around;flex:1;min-height:0;gap:2px}.qrow{display:grid;grid-template-columns:clamp(30px,3vw,55px) minmax(0,1fr) minmax(180px,30%);align-items:center;border-bottom:1px solid #e8eef6;padding:3px 10px;gap:14px;min-height:0;flex:1;font-size:var(--row-size,clamp(19px,1.8vw,29px));line-height:1.17}.qrow:last-child{border-bottom:0}.qrow.current{background:#edf5ff;border-radius:10px}.num{font-weight:900;color:#58759b}.prompt{overflow-wrap:anywhere}.prompt b{color:#172d4c}.prompt em{font-style:normal;color:#ca4947;font-weight:800}.answer{font-weight:800;color:#138052;opacity:0;transform:translateY(3px);transition:opacity .14s,transform .14s;overflow-wrap:anywhere}.qrow.shown .answer{opacity:1;transform:none}.qrow.shown{background:#f1fbf5;border-radius:10px}.qrow.current.shown{background:#e5f6ec}.answer small{font-size:.78em}.groupTitle{font-size:var(--group-size,clamp(14px,1.2vw,19px));font-weight:900;color:#d3424c;text-transform:uppercase;letter-spacing:.035em;flex-shrink:0;display:flex;align-items:center;gap:14px;margin:3px 0}.groupTitle:after{content:"";height:2px;flex:1;background:#f3d6d8}.wordbank{background:#edf3fa;border-radius:8px;font-size:var(--bank-size,clamp(12px,1.04vw,16px));padding:4px 10px;margin:0 0 2px;color:#284768;font-weight:600}.group{display:flex;flex-direction:column;flex:1;min-height:0}.group .qrow{font-size:var(--row-size,clamp(15px,1.36vw,23px));padding:2px 7px;gap:9px}.group .questions{flex:1}.dense .qrow{font-size:var(--row-size,clamp(16px,1.55vw,26px))}.dense .answer{font-size:.93em}.j-note{font-size:clamp(14px,1.3vw,19px);color:#69809a}footer{height:80px;background:#fff;border-top:1px solid #ccddee;display:flex;align-items:center;justify-content:space-between;gap:13px;padding:0 2.4vw}.leftbuttons,.rightbuttons{display:flex;align-items:center;gap:10px}footer button{border:0;border-radius:12px;padding:12px 22px;background:#e6eef8;color:#153a64;font-weight:800;font-size:clamp(14px,1.2vw,19px)}footer .primary{background:#c83f4a;color:white}footer button:disabled{opacity:.35;cursor:default}.progress{font-size:clamp(13px,1.1vw,18px);font-weight:800;color:#406080;text-align:center}.track{width:clamp(100px,14vw,230px);height:8px;background:#dce8f5;border-radius:8px;margin:7px auto 0;overflow:hidden}.fill{background:#cc4650;width:0;height:100%;transition:width .18s}.overlay{position:fixed;inset:0;background:#081e39b9;display:none;align-items:center;justify-content:center;padding:26px;z-index:9}.overlay.open{display:flex}.modal{background:white;border-radius:18px;padding:30px;max-width:800px;width:100%;max-height:85vh;overflow:auto;box-shadow:0 20px 60px #0017}.modal h2{font-size:28px;margin:0 0 12px}.modal p{line-height:1.45}.modal .close{float:right;background:#123b6d;color:#fff;border:0;border-radius:10px;padding:9px 16px}.note{padding:11px 0;border-top:1px solid #dce6f2}.note p{margin:6px 0} .keyboard{font-size:13px;color:#64809e;margin-top:10px}button:focus-visible{outline:4px solid #eda90f;outline-offset:2px}@media(max-width:850px){header{height:65px}main{height:calc(100dvh - 135px);padding:9px}.content{padding:8px}.qrow{grid-template-columns:30px minmax(0,1fr) minmax(115px,34%);gap:5px;font-size:clamp(11px,1.7vw,17px)!important}.group .qrow{font-size:clamp(10px,1.5vw,16px)!important}footer{height:70px;padding:0 10px}footer button{padding:10px}.strap{display:none}.instruction{font-size:14px}.heading h1{font-size:27px}}
+
+/* Presentation layout: topic-based pagination and in-sentence highlighting. */
+main{padding:1.2vh 2.4vw 1.2vh;gap:1vh}
+.content{padding:2vh 2.1vw}
+.questions{justify-content:stretch;gap:1vh}
+.qrow,.group .qrow{grid-template-columns:clamp(45px,4vw,72px) minmax(0,1.5fr) minmax(210px,1fr);font-size:var(--row-size,clamp(25px,2.35vw,39px))!important;line-height:1.25;padding:1.2vh 1vw;gap:1.5vw;min-height:0;flex:1}
+.answer{font-size:1em!important}
+.groupTitle{font-size:clamp(20px,1.8vw,28px);margin:0 0 1vh}
+.wordbank{font-size:clamp(19px,1.65vw,26px);line-height:1.3;padding:12px 16px;margin:0 0 1vh}
+.instruction{font-size:clamp(21px,1.65vw,28px)}
+@media(max-width:850px){.qrow,.group .qrow{grid-template-columns:36px minmax(0,1.3fr) minmax(135px,1fr);font-size:clamp(19px,2.55vw,29px)!important;gap:9px}.wordbank{font-size:18px}.instruction{font-size:18px}}
+@media(max-height:700px){header{height:62px}footer{height:66px}main{height:calc(100dvh - 128px)}.heading h1{font-size:clamp(23px,2.4vw,35px)}.qrow,.group .qrow{font-size:clamp(21px,2.15vw,33px)!important;padding:4px 10px}.content{padding:10px 18px}}
+
+/* Larger questions with a layout that makes full use of the screen. */
+.questions{gap:.5vh}
+.qrow,.group .qrow{font-size:clamp(27px,2.45vw,43px)!important;line-height:1.23}
+.alphabet-list .qrow{font-size:clamp(30px,2.8vw,49px)!important}
+.correction-list{gap:2vh}
+.correction-row{grid-template-columns:clamp(46px,4vw,72px) minmax(0,1fr)!important;font-size:clamp(31px,2.65vw,48px)!important;line-height:1.5;padding:1.6vh 1.2vw}
+.correction-row .prompt{overflow-wrap:normal;word-break:normal}
+.fix{border-radius:5px;transition:background .18s,color .18s;padding:0 2px}
+.fix.fixed{background:#ffe78a;color:#a51d2f;font-weight:900;box-shadow:0 2px 0 #eeb73d}
+@media(max-height:700px){.correction-row{font-size:clamp(24px,2.25vw,37px)!important}}
+
+/* Fit the complete exercise at browser zoom 100%, including short-height boards. */
+html,body{width:100%;height:100%;height:100dvh;overflow:hidden}
+body{display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+header{height:auto;min-height:0;padding:9px 2vw;gap:8px}
+.logo{font-size:clamp(18px,2vw,27px)}
+.strap{font-size:clamp(10px,.95vw,14px)}
+.topright{gap:7px}.pill{padding:6px 10px;font-size:clamp(11px,1vw,15px)}
+.iconbtn{padding:7px 10px;font-size:clamp(12px,1vw,16px)}
+main{height:auto!important;min-height:0;padding:8px 2vw!important;gap:7px!important}
+.heading{gap:11px}.letter{font-size:clamp(24px,2.65vw,36px);padding:4px 12px}
+.heading h1{font-size:clamp(24px,2.65vw,38px);line-height:1.08}
+.category{font-size:clamp(11px,1vw,14px)}
+.instruction{font-size:clamp(16px,1.4vw,22px)!important;line-height:1.2}
+.content{min-height:0;padding:9px 1.5vw!important;border-radius:14px}
+.questions{gap:3px!important;min-height:0}
+.qrow,.group .qrow,.alphabet-list .qrow,.correction-row{font-size:var(--fit-size,clamp(22px,2.2vw,36px))!important;padding:3px .7vw!important;line-height:1.16!important;gap:1vw;min-height:0}
+.qrow,.group .qrow{grid-template-columns:clamp(33px,3vw,55px) minmax(0,1.45fr) minmax(0,1fr)}
+.correction-row{grid-template-columns:clamp(33px,3vw,55px) minmax(0,1fr)!important}
+.answer{line-height:1.16}.groupTitle{font-size:clamp(16px,1.55vw,23px);margin:0 0 3px}
+.wordbank{font-size:clamp(14px,1.25vw,19px);padding:5px 9px;line-height:1.2;margin-bottom:4px}
+footer{height:auto;min-height:0;padding:7px 2vw;gap:8px}
+footer button{font-size:clamp(12px,1.15vw,17px);padding:9px 13px;border-radius:9px}
+.progress{font-size:clamp(11px,1vw,15px)}.track{margin:3px auto 0;height:5px}
+.leftbuttons,.rightbuttons{gap:6px}
+@media(max-width:950px){header{padding:7px 12px}main{padding:6px 12px!important}.content{padding:7px!important}footer{padding:6px 10px}footer button{padding:8px 9px}.pill{display:none}.qrow,.group .qrow{grid-template-columns:30px minmax(0,1.25fr) minmax(0,1fr)} }
+@media(max-height:650px){header{padding-top:5px;padding-bottom:5px}.strap{display:none}.heading h1{font-size:clamp(20px,2.3vw,31px)}.letter{font-size:25px}.instruction{font-size:15px!important}footer{padding-top:4px;padding-bottom:4px}footer button{padding:7px 10px}}
+</style></head><body><header><div class="headline"><div class="logo">Engli<span>Force</span></div><div class="strap">Make English your superpower!</div></div><div class="topright"><span class="pill">MAVO / HAVO 1 · MISSION 1</span><button class="iconbtn" id="full" title="Volledig scherm">⛶ Full screen</button><button class="iconbtn" id="notes" title="Alleen voor docent">⚙ Teacher</button></div></header><main><div class="heading"><span class="letter" id="letter"></span><div><div class="category" id="category"></div><h1 id="title"></h1></div></div><div class="instruction" id="instruction"></div><div class="content" id="content"></div></main><footer><div class="leftbuttons"><button id="prevSection">← Exercise</button><button id="prevAnswer">↶ Answer</button></div><div class="progress"><div id="progressLabel"></div><div class="track"><div class="fill" id="fill"></div></div></div><div class="rightbuttons"><button id="reset">Hide all</button><button class="primary" id="nextAnswer">Show answer →</button><button id="nextSection">Exercise →</button></div></footer><div class="overlay" id="teacherOverlay"><div class="modal"><button class="close" id="close">Close ✕</button><h2>Teacher notes · Check before marking</h2><p>De toets en de aangeleverde antwoordensleutel zijn niet op alle punten gelijk. In de klassikale weergave zijn de antwoorden afgestemd op de vragen van het toetsblad, met behoud van de originele vragen.</p><div class="note"><strong>A — The alphabet</strong><p>De toets vermeldt 6 punten, maar het antwoordenblad 5 punten. Volgens de nakijkinstructie levert iedere goede letter 0,2 punt op (25 letters = 5 punten).</p></div><div class="note"><strong>B — Words</strong><p>Het antwoordenblad voor B7–B9 en B13 hoort bij andere vragen. De app toont antwoorden passend bij het toetsblad. Bij odd one out kan ook een andere inhoudelijk correcte uitleg worden geaccepteerd.</p></div><div class="note"><strong>C — Capital letters</strong><p>Het antwoordenblad noemt 20 correcties; de app laat de verbeteringen één voor één direct in de originele zinnen oplichten.</p></div><div class="note"><strong>D — Counting</strong><p>D volgt nu de volgorde van de tien antwoorden uit het antwoordenblad. Let op: de oorspronkelijke toets heeft bij vraag 3 het getal 58; de sleutel noemt fifty-nine. In de app is dit 59 zodat de opgave en het antwoord overeenkomen.</p></div><div class="note"><strong>G — Have / have got</strong><p>Bij G staan meerdere antwoorden in het antwoordenblad onder een ander vraagnummer en passen enkele zinstypen niet bij het toetsblad. Alle tien antwoorden zijn opnieuw gekoppeld aan de juiste opdrachten. De toets vermeldt 8 punten bij 10 vragen; de antwoordenlijst noemt 10 punten.</p></div><div class="note"><strong>J — Interview yourself</strong><p>De toets vraagt 5 vragen én 5 antwoorden en noemt 5 punten. De antwoordenlijst vraagt 3 vragen en 3 antwoorden en noemt 9 punten. De app volgt de toets en toont vijf voorbeelden; meerdere persoonlijke antwoorden zijn goed.</p></div><div class="keyboard">Bediening: → of spatie = volgend antwoord; ← = vorig antwoord; PageDown/PageUp = volgende/vorige pagina; F = volledig scherm; Esc = sluiten.</div></div></div><script>
+const SECTIONS=[{"id": "A", "title": "The alphabet", "kind": "Grammar", "instructions": "Listen to your teacher. Write down the letters you hear.", "rows": [["1.", "…", "K U F D M"], ["2.", "…", "W I L E Z"], ["3.", "…", "Y S J H V"], ["4.", "…", "B G C O Q"], ["5.", "…", "X N T A R"]], "note": "De toets vermeldt 6 punten, maar het antwoordenblad 5 punten. Volgens de nakijkinstructie levert iedere goede letter 0,2 punt op (25 letters = 5 punten).", "groups": []}, {"id": "B", "title": "Words", "kind": "Vocabulary", "instructions": "Check the vocabulary answers.", "groups": [{"heading": "Translate the words in bold into Dutch", "rows": [["1.", "My <b>surname</b> is Jansen and my <b>nationality</b> is Dutch.", "achternaam · nationaliteit"], ["2.", "My <b>cousin</b> is very <b>honest</b>.", "neef/nicht · eerlijk"]], "start": 0}, {"heading": "Fill in the correct word", "support": "postcode · siblings · quiet · timetable · address · nephew · clever · homework", "rows": [["3.", "Do not forget to write your <em>…</em> after the town on the form.", "postcode"], ["4.", "I have one brother and one sister. They are my <em>…</em>.", "siblings"], ["5.", "Mila does not talk very much in class. She is quite <em>…</em>.", "quiet"], ["6.", "Check your <em>…</em> to see when you have English.", "timetable"]], "start": 2}, {"heading": "Odd one out — explain in Dutch", "rows": [["7.", "family · parents · sister · postcode", "postcode — de andere woorden hebben met familie te maken"], ["8.", "homework · test · timetable · cousin", "cousin — de andere woorden hebben met school te maken"], ["9.", "teacher · maths · French · neighbour", "neighbour — de andere woorden hebben met school te maken"]], "start": 6}, {"heading": "Choose the correct Dutch word and translate it", "rows": [["10.", "Noah learns things very quickly. He is (slim / stil).", "clever"], ["11.", "We always help (elkaar / samen) with difficult homework.", "each other"], ["12.", "Ella has very (krullend / steil) hair. It is full of curls.", "curly"], ["13.", "I got a good (cijfer / rooster) for my English test.", "mark"]], "start": 9}], "note": "Het antwoordenblad voor B7–B9 en B13 hoort bij andere vragen. De app toont antwoorden passend bij het toetsblad. Bij odd one out kan ook een andere inhoudelijk correcte uitleg worden geaccepteerd.", "rows": [["1.", "My <b>surname</b> is Jansen and my <b>nationality</b> is Dutch.", "achternaam · nationaliteit"], ["2.", "My <b>cousin</b> is very <b>honest</b>.", "neef/nicht · eerlijk"], ["3.", "Do not forget to write your <em>…</em> after the town on the form.", "postcode"], ["4.", "I have one brother and one sister. They are my <em>…</em>.", "siblings"], ["5.", "Mila does not talk very much in class. She is quite <em>…</em>.", "quiet"], ["6.", "Check your <em>…</em> to see when you have English.", "timetable"], ["7.", "family · parents · sister · postcode", "postcode — de andere woorden hebben met familie te maken"], ["8.", "homework · test · timetable · cousin", "cousin — de andere woorden hebben met school te maken"], ["9.", "teacher · maths · French · neighbour", "neighbour — de andere woorden hebben met school te maken"], ["10.", "Noah learns things very quickly. He is (slim / stil).", "clever"], ["11.", "We always help (elkaar / samen) with difficult homework.", "each other"], ["12.", "Ella has very (krullend / steil) hair. It is full of curls.", "curly"], ["13.", "I got a good (cijfer / rooster) for my English test.", "mark"]]}, {"id": "C", "title": "Capital letters", "kind": "Grammar", "instructions": "Find the mistakes with capital letters.", "rows": [["1.", "my Name is lucas and i live in Tilburg.", "My name is Lucas and I live in Tilburg."], ["2.", "we have English on monday and Maths at School on Friday.", "We have English on Monday and maths at school on Friday."], ["3.", "sara is from the netherlands and speaks dutch with her Brother.", "Sara is from the Netherlands and speaks Dutch with her brother."], ["4.", "my birthday is in july and i am Twelve years old.", "My birthday is in July and I am twelve years old."], ["5.", "mr Brown is our english Teacher and he lives in london.", "Mr Brown is our English teacher and he lives in London."]], "note": "Het antwoordenblad noemt 20 correcties; de app laat de verbeteringen één voor één direct in de originele zinnen oplichten.", "groups": []}, {"id": "D", "title": "Counting", "kind": "Grammar", "instructions": "Write the numbers in words or digits.", "rows": [["1.", "13 = <em>…</em>", "thirteen"], ["2.", "40 = <em>…</em>", "forty"], ["3.", "59 = <em>…</em>", "fifty-nine"], ["4.", "1,000 = <em>…</em>", "one thousand"], ["5.", "4 = <em>…</em>", "four"], ["6.", "18 = <em>…</em>", "eighteen"], ["7.", "25 = <em>…</em>", "twenty-five"], ["8.", "67 = <em>…</em>", "sixty-seven"], ["9.", "ninety-two = <em>…</em>", "92"], ["10.", "one hundred and five = <em>…</em>", "105"]], "note": "De volgorde volgt nu de tien antwoorden uit het aangeleverde antwoordenblad. Let op: de oorspronkelijke toets toont bij vraag 3 het getal 58, terwijl de sleutel fifty-nine vermeldt; de app gebruikt hier 59 om opgave en antwoord passend te maken.", "groups": []}, {"id": "E", "title": "Personal pronouns", "kind": "Grammar", "instructions": "Replace the words in bold with a personal pronoun.", "rows": [["1.", "<b>Mr Jones</b> is our teacher. <em>…</em> is very kind.", "He"], ["2.", "<b>Sophie</b> is my classmate. <em>…</em> is twelve years old.", "She"], ["3.", "<b>The dog</b> is under the table. <em>…</em> is very quiet.", "It"], ["4.", "<b>Mila and I</b> are neighbours. <em>…</em> live in the same street.", "We"], ["5.", "<b>My parents</b> are at home. <em>…</em> are in the kitchen.", "They"], ["6.", "<b>You and your brother</b> are late. <em>…</em> need to hurry.", "You"]], "groups": []}, {"id": "F", "title": "To be", "kind": "Grammar", "instructions": "Fill in the correct form of to be.", "rows": [["1.", "I <em>…</em> thirteen years old.", "am"], ["2.", "My parents <em>…</em> at home.", "are"], ["3.", "Ella <em>…</em> not my sister.", "is"], ["4.", "<em>…</em> you from the Netherlands?", "Are"], ["5.", "My classmates <em>…</em> very kind.", "are"], ["6.", "<em>…</em> he your neighbour?", "Is"], ["7.", "We <em>…</em> not late for school.", "are"], ["8.", "It <em>…</em> a difficult test.", "is"]], "groups": []}, {"id": "G", "title": "Have / have got", "kind": "Grammar", "instructions": "Make positive (+), negative (−) sentences or questions (?).", "rows": [["1.", "Emma / have got / a new bike (+)", "Emma has got a new bike."], ["2.", "you / have / a brother (?)", "Do you have a brother?"], ["3.", "Jack / have got / a pet (−)", "Jack hasn't got a pet."], ["4.", "they / have / English class today (+)", "They have English class today."], ["5.", "Sophie / have / a blue backpack (?)", "Does Sophie have a blue backpack?"], ["6.", "we / have got / enough time (−)", "We haven't got enough time."], ["7.", "your teacher / have / a laptop (−)", "Your teacher doesn't have a laptop."], ["8.", "Liam / have got / two sisters (?)", "Has Liam got two sisters?"], ["9.", "I / have / a lot of homework (+)", "I have a lot of homework."], ["10.", "your parents / have got / a car (?)", "Have your parents got a car?"]], "note": "Bij G staan meerdere antwoorden in het antwoordenblad onder een ander vraagnummer en passen enkele zinstypen niet bij het toetsblad. Alle tien antwoorden zijn opnieuw gekoppeld aan de juiste opdrachten. De toets vermeldt 8 punten bij 10 vragen; de antwoordenlijst noemt 10 punten.", "groups": []}, {"id": "H", "title": "Possessive adjectives", "kind": "Grammar", "instructions": "Fill in the correct possessive adjective.", "rows": [["1.", "Noah and Finn are brothers. <em>…</em> parents work at our school.", "Their"], ["2.", "I am Emma. <em>…</em> favourite subject is English.", "My"], ["3.", "Liam has a new bike. <em>…</em> bike is black.", "His"], ["4.", "We are in class 1B. <em>…</em> classroom is upstairs.", "Our"], ["5.", "The school has a new library. <em>…</em> doors are blue.", "Its"], ["6.", "You have curly hair. Is <em>…</em> hair naturally curly?", "your"], ["7.", "Sara is my classmate. <em>…</em> surname is Jansen.", "Her"]], "groups": []}, {"id": "I", "title": "Question words", "kind": "Grammar", "instructions": "Fill in: who, what, when, where, why, how or which. Use each word once.", "rows": [["1.", "<em>…</em> do you live?", "Where"], ["2.", "<em>…</em> is the girl next to Liam?", "Who"], ["3.", "<em>…</em> do you prefer, football or basketball?", "Which"], ["4.", "<em>…</em> are you laughing?", "Why"], ["5.", "<em>…</em> is your favourite school subject?", "What"], ["6.", "<em>…</em> do you spell your surname?", "How"], ["7.", "<em>…</em> is your English lesson?", "When"]], "groups": []}, {"id": "J", "title": "Interview yourself", "kind": "Writing", "instructions": "Write five questions about yourself, your family, your friends or your school. Write down the answers as well.", "rows": [["1.", "Example question and answer", "What is your favourite subject? — My favourite subject is English."], ["2.", "Example question and answer", "Have you got any brothers or sisters? — Yes, I have got one brother."], ["3.", "Example question and answer", "Where do you live? — I live in Zoetermeer."], ["4.", "Example question and answer", "What do you do after school? — I play football."], ["5.", "Example question and answer", "Who is your best friend? — My best friend is Alex."]], "note": "De toets vraagt 5 vragen én 5 antwoorden en noemt 5 punten. De antwoordenlijst vraagt 3 vragen en 3 antwoorden en noemt 9 punten. De app volgt de toets en toont vijf voorbeelden; meerdere persoonlijke antwoorden zijn goed.", "groups": []}];const PAGES=[];
+const splits={A:[5],C:[2,2,1],D:[5,5],E:[3,3],F:[4,4],G:[3,3,4],H:[4,3],I:[4,3],J:[3,2]};
+for(const s of SECTIONS){
+ if(s.groups?.length){for(const g of s.groups)PAGES.push({...s,rows:g.rows,partTitle:g.heading,support:g.support||'',groups:[],pageNo:0});}
+ else{let i=0;for(const n of (splits[s.id]||[s.rows.length])){PAGES.push({...s,rows:s.rows.slice(i,i+n),partTitle:'',support:'',groups:[],pageNo:0});i+=n;}}
+}
+const totals={};for(const p of PAGES)totals[p.id]=(totals[p.id]||0)+1;
+const counts={};for(const p of PAGES)p.pageNo=(counts[p.id]=(counts[p.id]||0)+1);
+let page=0,revealed=0;
+const el=id=>document.getElementById(id);
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function corrections(original,correct){
+ const a=original.split(/(\s+)/), b=correct.split(/(\s+)/);let html='',count=0;
+ for(let j=0;j<a.length;j++){
+  if(a[j]===b[j])html+=escapeHTML(a[j]);
+  else{html+=`<span class="fix" data-index="${count}" data-original="${escapeHTML(a[j])}" data-correct="${escapeHTML(b[j])}">${escapeHTML(a[j])}</span>`;count++;}
+ }return {html,count};
+}
+function revealTotal(s){return s.id==='C'?s.rows.reduce((n,r)=>n+corrections(r[1],r[2]).count,0):s.rows.length}
+function render(){
+ const s=PAGES[page],rows=s.rows,total=revealTotal(s);
+ el('letter').textContent=s.id;
+ el('title').textContent=s.title;
+ el('category').textContent=`${s.kind} · Part ${s.pageNo} of ${totals[s.id]}`;
+ el('instruction').textContent=s.id==='C'?'Watch the original sentence. Each click highlights and corrects one mistake.':s.instructions;
+ let content='';
+ if(s.partTitle)content+=`<div class="groupTitle">${escapeHTML(s.partTitle)}</div>`;
+ if(s.support)content+=`<div class="wordbank">Choose from: ${escapeHTML(s.support)}</div>`;
+ content+=`<div class="questions ${s.id==='C'?'correction-list':''} ${s.id==='A'?'alphabet-list':''}">`;
+ let globalFix=0;
+ rows.forEach((r,i)=>{
+  if(s.id==='C'){
+   const correction=corrections(r[1],r[2]);
+   // Give all changed spans unique indices across this page.
+   const text=correction.html.replace(/data-index="(\d+)"/g,(_,n)=>`data-index="${globalFix+Number(n)}"`);
+   content+=`<div class="qrow correction-row"><span class="num">${escapeHTML(r[0])}</span><div class="prompt">${text}</div></div>`;
+   globalFix+=correction.count;
+  }else{
+   content+=`<div class="qrow ${i<revealed?'shown':''} ${i===revealed?'current':''}"><span class="num">${escapeHTML(r[0])}</span><div class="prompt">${r[1]}</div><div class="answer">${escapeHTML(r[2])}</div></div>`;
+  }
+ });
+ content+='</div>';
+ el('content').innerHTML=content;
+ if(s.id==='C'){
+  el('content').querySelectorAll('.fix').forEach(span=>{
+   if(Number(span.dataset.index)<revealed){span.textContent=span.dataset.correct;span.classList.add('fixed');}
+  });
+ }
+ el('progressLabel').textContent=`${s.id} · Part ${s.pageNo}/${totals[s.id]} · ${revealed}/${total} ${s.id==='C'?'corrections':'answers'}`;
+ el('fill').style.width=(total?revealed/total*100:0)+'%';
+ el('prevSection').disabled=page===0;
+ el('nextSection').disabled=page===PAGES.length-1;
+ el('prevAnswer').disabled=revealed===0;
+ el('nextAnswer').textContent=revealed===total?'All shown ✓':s.id==='C'?'Highlight next →':'Show answer →';
+ el('nextAnswer').disabled=revealed===total;
+ el('prevSection').textContent='← Page';el('nextSection').textContent='Next page →';
+ fitSlide();
+}
+
+function fitSlide(){
+ const panel=el('content'), q=panel.querySelector('.questions');
+ if(!q)return;
+ const rows=[...panel.querySelectorAll('.qrow')];
+ // Use the largest type size that fits all original sentences and answers.
+ const usable=Math.max(250, panel.clientHeight);
+ let size=Math.min(42,Math.max(19,Math.min(window.innerWidth*.027,usable/(Math.max(rows.length,1)*1.55))));
+ const minSize=window.innerHeight<580?15:17;
+ const fits=()=>{
+  if(panel.scrollHeight>panel.clientHeight+2 || q.scrollHeight>q.clientHeight+2)return false;
+  return rows.every(r=>{
+   const nodes=[r.querySelector('.prompt'),r.querySelector('.answer')].filter(Boolean);
+   return nodes.every(n=>n.scrollHeight<=n.clientHeight+2) && r.scrollHeight<=r.clientHeight+2;
+  });
+ };
+ for(;size>=minSize;size-=1){panel.style.setProperty('--fit-size',size+'px');if(fits())break;}
+ panel.style.setProperty('--fit-size',Math.max(minSize,size)+'px');
+}
+window.addEventListener('resize',()=>fitSlide());
+function next(){if(revealed<revealTotal(PAGES[page])){revealed++;render()}}
+function prev(){if(revealed>0){revealed--;render()}}
+function go(step){let n=page+step;if(n>=0&&n<PAGES.length){page=n;revealed=0;render()}}
+el('nextAnswer').onclick=next;
+el('prevAnswer').onclick=prev;
+el('nextSection').onclick=()=>go(1);
+el('prevSection').onclick=()=>go(-1);
+el('reset').onclick=()=>{revealed=0;render()};
+el('notes').onclick=()=>el('teacherOverlay').classList.add('open');
+el('close').onclick=()=>el('teacherOverlay').classList.remove('open');
+el('teacherOverlay').onclick=e=>{if(e.target===el('teacherOverlay'))el('teacherOverlay').classList.remove('open')};
+el('full').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen?.()};
+document.addEventListener('keydown',e=>{
+ if(el('teacherOverlay').classList.contains('open')){if(e.key==='Escape')el('teacherOverlay').classList.remove('open');return}
+ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}
+ else if(e.key==='ArrowLeft'){e.preventDefault();prev()}
+ else if(e.key==='PageDown'){e.preventDefault();go(1)}
+ else if(e.key==='PageUp'){e.preventDefault();go(-1)}
+ else if(e.key.toLowerCase()==='f'&&!(e.ctrlKey||e.altKey)){el('full').click()}
+});render();
+</script></body></html>
