@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngliForce Academy: Have Got & Have Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Originele kleuren en opmaak van m1_mission_2.html */
+        :root {
+            --hero-green-main: #43a047;
+            --hero-green-dark: #388e3c;
+            --hero-green-glow: rgba(67, 160, 71, 0.4);
+            --hero-yellow: #ffb703;
+            --dark-bg: #0b1a2a;
+            --card-bg: #102a43;
+            --card-border: #243b53;
+            --card-bg-done: #05101a;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--hero-green-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-green-dark);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        main {
+            max-width: 1000px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            box-sizing: border-box;
+            flex: 1;
+        }
+
+        /* Originele stijlklassen blijven beschikbaar voor nieuwe inhoud. */
+        .learning-goals {
+            background: var(--card-bg);
+            border: 3px solid var(--hero-green-main);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px var(--hero-green-glow);
+        }
+        .learning-goals h2 {
+            font-family: 'Bangers', cursive;
+            font-size: 2.2rem;
+            color: var(--hero-green-main);
+            margin-top: 0;
+            letter-spacing: 1px;
+        }
+        .learning-goals p {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+        }
+        .divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-green-main), transparent);
+            margin: 60px 0 20px 0;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-green-main);
+        }
+        .section-title {
+            font-family: 'Bangers', cursive;
+            font-size: 2.8rem;
+            color: var(--hero-green-main);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            cursor: pointer;
+        }
+        .card:hover {
+            border-color: var(--hero-green-main);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .card-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .power-icon {
+            font-size: 2.5rem;
+            background: rgba(255,255,255,0.05);
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .name {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: #f8fafc;
+            text-align: center;
+        }
+        .desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            flex-grow: 1;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .btn {
+            background: var(--card-border);
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .card.done {
+            border-color: var(--hero-green-main);
+            background: var(--card-bg-done);
+            box-shadow: 0 0 20px var(--hero-green-glow);
+        }
+        .card.done .btn {
+            background: var(--hero-green-main);
+            color: white;
+        }
+
+        footer p {
+            text-align: center;
+            opacity: 0.5;
+            padding: 60px 0;
+            margin: 0;
+        }
+
+/* De lesindeling is bewust gelijk aan de oorspronkelijke Have Got & Have-pagina.
+   Alleen de algemene kleurstelling, groene balk en footer volgen de vaste template. */
+.briefing-box {
+    background: rgba(16,42,67,.9); border: 2px solid var(--hero-green-main);
+    border-radius: 20px; padding: 30px; margin-bottom: 30px;
+}
+.briefing-box h2 {font-family:'Lexend',sans-serif; font-weight:700; font-size:1.6rem; margin:0 0 18px; color:#fff}
+.explanation-text {font-size:1.1rem;line-height:1.6;border-left:4px solid var(--hero-yellow);padding:15px 20px;background:rgba(255,183,3,.045)}
+.explanation-text p {margin:0 0 15px;}
+.explanation-text p:last-child {margin-bottom:0}
+.highlight {color:#73f7d9;font-weight:700}
+.important {color:#ff938c;font-weight:700}
+.toggle-container {display:flex;gap:10px;justify-content:center;margin-bottom:30px;flex-wrap:wrap}
+.btn-toggle {
+    background:var(--hero-green-main);color:white;border:0;padding:12px 20px;
+    border-radius:50px;font-family:'Bangers',cursive;font-size:1.1rem;
+    cursor:pointer;border-bottom:5px solid var(--hero-green-dark);transition:.2s;
+    letter-spacing:.5px;
+}
+.btn-toggle:hover,.btn-toggle:focus-visible {background:var(--hero-yellow);color:#082019;transform:translateY(-3px)}
+.btn-toggle[aria-selected='true'] {background:var(--hero-yellow);color:#102a43;border-bottom-color:#bd8200}
+.btn-toggle.video-tab {background:#ba3838;border-bottom-color:#7c1b1b}
+.btn-toggle.video-tab:hover,.btn-toggle.video-tab:focus-visible {background:#ec5b5b;color:white}
+.btn-toggle.video-tab[aria-selected='true'] {background:var(--hero-yellow);border-bottom-color:#bd8200;color:#102a43}
+.content-section[hidden] {display:none!important}
+.table-container {background:var(--card-bg);border-radius:15px;overflow-x:auto;border:2px solid var(--hero-green-dark);margin-bottom:20px}
+.grammar-table {width:100%;border-collapse:collapse;min-width:620px}
+.grammar-table th,.grammar-table td {padding:15px;border:1px solid rgba(255,255,255,.1);text-align:center}
+.grammar-table th {background:rgba(0,0,0,.3);color:var(--hero-yellow);font-size:1.1rem;font-weight:700}
+.grammar-table th small {display:block;font-size:.8rem;margin-top:6px;color:#d4e2ef;font-weight:400}
+.row-3rd-person {background:rgba(255,183,3,.06)}
+.grammar-badge {display:inline-block;padding:4px 12px;border:1px solid;border-radius:8px;font-weight:700;white-space:nowrap}
+.badge-have {background:rgba(0,245,212,.15);color:#75f7e5;border-color:#00f5d4}
+.badge-has {background:rgba(255,183,3,.15);color:#ffcf55;border-color:#ffb703}
+.badge-do {background:rgba(162,210,255,.15);color:#b8ddff;border-color:#a2d2ff}
+.badge-does {background:rgba(255,133,161,.15);color:#ffb0c3;border-color:#ff85a1}
+.badge-negative-have {background:rgba(255,112,166,.15);color:#ffa0bf;border-color:#ff70a6}
+.badge-negative-has {background:rgba(255,10,84,.15);color:#ff758e;border-color:#ff4074}
+.video-disclaimer {padding:18px 20px;background:var(--card-bg);border:2px solid var(--hero-yellow);border-radius:15px;margin-bottom:20px;font-size:.97rem;line-height:1.6}
+.video-disclaimer strong {font-weight:700;color:var(--hero-yellow)}
+.video-disclaimer p {margin:8px 0 0}
+.video-grid {display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+.video-card {text-align:center;flex:1;min-width:min(100%,280px);max-width:480px}
+.video-heading {font-size:1.05rem;font-weight:700;margin:0 0 10px}
+.video-placeholder {aspect-ratio:16/9;border:4px solid #bb3737;border-radius:20px;background:#071626;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;box-sizing:border-box}
+.video-placeholder p {margin:0}
+.load-video {background:var(--hero-green-main);color:white;border:2px solid var(--hero-yellow);border-radius:50px;padding:12px 20px;font-family:'Lexend',sans-serif;font-weight:700;cursor:pointer}
+.load-video:hover,.load-video:focus-visible {background:var(--hero-green-dark)}
+.video-frame {display:block;width:100%;aspect-ratio:16/9;border:4px solid #bb3737;border-radius:20px;box-sizing:border-box}
+.pickle-title {font-family:'Lexend',sans-serif;font-weight:700;font-size:1.5rem;margin:30px 0 12px;color:#fff;text-align:left;letter-spacing:normal}
+.pickle-grid {display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:20px}
+.pickle-card {
+    background:var(--card-bg);border:3px solid var(--hero-green-dark);
+    border-radius:20px;padding:20px;text-align:center;cursor:default;
+    transition:border-color .25s,box-shadow .25s;
+    display:flex;flex-direction:column;align-items:stretch;color:white;position:relative;
+}
+.pickle-card:hover,.pickle-card:focus-within {transform:none;border-color:var(--hero-yellow);box-shadow:0 5px 18px rgba(0,0,0,.25)}
+.pickle-link {display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-decoration:none;color:#fff;outline-offset:5px}
+.pickle-link::after {content:"";position:absolute;inset:0}
+.pickle-icon {font-size:2.5rem}
+.pickle-name {font-family:'Bangers',cursive;font-size:1.5rem;margin-top:5px}
+.pickle-desc {font-size:.9rem;color:#75f7e5;margin:5px 0}
+.btn-like {position:relative;z-index:1;background:var(--hero-green-dark);color:white;border:2px solid #75f7e5;padding:5px 15px;border-radius:10px;cursor:pointer;margin:10px auto 0;font-family:'Lexend',sans-serif}
+.btn-like:hover,.btn-like:focus-visible {border-color:var(--hero-yellow)}
+@media(max-width:768px) {.pickle-grid{grid-template-columns:repeat(2,1fr)}.briefing-box{padding:20px}.grammar-table th,.grammar-table td{padding:11px 9px}}
+@media(max-width:480px) {.pickle-grid{grid-template-columns:1fr}.btn-toggle{flex:1 1 120px}.briefing-box{padding:16px}.explanation-text{padding:12px}header h1{font-size:clamp(2rem,9vw,3.5rem)}}
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ENGLIFORCE ACADEMY</h1>
+        <p>HAVE GOT &amp; HAVE COMMAND CENTER</p>
+    </header>
+
+    <main>
+<section class="briefing-box">
+    <h2>🚨 MISSION: HAVE GOT vs HAVE</h2>
+    <div class="explanation-text">
+        <p>De Engelse werkwoorden <span class="highlight">have got</span> en <span class="highlight">have</span> betekenen allebei precies hetzelfde: <span class="highlight">hebben</span>! Je gebruikt ze om te praten over je bezittingen (zoals een telefoon of een huisdier).</p>
+        <p>Hoewel ze hetzelfde betekenen, is er een <span class="important">groot verschil</span> in hoe je ze vragend maakt of er 'nee' (ontkennend) mee zegt. Klik snel op de knoppen hieronder om de geheime regels te ontdekken!</p>
+    </div>
+</section>
+<div class="toggle-container" role="tablist" aria-label="Have got en have: kies een onderdeel">
+<button class="btn-toggle" type="button" role="tab" id="tab-0" data-tab="n-bevestigen" aria-controls="n-bevestigen" aria-selected="true" tabindex="0">BEVESTIGEN</button>
+<button class="btn-toggle" type="button" role="tab" id="tab-1" data-tab="n-bevestigen-afkorting" aria-controls="n-bevestigen-afkorting" aria-selected="false" tabindex="-1">BEV. (AFK)</button>
+<button class="btn-toggle" type="button" role="tab" id="tab-2" data-tab="n-vragen" aria-controls="n-vragen" aria-selected="false" tabindex="-1">VRAGEN</button>
+<button class="btn-toggle" type="button" role="tab" id="tab-3" data-tab="n-ontkennen" aria-controls="n-ontkennen" aria-selected="false" tabindex="-1">ONTKENNEN</button>
+<button class="btn-toggle video-tab" type="button" role="tab" id="tab-4" data-tab="n-video" aria-controls="n-video" aria-selected="false" tabindex="-1">🎬 VIDEO</button>
+</div>
+<section class="content-section" id="n-bevestigen" role="tabpanel" aria-labelledby="tab-0"><div class="table-container"><table class="grammar-table"><thead><tr>
+<th scope="col">Persoon (Subject)</th>
+<th scope="col">Met HAVE GOT</th>
+<th scope="col">Met HAVE</th>
+<th scope="col">Nederlands</th>
+</tr></thead><tbody>
+<tr>
+<td>I</td>
+<td><span class="grammar-badge badge-have">have got</span></td>
+<td><span class="grammar-badge badge-have">have</span></td>
+<td>Ik heb</td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-have">have got</span></td>
+<td><span class="grammar-badge badge-have">have</span></td>
+<td>Jij hebt</td>
+</tr>
+<tr class="row-3rd-person">
+<td>He</td>
+<td><span class="grammar-badge badge-has">has got</span></td>
+<td><span class="grammar-badge badge-has">has</span></td>
+<td>Hij heeft</td>
+</tr>
+<tr class="row-3rd-person">
+<td>She</td>
+<td><span class="grammar-badge badge-has">has got</span></td>
+<td><span class="grammar-badge badge-has">has</span></td>
+<td>Zij heeft</td>
+</tr>
+<tr class="row-3rd-person">
+<td>It</td>
+<td><span class="grammar-badge badge-has">has got</span></td>
+<td><span class="grammar-badge badge-has">has</span></td>
+<td>Het heeft</td>
+</tr>
+<tr>
+<td>We</td>
+<td><span class="grammar-badge badge-have">have got</span></td>
+<td><span class="grammar-badge badge-have">have</span></td>
+<td>Wij hebben</td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-have">have got</span></td>
+<td><span class="grammar-badge badge-have">have</span></td>
+<td>Jullie hebben</td>
+</tr>
+<tr>
+<td>They</td>
+<td><span class="grammar-badge badge-have">have got</span></td>
+<td><span class="grammar-badge badge-have">have</span></td>
+<td>Zij hebben</td>
+</tr>
+</tbody></table></div></section>
+<section class="content-section" id="n-bevestigen-afkorting" role="tabpanel" aria-labelledby="tab-1" hidden><div class="table-container"><table class="grammar-table"><thead><tr>
+<th scope="col">Persoon</th>
+<th scope="col">HAVE GOT (Afkorting)</th>
+<th scope="col">HAVE (Geen afkorting mogelijk!)</th>
+</tr></thead><tbody>
+<tr>
+<td>I</td>
+<td><span class="grammar-badge badge-have">I've got</span></td>
+<td><span class="grammar-badge badge-have">I have</span></td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-have">You've got</span></td>
+<td><span class="grammar-badge badge-have">You have</span></td>
+</tr>
+<tr class="row-3rd-person">
+<td>He</td>
+<td><span class="grammar-badge badge-has">He's got</span></td>
+<td><span class="grammar-badge badge-has">He has</span></td>
+</tr>
+<tr class="row-3rd-person">
+<td>She</td>
+<td><span class="grammar-badge badge-has">She's got</span></td>
+<td><span class="grammar-badge badge-has">She has</span></td>
+</tr>
+<tr class="row-3rd-person">
+<td>It</td>
+<td><span class="grammar-badge badge-has">It's got</span></td>
+<td><span class="grammar-badge badge-has">It has</span></td>
+</tr>
+<tr>
+<td>We</td>
+<td><span class="grammar-badge badge-have">We've got</span></td>
+<td><span class="grammar-badge badge-have">We have</span></td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-have">You've got</span></td>
+<td><span class="grammar-badge badge-have">You have</span></td>
+</tr>
+<tr>
+<td>They</td>
+<td><span class="grammar-badge badge-have">They've got</span></td>
+<td><span class="grammar-badge badge-have">They have</span></td>
+</tr>
+</tbody></table></div></section>
+<section class="content-section" id="n-vragen" role="tabpanel" aria-labelledby="tab-2" hidden><div class="table-container"><table class="grammar-table"><thead><tr>
+<th scope="col">Persoon</th>
+<th scope="col">Vraag met HAVE GOT <small>(Omdraaien: Have/Has vooraan!)</small></th>
+<th scope="col">Vraag met HAVE <small>(Hulpje nodig: Do/Does vooraan!)</small></th>
+<th scope="col">Nederlands</th>
+</tr></thead><tbody>
+<tr>
+<td>I</td>
+<td><span class="grammar-badge badge-have">Have I got?</span></td>
+<td><span class="grammar-badge badge-do">Do I have?</span></td>
+<td>Heb ik?</td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-have">Have you got?</span></td>
+<td><span class="grammar-badge badge-do">Do you have?</span></td>
+<td>Heb jij?</td>
+</tr>
+<tr class="row-3rd-person">
+<td>He</td>
+<td><span class="grammar-badge badge-has">Has he got?</span></td>
+<td><span class="grammar-badge badge-does">Does he have?</span></td>
+<td>Heeft hij?</td>
+</tr>
+<tr class="row-3rd-person">
+<td>She</td>
+<td><span class="grammar-badge badge-has">Has she got?</span></td>
+<td><span class="grammar-badge badge-does">Does she have?</span></td>
+<td>Heeft zij?</td>
+</tr>
+<tr class="row-3rd-person">
+<td>It</td>
+<td><span class="grammar-badge badge-has">Has it got?</span></td>
+<td><span class="grammar-badge badge-does">Does it have?</span></td>
+<td>Heeft het?</td>
+</tr>
+<tr>
+<td>We</td>
+<td><span class="grammar-badge badge-have">Have we got?</span></td>
+<td><span class="grammar-badge badge-do">Do we have?</span></td>
+<td>Hebben wij?</td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-have">Have you got?</span></td>
+<td><span class="grammar-badge badge-do">Do you have?</span></td>
+<td>Hebben jullie?</td>
+</tr>
+<tr>
+<td>They</td>
+<td><span class="grammar-badge badge-have">Have they got?</span></td>
+<td><span class="grammar-badge badge-do">Do they have?</span></td>
+<td>Hebben zij?</td>
+</tr>
+</tbody></table></div></section>
+<section class="content-section" id="n-ontkennen" role="tabpanel" aria-labelledby="tab-3" hidden><div class="table-container"><table class="grammar-table"><thead><tr>
+<th scope="col">Persoon</th>
+<th scope="col">Ontkenning met HAVE GOT <small>(Haven’t / Hasn’t + got)</small></th>
+<th scope="col">Ontkenning met HAVE <small>(Don’t / Doesn’t + have)</small></th>
+<th scope="col">Nederlands</th>
+</tr></thead><tbody>
+<tr>
+<td>I</td>
+<td><span class="grammar-badge badge-negative-have">I haven't got</span></td>
+<td><span class="grammar-badge badge-negative-have">I don't have</span></td>
+<td>Ik heb niet</td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-negative-have">You haven't got</span></td>
+<td><span class="grammar-badge badge-negative-have">You don't have</span></td>
+<td>Jij hebt niet</td>
+</tr>
+<tr class="row-3rd-person">
+<td>He</td>
+<td><span class="grammar-badge badge-negative-has">He hasn't got</span></td>
+<td><span class="grammar-badge badge-negative-has">He doesn't have</span></td>
+<td>Hij heeft niet</td>
+</tr>
+<tr class="row-3rd-person">
+<td>She</td>
+<td><span class="grammar-badge badge-negative-has">She hasn't got</span></td>
+<td><span class="grammar-badge badge-negative-has">She doesn't have</span></td>
+<td>Zij heeft niet</td>
+</tr>
+<tr class="row-3rd-person">
+<td>It</td>
+<td><span class="grammar-badge badge-negative-has">It hasn't got</span></td>
+<td><span class="grammar-badge badge-negative-has">It doesn't have</span></td>
+<td>Het heeft niet</td>
+</tr>
+<tr>
+<td>We</td>
+<td><span class="grammar-badge badge-negative-have">We haven't got</span></td>
+<td><span class="grammar-badge badge-negative-have">We don't have</span></td>
+<td>Wij hebben niet</td>
+</tr>
+<tr>
+<td>You</td>
+<td><span class="grammar-badge badge-negative-have">You haven't got</span></td>
+<td><span class="grammar-badge badge-negative-have">You don't have</span></td>
+<td>Jullie hebben niet</td>
+</tr>
+<tr>
+<td>They</td>
+<td><span class="grammar-badge badge-negative-have">They haven't got</span></td>
+<td><span class="grammar-badge badge-negative-have">They don't have</span></td>
+<td>Zij hebben niet</td>
+</tr>
+</tbody></table></div></section>
+<section class="content-section" id="n-video" role="tabpanel" aria-labelledby="tab-4" hidden>
+<aside aria-label="Privacywaarschuwing YouTube" class="video-disclaimer" role="note">
+<strong>🔒 Privacy en YouTube</strong>
+<p>Deze video's worden aangeboden door YouTube (Google). De video's worden <strong>niet automatisch geladen</strong>. Pas nadat je zelf op <strong>‘Video laden’</strong> klikt, maakt je browser verbinding met YouTube. Hiervoor gebruiken we de privacyvriendelijkere <strong>youtube-nocookie.com</strong>-versie.</p>
+<p>Let op: dit betekent niet dat YouTube helemaal geen gegevens kan verwerken. Bij het laden en afspelen kunnen bijvoorbeeld je IP-adres en andere technische gegevens met YouTube worden gedeeld. Je kunt de rest van de les gebruiken zonder een video te laden.</p>
+</aside>
+<div class="video-grid">
+<section aria-labelledby="v1-heading" class="video-card">
+<h3 class="video-heading" id="v1-heading">Uitlegvideo 1</h3>
+<div class="video-placeholder" data-start="17" data-video-id="qveKcqk0Htc">
+<p>YouTube is nog niet geladen.</p>
+<button class="load-video" type="button">▶ Video 1 laden</button>
+</div>
+</section>
+<section aria-labelledby="v2-heading" class="video-card">
+<h3 class="video-heading" id="v2-heading">Uitlegvideo 2</h3>
+<div class="video-placeholder" data-video-id="ym8_FgIVSWk">
+<p>YouTube is nog niet geladen.</p>
+<button class="load-video" type="button">▶ Video 2 laden</button>
+</div>
+</section>
+</div>
+</section>
+<h2 class="pickle-title">⚔️ PICKLE MISSIONS</h2><div class="pickle-grid">
+<article class="pickle-card" id="card-p1">
+  <a class="pickle-link" href="m1t1_have_has_got_pickle_1.html" aria-label="Open Pickle 1: Drag en drop">
+    <span class="pickle-icon" aria-hidden="true">👆🏼</span>
+    <span class="pickle-name">Pickle 1</span>
+    <span class="pickle-desc">Drag &amp; drop</span>
+  </a>
+  <button type="button" class="btn-like" aria-pressed="false">👍 Like</button>
+</article>
+<article class="pickle-card" id="card-p2">
+  <a class="pickle-link" href="m1t1_have_has_got_pickle_2.html" aria-label="Open Pickle 2: Reflex Game">
+    <span class="pickle-icon" aria-hidden="true">🤚🏼</span>
+    <span class="pickle-name">Pickle 2</span>
+    <span class="pickle-desc">Reflex Game</span>
+  </a>
+  <button type="button" class="btn-like" aria-pressed="false">👍 Like</button>
+</article>
+<article class="pickle-card" id="card-p3">
+  <a class="pickle-link" href="m1t1_have_has_got_pickle_3.html" aria-label="Open Pickle 3: Treasure Hunt">
+    <span class="pickle-icon" aria-hidden="true">🏴‍☠️</span>
+    <span class="pickle-name">Pickle 3</span>
+    <span class="pickle-desc">Treasure Hunt</span>
+  </a>
+  <button type="button" class="btn-like" aria-pressed="false">👍 Like</button>
+</article>
+<article class="pickle-card" id="card-p4">
+  <a class="pickle-link" href="m1t1_have_has_got_pickle_4.html" aria-label="Open Pickle 4: 4 in a row">
+    <span class="pickle-icon" aria-hidden="true">🛑</span>
+    <span class="pickle-name">Pickle 4</span>
+    <span class="pickle-desc">4 in a row</span>
+  </a>
+  <button type="button" class="btn-like" aria-pressed="false">👍 Like</button>
+</article>
+</div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 EngliForce – Make English Your Superpower!</p>
+    </footer>
+<script>
+'use strict';
+const tabs = Array.from(document.querySelectorAll('[role="tab"][data-tab]'));
+function showTab(tab) {
+  tabs.forEach(item => {
+    const active = item === tab;
+    item.setAttribute('aria-selected', String(active));
+    item.tabIndex = active ? 0 : -1;
+    document.getElementById(item.dataset.tab).hidden = !active;
+  });
+}
+tabs.forEach((tab,index) => {
+  tab.addEventListener('click', () => showTab(tab));
+  tab.addEventListener('keydown', event => {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 :
+      (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+    showTab(tabs[next]); tabs[next].focus();
+  });
+});
+// De pagina bevat geen YouTube iframe of andere YouTube-bron totdat de leerling klikt.
+document.querySelectorAll('.load-video').forEach(button => {
+  button.addEventListener('click', () => {
+    const placeholder = button.closest('.video-placeholder');
+    const id = placeholder.dataset.videoId;
+    const start = Number(placeholder.dataset.start || 0);
+    const iframe = document.createElement('iframe');
+    iframe.className = 'video-frame';
+    iframe.title = 'YouTube uitlegvideo over have got en have';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allow = 'encrypted-media; picture-in-picture; fullscreen';
+    iframe.allowFullscreen = true;
+    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?rel=0${start ? `&start=${start}` : ''}`;
+    placeholder.replaceWith(iframe);
+  }, {once:true});
+});
+document.querySelectorAll('.btn-like').forEach(button => {
+  button.addEventListener('click', () => {
+    const liked = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed', String(liked));
+    button.textContent = liked ? '❤️ Liked' : '👍 Like';
+  });
+});
+</script>
+</body>
+</html>
