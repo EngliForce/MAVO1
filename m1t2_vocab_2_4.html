@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; frame-src 'self' about: https://www.youtube-nocookie.com; child-src 'self' about: https://www.youtube-nocookie.com; connect-src 'none'; font-src 'none'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <title>EngliForce Academy: Vocab 2.4 – Going Out</title>
+    <style>
+        :root {
+            --hero-purple-main: #43a047; /* Aangepast van paars naar oranje */
+            --hero-purple-dark: #388e3c; /* Donkeroranje variant */
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81c784;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #43a047;
+            --thumb-up: #4caf50;
+            --success-green: #2ecc71;
+        }
+        body {
+            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+        h1 { font-family: Impact, 'Arial Narrow', sans-serif, cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        h2 { font-family: Impact, 'Arial Narrow', sans-serif, cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.8rem; margin-top: 0;}
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; text-align: center; }
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 50px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+        .explanation-text {
+            font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
+            border-left: 4px solid var(--hero-orange); padding-left: 20px;
+            background: rgba(67, 160, 71, 0.05); padding-top: 10px; padding-bottom: 10px;
+        }
+        .keyword { color: var(--hero-orange); font-weight: 700; }
+        .toggle-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle {
+            background: var(--hero-purple-main); color: white; border: none;
+            padding: 10px 20px; border-radius: 50px; font-family: Impact, 'Arial Narrow', sans-serif, cursive;
+            font-size: 1.1rem; cursor: pointer; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark);
+        }
+        .btn-toggle:hover { transform: translateY(-2px); background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        .btn-video { background: var(--hero-orange); border-bottom-color: #388e3c; }
+        .btn-video:hover { background: #66bb6a; color: white; }
+
+        .table-container { overflow-x:auto; width: 100%; border-radius: 15px; background: #102a43; overflow: hidden; margin-top: 20px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--hero-purple-main); padding: 15px; text-align: left; font-family: Impact, 'Arial Narrow', sans-serif; }
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* FLASHCARDS */
+        .controls { background: rgba(16, 42, 67, 0.8); padding: 20px; border-radius: 15px; border: 1px solid var(--hero-cyan); display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; margin-bottom: 30px; }
+        .controls label { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.1rem; color: var(--hero-cyan); display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .flashcards-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 20px; min-height: 300px; }
+        
+        .card { width: 280px; height: 260px; perspective: 1000px; position: relative; transition: transform 0.4s, opacity 0.4s; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; border: 4px solid var(--hero-cyan); }
+        .card-front { background: var(--hero-purple-dark); color: white; font-size: 1.8rem; font-family: Impact, 'Arial Narrow', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; }
+        .card-back { background: var(--hero-yellow); color: var(--dark-bg); transform: rotateY(180deg); font-size: 1.6rem; font-family: Impact, 'Arial Narrow', sans-serif; }
+        
+        /* Bekend Status */
+        .known-btn {
+            margin-top: 15px;
+            background: rgba(0,0,0,0.1);
+            color: var(--dark-bg);
+            border: 2px solid var(--dark-bg);
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .known-btn:hover { background: rgba(0,0,0,0.2); transform: scale(1.05); }
+        .card.is-known .card-front { border-color: var(--success-green); box-shadow: 0 0 15px rgba(46, 204, 113, 0.6); }
+
+        .card-example { font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif; font-size: 0.85rem; margin-top: 10px; font-style: italic; color: rgba(255,255,255,0.8); backface-visibility: hidden; }
+        .card-back .card-example { color: rgba(0,0,0,0.7); }
+
+        /* PICKLE GRID */
+        .pickle-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 20px; }
+        .mission-card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; width: 220px; display: flex; flex-direction: column; justify-content: space-between; }
+        .mission-card:hover { border-color: var(--hero-yellow); transform: translateY(-5px); }
+        .mission-card .title { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.5rem; color: var(--hero-yellow); margin: 5px 0; }
+        .like-btn { background: rgba(255, 255, 255, 0.05); border: 2px solid var(--hero-cyan); border-radius: 10px; color: white; padding: 8px; margin-top: 15px; cursor: pointer; transition: 0.3s; font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .like-btn.liked { background: var(--thumb-up); border-color: white; }
+
+        /* EFFECTS */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text { position: fixed; pointer-events: none; font-family: Impact, 'Arial Narrow', sans-serif, cursive; color: var(--hero-yellow); font-size: 4rem; z-index: 2001; text-shadow: 3px 3px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        @keyframes boomAnim { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+        footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+    </style>
+<style>html{overflow-x:hidden;overflow-y:auto} body{overflow-y:visible} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } </style>
+<style>
+#vocab-page.hidden-page {display:none !important;}
+.pickle-page {display:none;width:100%;height:800px;min-height:800px;border:0;overflow:hidden;background:#05101a;}
+.pickle-page.active {display:block;}
+</style>
+<style id="engliforce-readable-type-v2">
+/* Grotere, beter leesbare letters: alleen typografie; kleuren, navigatie en YouTube ongewijzigd. */
+#vocab-page { font-size: 19px; line-height: 1.5; }
+#vocab-page header p { font-size: 1.35rem; }
+#vocab-page .explanation-text { font-size: 1.25rem; line-height: 1.65; }
+#vocab-page .toggle-container .btn-toggle { font-size: 1.3rem; padding: 12px 24px; }
+#vocab-page .content-section table { font-size: 1.2rem; line-height: 1.45; }
+#vocab-page .content-section th { font-size: 1.3rem; padding: 16px 18px; }
+#vocab-page .content-section td { font-size: 1.2rem; padding: 14px 18px; }
+#vocab-page .content-section td small { font-size: 0.95em; line-height: 1.5; }
+#vocab-page .controls label { font-size: 1.24rem; }
+#vocab-page .controls select { font-size: 1.08rem; padding: 5px 7px; }
+#vocab-page .controls .btn-toggle { font-size: 1.06rem !important; }
+#vocab-page .card { width: 300px; height: 285px; }
+#vocab-page .card-front { font-size: 2rem; }
+#vocab-page .card-back { font-size: 1.85rem; }
+#vocab-page .card-example { font-size: 1rem; line-height: 1.4; }
+#vocab-page .known-btn { font-size: 1rem; }
+#vocab-page .mission-card .title { font-size: 1.88rem; }
+#vocab-page .mission-card p { font-size: 1.18rem; line-height: 1.4; }
+#vocab-page .like-btn { font-size: 1.12rem; }
+#vocab-page footer { font-size: 1.05rem; }
+#vocab-page #video-section, #vocab-page #notice-section { font-size: 1.12rem; }
+@media (max-width: 650px) {
+  #vocab-page { font-size: 18px; }
+  #vocab-page .explanation-text { font-size: 1.12rem; }
+  #vocab-page .toggle-container .btn-toggle { font-size: 1.12rem; padding: 10px 16px; }
+  #vocab-page .content-section th { font-size: 1.1rem; padding: 13px 12px; }
+  #vocab-page .content-section td { font-size: 1.09rem; padding: 12px; overflow-wrap:anywhere; }
+  #vocab-page .card { width: min(100%, 320px); height: 270px; }
+  #vocab-page .card-front { font-size: 1.85rem; }
+  #vocab-page .card-back { font-size: 1.75rem; }
+  #vocab-page .controls { gap: 12px; }
+  #vocab-page .mission-card { width: min(100%, 270px); }
+}
+</style>
+</head>
+<body>
+<div id="vocab-page">
+
+<div class="flash-effect" id="flash"></div>
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>VOCAB 2.4: GOING OUT</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: VOCABULARY BRIEFING</h2>
+        <div class="explanation-text">
+            Leer 15 woorden en uitdrukkingen over uitgaan en afspreken met vrienden. Gebruik de <strong>video</strong> voor uitspraak en de <strong>flashcards</strong> om te oefenen.
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'vocab-list', 'ZAP!')">Lijst</button>
+        <button class="btn-toggle" onclick="showSection(event, 'context-list', 'KA-POW!')">Context</button>
+        <button class="btn-toggle" onclick="showSection(event, 'flashcards-section', 'BOOST!')">Flashcards</button>
+        <button class="btn-toggle btn-video" onclick="showSection(event, 'video-section', 'BOOM!')">Video</button>
+    </div>
+
+    <div id="vocab-list" class="content-section" style="display: block;">
+        <h3>Tactisch Overzicht</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Engels</th><th>Nederlands</th></tr></thead>
+                <tbody id="vocab-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="context-list" class="content-section">
+        <h3>Action Lab (Zinnen)</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Woord</th><th>Zin</th></tr></thead>
+                <tbody id="context-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="flashcards-section" class="content-section">
+        <h3>Flashcard Simulator</h3>
+        <div class="controls">
+            <label>Aantal: 
+                <select id="card-count" onchange="generateCards()">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15" selected>Alle</option>
+                </select>
+            </label>
+            <label><input type="checkbox" id="show-examples" onchange="generateCards()"> Voorbeelden</label>
+            <label><input type="checkbox" id="reverse-cards" onchange="generateCards()"> NL → EN</label>
+            <label style="color: var(--success-green);"><input type="checkbox" id="hide-known" onchange="generateCards()"> Verberg gekende woorden</label>
+            <button class="btn-toggle" onclick="resetKnown()" style="padding: 5px 10px; font-size: 0.8rem; background: #444;">Reset voortgang</button>
+            <button class="btn-toggle btn-action" onclick="generateCards()">Husselen 🔄</button>
+        </div>
+        <div class="flashcards-container" id="flashcards-container"></div>
+    </div>
+
+    <div id="video-section" class="content-section">
+        <h3>🎬 Uitspraak Training</h3>
+        <div style="max-width:800px;margin:auto;">
+            <div class="briefing-box" style="text-align:center;">
+                <p><strong>Privacy:</strong> Deze video wordt pas geladen als je op <strong>Video starten</strong> klikt. Daarna maakt je browser verbinding met YouTube. YouTube kan daarbij gegevens verwerken. We gebruiken de privacyvriendelijkere <code>youtube-nocookie.com</code>-embed, maar kunnen niet garanderen dat YouTube geen gegevens verwerkt.</p>
+                <button type="button" class="btn-toggle btn-video" id="load-video-btn" onclick="loadVideo()">▶ Video starten</button>
+                <div id="youtube-host" style="margin-top:20px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="section-divider"></div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="mission-card" onclick="openPickle(event, 'pickle1', 'CRUNCH!')">
+            <div><div class="title">🧩 Pickle 1</div><p>Drag & Drop</p></div>
+            <button class="like-btn" onclick="toggleLike(event, this)">🏆 ACHIEVED</button>
+        </div>
+        <div class="mission-card" onclick="openPickle(event, 'pickle2', 'SQUASH!')">
+            <div><div class="title">🧠 Pickle 2</div><p>Vocab Grid</p></div>
+            <button class="like-btn" onclick="toggleLike(event, this)">🏆 ACHIEVED</button>
+        </div>
+        <div class="mission-card" onclick="openPickle(event, 'pickle3', 'KABOOM!')">
+            <div><div class="title">🔎 Pickle 3</div><p>Vocab Detective</p></div>
+            <button class="like-btn" onclick="toggleLike(event, this)">🏆 ACHIEVED</button>
+        </div>
+    </div>
+</main>
+
+<footer><p>&copy; 2026 EngliForce: Make English Your Superpower!</p></footer>
+</div>
+
+<iframe id="frame-pickle1" class="pickle-page" title="Pickle 1: Drag and Drop" scrolling="no"></iframe>
+<iframe id="frame-pickle2" class="pickle-page" title="Pickle 2: Vocab Grid" scrolling="no"></iframe>
+<iframe id="frame-pickle3" class="pickle-page" title="Pickle 3: Vocab Detective" scrolling="no"></iframe>
+
+
+<script>
+    /* Vocab 2.4: Going Out – de vijftien afgesproken leerwoorden */
+    const flashcardsData = [{"en": "a fair", "nl": "een kermis", "exEN": "We are going to the fair on Saturday.", "exNL": "We gaan op zaterdag naar de kermis.", "highlight": "fair"}, {"en": "a shopping centre", "nl": "een winkelcentrum", "exEN": "Let's meet at the shopping centre.", "exNL": "Laten we afspreken bij het winkelcentrum.", "highlight": "shopping centre"}, {"en": "a meeting point", "nl": "een ontmoetingsplek", "exEN": "The station is our meeting point.", "exNL": "Het station is onze ontmoetingsplek.", "highlight": "meeting point"}, {"en": "a queue", "nl": "een wachtrij", "exEN": "We had to wait in a long queue.", "exNL": "We moesten in een lange wachtrij wachten.", "highlight": "queue"}, {"en": "an entrance fee", "nl": "een toegangsprijs", "exEN": "The entrance fee is five pounds.", "exNL": "De toegangsprijs is vijf pond.", "highlight": "entrance fee"}, {"en": "to meet up", "nl": "afspreken", "exEN": "I often meet up with my friends after school.", "exNL": "Ik spreek na school vaak af met mijn vrienden.", "highlight": "meet up"}, {"en": "to hang out", "nl": "rondhangen", "exEN": "We like to hang out in town.", "exNL": "We vinden het leuk om in de stad rond te hangen.", "highlight": "hang out"}, {"en": "to invite", "nl": "uitnodigen", "exEN": "I want to invite Sam to the cinema.", "exNL": "Ik wil Sam uitnodigen voor de bioscoop.", "highlight": "invite"}, {"en": "to book", "nl": "boeken / reserveren", "exEN": "My mum will book the tickets online.", "exNL": "Mijn moeder zal de kaartjes online boeken.", "highlight": "book"}, {"en": "to grab a bite", "nl": "iets gaan eten", "exEN": "Let's grab a bite after the film.", "exNL": "Laten we na de film iets gaan eten.", "highlight": "grab a bite"}, {"en": "to arrive", "nl": "aankomen", "exEN": "We always arrive on time.", "exNL": "We komen altijd op tijd aan.", "highlight": "arrive"}, {"en": "to pick someone up", "nl": "iemand ophalen", "exEN": "My dad will pick me up at eight.", "exNL": "Mijn vader haalt mij om acht uur op.", "highlight": "pick me up"}, {"en": "to be up for something", "nl": "ergens zin in hebben", "exEN": "Are you up for going into town?", "exNL": "Heb je zin om de stad in te gaan?", "highlight": "up for"}, {"en": "to tag along", "nl": "met iemand meegaan", "exEN": "Can I tag along with you?", "exNL": "Kan ik met je meegaan?", "highlight": "tag along"}, {"en": "to have a good time", "nl": "het leuk hebben", "exEN": "We always have a good time together.", "exNL": "We hebben het altijd leuk samen.", "highlight": "have a good time"}];
+
+    let knownWords = []; try { knownWords = JSON.parse(localStorage.getItem('engliforce_v24_going_out_known') || '[]'); } catch (_) {}
+
+    function init() {
+        const vBody = document.getElementById('vocab-table-body');
+        const cBody = document.getElementById('context-table-body');
+        flashcardsData.forEach(item => {
+            vBody.innerHTML += `<tr><td>${item.en}</td><td>${item.nl}</td></tr>`;
+            const base = item.highlight || item.en.replace(/^(to |a |an )/, '');
+            const highlightedEx = item.exEN.replace(new RegExp(base, 'gi'), match => `<span class="keyword">${match}</span>`);
+            cBody.innerHTML += `<tr><td>${item.en}</td><td>${highlightedEx}<br><small style="opacity:0.6">${item.exNL}</small></td></tr>`;
+        });
+        generateCards();
+    }
+
+    function generateCards() {
+        const container = document.getElementById('flashcards-container');
+        const countSelect = document.getElementById('card-count');
+        const count = countSelect.value === "15" ? flashcardsData.length : parseInt(countSelect.value);
+        const showEx = document.getElementById('show-examples').checked;
+        const reversed = document.getElementById('reverse-cards').checked;
+        const hideKnown = document.getElementById('hide-known').checked;
+        
+        container.innerHTML = '';
+        
+        let filteredData = [...flashcardsData];
+        if (hideKnown) {
+            filteredData = filteredData.filter(word => !knownWords.includes(word.en));
+        }
+
+        let data = filteredData.sort(() => 0.5 - Math.random()).slice(0, count);
+        
+        if (data.length === 0 && hideKnown) {
+            container.innerHTML = "<p style='font-family:Bangers; font-size:1.5rem; color:var(--hero-yellow);'>Missie volbracht! Geen ongekende woorden meer in deze selectie.</p>";
+            return;
+        }
+
+        data.forEach(word => {
+            const isKnown = knownWords.includes(word.en);
+            const cardWrap = document.createElement('div'); 
+            cardWrap.className = `card ${isKnown ? 'is-known' : ''}`;
+            
+            const inner = document.createElement('div'); 
+            inner.className = 'card-inner';
+            inner.onclick = () => cardWrap.classList.toggle('flipped');
+
+            const front = document.createElement('div'); 
+            front.className = 'card-front';
+            front.innerHTML = reversed ? word.nl : word.en;
+            if (showEx) front.innerHTML += `<div class="card-example">${reversed ? word.exNL : word.exEN}</div>`;
+
+            const back = document.createElement('div'); 
+            back.className = 'card-back';
+            back.innerHTML = reversed ? word.en : word.nl;
+            if (showEx) back.innerHTML += `<div class="card-example">${reversed ? word.exEN : word.exNL}</div>`;
+
+            const kBtn = document.createElement('button');
+            kBtn.className = 'known-btn';
+            
+            updateBtnStyle(kBtn, isKnown);
+            
+            kBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleKnown(e, word.en, cardWrap, kBtn);
+            };
+
+            back.appendChild(kBtn);
+            inner.appendChild(front); 
+            inner.appendChild(back);
+            cardWrap.appendChild(inner);
+            container.appendChild(cardWrap);
+        });
+    }
+
+    function toggleKnown(e, wordEn, cardElem, btn) {
+        const index = knownWords.indexOf(wordEn);
+        const hideKnown = document.getElementById('hide-known').checked;
+
+        if (index === -1) {
+            knownWords.push(wordEn);
+            createExplosion(e, 'CHECK!');
+            
+            if (hideKnown) {
+                cardElem.style.transform = 'scale(0)';
+                cardElem.style.opacity = '0';
+                setTimeout(() => generateCards(), 400);
+            } else {
+                cardElem.classList.add('is-known');
+                updateBtnStyle(btn, true);
+            }
+        } else {
+            knownWords.splice(index, 1);
+            createExplosion(e, 'RESET!');
+            cardElem.classList.remove('is-known');
+            updateBtnStyle(btn, false);
+        }
+        
+        try { localStorage.setItem('engliforce_v24_going_out_known', JSON.stringify(knownWords)); } catch (_) {}
+    }
+
+    function updateBtnStyle(btn, isKnown) {
+        if (isKnown) {
+            btn.innerHTML = '✅ Gekend';
+            btn.style.background = 'var(--success-green)';
+            btn.style.color = 'white';
+            btn.style.borderColor = 'white';
+        } else {
+            btn.innerHTML = '✔️ Ken ik';
+            btn.style.background = 'rgba(0,0,0,0.1)';
+            btn.style.color = 'var(--dark-bg)';
+            btn.style.borderColor = 'var(--dark-bg)';
+        }
+    }
+
+    function resetKnown() {
+        if(confirm("Wil je al je voortgang wissen?")) {
+            knownWords = [];
+            try { localStorage.removeItem('engliforce_v24_going_out_known'); } catch (_) {}
+            generateCards();
+        }
+    }
+
+    function toggleLike(e, btn) {
+        e.stopPropagation();
+        btn.classList.toggle('liked');
+        btn.innerText = btn.classList.contains('liked') ? '✅ ACHIEVED' : '🏆 ACHIEVED';
+        try { localStorage.setItem('engliforce_v24_going_out_achieved', JSON.stringify(Array.from(document.querySelectorAll('.like-btn')).map(b => b.classList.contains('liked')))); } catch (_) {}
+        if(btn.classList.contains('liked')) createExplosion(e, 'AWESOME!');
+    }
+
+    function openPickle(e, url, msg) {
+        createExplosion(e, msg);
+        setTimeout(() => showPage(url), 250);
+    }
+
+    function showSection(e, id, msg) {
+        if (id !== 'video-section') {
+            document.getElementById('youtube-host').replaceChildren();
+            document.getElementById('load-video-btn').style.display = '';
+        }
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, msg);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX || window.innerWidth/2; 
+        const y = e.clientY || window.innerHeight/2;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3'; 
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+        const txt = document.createElement('div'); 
+        txt.className = 'boom-text'; 
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px'; 
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt); 
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    function loadVideo() {
+        const host = document.getElementById('youtube-host');
+        if (host.querySelector('iframe') || host.querySelector('.video-direct-link')) return;
+        if (location.protocol === 'file:') {
+            const message = document.createElement('p');
+            message.className='video-direct-link';
+            message.innerHTML = 'Voor afspelen op deze pagina is een gepubliceerde HTTPS-website nodig (bijvoorbeeld GitHub Pages). ' +
+                '<a href="https://www.youtube.com/watch?v=6lIz7ZjOvuc" target="_blank" rel="noopener noreferrer" style="color:var(--hero-yellow)">Bekijk de video op YouTube ↗</a>';
+            host.replaceChildren(message);
+            document.getElementById('load-video-btn').style.display='none';
+            return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'position:relative;padding-top:56.25%;border:4px solid var(--hero-purple-main);border-radius:20px;overflow:hidden;';
+        const iframe = document.createElement('iframe');
+        iframe.title = 'Going Out vocabulary video (YouTube no-cookie)';
+        iframe.src = 'https://www.youtube-nocookie.com/embed/6lIz7ZjOvuc?rel=0';
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.allowFullscreen = true;
+        iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+        wrapper.appendChild(iframe);
+        host.appendChild(wrapper);
+        const fallback = document.createElement('p');
+        fallback.style.cssText = 'text-align:center;font-size:0.95rem;margin:14px 0;';
+        const link = document.createElement('a');
+        link.href = 'https://www.youtube.com/watch?v=6lIz7ZjOvuc';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.style.cssText = 'color:var(--hero-yellow);text-decoration:underline;';
+        link.textContent = 'Werkt de video niet? Bekijk hem op YouTube ↗';
+        fallback.appendChild(link);
+        host.appendChild(fallback);
+        document.getElementById('load-video-btn').style.display = 'none';
+    }
+    function restoreAchieved() {
+        let saved = [];
+        try { saved = JSON.parse(localStorage.getItem('engliforce_v24_going_out_achieved') || '[]'); } catch (_) {}
+        document.querySelectorAll('.like-btn').forEach((btn, index) => {
+          if (saved[index]) { btn.classList.add('liked'); btn.innerText = '✅ ACHIEVED'; }
+        });
+    }
+    window.onload = () => { init(); restoreAchieved(); };
+</script>
+
+<script>
+(function(){
+  const pickleDocuments={"pickle1": "<!DOCTYPE html>\n<html lang=\"nl\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>EngliForce Pickle: Going Out Drag & Drop<\/title>\n    <style>\n        :root {\n            --hero-purple-main: #43a047;\n            --hero-purple-dark: #388e3c;\n            --hero-yellow: #ffb703;\n            --hero-cyan: #81c784;\n            --dark-bg: #0b1a2a;\n            --hero-orange: #43a047;\n        }\n\n        body {\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);\n            color: white;\n            margin: 0;\n            padding: 0;\n            min-height: 100vh;\n        }\n\n        header {\n            background: var(--hero-purple-main);\n            padding: 2rem 1rem;\n            text-align: center;\n            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);\n            border-bottom: 5px solid var(--hero-yellow);\n        }\n\n        h1 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            font-size: 3rem; \n            margin: 0; \n            text-shadow: 3px 3px 0px var(--hero-purple-dark); \n        }\n\n        h2 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            color: var(--hero-yellow); \n            text-align: center; \n        }\n\n        .container { \n            max-width: 1000px; \n            margin: 20px auto; \n            padding: 20px; \n        }\n\n        .language-select {\n            display: flex;\n            justify-content: center;\n            gap: 20px;\n            margin-bottom: 30px;\n            background: rgba(255,255,255,0.05);\n            padding: 15px;\n            border-radius: 50px;\n            border: 1px solid var(--hero-cyan);\n        }\n\n        .language-select label { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            color: var(--hero-cyan); \n            cursor: pointer; \n        }\n\n        /* STICKY WORD BANK */\n        .word-bank {\n            display: flex;\n            flex-wrap: wrap;\n            gap: 12px;\n            justify-content: center;\n            margin-bottom: 40px;\n            padding: 20px;\n            background: rgba(16, 42, 67, 0.95);\n            border-radius: 20px;\n            border: 2px dashed var(--hero-cyan);\n            position: sticky;\n            top: 10px;\n            z-index: 1000;\n            box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n            backdrop-filter: blur(5px);\n        }\n\n        .draggable-word {\n            background: var(--hero-purple-main);\n            color: white;\n            padding: 8px 18px;\n            border-radius: 10px;\n            cursor: grab;\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            font-weight: bold;\n            font-size: 1rem;\n            border-bottom: 4px solid var(--hero-purple-dark);\n            user-select: none;\n            transition: 0.2s;\n        }\n\n        .draggable-word:active { \n            cursor: grabbing; \n            transform: scale(1.1); \n        }\n\n        .exercise-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));\n            gap: 20px;\n        }\n\n        .sentence-box {\n            background: #102a43;\n            border: 2px solid var(--hero-purple-main);\n            border-radius: 15px;\n            padding: 20px;\n            display: flex;\n            flex-direction: column;\n            gap: 10px;\n            box-shadow: 0 5px 15px rgba(0,0,0,0.2);\n        }\n\n        .sentence-box p { \n            margin: 0; \n            font-size: 0.95rem; \n            line-height: 1.4; \n            color: var(--hero-cyan); \n        }\n\n        .drop-zone {\n            height: 55px;\n            background: rgba(0,0,0,0.3);\n            border: 2px dashed #444;\n            border-radius: 10px;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            transition: 0.3s;\n        }\n\n        .drop-zone.drag-over { \n            background: rgba(129, 199, 132, 0.2); \n            border-color: var(--hero-cyan); \n        }\n\n        .correct { \n            border: 3px solid #4caf50 !important; \n            background: rgba(76, 175, 80, 0.1) !important; \n        }\n\n        .wrong { \n            border: 3px solid var(--hero-orange) !important; \n            background: rgba(67, 160, 71, 0.1) !important; \n        }\n\n        .button-row { \n            display: flex; \n            justify-content: center; \n            gap: 20px; \n            margin-top: 40px; \n            padding-bottom: 50px; \n        }\n\n        .btn {\n            background: var(--hero-orange);\n            color: white;\n            border: none;\n            padding: 15px 30px;\n            border-radius: 50px;\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 1.5rem;\n            cursor: pointer;\n            border-bottom: 5px solid #388e3c;\n            transition: 0.2s;\n        }\n\n        .btn:hover { \n            transform: translateY(-3px); \n        }\n\n        .boom-text {\n            position: fixed; \n            pointer-events: none; \n            font-family: Impact, 'Arial Narrow', sans-serif;\n            color: var(--hero-yellow); \n            font-size: 4rem; \n            z-index: 2000;\n            text-shadow: 3px 3px 0px #000; \n            animation: boom 0.6s ease-out forwards;\n        }\n\n        @keyframes boom { \n            0% { transform: scale(0); opacity: 1; } \n            100% { transform: scale(1.5); opacity: 0; } \n        }\n\n        footer {\n            text-align: center;\n            padding: 30px;\n            background: rgba(0,0,0,0.2);\n            color: rgba(255,255,255,0.6);\n            margin-top: 50px;\n            font-size: 1rem;\n        }\n    <\/style>\n<style>html,body{min-height:0!important} html{overflow:hidden} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } <\/style>\n<style id=\"engliforce-readable-pickle-type-v2\">\n/* Betere leesbaarheid in Pickles. Werking en originele kleuren niet aangepast. */\nbody { font-size: 18px; line-height: 1.5; }\nheader p { font-size: 1.15rem; }\nh1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }\nh2 { font-size: 2rem; }\n.language-select label { font-size: 1.14rem; }\n.draggable-word { font-size: 1.14rem; line-height: 1.4; }\n.sentence-box p { font-size: 1.14rem; line-height: 1.55; }\n.drop-zone { min-height: 62px; height: auto; padding: 4px; box-sizing: border-box; }\n.btn { font-size: 1.54rem; }\nselect, input { font-size: 1.06rem; }\n.grid .card { font-size: 1.18rem; }\n.turn { font-size: 2rem; }\n.score, .scoreboard { font-size: 1.17rem; }\n.result { font-size: 2.4rem; }\n.instructions { font-size: 1.15rem; line-height: 1.6; }\n.hint-text { font-size: 1.3rem; line-height: 1.5; }\nlabel { font-size: 1.2rem; }\n.word-card label { font-size: 1.3rem; }\n.back-to-vocab { font-size: 1.16rem; }\nfooter { font-size: 1.06rem; }\n@media (max-width: 650px) {\n  body { font-size: 17px; }\n  h1 { font-size: clamp(1.75rem, 6vw, 2.45rem); }\n  .language-select label { font-size: 1.05rem; }\n  .draggable-word { font-size: 1.07rem; }\n  .sentence-box p { font-size: 1.08rem; }\n  .grid .card { font-size: 1.04rem; padding: 6px; }\n  .btn { font-size: 1.28rem; padding: 13px 17px; }\n  .hint-text { font-size: 1.15rem; }\n}\n<\/style>\n<\/head>\n<body>\n\n<header>\n    <h1>PICKLE 1: GOING OUT<\/h1>\n    <p>sleep de woorden naar de juiste omschrijving<\/p>\n<\/header>\n\n<div class=\"container\">\n    <div class=\"language-select\">\n        <label><input type=\"radio\" name=\"language\" value=\"nl\" checked onchange=\"setupGame()\"> nederlands<\/label>\n        <label><input type=\"radio\" name=\"language\" value=\"en\" onchange=\"setupGame()\"> english<\/label>\n        <label><input type=\"radio\" name=\"language\" value=\"mixed\" onchange=\"setupGame()\"> mixed mode<\/label>\n    <\/div>\n\n    <div class=\"word-bank\" id=\"wordBank\"><\/div>\n    <div class=\"exercise-grid\" id=\"sentenceGrid\"><\/div>\n\n    <div class=\"button-row\">\n        <button class=\"btn\" onclick=\"checkAnswers(event)\">controleer ✅<\/button>\n        <button class=\"btn\" style=\"background:var(--hero-purple-main); border-bottom-color:var(--hero-purple-dark);\" onclick=\"setupGame()\">opnieuw 🔁<\/button>\n        <button class=\"btn\" onclick=\"returnToVocab()\">← Terug naar Vocab<\/button>\n    <\/div>\n<\/div>\n\n<footer>\n    &copy; 2026 EngliForce: Make English Your Superpower!\n<\/footer>\n\n<script>\n    const vocabData = {\"a fair\": {\"nl\": \"Een evenement met attracties, spelletjes en kraampjes.\", \"en\": \"An event with rides, games and food stalls.\"}, \"a shopping centre\": {\"nl\": \"Een groot gebouw met veel verschillende winkels.\", \"en\": \"A large building with lots of different shops.\"}, \"a meeting point\": {\"nl\": \"Een plek waar mensen hebben afgesproken om elkaar te zien.\", \"en\": \"A place where people agree to meet.\"}, \"a queue\": {\"nl\": \"Een rij mensen die op hun beurt wachten.\", \"en\": \"A line of people waiting for their turn.\"}, \"an entrance fee\": {\"nl\": \"Het bedrag dat je betaalt om ergens naar binnen te mogen.\", \"en\": \"The money you pay to enter a place or event.\"}, \"to meet up\": {\"nl\": \"Met vrienden afspreken om elkaar ergens te zien.\", \"en\": \"To arrange to see someone somewhere.\"}, \"to hang out\": {\"nl\": \"Op een ontspannen manier tijd doorbrengen met vrienden.\", \"en\": \"To spend time relaxing with friends.\"}, \"to invite\": {\"nl\": \"Iemand vragen om naar een feestje of activiteit te komen.\", \"en\": \"To ask someone to come to an event or activity.\"}, \"to book\": {\"nl\": \"Vooraf kaartjes of een plaats reserveren.\", \"en\": \"To reserve a place or tickets before an event.\"}, \"to grab a bite\": {\"nl\": \"Informeel: even ergens iets gaan eten.\", \"en\": \"To eat something, usually quickly and informally.\"}, \"to arrive\": {\"nl\": \"Op de plek komen waar je naartoe ging.\", \"en\": \"To reach the place where you were going.\"}, \"to pick someone up\": {\"nl\": \"Ergens naartoe gaan om iemand met je mee te nemen.\", \"en\": \"To go somewhere to collect someone and take them with you.\"}, \"to be up for something\": {\"nl\": \"Er zin in hebben om iets te gaan doen.\", \"en\": \"To feel like doing something.\"}, \"to tag along\": {\"nl\": \"Met andere mensen meegaan, ook als je niet eerst was uitgenodigd.\", \"en\": \"To go somewhere with other people, often without an invitation.\"}, \"to have a good time\": {\"nl\": \"Ergens van genieten en het naar je zin hebben.\", \"en\": \"To enjoy yourself while doing something.\"}};\n\n    function setupGame() {\n        const wordBank = document.getElementById('wordBank');\n        const sentenceGrid = document.getElementById('sentenceGrid');\n        wordBank.innerHTML = '';\n        sentenceGrid.innerHTML = '';\n\n        const allWords = Object.keys(vocabData);\n        const selectedWords = allWords.sort(() => 0.5 - Math.random()).slice(0, 10);\n                \n        [...selectedWords].sort().forEach(word => {\n            const el = document.createElement('div');\n            el.className = 'draggable-word';\n            el.textContent = word;\n            el.draggable = true;\n            el.addEventListener('dragstart', e => e.dataTransfer.setData(\"text\", word));\n            wordBank.appendChild(el);\n        });\n\n        const lang = document.querySelector('input[name=\"language\"]:checked').value;\n        \n        selectedWords.forEach((word, index) => {\n            let desc = lang === 'en' ? vocabData[word].en :\n                       lang === 'nl' ? vocabData[word].nl :\n                       (Math.random() > 0.5 ? vocabData[word].nl : vocabData[word].en);\n\n            const box = document.createElement('div');\n            box.className = 'sentence-box';\n            box.innerHTML = `\n                <p><strong>mission ${index + 1}:<\/strong> ${desc}<\/p>\n                <div class=\"drop-zone\" data-word=\"${word}\"><\/div>\n            `;\n            \n            const zone = box.querySelector('.drop-zone');\n            zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });\n            zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));\n            zone.addEventListener('drop', e => {\n                e.preventDefault();\n                zone.classList.remove('drag-over');\n                const droppedWord = e.dataTransfer.getData(\"text\");\n                zone.innerHTML = `<div class=\"draggable-word\" draggable=\"true\">${droppedWord}<\/div>`;\n                zone.querySelector('.draggable-word').addEventListener('dragstart', ev => ev.dataTransfer.setData(\"text\", droppedWord));\n            });\n            \n            sentenceGrid.appendChild(box);\n        });\n    }\n\n    function checkAnswers(e) {\n        let allCorrect = true;\n        document.querySelectorAll('.drop-zone').forEach(zone => {\n            const correctWord = zone.getAttribute('data-word');\n            const userWord = zone.textContent.trim();\n            zone.classList.remove('correct', 'wrong');\n\n            if (userWord === correctWord) {\n                zone.classList.add('correct');\n            } else if (userWord !== \"\") {\n                zone.classList.add('wrong');\n                allCorrect = false;\n            } else {\n                allCorrect = false;\n            }\n        });\n        \n        createExplosion(e, allCorrect ? 'mission complete!' : 'check again!');\n    }\n\n    function createExplosion(e, message) {\n        const txt = document.createElement('div');\n        txt.className = 'boom-text';\n        txt.innerText = message;\n        txt.style.left = (e.clientX - 50) + 'px';\n        txt.style.top = (e.clientY - 50) + 'px';\n        document.body.appendChild(txt);\n        setTimeout(() => txt.remove(), 600);\n    }\n\n    function returnToVocab() { window.parent.postMessage({type:'engliforce-nav',view:'vocab'}, '*'); }\n    window.onload = setupGame;\n<\/script>\n\n<script>\n(function(){\n  function report(){\n    const height=Math.ceil(document.body.scrollHeight);\n    window.parent.postMessage({type:'engliforce-height',height:height},'*');\n  }\n  window.addEventListener('load',report);\n  if ('ResizeObserver' in window) new ResizeObserver(report).observe(document.body);\n  document.addEventListener('click',()=>setTimeout(report,90));\n  setTimeout(report,80);\n})();\n<\/script>\n<\/body>\n<\/html>", "pickle2": "<!DOCTYPE html>\n<html lang=\"nl\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>EngliForce Pickle: Going Out Grid Challenge<\/title>\n    <style>\n        :root {\n            --hero-purple-main: #43a047;\n            --hero-purple-dark: #388e3c;\n            --hero-yellow: #ffb703;\n            --hero-cyan: #81c784;\n            --dark-bg: #0b1a2a;\n            --hero-orange: #43a047;\n        }\n\n        body {\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);\n            color: white;\n            margin: 0;\n            padding: 0;\n            min-height: 100vh;\n        }\n\n        header {\n            background: var(--hero-purple-main);\n            padding: 2rem 1rem;\n            text-align: center;\n            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);\n            border-bottom: 5px solid var(--hero-yellow);\n        }\n\n        h1 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            font-size: 3rem; \n            margin: 0; \n            text-shadow: 3px 3px 0px var(--hero-purple-dark); \n        }\n\n        h2 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            color: var(--hero-yellow); \n            text-align: center; \n            margin-top: 20px; \n        }\n\n        main { \n            max-width: 800px; \n            margin: 20px auto; \n            padding: 20px; \n            text-align: center; \n        }\n\n        section {\n            background: rgba(16, 42, 67, 0.8);\n            border-radius: 20px;\n            padding: 2rem;\n            border: 2px solid var(--hero-cyan);\n            box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n        }\n\n        /* Setup Area */\n        .setup {\n            display: flex;\n            justify-content: center;\n            flex-wrap: wrap;\n            gap: 10px;\n            margin-bottom: 20px;\n        }\n\n        select, input {\n            padding: 12px;\n            border-radius: 10px;\n            border: 2px solid var(--hero-purple-main);\n            background: #0b1a2a;\n            color: white;\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n        }\n\n        /* The Grid */\n        .grid {\n            display: grid;\n            grid-template-columns: repeat(3, 1fr);\n            grid-gap: 15px;\n            justify-content: center;\n            margin: 30px auto;\n            max-width: 450px;\n        }\n\n        .card {\n            aspect-ratio: 1 / 1;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            text-align: center;\n            font-size: 1rem;\n            font-weight: bold;\n            background: var(--hero-purple-dark);\n            border: 3px solid var(--hero-cyan);\n            border-radius: 15px;\n            cursor: pointer;\n            padding: 10px;\n            transition: 0.3s;\n            color: white;\n            overflow: hidden;\n            word-break: break-word;\n        }\n\n        .hiddenText { \n            color: transparent !important; \n            background: var(--hero-purple-main) !important; \n        }\n\n        .correct { \n            background-color: #4caf50 !important; \n            border-color: #81c784 !important; \n        }\n\n        .incorrect { \n            background-color: var(--hero-orange) !important; \n            border-color: #a5d6a7 !important; \n        }\n\n        /* UI Elements */\n        .turn { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            font-size: 1.8rem; \n            color: var(--hero-yellow); \n            margin: 20px 0; \n            min-height: 40px; \n        }\n\n        .score { \n            font-size: 1.2rem; \n            margin-top: 20px; \n            color: var(--hero-cyan); \n        }\n\n        .result { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            font-size: 2.5rem; \n            margin-top: 20px; \n            color: #fff; \n        }\n\n        .btn {\n            background: var(--hero-orange);\n            color: white;\n            border: none;\n            padding: 15px 30px;\n            border-radius: 50px;\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 1.5rem;\n            cursor: pointer;\n            border-bottom: 5px solid #388e3c;\n            transition: 0.2s;\n            margin: 10px;\n        }\n\n        .btn:hover:not(:disabled) { \n            transform: translateY(-3px); \n            filter: brightness(1.1); \n        }\n\n        .btn:disabled { \n            opacity: 0.5; \n            cursor: not-allowed; \n        }\n\n        .btn-start { \n            background: var(--hero-purple-main); \n            border-bottom-color: var(--hero-purple-dark); \n        }\n\n        .confetti { \n            font-size: 40px; \n            animation: pop 0.5s ease-in-out; \n            display: inline-block; \n        }\n\n        @keyframes pop { \n            0% { transform: scale(0); } \n            100% { transform: scale(1); } \n        }\n\n        footer {\n            text-align: center;\n            padding: 30px;\n            color: rgba(255,255,255,0.5);\n            margin-top: 50px;\n        }\n    <\/style>\n<style>html,body{min-height:0!important} html{overflow:hidden} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } <\/style>\n<style id=\"engliforce-readable-pickle-type-v2\">\n/* Betere leesbaarheid in Pickles. Werking en originele kleuren niet aangepast. */\nbody { font-size: 18px; line-height: 1.5; }\nheader p { font-size: 1.15rem; }\nh1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }\nh2 { font-size: 2rem; }\n.language-select label { font-size: 1.14rem; }\n.draggable-word { font-size: 1.14rem; line-height: 1.4; }\n.sentence-box p { font-size: 1.14rem; line-height: 1.55; }\n.drop-zone { min-height: 62px; height: auto; padding: 4px; box-sizing: border-box; }\n.btn { font-size: 1.54rem; }\nselect, input { font-size: 1.06rem; }\n.grid .card { font-size: 1.18rem; }\n.turn { font-size: 2rem; }\n.score, .scoreboard { font-size: 1.17rem; }\n.result { font-size: 2.4rem; }\n.instructions { font-size: 1.15rem; line-height: 1.6; }\n.hint-text { font-size: 1.3rem; line-height: 1.5; }\nlabel { font-size: 1.2rem; }\n.word-card label { font-size: 1.3rem; }\n.back-to-vocab { font-size: 1.16rem; }\nfooter { font-size: 1.06rem; }\n@media (max-width: 650px) {\n  body { font-size: 17px; }\n  h1 { font-size: clamp(1.75rem, 6vw, 2.45rem); }\n  .language-select label { font-size: 1.05rem; }\n  .draggable-word { font-size: 1.07rem; }\n  .sentence-box p { font-size: 1.08rem; }\n  .grid .card { font-size: 1.04rem; padding: 6px; }\n  .btn { font-size: 1.28rem; padding: 13px 17px; }\n  .hint-text { font-size: 1.15rem; }\n}\n<\/style>\n<\/head>\n<body>\n\n<header>\n    <h1>PICKLE 2: GOING OUT GRID<\/h1>\n    <p>Onthoud de posities en vind het juiste woord!<\/p>\n<\/header>\n\n<main>\n    <section>\n        <div class=\"setup\">\n            <select id=\"playerMode\">\n                <option value=\"1\">1 player<\/option>\n                <option value=\"2\">2 players<\/option>\n            <\/select>\n            <input type=\"text\" id=\"player1\" placeholder=\"Name player 1\" />\n            <input type=\"text\" id=\"player2\" placeholder=\"Name player 2\" />\n            <select id=\"direction\">\n                <option value=\"en-nl\">English → Dutch<\/option>\n                <option value=\"nl-en\">Dutch → English<\/option>\n            <\/select>\n            <button class=\"btn btn-start\" onclick=\"startGame()\">Start mission<\/button>\n        <\/div>\n\n        <div class=\"turn\" id=\"turnDisplay\"><\/div>\n        <div class=\"grid\" id=\"grid\"><\/div>\n\n        <div class=\"controls\">\n            <button class=\"btn\" onclick=\"showQuestion()\" id=\"readyBtn\" disabled>Ready!!<\/button>\n            <button class=\"btn\" onclick=\"nextRound()\" id=\"nextBtn\" style=\"display: none;\">Next round<\/button>\n        <\/div>\n\n        <div class=\"score\" id=\"scoreDisplay\"><\/div>\n        <div class=\"result\" id=\"resultDisplay\"><\/div>\n        <button class=\"btn\" type=\"button\" onclick=\"returnToVocab()\">← Terug naar Vocab<\/button>\n    <\/section>\n<\/main>\n\n<footer>\n    &copy; 2026 EngliForce: Make English Your Superpower!\n<\/footer>\n\n<script>\n    const wordList = [{\"en\": \"a fair\", \"nl\": \"een kermis\"}, {\"en\": \"a shopping centre\", \"nl\": \"een winkelcentrum\"}, {\"en\": \"a meeting point\", \"nl\": \"een ontmoetingsplek\"}, {\"en\": \"a queue\", \"nl\": \"een wachtrij\"}, {\"en\": \"an entrance fee\", \"nl\": \"een toegangsprijs\"}, {\"en\": \"to meet up\", \"nl\": \"afspreken\"}, {\"en\": \"to hang out\", \"nl\": \"rondhangen\"}, {\"en\": \"to invite\", \"nl\": \"uitnodigen\"}, {\"en\": \"to book\", \"nl\": \"boeken / reserveren\"}, {\"en\": \"to grab a bite\", \"nl\": \"iets gaan eten\"}, {\"en\": \"to arrive\", \"nl\": \"aankomen\"}, {\"en\": \"to pick someone up\", \"nl\": \"iemand ophalen\"}, {\"en\": \"to be up for something\", \"nl\": \"ergens zin in hebben\"}, {\"en\": \"to tag along\", \"nl\": \"met iemand meegaan\"}, {\"en\": \"to have a good time\", \"nl\": \"het leuk hebben\"}];\n\n    let currentGrid = [];\n    let correctIndex = -1;\n    let currentPlayer = 0;\n    let players = [];\n    let scores = [];\n    let rounds = [];\n    let mode = 1;\n    let direction = \"en-nl\";\n    const totalRounds = 5;\n    function returnToVocab() { window.parent.postMessage({type:'engliforce-nav',view:'vocab'}, '*'); }\n\n    function getRandomWords(count) {\n        return [...wordList].sort(() => 0.5 - Math.random()).slice(0, count);\n    }\n\n    function startGame() {\n        mode = parseInt(document.getElementById(\"playerMode\").value);\n        direction = document.getElementById(\"direction\").value;\n\n        const p1 = document.getElementById(\"player1\").value.trim() || \"agent 1\";\n        const p2 = document.getElementById(\"player2\").value.trim() || \"agent 2\";\n\n        players = mode === 2 ? [p1, p2] : [p1];\n        scores = Array(players.length).fill(0);\n        rounds = Array(players.length).fill(0);\n        currentPlayer = 0;\n\n        document.getElementById(\"resultDisplay\").innerHTML = \"\";\n        document.getElementById(\"nextBtn\").style.display = \"none\";\n        document.getElementById(\"readyBtn\").disabled = false;\n\n        newGrid();\n    }\n\n    function newGrid() {\n        if (players.length === 0) return;\n        currentGrid = getRandomWords(9);\n        correctIndex = -1;\n\n        const grid = document.getElementById(\"grid\");\n        grid.innerHTML = \"\";\n        currentGrid.forEach((word, i) => {\n            const div = document.createElement(\"div\");\n            div.className = \"card\";\n            div.textContent = direction === \"en-nl\" ? word.en : word.nl;\n            div.dataset.index = i;\n            grid.appendChild(div);\n        });\n\n        updateTurn();\n    }\n\n    function showQuestion() {\n        if (players.length === 0) return;\n        correctIndex = Math.floor(Math.random() * 9);\n        const targetWord = direction === \"en-nl\"\n            ? currentGrid[correctIndex].nl\n            : currentGrid[correctIndex].en;\n\n        document.getElementById(\"turnDisplay\").innerHTML =\n            `missie: waar zit \"<strong>${targetWord}<\/strong>\"?`;\n\n        document.querySelectorAll(\".card\").forEach(card => {\n            card.classList.remove(\"correct\", \"incorrect\");\n            card.classList.add(\"hiddenText\");\n            card.onclick = () => checkAnswer(parseInt(card.dataset.index), card);\n        });\n\n        document.getElementById(\"nextBtn\").style.display = \"none\";\n        document.getElementById(\"readyBtn\").disabled = true;\n    }\n\n    function checkAnswer(index, card) {\n        const all = document.querySelectorAll(\".card\");\n        all.forEach(c => {\n            c.classList.remove(\"hiddenText\");\n            c.onclick = null;\n        });\n\n        if (index === correctIndex) {\n            card.classList.add(\"correct\");\n            scores[currentPlayer]++;\n        } else {\n            card.classList.add(\"incorrect\");\n            all[correctIndex].classList.add(\"correct\");\n        }\n\n        rounds[currentPlayer]++;\n        updateScore();\n        document.getElementById(\"nextBtn\").style.display = \"inline-block\";\n    }\n\n    function nextRound() {\n        document.getElementById(\"nextBtn\").style.display = \"none\";\n\n        if ((mode === 2 && rounds[0] >= totalRounds && rounds[1] >= totalRounds) ||\n            (mode === 1 && rounds[0] >= totalRounds)) {\n            showWinner();\n        } else {\n            currentPlayer = (currentPlayer + 1) % players.length;\n            newGrid();\n            document.getElementById(\"readyBtn\").disabled = false;\n        }\n    }\n\n    function updateTurn() {\n        if (players.length > 0) {\n            document.getElementById(\"turnDisplay\").innerHTML = `turn: ${players[currentPlayer]}`;\n        }\n        updateScore();\n    }\n\n    function updateScore() {\n        if (players.length === 0) return;\n        const html = players.map((name, i) =>\n            `🎯 ${name}: ${scores[i]} (${rounds[i]}/${totalRounds})`\n        ).join(\" | \");\n        document.getElementById(\"scoreDisplay\").innerHTML = html;\n    }\n\n    function showWinner() {\n        const res = document.getElementById(\"resultDisplay\");\n        document.getElementById(\"turnDisplay\").innerHTML = \"mission accomplished!\";\n        if (mode === 1) {\n            res.innerHTML = `🎉 score: ${scores[0]} / ${totalRounds} <span class=\"confetti\">🎊<\/span>`;\n        } else if (scores[0] > scores[1]) {\n            res.innerHTML = `🏆 ${players[0]} wins! <span class=\"confetti\">🎊<\/span>`;\n        } else if (scores[1] > scores[0]) {\n            res.innerHTML = `🏆 ${players[1]} wins! <span class=\"confetti\">🎊<\/span>`;\n        } else {\n            res.innerHTML = `🤝 iT'S A TIE! <span class=\"confetti\">🎊<\/span>`;\n        }\n    }\n<\/script>\n\n<script>\n(function(){\n  function report(){\n    const height=Math.ceil(document.body.scrollHeight);\n    window.parent.postMessage({type:'engliforce-height',height:height},'*');\n  }\n  window.addEventListener('load',report);\n  if ('ResizeObserver' in window) new ResizeObserver(report).observe(document.body);\n  document.addEventListener('click',()=>setTimeout(report,90));\n  setTimeout(report,80);\n})();\n<\/script>\n<\/body>\n<\/html>", "pickle3": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>EngliForce Pickle: Going Out Detective<\/title>\n    <style>\n        :root {\n            --hero-purple-main: #43a047;\n            --hero-purple-dark: #388e3c;\n            --hero-yellow: #ffb703;\n            --hero-cyan: #81c784;\n            --dark-bg: #0b1a2a;\n            --hero-orange: #43a047;\n        }\n\n        body {\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);\n            color: white;\n            margin: 0;\n            padding: 0;\n            min-height: 100vh;\n            display: flex;\n            flex-direction: column;\n            align-items: center;\n        }\n\n        header {\n            width: 100%;\n            background: var(--hero-orange);\n            padding: 2rem 0;\n            text-align: center;\n            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);\n            border-bottom: 5px solid var(--hero-yellow);\n            margin-bottom: 20px;\n        }\n\n        h1 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            font-size: 3rem; \n            margin: 0; \n            text-shadow: 3px 3px 0px #388e3c; \n            color: white; \n        }\n\n        .container { \n            max-width: 700px; \n            width: 90%; \n            margin: 20px auto; \n        }\n\n        .section {\n            background: rgba(16, 42, 67, 0.8);\n            border-radius: 20px;\n            padding: 2rem;\n            border: 2px solid var(--hero-cyan);\n            box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n            margin-bottom: 20px;\n        }\n\n        .instructions { \n            font-size: 0.9rem; \n            color: var(--hero-cyan); \n            line-height: 1.5; \n            margin-bottom: 20px; \n            text-align: left; \n        }\n\n        label { \n            display: block; \n            margin-top: 1rem; \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            color: var(--hero-yellow); \n            font-size: 1.2rem; \n        }\n\n        input, select {\n            width: 100%;\n            padding: 12px;\n            margin-top: 5px;\n            border-radius: 10px;\n            border: 2px solid var(--hero-purple-main);\n            background: #0b1a2a;\n            color: white;\n            box-sizing: border-box;\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n        }\n\n        .btn {\n            background: var(--hero-orange);\n            color: white;\n            border: none;\n            padding: 15px 25px;\n            border-radius: 50px;\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 1.4rem;\n            cursor: pointer;\n            border-bottom: 5px solid #388e3c;\n            transition: 0.2s;\n            margin: 10px 5px 0 0;\n            width: 100%;\n        }\n\n        .btn:hover { \n            transform: translateY(-3px); \n            filter: brightness(1.1); \n        }\n\n        .btn-purple { \n            background: var(--hero-purple-main); \n            border-bottom-color: var(--hero-purple-dark); \n        }\n\n        .turn { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            font-size: 2.2rem; \n            color: var(--hero-yellow); \n            text-align: center; \n            margin-bottom: 10px; \n        }\n\n        .scoreboard {\n            display: flex;\n            justify-content: space-around;\n            background: rgba(0,0,0,0.3);\n            padding: 15px;\n            border-radius: 15px;\n            margin-bottom: 20px;\n            border: 1px solid var(--hero-purple-main);\n        }\n\n        .word-card {\n            background: #102a43;\n            border: 3px solid var(--hero-purple-main);\n            border-radius: 15px;\n            padding: 25px;\n            text-align: center;\n        }\n\n        .hint-text {\n            font-size: 1.2rem;\n            min-height: 60px;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            color: white;\n            font-style: italic;\n            margin: 20px 0;\n            background: rgba(0,0,0,0.2);\n            border-radius: 10px;\n            padding: 10px;\n        }\n\n        .answer-reveal {\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 2rem;\n            color: var(--hero-yellow);\n            display: none;\n            margin: 15px 0;\n            padding: 10px;\n            border: 2px dashed var(--hero-yellow);\n        }\n\n        footer {\n            text-align: center;\n            padding: 30px;\n            color: rgba(255,255,255,0.5);\n            width: 100%;\n        }\n\n        .flex-buttons { \n            display: grid; \n            grid-template-columns: 1fr 1fr; \n            gap: 10px; \n        }\n    <\/style>\n<style>html,body{min-height:0!important} html{overflow:hidden} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } <\/style>\n<style id=\"engliforce-readable-pickle-type-v2\">\n/* Betere leesbaarheid in Pickles. Werking en originele kleuren niet aangepast. */\nbody { font-size: 18px; line-height: 1.5; }\nheader p { font-size: 1.15rem; }\nh1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }\nh2 { font-size: 2rem; }\n.language-select label { font-size: 1.14rem; }\n.draggable-word { font-size: 1.14rem; line-height: 1.4; }\n.sentence-box p { font-size: 1.14rem; line-height: 1.55; }\n.drop-zone { min-height: 62px; height: auto; padding: 4px; box-sizing: border-box; }\n.btn { font-size: 1.54rem; }\nselect, input { font-size: 1.06rem; }\n.grid .card { font-size: 1.18rem; }\n.turn { font-size: 2rem; }\n.score, .scoreboard { font-size: 1.17rem; }\n.result { font-size: 2.4rem; }\n.instructions { font-size: 1.15rem; line-height: 1.6; }\n.hint-text { font-size: 1.3rem; line-height: 1.5; }\nlabel { font-size: 1.2rem; }\n.word-card label { font-size: 1.3rem; }\n.back-to-vocab { font-size: 1.16rem; }\nfooter { font-size: 1.06rem; }\n@media (max-width: 650px) {\n  body { font-size: 17px; }\n  h1 { font-size: clamp(1.75rem, 6vw, 2.45rem); }\n  .language-select label { font-size: 1.05rem; }\n  .draggable-word { font-size: 1.07rem; }\n  .sentence-box p { font-size: 1.08rem; }\n  .grid .card { font-size: 1.04rem; padding: 6px; }\n  .btn { font-size: 1.28rem; padding: 13px 17px; }\n  .hint-text { font-size: 1.15rem; }\n}\n<\/style>\n<\/head>\n<body>\n\n<header>\n    <h1>PICKLE 3: GOING OUT DETECTIVE<\/h1>\n<\/header>\n\n<div class=\"container\">\n    <div class=\"section\" id=\"setup\">\n        <div class=\"instructions\">\n            🔎 <strong>Mission:<\/strong> Guess the going out word using as few hints as possible.<br>\n            🌟 <strong>Bonus:<\/strong> Use <strong>English<\/strong> hints for +1 extra point!\n        <\/div>\n        \n        <label>Number of Agents:<\/label>\n        <select id=\"playerCount\" onchange=\"togglePlayer2()\">\n            <option value=\"1\">1 Agent<\/option>\n            <option value=\"2\" selected>2 Agents<\/option>\n        <\/select>\n        \n        <label>Agent 1:<\/label>\n        <input type=\"text\" id=\"player1\" placeholder=\"Name of Agent 1\" />\n        \n        <div id=\"player2Section\">\n            <label>Agent 2:<\/label>\n            <input type=\"text\" id=\"player2\" placeholder=\"Name of Agent 2\" />\n        <\/div>\n        \n        <button class=\"btn\" style=\"margin-top: 30px;\" onclick=\"startGame()\">Start Mission 🚀<\/button>\n    <\/div>\n\n    <div id=\"game\" style=\"display: none;\">\n        <div class=\"turn\" id=\"turnIndicator\">Turn: ...<\/div>\n        \n        <div class=\"scoreboard\">\n            <div><span id=\"name1\"><\/span>: <span id=\"score1\" style=\"color:var(--hero-yellow)\">0<\/span><\/div>\n            <div id=\"p2ScoreDisplay\"><span id=\"name2\"><\/span>: <span id=\"score2\" style=\"color:var(--hero-yellow)\">0<\/span><\/div>\n        <\/div>\n        \n        <div class=\"word-card\">\n            <div class=\"answer-reveal\" id=\"word-reveal\">Answer: ...<\/div>\n            \n            <label>Hint Language:<\/label>\n            <select id=\"hintLanguage\" onchange=\"resetClue()\">\n                <option value=\"nl\">Dutch<\/option>\n                <option value=\"en\">English (Bonus +1)<\/option>\n            <\/select>\n            \n            <div class=\"hint-text\" id=\"hintBox\">Click 'Next Hint' to start<\/div>\n            \n            <div class=\"flex-buttons\">\n                <button class=\"btn btn-purple\" onclick=\"nextHint()\">Next Hint 💡<\/button>\n                <button class=\"btn btn-purple\" onclick=\"showWord()\">Show Answer 👁️<\/button>\n                <button class=\"btn\" style=\"background:#4caf50; border-color:#2e7d32;\" onclick=\"correctGuess()\">Correct ✅<\/button>\n                <button class=\"btn\" style=\"background:var(--hero-orange); border-color:#388e3c;\" onclick=\"wrongGuess()\">Wrong ❌<\/button>\n            <\/div>\n        <\/div>\n    <\/div>\n    <button class=\"btn\" type=\"button\" onclick=\"returnToVocab()\">← Terug naar Vocab<\/button>\n<\/div>\n\n<footer>\n    &copy; 2026 EngliForce: Make English Your Superpower!\n<\/footer>\n\n<script>\n    const wordList = [{\"en\": \"a fair\", \"hints\": {\"nl\": [\"Je kunt hier heen met vrienden.\", \"Er zijn attracties en spelletjes.\", \"Je kunt er bijvoorbeeld in het reuzenrad.\"], \"en\": [\"It is a fun place to visit.\", \"There are games and rides.\", \"You might go on a big wheel.\"]}}, {\"en\": \"a shopping centre\", \"hints\": {\"nl\": [\"Dit is een gebouw in de stad.\", \"Er zijn veel verschillende winkels.\", \"Je kunt hier met vrienden winkelen.\"], \"en\": [\"You can go here after school.\", \"There are many shops in one place.\", \"You can buy clothes and gifts here.\"]}}, {\"en\": \"a meeting point\", \"hints\": {\"nl\": [\"Je kiest deze plek voordat je weggaat.\", \"Je vrienden weten waar ze naartoe moeten.\", \"Het is de plek waar je elkaar ontmoet.\"], \"en\": [\"You decide on this before going out.\", \"Everyone knows where to wait.\", \"It is the place where friends meet.\"]}}, {\"en\": \"a queue\", \"hints\": {\"nl\": [\"Je ziet dit vaak bij een attractie.\", \"Je moet soms lang wachten.\", \"Mensen staan achter elkaar in een rij.\"], \"en\": [\"You might see this outside a cinema.\", \"You need to wait for your turn.\", \"People stand in a line.\"]}}, {\"en\": \"an entrance fee\", \"hints\": {\"nl\": [\"Je hebt dit niet overal nodig.\", \"Je betaalt dit voordat je naar binnen gaat.\", \"Dit is de prijs om binnen te komen.\"], \"en\": [\"You pay this before you go inside.\", \"It could cost five pounds.\", \"It is the price to enter.\"]}}, {\"en\": \"to meet up\", \"hints\": {\"nl\": [\"Je kunt dit na school doen.\", \"Je maakt een afspraak met vrienden.\", \"Je spreekt met iemand af om elkaar te zien.\"], \"en\": [\"You often do this with friends.\", \"You plan a place and time.\", \"You arrange to see each other.\"]}}, {\"en\": \"to hang out\", \"hints\": {\"nl\": [\"Dit doe je vaak met vrienden.\", \"Je hebt niet altijd een speciaal plan.\", \"Je brengt samen ontspannen tijd door.\"], \"en\": [\"You can do this in the park.\", \"You do not need a special plan.\", \"You spend relaxed time with friends.\"]}}, {\"en\": \"to invite\", \"hints\": {\"nl\": [\"Dit kun je met een berichtje doen.\", \"Je vraagt iemand om mee te gaan.\", \"Je vraagt iemand te komen naar jouw feestje.\"], \"en\": [\"You can do this by text message.\", \"You ask someone to join you.\", \"You ask a friend to come to a party.\"]}}, {\"en\": \"to book\", \"hints\": {\"nl\": [\"Je doet dit vaak voordat je ergens heen gaat.\", \"Je kunt het online doen.\", \"Je reserveert bijvoorbeeld tickets voor de bioscoop.\"], \"en\": [\"You often do this before an event.\", \"You can do it online.\", \"You reserve tickets in advance.\"]}}, {\"en\": \"to grab a bite\", \"hints\": {\"nl\": [\"Je hebt trek na school.\", \"Je gaat even ergens eten.\", \"Het is een informele uitdrukking voor iets gaan eten.\"], \"en\": [\"You feel hungry.\", \"You might stop at a café.\", \"It means getting something to eat.\"]}}, {\"en\": \"to arrive\", \"hints\": {\"nl\": [\"Dit gebeurt na je reis.\", \"Je bent niet meer onderweg.\", \"Je komt op je bestemming aan.\"], \"en\": [\"This happens at the end of a journey.\", \"You reach the cinema or station.\", \"You get to your destination.\"]}}, {\"en\": \"to pick someone up\", \"hints\": {\"nl\": [\"Je gaat ergens heen voor een ander.\", \"Je kunt dit met de auto of fiets doen.\", \"Je haalt bijvoorbeeld een vriend op bij school.\"], \"en\": [\"You go to a place for another person.\", \"You might do it by car.\", \"You collect a friend and go together.\"]}}, {\"en\": \"to be up for something\", \"hints\": {\"nl\": [\"Een vriend vraagt of je iets wilt doen.\", \"Je hebt er wel zin in.\", \"Je staat ervoor open om mee te gaan.\"], \"en\": [\"A friend suggests a plan.\", \"You feel like joining.\", \"You want to do the suggested activity.\"]}}, {\"en\": \"to tag along\", \"hints\": {\"nl\": [\"Je vrienden hebben al een plan.\", \"Je vraagt of jij ook mee mag.\", \"Je gaat met anderen mee.\"], \"en\": [\"Your friends already have a plan.\", \"You ask whether you can join them.\", \"You go with other people.\"]}}, {\"en\": \"to have a good time\", \"hints\": {\"nl\": [\"Dit wil je tijdens een uitje.\", \"Je lacht en geniet.\", \"Je hebt het gezellig en naar je zin.\"], \"en\": [\"You feel happy at an event.\", \"You laugh and enjoy yourself.\", \"You enjoy the time you spend together.\"]}}];\n\n    let words = [];\n    let p1 = '', p2 = '', playerCount = 2;\n    let score = [0, 0];\n    let currentIndex = 0;\n    let currentHint = 0;\n    let currentPlayer = 0;\n\n    function returnToVocab() { window.parent.postMessage({type:'engliforce-nav',view:'vocab'}, '*'); }\n    function togglePlayer2() {\n        const val = document.getElementById(\"playerCount\").value;\n        document.getElementById(\"player2Section\").style.display = (val === \"1\") ? \"none\" : \"block\";\n    }\n\n    function startGame() {\n        playerCount = parseInt(document.getElementById(\"playerCount\").value);\n        p1 = document.getElementById(\"player1\").value || \"Agent 1\";\n        p2 = document.getElementById(\"player2\").value || \"Agent 2\";\n\n        // Kopieer de lijst en schud hem volledig willekeurig door elkaar\n        words = [...wordList].sort(() => Math.random() - 0.5);\n\n        score = [0, 0];\n        currentIndex = 0;\n        currentPlayer = 0;\n\n        document.getElementById(\"name1\").textContent = p1;\n        document.getElementById(\"name2\").textContent = (playerCount === 2) ? p2 : \"\";\n        document.getElementById(\"p2ScoreDisplay\").style.visibility = (playerCount === 2) ? \"visible\" : \"hidden\";\n\n        document.getElementById(\"setup\").style.display = \"none\";\n        document.getElementById(\"game\").style.display = \"block\";\n        updateScore();\n        showTurn();\n        resetWordCard();\n    }\n\n    function showTurn() {\n        const name = currentPlayer === 0 ? p1 : p2;\n        document.getElementById(\"turnIndicator\").textContent = (playerCount === 1) ? `Agent: ${p1}` : `Turn: ${name}`;\n    }\n\n    function resetWordCard() {\n        currentHint = 0;\n        document.getElementById(\"hintBox\").textContent = \"Click 'Next Hint' to start\";\n        document.getElementById(\"word-reveal\").style.display = \"none\";\n    }\n\n    function nextHint() {\n        if (currentIndex >= words.length) return;\n        if (currentHint >= 3) return;\n        const lang = document.getElementById(\"hintLanguage\").value;\n        const hint = words[currentIndex].hints[lang][currentHint];\n        document.getElementById(\"hintBox\").textContent = `Hint ${currentHint + 1}: ${hint}`;\n        currentHint++;\n    }\n\n    function showWord() {\n        if (currentIndex >= words.length) return;\n        document.getElementById(\"word-reveal\").textContent = `Answer: ${words[currentIndex].en}`;\n        document.getElementById(\"word-reveal\").style.display = \"block\";\n    }\n\n    function correctGuess() {\n        if (currentIndex >= words.length) return;\n        const lang = document.getElementById(\"hintLanguage\").value;\n        let points = Math.max(1, 4 - currentHint);\n        if (lang === \"en\") points += 1;\n        score[currentPlayer] += points;\n        nextWord();\n    }\n\n    function wrongGuess() {\n        if (currentIndex >= words.length) return;\n        nextWord();\n    }\n\n    function nextWord() {\n        currentIndex++;\n        if (playerCount === 2) currentPlayer = 1 - currentPlayer;\n        updateScore();\n        if (currentIndex >= words.length) {\n            document.getElementById(\"turnIndicator\").textContent = \"Mission Accomplished!\";\n            document.getElementById(\"hintBox\").textContent = \"All words discovered!\";\n            document.getElementById(\"word-reveal\").style.display = \"none\";\n        } else {\n            showTurn();\n            resetWordCard();\n        }\n    }\n\n    function updateScore() {\n        document.getElementById(\"score1\").textContent = score[0] + \" pt\";\n        document.getElementById(\"score2\").textContent = score[1] + \" pt\";\n    }\n\n    function resetClue() {\n        if (currentIndex >= words.length) return;\n        if (currentHint > 0) {\n            const lang = document.getElementById(\"hintLanguage\").value;\n            const hint = words[currentIndex].hints[lang][currentHint - 1];\n            document.getElementById(\"hintBox\").textContent = `Hint ${currentHint}: ${hint}`;\n        }\n    }\n<\/script>\n\n<script>\n(function(){\n  function report(){\n    const height=Math.ceil(document.body.scrollHeight);\n    window.parent.postMessage({type:'engliforce-height',height:height},'*');\n  }\n  window.addEventListener('load',report);\n  if ('ResizeObserver' in window) new ResizeObserver(report).observe(document.body);\n  document.addEventListener('click',()=>setTimeout(report,90));\n  setTimeout(report,80);\n})();\n<\/script>\n<\/body>\n<\/html>"};
+  const pickleFrames={};
+  const loaded={pickle1:false,pickle2:false,pickle3:false};
+  const vocabPage=document.getElementById('vocab-page');
+  for(const key of Object.keys(pickleDocuments)) pickleFrames[key]=document.getElementById('frame-'+key);
+  window.showPage=function(key){
+    if(key!=='vocab' && !Object.prototype.hasOwnProperty.call(pickleFrames,key))return;
+    // Pause the video when leaving the vocabulary view.
+    if(key!=='vocab'){
+      const host=document.getElementById('youtube-host');
+      if(host)host.replaceChildren();
+      const button=document.getElementById('load-video-btn');
+      if(button)button.style.display='';
+    }
+    if(key!=='vocab' && !loaded[key]){
+      loaded[key]=true;
+      pickleFrames[key].srcdoc=pickleDocuments[key];
+    }
+    vocabPage.classList.toggle('hidden-page',key!=='vocab');
+    for(const [name,frame] of Object.entries(pickleFrames)){
+      frame.classList.toggle('active',name===key);
+      frame.setAttribute('aria-hidden',name===key?'false':'true');
+    }
+    window.scrollTo({top:0,behavior:'instant'});
+  };
+  window.addEventListener('message',event=>{
+    const source=Object.keys(pickleFrames).find(key=>pickleFrames[key].contentWindow===event.source);
+    if(!source||!event.data||typeof event.data!=='object')return;
+    if(event.data.type==='engliforce-nav' && event.data.view==='vocab') showPage('vocab');
+    if(event.data.type==='engliforce-height' && Number.isFinite(event.data.height)){
+      pickleFrames[source].style.height=Math.max(200,Math.min(20000,event.data.height+3))+'px';
+    }
+  });
+  showPage('vocab');
+})();
+</script>
+</body>
+</html>
