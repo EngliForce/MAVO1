@@ -211,6 +211,15 @@
 #vocab-page .video-fallback a {color:var(--hero-yellow);text-decoration:underline;}
 @media(max-width:650px){#vocab-page .video-privacy-notice{font-size:1.06rem;}#vocab-page .theme-video-card{padding:14px;}}
 </style>
+
+<style>
+/* Zelfde terugnavigatie als bij de Mission 2 Grammar Briefings. */
+.ef-mission-back-nav { display:flex; justify-content:center; align-items:center; max-width:1200px; margin:12px auto 25px; padding:0 16px; }
+.ef-mission-back-link { display:inline-flex; align-items:center; justify-content:center; gap:8px; max-width:100%; padding:13px 24px; background:#388e3c; color:#fff !important; border:2px solid #81c784; border-bottom:5px solid #246829; border-radius:50px; text-decoration:none !important; font-family:'Trebuchet MS',Arial,sans-serif; font-size:1.06rem; font-weight:800; letter-spacing:.35px; line-height:1.25; text-align:center; box-shadow:0 5px 17px rgba(0,0,0,.32); transition:transform .16s ease,background .16s ease; }
+.ef-mission-back-link:hover { background:#43a047; transform:translateY(-2px); }
+.ef-mission-back-link:focus-visible { outline:3px solid #ffb703; outline-offset:3px; }
+@media(max-width:530px) { .ef-mission-back-link { font-size:.96rem; padding:12px 17px; width:100%; max-width:400px; } }
+</style>
 </head>
 <body>
 <div id="vocab-page">
@@ -220,6 +229,10 @@
     <h1>ENGLIFORCE ACADEMY</h1>
     <p>MISSION 2: LEISURE</p>
 </header>
+
+<nav class="ef-mission-back-nav" aria-label="Terug naar Mission 2">
+  <a class="ef-mission-back-link" href="m1_mission_2.html">← TERUG NAAR MISSION 2</a>
+</nav>
 
 <main>
     <section class="briefing-box">
@@ -320,6 +333,10 @@
         </div>
     </div>
 </main>
+
+<nav class="ef-mission-back-nav" aria-label="Terug naar Mission 2">
+  <a class="ef-mission-back-link" href="m1_mission_2.html">← TERUG NAAR MISSION 2</a>
+</nav>
 
 <footer><p>&copy; 2026 EngliForce: Make English Your Superpower!</p></footer>
 </div>
