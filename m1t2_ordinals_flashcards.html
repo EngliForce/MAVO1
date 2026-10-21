@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flashcards – Rangtelwoorden 1–101</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flashcards – Rangtelwoorden 1–101</title>
+<style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fff8f0;
@@ -134,40 +134,36 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="EngliForce logo" />
-    <h1>Rangtelwoorden 1 t/m 101</h1>
-    <p>Klik op een kaart om de vertaling te zien. Oefen slim!</p>
-  </header>
-
-  <div class="controls">
-    <label>
+<header>
+<img alt="EngliForce logo" src="logo.png"/>
+<h1>Rangtelwoorden 1 t/m 101</h1>
+<p>Klik op een kaart om de vertaling te zien. Oefen slim!</p>
+</header>
+<div class="controls">
+<label>
       Aantal kaarten:
       <select id="card-count">
-        <option value="1">1</option>
-        <option value="2" selected>2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </label>
-    <label>
-      <input type="checkbox" id="reverse-cards" />
+<option value="1">1</option>
+<option selected="" value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</label>
+<label>
+<input id="reverse-cards" type="checkbox"/>
       Nederlands → Engels
     </label>
-    <button onclick="generateCards()">Next 🔁</button>
-    <button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
-    <button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
-    <button onclick="practiceAll()">Oefen alles 🔄</button>
-  </div>
-
-  <div class="flashcards-container" id="flashcards-container"></div>
-
-  <footer>
-    <p>&copy; 2025 EngliForce – Make English Your Superpower!</p>
-  </footer>
-
-  <script>
+<button onclick="generateCards()">Next 🔁</button>
+<button onclick="practiceUnknown()">Oefen ‘ken ik niet’ 🎯</button>
+<button onclick="practiceKnown()">Oefen ‘ken ik wel’ ✅</button>
+<button onclick="practiceAll()">Oefen alles 🔄</button>
+</div>
+<div class="flashcards-container" id="flashcards-container"></div>
+<footer>
+<p>© 2025 EngliForce – Make English Your Superpower!</p>
+</footer>
+<script>
     const flashcards = [
       { en: "1st – first", nl: "eerste" },
       { en: "2nd – second", nl: "tweede" },
@@ -360,5 +356,3 @@
   </script>
 </body>
 </html>
-
-

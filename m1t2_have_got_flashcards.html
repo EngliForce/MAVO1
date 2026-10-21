@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flashcards – Have Got</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flashcards – Have Got</title>
+<style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f0fff8; /* lichtgroene achtergrond */
@@ -124,25 +123,21 @@
   </style>
 </head>
 <body>
-
-  <header>
-    <img src="Logo.png" alt="Englix Logo">
-    <h1>📘 Flashcards – Have Got</h1>
-  </header>
-
-  <div class="tabs">
-    <button class="tab-button active" onclick="showTab(0)">Bevestigend – Volledig</button>
-    <button class="tab-button" onclick="showTab(1)">Bevestigend – Afgekort</button>
-    <button class="tab-button" onclick="showTab(2)">Ontkennend – Volledig</button>
-    <button class="tab-button" onclick="showTab(3)">Ontkennend – Afgekort</button>
-  </div>
-
-  <div id="tab-0" class="flashcards-container active"></div>
-  <div id="tab-1" class="flashcards-container"></div>
-  <div id="tab-2" class="flashcards-container"></div>
-  <div id="tab-3" class="flashcards-container"></div>
-
-  <script>
+<header>
+<img alt="Englix Logo" src="Logo.png"/>
+<h1>📘 Flashcards – Have Got</h1>
+</header>
+<div class="tabs">
+<button class="tab-button active" onclick="showTab(0)">Bevestigend – Volledig</button>
+<button class="tab-button" onclick="showTab(1)">Bevestigend – Afgekort</button>
+<button class="tab-button" onclick="showTab(2)">Ontkennend – Volledig</button>
+<button class="tab-button" onclick="showTab(3)">Ontkennend – Afgekort</button>
+</div>
+<div class="flashcards-container active" id="tab-0"></div>
+<div class="flashcards-container" id="tab-1"></div>
+<div class="flashcards-container" id="tab-2"></div>
+<div class="flashcards-container" id="tab-3"></div>
+<script>
     const sets = [
       [ // Bevestigend – Volledig
         ["I", "have got"], ["You", "have got"], ["He", "has got"], ["She", "has got"], ["It", "has got"],
@@ -199,10 +194,8 @@
     // Initialize all sets
     sets.forEach((set, i) => createFlashcards(`tab-${i}`, set));
   </script>
-
-  <footer style="background-color: #e0f2f1; text-align: center; padding: 1rem; font-size: 0.9rem;">
-    <p>&copy; 2025 Englix – Make English Your Superpower!</p>
-  </footer>
-
+<footer style="background-color: #e0f2f1; text-align: center; padding: 1rem; font-size: 0.9rem;">
+<p>© 2025 Englix – Make English Your Superpower!</p>
+</footer>
 </body>
 </html>
