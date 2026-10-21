@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; frame-src 'self' about: https://www.youtube-nocookie.com; child-src 'self' about: https://www.youtube-nocookie.com; connect-src 'none'; font-src 'none'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <title>EngliForce Academy: Mission 2 – Leisure | Vocabulary Briefing</title>
+    <style>
+        :root {
+            --hero-purple-main: #43a047; /* Aangepast van paars naar oranje */
+            --hero-purple-dark: #388e3c; /* Donkeroranje variant */
+            --hero-yellow: #ffb703;
+            --hero-cyan: #81c784;
+            --dark-bg: #0b1a2a;
+            --hero-orange: #43a047;
+            --thumb-up: #4caf50;
+            --success-green: #2ecc71;
+        }
+        body {
+            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        header {
+            background: var(--hero-purple-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+        }
+        h1 { font-family: Impact, 'Arial Narrow', sans-serif, cursive; font-size: 3.5rem; letter-spacing: 3px; margin: 0; text-shadow: 4px 4px 0px var(--hero-purple-dark); }
+        h2 { font-family: Impact, 'Arial Narrow', sans-serif, cursive; color: var(--hero-yellow); font-size: 2.2rem; margin-top: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); display: inline-block; padding-bottom: 5px; }
+        h3 { color: var(--hero-cyan); font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.8rem; margin-top: 0;}
+        main { max-width: 1200px; margin: 20px auto; padding: 20px; text-align: center; }
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-cyan), transparent);
+            margin: 50px 0;
+            opacity: 0.8;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-cyan);
+        }
+        .briefing-box {
+            background: rgba(16, 42, 67, 0.9);
+            border: 2px solid var(--hero-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+        .explanation-text {
+            font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;
+            border-left: 4px solid var(--hero-orange); padding-left: 20px;
+            background: rgba(67, 160, 71, 0.05); padding-top: 10px; padding-bottom: 10px;
+        }
+        .keyword { color: var(--hero-orange); font-weight: 700; }
+        .toggle-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        .btn-toggle {
+            background: var(--hero-purple-main); color: white; border: none;
+            padding: 10px 20px; border-radius: 50px; font-family: Impact, 'Arial Narrow', sans-serif, cursive;
+            font-size: 1.1rem; cursor: pointer; transition: 0.2s; border-bottom: 4px solid var(--hero-purple-dark);
+        }
+        .btn-toggle:hover { transform: translateY(-2px); background: var(--hero-cyan); color: var(--hero-purple-dark); }
+        .btn-video { background: var(--hero-orange); border-bottom-color: #388e3c; }
+        .btn-video:hover { background: #66bb6a; color: white; }
+
+        .table-container { overflow-x:auto; width: 100%; border-radius: 15px; background: #102a43; overflow: hidden; margin-top: 20px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--hero-purple-main); padding: 15px; text-align: left; font-family: Impact, 'Arial Narrow', sans-serif; }
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* FLASHCARDS */
+        .controls { background: rgba(16, 42, 67, 0.8); padding: 20px; border-radius: 15px; border: 1px solid var(--hero-cyan); display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; margin-bottom: 30px; }
+        .controls label { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.1rem; color: var(--hero-cyan); display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .flashcards-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 20px; min-height: 300px; }
+        
+        .card { width: 280px; height: 260px; perspective: 1000px; position: relative; transition: transform 0.4s, opacity 0.4s; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; border: 4px solid var(--hero-cyan); }
+        .card-front { background: var(--hero-purple-dark); color: white; font-size: 1.8rem; font-family: Impact, 'Arial Narrow', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; }
+        .card-back { background: var(--hero-yellow); color: var(--dark-bg); transform: rotateY(180deg); font-size: 1.6rem; font-family: Impact, 'Arial Narrow', sans-serif; }
+        
+        /* Bekend Status */
+        .known-btn {
+            margin-top: 15px;
+            background: rgba(0,0,0,0.1);
+            color: var(--dark-bg);
+            border: 2px solid var(--dark-bg);
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .known-btn:hover { background: rgba(0,0,0,0.2); transform: scale(1.05); }
+        .card.is-known .card-front { border-color: var(--success-green); box-shadow: 0 0 15px rgba(46, 204, 113, 0.6); }
+
+        .card-example { font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif; font-size: 0.85rem; margin-top: 10px; font-style: italic; color: rgba(255,255,255,0.8); backface-visibility: hidden; }
+        .card-back .card-example { color: rgba(0,0,0,0.7); }
+
+        /* PICKLE GRID */
+        .pickle-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 20px; }
+        .mission-card { background: #102a43; border: 3px solid #243b53; border-radius: 20px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; width: 220px; display: flex; flex-direction: column; justify-content: space-between; }
+        .mission-card:hover { border-color: var(--hero-yellow); transform: translateY(-5px); }
+        .mission-card .title { font-family: Impact, 'Arial Narrow', sans-serif; font-size: 1.5rem; color: var(--hero-yellow); margin: 5px 0; }
+        .like-btn { background: rgba(255, 255, 255, 0.05); border: 2px solid var(--hero-cyan); border-radius: 10px; color: white; padding: 8px; margin-top: 15px; cursor: pointer; transition: 0.3s; font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .like-btn.liked { background: var(--thumb-up); border-color: white; }
+
+        /* EFFECTS */
+        .flash-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1999; }
+        .boom-text { position: fixed; pointer-events: none; font-family: Impact, 'Arial Narrow', sans-serif, cursive; color: var(--hero-yellow); font-size: 4rem; z-index: 2001; text-shadow: 3px 3px 0px #000; animation: boomAnim 0.6s ease-out forwards; }
+        @keyframes boomAnim { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } }
+        footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+    </style>
+<style>html{overflow-x:hidden;overflow-y:auto} body{overflow-y:visible} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } </style>
+<style>
+#vocab-page.hidden-page {display:none !important;}
+.pickle-page {display:none;width:100%;height:800px;min-height:800px;border:0;overflow:hidden;background:#05101a;}
+.pickle-page.active {display:block;}
+</style>
+<style id="engliforce-readable-type-v2">
+/* Grotere, beter leesbare letters: alleen typografie; kleuren, navigatie en YouTube ongewijzigd. */
+#vocab-page { font-size: 19px; line-height: 1.5; }
+#vocab-page header p { font-size: 1.35rem; }
+#vocab-page .explanation-text { font-size: 1.25rem; line-height: 1.65; }
+#vocab-page .toggle-container .btn-toggle { font-size: 1.3rem; padding: 12px 24px; }
+#vocab-page .content-section table { font-size: 1.2rem; line-height: 1.45; }
+#vocab-page .content-section th { font-size: 1.3rem; padding: 16px 18px; }
+#vocab-page .content-section td { font-size: 1.2rem; padding: 14px 18px; }
+#vocab-page .content-section td small { font-size: 0.95em; line-height: 1.5; }
+#vocab-page .controls label { font-size: 1.24rem; }
+#vocab-page .controls select { font-size: 1.08rem; padding: 5px 7px; }
+#vocab-page .controls .btn-toggle { font-size: 1.06rem !important; }
+#vocab-page .card { width: 300px; height: 285px; }
+#vocab-page .card-front { font-size: 2rem; }
+#vocab-page .card-back { font-size: 1.85rem; }
+#vocab-page .card-example { font-size: 1rem; line-height: 1.4; }
+#vocab-page .known-btn { font-size: 1rem; }
+#vocab-page .mission-card .title { font-size: 1.88rem; }
+#vocab-page .mission-card p { font-size: 1.18rem; line-height: 1.4; }
+#vocab-page .like-btn { font-size: 1.12rem; }
+#vocab-page footer { font-size: 1.05rem; }
+
+@media (max-width: 650px) {
+  #vocab-page { font-size: 18px; }
+  #vocab-page .explanation-text { font-size: 1.12rem; }
+  #vocab-page .toggle-container .btn-toggle { font-size: 1.12rem; padding: 10px 16px; }
+  #vocab-page .content-section th { font-size: 1.1rem; padding: 13px 12px; }
+  #vocab-page .content-section td { font-size: 1.09rem; padding: 12px; overflow-wrap:anywhere; }
+  #vocab-page .card { width: min(100%, 320px); height: 270px; }
+  #vocab-page .card-front { font-size: 1.85rem; }
+  #vocab-page .card-back { font-size: 1.75rem; }
+  #vocab-page .controls { gap: 12px; }
+  #vocab-page .mission-card { width: min(100%, 270px); }
+}
+</style>
+
+<style id="theme2-review-style">
+/* Keuzeschuifjes: geen extra scripts, geen externe diensten. */
+.theme-selector{max-width:1000px;margin:0 auto 32px;padding:20px 22px;background:#102a43;border:2px solid #43a047;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.theme-selector-heading{margin:0 0 14px;text-align:center;font-size:1.3rem;font-weight:700;color:#fff}
+.theme-toggle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.theme-switch{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:66px;padding:11px 16px;background:#091d31;border:2px solid #365669;border-radius:14px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.theme-switch[data-selected="true"]{border-color:#81c784;background:#113826}
+.theme-switch:focus-within{outline:3px solid #ffb703;outline-offset:2px}
+.theme-switch-name{font-size:1.16rem;line-height:1.35;font-weight:700;color:#f8fafc;flex:1}
+.theme-switch input{appearance:none;-webkit-appearance:none;box-sizing:border-box;position:relative;margin:0;flex:none;width:53px;height:30px;border-radius:99px;background:#526879;border:2px solid #97a7b6;cursor:pointer;transition:background .2s,border-color .2s}
+.theme-switch input:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:transform .2s}
+.theme-switch input:checked{background:#43a047;border-color:#81c784}
+.theme-switch input:checked:before{transform:translateX(22px)}
+.theme-selection-count{margin:14px 0 0;text-align:center;color:#d3f0da;font-size:1.08rem;font-weight:700}
+.theme-selection-tip{margin:6px 0 0;text-align:center;color:#bfceda;font-size:.97rem}
+#vocab-page .theme-header-row td{background:#244c43;color:#ffdc72;font-size:1.22rem;font-weight:bold;letter-spacing:.25px;padding:13px 18px}
+#vocab-page .table-container{overflow-x:auto}
+#vocab-page .content-section table{min-width:450px}
+#vocab-page #context-list .table-container table{min-width:520px}
+#vocab-page #context-table-body small{display:block;margin-top:5px}
+#vocab-page .controls{text-align:center}
+@media(max-width:650px){
+  .theme-selector{padding:14px 12px}
+  .theme-toggle-grid{grid-template-columns:1fr;gap:9px}
+  .theme-switch{min-height:58px;padding:9px 13px}
+  .theme-switch-name{font-size:1.08rem}
+  #vocab-page .content-section table{min-width:0}
+  #vocab-page #context-list .table-container table{min-width:0}
+  #vocab-page .theme-header-row td{font-size:1.08rem}
+}
+
+/* Video: dezelfde groen/donkere EngliForce-stijl; iframes worden pas na klik toegevoegd. */
+#vocab-page .video-privacy-notice {font-size:1.15rem;line-height:1.55;max-width:960px;margin:0 auto 24px;text-align:left;}
+#vocab-page .theme-video-list {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px;align-items:start;text-align:left;}
+#vocab-page .theme-video-card {background:#102a43;border:2px solid #81c784;border-radius:18px;padding:22px;min-width:0;}
+#vocab-page .theme-video-card h4 {font-size:1.4rem;margin:0 0 14px;color:var(--hero-yellow);}
+#vocab-page .video-activate {font-size:1.2rem;padding:12px 22px;}
+#vocab-page .video-frame-shell {position:relative;width:100%;aspect-ratio:16/9;border:4px solid #43a047;border-radius:12px;overflow:hidden;box-sizing:border-box;margin-top:16px;}
+#vocab-page .video-frame-shell iframe {position:absolute;inset:0;width:100%;height:100%;border:0;}
+#vocab-page .video-fallback {font-size:1.02rem;line-height:1.45;margin:12px 0 0;}
+#vocab-page .video-fallback a {color:var(--hero-yellow);text-decoration:underline;}
+@media(max-width:650px){#vocab-page .video-privacy-notice{font-size:1.06rem;}#vocab-page .theme-video-card{padding:14px;}}
+</style>
+</head>
+<body>
+<div id="vocab-page">
+
+<div class="flash-effect" id="flash"></div>
+<header>
+    <h1>ENGLIFORCE ACADEMY</h1>
+    <p>MISSION 2: LEISURE</p>
+</header>
+
+<main>
+    <section class="briefing-box">
+        <h2>🚨 MISSION: VOCABULARY BRIEFING</h2>
+        <div class="explanation-text">
+            Kies zelf welke woordenlijsten van Mission 2 je wilt oefenen: <strong>Sports, Hobbies, Entertainment</strong> en <strong>Going Out</strong>. Bekijk de woorden en contextzinnen, leer met flashcards en speel de drie Pickles.
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <div class="toggle-container">
+        <button class="btn-toggle" onclick="showSection(event, 'vocab-list', 'ZAP!')">Lijst</button>
+        <button class="btn-toggle" onclick="showSection(event, 'context-list', 'KA-POW!')">Context</button>
+        <button class="btn-toggle" onclick="showSection(event, 'flashcards-section', 'BOOST!')">Flashcards</button>
+        <button class="btn-toggle btn-video" onclick="showSection(event, 'video-section', 'BOOM!')">Video</button>
+    </div>
+
+
+    <section class="theme-selector" aria-labelledby="theme-choice-heading">
+        <h2 id="theme-choice-heading" class="theme-selector-heading">Welke woordenlijsten wil je oefenen?</h2>
+        <div class="theme-toggle-grid" role="group" aria-label="Kies één of meer woordenlijsten">
+            <label class="theme-switch" data-selected="true"><span class="theme-switch-name">⚽ 2.1 Sports</span><input type="checkbox" role="switch" data-theme="sports" checked onchange="changeThemeToggle(this)" aria-label="Sports oefenen"></label>
+            <label class="theme-switch" data-selected="true"><span class="theme-switch-name">🎨 2.2 Hobbies</span><input type="checkbox" role="switch" data-theme="hobbies" checked onchange="changeThemeToggle(this)" aria-label="Hobbies oefenen"></label>
+            <label class="theme-switch" data-selected="true"><span class="theme-switch-name">🎬 2.3 Entertainment</span><input type="checkbox" role="switch" data-theme="entertainment" checked onchange="changeThemeToggle(this)" aria-label="Entertainment oefenen"></label>
+            <label class="theme-switch" data-selected="true"><span class="theme-switch-name">🎟️ 2.4 Going Out</span><input type="checkbox" role="switch" data-theme="goingout" checked onchange="changeThemeToggle(this)" aria-label="Going Out oefenen"></label>
+        </div>
+        <p id="selected-count" class="theme-selection-count" role="status" aria-live="polite">4 lijsten geselecteerd · 60 woorden</p>
+        <p class="theme-selection-tip">Zet de schuifjes aan of uit. Je keuze geldt ook voor alle drie de Pickles.</p>
+    </section>
+
+    <div id="vocab-list" class="content-section" style="display: block;">
+        <h3>Tactisch Overzicht</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Engels</th><th>Nederlands</th></tr></thead>
+                <tbody id="vocab-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="context-list" class="content-section">
+        <h3>Action Lab (Zinnen)</h3>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Woord</th><th>Zin</th></tr></thead>
+                <tbody id="context-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="flashcards-section" class="content-section">
+        <h3>Flashcard Simulator</h3>
+        <div class="controls">
+            <label>Aantal: 
+                <select id="card-count" onchange="generateCards()">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15" selected>15</option>
+                    <option value="30">30</option>
+                    <option value="60">Alle beschikbare woorden</option>
+                </select>
+            </label>
+            <label><input type="checkbox" id="show-examples" onchange="generateCards()"> Voorbeelden</label>
+            <label><input type="checkbox" id="reverse-cards" onchange="generateCards()"> NL → EN</label>
+            <label style="color: var(--success-green);"><input type="checkbox" id="hide-known" onchange="generateCards()"> Verberg gekende woorden</label>
+            <button class="btn-toggle" onclick="resetKnown()" style="padding: 5px 10px; font-size: 0.8rem; background: #444;">Reset voortgang</button>
+            <button class="btn-toggle btn-action" onclick="generateCards()">Husselen 🔄</button>
+        </div>
+        <div class="flashcards-container" id="flashcards-container"></div>
+    </div>
+
+    <div id="video-section" class="content-section" aria-labelledby="video-section-title">
+        <h3 id="video-section-title">🎬 Uitspraak Training</h3>
+        <div class="briefing-box video-privacy-notice">
+            <strong>Privacy:</strong> De video's worden <strong>niet automatisch geladen</strong>.
+            Pas als je voor een video op <strong>Video starten</strong> klikt, maakt je browser
+            verbinding met YouTube. YouTube kan daarbij gegevens verwerken. We gebruiken
+            <strong>youtube-nocookie.com</strong>, maar dit sluit gegevensverwerking door YouTube niet volledig uit.
+        </div>
+        <div id="theme-video-list" class="theme-video-list" aria-live="polite"></div>
+    </div>
+    <div class="section-divider"></div>
+
+    <h2>⚔️ PICKLE MISSIONS</h2>
+    <div class="pickle-grid">
+        <div class="mission-card" onclick="openPickle(event, 'pickle1', 'CRUNCH!')">
+            <div><div class="title">🧩 Pickle 1</div><p>Drag & Drop • <span class="selected-words-count">60</span> woorden</p></div>
+            <button class="like-btn" onclick="toggleLike(event, this)">🏆 ACHIEVED</button>
+        </div>
+        <div class="mission-card" onclick="openPickle(event, 'pickle2', 'SQUASH!')">
+            <div><div class="title">🧠 Pickle 2</div><p>Vocab Grid • <span class="selected-words-count">60</span> woorden</p></div>
+            <button class="like-btn" onclick="toggleLike(event, this)">🏆 ACHIEVED</button>
+        </div>
+        <div class="mission-card" onclick="openPickle(event, 'pickle3', 'KABOOM!')">
+            <div><div class="title">🔎 Pickle 3</div><p>Vocab Detective • <span class="selected-words-count">60</span> woorden</p></div>
+            <button class="like-btn" onclick="toggleLike(event, this)">🏆 ACHIEVED</button>
+        </div>
+    </div>
+</main>
+
+<footer><p>&copy; 2026 EngliForce: Make English Your Superpower!</p></footer>
+</div>
+
+<iframe id="frame-pickle1" class="pickle-page" title="Pickle 1: Drag and Drop" scrolling="no"></iframe>
+<iframe id="frame-pickle2" class="pickle-page" title="Pickle 2: Vocab Grid" scrolling="no"></iframe>
+<iframe id="frame-pickle3" class="pickle-page" title="Pickle 3: Vocab Detective" scrolling="no"></iframe>
+
+
+<script>
+    /* Theme 2: 60 afgesproken leerwoorden uit de vier subthema’s. */
+    const flashcardsData = [{"en":"teammate","nl":"teamgenoot","exEN":"My teammate helps me during the match.","exNL":"Mijn teamgenoot helpt mij tijdens de wedstrijd.","theme":"sports"},{"en":"opponent","nl":"tegenstander","exEN":"Our opponent is very strong today.","exNL":"Onze tegenstander is vandaag erg sterk.","theme":"sports"},{"en":"referee","nl":"scheidsrechter","exEN":"The referee blows the whistle.","exNL":"De scheidsrechter blaast op het fluitje.","theme":"sports"},{"en":"pitch","nl":"(voetbal)veld","exEN":"We run onto the pitch before the game.","exNL":"We rennen het veld op voor de wedstrijd.","theme":"sports"},{"en":"changing room","nl":"kleedkamer","exEN":"We leave our bags in the changing room.","exNL":"We laten onze tassen in de kleedkamer.","theme":"sports"},{"en":"whistle","nl":"fluitje","exEN":"The coach uses a whistle at training.","exNL":"De coach gebruikt een fluitje bij de training.","theme":"sports"},{"en":"player","nl":"speler","exEN":"Every player wears a team shirt.","exNL":"Elke speler draagt een teamshirt.","theme":"sports"},{"en":"to practise","nl":"oefenen","exEN":"I practise football after school.","exNL":"Ik oefen na school voetbal.","theme":"sports"},{"en":"to warm up","nl":"opwarmen","exEN":"We always warm up before we play.","exNL":"We warmen altijd op voordat we spelen.","theme":"sports"},{"en":"to pass","nl":"overspelen","exEN":"Please pass the ball to me.","exNL":"Speel de bal alsjeblieft naar mij over.","theme":"sports"},{"en":"to throw","nl":"gooien","exEN":"She can throw the ball very far.","exNL":"Zij kan de bal heel ver gooien.","theme":"sports"},{"en":"to catch","nl":"vangen","exEN":"Can you catch this ball?","exNL":"Kun jij deze bal vangen?","theme":"sports"},{"en":"to shoot","nl":"schieten","exEN":"He wants to shoot at the goal.","exNL":"Hij wil op het doel schieten.","theme":"sports"},{"en":"to beat","nl":"verslaan","exEN":"Our team can beat the other team.","exNL":"Ons team kan het andere team verslaan.","theme":"sports"},{"en":"a draw","nl":"gelijkspel","exEN":"The match ends in a draw.","exNL":"De wedstrijd eindigt in een gelijkspel.","theme":"sports"},{"en":"leisure","nl":"vrije tijd","exEN":"In my leisure time, I like reading.","exNL":"In mijn vrije tijd lees ik graag.","highlight":"leisure","theme":"hobbies"},{"en":"an activity","nl":"een activiteit","exEN":"Swimming is a fun activity.","exNL":"Zwemmen is een leuke activiteit.","highlight":"activity","theme":"hobbies"},{"en":"a board game","nl":"een bordspel","exEN":"We play a board game after dinner.","exNL":"We spelen na het eten een bordspel.","highlight":"board game","theme":"hobbies"},{"en":"a collection","nl":"een verzameling","exEN":"He has a collection of football cards.","exNL":"Hij heeft een verzameling voetbalkaartjes.","highlight":"collection","theme":"hobbies"},{"en":"a skill","nl":"een vaardigheid","exEN":"Cooking is a useful skill.","exNL":"Koken is een nuttige vaardigheid.","highlight":"skill","theme":"hobbies"},{"en":"to write stories","nl":"verhalen schrijven","exEN":"She loves to write stories in her notebook.","exNL":"Zij schrijft graag verhalen in haar schrift.","highlight":"write stories","theme":"hobbies"},{"en":"to bake","nl":"bakken","exEN":"We bake biscuits on Saturday.","exNL":"Wij bakken op zaterdag koekjes.","highlight":"bake","theme":"hobbies"},{"en":"to build","nl":"bouwen","exEN":"They build models at home.","exNL":"Zij bouwen thuis modellen.","highlight":"build","theme":"hobbies"},{"en":"to take photos","nl":"foto's maken","exEN":"I take photos in the park.","exNL":"Ik maak foto's in het park.","highlight":"take photos","theme":"hobbies"},{"en":"to do crafts","nl":"knutselen","exEN":"We do crafts at school.","exNL":"Wij knutselen op school.","highlight":"do crafts","theme":"hobbies"},{"en":"to play a sport","nl":"een sport beoefenen","exEN":"My brother likes to play a sport after school.","exNL":"Mijn broer doet graag na school een sport.","highlight":"play a sport","theme":"hobbies"},{"en":"to play an instrument","nl":"een instrument bespelen","exEN":"Can you play an instrument?","exNL":"Kun jij een instrument bespelen?","highlight":"play an instrument","theme":"hobbies"},{"en":"to try out","nl":"uitproberen","exEN":"I want to try out a new hobby.","exNL":"Ik wil een nieuwe hobby uitproberen.","highlight":"try out","theme":"hobbies"},{"en":"to be keen on","nl":"dol zijn op","exEN":"She is keen on painting.","exNL":"Zij is dol op schilderen.","highlight":"keen on","theme":"hobbies"},{"en":"to be good at","nl":"goed zijn in","exEN":"He is good at baking.","exNL":"Hij is goed in bakken.","highlight":"good at","theme":"hobbies"},{"en":"a character","nl":"een personage","exEN":"My favourite character is funny and brave.","exNL":"Mijn favoriete personage is grappig en dapper.","highlight":"character","theme":"entertainment"},{"en":"a prequel","nl":"een voorverhaal","exEN":"We watched a prequel before the main film.","exNL":"We keken een voorverhaal voor de hoofdfilm.","highlight":"prequel","theme":"entertainment"},{"en":"subtitles","nl":"ondertiteling","exEN":"I use subtitles when I watch English series.","exNL":"Ik gebruik ondertiteling als ik Engelse series kijk.","highlight":"subtitles","theme":"entertainment"},{"en":"a sequel","nl":"een vervolg","exEN":"The sequel is even better than the first film.","exNL":"Het vervolg is nog beter dan de eerste film.","highlight":"sequel","theme":"entertainment"},{"en":"to watch","nl":"kijken naar","exEN":"We watch a film together on Friday night.","exNL":"Wij kijken op vrijdagavond samen naar een film.","highlight":"watch","theme":"entertainment"},{"en":"lyrics","nl":"songtekst","exEN":"I know the lyrics of this song by heart.","exNL":"Ik ken de songtekst van dit liedje uit mijn hoofd.","highlight":"lyrics","theme":"entertainment"},{"en":"a soundtrack","nl":"filmmuziek","exEN":"The soundtrack makes the film more exciting.","exNL":"De filmmuziek maakt de film spannender.","highlight":"soundtrack","theme":"entertainment"},{"en":"to release a song","nl":"een liedje uitbrengen","exEN":"The band will release a song next week.","exNL":"De band zal volgende week een liedje uitbrengen.","highlight":"release a song","theme":"entertainment"},{"en":"to sing along","nl":"meezingen","exEN":"We always sing along to this song.","exNL":"Wij zingen altijd mee met dit liedje.","highlight":"sing along","theme":"entertainment"},{"en":"to turn up the volume","nl":"het volume harder zetten","exEN":"Please turn up the volume a little.","exNL":"Zet het volume alsjeblieft een beetje harder.","highlight":"turn up the volume","theme":"entertainment"},{"en":"a reward","nl":"een beloning","exEN":"You get a reward after finishing the mission.","exNL":"Je krijgt een beloning na het afronden van de missie.","highlight":"reward","theme":"entertainment"},{"en":"a clue","nl":"een aanwijzing","exEN":"This clue helps you find the hidden door.","exNL":"Deze aanwijzing helpt je de verborgen deur te vinden.","highlight":"clue","theme":"entertainment"},{"en":"to unlock","nl":"vrijspelen","exEN":"You can unlock a new character in this game.","exNL":"Je kunt in dit spel een nieuw personage vrijspelen.","highlight":"unlock","theme":"entertainment"},{"en":"to complete a level","nl":"een level uitspelen","exEN":"She wants to complete a level before dinner.","exNL":"Zij wil voor het eten een level uitspelen.","highlight":"complete a level","theme":"entertainment"},{"en":"to get stuck","nl":"vastlopen","exEN":"I often get stuck in difficult games.","exNL":"Ik loop vaak vast in moeilijke games.","highlight":"get stuck","theme":"entertainment"},{"en":"a fair","nl":"een kermis","exEN":"We are going to the fair on Saturday.","exNL":"We gaan op zaterdag naar de kermis.","highlight":"fair","theme":"goingout"},{"en":"a shopping centre","nl":"een winkelcentrum","exEN":"Let's meet at the shopping centre.","exNL":"Laten we afspreken bij het winkelcentrum.","highlight":"shopping centre","theme":"goingout"},{"en":"a meeting point","nl":"een ontmoetingsplek","exEN":"The station is our meeting point.","exNL":"Het station is onze ontmoetingsplek.","highlight":"meeting point","theme":"goingout"},{"en":"a queue","nl":"een wachtrij","exEN":"We had to wait in a long queue.","exNL":"We moesten in een lange wachtrij wachten.","highlight":"queue","theme":"goingout"},{"en":"an entrance fee","nl":"een toegangsprijs","exEN":"The entrance fee is five pounds.","exNL":"De toegangsprijs is vijf pond.","highlight":"entrance fee","theme":"goingout"},{"en":"to meet up","nl":"afspreken","exEN":"I often meet up with my friends after school.","exNL":"Ik spreek na school vaak af met mijn vrienden.","highlight":"meet up","theme":"goingout"},{"en":"to hang out","nl":"rondhangen","exEN":"We like to hang out in town.","exNL":"We vinden het leuk om in de stad rond te hangen.","highlight":"hang out","theme":"goingout"},{"en":"to invite","nl":"uitnodigen","exEN":"I want to invite Sam to the cinema.","exNL":"Ik wil Sam uitnodigen voor de bioscoop.","highlight":"invite","theme":"goingout"},{"en":"to book","nl":"boeken / reserveren","exEN":"My mum will book the tickets online.","exNL":"Mijn moeder zal de kaartjes online boeken.","highlight":"book","theme":"goingout"},{"en":"to grab a bite","nl":"iets gaan eten","exEN":"Let's grab a bite after the film.","exNL":"Laten we na de film iets gaan eten.","highlight":"grab a bite","theme":"goingout"},{"en":"to arrive","nl":"aankomen","exEN":"We always arrive on time.","exNL":"We komen altijd op tijd aan.","highlight":"arrive","theme":"goingout"},{"en":"to pick someone up","nl":"iemand ophalen","exEN":"My dad will pick me up at eight.","exNL":"Mijn vader haalt mij om acht uur op.","highlight":"pick me up","theme":"goingout"},{"en":"to be up for something","nl":"ergens zin in hebben","exEN":"Are you up for going into town?","exNL":"Heb je zin om de stad in te gaan?","highlight":"up for","theme":"goingout"},{"en":"to tag along","nl":"met iemand meegaan","exEN":"Can I tag along with you?","exNL":"Kan ik met je meegaan?","highlight":"tag along","theme":"goingout"},{"en":"to have a good time","nl":"het leuk hebben","exEN":"We always have a good time together.","exNL":"We hebben het altijd leuk samen.","highlight":"have a good time","theme":"goingout"}];
+
+    let knownWords = []; try { knownWords = JSON.parse(localStorage.getItem('engliforce_theme2_review_known') || '[]'); } catch (_) {}
+
+    const themeTitles = {
+        sports: '2.1: Sports', hobbies: '2.2: Hobbies',
+        entertainment: '2.3: Entertainment', goingout: '2.4: Going Out'
+    };
+    const orderedThemes = ['sports','hobbies','entertainment','goingout'];
+    function getSelectedThemes() {
+        return [...document.querySelectorAll('.theme-switch input[data-theme]:checked')].map(input => input.dataset.theme);
+    }
+    function getFilteredData() {
+        const active = new Set(getSelectedThemes());
+        return flashcardsData.filter(item => active.has(item.theme));
+    }
+    function updateSelectionSummary(message) {
+        const selected=getSelectedThemes();
+        const amount=selected.length*15;
+        document.getElementById('selected-count').textContent=message || `${selected.length} ${selected.length===1?'lijst':'lijsten'} geselecteerd · ${amount} woorden`;
+        document.querySelectorAll('.selected-words-count').forEach(el=>el.textContent=amount);
+        document.querySelectorAll('.theme-switch').forEach(el=>el.dataset.selected=el.querySelector('input').checked?'true':'false');
+    }
+    function changeThemeToggle(control) {
+        if(getSelectedThemes().length===0) {
+            control.checked=true;
+            updateSelectionSummary('Kies minimaal één woordenlijst om te oefenen.');
+            return;
+        }
+        updateSelectionSummary();
+        renderLists(); generateCards();
+        renderVideoChoices();
+        if(typeof window.notifyPickleSelections==='function')window.notifyPickleSelections();
+    }
+    function renderLists() {
+        const vBody = document.getElementById('vocab-table-body');
+        const cBody = document.getElementById('context-table-body');
+        vBody.replaceChildren(); cBody.replaceChildren();
+        let lastTheme = '';
+        for (const item of getFilteredData()) {
+            if (item.theme !== lastTheme) {
+                lastTheme = item.theme;
+                for (const body of [vBody,cBody]) {
+                    const tr = document.createElement('tr');
+                    tr.className = 'theme-header-row';
+                    const td = document.createElement('td');
+                    td.colSpan = 2; td.textContent = 'VOCAB ' + themeTitles[item.theme];
+                    tr.appendChild(td); body.appendChild(tr);
+                }
+            }
+            const row = document.createElement('tr');
+            for (const value of [item.en,item.nl]) {
+                const td=document.createElement('td'); td.textContent=value; row.appendChild(td);
+            }
+            vBody.appendChild(row);
+            const contextRow=document.createElement('tr');
+            const wordCell=document.createElement('td');wordCell.textContent=item.en;
+            const contextCell=document.createElement('td');
+            const englishLine=document.createElement('div');
+            const term=item.highlight || item.en.replace(/^(to |a |an )/,'');
+            const lower=item.exEN.toLowerCase(), at=lower.indexOf(term.toLowerCase());
+            if(at>=0) {
+                englishLine.append(document.createTextNode(item.exEN.slice(0,at)));
+                const highlighted=document.createElement('span');
+                highlighted.className='keyword'; highlighted.textContent=item.exEN.slice(at,at+term.length);
+                englishLine.append(highlighted,document.createTextNode(item.exEN.slice(at+term.length)));
+            } else englishLine.textContent=item.exEN;
+            const dutchLine=document.createElement('small');
+            dutchLine.style.opacity='0.8'; dutchLine.textContent=item.exNL;
+            contextCell.append(englishLine,dutchLine);
+            contextRow.append(wordCell,contextCell); cBody.appendChild(contextRow);
+        }
+    }
+    function init() { updateSelectionSummary(); renderLists(); generateCards(); }
+
+    function generateCards() {
+        const container = document.getElementById('flashcards-container');
+        const countSelect = document.getElementById('card-count');
+        const count = countSelect.value === "60" ? getFilteredData().length : parseInt(countSelect.value,10);
+        const showEx = document.getElementById('show-examples').checked;
+        const reversed = document.getElementById('reverse-cards').checked;
+        const hideKnown = document.getElementById('hide-known').checked;
+        
+        container.innerHTML = '';
+        
+        let filteredData = [...getFilteredData()];
+        if (hideKnown) {
+            filteredData = filteredData.filter(word => !knownWords.includes(word.en));
+        }
+
+        let data = filteredData.sort(() => 0.5 - Math.random()).slice(0, count);
+        
+        if (data.length === 0 && hideKnown) {
+            container.innerHTML = "<p style='font-family:Impact,Arial,sans-serif; font-size:1.5rem; color:var(--hero-yellow);'>Missie volbracht! Geen ongekende woorden meer in deze selectie.</p>";
+            return;
+        }
+
+        data.forEach(word => {
+            const isKnown = knownWords.includes(word.en);
+            const cardWrap = document.createElement('div'); 
+            cardWrap.className = `card ${isKnown ? 'is-known' : ''}`;
+            
+            const inner = document.createElement('div'); 
+            inner.className = 'card-inner';
+            inner.onclick = () => cardWrap.classList.toggle('flipped');
+
+            const front = document.createElement('div'); 
+            front.className = 'card-front';
+            front.innerHTML = reversed ? word.nl : word.en;
+            if (showEx) front.innerHTML += `<div class="card-example">${reversed ? word.exNL : word.exEN}</div>`;
+
+            const back = document.createElement('div'); 
+            back.className = 'card-back';
+            back.innerHTML = reversed ? word.en : word.nl;
+            if (showEx) back.innerHTML += `<div class="card-example">${reversed ? word.exEN : word.exNL}</div>`;
+
+            const kBtn = document.createElement('button');
+            kBtn.className = 'known-btn';
+            
+            updateBtnStyle(kBtn, isKnown);
+            
+            kBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleKnown(e, word.en, cardWrap, kBtn);
+            };
+
+            back.appendChild(kBtn);
+            inner.appendChild(front); 
+            inner.appendChild(back);
+            cardWrap.appendChild(inner);
+            container.appendChild(cardWrap);
+        });
+    }
+
+    function toggleKnown(e, wordEn, cardElem, btn) {
+        const index = knownWords.indexOf(wordEn);
+        const hideKnown = document.getElementById('hide-known').checked;
+
+        if (index === -1) {
+            knownWords.push(wordEn);
+            createExplosion(e, 'CHECK!');
+            
+            if (hideKnown) {
+                cardElem.style.transform = 'scale(0)';
+                cardElem.style.opacity = '0';
+                setTimeout(() => generateCards(), 400);
+            } else {
+                cardElem.classList.add('is-known');
+                updateBtnStyle(btn, true);
+            }
+        } else {
+            knownWords.splice(index, 1);
+            createExplosion(e, 'RESET!');
+            cardElem.classList.remove('is-known');
+            updateBtnStyle(btn, false);
+        }
+        
+        try { localStorage.setItem('engliforce_theme2_review_known', JSON.stringify(knownWords)); } catch (_) {}
+    }
+
+    function updateBtnStyle(btn, isKnown) {
+        if (isKnown) {
+            btn.innerHTML = '✅ Gekend';
+            btn.style.background = 'var(--success-green)';
+            btn.style.color = 'white';
+            btn.style.borderColor = 'white';
+        } else {
+            btn.innerHTML = '✔️ Ken ik';
+            btn.style.background = 'rgba(0,0,0,0.1)';
+            btn.style.color = 'var(--dark-bg)';
+            btn.style.borderColor = 'var(--dark-bg)';
+        }
+    }
+
+    function resetKnown() {
+        if(confirm("Wil je al je voortgang wissen?")) {
+            knownWords = [];
+            try { localStorage.removeItem('engliforce_theme2_review_known'); } catch (_) {}
+            generateCards();
+        }
+    }
+
+    function toggleLike(e, btn) {
+        e.stopPropagation();
+        btn.classList.toggle('liked');
+        btn.innerText = btn.classList.contains('liked') ? '✅ ACHIEVED' : '🏆 ACHIEVED';
+        try { localStorage.setItem('engliforce_theme2_review_achieved', JSON.stringify(Array.from(document.querySelectorAll('.like-btn')).map(b => b.classList.contains('liked')))); } catch (_) {}
+        if(btn.classList.contains('liked')) createExplosion(e, 'AWESOME!');
+    }
+
+    function openPickle(e, url, msg) {
+        createExplosion(e, msg);
+        setTimeout(() => showPage(url), 250);
+    }
+
+    // Vier eerdere goedgekeurde videolinks; alleen geselecteerde thema's worden getoond.
+    const themeVideos = {
+        sports: {title: '⚽ 2.1 Sports', id: 'kCdqOqA2uHM'},
+        hobbies: {title: '🎨 2.2 Hobbies', id: 'FoKRWD0EtT4'},
+        entertainment: {title: '🎬 2.3 Entertainment', id: '85cgJcKKbGc'},
+        goingout: {title: '🎟️ 2.4 Going Out', id: '6lIz7ZjOvuc'}
+    };
+
+    function renderVideoChoices() {
+        const list = document.getElementById('theme-video-list');
+        if (!list) return;
+        list.replaceChildren(); // verwijdert ook eventuele lopende YouTube-spelers
+        for (const theme of getSelectedThemes()) {
+            const video = themeVideos[theme];
+            const card = document.createElement('article');
+            card.className = 'theme-video-card';
+            const heading = document.createElement('h4');
+            heading.textContent = video.title;
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'btn-toggle btn-video video-activate';
+            button.textContent = '▶ Video starten';
+            button.addEventListener('click', () => loadThemeVideo(theme, card, button));
+            card.append(heading, button);
+            list.appendChild(card);
+        }
+    }
+
+    function loadThemeVideo(theme, card, button) {
+        const video = themeVideos[theme];
+        if (!video || !getSelectedThemes().includes(theme) || card.querySelector('iframe,.video-fallback')) return;
+        const fallback = document.createElement('p');
+        fallback.className = 'video-fallback';
+        const link = document.createElement('a');
+        link.href = `https://www.youtube.com/watch?v=${video.id}`;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Video rechtstreeks op YouTube bekijken ↗';
+        if (location.protocol === 'file:') {
+            // YouTube kan op lokale file://-pagina's fout 153 tonen.
+            fallback.append('Voor de ingesloten speler publiceer je de pagina eerst op GitHub Pages. ', link);
+            card.appendChild(fallback);
+            button.hidden = true;
+            return;
+        }
+        const shell = document.createElement('div');
+        shell.className = 'video-frame-shell';
+        const iframe = document.createElement('iframe');
+        iframe.title = `${video.title} – YouTube no-cookie`;
+        iframe.src = `https://www.youtube-nocookie.com/embed/${video.id}?rel=0`;
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.allowFullscreen = true;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        shell.appendChild(iframe);
+        fallback.append('Werkt de speler niet? ', link);
+        card.append(shell, fallback);
+        button.hidden = true;
+    }
+
+    function showSection(e, id, msg) {
+        if (id !== 'video-section') renderVideoChoices(); // stopt video's bij verlaten tab
+        document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        createExplosion(e, msg);
+    }
+
+    function createExplosion(e, message) {
+        const x = e.clientX || window.innerWidth/2; 
+        const y = e.clientY || window.innerHeight/2;
+        const flash = document.getElementById('flash');
+        flash.style.opacity = '0.3'; 
+        document.body.classList.add('shake');
+        setTimeout(() => { flash.style.opacity = '0'; document.body.classList.remove('shake'); }, 200);
+        const txt = document.createElement('div'); 
+        txt.className = 'boom-text'; 
+        txt.innerText = message;
+        txt.style.left = (x - 50) + 'px'; 
+        txt.style.top = (y - 50) + 'px';
+        document.body.appendChild(txt); 
+        setTimeout(() => txt.remove(), 600);
+    }
+
+    function restoreAchieved() {
+        let saved = [];
+        try { saved = JSON.parse(localStorage.getItem('engliforce_theme2_review_achieved') || '[]'); } catch (_) {}
+        document.querySelectorAll('.like-btn').forEach((btn, index) => {
+          if (saved[index]) { btn.classList.add('liked'); btn.innerText = '✅ ACHIEVED'; }
+        });
+    }
+    window.onload = () => { init(); renderVideoChoices(); restoreAchieved(); };
+</script>
+
+<script>
+(function(){
+  const pickleDocuments={"pickle1":"<!DOCTYPE html>\n<html lang=\"nl\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>EngliForce Pickle: Theme 2 Drag & Drop<\/title>\n    <style>\n        :root {\n            --hero-purple-main: #43a047;\n            --hero-purple-dark: #388e3c;\n            --hero-yellow: #ffb703;\n            --hero-cyan: #81c784;\n            --dark-bg: #0b1a2a;\n            --hero-orange: #43a047;\n        }\n\n        body {\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);\n            color: white;\n            margin: 0;\n            padding: 0;\n            min-height: 100vh;\n        }\n\n        header {\n            background: var(--hero-purple-main);\n            padding: 2rem 1rem;\n            text-align: center;\n            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);\n            border-bottom: 5px solid var(--hero-yellow);\n        }\n\n        h1 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            font-size: 3rem; \n            margin: 0; \n            text-shadow: 3px 3px 0px var(--hero-purple-dark); \n        }\n\n        h2 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            color: var(--hero-yellow); \n            text-align: center; \n        }\n\n        .container { \n            max-width: 1000px; \n            margin: 20px auto; \n            padding: 20px; \n        }\n\n        .language-select {\n            display: flex;\n            justify-content: center;\n            gap: 20px;\n            margin-bottom: 30px;\n            background: rgba(255,255,255,0.05);\n            padding: 15px;\n            border-radius: 50px;\n            border: 1px solid var(--hero-cyan);\n        }\n\n        .language-select label { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            color: var(--hero-cyan); \n            cursor: pointer; \n        }\n\n        /* STICKY WORD BANK */\n        .word-bank {\n            display: flex;\n            flex-wrap: wrap;\n            gap: 12px;\n            justify-content: center;\n            margin-bottom: 40px;\n            padding: 20px;\n            background: rgba(16, 42, 67, 0.95);\n            border-radius: 20px;\n            border: 2px dashed var(--hero-cyan);\n            position: sticky;\n            top: 10px;\n            z-index: 1000;\n            box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n            backdrop-filter: blur(5px);\n        }\n\n        .draggable-word {\n            background: var(--hero-purple-main);\n            color: white;\n            padding: 8px 18px;\n            border-radius: 10px;\n            cursor: grab;\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            font-weight: bold;\n            font-size: 1rem;\n            border-bottom: 4px solid var(--hero-purple-dark);\n            user-select: none;\n            transition: 0.2s;\n        }\n\n        .draggable-word:active { \n            cursor: grabbing; \n            transform: scale(1.1); \n        }\n\n        .exercise-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));\n            gap: 20px;\n        }\n\n        .sentence-box {\n            background: #102a43;\n            border: 2px solid var(--hero-purple-main);\n            border-radius: 15px;\n            padding: 20px;\n            display: flex;\n            flex-direction: column;\n            gap: 10px;\n            box-shadow: 0 5px 15px rgba(0,0,0,0.2);\n        }\n\n        .sentence-box p { \n            margin: 0; \n            font-size: 0.95rem; \n            line-height: 1.4; \n            color: var(--hero-cyan); \n        }\n\n        .drop-zone {\n            height: 55px;\n            background: rgba(0,0,0,0.3);\n            border: 2px dashed #444;\n            border-radius: 10px;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            transition: 0.3s;\n        }\n\n        .drop-zone.drag-over { \n            background: rgba(129, 199, 132, 0.2); \n            border-color: var(--hero-cyan); \n        }\n\n        .correct { \n            border: 3px solid #4caf50 !important; \n            background: rgba(76, 175, 80, 0.1) !important; \n        }\n\n        .wrong { \n            border: 3px solid var(--hero-orange) !important; \n            background: rgba(67, 160, 71, 0.1) !important; \n        }\n\n        .button-row { \n            display: flex; \n            justify-content: center; \n            gap: 20px; \n            margin-top: 40px; \n            padding-bottom: 50px; \n        }\n\n        .btn {\n            background: var(--hero-orange);\n            color: white;\n            border: none;\n            padding: 15px 30px;\n            border-radius: 50px;\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 1.5rem;\n            cursor: pointer;\n            border-bottom: 5px solid #388e3c;\n            transition: 0.2s;\n        }\n\n        .btn:hover { \n            transform: translateY(-3px); \n        }\n\n        .boom-text {\n            position: fixed; \n            pointer-events: none; \n            font-family: Impact, 'Arial Narrow', sans-serif;\n            color: var(--hero-yellow); \n            font-size: 4rem; \n            z-index: 2000;\n            text-shadow: 3px 3px 0px #000; \n            animation: boom 0.6s ease-out forwards;\n        }\n\n        @keyframes boom { \n            0% { transform: scale(0); opacity: 1; } \n            100% { transform: scale(1.5); opacity: 0; } \n        }\n\n        footer {\n            text-align: center;\n            padding: 30px;\n            background: rgba(0,0,0,0.2);\n            color: rgba(255,255,255,0.6);\n            margin-top: 50px;\n            font-size: 1rem;\n        }\n    <\/style>\n<style>html,body{min-height:0!important} html{overflow:hidden} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } <\/style>\n<style id=\"engliforce-readable-pickle-type-v2\">\n/* Betere leesbaarheid in Pickles. Werking en originele kleuren niet aangepast. */\nbody { font-size: 18px; line-height: 1.5; }\nheader p { font-size: 1.15rem; }\nh1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }\nh2 { font-size: 2rem; }\n.language-select label { font-size: 1.14rem; }\n.draggable-word { font-size: 1.14rem; line-height: 1.4; }\n.sentence-box p { font-size: 1.14rem; line-height: 1.55; }\n.drop-zone { min-height: 62px; height: auto; padding: 4px; box-sizing: border-box; }\n.btn { font-size: 1.54rem; }\nselect, input { font-size: 1.06rem; }\n.grid .card { font-size: 1.18rem; }\n.turn { font-size: 2rem; }\n.score, .scoreboard { font-size: 1.17rem; }\n.result { font-size: 2.4rem; }\n.instructions { font-size: 1.15rem; line-height: 1.6; }\n.hint-text { font-size: 1.3rem; line-height: 1.5; }\nlabel { font-size: 1.2rem; }\n.word-card label { font-size: 1.3rem; }\n.back-to-vocab { font-size: 1.16rem; }\nfooter { font-size: 1.06rem; }\n@media (max-width: 650px) {\n  body { font-size: 17px; }\n  h1 { font-size: clamp(1.75rem, 6vw, 2.45rem); }\n  .language-select label { font-size: 1.05rem; }\n  .draggable-word { font-size: 1.07rem; }\n  .sentence-box p { font-size: 1.08rem; }\n  .grid .card { font-size: 1.04rem; padding: 6px; }\n  .btn { font-size: 1.28rem; padding: 13px 17px; }\n  .hint-text { font-size: 1.15rem; }\n}\n<\/style>\n<style>\n.review-pickle-filter{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;\n gap:10px;margin:16px auto 24px;padding:14px;background:#102a43;\n border:2px solid #81c784;border-radius:15px;max-width:680px}\n.review-pickle-filter label{font-family:'Trebuchet MS',Arial,sans-serif;\n color:#fff;font-weight:700;font-size:1.08rem;margin:0}\n.review-pickle-filter select,.review-pickle-filter select option{background:#071726;\n color:#fff;padding:10px 12px;font-size:1.05rem;border:1px solid #81c784;border-radius:9px;\n max-width:100%;font-family:'Trebuchet MS',Arial,sans-serif}\n@media(max-width:650px){.review-pickle-filter select{width:100%}}\n<\/style><\/head>\n<body>\n\n<header>\n    <h1>PICKLE 1: THEME 2: LEISURE<\/h1>\n    <p>sleep de woorden naar de juiste omschrijving<\/p>\n<\/header>\n\n<div class=\"container\">\n\n<div class=\"review-pickle-filter\" role=\"status\" aria-live=\"polite\">\n  <strong id=\"pickle-selection-summary\">⚽ 🎨 🎬 🎟️ 4 lijsten geselecteerd · 60 woorden<\/strong>\n  <div style=\"font-size:.9rem;margin-top:5px;opacity:.85\">Wijzig de schuifjes op de vocabulary-pagina.<\/div>\n<\/div>\n    <div class=\"language-select\">\n        <label><input type=\"radio\" name=\"language\" value=\"nl\" checked onchange=\"setupGame()\"> nederlands<\/label>\n        <label><input type=\"radio\" name=\"language\" value=\"en\" onchange=\"setupGame()\"> english<\/label>\n        <label><input type=\"radio\" name=\"language\" value=\"mixed\" onchange=\"setupGame()\"> mixed mode<\/label>\n    <\/div>\n\n    <div class=\"review-pickle-filter\">\n       <label for=\"pickle-count\">Aantal woorden:<\/label>\n       <select id=\"pickle-count\" onchange=\"setupGame()\"><option value=\"10\">10<\/option><option value=\"15\">15<\/option><option value=\"30\">30<\/option><option value=\"60\">Alle beschikbare woorden<\/option><\/select>\n    <\/div>\n    <div class=\"word-bank\" id=\"wordBank\"><\/div>\n    <div class=\"exercise-grid\" id=\"sentenceGrid\"><\/div>\n\n    <div class=\"button-row\">\n        <button class=\"btn\" onclick=\"checkAnswers(event)\">controleer ✅<\/button>\n        <button class=\"btn\" style=\"background:var(--hero-purple-main); border-bottom-color:var(--hero-purple-dark);\" onclick=\"setupGame()\">opnieuw 🔁<\/button>\n        <button class=\"btn\" onclick=\"returnToVocab()\">← Terug naar Vocab<\/button>\n    <\/div>\n<\/div>\n\n<footer>\n    &copy; 2026 EngliForce: Make English Your Superpower!\n<\/footer>\n\n<script>\n    let activeThemes=new Set(['sports','hobbies','entertainment','goingout']);\n    const themeNames={sports:'Sports',hobbies:'Hobbies',entertainment:'Entertainment',goingout:'Going Out'};\n    window.addEventListener('message',function(event){\n        if(event.source!==window.parent || !event.data || event.data.type!=='engliforce-theme-selection')return;\n        const keys=event.data.themes;\n        if(!Array.isArray(keys))return;\n        const valid=keys.filter(key=>Object.prototype.hasOwnProperty.call(themeNames,key));\n        if(valid.length===0)return;\n        activeThemes=new Set(valid);\n        const summary=document.getElementById('pickle-selection-summary');\n        if(summary) summary.textContent=valid.map(t=>themeNames[t]).join(' + ')+' · '+(valid.length*15)+' woorden';\n        if(document.getElementById('wordBank'))setupGame();\n    });\n\n    const vocabData = {\"teammate\":{\"nl\":\"Iemand die samen met jou in hetzelfde team speelt.\",\"en\":\"A person who plays on the same team as you.\"},\"opponent\":{\"nl\":\"Een speler of team waartegen je speelt.\",\"en\":\"A player or team you play against.\"},\"referee\":{\"nl\":\"Iemand die de regels bewaakt tijdens een wedstrijd.\",\"en\":\"The person who checks the rules in a match.\"},\"pitch\":{\"nl\":\"Een veld waarop je bijvoorbeeld voetbalt.\",\"en\":\"A field where people play football.\"},\"changing room\":{\"nl\":\"De ruimte waar sporters zich omkleden.\",\"en\":\"The room where athletes change their clothes.\"},\"whistle\":{\"nl\":\"Een klein voorwerp waarop je blaast om een signaal te geven.\",\"en\":\"A small object you blow to make a sharp sound.\"},\"player\":{\"nl\":\"Iemand die aan een spel of wedstrijd meedoet.\",\"en\":\"A person who takes part in a game or match.\"},\"to practise\":{\"nl\":\"Iets herhalen om er beter in te worden.\",\"en\":\"To do an activity again to get better at it.\"},\"to warm up\":{\"nl\":\"Je lichaam voorbereiden op het sporten.\",\"en\":\"To prepare your body before exercising.\"},\"to pass\":{\"nl\":\"De bal naar een medespeler spelen.\",\"en\":\"To send the ball to another player.\"},\"to throw\":{\"nl\":\"Iets met je hand door de lucht bewegen.\",\"en\":\"To send something through the air with your hand.\"},\"to catch\":{\"nl\":\"Een voorwerp dat aankomt met je handen pakken.\",\"en\":\"To take hold of something moving through the air.\"},\"to shoot\":{\"nl\":\"Proberen de bal naar het doel te schieten.\",\"en\":\"To kick or hit the ball towards the goal.\"},\"to beat\":{\"nl\":\"Van een tegenstander winnen.\",\"en\":\"To win against someone in a game or match.\"},\"a draw\":{\"nl\":\"Een uitslag waarbij niemand wint.\",\"en\":\"A result when neither team wins.\"},\"leisure\":{\"nl\":\"Vrije tijd waarin je doet wat je leuk vindt.\",\"en\":\"Free time to relax or enjoy yourself.\"},\"an activity\":{\"nl\":\"Iets wat je doet, zoals zwemmen, koken of wandelen.\",\"en\":\"Something you do, such as swimming or cooking.\"},\"a board game\":{\"nl\":\"Een spel met een speelbord, vaak met pionnen of dobbelstenen.\",\"en\":\"A game played on a table, often with pieces and dice.\"},\"a collection\":{\"nl\":\"Een groep voorwerpen die je bewaart, bijvoorbeeld voetbalkaartjes.\",\"en\":\"A group of things you keep, like cards or coins.\"},\"a skill\":{\"nl\":\"Iets wat je hebt geleerd en steeds beter kunt.\",\"en\":\"Something you have learnt how to do well.\"},\"to write stories\":{\"nl\":\"Zelf verhalen bedenken en opschrijven.\",\"en\":\"To make up tales and put them on paper.\"},\"to bake\":{\"nl\":\"Koekjes of taart maken met behulp van een oven.\",\"en\":\"To make cakes or biscuits in an oven.\"},\"to build\":{\"nl\":\"Iets in elkaar zetten, zoals een model of een hut.\",\"en\":\"To put parts together to make something.\"},\"to take photos\":{\"nl\":\"Beelden vastleggen met een camera of telefoon.\",\"en\":\"To use a camera or phone to capture pictures.\"},\"to do crafts\":{\"nl\":\"Zelf iets maken met papier, lijm, verf of andere materialen.\",\"en\":\"To make things with paper, glue, paint or other materials.\"},\"to play a sport\":{\"nl\":\"Meedoen aan een sport, bijvoorbeeld voetbal of tennis.\",\"en\":\"To take part in a game such as tennis or football.\"},\"to play an instrument\":{\"nl\":\"Muziek maken op bijvoorbeeld een gitaar of piano.\",\"en\":\"To make music using a guitar, piano or another musical tool.\"},\"to try out\":{\"nl\":\"Iets nieuws proberen om te ontdekken of je het leuk vindt.\",\"en\":\"To test something new to see if you like it.\"},\"to be keen on\":{\"nl\":\"Iets heel erg leuk vinden.\",\"en\":\"To really like something and be interested in it.\"},\"to be good at\":{\"nl\":\"Ergens handig in zijn of iets goed kunnen.\",\"en\":\"To have the ability to do something well.\"},\"a character\":{\"nl\":\"Een persoon of figuur in een film, serie of game.\",\"en\":\"A person or figure in a film, series or game.\"},\"a prequel\":{\"nl\":\"Een film die vóór het verhaal van een eerdere film speelt.\",\"en\":\"A film whose story happens before an earlier film.\"},\"subtitles\":{\"nl\":\"Geschreven woorden onderaan het scherm die weergeven wat iemand zegt.\",\"en\":\"Words at the bottom of the screen showing what people say.\"},\"a sequel\":{\"nl\":\"Een vervolgfilm waarvan het verhaal na het eerste deel speelt.\",\"en\":\"A film that continues the story after an earlier film.\"},\"to watch\":{\"nl\":\"Aandachtig naar een film, serie of video kijken.\",\"en\":\"To look at a film, show or video for a while.\"},\"lyrics\":{\"nl\":\"De woorden die in een liedje worden gezongen.\",\"en\":\"The words of a song.\"},\"a soundtrack\":{\"nl\":\"De muziek die bij een film of game hoort.\",\"en\":\"The music used in a film or a game.\"},\"to release a song\":{\"nl\":\"Een nieuw liedje uitbrengen zodat iedereen het kan luisteren.\",\"en\":\"To make a new song available for people to listen to.\"},\"to sing along\":{\"nl\":\"Met een liedje meezingen terwijl je luistert.\",\"en\":\"To join in singing while a song is playing.\"},\"to turn up the volume\":{\"nl\":\"Het geluid van muziek, televisie of een game harder zetten.\",\"en\":\"To make sound from a device louder.\"},\"a reward\":{\"nl\":\"Iets dat je verdient na een opdracht of prestatie.\",\"en\":\"Something you receive for doing or finishing something well.\"},\"a clue\":{\"nl\":\"Een aanwijzing die helpt om een raadsel op te lossen.\",\"en\":\"A piece of information that helps solve a mystery.\"},\"to unlock\":{\"nl\":\"Iets in een game beschikbaar maken dat eerst op slot zat.\",\"en\":\"To make something available in a game after earning access.\"},\"to complete a level\":{\"nl\":\"Een bepaald gedeelte van een game helemaal uitspelen.\",\"en\":\"To finish one stage of a video game.\"},\"to get stuck\":{\"nl\":\"Niet verder kunnen komen bij een moeilijk deel van een game.\",\"en\":\"To be unable to continue because part of a game is difficult.\"},\"a fair\":{\"nl\":\"Een evenement met attracties, spelletjes en kraampjes.\",\"en\":\"An event with rides, games and food stalls.\"},\"a shopping centre\":{\"nl\":\"Een groot gebouw met veel verschillende winkels.\",\"en\":\"A large building with lots of different shops.\"},\"a meeting point\":{\"nl\":\"Een plek waar mensen hebben afgesproken om elkaar te zien.\",\"en\":\"A place where people agree to meet.\"},\"a queue\":{\"nl\":\"Een rij mensen die op hun beurt wachten.\",\"en\":\"A line of people waiting for their turn.\"},\"an entrance fee\":{\"nl\":\"Het bedrag dat je betaalt om ergens naar binnen te mogen.\",\"en\":\"The money you pay to enter a place or event.\"},\"to meet up\":{\"nl\":\"Met vrienden afspreken om elkaar ergens te zien.\",\"en\":\"To arrange to see someone somewhere.\"},\"to hang out\":{\"nl\":\"Op een ontspannen manier tijd doorbrengen met vrienden.\",\"en\":\"To spend time relaxing with friends.\"},\"to invite\":{\"nl\":\"Iemand vragen om naar een feestje of activiteit te komen.\",\"en\":\"To ask someone to come to an event or activity.\"},\"to book\":{\"nl\":\"Vooraf kaartjes of een plaats reserveren.\",\"en\":\"To reserve a place or tickets before an event.\"},\"to grab a bite\":{\"nl\":\"Informeel: even ergens iets gaan eten.\",\"en\":\"To eat something, usually quickly and informally.\"},\"to arrive\":{\"nl\":\"Op de plek komen waar je naartoe ging.\",\"en\":\"To reach the place where you were going.\"},\"to pick someone up\":{\"nl\":\"Ergens naartoe gaan om iemand met je mee te nemen.\",\"en\":\"To go somewhere to collect someone and take them with you.\"},\"to be up for something\":{\"nl\":\"Er zin in hebben om iets te gaan doen.\",\"en\":\"To feel like doing something.\"},\"to tag along\":{\"nl\":\"Met andere mensen meegaan, ook als je niet eerst was uitgenodigd.\",\"en\":\"To go somewhere with other people, often without an invitation.\"},\"to have a good time\":{\"nl\":\"Ergens van genieten en het naar je zin hebben.\",\"en\":\"To enjoy yourself while doing something.\"}};\n\n    const wordThemes = {\"teammate\":\"sports\",\"opponent\":\"sports\",\"referee\":\"sports\",\"pitch\":\"sports\",\"changing room\":\"sports\",\"whistle\":\"sports\",\"player\":\"sports\",\"to practise\":\"sports\",\"to warm up\":\"sports\",\"to pass\":\"sports\",\"to throw\":\"sports\",\"to catch\":\"sports\",\"to shoot\":\"sports\",\"to beat\":\"sports\",\"a draw\":\"sports\",\"leisure\":\"hobbies\",\"an activity\":\"hobbies\",\"a board game\":\"hobbies\",\"a collection\":\"hobbies\",\"a skill\":\"hobbies\",\"to write stories\":\"hobbies\",\"to bake\":\"hobbies\",\"to build\":\"hobbies\",\"to take photos\":\"hobbies\",\"to do crafts\":\"hobbies\",\"to play a sport\":\"hobbies\",\"to play an instrument\":\"hobbies\",\"to try out\":\"hobbies\",\"to be keen on\":\"hobbies\",\"to be good at\":\"hobbies\",\"a character\":\"entertainment\",\"a prequel\":\"entertainment\",\"subtitles\":\"entertainment\",\"a sequel\":\"entertainment\",\"to watch\":\"entertainment\",\"lyrics\":\"entertainment\",\"a soundtrack\":\"entertainment\",\"to release a song\":\"entertainment\",\"to sing along\":\"entertainment\",\"to turn up the volume\":\"entertainment\",\"a reward\":\"entertainment\",\"a clue\":\"entertainment\",\"to unlock\":\"entertainment\",\"to complete a level\":\"entertainment\",\"to get stuck\":\"entertainment\",\"a fair\":\"goingout\",\"a shopping centre\":\"goingout\",\"a meeting point\":\"goingout\",\"a queue\":\"goingout\",\"an entrance fee\":\"goingout\",\"to meet up\":\"goingout\",\"to hang out\":\"goingout\",\"to invite\":\"goingout\",\"to book\":\"goingout\",\"to grab a bite\":\"goingout\",\"to arrive\":\"goingout\",\"to pick someone up\":\"goingout\",\"to be up for something\":\"goingout\",\"to tag along\":\"goingout\",\"to have a good time\":\"goingout\"};\n    function setupGame() {\n        const wordBank = document.getElementById('wordBank');\n        const sentenceGrid = document.getElementById('sentenceGrid');\n        wordBank.innerHTML = '';\n        sentenceGrid.innerHTML = '';\n\n        const allWords=Object.keys(vocabData).filter(en=>activeThemes.has(wordThemes[en]));\n        const rawCount=document.getElementById('pickle-count').value;\n        const count=rawCount==='60'?allWords.length:parseInt(rawCount,10);\n        const selectedWords=[...allWords].sort(()=>Math.random()-.5).slice(0,count);\n                \n        [...selectedWords].sort().forEach(word => {\n            const el = document.createElement('div');\n            el.className = 'draggable-word';\n            el.textContent = word;\n            el.draggable = true;\n            el.addEventListener('dragstart', e => e.dataTransfer.setData(\"text\", word));\n            wordBank.appendChild(el);\n        });\n\n        const lang = document.querySelector('input[name=\"language\"]:checked').value;\n        \n        selectedWords.forEach((word, index) => {\n            let desc = lang === 'en' ? vocabData[word].en :\n                       lang === 'nl' ? vocabData[word].nl :\n                       (Math.random() > 0.5 ? vocabData[word].nl : vocabData[word].en);\n\n            const box = document.createElement('div');\n            box.className = 'sentence-box';\n            box.innerHTML = `\n                <p><strong>mission ${index + 1}:<\/strong> ${desc}<\/p>\n                <div class=\"drop-zone\" data-word=\"${word}\"><\/div>\n            `;\n            \n            const zone = box.querySelector('.drop-zone');\n            zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });\n            zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));\n            zone.addEventListener('drop', e => {\n                e.preventDefault();\n                zone.classList.remove('drag-over');\n                const droppedWord = e.dataTransfer.getData(\"text\");\n                zone.innerHTML = `<div class=\"draggable-word\" draggable=\"true\">${droppedWord}<\/div>`;\n                zone.querySelector('.draggable-word').addEventListener('dragstart', ev => ev.dataTransfer.setData(\"text\", droppedWord));\n            });\n            \n            sentenceGrid.appendChild(box);\n        });\n    }\n\n    function checkAnswers(e) {\n        let allCorrect = true;\n        document.querySelectorAll('.drop-zone').forEach(zone => {\n            const correctWord = zone.getAttribute('data-word');\n            const userWord = zone.textContent.trim();\n            zone.classList.remove('correct', 'wrong');\n\n            if (userWord === correctWord) {\n                zone.classList.add('correct');\n            } else if (userWord !== \"\") {\n                zone.classList.add('wrong');\n                allCorrect = false;\n            } else {\n                allCorrect = false;\n            }\n        });\n        \n        createExplosion(e, allCorrect ? 'mission complete!' : 'check again!');\n    }\n\n    function createExplosion(e, message) {\n        const txt = document.createElement('div');\n        txt.className = 'boom-text';\n        txt.innerText = message;\n        txt.style.left = (e.clientX - 50) + 'px';\n        txt.style.top = (e.clientY - 50) + 'px';\n        document.body.appendChild(txt);\n        setTimeout(() => txt.remove(), 600);\n    }\n\n    function returnToVocab() { window.parent.postMessage({type:'engliforce-nav',view:'vocab'}, '*'); }\n    window.onload = setupGame;\n<\/script>\n\n<script>\n(function(){\n  function report(){\n    const height=Math.ceil(document.body.scrollHeight);\n    window.parent.postMessage({type:'engliforce-height',height:height},'*');\n  }\n  window.addEventListener('load',report);\n  if ('ResizeObserver' in window) new ResizeObserver(report).observe(document.body);\n  document.addEventListener('click',()=>setTimeout(report,90));\n  setTimeout(report,80);\n})();\n<\/script>\n<\/body>\n<\/html>","pickle2":"<!DOCTYPE html>\n<html lang=\"nl\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>EngliForce Pickle: Theme 2 Grid Challenge<\/title>\n    <style>\n        :root {\n            --hero-purple-main: #43a047;\n            --hero-purple-dark: #388e3c;\n            --hero-yellow: #ffb703;\n            --hero-cyan: #81c784;\n            --dark-bg: #0b1a2a;\n            --hero-orange: #43a047;\n        }\n\n        body {\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);\n            color: white;\n            margin: 0;\n            padding: 0;\n            min-height: 100vh;\n        }\n\n        header {\n            background: var(--hero-purple-main);\n            padding: 2rem 1rem;\n            text-align: center;\n            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);\n            border-bottom: 5px solid var(--hero-yellow);\n        }\n\n        h1 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            font-size: 3rem; \n            margin: 0; \n            text-shadow: 3px 3px 0px var(--hero-purple-dark); \n        }\n\n        h2 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            color: var(--hero-yellow); \n            text-align: center; \n            margin-top: 20px; \n        }\n\n        main { \n            max-width: 800px; \n            margin: 20px auto; \n            padding: 20px; \n            text-align: center; \n        }\n\n        section {\n            background: rgba(16, 42, 67, 0.8);\n            border-radius: 20px;\n            padding: 2rem;\n            border: 2px solid var(--hero-cyan);\n            box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n        }\n\n        /* Setup Area */\n        .setup {\n            display: flex;\n            justify-content: center;\n            flex-wrap: wrap;\n            gap: 10px;\n            margin-bottom: 20px;\n        }\n\n        select, input {\n            padding: 12px;\n            border-radius: 10px;\n            border: 2px solid var(--hero-purple-main);\n            background: #0b1a2a;\n            color: white;\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n        }\n\n        /* The Grid */\n        .grid {\n            display: grid;\n            grid-template-columns: repeat(3, 1fr);\n            grid-gap: 15px;\n            justify-content: center;\n            margin: 30px auto;\n            max-width: 450px;\n        }\n\n        .card {\n            aspect-ratio: 1 / 1;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            text-align: center;\n            font-size: 1rem;\n            font-weight: bold;\n            background: var(--hero-purple-dark);\n            border: 3px solid var(--hero-cyan);\n            border-radius: 15px;\n            cursor: pointer;\n            padding: 10px;\n            transition: 0.3s;\n            color: white;\n            overflow: hidden;\n            word-break: break-word;\n        }\n\n        .hiddenText { \n            color: transparent !important; \n            background: var(--hero-purple-main) !important; \n        }\n\n        .correct { \n            background-color: #4caf50 !important; \n            border-color: #81c784 !important; \n        }\n\n        .incorrect { \n            background-color: var(--hero-orange) !important; \n            border-color: #a5d6a7 !important; \n        }\n\n        /* UI Elements */\n        .turn { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            font-size: 1.8rem; \n            color: var(--hero-yellow); \n            margin: 20px 0; \n            min-height: 40px; \n        }\n\n        .score { \n            font-size: 1.2rem; \n            margin-top: 20px; \n            color: var(--hero-cyan); \n        }\n\n        .result { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            font-size: 2.5rem; \n            margin-top: 20px; \n            color: #fff; \n        }\n\n        .btn {\n            background: var(--hero-orange);\n            color: white;\n            border: none;\n            padding: 15px 30px;\n            border-radius: 50px;\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 1.5rem;\n            cursor: pointer;\n            border-bottom: 5px solid #388e3c;\n            transition: 0.2s;\n            margin: 10px;\n        }\n\n        .btn:hover:not(:disabled) { \n            transform: translateY(-3px); \n            filter: brightness(1.1); \n        }\n\n        .btn:disabled { \n            opacity: 0.5; \n            cursor: not-allowed; \n        }\n\n        .btn-start { \n            background: var(--hero-purple-main); \n            border-bottom-color: var(--hero-purple-dark); \n        }\n\n        .confetti { \n            font-size: 40px; \n            animation: pop 0.5s ease-in-out; \n            display: inline-block; \n        }\n\n        @keyframes pop { \n            0% { transform: scale(0); } \n            100% { transform: scale(1); } \n        }\n\n        footer {\n            text-align: center;\n            padding: 30px;\n            color: rgba(255,255,255,0.5);\n            margin-top: 50px;\n        }\n    <\/style>\n<style>html,body{min-height:0!important} html{overflow:hidden} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } <\/style>\n<style id=\"engliforce-readable-pickle-type-v2\">\n/* Betere leesbaarheid in Pickles. Werking en originele kleuren niet aangepast. */\nbody { font-size: 18px; line-height: 1.5; }\nheader p { font-size: 1.15rem; }\nh1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }\nh2 { font-size: 2rem; }\n.language-select label { font-size: 1.14rem; }\n.draggable-word { font-size: 1.14rem; line-height: 1.4; }\n.sentence-box p { font-size: 1.14rem; line-height: 1.55; }\n.drop-zone { min-height: 62px; height: auto; padding: 4px; box-sizing: border-box; }\n.btn { font-size: 1.54rem; }\nselect, input { font-size: 1.06rem; }\n.grid .card { font-size: 1.18rem; }\n.turn { font-size: 2rem; }\n.score, .scoreboard { font-size: 1.17rem; }\n.result { font-size: 2.4rem; }\n.instructions { font-size: 1.15rem; line-height: 1.6; }\n.hint-text { font-size: 1.3rem; line-height: 1.5; }\nlabel { font-size: 1.2rem; }\n.word-card label { font-size: 1.3rem; }\n.back-to-vocab { font-size: 1.16rem; }\nfooter { font-size: 1.06rem; }\n@media (max-width: 650px) {\n  body { font-size: 17px; }\n  h1 { font-size: clamp(1.75rem, 6vw, 2.45rem); }\n  .language-select label { font-size: 1.05rem; }\n  .draggable-word { font-size: 1.07rem; }\n  .sentence-box p { font-size: 1.08rem; }\n  .grid .card { font-size: 1.04rem; padding: 6px; }\n  .btn { font-size: 1.28rem; padding: 13px 17px; }\n  .hint-text { font-size: 1.15rem; }\n}\n<\/style>\n<style>\n.review-pickle-filter{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;\n gap:10px;margin:16px auto 24px;padding:14px;background:#102a43;\n border:2px solid #81c784;border-radius:15px;max-width:680px}\n.review-pickle-filter label{font-family:'Trebuchet MS',Arial,sans-serif;\n color:#fff;font-weight:700;font-size:1.08rem;margin:0}\n.review-pickle-filter select,.review-pickle-filter select option{background:#071726;\n color:#fff;padding:10px 12px;font-size:1.05rem;border:1px solid #81c784;border-radius:9px;\n max-width:100%;font-family:'Trebuchet MS',Arial,sans-serif}\n@media(max-width:650px){.review-pickle-filter select{width:100%}}\n<\/style><\/head>\n<body>\n\n<header>\n    <h1>PICKLE 2: THEME 2: LEISURE GRID<\/h1>\n    <p>Onthoud de posities en vind het juiste woord!<\/p>\n<\/header>\n\n<main>\n    <section>\n\n<div class=\"review-pickle-filter\" role=\"status\" aria-live=\"polite\">\n  <strong id=\"pickle-selection-summary\">⚽ 🎨 🎬 🎟️ 4 lijsten geselecteerd · 60 woorden<\/strong>\n  <div style=\"font-size:.9rem;margin-top:5px;opacity:.85\">Wijzig de schuifjes op de vocabulary-pagina.<\/div>\n<\/div>\n        <div class=\"setup\">\n            <select id=\"playerMode\">\n                <option value=\"1\">1 player<\/option>\n                <option value=\"2\">2 players<\/option>\n            <\/select>\n            <input type=\"text\" id=\"player1\" placeholder=\"Name player 1\" />\n            <input type=\"text\" id=\"player2\" placeholder=\"Name player 2\" />\n            <select id=\"direction\">\n                <option value=\"en-nl\">English → Dutch<\/option>\n                <option value=\"nl-en\">Dutch → English<\/option>\n            <\/select>\n            <button class=\"btn btn-start\" onclick=\"startGame()\">Start mission<\/button>\n        <\/div>\n\n        <div class=\"turn\" id=\"turnDisplay\"><\/div>\n        <div class=\"grid\" id=\"grid\"><\/div>\n\n        <div class=\"controls\">\n            <button class=\"btn\" onclick=\"showQuestion()\" id=\"readyBtn\" disabled>Ready!!<\/button>\n            <button class=\"btn\" onclick=\"nextRound()\" id=\"nextBtn\" style=\"display: none;\">Next round<\/button>\n        <\/div>\n\n        <div class=\"score\" id=\"scoreDisplay\"><\/div>\n        <div class=\"result\" id=\"resultDisplay\"><\/div>\n        <button class=\"btn\" type=\"button\" onclick=\"returnToVocab()\">← Terug naar Vocab<\/button>\n    <\/section>\n<\/main>\n\n<footer>\n    &copy; 2026 EngliForce: Make English Your Superpower!\n<\/footer>\n\n<script>\n    let activeThemes=new Set(['sports','hobbies','entertainment','goingout']);\n    const themeNames={sports:'Sports',hobbies:'Hobbies',entertainment:'Entertainment',goingout:'Going Out'};\n    window.addEventListener('message',function(event){\n        if(event.source!==window.parent || !event.data || event.data.type!=='engliforce-theme-selection')return;\n        const keys=event.data.themes;\n        if(!Array.isArray(keys))return;\n        const valid=keys.filter(key=>Object.prototype.hasOwnProperty.call(themeNames,key));\n        if(valid.length===0)return;\n        activeThemes=new Set(valid);\n        const summary=document.getElementById('pickle-selection-summary');\n        if(summary) summary.textContent=valid.map(t=>themeNames[t]).join(' + ')+' · '+(valid.length*15)+' woorden';\n        if(players.length>0)startGame();\n    });\n\n    const wordList = [{\"en\":\"teammate\",\"nl\":\"teamgenoot\",\"theme\":\"sports\"},{\"en\":\"opponent\",\"nl\":\"tegenstander\",\"theme\":\"sports\"},{\"en\":\"referee\",\"nl\":\"scheidsrechter\",\"theme\":\"sports\"},{\"en\":\"pitch\",\"nl\":\"(voetbal)veld\",\"theme\":\"sports\"},{\"en\":\"changing room\",\"nl\":\"kleedkamer\",\"theme\":\"sports\"},{\"en\":\"whistle\",\"nl\":\"fluitje\",\"theme\":\"sports\"},{\"en\":\"player\",\"nl\":\"speler\",\"theme\":\"sports\"},{\"en\":\"to practise\",\"nl\":\"oefenen\",\"theme\":\"sports\"},{\"en\":\"to warm up\",\"nl\":\"opwarmen\",\"theme\":\"sports\"},{\"en\":\"to pass\",\"nl\":\"overspelen\",\"theme\":\"sports\"},{\"en\":\"to throw\",\"nl\":\"gooien\",\"theme\":\"sports\"},{\"en\":\"to catch\",\"nl\":\"vangen\",\"theme\":\"sports\"},{\"en\":\"to shoot\",\"nl\":\"schieten\",\"theme\":\"sports\"},{\"en\":\"to beat\",\"nl\":\"verslaan\",\"theme\":\"sports\"},{\"en\":\"a draw\",\"nl\":\"gelijkspel\",\"theme\":\"sports\"},{\"en\":\"leisure\",\"nl\":\"vrije tijd\",\"theme\":\"hobbies\"},{\"en\":\"an activity\",\"nl\":\"een activiteit\",\"theme\":\"hobbies\"},{\"en\":\"a board game\",\"nl\":\"een bordspel\",\"theme\":\"hobbies\"},{\"en\":\"a collection\",\"nl\":\"een verzameling\",\"theme\":\"hobbies\"},{\"en\":\"a skill\",\"nl\":\"een vaardigheid\",\"theme\":\"hobbies\"},{\"en\":\"to write stories\",\"nl\":\"verhalen schrijven\",\"theme\":\"hobbies\"},{\"en\":\"to bake\",\"nl\":\"bakken\",\"theme\":\"hobbies\"},{\"en\":\"to build\",\"nl\":\"bouwen\",\"theme\":\"hobbies\"},{\"en\":\"to take photos\",\"nl\":\"foto's maken\",\"theme\":\"hobbies\"},{\"en\":\"to do crafts\",\"nl\":\"knutselen\",\"theme\":\"hobbies\"},{\"en\":\"to play a sport\",\"nl\":\"een sport beoefenen\",\"theme\":\"hobbies\"},{\"en\":\"to play an instrument\",\"nl\":\"een instrument bespelen\",\"theme\":\"hobbies\"},{\"en\":\"to try out\",\"nl\":\"uitproberen\",\"theme\":\"hobbies\"},{\"en\":\"to be keen on\",\"nl\":\"dol zijn op\",\"theme\":\"hobbies\"},{\"en\":\"to be good at\",\"nl\":\"goed zijn in\",\"theme\":\"hobbies\"},{\"en\":\"a character\",\"nl\":\"een personage\",\"theme\":\"entertainment\"},{\"en\":\"a prequel\",\"nl\":\"een voorverhaal\",\"theme\":\"entertainment\"},{\"en\":\"subtitles\",\"nl\":\"ondertiteling\",\"theme\":\"entertainment\"},{\"en\":\"a sequel\",\"nl\":\"een vervolg\",\"theme\":\"entertainment\"},{\"en\":\"to watch\",\"nl\":\"kijken naar\",\"theme\":\"entertainment\"},{\"en\":\"lyrics\",\"nl\":\"songtekst\",\"theme\":\"entertainment\"},{\"en\":\"a soundtrack\",\"nl\":\"filmmuziek\",\"theme\":\"entertainment\"},{\"en\":\"to release a song\",\"nl\":\"een liedje uitbrengen\",\"theme\":\"entertainment\"},{\"en\":\"to sing along\",\"nl\":\"meezingen\",\"theme\":\"entertainment\"},{\"en\":\"to turn up the volume\",\"nl\":\"het volume harder zetten\",\"theme\":\"entertainment\"},{\"en\":\"a reward\",\"nl\":\"een beloning\",\"theme\":\"entertainment\"},{\"en\":\"a clue\",\"nl\":\"een aanwijzing\",\"theme\":\"entertainment\"},{\"en\":\"to unlock\",\"nl\":\"vrijspelen\",\"theme\":\"entertainment\"},{\"en\":\"to complete a level\",\"nl\":\"een level uitspelen\",\"theme\":\"entertainment\"},{\"en\":\"to get stuck\",\"nl\":\"vastlopen\",\"theme\":\"entertainment\"},{\"en\":\"a fair\",\"nl\":\"een kermis\",\"theme\":\"goingout\"},{\"en\":\"a shopping centre\",\"nl\":\"een winkelcentrum\",\"theme\":\"goingout\"},{\"en\":\"a meeting point\",\"nl\":\"een ontmoetingsplek\",\"theme\":\"goingout\"},{\"en\":\"a queue\",\"nl\":\"een wachtrij\",\"theme\":\"goingout\"},{\"en\":\"an entrance fee\",\"nl\":\"een toegangsprijs\",\"theme\":\"goingout\"},{\"en\":\"to meet up\",\"nl\":\"afspreken\",\"theme\":\"goingout\"},{\"en\":\"to hang out\",\"nl\":\"rondhangen\",\"theme\":\"goingout\"},{\"en\":\"to invite\",\"nl\":\"uitnodigen\",\"theme\":\"goingout\"},{\"en\":\"to book\",\"nl\":\"boeken / reserveren\",\"theme\":\"goingout\"},{\"en\":\"to grab a bite\",\"nl\":\"iets gaan eten\",\"theme\":\"goingout\"},{\"en\":\"to arrive\",\"nl\":\"aankomen\",\"theme\":\"goingout\"},{\"en\":\"to pick someone up\",\"nl\":\"iemand ophalen\",\"theme\":\"goingout\"},{\"en\":\"to be up for something\",\"nl\":\"ergens zin in hebben\",\"theme\":\"goingout\"},{\"en\":\"to tag along\",\"nl\":\"met iemand meegaan\",\"theme\":\"goingout\"},{\"en\":\"to have a good time\",\"nl\":\"het leuk hebben\",\"theme\":\"goingout\"}];\n\n    let currentGrid = [];\n    let correctIndex = -1;\n    let currentPlayer = 0;\n    let players = [];\n    let scores = [];\n    let rounds = [];\n    let mode = 1;\n    let direction = \"en-nl\";\n    const totalRounds = 5;\n    function returnToVocab() { window.parent.postMessage({type:'engliforce-nav',view:'vocab'}, '*'); }\n\n    function getRandomWords(count) {\n        const choices=wordList.filter(w=>activeThemes.has(w.theme));\n        return [...choices].sort(()=>Math.random()-.5).slice(0,count);\n    }\n\n    function startGame() {\n        mode = parseInt(document.getElementById(\"playerMode\").value);\n        direction = document.getElementById(\"direction\").value;\n\n        const p1 = document.getElementById(\"player1\").value.trim() || \"agent 1\";\n        const p2 = document.getElementById(\"player2\").value.trim() || \"agent 2\";\n\n        players = mode === 2 ? [p1, p2] : [p1];\n        scores = Array(players.length).fill(0);\n        rounds = Array(players.length).fill(0);\n        currentPlayer = 0;\n\n        document.getElementById(\"resultDisplay\").innerHTML = \"\";\n        document.getElementById(\"nextBtn\").style.display = \"none\";\n        document.getElementById(\"readyBtn\").disabled = false;\n\n        newGrid();\n    }\n\n    function newGrid() {\n        if (players.length === 0) return;\n        currentGrid = getRandomWords(9);\n        correctIndex = -1;\n\n        const grid = document.getElementById(\"grid\");\n        grid.innerHTML = \"\";\n        currentGrid.forEach((word, i) => {\n            const div = document.createElement(\"div\");\n            div.className = \"card\";\n            div.textContent = direction === \"en-nl\" ? word.en : word.nl;\n            div.dataset.index = i;\n            grid.appendChild(div);\n        });\n\n        updateTurn();\n    }\n\n    function showQuestion() {\n        if (players.length === 0) return;\n        correctIndex = Math.floor(Math.random() * 9);\n        const targetWord = direction === \"en-nl\"\n            ? currentGrid[correctIndex].nl\n            : currentGrid[correctIndex].en;\n\n        document.getElementById(\"turnDisplay\").innerHTML =\n            `missie: waar zit \"<strong>${targetWord}<\/strong>\"?`;\n\n        document.querySelectorAll(\".card\").forEach(card => {\n            card.classList.remove(\"correct\", \"incorrect\");\n            card.classList.add(\"hiddenText\");\n            card.onclick = () => checkAnswer(parseInt(card.dataset.index), card);\n        });\n\n        document.getElementById(\"nextBtn\").style.display = \"none\";\n        document.getElementById(\"readyBtn\").disabled = true;\n    }\n\n    function checkAnswer(index, card) {\n        const all = document.querySelectorAll(\".card\");\n        all.forEach(c => {\n            c.classList.remove(\"hiddenText\");\n            c.onclick = null;\n        });\n\n        if (index === correctIndex) {\n            card.classList.add(\"correct\");\n            scores[currentPlayer]++;\n        } else {\n            card.classList.add(\"incorrect\");\n            all[correctIndex].classList.add(\"correct\");\n        }\n\n        rounds[currentPlayer]++;\n        updateScore();\n        document.getElementById(\"nextBtn\").style.display = \"inline-block\";\n    }\n\n    function nextRound() {\n        document.getElementById(\"nextBtn\").style.display = \"none\";\n\n        if ((mode === 2 && rounds[0] >= totalRounds && rounds[1] >= totalRounds) ||\n            (mode === 1 && rounds[0] >= totalRounds)) {\n            showWinner();\n        } else {\n            currentPlayer = (currentPlayer + 1) % players.length;\n            newGrid();\n            document.getElementById(\"readyBtn\").disabled = false;\n        }\n    }\n\n    function updateTurn() {\n        if (players.length > 0) {\n            document.getElementById(\"turnDisplay\").innerHTML = `turn: ${players[currentPlayer]}`;\n        }\n        updateScore();\n    }\n\n    function updateScore() {\n        if (players.length === 0) return;\n        const html = players.map((name, i) =>\n            `🎯 ${name}: ${scores[i]} (${rounds[i]}/${totalRounds})`\n        ).join(\" | \");\n        document.getElementById(\"scoreDisplay\").innerHTML = html;\n    }\n\n    function showWinner() {\n        const res = document.getElementById(\"resultDisplay\");\n        document.getElementById(\"turnDisplay\").innerHTML = \"mission accomplished!\";\n        if (mode === 1) {\n            res.innerHTML = `🎉 score: ${scores[0]} / ${totalRounds} <span class=\"confetti\">🎊<\/span>`;\n        } else if (scores[0] > scores[1]) {\n            res.innerHTML = `🏆 ${players[0]} wins! <span class=\"confetti\">🎊<\/span>`;\n        } else if (scores[1] > scores[0]) {\n            res.innerHTML = `🏆 ${players[1]} wins! <span class=\"confetti\">🎊<\/span>`;\n        } else {\n            res.innerHTML = `🤝 iT'S A TIE! <span class=\"confetti\">🎊<\/span>`;\n        }\n    }\n<\/script>\n\n<script>\n(function(){\n  function report(){\n    const height=Math.ceil(document.body.scrollHeight);\n    window.parent.postMessage({type:'engliforce-height',height:height},'*');\n  }\n  window.addEventListener('load',report);\n  if ('ResizeObserver' in window) new ResizeObserver(report).observe(document.body);\n  document.addEventListener('click',()=>setTimeout(report,90));\n  setTimeout(report,80);\n})();\n<\/script>\n<\/body>\n<\/html>","pickle3":"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>EngliForce Pickle: Theme 2 Detective<\/title>\n    <style>\n        :root {\n            --hero-purple-main: #43a047;\n            --hero-purple-dark: #388e3c;\n            --hero-yellow: #ffb703;\n            --hero-cyan: #81c784;\n            --dark-bg: #0b1a2a;\n            --hero-orange: #43a047;\n        }\n\n        body {\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);\n            color: white;\n            margin: 0;\n            padding: 0;\n            min-height: 100vh;\n            display: flex;\n            flex-direction: column;\n            align-items: center;\n        }\n\n        header {\n            width: 100%;\n            background: var(--hero-orange);\n            padding: 2rem 0;\n            text-align: center;\n            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);\n            border-bottom: 5px solid var(--hero-yellow);\n            margin-bottom: 20px;\n        }\n\n        h1 { \n            font-family: Impact, 'Arial Narrow', sans-serif, cursive; \n            font-size: 3rem; \n            margin: 0; \n            text-shadow: 3px 3px 0px #388e3c; \n            color: white; \n        }\n\n        .container { \n            max-width: 700px; \n            width: 90%; \n            margin: 20px auto; \n        }\n\n        .section {\n            background: rgba(16, 42, 67, 0.8);\n            border-radius: 20px;\n            padding: 2rem;\n            border: 2px solid var(--hero-cyan);\n            box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n            margin-bottom: 20px;\n        }\n\n        .instructions { \n            font-size: 0.9rem; \n            color: var(--hero-cyan); \n            line-height: 1.5; \n            margin-bottom: 20px; \n            text-align: left; \n        }\n\n        label { \n            display: block; \n            margin-top: 1rem; \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            color: var(--hero-yellow); \n            font-size: 1.2rem; \n        }\n\n        input, select {\n            width: 100%;\n            padding: 12px;\n            margin-top: 5px;\n            border-radius: 10px;\n            border: 2px solid var(--hero-purple-main);\n            background: #0b1a2a;\n            color: white;\n            box-sizing: border-box;\n            font-family: 'Trebuchet MS', Arial, sans-serif, sans-serif;\n        }\n\n        .btn {\n            background: var(--hero-orange);\n            color: white;\n            border: none;\n            padding: 15px 25px;\n            border-radius: 50px;\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 1.4rem;\n            cursor: pointer;\n            border-bottom: 5px solid #388e3c;\n            transition: 0.2s;\n            margin: 10px 5px 0 0;\n            width: 100%;\n        }\n\n        .btn:hover { \n            transform: translateY(-3px); \n            filter: brightness(1.1); \n        }\n\n        .btn-purple { \n            background: var(--hero-purple-main); \n            border-bottom-color: var(--hero-purple-dark); \n        }\n\n        .turn { \n            font-family: Impact, 'Arial Narrow', sans-serif; \n            font-size: 2.2rem; \n            color: var(--hero-yellow); \n            text-align: center; \n            margin-bottom: 10px; \n        }\n\n        .scoreboard {\n            display: flex;\n            justify-content: space-around;\n            background: rgba(0,0,0,0.3);\n            padding: 15px;\n            border-radius: 15px;\n            margin-bottom: 20px;\n            border: 1px solid var(--hero-purple-main);\n        }\n\n        .word-card {\n            background: #102a43;\n            border: 3px solid var(--hero-purple-main);\n            border-radius: 15px;\n            padding: 25px;\n            text-align: center;\n        }\n\n        .hint-text {\n            font-size: 1.2rem;\n            min-height: 60px;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            color: white;\n            font-style: italic;\n            margin: 20px 0;\n            background: rgba(0,0,0,0.2);\n            border-radius: 10px;\n            padding: 10px;\n        }\n\n        .answer-reveal {\n            font-family: Impact, 'Arial Narrow', sans-serif;\n            font-size: 2rem;\n            color: var(--hero-yellow);\n            display: none;\n            margin: 15px 0;\n            padding: 10px;\n            border: 2px dashed var(--hero-yellow);\n        }\n\n        footer {\n            text-align: center;\n            padding: 30px;\n            color: rgba(255,255,255,0.5);\n            width: 100%;\n        }\n\n        .flex-buttons { \n            display: grid; \n            grid-template-columns: 1fr 1fr; \n            gap: 10px; \n        }\n    <\/style>\n<style>html,body{min-height:0!important} html{overflow:hidden} .back-to-vocab{display:block;margin:20px auto 10px} @media(max-width:650px){ header h1{font-size:clamp(1.7rem,7vw,2.5rem);letter-spacing:1px} main,.container{padding:12px} .briefing-box{padding:18px} .mission-card{width:min(100%,250px)} .exercise-grid{grid-template-columns:1fr} .toggle-container{gap:8px} .language-select{flex-wrap:wrap;border-radius:16px} } <\/style>\n<style id=\"engliforce-readable-pickle-type-v2\">\n/* Betere leesbaarheid in Pickles. Werking en originele kleuren niet aangepast. */\nbody { font-size: 18px; line-height: 1.5; }\nheader p { font-size: 1.15rem; }\nh1 { font-size: clamp(2.1rem, 4.6vw, 3.1rem); }\nh2 { font-size: 2rem; }\n.language-select label { font-size: 1.14rem; }\n.draggable-word { font-size: 1.14rem; line-height: 1.4; }\n.sentence-box p { font-size: 1.14rem; line-height: 1.55; }\n.drop-zone { min-height: 62px; height: auto; padding: 4px; box-sizing: border-box; }\n.btn { font-size: 1.54rem; }\nselect, input { font-size: 1.06rem; }\n.grid .card { font-size: 1.18rem; }\n.turn { font-size: 2rem; }\n.score, .scoreboard { font-size: 1.17rem; }\n.result { font-size: 2.4rem; }\n.instructions { font-size: 1.15rem; line-height: 1.6; }\n.hint-text { font-size: 1.3rem; line-height: 1.5; }\nlabel { font-size: 1.2rem; }\n.word-card label { font-size: 1.3rem; }\n.back-to-vocab { font-size: 1.16rem; }\nfooter { font-size: 1.06rem; }\n@media (max-width: 650px) {\n  body { font-size: 17px; }\n  h1 { font-size: clamp(1.75rem, 6vw, 2.45rem); }\n  .language-select label { font-size: 1.05rem; }\n  .draggable-word { font-size: 1.07rem; }\n  .sentence-box p { font-size: 1.08rem; }\n  .grid .card { font-size: 1.04rem; padding: 6px; }\n  .btn { font-size: 1.28rem; padding: 13px 17px; }\n  .hint-text { font-size: 1.15rem; }\n}\n<\/style>\n<style>\n.review-pickle-filter{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;\n gap:10px;margin:16px auto 24px;padding:14px;background:#102a43;\n border:2px solid #81c784;border-radius:15px;max-width:680px}\n.review-pickle-filter label{font-family:'Trebuchet MS',Arial,sans-serif;\n color:#fff;font-weight:700;font-size:1.08rem;margin:0}\n.review-pickle-filter select,.review-pickle-filter select option{background:#071726;\n color:#fff;padding:10px 12px;font-size:1.05rem;border:1px solid #81c784;border-radius:9px;\n max-width:100%;font-family:'Trebuchet MS',Arial,sans-serif}\n@media(max-width:650px){.review-pickle-filter select{width:100%}}\n<\/style><\/head>\n<body>\n\n<header>\n    <h1>PICKLE 3: THEME 2: LEISURE DETECTIVE<\/h1>\n<\/header>\n\n<div class=\"container\">\n    <div class=\"section\" id=\"setup\">\n\n<div class=\"review-pickle-filter\" role=\"status\" aria-live=\"polite\">\n  <strong id=\"pickle-selection-summary\">⚽ 🎨 🎬 🎟️ 4 lijsten geselecteerd · 60 woorden<\/strong>\n  <div style=\"font-size:.9rem;margin-top:5px;opacity:.85\">Wijzig de schuifjes op de vocabulary-pagina.<\/div>\n<\/div>\n        <div class=\"review-pickle-filter\"><label for=\"pickle-count\">Aantal woorden:<\/label>\n          <select id=\"pickle-count\"><option value=\"10\">10<\/option><option value=\"15\" selected>15<\/option><option value=\"60\">Alle beschikbare woorden<\/option><\/select>\n        <\/div>\n        <div class=\"instructions\">\n            🔎 <strong>Mission:<\/strong> Guess a word from Theme 2 using as few hints as possible.<br>\n            🌟 <strong>Bonus:<\/strong> Use <strong>English<\/strong> hints for +1 extra point!\n        <\/div>\n        \n        <label>Number of Agents:<\/label>\n        <select id=\"playerCount\" onchange=\"togglePlayer2()\">\n            <option value=\"1\">1 Agent<\/option>\n            <option value=\"2\" selected>2 Agents<\/option>\n        <\/select>\n        \n        <label>Agent 1:<\/label>\n        <input type=\"text\" id=\"player1\" placeholder=\"Name of Agent 1\" />\n        \n        <div id=\"player2Section\">\n            <label>Agent 2:<\/label>\n            <input type=\"text\" id=\"player2\" placeholder=\"Name of Agent 2\" />\n        <\/div>\n        \n        <button class=\"btn\" style=\"margin-top: 30px;\" onclick=\"startGame()\">Start Mission 🚀<\/button>\n    <\/div>\n\n    <div id=\"game\" style=\"display: none;\">\n        <div class=\"turn\" id=\"turnIndicator\">Turn: ...<\/div>\n        \n        <div class=\"scoreboard\">\n            <div><span id=\"name1\"><\/span>: <span id=\"score1\" style=\"color:var(--hero-yellow)\">0<\/span><\/div>\n            <div id=\"p2ScoreDisplay\"><span id=\"name2\"><\/span>: <span id=\"score2\" style=\"color:var(--hero-yellow)\">0<\/span><\/div>\n        <\/div>\n        \n        <div class=\"word-card\">\n            <div class=\"answer-reveal\" id=\"word-reveal\">Answer: ...<\/div>\n            \n            <label>Hint Language:<\/label>\n            <select id=\"hintLanguage\" onchange=\"resetClue()\">\n                <option value=\"nl\">Dutch<\/option>\n                <option value=\"en\">English (Bonus +1)<\/option>\n            <\/select>\n            \n            <div class=\"hint-text\" id=\"hintBox\">Click 'Next Hint' to start<\/div>\n            \n            <div class=\"flex-buttons\">\n                <button class=\"btn btn-purple\" onclick=\"nextHint()\">Next Hint 💡<\/button>\n                <button class=\"btn btn-purple\" onclick=\"showWord()\">Show Answer 👁️<\/button>\n                <button class=\"btn\" style=\"background:#4caf50; border-color:#2e7d32;\" onclick=\"correctGuess()\">Correct ✅<\/button>\n                <button class=\"btn\" style=\"background:var(--hero-orange); border-color:#388e3c;\" onclick=\"wrongGuess()\">Wrong ❌<\/button>\n            <\/div>\n        <\/div>\n    <\/div>\n    <button class=\"btn\" type=\"button\" onclick=\"returnToVocab()\">← Terug naar Vocab<\/button>\n<\/div>\n\n<footer>\n    &copy; 2026 EngliForce: Make English Your Superpower!\n<\/footer>\n\n<script>\n    let activeThemes=new Set(['sports','hobbies','entertainment','goingout']);\n    const themeNames={sports:'Sports',hobbies:'Hobbies',entertainment:'Entertainment',goingout:'Going Out'};\n    window.addEventListener('message',function(event){\n        if(event.source!==window.parent || !event.data || event.data.type!=='engliforce-theme-selection')return;\n        const keys=event.data.themes;\n        if(!Array.isArray(keys))return;\n        const valid=keys.filter(key=>Object.prototype.hasOwnProperty.call(themeNames,key));\n        if(valid.length===0)return;\n        activeThemes=new Set(valid);\n        const summary=document.getElementById('pickle-selection-summary');\n        if(summary) summary.textContent=valid.map(t=>themeNames[t]).join(' + ')+' · '+(valid.length*15)+' woorden';\n        document.getElementById('setup').style.display='block';\n        document.getElementById('game').style.display='none';\n    });\n\n    const wordList = [{\"en\":\"teammate\",\"hints\":{\"nl\":[\"Je speelt samen met deze persoon.\",\"Jullie dragen vaak hetzelfde shirt.\",\"Het betekent teamgenoot.\"],\"en\":[\"This person plays with you.\",\"You are on the same team.\",\"The opposite of an opponent.\"]},\"theme\":\"sports\"},{\"en\":\"opponent\",\"hints\":{\"nl\":[\"Deze persoon speelt niet in jouw team.\",\"Je probeert deze persoon te verslaan.\",\"Het betekent tegenstander.\"],\"en\":[\"This person is not in your team.\",\"You try to beat this person.\",\"Another word for a rival in a match.\"]},\"theme\":\"sports\"},{\"en\":\"referee\",\"hints\":{\"nl\":[\"Deze persoon speelt meestal niet mee.\",\"Deze persoon kan een overtreding geven.\",\"Hij of zij gebruikt vaak een fluitje.\"],\"en\":[\"This person checks the rules.\",\"This person is not a player.\",\"This person often blows a whistle.\"]},\"theme\":\"sports\"},{\"en\":\"pitch\",\"hints\":{\"nl\":[\"Je speelt hier vaak buiten.\",\"Bij voetbal heeft het witte lijnen.\",\"Het betekent voetbalveld.\"],\"en\":[\"You run on this when you play.\",\"It can be made of grass.\",\"Footballers play on this field.\"]},\"theme\":\"sports\"},{\"en\":\"changing room\",\"hints\":{\"nl\":[\"Je vindt deze ruimte in een sporthal.\",\"Hier zet je vaak je sporttas neer.\",\"Hier trek je je sportkleren aan.\"],\"en\":[\"You can leave your bag here.\",\"Players go here before a match.\",\"You put on your sports clothes here.\"]},\"theme\":\"sports\"},{\"en\":\"whistle\",\"hints\":{\"nl\":[\"Een scheidsrechter heeft dit vaak.\",\"Dit maakt een hard, hoog geluid.\",\"Je blaast erop om het spel te stoppen.\"],\"en\":[\"A referee often has one.\",\"It makes a loud, high sound.\",\"You blow it to stop a match.\"]},\"theme\":\"sports\"},{\"en\":\"player\",\"hints\":{\"nl\":[\"Deze persoon doet mee aan de wedstrijd.\",\"Deze persoon kan scoren.\",\"Het betekent speler.\"],\"en\":[\"This person takes part in a game.\",\"This person can score goals.\",\"Someone who plays.\"]},\"theme\":\"sports\"},{\"en\":\"to practise\",\"hints\":{\"nl\":[\"Je doet dit op de training.\",\"Je doet dit om beter te worden.\",\"Het betekent oefenen.\"],\"en\":[\"You do this at training.\",\"You do this to improve your skills.\",\"You repeat something to get better.\"]},\"theme\":\"sports\"},{\"en\":\"to warm up\",\"hints\":{\"nl\":[\"Je doet dit aan het begin van de training.\",\"Je kunt rustig rennen en bewegen.\",\"Het betekent opwarmen.\"],\"en\":[\"You do this before exercise.\",\"You might jog and stretch.\",\"It prepares your body for sport.\"]},\"theme\":\"sports\"},{\"en\":\"to pass\",\"hints\":{\"nl\":[\"Je doet dit met een bal.\",\"Je geeft de bal aan iemand uit je team.\",\"Het betekent overspelen.\"],\"en\":[\"You do this with a ball.\",\"You send it to a teammate.\",\"You do this instead of keeping the ball.\"]},\"theme\":\"sports\"},{\"en\":\"to throw\",\"hints\":{\"nl\":[\"Je gebruikt je arm en hand.\",\"Een bal kan door de lucht vliegen.\",\"Het betekent gooien.\"],\"en\":[\"You use your arm to do this.\",\"The ball flies through the air.\",\"You do this with your hand, not your foot.\"]},\"theme\":\"sports\"},{\"en\":\"to catch\",\"hints\":{\"nl\":[\"Je gebruikt meestal je handen.\",\"Een teamgenoot gooit een bal naar je.\",\"Het betekent vangen.\"],\"en\":[\"You normally use your hands.\",\"Someone may throw a ball to you.\",\"You stop a flying ball and hold it.\"]},\"theme\":\"sports\"},{\"en\":\"to shoot\",\"hints\":{\"nl\":[\"Dit doe je richting het doel.\",\"Je probeert misschien een doelpunt te maken.\",\"Het betekent schieten.\"],\"en\":[\"You aim towards the goal.\",\"You try to score a goal.\",\"A footballer uses a foot to do this.\"]},\"theme\":\"sports\"},{\"en\":\"to beat\",\"hints\":{\"nl\":[\"Je wilt dit doen met je tegenstander.\",\"Je wint van de ander.\",\"Het betekent verslaan.\"],\"en\":[\"You want to do this to your opponent.\",\"You win the game against someone.\",\"The opposite of losing to someone.\"]},\"theme\":\"sports\"},{\"en\":\"a draw\",\"hints\":{\"nl\":[\"Het is een uitslag.\",\"Bij voetbal kan het bijvoorbeeld 2-2 zijn.\",\"Geen van beide teams wint.\"],\"en\":[\"This is a match result.\",\"The final score might be 1-1.\",\"Neither team wins.\"]},\"theme\":\"sports\"},{\"en\":\"leisure\",\"hints\":{\"nl\":[\"Je hebt het vooral na school of in het weekend.\",\"Je kiest zelf hoe je deze tijd besteedt.\",\"Het betekent vrije tijd.\"],\"en\":[\"You often have it after school.\",\"You can spend it relaxing or enjoying hobbies.\",\"It means free time.\"]},\"theme\":\"hobbies\"},{\"en\":\"an activity\",\"hints\":{\"nl\":[\"Zwemmen of koken is hier een voorbeeld van.\",\"Je kunt dit alleen of samen doen.\",\"Het betekent een bezigheid of activiteit.\"],\"en\":[\"You can do this alone or with friends.\",\"Swimming and painting are examples.\",\"It is something you do.\"]},\"theme\":\"hobbies\"},{\"en\":\"a board game\",\"hints\":{\"nl\":[\"Je speelt dit vaak aan tafel.\",\"Je gebruikt soms pionnen en een dobbelsteen.\",\"Mens-erger-je-niet is een voorbeeld.\"],\"en\":[\"You usually play this at a table.\",\"You might use dice and small pieces.\",\"Monopoly is an example.\"]},\"theme\":\"hobbies\"},{\"en\":\"a collection\",\"hints\":{\"nl\":[\"Je kunt deze steeds groter maken.\",\"Soms bewaar je munten, kaarten of stickers.\",\"Het is een groep dingen die je verzamelt.\"],\"en\":[\"You can add new items to it.\",\"Coins and football cards are examples.\",\"It is a group of things you keep.\"]},\"theme\":\"hobbies\"},{\"en\":\"a skill\",\"hints\":{\"nl\":[\"Je kunt dit oefenen en verbeteren.\",\"Gitaar spelen kan er een zijn.\",\"Het betekent vaardigheid.\"],\"en\":[\"You can learn and improve it.\",\"Cooking and playing guitar are examples.\",\"It is an ability you have learnt.\"]},\"theme\":\"hobbies\"},{\"en\":\"to write stories\",\"hints\":{\"nl\":[\"Je gebruikt woorden en je fantasie.\",\"Je kunt het in een schrift of op een laptop doen.\",\"Je bedenkt en schrijft zelf een verhaal.\"],\"en\":[\"You use words and your imagination.\",\"You can do this in a notebook.\",\"You make up tales and put them into words.\"]},\"theme\":\"hobbies\"},{\"en\":\"to bake\",\"hints\":{\"nl\":[\"Je doet dit vaak in de keuken.\",\"Je gebruikt soms meel, boter en suiker.\",\"Je maakt koekjes of cake in de oven.\"],\"en\":[\"You often do this in a kitchen.\",\"You might use flour and sugar.\",\"You make biscuits or cakes in an oven.\"]},\"theme\":\"hobbies\"},{\"en\":\"to build\",\"hints\":{\"nl\":[\"Je hebt materialen of onderdelen nodig.\",\"Je kunt dit met LEGO of hout doen.\",\"Je maakt iets door delen samen te voegen.\"],\"en\":[\"You need materials or parts.\",\"You can do this with LEGO.\",\"You put pieces together to make something.\"]},\"theme\":\"hobbies\"},{\"en\":\"to take photos\",\"hints\":{\"nl\":[\"Je kunt dit op vakantie doen.\",\"Je gebruikt een camera of telefoon.\",\"Je legt een moment vast in een plaatje.\"],\"en\":[\"You can do this on holiday.\",\"You need a camera or phone.\",\"You capture pictures of people or places.\"]},\"theme\":\"hobbies\"},{\"en\":\"to do crafts\",\"hints\":{\"nl\":[\"Je bent hierbij creatief bezig.\",\"Je gebruikt bijvoorbeeld papier, lijm of verf.\",\"Het betekent knutselen.\"],\"en\":[\"You are creative when you do this.\",\"You might use paper, glue and scissors.\",\"You make things by hand.\"]},\"theme\":\"hobbies\"},{\"en\":\"to play a sport\",\"hints\":{\"nl\":[\"Je doet dit vaak op een sportclub.\",\"Voetbal en tennis zijn voorbeelden.\",\"Je doet mee aan een sportwedstrijd of training.\"],\"en\":[\"You can do this with a team or alone.\",\"Football and tennis are examples.\",\"You take part in a physical game.\"]},\"theme\":\"hobbies\"},{\"en\":\"to play an instrument\",\"hints\":{\"nl\":[\"Je maakt hierbij geluid en melodieën.\",\"Gitaar en piano zijn voorbeelden.\",\"Je maakt muziek met een muziekinstrument.\"],\"en\":[\"You make music when you do this.\",\"Guitars and pianos are examples.\",\"You use something to make melodies.\"]},\"theme\":\"hobbies\"},{\"en\":\"to try out\",\"hints\":{\"nl\":[\"Je kent iets misschien nog niet.\",\"Je wilt weten of het je bevalt.\",\"Het betekent uitproberen.\"],\"en\":[\"You may never have done it before.\",\"You want to see if you enjoy it.\",\"You test something new.\"]},\"theme\":\"hobbies\"},{\"en\":\"to be keen on\",\"hints\":{\"nl\":[\"Dit gebruik je als je enthousiast bent over iets.\",\"Je vertelt hiermee dat je iets heel leuk vindt.\",\"Een Britse manier om te zeggen dat je dol bent op iets.\"],\"en\":[\"This phrase shows your interest.\",\"It is British English.\",\"It means to really like something.\"]},\"theme\":\"hobbies\"},{\"en\":\"to be good at\",\"hints\":{\"nl\":[\"Dit zegt iets over wat je kunt.\",\"Je hebt misschien veel geoefend.\",\"Het betekent ergens goed in zijn.\"],\"en\":[\"You can say this about your talents.\",\"Practising can help you become this.\",\"It means you can do something well.\"]},\"theme\":\"hobbies\"},{\"en\":\"a character\",\"hints\":{\"nl\":[\"Je ziet dit in een film of game.\",\"Het kan een held, slechterik of bijfiguur zijn.\",\"Het is een figuur die in het verhaal voorkomt.\"],\"en\":[\"You meet them in films and games.\",\"They can be heroes or villains.\",\"They are a person in a story.\"]},\"theme\":\"entertainment\"},{\"en\":\"a prequel\",\"hints\":{\"nl\":[\"Het heeft te maken met films die bij elkaar horen.\",\"Het verhaal speelt zich vroeger af dan een eerder deel.\",\"Het vertelt wat er vóór de oorspronkelijke film gebeurde.\"],\"en\":[\"It is part of a film series.\",\"The story takes place earlier in time.\",\"It shows what happened before the original film.\"]},\"theme\":\"entertainment\"},{\"en\":\"subtitles\",\"hints\":{\"nl\":[\"Je kunt dit bij een film aan- of uitzetten.\",\"Je ziet het onderaan het scherm.\",\"Het laat zien wat mensen zeggen.\"],\"en\":[\"You can switch these on while watching.\",\"You see them along the bottom of the screen.\",\"They show the words people are saying.\"]},\"theme\":\"entertainment\"},{\"en\":\"a sequel\",\"hints\":{\"nl\":[\"Het heeft te maken met films uit dezelfde reeks.\",\"Er is al minstens één eerder deel.\",\"Het verhaal gaat verder ná de eerste film.\"],\"en\":[\"There must be an earlier film.\",\"You may meet the same people again.\",\"It continues the story after the original film.\"]},\"theme\":\"entertainment\"},{\"en\":\"to watch\",\"hints\":{\"nl\":[\"Je kunt dit na school op de bank doen.\",\"Je kijkt naar bewegende beelden.\",\"Je doet dit met een film of serie.\"],\"en\":[\"You often do this on a sofa.\",\"It involves looking at something on a screen.\",\"You do it with films and series.\"]},\"theme\":\"entertainment\"},{\"en\":\"lyrics\",\"hints\":{\"nl\":[\"Het hoort bij muziek.\",\"Je kunt het meelezen wanneer een liedje speelt.\",\"Dit zijn de woorden die worden gezongen.\"],\"en\":[\"They are part of a song.\",\"You can read them while listening.\",\"They are the words the singer sings.\"]},\"theme\":\"entertainment\"},{\"en\":\"a soundtrack\",\"hints\":{\"nl\":[\"Het hoort bij een film of game.\",\"Het zorgt vaak voor spanning of emotie.\",\"Het is de muziek die bij de beelden hoort.\"],\"en\":[\"It belongs to a film or game.\",\"It can make a scene feel exciting or sad.\",\"It is the music used in a production.\"]},\"theme\":\"entertainment\"},{\"en\":\"to release a song\",\"hints\":{\"nl\":[\"Een artiest doet dit vaak met nieuwe muziek.\",\"Daarna kunnen fans het nummer beluisteren.\",\"Je brengt een nieuw liedje uit.\"],\"en\":[\"A singer or band does this with new music.\",\"Fans can listen to it afterwards.\",\"It means to make a new track available.\"]},\"theme\":\"entertainment\"},{\"en\":\"to sing along\",\"hints\":{\"nl\":[\"Je hoort muziek en doet zelf mee.\",\"Je moet de woorden een beetje kennen.\",\"Je zingt mee met het liedje.\"],\"en\":[\"You do this when a song is playing.\",\"It helps if you know the words.\",\"You join in with the singer.\"]},\"theme\":\"entertainment\"},{\"en\":\"to turn up the volume\",\"hints\":{\"nl\":[\"Je gebruikt hiervoor vaak een knop.\",\"De buren kunnen het soms niet leuk vinden.\",\"Je zet het geluid harder.\"],\"en\":[\"You might press a button to do this.\",\"The music becomes louder.\",\"You increase how loud the sound is.\"]},\"theme\":\"entertainment\"},{\"en\":\"a reward\",\"hints\":{\"nl\":[\"Je krijgt dit niet zomaar in een game.\",\"Je verdient het door iets te doen.\",\"Het is bijvoorbeeld een prijs of bonus.\"],\"en\":[\"You can earn this in games.\",\"You receive it after achieving something.\",\"It is a prize or bonus.\"]},\"theme\":\"entertainment\"},{\"en\":\"a clue\",\"hints\":{\"nl\":[\"Dit kan heel klein zijn.\",\"Je vindt dit tijdens een zoektocht of puzzel.\",\"Het helpt je een raadsel op te lossen.\"],\"en\":[\"You might find this in a mystery game.\",\"It gives you useful information.\",\"It helps you solve a puzzle.\"]},\"theme\":\"entertainment\"},{\"en\":\"to unlock\",\"hints\":{\"nl\":[\"Je kunt dit in games doen.\",\"Eerst kun je iets nog niet gebruiken.\",\"Na een opdracht speel je bijvoorbeeld een nieuw personage vrij.\"],\"en\":[\"You can do this in games.\",\"Something is not available at first.\",\"You earn access to a new item or person.\"]},\"theme\":\"entertainment\"},{\"en\":\"to complete a level\",\"hints\":{\"nl\":[\"Je doet dit tijdens het gamen.\",\"Je moet alle opdrachten van één gedeelte afmaken.\",\"Je speelt een spelniveau helemaal uit.\"],\"en\":[\"It is something you do in a video game.\",\"You need to finish the challenges in one stage.\",\"You reach the end of a game stage.\"]},\"theme\":\"entertainment\"},{\"en\":\"to get stuck\",\"hints\":{\"nl\":[\"Dit kan frustrerend zijn.\",\"Je weet even niet hoe je verder moet.\",\"Je loopt vast in een lastig stukje van een game.\"],\"en\":[\"This can be frustrating.\",\"You cannot find a way to continue.\",\"You cannot move past a difficult part of a game.\"]},\"theme\":\"entertainment\"},{\"en\":\"a fair\",\"hints\":{\"nl\":[\"Je kunt hier heen met vrienden.\",\"Er zijn attracties en spelletjes.\",\"Je kunt er bijvoorbeeld in het reuzenrad.\"],\"en\":[\"It is a fun place to visit.\",\"There are games and rides.\",\"You might go on a big wheel.\"]},\"theme\":\"goingout\"},{\"en\":\"a shopping centre\",\"hints\":{\"nl\":[\"Dit is een gebouw in de stad.\",\"Er zijn veel verschillende winkels.\",\"Je kunt hier met vrienden winkelen.\"],\"en\":[\"You can go here after school.\",\"There are many shops in one place.\",\"You can buy clothes and gifts here.\"]},\"theme\":\"goingout\"},{\"en\":\"a meeting point\",\"hints\":{\"nl\":[\"Je kiest deze plek voordat je weggaat.\",\"Je vrienden weten waar ze naartoe moeten.\",\"Het is de plek waar je elkaar ontmoet.\"],\"en\":[\"You decide on this before going out.\",\"Everyone knows where to wait.\",\"It is the place where friends meet.\"]},\"theme\":\"goingout\"},{\"en\":\"a queue\",\"hints\":{\"nl\":[\"Je ziet dit vaak bij een attractie.\",\"Je moet soms lang wachten.\",\"Mensen staan achter elkaar in een rij.\"],\"en\":[\"You might see this outside a cinema.\",\"You need to wait for your turn.\",\"People stand in a line.\"]},\"theme\":\"goingout\"},{\"en\":\"an entrance fee\",\"hints\":{\"nl\":[\"Je hebt dit niet overal nodig.\",\"Je betaalt dit voordat je naar binnen gaat.\",\"Dit is de prijs om binnen te komen.\"],\"en\":[\"You pay this before you go inside.\",\"It could cost five pounds.\",\"It is the price to enter.\"]},\"theme\":\"goingout\"},{\"en\":\"to meet up\",\"hints\":{\"nl\":[\"Je kunt dit na school doen.\",\"Je maakt een afspraak met vrienden.\",\"Je spreekt met iemand af om elkaar te zien.\"],\"en\":[\"You often do this with friends.\",\"You plan a place and time.\",\"You arrange to see each other.\"]},\"theme\":\"goingout\"},{\"en\":\"to hang out\",\"hints\":{\"nl\":[\"Dit doe je vaak met vrienden.\",\"Je hebt niet altijd een speciaal plan.\",\"Je brengt samen ontspannen tijd door.\"],\"en\":[\"You can do this in the park.\",\"You do not need a special plan.\",\"You spend relaxed time with friends.\"]},\"theme\":\"goingout\"},{\"en\":\"to invite\",\"hints\":{\"nl\":[\"Dit kun je met een berichtje doen.\",\"Je vraagt iemand om mee te gaan.\",\"Je vraagt iemand te komen naar jouw feestje.\"],\"en\":[\"You can do this by text message.\",\"You ask someone to join you.\",\"You ask a friend to come to a party.\"]},\"theme\":\"goingout\"},{\"en\":\"to book\",\"hints\":{\"nl\":[\"Je doet dit vaak voordat je ergens heen gaat.\",\"Je kunt het online doen.\",\"Je reserveert bijvoorbeeld tickets voor de bioscoop.\"],\"en\":[\"You often do this before an event.\",\"You can do it online.\",\"You reserve tickets in advance.\"]},\"theme\":\"goingout\"},{\"en\":\"to grab a bite\",\"hints\":{\"nl\":[\"Je hebt trek na school.\",\"Je gaat even ergens eten.\",\"Het is een informele uitdrukking voor iets gaan eten.\"],\"en\":[\"You feel hungry.\",\"You might stop at a café.\",\"It means getting something to eat.\"]},\"theme\":\"goingout\"},{\"en\":\"to arrive\",\"hints\":{\"nl\":[\"Dit gebeurt na je reis.\",\"Je bent niet meer onderweg.\",\"Je komt op je bestemming aan.\"],\"en\":[\"This happens at the end of a journey.\",\"You reach the cinema or station.\",\"You get to your destination.\"]},\"theme\":\"goingout\"},{\"en\":\"to pick someone up\",\"hints\":{\"nl\":[\"Je gaat ergens heen voor een ander.\",\"Je kunt dit met de auto of fiets doen.\",\"Je haalt bijvoorbeeld een vriend op bij school.\"],\"en\":[\"You go to a place for another person.\",\"You might do it by car.\",\"You collect a friend and go together.\"]},\"theme\":\"goingout\"},{\"en\":\"to be up for something\",\"hints\":{\"nl\":[\"Een vriend vraagt of je iets wilt doen.\",\"Je hebt er wel zin in.\",\"Je staat ervoor open om mee te gaan.\"],\"en\":[\"A friend suggests a plan.\",\"You feel like joining.\",\"You want to do the suggested activity.\"]},\"theme\":\"goingout\"},{\"en\":\"to tag along\",\"hints\":{\"nl\":[\"Je vrienden hebben al een plan.\",\"Je vraagt of jij ook mee mag.\",\"Je gaat met anderen mee.\"],\"en\":[\"Your friends already have a plan.\",\"You ask whether you can join them.\",\"You go with other people.\"]},\"theme\":\"goingout\"},{\"en\":\"to have a good time\",\"hints\":{\"nl\":[\"Dit wil je tijdens een uitje.\",\"Je lacht en geniet.\",\"Je hebt het gezellig en naar je zin.\"],\"en\":[\"You feel happy at an event.\",\"You laugh and enjoy yourself.\",\"You enjoy the time you spend together.\"]},\"theme\":\"goingout\"}];\n\n    let words = [];\n    let p1 = '', p2 = '', playerCount = 2;\n    let score = [0, 0];\n    let currentIndex = 0;\n    let currentHint = 0;\n    let currentPlayer = 0;\n\n    function returnToVocab() { window.parent.postMessage({type:'engliforce-nav',view:'vocab'}, '*'); }\n    function togglePlayer2() {\n        const val = document.getElementById(\"playerCount\").value;\n        document.getElementById(\"player2Section\").style.display = (val === \"1\") ? \"none\" : \"block\";\n    }\n\n    function startGame() {\n        playerCount = parseInt(document.getElementById(\"playerCount\").value);\n        p1 = document.getElementById(\"player1\").value || \"Agent 1\";\n        p2 = document.getElementById(\"player2\").value || \"Agent 2\";\n\n        // Kopieer de lijst en schud hem volledig willekeurig door elkaar\n        const pool=wordList.filter(w=>activeThemes.has(w.theme));\n        const chosen=document.getElementById('pickle-count').value;\n        words=[...pool].sort(()=>Math.random()-.5).slice(0,chosen==='60'?pool.length:Number(chosen));\n\n        score = [0, 0];\n        currentIndex = 0;\n        currentPlayer = 0;\n\n        document.getElementById(\"name1\").textContent = p1;\n        document.getElementById(\"name2\").textContent = (playerCount === 2) ? p2 : \"\";\n        document.getElementById(\"p2ScoreDisplay\").style.visibility = (playerCount === 2) ? \"visible\" : \"hidden\";\n\n        document.getElementById(\"setup\").style.display = \"none\";\n        document.getElementById(\"game\").style.display = \"block\";\n        updateScore();\n        showTurn();\n        resetWordCard();\n    }\n\n    function showTurn() {\n        const name = currentPlayer === 0 ? p1 : p2;\n        document.getElementById(\"turnIndicator\").textContent = (playerCount === 1) ? `Agent: ${p1}` : `Turn: ${name}`;\n    }\n\n    function resetWordCard() {\n        currentHint = 0;\n        document.getElementById(\"hintBox\").textContent = \"Click 'Next Hint' to start\";\n        document.getElementById(\"word-reveal\").style.display = \"none\";\n    }\n\n    function nextHint() {\n        if (currentIndex >= words.length) return;\n        if (currentHint >= 3) return;\n        const lang = document.getElementById(\"hintLanguage\").value;\n        const hint = words[currentIndex].hints[lang][currentHint];\n        document.getElementById(\"hintBox\").textContent = `Hint ${currentHint + 1}: ${hint}`;\n        currentHint++;\n    }\n\n    function showWord() {\n        if (currentIndex >= words.length) return;\n        document.getElementById(\"word-reveal\").textContent = `Answer: ${words[currentIndex].en}`;\n        document.getElementById(\"word-reveal\").style.display = \"block\";\n    }\n\n    function correctGuess() {\n        if (currentIndex >= words.length) return;\n        const lang = document.getElementById(\"hintLanguage\").value;\n        let points = Math.max(1, 4 - currentHint);\n        if (lang === \"en\") points += 1;\n        score[currentPlayer] += points;\n        nextWord();\n    }\n\n    function wrongGuess() {\n        if (currentIndex >= words.length) return;\n        nextWord();\n    }\n\n    function nextWord() {\n        currentIndex++;\n        if (playerCount === 2) currentPlayer = 1 - currentPlayer;\n        updateScore();\n        if (currentIndex >= words.length) {\n            document.getElementById(\"turnIndicator\").textContent = \"Mission Accomplished!\";\n            document.getElementById(\"hintBox\").textContent = \"All words discovered!\";\n            document.getElementById(\"word-reveal\").style.display = \"none\";\n        } else {\n            showTurn();\n            resetWordCard();\n        }\n    }\n\n    function updateScore() {\n        document.getElementById(\"score1\").textContent = score[0] + \" pt\";\n        document.getElementById(\"score2\").textContent = score[1] + \" pt\";\n    }\n\n    function resetClue() {\n        if (currentIndex >= words.length) return;\n        if (currentHint > 0) {\n            const lang = document.getElementById(\"hintLanguage\").value;\n            const hint = words[currentIndex].hints[lang][currentHint - 1];\n            document.getElementById(\"hintBox\").textContent = `Hint ${currentHint}: ${hint}`;\n        }\n    }\n<\/script>\n\n<script>\n(function(){\n  function report(){\n    const height=Math.ceil(document.body.scrollHeight);\n    window.parent.postMessage({type:'engliforce-height',height:height},'*');\n  }\n  window.addEventListener('load',report);\n  if ('ResizeObserver' in window) new ResizeObserver(report).observe(document.body);\n  document.addEventListener('click',()=>setTimeout(report,90));\n  setTimeout(report,80);\n})();\n<\/script>\n<\/body>\n<\/html>"};
+  const pickleFrames={};
+  const loaded={pickle1:false,pickle2:false,pickle3:false};
+  const vocabPage=document.getElementById('vocab-page');
+  for(const key of Object.keys(pickleDocuments)) {
+    const frame=document.getElementById('frame-'+key);
+    pickleFrames[key]=frame;
+    frame.addEventListener('load',()=>{
+      if(loaded[key] && frame.contentWindow)frame.contentWindow.postMessage({type:'engliforce-theme-selection',themes:getSelectedThemes()},'*');
+    });
+  }
+  window.notifyPickleSelections=function(){
+    const themes=getSelectedThemes();
+    for(const [key,frame] of Object.entries(pickleFrames)) {
+      if(loaded[key] && frame.contentWindow)frame.contentWindow.postMessage({type:'engliforce-theme-selection',themes},'*');
+    }
+  };
+  window.showPage=function(key){
+    if(key!=='vocab' && !Object.prototype.hasOwnProperty.call(pickleFrames,key))return;
+    if (key!=='vocab') renderVideoChoices(); // stopt afspelen bij het openen van een Pickle
+    if(key!=='vocab' && !loaded[key]){
+      loaded[key]=true;
+      pickleFrames[key].srcdoc=pickleDocuments[key];
+    }
+    vocabPage.classList.toggle('hidden-page',key!=='vocab');
+    for(const [name,frame] of Object.entries(pickleFrames)){
+      frame.classList.toggle('active',name===key);
+      frame.setAttribute('aria-hidden',name===key?'false':'true');
+    }
+    window.scrollTo({top:0,behavior:'instant'});
+  };
+  window.addEventListener('message',event=>{
+    const source=Object.keys(pickleFrames).find(key=>pickleFrames[key].contentWindow===event.source);
+    if(!source||!event.data||typeof event.data!=='object')return;
+    if(event.data.type==='engliforce-nav' && event.data.view==='vocab') showPage('vocab');
+    if(event.data.type==='engliforce-height' && Number.isFinite(event.data.height)){
+      pickleFrames[source].style.height=Math.max(200,Math.min(20000,event.data.height+3))+'px';
+    }
+  });
+  showPage('vocab');
+})();
+</script>
+</body>
+</html>
