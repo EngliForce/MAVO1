@@ -189,52 +189,116 @@ footer{box-sizing:border-box;background:transparent!important;color:#afc0d0!impo
 .ef-breadcrumb .ef-mission-back-link{color:#fff!important;}
 @media(max-width:530px){.ef-mission-back-link{font-size:.96rem;padding:12px 17px;width:100%;max-width:400px}}
 </style>
+<style id="ef-ordinals-flashcards-style">
+/* Only styles the integrated original Ordinals flashcards; the rest of the lesson is unchanged. */
+#ef-ordinals-flashcards{width:100%;box-sizing:border-box}
+#ef-ordinals-flashcards .ef-flash-instructions{text-align:center;margin:10px auto 24px}
+#ef-ordinals-flashcards .ef-flash-controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin:16px 0}
+#ef-ordinals-flashcards .ef-flash-controls label{display:flex;align-items:center;gap:8px;font-size:1rem}
+#ef-ordinals-flashcards .ef-flash-controls button,#ef-ordinals-flashcards .ef-flash-controls select{font-family:inherit;font-size:1rem;padding:10px 12px;border-radius:8px}
+#ef-ordinals-flashcards .ef-flash-controls button{cursor:pointer;background:#43a047;color:white;border:0;font-weight:700}
+#ef-ordinals-flashcards .ef-flash-controls button:hover{background:#2e7d32}
+#ef-ordinals-flashcards .ef-flash-controls button:focus-visible{outline:3px solid #ffb703;outline-offset:3px}
+#ef-ordinals-flashcards .flashcards-container{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;margin-top:24px;padding:12px}
+#ef-ordinals-flashcards .card{position:relative;width:220px;height:160px;perspective:1000px;cursor:pointer}
+#ef-ordinals-flashcards .card-inner{position:relative;width:100%;height:100%;text-align:center;transition:transform .7s ease;transform-style:preserve-3d;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+#ef-ordinals-flashcards .card.flipped .card-inner{transform:rotateY(180deg)}
+#ef-ordinals-flashcards .card-front,#ef-ordinals-flashcards .card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:1rem;box-sizing:border-box}
+#ef-ordinals-flashcards .card-front{background:linear-gradient(145deg,#fff,#e8f5e9);color:#2e7d32;font-size:1.3rem;font-weight:bold}
+#ef-ordinals-flashcards .card-back{background:#43a047;color:#fff;transform:rotateY(180deg);font-size:1.2rem}
+#ef-ordinals-flashcards .checkbox-container{position:absolute;bottom:10px;left:10px;font-size:.85rem;display:flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.85);color:#111;padding:4px 6px;border-radius:6px;cursor:pointer}
+#ef-ordinals-flashcards .checkbox-container input{margin:0}
+@media(max-width:580px){#ef-ordinals-flashcards .ef-flash-controls{gap:10px}#ef-ordinals-flashcards .ef-flash-controls button{font-size:.92rem}#ef-ordinals-flashcards .flashcards-container{gap:16px}#ef-ordinals-flashcards .card{width:min(100%,260px)}}
+</style>
 </head>
 <body><header class="ef-header"><h1>ENGLIFORCE ACADEMY</h1><p>MISSION 2 · GRAMMAR: ORDINALS</p></header>
 <main>
-<nav class="ef-mission-back-nav" aria-label="Terug naar Grammar Topics binnen Mission 2"><a class="ef-mission-back-link" href="m1_mission_2.html#grammar">← TERUG NAAR GRAMMAR TOPICS</a></nav>
 
-<nav aria-label="Kies een uitlegonderdeel" class="ef-topic-tabs"><button aria-controls="ef-topic-1" aria-selected="true" class="ef-topic-button" data-ef-topic="ef-topic-1" type="button">📍 Rangtelwoorden</button><button aria-controls="ef-topic-2" aria-selected="false" class="ef-topic-button" data-ef-topic="ef-topic-2" type="button">🃏 Flashcards</button><button aria-controls="ef-topic-3" aria-selected="false" class="ef-topic-button" data-ef-topic="ef-topic-3" type="button">🎬 Video</button></nav><section class="ef-topic-panel" data-ef-explanation-start="true" id="ef-topic-1">
-<h2>📍 Rangtelwoorden (Ordinal Numbers)</h2>
+<nav aria-label="Kies een uitlegonderdeel" class="ef-topic-tabs">
+<button aria-controls="ef-topic-1" aria-selected="true" class="ef-topic-button" data-ef-topic="ef-topic-1" type="button">📖 ALGEMENE REGEL</button>
+<button aria-controls="ef-topic-4" aria-selected="false" class="ef-topic-button" data-ef-topic="ef-topic-4" type="button">⚠️ UITZONDERINGEN</button>
+<button aria-controls="ef-topic-2" aria-selected="false" class="ef-topic-button" data-ef-topic="ef-topic-2" type="button">🃏 Flashcards</button>
+<button aria-controls="ef-topic-3" aria-selected="false" class="ef-topic-button" data-ef-topic="ef-topic-3" type="button">🎬 Video</button>
+</nav><section class="ef-topic-panel" data-ef-explanation-start="true" id="ef-topic-1">
+<h2>📖 Algemene regel – Ordinal Numbers</h2>
 <p>Rangtelwoorden gebruik je om een volgorde aan te geven, zoals <em>eerste</em>, <em>tweede</em>, enzovoort.</p>
-<p><strong>Algemene regel:</strong> Vanaf het getal 4 voeg je meestal <code>-th</code> toe aan het eind van het telwoord.</p>
+<p><strong>De algemene regel:</strong> je voegt meestal <code>-th</code> toe aan het Engelse telwoord. Dit geldt voor veel getallen vanaf 4. Sommige woorden veranderen van spelling: die vind je onder de knop <strong>UITZONDERINGEN</strong>.</p>
 <table>
-<tr>
-<th>Getal</th>
-<th>Ordinal (rangtelwoord)</th>
-</tr>
-<tr><td>4</td><td>fourth</td></tr>
-<tr><td>6</td><td>sixth</td></tr>
-<tr><td>7</td><td>seventh</td></tr>
-<tr><td>10</td><td>tenth</td></tr>
-<tr><td>13</td><td>thirteenth</td></tr>
+<tr><th>Getal</th><th>Engels telwoord</th><th>Rangtelwoord</th></tr>
+<tr><td>4e</td><td>four</td><td class="highlight">fourth</td></tr>
+<tr><td>6e</td><td>six</td><td class="highlight">sixth</td></tr>
+<tr><td>7e</td><td>seven</td><td class="highlight">seventh</td></tr>
+<tr><td>10e</td><td>ten</td><td class="highlight">tenth</td></tr>
+<tr><td>11e</td><td>eleven</td><td class="highlight">eleventh</td></tr>
+<tr><td>13e</td><td>thirteen</td><td class="highlight">thirteenth</td></tr>
+<tr><td>14e</td><td>fourteen</td><td class="highlight">fourteenth</td></tr>
+<tr><td>16e</td><td>sixteen</td><td class="highlight">sixteenth</td></tr>
+<tr><td>100e</td><td>one hundred</td><td class="highlight">one hundredth</td></tr>
 </table>
-<p>⚠️ Sommige rangtelwoorden zijn uitzonderingen. Ze hebben een andere vorm of spelling:</p>
+<p><strong>Afkortingen:</strong> de meeste rangtelwoorden krijgen <code>th</code> achter het cijfer, bijvoorbeeld <strong>4th</strong>, <strong>6th</strong>, <strong>11th</strong> en <strong>13th</strong>. Voor sommige getallen gebruik je <code>st</code>, <code>nd</code> of <code>rd</code>; ook dat staat bij <strong>UITZONDERINGEN</strong>.</p>
+</section>
+<section class="ef-topic-panel" hidden="" id="ef-topic-4">
+<h2>⚠️ Uitzonderingen – Ordinal Numbers</h2>
+<p>Bij deze rangtelwoorden kun je niet zomaar <code>-th</code> achter het telwoord zetten. Leer de afwijkende spellingen goed.</p>
+<h3>1. Afwijkende woorden en spellingen</h3>
 <table>
-<tr>
-<th>Nederlands</th>
-<th>Engels</th>
-</tr>
-<tr><td>1e</td><td class="highlight">first</td></tr>
-<tr><td>2e</td><td class="highlight">second</td></tr>
-<tr><td>3e</td><td class="highlight">third</td></tr>
-<tr><td>5e</td><td class="highlight">fifth</td></tr>
-<tr><td>8e</td><td class="highlight">eighth</td></tr>
-<tr><td>9e</td><td class="highlight">ninth</td></tr>
-<tr><td>12e</td><td class="highlight">twelfth</td></tr>
-<tr><td>20e</td><td class="highlight">twentieth</td></tr>
-<tr>
-<td>21e</td>
-<td class="highlight">twenty-first<br/><small>(alleen het tweede deel krijgt de rangvorm)</small></td>
-</tr>
-<tr><td>30e, 40e, 50e, etc.</td><td class="highlight">thirtieth, fortieth, fiftieth, etc.</td></tr>
+<tr><th>Getal</th><th>Telwoord</th><th>Rangtelwoord</th></tr>
+<tr><td>1st</td><td>one</td><td class="highlight">first</td></tr>
+<tr><td>2nd</td><td>two</td><td class="highlight">second</td></tr>
+<tr><td>3rd</td><td>three</td><td class="highlight">third</td></tr>
+<tr><td>5th</td><td>five</td><td class="highlight">fifth</td></tr>
+<tr><td>8th</td><td>eight</td><td class="highlight">eighth</td></tr>
+<tr><td>9th</td><td>nine</td><td class="highlight">ninth</td></tr>
+<tr><td>12th</td><td>twelve</td><td class="highlight">twelfth</td></tr>
 </table>
+<p><strong>Let op:</strong> bij <em>fifth</em> en <em>twelfth</em> verandert <code>ve</code> in <code>f</code>; bij <em>ninth</em> verdwijnt de <code>e</code> en bij <em>eighth</em> schrijf je maar één extra <code>h</code>.</p>
+<h3>2. Tientallen op -y worden -ieth</h3>
+<p>Bij een heel tiental verandert de eindletter <strong>-y</strong> in <strong>-ie</strong> en voeg je <strong>-th</strong> toe: <em>twenty → twentieth</em>.</p>
+<table>
+<tr><th>Getal</th><th>Telwoord</th><th>Rangtelwoord</th></tr>
+<tr><td>20th</td><td>twenty</td><td class="highlight">twentieth</td></tr>
+<tr><td>30th</td><td>thirty</td><td class="highlight">thirtieth</td></tr>
+<tr><td>40th</td><td>forty</td><td class="highlight">fortieth</td></tr>
+<tr><td>50th</td><td>fifty</td><td class="highlight">fiftieth</td></tr>
+<tr><td>60th</td><td>sixty</td><td class="highlight">sixtieth</td></tr>
+<tr><td>70th</td><td>seventy</td><td class="highlight">seventieth</td></tr>
+<tr><td>80th</td><td>eighty</td><td class="highlight">eightieth</td></tr>
+<tr><td>90th</td><td>ninety</td><td class="highlight">ninetieth</td></tr>
+</table>
+<h3>3. Samengestelde getallen</h3>
+<p>Bij een samengesteld getal verandert <strong>alleen het laatste woord</strong> in een rangtelwoord. De rest blijft hetzelfde.</p>
+<p><strong>Het koppelteken (-):</strong> net als bij gewone Engelse telwoorden schrijf je samengestelde getallen vanaf 21 met een <strong>streepje tussen de tientallen en de eenheden</strong>. Dat blijft zo bij rangtelwoorden: <em>twenty-one → twenty-first</em>, <em>thirty-two → thirty-second</em>. Bij hele tientallen, zoals <em>twentieth</em> en <em>thirtieth</em>, gebruik je geen koppelteken.</p>
+<table>
+<tr><th>Getal</th><th>Engels</th></tr>
+<tr><td>21st</td><td class="highlight">twenty-first</td></tr>
+<tr><td>22nd</td><td class="highlight">twenty-second</td></tr>
+<tr><td>23rd</td><td class="highlight">twenty-third</td></tr>
+<tr><td>24th</td><td class="highlight">twenty-fourth</td></tr>
+<tr><td>35th</td><td class="highlight">thirty-fifth</td></tr>
+<tr><td>48th</td><td class="highlight">forty-eighth</td></tr>
+<tr><td>59th</td><td class="highlight">fifty-ninth</td></tr>
+<tr><td>101st</td><td class="highlight">one hundred and first</td></tr>
+</table>
+<h3>4. De afkortingen -st, -nd en -rd</h3>
+<p>Getallen die eindigen op <strong>1</strong>, <strong>2</strong> of <strong>3</strong> krijgen meestal <strong>st</strong>, <strong>nd</strong> of <strong>rd</strong>: <em>1st, 2nd, 3rd, 21st, 22nd, 23rd</em>.</p>
+<p><strong>Uitzondering op die afkortingen:</strong> <em>11th, 12th en 13th</em> eindigen op <strong>th</strong>, net als <em>111th, 112th en 113th</em>. De laatste twee cijfers bepalen dus de uitzondering.</p>
 </section>
 <section class="ef-topic-panel" hidden="" id="ef-topic-2">
 <h2>🃏 Flashcards</h2>
 <p>Oefen de getallen met interactieve flashcards.</p>
-<div class="links">
-<a href="m1t2_ordinals_flashcards.html" rel="noopener noreferrer" target="_blank">Open Flashcards</a>
+<div class="ef-ordinals-flashcards" id="ef-ordinals-flashcards">
+  <p class="ef-flash-instructions"><strong>Rangtelwoorden 1 t/m 101.</strong> Klik op een kaart om de vertaling te zien. Oefen slim!</p>
+  <div class="ef-flash-controls">
+    <label>Aantal kaarten:
+      <select id="card-count"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+    </label>
+    <label><input id="reverse-cards" type="checkbox"> Nederlands → Engels</label>
+    <button type="button" data-flash-action="next">Next 🔁</button>
+    <button type="button" data-flash-action="unknown">Oefen ‘ken ik niet’ 🎯</button>
+    <button type="button" data-flash-action="known">Oefen ‘ken ik wel’ ✅</button>
+    <button type="button" data-flash-action="all">Oefen alles 🔄</button>
+  </div>
+  <div class="flashcards-container" id="flashcards-container" aria-live="polite"></div>
 </div>
 </section>
 <section class="ef-topic-panel" data-ef-video-container="true" hidden="" id="ef-topic-3">
@@ -342,5 +406,210 @@ if(nav){
   buttons.forEach((b,i)=>b.addEventListener('click',()=>activate(i)));
   activate(0);
 })();
-</script></body>
+</script><script id="ef-ordinals-flashcards-script">
+(()=>{
+"use strict";
+
+    const flashcards = [
+      { en: "1st – first", nl: "eerste" },
+      { en: "2nd – second", nl: "tweede" },
+      { en: "3rd – third", nl: "derde" },
+      { en: "4th – fourth", nl: "vierde" },
+      { en: "5th – fifth", nl: "vijfde" },
+      { en: "6th – sixth", nl: "zesde" },
+      { en: "7th – seventh", nl: "zevende" },
+      { en: "8th – eighth", nl: "achtste" },
+      { en: "9th – ninth", nl: "negende" },
+      { en: "10th – tenth", nl: "tiende" },
+      { en: "11th – eleventh", nl: "elfde" },
+      { en: "12th – twelfth", nl: "twaalfde" },
+      { en: "13th – thirteenth", nl: "dertiende" },
+      { en: "14th – fourteenth", nl: "veertiende" },
+      { en: "15th – fifteenth", nl: "vijftiende" },
+      { en: "16th – sixteenth", nl: "zestiende" },
+      { en: "17th – seventeenth", nl: "zeventiende" },
+      { en: "18th – eighteenth", nl: "achttiende" },
+      { en: "19th – nineteenth", nl: "negentiende" },
+      { en: "20th – twentieth", nl: "twintigste" },
+      { en: "21st – twenty-first", nl: "eenentwintigste" },
+      { en: "22nd – twenty-second", nl: "tweeëntwintigste" },
+      { en: "23rd – twenty-third", nl: "drieëntwintigste" },
+      { en: "24th – twenty-fourth", nl: "vierentwintigste" },
+      { en: "25th – twenty-fifth", nl: "vijfentwintigste" },
+      { en: "26th – twenty-sixth", nl: "zesentwintigste" },
+      { en: "27th – twenty-seventh", nl: "zevenentwintigste" },
+      { en: "28th – twenty-eighth", nl: "achtentwintigste" },
+      { en: "29th – twenty-ninth", nl: "negenentwintigste" },
+      { en: "30th – thirtieth", nl: "dertigste" },
+      { en: "31st – thirty-first", nl: "eenendertigste" },
+      { en: "32nd – thirty-second", nl: "tweeëndertigste" },
+      { en: "33rd – thirty-third", nl: "drieëndertigste" },
+      { en: "34th – thirty-fourth", nl: "vierendertigste" },
+      { en: "35th – thirty-fifth", nl: "vijfendertigste" },
+      { en: "36th – thirty-sixth", nl: "zesendertigste" },
+      { en: "37th – thirty-seventh", nl: "zevenendertigste" },
+      { en: "38th – thirty-eighth", nl: "achtendertigste" },
+      { en: "39th – thirty-ninth", nl: "negenendertigste" },
+      { en: "40th – fortieth", nl: "veertigste" },
+      { en: "41st – forty-first", nl: "eenenveertigste" },
+      { en: "42nd – forty-second", nl: "tweeënveertigste" },
+      { en: "43rd – forty-third", nl: "drieënveertigste" },
+      { en: "44th – forty-fourth", nl: "vierenveertigste" },
+      { en: "45th – forty-fifth", nl: "vijfenveertigste" },
+      { en: "46th – forty-sixth", nl: "zesenveertigste" },
+      { en: "47th – forty-seventh", nl: "zevenenveertigste" },
+      { en: "48th – forty-eighth", nl: "achtenveertigste" },
+      { en: "49th – forty-ninth", nl: "negenenveertigste" },
+      { en: "50th – fiftieth", nl: "vijftigste" },
+      { en: "51st – fifty-first", nl: "eenenvijftigste" },
+      { en: "52nd – fifty-second", nl: "tweeënvijftigste" },
+      { en: "53rd – fifty-third", nl: "drieënvijftigste" },
+      { en: "54th – fifty-fourth", nl: "vierenvijftigste" },
+      { en: "55th – fifty-fifth", nl: "vijfenvijftigste" },
+      { en: "56th – fifty-sixth", nl: "zesenvijftigste" },
+      { en: "57th – fifty-seventh", nl: "zevenenvijftigste" },
+      { en: "58th – fifty-eighth", nl: "achtenvijftigste" },
+      { en: "59th – fifty-ninth", nl: "negenenvijftigste" },
+      { en: "60th – sixtieth", nl: "zestigste" },
+      { en: "61st – sixty-first", nl: "eenenzestigste" },
+      { en: "62nd – sixty-second", nl: "tweeënzestigste" },
+      { en: "63rd – sixty-third", nl: "drieënzestigste" },
+      { en: "64th – sixty-fourth", nl: "vierenzestigste" },
+      { en: "65th – sixty-fifth", nl: "vijfenzestigste" },
+      { en: "66th – sixty-sixth", nl: "zesenzestigste" },
+      { en: "67th – sixty-seventh", nl: "zevenenzestigste" },
+      { en: "68th – sixty-eighth", nl: "achtenzestigste" },
+      { en: "69th – sixty-ninth", nl: "negenenzestigste" },
+      { en: "70th – seventieth", nl: "zeventigste" },
+      { en: "71st – seventy-first", nl: "eenenzeventigste" },
+      { en: "72nd – seventy-second", nl: "tweeënzeventigste" },
+      { en: "73rd – seventy-third", nl: "drieënzeventigste" },
+      { en: "74th – seventy-fourth", nl: "vierenzeventigste" },
+      { en: "75th – seventy-fifth", nl: "vijfenzeventigste" },
+      { en: "76th – seventy-sixth", nl: "zesenzeventigste" },
+      { en: "77th – seventy-seventh", nl: "zevenenzeventigste" },
+      { en: "78th – seventy-eighth", nl: "achtenzeventigste" },
+      { en: "79th – seventy-ninth", nl: "negenenzeventigste" },
+      { en: "80th – eightieth", nl: "tachtigste" },
+      { en: "81st – eighty-first", nl: "eenentachtigste" },
+      { en: "82nd – eighty-second", nl: "tweeëntachtigste" },
+      { en: "83rd – eighty-third", nl: "drieëntachtigste" },
+      { en: "84th – eighty-fourth", nl: "vierentachtigste" },
+      { en: "85th – eighty-fifth", nl: "vijfentachtigste" },
+      { en: "86th – eighty-sixth", nl: "zesentachtigste" },
+      { en: "87th – eighty-seventh", nl: "zevenentachtigste" },
+      { en: "88th – eighty-eighth", nl: "achtentachtigste" },
+      { en: "89th – eighty-ninth", nl: "negenentachtigste" },
+      { en: "90th – ninetieth", nl: "negentigste" },
+      { en: "91st – ninety-first", nl: "eenennegentigste" },
+      { en: "92nd – ninety-second", nl: "tweeënnegentigste" },
+      { en: "93rd – ninety-third", nl: "drieënnegentigste" },
+      { en: "94th – ninety-fourth", nl: "vierennegentigste" },
+      { en: "95th – ninety-fifth", nl: "vijfennegentigste" },
+      { en: "96th – ninety-sixth", nl: "zesennegentigste" },
+      { en: "97th – ninety-seventh", nl: "zevenennegentigste" },
+      { en: "98th – ninety-eighth", nl: "achtennegentigste" },
+      { en: "99th – ninety-ninth", nl: "negenennegentigste" },
+      { en: "100th – one hundredth", nl: "honderdste" },
+      { en: "101st – one hundred and first", nl: "honderdeerste" }
+    ];
+
+    const knownWords = new Set();
+
+    function generateCards() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, reversed, container));
+    }
+
+    function practiceUnknown() {
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const unknown = flashcards.filter(word => !knownWords.has(word.en));
+      if (unknown.length === 0) {
+        container.innerHTML = "<p>🎉 Je kent alle woorden al!</p>";
+        return;
+      }
+      unknown.slice(0, 10).forEach(word => createCard(word, reversed, container));
+    }
+
+    function practiceKnown() {
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const known = flashcards.filter(word => knownWords.has(word.en));
+      if (known.length === 0) {
+        container.innerHTML = "<p>📋 Je hebt nog geen woorden gemarkeerd als ‘Ken ik’.</p>";
+        return;
+      }
+      known.slice(0, 10).forEach(word => createCard(word, reversed, container));
+    }
+
+    function practiceAll() {
+      const count = parseInt(document.getElementById('card-count').value);
+      const reversed = document.getElementById('reverse-cards').checked;
+      const container = document.getElementById('flashcards-container');
+      container.innerHTML = '';
+      const selected = flashcards.sort(() => 0.5 - Math.random()).slice(0, count);
+      selected.forEach(word => createCard(word, reversed, container));
+    }
+
+    function createCard(word, reversed, container) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => card.classList.toggle('flipped');
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'card-inner';
+
+      const front = document.createElement('div');
+      front.className = 'card-front';
+      front.innerHTML = reversed ? word.nl : word.en;
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.innerHTML = reversed ? word.en : word.nl;
+
+      const checkboxContainer = document.createElement('label');
+      checkboxContainer.className = 'checkbox-container';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = knownWords.has(word.en);
+      checkbox.onchange = (e) => {
+        e.stopPropagation();
+        if (checkbox.checked) {
+          knownWords.add(word.en);
+        } else {
+          knownWords.delete(word.en);
+        }
+      };
+      const labelText = document.createTextNode('Ken ik');
+      checkboxContainer.appendChild(checkbox);
+      checkboxContainer.appendChild(labelText);
+
+      cardInner.appendChild(front);
+      cardInner.appendChild(back);
+      card.appendChild(cardInner);
+      card.appendChild(checkboxContainer);
+      container.appendChild(card);
+    }
+
+    
+    // Flashcards open in the same Grammar Briefing and no longer need a separate HTML file.
+    const root = document.getElementById('ef-ordinals-flashcards');
+    root.querySelector('[data-flash-action="next"]').addEventListener('click', generateCards);
+    root.querySelector('[data-flash-action="unknown"]').addEventListener('click', practiceUnknown);
+    root.querySelector('[data-flash-action="known"]').addEventListener('click', practiceKnown);
+    root.querySelector('[data-flash-action="all"]').addEventListener('click', practiceAll);
+    root.querySelector('#reverse-cards').addEventListener('change', generateCards);
+    root.querySelector('#card-count').addEventListener('change', generateCards);
+    generateCards();
+  
+})();
+</script>
+</body>
 </html>
