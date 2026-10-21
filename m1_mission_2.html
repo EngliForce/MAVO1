@@ -358,8 +358,17 @@ function starBurst(el){
 }
 const grammar=document.getElementById('grammar-panel'),test=document.getElementById('test-panel');
 const grammarBtn=document.getElementById('grammar-toggle'),testBtn=document.getElementById('test-toggle');
-function setPanel(which){
+function setPanel(which, {syncHash=true}={}){
  const g=which==='grammar',t=which==='test';
+ // Keep the selected menu section in the URL, so returning from a topic
+ // restores the Grammar Topics rather than the three-card landing screen.
+ if(syncHash){
+  const newHash=g?'#grammar':t?'#test':'';
+  if(window.location.hash!==newHash){
+   try { window.history.replaceState(null,'',window.location.pathname+window.location.search+newHash); }
+   catch(e) { /* Navigation still works if local history updates are blocked. */ }
+  }
+ }
  grammar.hidden=!g;test.hidden=!t;grammarBtn.setAttribute('aria-expanded',String(g));testBtn.setAttribute('aria-expanded',String(t));
  if(g||t){ (g?grammar:test).scrollIntoView({behavior:'smooth',block:'start'}); }
  else { document.querySelector('.main-menu').scrollIntoView({behavior:'smooth',block:'start'}); }
@@ -369,6 +378,13 @@ testBtn.addEventListener('click',()=>setPanel(test.hidden?'test':null));
 document.getElementById('grammar-close').addEventListener('click',()=>setPanel(null));
 document.getElementById('test-close').addEventListener('click',()=>setPanel(null));
 makeGrammarCards();
+function restoreMissionSection(){
+ const hash=window.location.hash.toLowerCase();
+ if(hash==='#grammar'||hash==='#grammar-panel')setPanel('grammar',{syncHash:false});
+ else if(hash==='#test'||hash==='#test-panel')setPanel('test',{syncHash:false});
+}
+window.addEventListener('hashchange',restoreMissionSection);
+restoreMissionSection();
 </script>
 </body>
 </html>

@@ -241,9 +241,21 @@ footer{box-sizing:border-box;background:transparent!important;color:#afc0d0!impo
 .ef-topic-button[aria-selected="true"]{background:#ffb703;color:#08192b;border-bottom-color:#d18f00}
 .ef-topic-button:focus-visible{outline:3px solid #ffb703;outline-offset:3px}
 .ef-topic-panel[hidden], .ef-video-collapsed{display:none!important}
-</style></head>
+</style><style>
+/* ENGLIFORCE: Navigation back to Mission 2 – visual style only */
+.ef-mission-back-nav{display:flex;justify-content:center;align-items:center;margin:12px auto 25px;padding:0 12px;max-width:1100px;}
+.ef-mission-back-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;max-width:100%;padding:13px 24px;background:#388e3c;color:#fff!important;border:2px solid #81c784;border-bottom:5px solid #246829;border-radius:50px;text-decoration:none!important;font-family:'Trebuchet MS',Arial,sans-serif;font-size:1.06rem;font-weight:800;letter-spacing:.35px;line-height:1.25;text-align:center;box-shadow:0 5px 17px rgba(0,0,0,.32);transition:transform .16s ease,background .16s ease;}
+.ef-mission-back-link:hover{background:#43a047;transform:translateY(-2px);}
+.ef-mission-back-link:focus-visible{outline:3px solid #ffb703;outline-offset:3px;}
+.ef-breadcrumb{display:flex!important;justify-content:center;margin:28px auto!important;padding:0 12px 16px;}
+.ef-breadcrumb .ef-mission-back-link{color:#fff!important;}
+@media(max-width:530px){.ef-mission-back-link{font-size:.96rem;padding:12px 17px;width:100%;max-width:400px}}
+</style>
+</head>
 <body><header class="ef-header"><h1>ENGLIFORCE ACADEMY</h1><p>MISSION 2 · GRAMMAR: PRESENT SIMPLE</p></header>
 <main>
+<nav class="ef-mission-back-nav" aria-label="Terug naar Grammar Topics binnen Mission 2"><a class="ef-mission-back-link" href="m1_mission_2.html#grammar">← TERUG NAAR GRAMMAR TOPICS</a></nav>
+
 <section data-ef-explanation-start="true">
 <h2>🧠 Wat is de Present Simple?</h2>
 <p>De <strong>present simple</strong> gebruik je om te praten over gewoontes, feiten en dingen die regelmatig gebeuren.</p>
@@ -344,7 +356,7 @@ footer{box-sizing:border-box;background:transparent!important;color:#afc0d0!impo
 </div>
 </section>
 <!-- 📝 Super Pickles -->
-<div class="ef-pickles-wrap" id="pickle-missions"><h2>⚔️ PICKLE MISSIONS</h2><div class="ef-pickles"><div aria-label="Open Pickle 1: Boss Battle" class="ef-pickle" data-external="false" data-game="1" role="button" tabindex="0"><div class="ef-emoji">🎯</div><div class="ef-name">Pickle 1</div><div class="ef-desc">Boss Battle</div><button aria-pressed="false" class="ef-achieved" data-achieved="1" type="button">ACHIEVED</button></div><div aria-label="Open Pickle 2: Correct or not?" class="ef-pickle" data-external="true" data-game="2" role="button" tabindex="0"><div class="ef-emoji">🧩</div><div class="ef-name">Pickle 2</div><div class="ef-desc">Correct or not? · externe website</div><button aria-pressed="false" class="ef-achieved" data-achieved="2" type="button">ACHIEVED</button></div><div aria-label="Open Pickle 3: Questions and negations" class="ef-pickle" data-external="true" data-game="3" role="button" tabindex="0"><div class="ef-emoji">🔎</div><div class="ef-name">Pickle 3</div><div class="ef-desc">Questions and negations · externe website</div><button aria-pressed="false" class="ef-achieved" data-achieved="3" type="button">ACHIEVED</button></div></div></div><div class="ef-pickle-panel" id="ef-pickle-panel"><div class="ef-game-head"><h2 id="ef-game-title">Pickle</h2><button class="ef-pickle-back" type="button">← TERUG NAAR GRAMMAR</button></div><iframe class="ef-game-frame" id="ef-game-frame" loading="lazy" title="EngliForce interactieve grammaticapuzzel"></iframe></div><div class="ef-breadcrumb"><a href="m1_mission_2.html">← Terug naar Mission 2</a></div></main>
+<div class="ef-pickles-wrap" id="pickle-missions"><h2>⚔️ PICKLE MISSIONS</h2><div class="ef-pickles"><div aria-label="Open Pickle 1: Boss Battle" class="ef-pickle" data-external="false" data-game="1" role="button" tabindex="0"><div class="ef-emoji">🎯</div><div class="ef-name">Pickle 1</div><div class="ef-desc">Boss Battle</div><button aria-pressed="false" class="ef-achieved" data-achieved="1" type="button">ACHIEVED</button></div><div aria-label="Open Pickle 2: Correct or not?" class="ef-pickle" data-external="true" data-game="2" role="button" tabindex="0"><div class="ef-emoji">🧩</div><div class="ef-name">Pickle 2</div><div class="ef-desc">Correct or not? · externe website</div><button aria-pressed="false" class="ef-achieved" data-achieved="2" type="button">ACHIEVED</button></div><div aria-label="Open Pickle 3: Questions and negations" class="ef-pickle" data-external="true" data-game="3" role="button" tabindex="0"><div class="ef-emoji">🔎</div><div class="ef-name">Pickle 3</div><div class="ef-desc">Questions and negations · externe website</div><button aria-pressed="false" class="ef-achieved" data-achieved="3" type="button">ACHIEVED</button></div></div></div><div class="ef-pickle-panel" id="ef-pickle-panel"><div class="ef-game-head"><h2 id="ef-game-title">Pickle</h2><button class="ef-pickle-back" type="button">← TERUG NAAR PRESENT SIMPLE</button></div><iframe class="ef-game-frame" id="ef-game-frame" loading="lazy" title="EngliForce interactieve grammaticapuzzel"></iframe></div><nav class="ef-breadcrumb" aria-label="Terug naar Grammar Topics binnen Mission 2"><a class="ef-mission-back-link" href="m1_mission_2.html#grammar">← TERUG NAAR GRAMMAR TOPICS</a></nav></main>
 <footer>© 2026 EngliForce – Make English your superpower!</footer><script>
 (() => {
 'use strict';
