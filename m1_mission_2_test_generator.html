@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
+<title>EngliForce Academy – Mission 2 Test Generator</title>
+<style>
+
+
+        :root {
+            /* Groene accenten voor Theme 2 */
+            --hero-green-main: #43a047;
+            --hero-green-dark: #388e3c;
+            --hero-green-glow: rgba(67, 160, 71, 0.4);
+            --hero-yellow: #ffb703;
+            
+            /* Donkere achtergrondkleuren uit Theme 4 */
+            --dark-bg: #0b1a2a;
+            --card-bg: #102a43;
+            --card-border: #243b53;
+            --card-bg-done: #05101a;
+        }
+
+        body {
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            background: radial-gradient(circle at center, #102a43 0%, #05101a 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--hero-green-main);
+            padding: 2.5rem 1rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            border-bottom: 5px solid var(--hero-yellow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        h1 {
+            font-family: Impact, 'Arial Narrow', sans-serif;
+            font-size: 3.5rem;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 4px 4px 0px var(--hero-green-dark);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .learning-goals {
+            background: var(--card-bg);
+            border: 3px solid var(--hero-green-main);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px var(--hero-green-glow);
+        }
+
+        .learning-goals h2 {
+            font-family: Impact, 'Arial Narrow', sans-serif;
+            font-size: 2.2rem;
+            color: var(--hero-green-main);
+            margin-top: 0;
+            letter-spacing: 1px;
+        }
+
+        .learning-goals p {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+        }
+
+        .divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--hero-green-main), transparent);
+            margin: 60px 0 20px 0;
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--hero-green-main);
+        }
+
+        .section-title {
+            font-family: Impact, 'Arial Narrow', sans-serif;
+            font-size: 2.8rem;
+            color: var(--hero-green-main);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: var(--hero-green-main);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .power-icon {
+            font-size: 2.5rem;
+            background: rgba(255,255,255,0.05);
+            width: 65px; height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 1.45rem;
+            margin-bottom: 8px;
+            color: #f8fafc;
+            text-align: center;
+        }
+
+        .desc {
+            font-size: 1.05rem;
+            color: #c4d4e4;
+            flex-grow: 1;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: var(--card-border);
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: Impact, 'Arial Narrow', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            z-index: 5;
+        }
+
+        .card.done {
+            border-color: var(--hero-green-main);
+            background: var(--card-bg-done);
+            box-shadow: 0 0 20px var(--hero-green-glow);
+        }
+
+        .card.done .btn {
+            background: var(--hero-green-main);
+            color: white;
+        }
+
+        .star {
+            position: fixed;
+            pointer-events: none;
+            font-size: 3rem;
+            z-index: 1000;
+            animation: starFly 0.8s forwards;
+        }
+
+        @keyframes starFly {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2) translateY(-150px); opacity: 0; }
+        }
+    
+
+/* Mission 2 page additions. Does not load external fonts, scripts or trackers. */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-y: auto; }
+body { overflow-x: hidden; }
+header { min-height: 180px; }
+header h1 { line-height: 1.12; }
+header p { margin-bottom: 14px; }
+.main-menu { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 23px; margin-top: 32px; }
+.menu-card { min-height: 345px; align-items: center; gap: 8px; text-align: center; padding: 26px 19px; }
+.menu-card .power-icon { width: 78px; height: 78px; font-size: 2.9rem; }
+.menu-card .card-header { margin: 0 0 9px; }
+.menu-card .name { font-size: 1.55rem; }
+.menu-card .desc { line-height: 1.5; font-size: 1.07rem; color: #d7e5f4; }
+.menu-card .meta { color: #a3b9ce; font-size: 0.98rem; margin-bottom: 14px; }
+.action-btn { display: block; width: 100%; background: #388e3c; color: white; border: 0; border-bottom: 4px solid #23672a; border-radius: 12px; text-align: center; padding: 14px 9px; text-decoration: none; cursor: pointer; font: 1.3rem Impact, 'Arial Narrow', sans-serif; letter-spacing: 0.5px; transition: background .18s, transform .18s; margin-top: auto; }
+.action-btn:hover, .action-btn:focus-visible { background: #43a047; transform: translateY(-2px); }
+.action-btn:focus-visible, .card:focus-visible, .btn:focus-visible { outline: 3px solid #ffb703; outline-offset: 3px; }
+.content-panel { margin-top: 34px; }
+.content-panel[hidden] { display: none !important; }
+.panel-title { color: var(--hero-green-main); font-family: Impact, 'Arial Narrow', sans-serif; letter-spacing: 1px; font-size: 2.1rem; margin: 0 0 8px; text-align:center; }
+.panel-intro { text-align: center; color:#e2e8f0; font-size: 1.13rem; line-height: 1.6; max-width:720px; margin: 0 auto 10px; }
+.grammar-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(225px,1fr)); gap: 23px; margin-top: 25px; }
+.grammar-card { cursor: default; padding: 18px; min-height: 253px; }
+.grammar-card .name { font-size:1.36rem; }
+.grammar-card .desc { font-size: 1rem; }
+.grammar-card .card-header { margin-bottom: 8px; }
+.grammar-card .power-icon { width: 63px; height: 63px; font-size: 2.5rem; }
+.grammar-card .topic-link { display:flex; flex-direction:column; flex:1; gap:3px; color: inherit; text-decoration:none; }
+.grammar-card .topic-link:focus-visible { outline: 2px solid var(--hero-yellow); outline-offset: 4px; border-radius: 9px; }
+.grammar-card .btn { margin-top: 12px; font-size: 1.19rem; width: 100%; }
+.grammar-card .btn:hover { background: #388e3c; }
+.grammar-card.done .btn { background: var(--hero-green-main); }
+.grammar-card.done .btn::before { content:'✓ '; }
+.notice-panel { padding: 28px; border: 2px solid var(--hero-green-main); border-radius: 20px; background: var(--card-bg); max-width: 720px; margin: 28px auto 0; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+.notice-panel p { color:#d8e7f5; font-size:1.1rem; line-height:1.65; }
+.notice-panel .power-icon { margin: 0 auto 15px; }
+.secondary-btn { display:block; margin:25px auto 0; min-width:185px; width:max-content; max-width:100%; padding:11px 19px; background:var(--card-border); }
+.status-note { text-align:center; color:#9bb0c6; font-size:.91rem; padding:0 15px; margin-top:29px; }
+footer { padding: 20px 0 10px; }
+@media(max-width: 850px) {
+  .main-menu { grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); }
+  .menu-card { min-height: 305px; }
+}
+@media(max-width: 610px) {
+  header { padding:2.2rem 1rem; min-height:unset; }
+  header h1 { font-size: clamp(2rem, 9vw, 3.1rem); letter-spacing:1.5px; }
+  header p { font-size: 1rem; }
+  main { padding: 17px 14px; margin: 4px auto; }
+  .main-menu { grid-template-columns:1fr; margin-top:22px; gap:16px; }
+  .menu-card { min-height: 0; padding: 23px; }
+  .menu-card .power-icon { width: 65px; height: 65px; font-size: 2.6rem; }
+  .grammar-grid { grid-template-columns:1fr; }
+  .section-title { font-size:2.25rem; }
+  .panel-title { font-size:1.95rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto } .card,.btn,.action-btn { transition:none !important; } }
+
+
+/* Menu tegels zijn rechtstreeks aanklikbaar; ACHIEVED is de enige aparte bediening. */
+.main-menu .menu-card:has(.menu-card-link){position:relative;cursor:pointer}
+.menu-card-link{display:flex;flex-direction:column;align-items:center;flex:1;width:100%;text-decoration:none;color:inherit;gap:8px}
+.menu-card-link::after{content:"";position:absolute;inset:0;z-index:1;border-radius:18px}
+.menu-card-link:focus-visible{outline:0}
+.menu-card:has(.menu-card-link:focus-visible){outline:3px solid var(--hero-yellow);outline-offset:4px}
+.menu-card .menu-achieved{position:relative;z-index:2;width:100%;margin-top:auto;background:var(--card-border);border:2px solid #51718a;min-height:50px}
+.menu-card.done .menu-achieved,.menu-card .menu-achieved[aria-pressed="true"]{background:var(--hero-green-main);border-color:#b7ebaf}
+.menu-card.done .menu-achieved::before{content:"✓ ";}
+
+/* Generator in oorspronkelijke Mission 2-stijl. */
+#test-toggle.menu-card-link {font-family:inherit;color:inherit;border:0;padding:0;
+ background:transparent;text-align:center;cursor:pointer;justify-content:flex-start;}
+#test-toggle.menu-card-link:focus-visible{outline:none;}
+.menu-card:has(#test-toggle:focus-visible){outline:3px solid var(--hero-yellow);outline-offset:4px;}
+#test-panel{--green:var(--hero-green-main);--deepgreen:var(--hero-green-dark);
+ --yellow:var(--hero-yellow);--accent:#a7dfbb;--danger:#ffb7ad;
+ max-width:1000px;margin:30px auto 0;padding:clamp(18px,3vw,27px);
+ background:var(--card-bg);border:3px solid var(--hero-green-main);
+ border-radius:20px;box-shadow:0 10px 30px var(--hero-green-glow);color:#f8fafc;}
+#test-panel[hidden],#test-panel [hidden]{display:none!important;}
+#test-panel *{box-sizing:border-box;}
+#test-panel p {line-height:1.55;}
+#test-panel .panel-title {text-align:left;font-size:2.15rem;color:var(--hero-green-main);}
+#test-panel .action-btn{width:auto;max-width:100%;min-width:165px;padding:12px 18px;
+ border-bottom:4px solid #23672a;background:var(--hero-green-dark);font-size:1.08rem;
+ border-radius:12px;color:#fff;text-decoration:none;cursor:pointer;}
+#test-panel .action-btn:hover {background:var(--hero-green-main);}
+#test-panel .action-btn.secondary{background:var(--card-border);border-bottom-color:#132b40;}
+#test-panel .action-btn.warn{background:#87463e;border-bottom-color:#642922;}
+#test-panel .action-btn:disabled{opacity:.5;cursor:not-allowed;}
+#test-panel button:focus-visible,#test-panel a:focus-visible,
+#test-panel input:focus-visible,#test-panel select:focus-visible {outline:3px solid var(--hero-yellow);outline-offset:3px;}
+#test-panel .section-sub {color:#a7dfbb;}
+#test-panel .switch-line {background:#0b2538;border-color:var(--card-border);}
+#test-panel .switch-line:has(input:checked){background:#11362d;border-color:var(--hero-green-main);}
+#test-panel .question-card,#test-panel .result-topic{background:#0d293f;}
+#test-panel .question-pool-count{color:#e4f8ef;}
+#test-panel .privacy{text-align:left;}
+#test-panel .panel-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:23px; }
+#test-panel .panel-actions > * { width:auto; min-width:180px; }
+#test-panel .tagline, #test-panel .privacy { color:#a9bdcc; text-align:center; font-size:.89rem; }
+#test-panel .tagline { margin:30px 10px 0; }
+#test-panel .quiz-setup-intro { max-width:770px; }
+#test-panel .section-sub { text-transform:uppercase; font-size:1rem; font-weight:850; color:var(--accent); letter-spacing:.5px; margin:23px 0 11px; }
+#test-panel .select-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:11px; }
+#test-panel .switch-line { position:relative; background:#0b2134; border:2px solid #315068; border-radius:14px; display:flex; align-items:center; gap:11px; padding:13px; cursor:pointer; min-width:0; }
+#test-panel .switch-line:has(input:checked) { border-color:var(--green); background:#102e2c; }
+#test-panel .switch-line input { position:absolute; opacity:0; width:1px; height:1px; }
+#test-panel .switch-line:has(input:focus-visible) { outline:3px solid var(--yellow); }
+#test-panel .switch-ui { width:42px; height:24px; flex:0 0 42px; background:#667789; border-radius:25px; padding:3px; transition:background .15s; }
+#test-panel .switch-ui::before { content:""; display:block; background:white; border-radius:50%; width:18px; height:18px; transition:transform .15s; }
+#test-panel .switch-line:has(input:checked) .switch-ui { background:var(--green); }
+#test-panel .switch-line:has(input:checked) .switch-ui::before { transform:translateX(18px); }
+#test-panel .switch-label { display:block; font-weight:750; font-size:.91rem; line-height:1.22; }
+#test-panel .switch-label small { display:block; font-weight:400; color:#bfd1de; padding-top:4px; }
+#test-panel .quiz-controls { display:grid; grid-template-columns:1fr minmax(180px,290px); align-items:center; gap:18px; margin:19px 0 6px; }
+#test-panel .quiz-controls label { font-weight:750; }
+#test-panel .quiz-controls select { width:100%; margin-top:7px; padding:11px; border-radius:9px; color:white; background:#081f32; border:1px solid #648094; }
+#test-panel .notice { background:#0b2338; border-left:4px solid var(--yellow); padding:12px 16px; border-radius:6px; margin:20px 0; color:#f3f7fd; }
+#test-panel .notice.error { border-left-color:var(--danger); }
+#test-panel .statsbar { display:flex; gap:12px; flex-wrap:wrap; margin:12px 0 20px; }
+#test-panel .pill { border:1px solid #59758a; background:#0a2134; color:#d7e7ef; border-radius:999px; padding:5px 12px; font-size:.88rem; }
+#test-panel .question-card { background:#0a2235; border:1px solid #537081; border-radius:14px; padding:clamp(16px,2vw,24px); margin-top:17px; }
+#test-panel .question-label { color:var(--accent); font-weight:800; font-size:.9rem; }
+#test-panel .question-text { font-size:clamp(1.16rem,2.5vw,1.42rem); font-weight:700; margin:12px 0 20px; white-space:pre-line; }
+#test-panel .answer-list { display:grid; gap:10px; }
+#test-panel .answer-option { display:flex; gap:11px; cursor:pointer; padding:13px; border:2px solid #3e5d70; border-radius:12px; background:#102b41; align-items:flex-start; }
+#test-panel .answer-option:has(input:checked) { border-color:#7fd394; background:#123e36; }
+#test-panel .answer-option input { margin:4px 0 0; accent-color:var(--green); width:19px; height:19px; }
+#test-panel .answer-option span { flex:1; }
+#test-panel .answer-type { display:block; width:100%; font-size:1.07rem; background:#081a2b; color:white; border:2px solid #5a768a; padding:15px; border-radius:10px; }
+#test-panel .progress { height:13px; border-radius:12px; background:#29475b; overflow:hidden; }
+#test-panel .progress > div { background:linear-gradient(90deg,var(--green),#9ce0ac); height:100%; }
+#test-panel .results-head { background:#0b283b; border:2px solid #438f57; border-radius:16px; padding:20px; text-align:center; }
+#test-panel .results-head strong { font:3rem Impact,"Arial Narrow",sans-serif; color:var(--yellow); }
+#test-panel .result-grid { display:grid; gap:10px; }
+#test-panel .result-topic { background:#092138; padding:14px; border-radius:13px; border:1px solid #31516a; }
+#test-panel .result-topic-title { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; margin-bottom:9px; }
+#test-panel .meter { height:10px; background:#273e53; border-radius:20px; overflow:hidden; }
+#test-panel .meter div { height:100%; background:var(--green); }
+#test-panel .result-topic .action-btn { width:auto; display:inline-block; font-size:.94rem; min-height:38px; margin-top:11px; padding:10px 16px; }
+#test-panel .review-item { border-bottom:1px solid #3f5c6e; padding:13px 0; }
+#test-panel .review-item:last-child { border-bottom:0; }
+#test-panel .review-item b { color:#ffd9c9; }
+#test-panel .table-wrap { width:100%; overflow:auto; }
+#test-panel table { border-collapse:collapse; width:100%; font-size:.91rem; min-width:575px; }
+#test-panel th, #test-panel td { text-align:left; padding:12px 10px; border-bottom:1px solid #38566a; vertical-align:top; }
+#test-panel th { color:#b6dfc4; font-weight:800; background:#0a263a; }
+#test-panel td .action-btn { min-height:35px; width:auto; display:inline-block; font-size:.86rem; padding:8px 11px; white-space:nowrap; }
+#test-panel .empty { color:#bbcbd9; text-align:center; padding:16px; }
+#test-panel details { border:1px solid #3e576b; border-radius:12px; padding:13px 16px; margin:12px 0; }
+#test-panel summary { font-weight:800; cursor:pointer; }
+@media(max-width:850px){#test-panel .select-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:610px){#test-panel .select-grid{grid-template-columns:1fr;}
+ #test-panel .quiz-controls{grid-template-columns:1fr;gap:10px;}
+ #test-panel .panel-actions>*{width:100%;}
+ #test-panel .results-head strong{font-size:2.5rem;}}
+
+
+/* Nieuwe pagina: terugknop op vaste, herkenbare plek boven en onder de generator. */
+.ef-back-navigation{max-width:1000px;margin:23px auto 4px;display:flex;align-items:center;justify-content:flex-start;}
+.ef-back-navigation.bottom{margin:10px auto 25px;}
+.ef-back-navigation .ef-back {display:inline-block;text-decoration:none;background:var(--card-border);border:2px solid #51718a;color:#fff;border-radius:12px;padding:11px 19px;font-family:Impact,'Arial Narrow',sans-serif;font-size:1.1rem;letter-spacing:.6px;}
+.ef-back-navigation .ef-back:hover,.ef-back-navigation .ef-back:focus-visible{background:var(--hero-green-dark);border-color:var(--hero-green-main);}
+.ef-back-navigation .ef-back:focus-visible{outline:3px solid var(--hero-yellow);outline-offset:3px;}
+#test-panel {margin:18px auto 25px;}
+@media(max-width:610px){.ef-back-navigation .ef-back{width:100%;text-align:center;}}
+
+</style>
+</head>
+<body>
+<header>
+<h1>ENGLIFORCE ACADEMY</h1>
+<p>MISSION 2: LEISURE</p>
+</header>
+<main>
+<nav class="ef-back-navigation" aria-label="Terug naar Mission 2"><a class="ef-back" href="m1_mission_2.html">← TERUG NAAR MISSION 2</a></nav>
+<section class="content-panel" id="test-panel" aria-label="Test Generator">
+  <div id="test-setup">
+    <h2 class="panel-title">BUILD YOUR PRACTICE TEST</h2>
+    <p class="quiz-setup-intro">Zet de onderwerpen aan die je wilt oefenen. Nieuwe vragen krijgen altijd voorrang op vragen die je eerder hebt gehad. Na de toets zie je je score per onderwerp en kun je naar de juiste oefenpagina gaan.</p>
+    <p class="section-sub">Vocabulary · choose your topics</p>
+    <div class="select-grid" id="vocab-switches"></div>
+    <p class="section-sub">Grammar · choose your topics</p>
+    <div class="select-grid" id="grammar-switches"></div>
+    <div class="quiz-controls"><label for="question-count">How many questions?<select id="question-count"><option value="10">10 questions</option><option value="20" selected>20 questions</option><option value="30">30 questions</option><option value="40">40 questions</option></select></label><div><span class="pill" id="question-pool-count">0 questions in question bank</span><p style="font-size:.85rem;color:#bfd0dc">Multiple choice en invulvragen · vraagherhaling wordt bijgehouden</p></div></div>
+    <p id="selection-msg" role="status" aria-live="polite"></p>
+    <div class="notice" id="question-repeat-info">De generator onthoudt welke vragen je hebt gemaakt en kiest zo lang mogelijk nieuwe opgaven.</div>
+    <div class="panel-actions"><button class="action-btn" type="button" id="start-test">START PRACTICE TEST</button><button class="action-btn secondary" type="button" id="view-history">MY RESULTS</button><a class="action-btn secondary" href="m1_mission_2.html">TERUG NAAR MISSION 2</a></div>
+  </div>
+  <div id="test-taking" hidden>
+    <h2 class="panel-title">PRACTICE TEST</h2>
+    <div class="statsbar"><span class="pill" id="question-progress-label"></span><span class="pill" id="question-subject-label"></span></div>
+    <div class="progress" aria-hidden="true"><div id="question-progress-bar"></div></div>
+    <div class="question-card" id="question-card"></div>
+    <div class="panel-actions"><button class="action-btn secondary" type="button" id="previous-question">PREVIOUS</button><button class="action-btn" type="button" id="next-question">NEXT QUESTION</button><button class="action-btn warn" type="button" id="stop-test">STOP TEST</button></div>
+  </div>
+  <div id="test-results" hidden>
+    <h2 class="panel-title">YOUR RESULTS</h2>
+    <div id="results-content"></div>
+    <div class="panel-actions"><button class="action-btn" type="button" id="new-test">NEW PRACTICE TEST</button><button class="action-btn secondary" type="button" id="results-history">MY RESULTS</button></div>
+  </div>
+  <div id="test-history" hidden>
+    <h2 class="panel-title">MY RESULTS</h2>
+    <p>Hier zie je de resultaten die in deze browser zijn opgeslagen. Bekijk je score en de oefentips per onderdeel.</p>
+    <div id="history-content"></div>
+    <div class="panel-actions"><button class="action-btn" type="button" id="history-back">BACK TO TEST GENERATOR</button><button class="action-btn secondary" type="button" id="export-history">EXPORT RESULTS</button><button class="action-btn secondary" type="button" id="import-history-button">IMPORT RESULTS</button><input type="file" id="import-history" accept=".json,application/json" hidden><button class="action-btn warn" type="button" id="clear-history">DELETE MY RESULTS</button></div>
+    <p class="privacy">Exporteer je resultaten én je vraaggeschiedenis als je van Chromebook wisselt. Importeren voegt scores en eerdere vragen samen.</p>
+  </div>
+</section>
+<nav class="ef-back-navigation bottom" aria-label="Terug naar Mission 2"><a class="ef-back" href="m1_mission_2.html">← TERUG NAAR MISSION 2</a></nav>
+</main>
+<footer><p style="text-align:center;opacity:.65;padding:35px 12px;">© 2026 EngliForce – Make English your superpower!</p></footer>
+<script>
+
+
+
+'use strict';
+/* Mission 2: offline/standalone question bank. No external scripts or network calls. */
+const GRAMMAR = [
+  {id:'t2g3',name:'Ordinals',desc:'Rangtelwoorden',icon:'🥇',url:'m1t2_ordinals.html'},
+  {id:'t2g6',name:'Present Simple',desc:'Vragen en ontkennen',icon:'❓',url:'m1t2_present_simple.html'},
+  {id:'t2g1',name:'To Be',desc:'Am, is en are',icon:'✨',url:'m1t2_to_be.html'},
+  {id:'t2g5',name:'Telling the Time',desc:'Klokkijken',icon:'⌚',url:'m1t2_telling_the_time.html'},
+  {id:'t2g2',name:'Have / Has got',desc:'Bezitten en beschrijven',icon:'🤲',url:'m1t2_have_has_got.html'},
+  {id:'t2g4',name:'Plurals',desc:'Enkelvoud en meervoud',icon:'👯',url:'m1t2_plurals.html'},
+  {id:'t2g7',name:'Dates',desc:'Dagen, maanden en data',icon:'📅',url:'m1t2_dates.html'},
+  {id:'t2g8',name:'Countable Nouns',desc:'Countable en uncountable',icon:'🧮',url:'m1t2_countable_nouns.html'}
+];
+const VOCAB_TOPICS = [
+  {id:'sports',name:'Sports',icon:'⚽'}, {id:'hobbies',name:'Hobbies',icon:'🎨'},
+  {id:'entertainment',name:'Entertainment',icon:'🎬'}, {id:'goingout',name:'Going Out',icon:'🎟️'}
+];
+/* The 60 items are the existing Mission 2 vocabulary, in the same order as the briefing page. */
+const WORDS = [
+  ['sports','teammate','teamgenoot'],['sports','opponent','tegenstander'],['sports','referee','scheidsrechter'],['sports','pitch','(voetbal)veld'],['sports','changing room','kleedkamer'],
+  ['sports','whistle','fluitje'],['sports','player','speler'],['sports','to practise','oefenen'],['sports','to warm up','opwarmen'],['sports','to pass','overspelen'],
+  ['sports','to throw','gooien'],['sports','to catch','vangen'],['sports','to shoot','schieten'],['sports','to beat','verslaan'],['sports','a draw','gelijkspel'],
+  ['hobbies','leisure','vrije tijd'],['hobbies','an activity','een activiteit'],['hobbies','a board game','een bordspel'],['hobbies','a collection','een verzameling'],['hobbies','a skill','een vaardigheid'],
+  ['hobbies','to write stories','verhalen schrijven'],['hobbies','to bake','bakken'],['hobbies','to build','bouwen'],['hobbies','to take photos',"foto's maken"],['hobbies','to do crafts','knutselen'],
+  ['hobbies','to play a sport','een sport beoefenen'],['hobbies','to play an instrument','een instrument bespelen'],['hobbies','to try out','uitproberen'],['hobbies','to be keen on','dol zijn op'],['hobbies','to be good at','goed zijn in'],
+  ['entertainment','a character','een personage'],['entertainment','a prequel','een voorverhaal'],['entertainment','subtitles','ondertiteling'],['entertainment','a sequel','een vervolg'],['entertainment','to watch','kijken naar'],
+  ['entertainment','lyrics','songtekst'],['entertainment','a soundtrack','filmmuziek'],['entertainment','to release a song','een liedje uitbrengen'],['entertainment','to sing along','meezingen'],['entertainment','to turn up the volume','het volume harder zetten'],
+  ['entertainment','a reward','een beloning'],['entertainment','a clue','een aanwijzing'],['entertainment','to unlock','vrijspelen'],['entertainment','to complete a level','een level uitspelen'],['entertainment','to get stuck','vastlopen'],
+  ['goingout','a fair','een kermis'],['goingout','a shopping centre','een winkelcentrum'],['goingout','a meeting point','een ontmoetingsplek'],['goingout','a queue','een wachtrij'],['goingout','an entrance fee','een toegangsprijs'],
+  ['goingout','to meet up','afspreken'],['goingout','to hang out','rondhangen'],['goingout','to invite','uitnodigen'],['goingout','to book','boeken / reserveren'],['goingout','to grab a bite','iets gaan eten'],
+  ['goingout','to arrive','aankomen'],['goingout','to pick someone up','iemand ophalen'],['goingout','to be up for something','ergens zin in hebben'],['goingout','to tag along','met iemand meegaan'],['goingout','to have a good time','het leuk hebben']
+];
+/* 12 reviewed multiple-choice grammar questions per topic: [prompt, correct, wrong1, wrong2, wrong3]. */
+const GRAMMAR_BANK = {
+ t2g3: [
+  ['How do you write 1st in words?','first','one','oneth','once'],
+  ['How do you write 2nd in words?','second','two','twoth','twice'],
+  ['How do you write 3rd in words?','third','three','threeth','threerd'],
+  ['How do you write 4th in words?','fourth','four','forth','fourst'],
+  ['How do you write 5th in words?','fifth','fiveth','fiveths','five'],
+  ['How do you write 8th in words?','eighth','eightth','eight','eighty'],
+  ['How do you write 9th in words?','ninth','nineth','nine','ninety'],
+  ['How do you write 12th in words?','twelfth','twelveth','twelve','twentyth'],
+  ['How do you write 20th in words?','twentieth','twentyth','twenty','twentieths'],
+  ['How do you write 21st in words?','twenty-first','twenty-oneth','twenty-one','twenty-thirst'],
+  ['How do you write 33rd in words?','thirty-third','thirty-three','thirty-threeth','thirtieth-third'],
+  ['How do you write 11th in words?','eleventh','eleven','eleventhth','eleventieth']
+ ],
+ t2g6: [
+  ['_____ you like football?','Do','Does','Are','Is'],
+  ['_____ she play tennis on Sundays?','Does','Do','Is','Has'],
+  ['He _____ not like swimming.','does','do','is','has'],
+  ['They _____ not watch TV every day.','do','does','are','have'],
+  ['_____ your brother live in London?','Does','Do','Is','Are'],
+  ['I _____ play the guitar. (negative)','do not','does not','am not','has not'],
+  ['Where _____ your friends go after school?','do','does','are','is'],
+  ['She _____ play computer games. (negative)','does not','do not','is not','have not'],
+  ['_____ Tom and Mia walk to school?','Do','Does','Are','Is'],
+  ['What time _____ he get up?','does','do','is','has'],
+  ['We _____ eat lunch at 10 o’clock. (negative)','do not','does not','are not','is not'],
+  ['_____ it rain a lot in autumn?','Does','Do','Is','Has']
+ ],
+ t2g1: [
+  ['I _____ thirteen years old.','am','is','are','be'],
+  ['My friends _____ in the classroom.','are','is','am','be'],
+  ['She _____ very good at English.','is','am','are','be'],
+  ['_____ you from the Netherlands?','Are','Am','Is','Be'],
+  ['It _____ cold today.','is','are','am','be'],
+  ['We _____ not late for school.','are','is','am','be'],
+  ['He _____ my best friend.','is','are','am','be'],
+  ['Where _____ your teacher?','is','are','am','be'],
+  ['They _____ happy with their scores.','are','is','am','be'],
+  ['I _____ not tired.','am','is','are','be'],
+  ['_____ she in the school team?','Is','Are','Am','Be'],
+  ['The books _____ on the table.','are','is','am','be']
+ ],
+ t2g5: [
+  ['What time is “half past five”?','5:30','5:15','6:30','4:30'],
+  ['What time is “quarter past seven”?','7:15','7:45','6:15','8:15'],
+  ['What time is “quarter to nine”?','8:45','9:15','9:45','8:15'],
+  ['What time is “ten past two”?','2:10','2:50','10:02','3:10'],
+  ['What time is “twenty to six”?','5:40','6:20','5:20','6:40'],
+  ['What time is “five to twelve”?','11:55','12:05','11:05','12:55'],
+  ['How do you say 3:00?','three o’clock','three past','half past three','quarter to three'],
+  ['How do you say 4:30?','half past four','half to four','quarter past four','four o’clock'],
+  ['How do you say 10:15?','quarter past ten','quarter to ten','ten to quarter','half past ten'],
+  ['How do you say 6:45?','quarter to seven','quarter past six','quarter to six','quarter past seven'],
+  ['How do you say 8:50?','ten to nine','ten past eight','ten to eight','twenty to nine'],
+  ['How do you say 1:20?','twenty past one','twenty to one','ten past one','half past one']
+ ],
+ t2g2: [
+  ['She _____ got a new bike.','has','have','is','are'],
+  ['I _____ got two brothers.','have','has','am','is'],
+  ['_____ he got a pet?','Has','Have','Does','Is'],
+  ['They _____ got much homework today.','have','has','are','is'],
+  ['We _____ not got a car.','have','has','are','do'],
+  ['My dog _____ got a long tail.','has','have','is','does'],
+  ['_____ your parents got a garden?','Have','Has','Do','Are'],
+  ['He _____ not got any sisters.','has','have','does','is'],
+  ['You _____ got a nice schoolbag.','have','has','are','do'],
+  ['_____ Lucy got blue eyes?','Has','Have','Is','Does'],
+  ['The children _____ got a football.','have','has','are','do'],
+  ['My teacher _____ got a laptop.','has','have','is','does']
+ ],
+ t2g4: [
+  ['What is the plural of “baby”?','babies','babys','babyes','babyeses'],
+  ['What is the plural of “box”?','boxes','boxs','boxies','boxen'],
+  ['What is the plural of “child”?','children','childs','childes','childrens'],
+  ['What is the plural of “man”?','men','mans','manes','mens'],
+  ['What is the plural of “woman”?','women','womans','womanes','womens'],
+  ['What is the plural of “tooth”?','teeth','tooths','teeths','toothes'],
+  ['What is the plural of “foot”?','feet','foots','feets','footes'],
+  ['What is the plural of “mouse”?','mice','mouses','mices','mousees'],
+  ['What is the plural of “sheep”?','sheep','sheeps','sheepes','sheepen'],
+  ['What is the plural of “knife”?','knives','knifes','knivies','knifees'],
+  ['What is the plural of “tomato”?','tomatoes','tomatos','tomaties','tomatoies'],
+  ['What is the plural of “city”?','cities','citys','cityes','cites']
+ ],
+ t2g7: [
+  ['Which day comes after Wednesday?','Thursday','Tuesday','Friday','Sunday'],
+  ['Which day comes before Tuesday?','Monday','Wednesday','Sunday','Thursday'],
+  ['Which month comes after February?','March','January','April','May'],
+  ['Which month comes before December?','November','October','September','January'],
+  ['How do you write “3 juni” in British English?','3 June','June 3','3 July','June 30'],
+  ['How do you write “25 december” in British English?','25 December','25 November','December 52','5 December'],
+  ['What is the correct spelling?','Wednesday','Wensday','Wednesdey','Wensdey'],
+  ['What is the correct spelling?','February','Febuary','Februari','Febrary'],
+  ['Which month is the fifth month?','May','March','April','June'],
+  ['Which month is the eighth month?','August','October','September','July'],
+  ['In the UK, 04/07 means:','4 July','7 April','4 June','7 June'],
+  ['How do you say the year 2005?','two thousand and five','two thousand fifty','twenty fifty','two hundred and five']
+ ],
+ t2g8: [
+  ['How _____ apples are there?','many','much','a little','any much'],
+  ['How _____ water do you drink?','much','many','a few','several'],
+  ['There are _____ bananas on the table.','a few','a little','much','any much'],
+  ['There is _____ milk left in the bottle.','a little','a few','many','several'],
+  ['Which word is uncountable?','rice','apple','egg','banana'],
+  ['Which word is countable?','chair','milk','water','sugar'],
+  ['We have not got _____ bread.','any','many','a few','several'],
+  ['There are _____ students in the classroom.','many','much','a little','any much'],
+  ['I need _____ butter for my sandwich.','some','a few','many','several'],
+  ['How _____ books have you got?','many','much','a little','some much'],
+  ['Can I have _____ orange, please?','an','a','many','much'],
+  ['I would like _____ cup of tea.','a','an','much','many']
+ ]
+};
+
+/* Two independently written, A1/A2-level contexts for each of the 60 fixed vocabulary terms.
+   Use the full dictionary form (including 'to' for verbs) to prevent tense ambiguity. */
+const VOCAB_CONTEXTS = {
+ sports: [
+  ['Our best ___ scored two goals today.','I gave my ___ a high five after the match.'],
+  ['The ___ played better than we did.','We shook hands with our ___ after the game.'],
+  ['The ___ stopped the match for a moment.','A ___ makes sure players follow the rules.'],
+  ['There was a lot of rain on the football ___.','The players ran across the ___ before kick-off.'],
+  ['We left our bags in the ___ before the match.','The players got changed in the ___ after training.'],
+  ['The coach blew a ___ to start the exercise.','I heard the sharp sound of the ___.'],
+  ['Every ___ on the team wore a blue shirt.','A good ___ listens to their coach.'],
+  ['I want ___ my swimming skills every week.','We go to the sports club ___ together.'],
+  ['It is important ___ before you start running.','Our teacher told us ___ before the game.'],
+  ['I want ___ the ball to my friend.','You need ___ the ball quickly in this game.'],
+  ['He tried ___ the ball over the fence.','Can you teach me ___ a ball correctly?'],
+  ['I want ___ the ball with both hands.','The goalkeeper tried ___ the high ball.'],
+  ['Our striker hopes ___ the ball into the net.','I want ___ at the goal from here.'],
+  ['Our team wants ___ the league leaders.','They will train hard ___ their opponents.'],
+  ['The match ended 2–2, so it was ___.','Neither team won; the result was ___.']
+ ],
+ hobbies: [
+  ['I have more ___ at the weekend than on school days.','Playing games is one way to spend your ___.'],
+  ['We need ___ that everyone can enjoy.','Drawing is ___ you can do at home.'],
+  ['Our family plays ___ on Friday evenings.','Monopoly is an example of ___.'],
+  ['He has ___ of old football cards.','I keep ___ of stamps in a box.'],
+  ['Learning to swim is ___ you can practise.','Playing the guitar is ___ that takes time to learn.'],
+  ['I love ___ in my notebook after school.','My hobby is ___ about interesting people.'],
+  ['I want ___ biscuits with my grandmother.','On Saturdays we often go to the kitchen ___.'],
+  ['We are planning ___ a model castle together.','My brother loves ___ things with blocks.'],
+  ['I love ___ when I go on holiday.','My parents want ___ of the garden.'],
+  ['I like ___ with paper, scissors and glue.','We meet after school ___ together.'],
+  ['I want ___ at the weekend instead of staying inside.','My friend is hoping ___ at a local club.'],
+  ['She wants ___ in the school band.','My cousin is learning ___ in music lessons.'],
+  ['I want ___ a new hobby this term.','You can visit the club ___ something different.'],
+  ['I am starting ___ tennis, even though I am a beginner.','My sister seems ___ anything involving music.'],
+  ['I hope ___ drawing after a few lessons.','She wants ___ playing the piano one day.']
+ ],
+ entertainment: [
+  ['The main ___ in the book is a brave girl.','Every ___ in the film has a different personality.'],
+  ['This film tells an earlier story, so it is ___.','The new film takes place before the first one; it is ___.'],
+  ['I turn on the ___ when the film is in French.','The ___ help me understand what the actors say.'],
+  ['The story continues in ___ next year.','This film comes after the original; it is ___.'],
+  ['We want ___ a funny film tonight.','I like ___ music videos after school.'],
+  ['I always read the ___ when learning a new song.','The ___ tell you the words the singer sings.'],
+  ['I love ___ of this film because the music is exciting.','The ___ contains all the songs from the movie.'],
+  ['The band hopes ___ next month.','A singer may use a music app ___ online.'],
+  ['We love ___ when our favourite song plays.','The whole class began ___ with the chorus.'],
+  ['My brother wants ___ because he cannot hear the song.','Please ask Dad not ___; the music is already loud.'],
+  ['The game gives you ___ when you finish a mission.','She got ___ for completing the challenge.'],
+  ['The detective found ___ behind the door.','This note is ___ that may solve the mystery.'],
+  ['Players want ___ new characters in this game.','You need ten stars ___ the next area.'],
+  ['You have to practise ___ in this game.','My brother is trying ___ before dinner.'],
+  ['It is normal ___ on a difficult puzzle.','I do not want ___ at the same point in this game.']
+ ],
+ goingout: [
+  ['We went to ___ and rode the big wheel.','You can go on exciting rides at ___.'],
+  ['There are lots of shops in ___.','We are going to ___ to buy a birthday present.'],
+  ['The station clock is our ___.','Let us choose ___ so nobody gets lost.'],
+  ['There was ___ outside the cinema.','We stood in ___ to buy our tickets.'],
+  ['You must pay ___ to go into the museum.','The ___ is five pounds per person.'],
+  ['My friends want ___ after school.','We are planning ___ in the park on Saturday.'],
+  ['The teenagers like ___ at the youth club.','We often go to the park ___ with our friends.'],
+  ['I want ___ three friends to my party.','She is planning ___ her classmates on Friday.'],
+  ['We need ___ tickets for the concert.','My parents are going ___ a table at the café.'],
+  ['Let us stop ___ after the film.','My friends want ___ before going home.'],
+  ['We hope ___ at the station before six.','The coach expects ___ on time.'],
+  ['My mum needs ___ from football practice.','I asked Dad ___ after school.'],
+  ['I want ___ new and exciting this weekend.','It is great ___ different when your friends ask.'],
+  ['Would you like ___ with us to the cinema?','My little brother wants ___ on our trip.'],
+  ['We hope ___ at the school party.','You do not have to spend money ___ with friends.']
+ ]
+};
+
+
+/* Additional independent examples, systematically generated but linguistically constrained.
+   Stable IDs and per-concept IDs let the test history avoid old questions and old concepts. */
+const SEEN_KEY='engliforce_m2_seen_v2';
+function addQuestion(bank,topic,id,question,correct,options,type='mc',concept=id) {
+  let obj={id,topic,type,question,correct,concept,options:type==='mc'?[...new Set(options)]:undefined};
+  if(type==='mc'&&(obj.options.length<3||!obj.options.includes(correct))) throw Error('Bad options: '+id);
+  bank[topic].push(obj);
+}
+function ordinalWord(n) {
+  const ones=['','first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth','eleventh','twelfth','thirteenth','fourteenth','fifteenth','sixteenth','seventeenth','eighteenth','nineteenth'];
+  if(n<20)return ones[n];
+  const tens=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+  const ordTens=['','','twentieth','thirtieth','fortieth','fiftieth','sixtieth','seventieth','eightieth','ninetieth'];
+  const t=Math.floor(n/10),u=n%10;return u?`${tens[t]}-${ones[u]}`:ordTens[t];
+}
+function ordinalNumber(n){return String(n)+(n%100>=11&&n%100<=13?'th':({1:'st',2:'nd',3:'rd'}[n%10]||'th'));}
+const NUMBER_WORDS=['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven'];
+function sayTime(hour,min){
+  const n=['','five','ten','quarter','twenty','twenty-five','half'];
+  if(min===0)return NUMBER_WORDS[hour%12]+' o’clock';
+  if(min<=30)return n[min/5]+' past '+NUMBER_WORDS[hour%12];
+  return n[(60-min)/5]+' to '+NUMBER_WORDS[(hour+1)%12];
+}
+function displayTime(h,m){return h+':'+String(m).padStart(2,'0');}
+const PLURAL_PAIRS=[
+ ['cat','cats'],['dog','dogs'],['book','books'],['apple','apples'],['banana','bananas'],['desk','desks'],
+ ['box','boxes'],['bus','buses'],['dish','dishes'],['watch','watches'],['brush','brushes'],['church','churches'],
+ ['baby','babies'],['city','cities'],['story','stories'],['party','parties'],['family','families'],['country','countries'],
+ ['toy','toys'],['boy','boys'],['key','keys'],['day','days'],['monkey','monkeys'],
+ ['knife','knives'],['wife','wives'],['life','lives'],['leaf','leaves'],['wolf','wolves'],
+ ['potato','potatoes'],['tomato','tomatoes'],['hero','heroes'],['photo','photos'],['piano','pianos'],
+ ['child','children'],['man','men'],['woman','women'],['foot','feet'],['tooth','teeth'],['mouse','mice'],['person','people'],
+ ['sheep','sheep'],['deer','deer'],['fish','fish']
+];
+const DAY_NAMES=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function expandBank(bank){
+ // Ordinals: useful (1st–60th), both directions, no randomly unreviewed forms.
+ for(let n=1;n<=60;n++){
+   const k='ordinal_'+n,st=ordinalNumber(n),w=ordinalWord(n),topic='g_t2g3';
+   addQuestion(bank,topic,'e_ord_w_'+n,`Write ${st} in English words.`,w,[], 'type',k);
+   addQuestion(bank,topic,'e_ord_n_'+n,`Write “${w}” as an ordinal number (e.g. 1st).`,st,[], 'type',k);
+ }
+ // Past simple is intentionally excluded: Mission 2 only tests its actual 8 grammar topics.
+ const toBeSubjects=[
+ ['I','am','ready for the match'],['you','are','in the right classroom'],['he','is','my swimming coach'],['she','is','good at music'],
+ ['it','is','cold outside'],['we','are','excited about the trip'],['they','are','at the cinema'],['my friend','is','thirteen years old'],
+ ['the boys','are','on the football pitch'],['my sister','is','in the school band'],['the girls','are','very tired after PE'],
+ ['our teacher','is','near the door'],['these books','are','interesting'],['this game','is','difficult'],
+ ['my parents','are','at work'],['Luca','is','on the sports team'],['Mia and Noah','are','best friends'],
+ ['the football','is','under the bench'],['our classmates','are','really friendly'],['the musicians','are','on stage'],
+ ['my bicycle','is','in the garden'],['the windows','are','open'],['the test','is','tomorrow'],
+ ['my neighbours','are','very helpful'],['Abby','is','good at surfing'],['my little brothers','are','six years old'],
+ ['our lesson','is','almost over'],['the posters','are','blue and green']
+ ];
+ toBeSubjects.forEach(([subject,form,pred],i)=>{
+   const sub=subject.charAt(0).toUpperCase()+subject.slice(1),c='be_'+i,topic='g_t2g1';
+   addQuestion(bank,topic,'e_be_aff_'+i,`${sub} ___ ${pred}.`,form,['am','is','are','be'],'mc',c);
+   addQuestion(bank,topic,'e_be_neg_'+i,`${sub} ___ not ${pred}.`,form,['am','is','are','be'],'mc',c);
+   addQuestion(bank,topic,'e_be_ask_'+i,`___ ${subject} ${pred}?`,form.charAt(0).toUpperCase()+form.slice(1),['Am','Is','Are','Be'],'mc',c);
+ });
+ const haveSubjects=[
+ ['I','have','a blue schoolbag'],['you','have','two pencils'],['he','has','a new football'],['she','has','three brothers'],
+ ['we','have','a small garden'],['they','have','two cats'],['my brother','has','a red bicycle'],['my friends','have','new phones'],
+ ['our teacher','has','a laptop'],['the children','have','lots of homework'],['Mia','has','a guitar'],['Noah','has','a swimming cap'],
+ ['my parents','have','a car'],['the dog','has','a long tail'],['those students','have','their books'],['my cousin','has','a skateboard'],
+ ['I','have','a favourite film'],['you','have','an interesting idea'],['our school','has','a sports hall'],
+ ['the football players','have','a big match'],['she','has','a funny hat'],['he','has','a little sister'],
+ ['our neighbours','have','two bicycles'],['my cat','has','green eyes'],['we','have','time for a board game'],
+ ['they','have','tickets for the show'],['Luca and Abby','have','the same hobby']
+ ];
+ haveSubjects.forEach(([subject,form,object],i)=>{
+   let cap=subject[0].toUpperCase()+subject.slice(1),c='got_'+i,topic='g_t2g2';
+   addQuestion(bank,topic,'e_got_aff_'+i,`${cap} ___ got ${object}.`,form,['have','has','is','are'],'mc',c);
+   addQuestion(bank,topic,'e_got_neg_'+i,`${cap} ___ not got ${object}.`,form,['have','has','is','are'],'mc',c);
+   addQuestion(bank,topic,'e_got_ask_'+i,`___ ${subject} got ${object}?`,form[0].toUpperCase()+form.slice(1),['Have','Has','Do','Does'],'mc',c);
+ });
+ const simpleSubjects=[
+  ['I','do','play football on Saturdays'],['you','do','listen to music after school'],['he','does','watch films at the weekend'],
+  ['she','does','read before bed'],['it','does','work without batteries'],['we','do','go swimming on Fridays'],
+  ['they','do','visit their grandparents on Sundays'],['my brother','does','play the piano'],['my sister','does','ride her bicycle to school'],
+  ['our friends','do','enjoy board games'],['the goalkeeper','does','train every afternoon'],['my parents','do','watch the news'],
+  ['Mia','does','like detective stories'],['Noah','does','walk to school'],['Luca and Raheem','do','play online games'],
+  ['your teachers','do','give homework'],['this app','does','save the score'],['our club','does','open on Mondays'],
+  ['my friends','do','write stories'],['my cousin','does','bake bread'],['the pupils','do','learn English'],
+  ['her dad','does','drive to work'],['I','do','get up at seven'],['you','do','help at home'],
+  ['the girls','do','sing in the school choir'],['the boy','does','take photos'],['the children','do','eat lunch at school']
+ ];
+ simpleSubjects.forEach(([s,form,action],i)=>{
+   let cap=s.charAt(0).toUpperCase()+s.slice(1),c='simple_'+i,topic='g_t2g6',base=action;
+   addQuestion(bank,topic,'e_simple_ask_'+i,`___ ${s} ${base}?`,form[0].toUpperCase()+form.slice(1),['Do','Does','Is','Are'],'mc',c);
+   addQuestion(bank,topic,'e_simple_neg_'+i,`${cap} ___ not ${base}.`,form,['do','does','is','are'],'mc',c);
+   // Two clear auxiliary-verb tasks per context; no automatic tense conjugation guesswork.
+   addQuestion(bank,topic,'e_simple_wh_'+i,`Why ___ ${s} ${base}?`,form,['do','does','is','are'],'mc',c);
+ });
+ // Plurals: rule applications and the reverse direction, including a few irregular forms.
+ PLURAL_PAIRS.forEach(([one,many],i)=>{
+   const c='plural_'+i,topic='g_t2g4';
+   addQuestion(bank,topic,'e_plural_'+i,`Write the plural of “${one}”.`,many,[],'type',c);
+   addQuestion(bank,topic,'e_singular_'+i,`Write the singular of “${many}”.`,one,[],'type',c);
+ });
+ // Telling the time: precise five-minute increments; two response formats.
+ for(let h=1;h<=12;h++)for(let min=0;min<=55;min+=5){
+   const tm=displayTime(h,min),said=sayTime(h,min),c='clock_'+h+'_'+min,topic='g_t2g5';
+   addQuestion(bank,topic,'e_time_digits_'+h+'_'+min,`Write “${said}” in numbers (e.g. 4:15).`,tm,[],'type',c);
+   addQuestion(bank,topic,'e_time_words_'+h+'_'+min,`Write ${tm} in words using past/to (e.g. quarter past four).`,said,[],'type',c);
+ }
+ // Dates: weekdays, month order, and British numeric day/month notation.
+ DAY_NAMES.forEach((d,i)=>{
+  const topic='g_t2g7',c='weekday_'+i;
+  addQuestion(bank,topic,'e_day_next_'+i,`Which day is after ${d}?`,DAY_NAMES[(i+1)%7],DAY_NAMES,'mc',c);
+  addQuestion(bank,topic,'e_day_before_'+i,`Which day is before ${d}?`,DAY_NAMES[(i+6)%7],DAY_NAMES,'mc',c);
+ });
+ MONTH_NAMES.forEach((m,i)=>{
+   const topic='g_t2g7',c='month_'+i;
+   addQuestion(bank,topic,'e_month_next_'+i,`Which month comes after ${m}?`,MONTH_NAMES[(i+1)%12],MONTH_NAMES,'mc',c);
+   addQuestion(bank,topic,'e_month_before_'+i,`Which month comes before ${m}?`,MONTH_NAMES[(i+11)%12],MONTH_NAMES,'mc',c);
+   [4,13,25].forEach(day=>{
+     const c2='date_'+i+'_'+day,num=String(day).padStart(2,'0')+'/'+String(i+1).padStart(2,'0');
+     addQuestion(bank,topic,'e_date_digits_'+i+'_'+day,`Write ${day} ${m} as a British date (DD/MM).`,num,[],'type',c2);
+     addQuestion(bank,topic,'e_date_words_'+i+'_'+day,`Write the date ${num} in British English words (e.g. 3 June).`,`${day} ${m}`,[],'type',c2);
+   });
+ });
+ const quantifiers=[
+ ['apples','many'],['students','many'],['pencils','many'],['sports','many'],['siblings','many'],['books','many'],['chairs','many'],['hobbies','many'],['tickets','many'],['films','many'],['songs','many'],['games','many'],['friends','many'],['players','many'],
+ ['water','much'],['rice','much'],['milk','much'],['sugar','much'],['music','much'],['homework','much'],['time','much'],['money','much'],['juice','much'],['cheese','much'],['bread','much'],['information','much'],['flour','much'],['tea','much']
+ ];
+ quantifiers.forEach(([noun,correct],i)=>{
+    const c='quantity_'+i,topic='g_t2g8';
+    addQuestion(bank,topic,'e_qty_question_'+i,`How ___ ${noun} do you need?`,correct,['much','many','a little','a few'],'mc',c);
+    addQuestion(bank,topic,'e_qty_negative_'+i,`We do not have ___ ${noun}. (Choose much or many.)`,correct,['much','many','a few','a little'],'mc',c);
+    const phrase=correct==='many'?'a few':'a little';
+    addQuestion(bank,topic,'e_qty_small_'+i,`I only need ___ ${noun}. (Choose the phrase meaning a small amount/number.)`,phrase,['a few','a little','much','many'],'mc',c);
+ });
+ // Pair countable-v-uncountable terms with explicitly correct, unambiguous classifications.
+ quantifiers.forEach(([noun,correct],i)=>{
+   let topic='g_t2g8',c='countnoun_'+i;
+   addQuestion(bank,topic,'e_count_class_'+i,`Is “${noun}” countable or uncountable?`,correct==='many'?'countable':'uncountable',['countable','uncountable','both'], 'mc',c);
+ });
+ // Vocabulary contextual recall and translation variations; word concepts cover all 60 real words.
+ VOCAB_TOPICS.forEach(t=>{
+  const topic='v_'+t.id,group=WORDS.filter(w=>w[0]===t.id);
+  group.forEach((w,i)=>{
+    const concept='word_'+t.id+'_'+i,contexts=VOCAB_CONTEXTS[t.id][i];
+    const wrong=group.filter((v,j)=>j!==i);
+    addQuestion(bank,topic,'e_vn_mc_'+t.id+'_'+i,`Which English word means “${w[2]}”?`,w[1],[w[1],...wrong.slice(0,3).map(v=>v[1])],'mc',concept);
+    contexts.forEach((sentence,j)=>{
+       if(!sentence.includes('___'))throw Error('Missing vocab blank '+topic+' '+i);
+       const options=[w[1],...wrong.slice((i+j*3)%11).filter(v=>v[1]!==w[1]).slice(0,3).map(v=>v[1])];
+       addQuestion(bank,topic,'e_vcx_mc_'+t.id+'_'+i+'_'+j,`Complete the sentence. Hint: “${w[2]}”\n${sentence}`,w[1],options,'mc',concept);
+       addQuestion(bank,topic,'e_vcx_write_'+t.id+'_'+i+'_'+j,`Complete the sentence using the English for “${w[2]}”.\n${sentence}`,w[1],[], 'type',concept);
+    });
+  });
+ });
+}
+
+const PROGRESS_KEY='hero_progress_t2'; // Keep backwards compatibility with the old Mission 2 page.
+const RESULTS_KEY='engliforce_m2_test_results_v1';
+const $=id=>document.getElementById(id);
+const allTopics=[...VOCAB_TOPICS.map(v=>({...v,key:'v_'+v.id,category:'Vocabulary',url:'m1t2_vocab_theme_2.html'})),...GRAMMAR.map(g=>({...g,key:'g_'+g.id,category:'Grammar'}))];
+const topicsByKey=Object.fromEntries(allTopics.map(t=>[t.key,t]));
+function safeGet(key,backup) { try {let parsed=JSON.parse(localStorage.getItem(key));return parsed===null?backup:parsed;}catch {return backup;} }
+function safeSet(key,v) { try { localStorage.setItem(key,JSON.stringify(v));return true; } catch { return false; } }
+function readResults() {const s=safeGet(RESULTS_KEY,[]);return Array.isArray(s)?s.filter(r=>r&&typeof r==='object'&&Array.isArray(r.topics)):[];}
+function buildSwitches() {allTopics.forEach(topic=>{const label=document.createElement('label');label.className='switch-line';let input=document.createElement('input');input.type='checkbox';input.value=topic.key;input.checked=true;input.setAttribute('aria-label',topic.name+' kiezen');input.addEventListener('change',updatePool);let sw=document.createElement('span');sw.className='switch-ui';sw.setAttribute('aria-hidden','true');let labelText=document.createElement('span');labelText.className='switch-label';labelText.textContent=(topic.icon?topic.icon+' ':'')+topic.name;let sub=document.createElement('small');sub.textContent=(BANK[topic.key]?.length||0)+' questions';labelText.append(sub);label.append(input,sw,labelText);$(topic.category==='Vocabulary'?'vocab-switches':'grammar-switches').appendChild(label);});}
+function selectedKeys() {return [...document.querySelectorAll('.switch-line input:checked')].map(x=>x.value);}
+function shuffle(array) {const a=[...array];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function buildBank() {
+ const bank={};
+ VOCAB_TOPICS.forEach(t=>{
+  let group=WORDS.filter(w=>w[0]===t.id),items=[];
+  group.forEach((w,i)=>{
+    let others=group.filter(x=>x[1]!==w[1]);
+    let options=others.map(x=>x[2]).slice(0,3);
+    items.push({id:`v_${t.id}_en_${i}`,topic:'v_'+t.id,type:'mc',concept:'word_'+t.id+'_'+i,question:`What does “${w[1]}” mean in Dutch?`,correct:w[2],options:[w[2],...options]});
+    items.push({id:`v_${t.id}_nl_${i}`,topic:'v_'+t.id,type:'type',concept:'word_'+t.id+'_'+i,question:`Vertaal naar het Engels: “${w[2]}”`,correct:w[1]});
+  });bank['v_'+t.id]=items;
+ });
+ GRAMMAR.forEach(g=>{bank['g_'+g.id]=(GRAMMAR_BANK[g.id]||[]).filter((row,i)=>!(g.id==='t2g8'&&i===2)).map((row,i)=>({id:`g_${g.id}_${i}`,topic:'g_'+g.id,type:'mc',concept:'old_'+g.id+'_'+i,question:row[0],correct:row[1],options:row.slice(1)}));});
+ expandBank(bank);
+ for(const [topic,questions] of Object.entries(bank)){
+   let ids=new Set();for(const q of questions){if(ids.has(q.id))throw Error('Duplicate ID: '+q.id);ids.add(q.id);}
+ }
+ return bank;
+}
+const BANK=buildBank();
+function priorSeen() {
+  const stored=safeGet(SEEN_KEY,{});
+  const history=readResults();let seen={};
+  if(stored&&typeof stored==='object'&&!Array.isArray(stored)){
+    for(const [id,o] of Object.entries(stored))if(o&&typeof o.n==='number'&&o.n>=1)seen[id]={n:o.n,last:Number(o.last)||0};
+  }
+  // Fallback for old stored results without seen records, avoiding false repeats after upgrades.
+  for(const r of history){let t=Date.parse(r.date)||0;for(const item of r.items||[]){
+    if(item&&typeof item.id==='string'&&!seen[item.id])seen[item.id]={n:1,last:t};
+  }}
+  return seen;
+}
+function seenCounts(keys){const old=priorSeen();return keys.map(k=>({key:k,total:BANK[k]?.length||0,unseen:(BANK[k]||[]).filter(q=>!old[q.id]).length}));}
+function updatePool() {
+ const keys=selectedKeys();let stats=seenCounts(keys),total=stats.reduce((n,x)=>n+x.total,0),unseen=stats.reduce((n,x)=>n+x.unseen,0),requested=Number($('question-count').value);
+ $('question-pool-count').textContent=`${total.toLocaleString('nl-NL')} questions · ${unseen.toLocaleString('nl-NL')} new`;
+ $('selection-msg').textContent=keys.length?`Selected: ${keys.length} ${keys.length===1?'topic':'topics'}. ${Math.min(requested,total)} questions in your test.`:'Choose at least one topic.';
+ $('question-repeat-info').textContent=!keys.length?'Kies een of meer onderwerpen.':unseen>=requested?`Nog ${unseen} vragen die je nooit eerder hebt gezien. Je volgende toets gebruikt uitsluitend ongeziene vragen.`:unseen>0?`Nog ${unseen} nieuwe vragen beschikbaar. De overige ${Math.max(0,Math.min(requested,total)-unseen)} vragen moeten worden herhaald. Oudere vragen krijgen voorrang.`:`Je hebt alle ${total} vraagvarianten uit deze selectie al eens gehad. De generator begint met de vragen die je het langst niet hebt gezien.`;
+ $('start-test').disabled=total===0;
+}
+function makeQuestions(keys,n) {
+ const seen=priorSeen();
+ const conceptVisits={};
+ for(const k of keys)for(const q of BANK[k]||[])if(seen[q.id]){
+    let old=conceptVisits[q.concept]||{n:0,last:0};old.n+=seen[q.id].n;old.last=Math.max(old.last,seen[q.id].last);conceptVisits[q.concept]=old;
+ }
+ const available=Object.fromEntries(keys.map(k=>[k,[...BANK[k]]]));
+ let list=[],localConcepts={},keyOrder=shuffle(keys);
+ while(list.length<n){
+   let progressed=false;
+   for(const key of keyOrder){
+     let pool=available[key];if(!pool||!pool.length)continue;
+     let best=-Infinity,candidates=[];
+     for(const q of pool){
+       let seenQ=seen[q.id];let prior=conceptVisits[q.concept]||{n:0,last:0};
+       // Primary rule: unseen exact questions before any repeats; secondary: unused concepts.
+       // The local term ensures the same word/grammar concept isn't repeated within one test where possible.
+       let rank=(seenQ?0:1000000)-((prior.n||0)+(localConcepts[q.concept]||0)*8)*1000-(seenQ?Math.min(seenQ.n,99)*100:0);
+       if(rank>best){best=rank;candidates=[q];}else if(rank===best)candidates.push(q);
+     }
+     if(!candidates.length)continue;
+     let q=candidates[Math.floor(Math.random()*candidates.length)];
+     pool.splice(pool.indexOf(q),1);list.push(q);localConcepts[q.concept]=(localConcepts[q.concept]||0)+1;
+     progressed=true;
+     if(list.length>=n)break;
+   }
+   if(!progressed)break;
+   keyOrder=shuffle(keys);
+ }
+ return list.map(q=>({...q,options:q.type==='mc'?shuffle(q.options):undefined}));
+}
+let current=[],answers=[],index=0,startedAt=0,latestResult=null;
+function showTestView(section) {['test-setup','test-taking','test-results','test-history'].forEach(id=>$(id).hidden=(id!==section));$('test-panel').scrollIntoView({behavior:'smooth',block:'start'});}
+function startTest() {const keys=selectedKeys(),total=keys.reduce((n,k)=>n+(BANK[k]?.length||0),0);if(!total)return;const qty=Math.min(Number($('question-count').value),total);current=makeQuestions(keys,qty);answers=Array(current.length).fill(null);index=0;startedAt=Date.now();showTestView('test-taking');showQuestion();}
+function showQuestion() {let q=current[index];$('question-progress-label').textContent=`Question ${index+1} of ${current.length}`;$('question-subject-label').textContent=topicsByKey[q.topic].name;$('question-progress-bar').style.width=((index+1)/current.length*100)+'%';const card=$('question-card');card.replaceChildren();let cat=document.createElement('div');cat.className='question-label';cat.textContent=topicsByKey[q.topic].category.toUpperCase();let text=document.createElement('div');text.className='question-text';text.textContent=q.question;card.append(cat,text);if(q.type==='mc'){let list=document.createElement('div');list.className='answer-list';q.options.forEach(option=>{let line=document.createElement('label');line.className='answer-option';let inp=document.createElement('input');inp.type='radio';inp.name='question-answer';inp.value=option;inp.checked=answers[index]===option;inp.addEventListener('change',()=>answers[index]=option);let sp=document.createElement('span');sp.textContent=option;line.append(inp,sp);list.append(line);});card.append(list);}else {let input=document.createElement('input');input.className='answer-type';input.type='text';input.lang='en';input.autocomplete='off';input.spellcheck=false;input.placeholder='Type the English word(s) here';input.value=answers[index]||'';input.addEventListener('input',()=>answers[index]=input.value);card.append(input);} $('previous-question').disabled=index===0;$('next-question').textContent=index===current.length-1?'FINISH TEST':'NEXT QUESTION';}
+function normalise(s) {return String(s??'').normalize('NFKC').trim().toLowerCase().replace(/[’‘]/g,"'").replace(/[.?!]+$/g,'').replace(/\s+/g,' ');}
+function mark(q,a) {return normalise(q.correct)===normalise(a);}
+function nextQuestion(){if(index===current.length-1){finishTest();return;}index++;showQuestion();}
+function finishTest(){let unanswered=answers.filter(a=>a===null||String(a).trim()==='').length;if(unanswered&&!confirm(`Je hebt ${unanswered} ${unanswered===1?'vraag':'vragen'} niet ingevuld. Toch nakijken?`))return;let perTopic={};let items=current.map((q,i)=>{let ok=mark(q,answers[i]);perTopic[q.topic]??={score:0,total:0};perTopic[q.topic].total++;if(ok)perTopic[q.topic].score++;return {id:q.id,topic:q.topic,question:q.question,answer:answers[i]??'',correct:q.correct,ok};});let score=items.filter(x=>x.ok).length;const result={id:'test_'+Date.now()+'_'+Math.random().toString(36).slice(2,9),date:new Date().toISOString(),score,total:items.length,topics:Object.keys(perTopic).map(key=>({key,...perTopic[key]})),items,chosen:selectedKeys(),durationSeconds:Math.max(0,Math.floor((Date.now()-startedAt)/1000))};latestResult=result;const usage=priorSeen();const stamp=Date.now();for(const q of current){const u=usage[q.id]||{n:0,last:0};usage[q.id]={n:u.n+1,last:stamp};}if(!safeSet(SEEN_KEY,usage))alert('De vraaggeschiedenis kon niet worden opgeslagen.');let saved=readResults();saved.unshift(result);saved=saved.slice(0,200);if(!safeSet(RESULTS_KEY,saved))alert('Let op: het resultaat kon niet worden opgeslagen op dit apparaat. Maak eventueel een screenshot.');renderResult(result);showTestView('test-results');}
+function renderResult(result) {const out=$('results-content');out.replaceChildren();let head=document.createElement('div');head.className='results-head';let score=document.createElement('strong');score.textContent=`${Math.round(result.score/result.total*100)}%`;let p=document.createElement('p');p.textContent=`${result.score} of ${result.total} correct answers`;head.append(score,p);out.append(head);let sub=document.createElement('h3');sub.className='section-sub';sub.textContent='Your score by topic';out.append(sub);let grid=document.createElement('div');grid.className='result-grid';for(let t of result.topics){let topic=topicsByKey[t.key]||{name:t.key,url:'m1_mission_2.html'};let percent=Math.round(t.score/t.total*100);let row=document.createElement('div');row.className='result-topic';let title=document.createElement('div');title.className='result-topic-title';let name=document.createElement('strong');name.textContent=topic.name;let points=document.createElement('span');points.textContent=`${t.score}/${t.total} · ${percent}%`;title.append(name,points);let bar=document.createElement('div');bar.className='meter';let fill=document.createElement('div');fill.style.width=percent+'%';bar.append(fill);row.append(title,bar);let tip=document.createElement('p');tip.style.fontSize='.9rem';tip.textContent=percent>=80?'Great work!':percent>=60?'Nearly there. Keep practising.':'Extra practice will help you.';row.append(tip);let a=document.createElement('a');a.className='action-btn';a.href=topic.url;a.target='_blank';a.rel='noopener';a.textContent='PRACTISE';row.append(a);grid.append(row);}out.append(grid);const details=document.createElement('details');let summary=document.createElement('summary');summary.textContent='Review your answers';let holder=document.createElement('div');result.items.forEach((q,i)=>{let div=document.createElement('div');div.className='review-item';let title=document.createElement('div');title.textContent=`${i+1}. ${q.question}`;let answer=document.createElement('div');answer.textContent='Your answer: '+(q.answer||'Not answered');let right=document.createElement('div');right.textContent=(q.ok?'✅ Correct':'❌ Correct answer: '+q.correct);if(!q.ok)right.style.color='#ffd0bd';div.append(title,answer,right);holder.append(div);});details.append(summary,holder);out.append(details);}
+function renderHistory(){const out=$('history-content');out.replaceChildren();let results=readResults();if(!results.length){let p=document.createElement('p');p.className='empty';p.textContent='You have not completed a practice test yet.';out.append(p);return;}let wrap=document.createElement('div');wrap.className='table-wrap';let table=document.createElement('table');let thead=document.createElement('thead');let head=document.createElement('tr');['Date','Score','Questions','Topics','Details'].forEach(x=>{let th=document.createElement('th');th.textContent=x;head.append(th);});thead.append(head);table.append(thead);let tbody=document.createElement('tbody');results.forEach(result=>{let tr=document.createElement('tr');const values=[new Date(result.date).toLocaleString('nl-NL'),Math.round(result.score/result.total*100)+'%',`${result.score} / ${result.total}`,result.topics.map(t=>topicsByKey[t.key]?.name||t.key).join(', ')];values.forEach(v=>{let td=document.createElement('td');td.textContent=v;tr.append(td);});let td=document.createElement('td');let btn=document.createElement('button');btn.type='button';btn.className='action-btn';btn.textContent='VIEW';btn.addEventListener('click',()=>{latestResult=result;renderResult(result);showTestView('test-results');});td.append(btn);tr.append(td);tbody.append(tr);});table.append(tbody);wrap.append(table);out.append(wrap);let p=document.createElement('p');p.className='privacy';p.textContent=`${results.length} saved ${results.length===1?'result':'results'} on this device (maximum 200).`;out.append(p);}
+function exportHistory(){const content=JSON.stringify({app:'engliforce-mission-2',version:1,exportedAt:new Date().toISOString(),results:readResults(),seen:priorSeen()},null,2);const blob=new Blob([content],{type:'application/json'});let u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='engliforce-mission-2-results.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),500);}
+async function importHistory(e){const file=e.target.files?.[0];if(!file)return;try{if(file.size>5_000_000)throw Error('This file is too large.');let imported=JSON.parse(await file.text());if(imported.app!=='engliforce-mission-2'||!Array.isArray(imported.results))throw Error('This is not a Mission 2 results export.');let incoming=imported.results.filter(r=>r&&typeof r.id==='string'&&typeof r.date==='string'&&typeof r.score==='number'&&typeof r.total==='number'&&r.total>0&&r.score>=0&&r.score<=r.total&&Array.isArray(r.topics)&&Array.isArray(r.items));let combined=[...readResults(),...incoming];let unique=new Map(combined.map(r=>[r.id,r]));let output=[...unique.values()].sort((a,b)=>Date.parse(b.date)-Date.parse(a.date)).slice(0,200);if(!safeSet(RESULTS_KEY,output))throw Error('Browser storage is unavailable.');if(imported.seen&&typeof imported.seen==='object'&&!Array.isArray(imported.seen)){const known=priorSeen();for(const [id,u] of Object.entries(imported.seen))if(u&&typeof u.n==='number'&&u.n>=1){const old=known[id];known[id]={n:Math.max(old?.n||0,u.n),last:Math.max(old?.last||0,Number(u.last)||0)};}safeSet(SEEN_KEY,known);}renderHistory();alert(`${incoming.length} results read. Your history now contains ${output.length} results.`);}catch(err){alert('Import failed: '+err.message);}finally{e.target.value='';}}
+function goSetup(){showTestView('test-setup');updatePool();}
+
+function initTestGenerator(){
+ buildSwitches();
+ updatePool();
+ $('question-count').addEventListener('change',updatePool);
+ $('start-test').addEventListener('click',startTest);
+ $('view-history').addEventListener('click',()=>{renderHistory();showTestView('test-history');});
+ $('previous-question').addEventListener('click',()=>{index=Math.max(0,index-1);showQuestion();});
+ $('next-question').addEventListener('click',nextQuestion);
+ $('stop-test').addEventListener('click',()=>{if(confirm('Stop this test without saving a score?'))goSetup();});
+ $('new-test').addEventListener('click',goSetup);
+ $('results-history').addEventListener('click',()=>{renderHistory();showTestView('test-history');});
+ $('history-back').addEventListener('click',goSetup);
+ $('export-history').addEventListener('click',exportHistory);
+ $('import-history-button').addEventListener('click',()=>$('import-history').click());
+ $('import-history').addEventListener('change',importHistory);
+ $('clear-history').addEventListener('click',()=>{
+   if(confirm('Delete all saved Mission 2 results AND question history on this device?')){
+     try{localStorage.removeItem(RESULTS_KEY);localStorage.removeItem(SEEN_KEY);}catch{}
+     renderHistory();updatePool();
+   }
+ });
+}
+initTestGenerator();
+
+</script>
+</body>
+</html>

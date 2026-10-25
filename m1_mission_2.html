@@ -293,26 +293,15 @@ footer { padding: 20px 0 10px; }
 <div class="meta">8 grammar topics</div>
 
 </a><button aria-label="Markeer grammar als afgerond" aria-pressed="false" class="btn menu-achieved" data-section="grammar" type="button">ACHIEVED</button></article>
-<article class="card menu-card">
+<article class="card menu-card"><a aria-label="Open Test Generator" class="menu-card-link" href="m1_mission_2_test_generator.html">
 <div class="card-header"><div aria-hidden="true" class="power-icon">📝</div></div>
 <div class="name">TEST GENERATOR</div>
 <div class="desc">Stel je eigen proeftoets samen en ontdek wat je nog kunt oefenen</div>
 <div class="meta">Proeftoets · Analyse · Oefenadvies</div>
-<button aria-controls="test-panel" aria-expanded="false" class="action-btn" id="test-toggle" type="button">PRACTISE TEST</button>
-</article>
+</a></article>
 </div>
 
-<section aria-label="Test Generator" class="content-panel" hidden="" id="test-panel">
-<div class="divider"></div>
-<div class="notice-panel">
-<div aria-hidden="true" class="power-icon">📝</div>
-<h2 class="panel-title">TEST GENERATOR</h2>
-<p><strong>Coming soon!</strong> Hier kunnen leerlingen binnenkort met schuifjes kiezen welke vocab- en grammaronderdelen ze willen oefenen.</p>
-<p>Na de proeftoets krijgen ze een analyse met een score per onderdeel en klikbare <strong>PRACTISE</strong>-knoppen. De oefeningen openen in een nieuw tabblad, zodat de resultaten bewaard blijven.</p>
-<p>De Test Generator is nog in ontwikkeling; er wordt nu nog geen toets gestart.</p>
-<button class="action-btn secondary-btn" id="test-close" type="button">TERUG NAAR KEUZE</button>
-</div>
-</section>
+
 <p class="status-note">Je voortgang wordt alleen op dit apparaat opgeslagen. Geen tracking of cookies.</p>
 </main>
 <footer><p style="text-align:center;opacity:.65;padding:35px 12px;">© 2026 EngliForce – Make English your superpower!</p></footer>
@@ -339,30 +328,11 @@ document.querySelectorAll('.menu-achieved').forEach(btn=>{
   if(now)starBurst(btn);
  });
 });
-const test=document.getElementById('test-panel');
-const testBtn=document.getElementById('test-toggle');
-function setTestPanel(open,{syncHash=true}={}){
- test.hidden=!open;
- testBtn.setAttribute('aria-expanded',String(open));
- if(syncHash){
-  const newHash=open?'#test':'';
-  try {history.replaceState(null,'',location.pathname+location.search+newHash);} catch {}
- }
- if(open)test.scrollIntoView({behavior:'smooth',block:'start'});
- else document.querySelector('.main-menu').scrollIntoView({behavior:'smooth',block:'start'});
-}
-testBtn.addEventListener('click',()=>setTestPanel(test.hidden));
-document.getElementById('test-close').addEventListener('click',()=>setTestPanel(false));
-// Legacy grammar links in the existing eight grammar pages target #grammar.
-// Send these back to the new grammar overview without modifying those eight pages.
+// Preserve existing legacy links from grammar pages without changing their URLs.
 function restoreSectionFromHash(){
  const h=location.hash.toLowerCase();
- if(h==='#grammar'||h==='#grammar-panel'){
-  location.replace('m1t2_grammar.html');
-  return;
- }
- if(h==='#test'||h==='#test-panel')setTestPanel(true,{syncHash:false});
- else if(!test.hidden)setTestPanel(false,{syncHash:false});
+ if(h==='#grammar'||h==='#grammar-panel')location.replace('m1t2_grammar.html');
+ else if(h==='#test'||h==='#test-panel')location.replace('m1_mission_2_test_generator.html');
 }
 window.addEventListener('hashchange',restoreSectionFromHash);
 restoreSectionFromHash();
