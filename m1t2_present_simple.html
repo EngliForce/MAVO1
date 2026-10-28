@@ -251,6 +251,48 @@ footer{box-sizing:border-box;background:transparent!important;color:#afc0d0!impo
 .ef-breadcrumb .ef-mission-back-link{color:#fff!important;}
 @media(max-width:530px){.ef-mission-back-link{font-size:.96rem;padding:12px 17px;width:100%;max-width:400px}}
 </style>
+<style id="ef-present-simple-readability-fix">
+/* Donkere uitlegvlakken met voldoende contrast in alle drie de zinstypen. */
+main .tip {
+  background:#173c50!important;
+  border-left:6px solid #66c989!important;
+  color:#f5faff!important;
+  border-radius:0 12px 12px 0;
+  max-width:790px;
+}
+main .tip p,main .tip li,main .tip em,main .tip strong {color:#f5faff!important}
+main .tip h3 {color:#b9f1c9!important}
+main .tip code {background:rgba(0,0,0,.25)!important;color:#ffda74!important;border-radius:4px;padding:1px 5px}
+main .tip .present-simple,main table .present-simple {color:#9ce7b0!important;font-weight:800!important}
+/* De vier knoppen staan in één groep en zien er hetzelfde uit. */
+main .ef-grammar-actions {margin:16px auto 8px;gap:12px}
+main .ef-grammar-actions .toggle-button {margin:0!important;min-width:155px}
+main .ef-grammar-actions .toggle-button[aria-pressed="true"] {
+  background:#ffb703!important;color:#08192b!important;border-bottom-color:#cf8c00!important;
+}
+@media(max-width:450px){main .ef-grammar-actions .toggle-button {min-width:125px;padding:9px 12px!important}}
+</style>
+<style id="ef-original-green-header-restored">
+/* De vaste EngliForce kopbalk: groen kleurverloop, schuine onderrand en dunne gele lijn.
+   Alleen de kopbalk is hersteld; lesinhoud, vier knoppen en privacyvideo blijven ongewijzigd. */
+header.ef-header {
+  min-height: 0!important;
+  height: clamp(138px, 9vw, 152px)!important;
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding: 14px 18px 29px!important;
+  background:radial-gradient(ellipse at 19% -45%,rgba(255,255,255,.12),transparent 63%),
+             radial-gradient(ellipse at 72% 80%,rgba(18,99,27,.06),transparent 68%),
+             linear-gradient(100deg,#469d47 0%,#419c43 55%,#469e47 100%)!important;
+  border:0!important;
+  border-bottom:5px solid #ffb703!important;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 21px),0 100%)!important;
+}
+header.ef-header h1,header.ef-header p {position:relative;z-index:2}
+@media(max-width:600px){header.ef-header{height:138px!important;padding:10px 10px 26px!important}}
+</style>
 </head>
 <body><header class="ef-header"><h1>ENGLIFORCE ACADEMY</h1><p>MISSION 2 · GRAMMAR: PRESENT SIMPLE</p></header>
 <main>
@@ -259,12 +301,15 @@ footer{box-sizing:border-box;background:transparent!important;color:#afc0d0!impo
 <section data-ef-explanation-start="true">
 <h2>🧠 Wat is de Present Simple?</h2>
 <p>De <strong>present simple</strong> gebruik je om te praten over gewoontes, feiten en dingen die regelmatig gebeuren.</p>
-</section><div aria-label="Video" class="ef-nav-strip"><button class="ef-nav-button" data-ef-nav="video" type="button">🎬 VIDEO</button></div>
+</section>
 <section>
 <h2>📂 Uitleg per type zin</h2>
-<button class="toggle-button" onclick="toggleSection('bevestigend')">Bevestigend</button>
-<button class="toggle-button" onclick="toggleSection('ontkennend')">Ontkennend</button>
-<button class="toggle-button" onclick="toggleSection('vragend')">Vragend</button>
+<div class="ef-nav-strip ef-grammar-actions" aria-label="Kies de uitleg">
+<button class="toggle-button" type="button" onclick="toggleSection('bevestigend')" data-section="bevestigend" aria-pressed="false">Bevestigend</button>
+<button class="toggle-button" type="button" onclick="toggleSection('ontkennend')" data-section="ontkennend" aria-pressed="false">Ontkennend</button>
+<button class="toggle-button" type="button" onclick="toggleSection('vragend')" data-section="vragend" aria-pressed="false">Vragend</button>
+<button class="toggle-button" type="button" data-ef-nav="video" aria-pressed="false" aria-expanded="false">🎬 Video</button>
+</div>
 </section>
 <!-- ✅ Bevestigend -->
 <section class="collapsible-content" id="bevestigend">
@@ -349,10 +394,9 @@ footer{box-sizing:border-box;background:transparent!important;color:#afc0d0!impo
 </section>
 <!-- 🎥 Video's -->
 <section class="ef-video-collapsed" data-ef-video-container="true">
-<h2>🎥 Uitlegvideo's</h2>
+<h2>🎥 Uitlegvideo</h2>
 <div class="video-row">
-<div class="ef-video-placeholder" data-loaded="false" data-start="6" data-youtube-id="D1cxf02LZ18"><p>🔒 Privacy: de YouTube-video wordt pas geladen wanneer je op de knop klikt. Bij afspelen deelt je browser gegevens met YouTube (Google).</p><button class="ef-video-start" type="button">▶ Video starten</button></div>
-<div class="ef-video-placeholder" data-loaded="false" data-start="0" data-youtube-id="RsOZLrxDUP8"><p>🔒 Privacy: de YouTube-video wordt pas geladen wanneer je op de knop klikt. Bij afspelen deelt je browser gegevens met YouTube (Google).</p><button class="ef-video-start" type="button">▶ Video starten</button></div>
+<div class="ef-video-placeholder" data-loaded="false" data-start="0" data-youtube-id="N2ZWtV2b77o"><p>🔒 Privacy: de YouTube-video wordt pas geladen wanneer je op de knop klikt. Bij afspelen deelt je browser gegevens met YouTube (Google).</p><button class="ef-video-start" type="button">▶ Video starten</button></div>
 </div>
 </section>
 <!-- 📝 Super Pickles -->
@@ -413,41 +457,49 @@ for(const node of document.querySelectorAll('.ef-video-placeholder')){
     view.append(iframe);node.replaceChildren(view);
   },{once:true});
 }
-// Top briefing buttons: show the original explanation or original video without changing lesson content.
-const nav=document.querySelector('.ef-nav-strip');
-if(nav){
-  nav.querySelector('[data-ef-nav="video"]').addEventListener('click',()=>{
-    const controls=[...document.querySelectorAll('main .toggle-container button')];
-    const videoBtn=controls.find(b=>/video/i.test(b.textContent||'') && !b.classList.contains('ef-nav-button'));
-    if(videoBtn) videoBtn.click();
-    const target=document.querySelector('[data-ef-video-container]');
-    if(target){
-      if(getComputedStyle(target).display==='none')target.style.display='block';
-      target.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-  });
-}
 })();</script><script>
 (()=>{
-  const trigger=document.querySelector('.ef-nav-strip [data-ef-nav="video"]');
+  'use strict';
   const video=document.querySelector('[data-ef-video-container]');
-  if(!trigger||!video)return;
-  video.classList.add('ef-video-collapsed');
-  trigger.setAttribute('aria-expanded','false');
-  // Capture this click to avoid a duplicate legacy handler scrolling the page unexpectedly.
-  trigger.addEventListener('click',(e)=>{
-    e.stopImmediatePropagation();
-    const open=video.classList.contains('ef-video-collapsed');
-    video.classList.toggle('ef-video-collapsed',!open);
-    trigger.setAttribute('aria-expanded',String(open));
-    if(open){for(const frame of video.querySelectorAll('iframe[data-restore-src]')){frame.src=frame.dataset.restoreSrc;}video.scrollIntoView({behavior:'smooth',block:'start'});}
-    else {
-      for(const frame of video.querySelectorAll('.ef-video-view iframe')){
-        frame.dataset.restoreSrc ||= frame.src;
+  const trigger=document.querySelector('.ef-grammar-actions [data-ef-nav="video"]');
+  if(!video||!trigger)return;
+  const buttons=[...document.querySelectorAll('.ef-grammar-actions button')];
+  const selectButton=(chosen)=>{
+    for(const button of buttons)button.setAttribute('aria-pressed',String(button===chosen));
+  };
+  const closeVideo=()=>{
+    video.classList.add('ef-video-collapsed');
+    trigger.setAttribute('aria-expanded','false');
+    // Stop video playback when pupils switch back to written explanation.
+    for(const frame of video.querySelectorAll('.ef-video-view iframe')){
+      if(frame.hasAttribute('src')){
+        frame.dataset.restoreSrc=frame.src;
         frame.removeAttribute('src');
       }
     }
-  },true);
+  };
+  // Keep the existing Bevestigend / Ontkennend / Vragend logic.
+  const originalToggle=window.toggleSection;
+  if(typeof originalToggle==='function'){
+    window.toggleSection=(id)=>{
+      originalToggle(id);
+      closeVideo();
+      selectButton(buttons.find(button=>button.dataset.section===id));
+    };
+  }
+  trigger.addEventListener('click',()=>{
+    const willOpen=video.classList.contains('ef-video-collapsed');
+    if(!willOpen){closeVideo();selectButton(null);return;}
+    document.querySelectorAll('.collapsible-content').forEach(section=>section.style.display='none');
+    video.classList.remove('ef-video-collapsed');
+    trigger.setAttribute('aria-expanded','true');
+    selectButton(trigger);
+    // Only reload an iframe that was already explicitly started by the pupil.
+    for(const frame of video.querySelectorAll('iframe[data-restore-src]')){
+      frame.src=frame.dataset.restoreSrc;
+    }
+    video.scrollIntoView({behavior:'smooth',block:'start'});
+  });
 })();
 </script></body>
 </html>
