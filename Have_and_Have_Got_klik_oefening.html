@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#439c43">
+<title>Have and Have Got – Classroom Practice</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --dark: #071b2b;
+    --yellow: #ffff4b;
+    --red: #ff535e;
+    --orange: #ff851c;
+    --green: #19f83d;
+    --header-height: 117px;
+    --font: "Arial Rounded MT Bold", "Trebuchet MS", "DejaVu Sans", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-width: 320px; min-height: 100%; }
+  body {
+    background: radial-gradient(ellipse 77% 57% at 50% 61%, #193955 0%, #0c263e 60%, #061828 100%);
+    color: white;
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* The green, subtly slanted banner matches the original example.
+     It extends from y=117 at left to y=101 at right (at 1225px width). */
+  .banner {
+    height: var(--header-height);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 15px 14px 0;
+    text-align: center;
+    background: #e1c522;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), 0 100%);
+  }
+  .banner::before {
+    position: absolute;
+    content: "";
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, #449d43 0%, #439c43 48%, #429c43 100%);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 17px), 0 calc(100% - 1px));
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(38px, 3.95vw, 66px);
+    line-height: 1.14;
+    letter-spacing: -.6px;
+    font-weight: 800;
+    color: var(--yellow);
+    text-shadow: 0 1px 1px rgba(27,82,27,.15);
+  }
+  .board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(35px, 6.55vw, 96px);
+    max-width: 1930px;
+    margin: -2px auto 0;
+    padding: 0 clamp(20px, 3.75vw, 70px) 8px;
+    height: calc(100vh - var(--header-height) + 2px);
+    height: calc(100svh - var(--header-height) + 2px);
+    cursor: pointer;
+  }
+  .column {
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: clamp(8px, .9vh, 12px);
+    min-width: 0;
+  }
+  .task-card {
+    min-width: 0;
+    padding: clamp(14px, 1.35vw, 25px) clamp(13px, 1.4vw, 24px);
+    border: clamp(4px, .42vw, 6px) solid #fff;
+    border-radius: clamp(29px, 3.5vw, 47px);
+    background: radial-gradient(ellipse 96% 87% at 55% 55%, #162e48 0%, #0a2135 72%, #071a2a 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .task-card h2 {
+    font-weight: 800;
+    font-size: clamp(22px, 1.75vw, 33px);
+    line-height: 1.12;
+    margin: 0 0 clamp(5px, .7vh, 9px);
+    letter-spacing: -.6px;
+  }
+  .negative h2 { color: #ff2632; }
+  .questions h2 { color: var(--orange); }
+  .positive h2 { color: var(--green); }
+  .sentences {
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    align-content: stretch;
+    row-gap: clamp(4px, .6vh, 9px);
+    flex: 1;
+    height: auto;
+  }
+  .exercise {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: .34em;
+    min-width: 0;
+    align-content: start;
+    font-size: clamp(21px, 1.5vw, 28px);
+    line-height: 1.18;
+    font-weight: 800;
+    letter-spacing: -.55px;
+  }
+  .number { font-variant-numeric: tabular-nums; }
+  .pair { min-width: 0; }
+  .prompt, .answer { overflow-wrap: break-word; }
+  .prompt { color: #fff; }
+  .answer {
+    color: #effff3;
+    margin-top: .13em;
+    min-height: 1.18em;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .16s linear;
+  }
+  .exercise.is-shown .answer { opacity: 1; visibility: visible; }
+  .exercise.is-newest .answer { color: #ffffdd; }
+  .grammar-red, .grammar-orange, .grammar-green {
+    font-weight: 900;
+    text-shadow: 0 0 .15px currentColor;
+  }
+  .grammar-red { color: var(--red); }
+  .grammar-orange { color: var(--orange); }
+  .grammar-green { color: var(--green); }
+  .toolbar {
+    position: fixed;
+    bottom: 7px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(3, 17, 30, .90);
+    border-radius: 12px;
+    padding: 5px;
+    opacity: .24;
+    transition: opacity .15s ease;
+  }
+  .toolbar:hover, .toolbar:focus-within { opacity: 1; }
+  .progress {
+    padding: 0 5px;
+    font: 800 13px/1 system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  .tool-button {
+    width: 29px;
+    height: 29px;
+    border: 1px solid #99aeba;
+    border-radius: 7px;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+    background: #123449;
+    color: #fff;
+    font: 800 18px/1 system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .tool-button:hover, .tool-button:focus-visible { background: #335f75; outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  /* On a full-size interactive whiteboard, keep the six boxes within the screen. */
+  @media (min-width: 1450px) and (min-height: 850px) {
+    .board { padding-top: 1px; }
+    .task-card { padding-top: 15px; padding-bottom: 10px; }
+    .task-card h2 { font-size: clamp(27px, 1.75vw, 33px); }
+    .exercise { font-size: clamp(24px, 1.50vw, 28px); }
+  }
+  /* When the screen is shallow, keep the type readable and scroll instead of crushing it. */
+  @media (max-height: 800px) and (min-width: 800px) {
+    .board { height: auto; min-height: calc(100svh - var(--header-height) + 2px); }
+    .column { grid-template-rows: repeat(3, minmax(245px, auto)); }
+    .task-card { padding-top: 13px; padding-bottom: 11px; }
+    .sentences { row-gap: 9px; }
+    .exercise { font-size: clamp(20px, 1.75vw, 27px); }
+  }
+  @media (max-width: 800px) {
+    .banner { --header-height: 100px; padding-top: 15px; }
+    h1 { font-size: clamp(28px, 5.2vw, 43px); }
+    .board { height: auto; min-height: calc(100svh - var(--header-height)); gap: 15px; padding: 0 12px 20px; }
+    .column { grid-template-rows: repeat(3, minmax(218px, auto)); gap: 11px; }
+    .task-card { padding: 13px 11px; border-width: 4px; border-radius: 26px; }
+    .task-card h2 { font-size: 20px; }
+    .exercise { font-size: clamp(16px, 2.5vw, 21px); letter-spacing: -.3px; }
+  }
+  @media (max-width: 570px) {
+    .banner { --header-height: 90px; }
+    h1 { font-size: clamp(25px, 6vw, 36px); }
+    .board { grid-template-columns: 1fr; }
+    .column { grid-template-rows: none; }
+    .task-card { min-height: 220px; padding: 15px 17px; }
+    .task-card h2 { font-size: 22px; }
+    .exercise { font-size: clamp(18px, 4.2vw, 23px); }
+    .toolbar { opacity: .75; }
+  }
+  @media (prefers-reduced-motion: reduce) { .answer, .toolbar { transition: none; } }
+</style>
+</head>
+<body>
+<header class="banner"><h1>Have and Have Got</h1></header>
+<main class="board" id="board" aria-label="Classroom exercise. Click to show answers one by one: first Have, then Have Got.">
+  <section class="column" aria-label="Have: first nine questions">
+    <article class="task-card negative"><h2>Make Negative:</h2><div class="sentences">
+      <div class="exercise" data-answer="Jack doesn't have a green scooter."><span class="number">1.</span><div class="pair"><div class="prompt">Jack has a green scooter.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="We don't have PE on Tuesday."><span class="number">2.</span><div class="pair"><div class="prompt">We have PE on Tuesday.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="They don't have new school bags."><span class="number">3.</span><div class="pair"><div class="prompt">They have new school bags.</div><div class="answer" aria-hidden="true"></div></div></div>
+    </div></article>
+    <article class="task-card questions"><h2>Make questions:</h2><div class="sentences">
+      <div class="exercise" data-answer="Does Lily have a pink umbrella?"><span class="number">1.</span><div class="pair"><div class="prompt">Lily has a pink umbrella.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="Does your uncle have a motorbike?"><span class="number">2.</span><div class="pair"><div class="prompt">Your uncle has a motorbike.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="Do the girls have a football?"><span class="number">3.</span><div class="pair"><div class="prompt">The girls have a football.</div><div class="answer" aria-hidden="true"></div></div></div>
+    </div></article>
+    <article class="task-card positive"><h2>Make positive:</h2><div class="sentences">
+      <div class="exercise" data-answer="Ben has a pet fish."><span class="number">1.</span><div class="pair"><div class="prompt">Does Ben have a pet fish?</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="My friends have a test."><span class="number">2.</span><div class="pair"><div class="prompt">My friends don't have a test.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="The library has a lift."><span class="number">3.</span><div class="pair"><div class="prompt">The library doesn't have a lift.</div><div class="answer" aria-hidden="true"></div></div></div>
+    </div></article>
+  </section>
+  <section class="column" aria-label="Have got: nine questions after Have">
+    <article class="task-card negative"><h2>Make Negative:</h2><div class="sentences">
+      <div class="exercise" data-answer="Ruby hasn't got a new phone."><span class="number">1.</span><div class="pair"><div class="prompt">Ruby has got a new phone.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="We haven't got a history test."><span class="number">2.</span><div class="pair"><div class="prompt">We have got a history test.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="The twins haven't got a puppy."><span class="number">3.</span><div class="pair"><div class="prompt">The twins have got a puppy.</div><div class="answer" aria-hidden="true"></div></div></div>
+    </div></article>
+    <article class="task-card questions"><h2>Make questions:</h2><div class="sentences">
+      <div class="exercise" data-answer="Has Tom got a blue hoodie?"><span class="number">1.</span><div class="pair"><div class="prompt">Tom has got a blue hoodie.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="Has your aunt got a camera?"><span class="number">2.</span><div class="pair"><div class="prompt">Your aunt has got a camera.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="Have the boys got tickets?"><span class="number">3.</span><div class="pair"><div class="prompt">The boys have got tickets.</div><div class="answer" aria-hidden="true"></div></div></div>
+    </div></article>
+    <article class="task-card positive"><h2>Make positive:</h2><div class="sentences">
+      <div class="exercise" data-answer="Mia has got a dictionary."><span class="number">1.</span><div class="pair"><div class="prompt">Has Mia got a dictionary?</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="I have got a pencil case."><span class="number">2.</span><div class="pair"><div class="prompt">I haven't got a pencil case.</div><div class="answer" aria-hidden="true"></div></div></div>
+      <div class="exercise" data-answer="They have got a map."><span class="number">3.</span><div class="pair"><div class="prompt">They haven't got a map.</div><div class="answer" aria-hidden="true"></div></div></div>
+    </div></article>
+  </section>
+</main>
+<nav class="toolbar" aria-label="Presentation controls">
+  <span class="progress" id="progress" title="Answers visible">0/18</span>
+  <button class="tool-button" type="button" id="previous" aria-label="Previous answer" title="Previous answer (←)">↶</button>
+  <button class="tool-button" type="button" id="reset" aria-label="Reset all answers" title="Start again (R)">⟳</button>
+  <button class="tool-button" type="button" id="fullscreen" aria-label="Fullscreen" title="Fullscreen (F)">⛶</button>
+</nav>
+<p id="announce" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+<script>
+  'use strict';
+  const exercises = [...document.querySelectorAll('.exercise')];
+  const announce = document.getElementById('announce');
+  const progress = document.getElementById('progress');
+  let shown = 0;
+  const escapeHtml = text => text.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // Original prompts are always white. Only changes in the revealed answers
+  // receive a colour: negatives RED, questions ORANGE, positives GREEN.
+  // GOT uses the same exercise colour as the other changed verb forms.
+  function highlightAnswer(ex) {
+    const answer = escapeHtml(ex.dataset.answer);
+    const card = ex.closest('.task-card');
+    const mark = (word, colour) => `<span class="grammar-${colour}">${word}</span>`;
+
+    if (card.classList.contains('negative')) {
+      // Highlight the full negative verb form, including GOT where relevant.
+      return answer.replace(/doesn&#39;t have|don&#39;t have|hasn&#39;t got|haven&#39;t got/gi,
+        word => mark(word, 'red'));
+    }
+    if (card.classList.contains('questions')) {
+      const match = answer.match(/^(Does|Do|Has|Have)\b/);
+      if (!match) return answer;
+      let remaining = answer.slice(match[0].length);
+      if (match[0] === 'Does' || match[0] === 'Do') {
+        // In HAVE questions, HAVE changes from HAS or follows added DO/DOES.
+        remaining = remaining.replace(/\bhave\b/i, word => mark(word, 'orange'));
+      }
+      // In HAVE GOT questions, both the moved auxiliary and GOT are orange.
+      remaining = remaining.replace(/\bgot\b/gi, word => mark(word, 'orange'));
+      return mark(match[0], 'orange') + remaining;
+    }
+    if (card.classList.contains('positive')) {
+      // Changed/restored HAVE or HAS and GOT are green.
+      return answer.replace(/\b(has|have)(\s+got)?\b/i, (phrase, verb, gotPart) =>
+        mark(verb, 'green') + (gotPart ? ' ' + mark('got', 'green') : ''));
+    }
+    return answer;
+  }
+  exercises.forEach(ex => {
+    ex.querySelector('.answer').innerHTML = highlightAnswer(ex);
+  });
+  function render() {
+    exercises.forEach((ex, index) => {
+      const open = index < shown;
+      ex.classList.toggle('is-shown', open);
+      ex.classList.toggle('is-newest', open && index === shown - 1);
+      ex.querySelector('.answer').setAttribute('aria-hidden', String(!open));
+    });
+    progress.textContent = `${shown}/${exercises.length}`;
+    announce.textContent = shown ? `Answer ${shown} of ${exercises.length}: ${exercises[shown - 1].dataset.answer}` : 'Ready to begin.';
+  }
+  function next() {
+    if (shown >= exercises.length) return;
+    shown++;
+    render();
+    // For smaller browser windows, keep the newest response in view.
+    const ex = exercises[shown - 1];
+    const bounds = ex.getBoundingClientRect();
+    if (bounds.bottom > innerHeight - 35 || bounds.top < 95) ex.scrollIntoView({block:'center', behavior:'instant'});
+  }
+  function previous() {
+    if (shown > 0) {
+      shown--;
+      render();
+    }
+  }
+  function reset() { shown = 0; render(); window.scrollTo({top: 0, behavior: 'instant'}); }
+  async function fullScreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+    } catch (e) { /* Full screen may be disabled by the browser. */ }
+  }
+  document.addEventListener('click', e => { if (!e.target.closest('button')) next(); });
+  document.getElementById('previous').addEventListener('click', previous);
+  document.getElementById('reset').addEventListener('click', reset);
+  document.getElementById('fullscreen').addEventListener('click', fullScreen);
+  document.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey || e.repeat) return;
+    if (['ArrowRight','ArrowDown','PageDown','Enter',' ','Spacebar','MediaTrackNext'].includes(e.key)) {
+      if (e.target.closest && e.target.closest('button') && (e.key === 'Enter' || e.key === ' ')) return;
+      e.preventDefault(); next();
+    } else if (['ArrowLeft','ArrowUp','PageUp','Backspace','MediaTrackPrevious'].includes(e.key)) {
+      e.preventDefault(); previous();
+    } else if (e.key.toLowerCase() === 'r' || e.key === 'Home') {
+      e.preventDefault(); reset();
+    } else if (e.key.toLowerCase() === 'f') {
+      e.preventDefault(); fullScreen();
+    }
+  });
+  render();
+</script>
+</body>
+</html>
